@@ -89,6 +89,9 @@ class GovAuditoriaCiclo(models.Model):
     apontamento_ids = fields.One2many("gov.auditoria.apontamento", "ciclo_id")
     decisao_id = fields.Many2one("gov.auditoria.decisao", ondelete="set null")
     checklist_id = fields.Many2one("gov.auditoria.checklist", ondelete="set null", copy=False)
+    checklist_progresso = fields.Float(related="checklist_id.progresso", readonly=True)
+    checklist_pendente_count = fields.Integer(related="checklist_id.item_pending_count", readonly=True)
+    checklist_bloqueado_count = fields.Integer(related="checklist_id.item_blocked_count", readonly=True)
     espelho_ids = fields.One2many("gov.auditoria.espelho", "ciclo_id")
     doc_processo_ref_ids = fields.Many2many(
         "gov.processo.doc",
@@ -114,17 +117,30 @@ class GovAuditoriaCiclo(models.Model):
         compute="_compute_reporting_ready",
         store=False,
     )
+    situacao_executiva = fields.Selection(
+        [
+            ("critica", "Critica"),
+            ("atencao", "Atencao"),
+            ("controlada", "Controlada"),
+        ],
+        compute="_compute_situacao_executiva",
+        store=False,
+    )
+    proximo_vencimento = fields.Date(compute="_compute_deadline_metrics", store=False)
+    prazo_vigente_count = fields.Integer(compute="_compute_deadline_metrics", store=False)
+    prazo_vencido_count = fields.Integer(compute="_compute_deadline_metrics", store=False)
+    documento_enviado_count = fields.Integer(compute="_compute_document_metrics", store=False)
+    documento_pendente_count = fields.Integer(compute="_compute_document_metrics", store=False)
+    apontamento_aberto_count = fields.Integer(compute="_compute_apontamento_metrics", store=False)
+    ultimo_evento_em = fields.Datetime(compute="_compute_event_metrics", store=False)
     native_empenho_count = fields.Integer(compute="_compute_native_counts", store=False)
     native_liquidacao_count = fields.Integer(compute="_compute_native_counts", store=False)
     native_pagamento_count = fields.Integer(compute="_compute_native_counts", store=False)
 
-    _sql_constraints = [
-        (
-            "gov_auditoria_ciclo_unique",
-            "unique(company_id, exercicio_id, orgao_id, tipo_prestacao)",
-            "Ja existe um ciclo para a mesma UG, exercicio, orgao e tipo de prestacao.",
-        ),
-    ]
+    _cycle_unique = models.Constraint(
+        "unique(company_id, exercicio_id, orgao_id, tipo_prestacao)",
+        "Ja existe um ciclo para a mesma UG, exercicio, orgao e tipo de prestacao.",
+    )
 
     @api.depends("company_id", "exercicio_id", "orgao_id")
     def _compute_name(self):
@@ -157,6 +173,54 @@ class GovAuditoriaCiclo(models.Model):
                 rec.reporting_ready = bool(fiscal_ready and rec.mapeamento_validado and rec.cobertura_espelho_pct >= 100.0)
             else:
                 rec.reporting_ready = bool(fiscal_ready and rec.mapeamento_validado)
+
+    @api.depends("prazo_ids.state", "prazo_ids.data_fim_real", "prazo_ids.data_fim_legal")
+    def _compute_deadline_metrics(self):
+        today = fields.Date.today()
+        for rec in self:
+            relevant_deadlines = rec.prazo_ids.filtered(lambda prazo: prazo.state not in ("cumprido", "cancelado"))
+            rec.prazo_vigente_count = len(relevant_deadlines.filtered(lambda prazo: prazo.state == "vigente"))
+            rec.prazo_vencido_count = len(relevant_deadlines.filtered(lambda prazo: prazo.state == "vencido"))
+            ordered = sorted(
+                relevant_deadlines,
+                key=lambda prazo: prazo.data_fim_real or prazo.data_fim_legal or today,
+            )
+            rec.proximo_vencimento = ordered[0].data_fim_real or ordered[0].data_fim_legal if ordered else False
+
+    @api.depends("documento_ids.state")
+    def _compute_document_metrics(self):
+        for rec in self:
+            rec.documento_enviado_count = len(rec.documento_ids.filtered(lambda doc: doc.state == "enviado"))
+            rec.documento_pendente_count = len(rec.documento_ids.filtered(lambda doc: doc.state in ("rascunho", "finalizado")))
+
+    @api.depends("apontamento_ids.state")
+    def _compute_apontamento_metrics(self):
+        for rec in self:
+            rec.apontamento_aberto_count = len(
+                rec.apontamento_ids.filtered(lambda item: item.state in ("aberto", "respondido"))
+            )
+
+    @api.depends("evento_ids.data_evento")
+    def _compute_event_metrics(self):
+        for rec in self:
+            rec.ultimo_evento_em = max(rec.evento_ids.mapped("data_evento"), default=False)
+
+    @api.depends(
+        "prazo_vencido_count",
+        "apontamento_aberto_count",
+        "reporting_ready",
+        "state",
+        "proximo_vencimento",
+    )
+    def _compute_situacao_executiva(self):
+        today = fields.Date.today()
+        for rec in self:
+            if rec.prazo_vencido_count or rec.state in ("diligencia", "recurso"):
+                rec.situacao_executiva = "critica"
+            elif rec.apontamento_aberto_count or (rec.proximo_vencimento and rec.proximo_vencimento <= today + timedelta(days=5)):
+                rec.situacao_executiva = "atencao"
+            else:
+                rec.situacao_executiva = "controlada"
 
     @api.depends("company_id", "exercicio_id")
     def _compute_native_counts(self):
@@ -254,6 +318,51 @@ class GovAuditoriaCiclo(models.Model):
         for rec in self:
             rec._set_state("acordao")
         return True
+
+    def action_open_diligencia_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Registrar Diligencia",
+            "res_model": "gov.auditoria.diligencia.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_ciclo_id": self.id},
+        }
+
+    def action_open_checklist(self):
+        self.ensure_one()
+        checklist = self._ensure_checklist()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Checklist do Ciclo",
+            "res_model": "gov.auditoria.checklist",
+            "res_id": checklist.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_open_acordao_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Registrar Acordao",
+            "res_model": "gov.auditoria.acordao.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_ciclo_id": self.id},
+        }
+
+    def action_open_protocolo_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Registrar Protocolo de Envio",
+            "res_model": "gov.auditoria.protocolo.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_ciclo_id": self.id},
+        }
 
     def action_to_recurso(self):
         for rec in self:

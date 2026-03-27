@@ -72,12 +72,14 @@ class AccountFiscalYear(models.Model):
                 and journal._get_journal_lock_date() >= date_to
             )
 
-        public_accounting_enabled = bool(getattr(company, "gov_public_accounting_enabled", False))
-        journal_lock_complete = (
-            fiscal_lock_satisfied
-            if not journals
-            else len(effective_locked_journals) == len(journals)
+        public_accounting_enabled = (
+            "gov_public_accounting_enabled" not in company._fields
+            or bool(getattr(company, "gov_public_accounting_enabled", False))
         )
+        if not journal_lock_supported or not journals:
+            journal_lock_complete = True
+        else:
+            journal_lock_complete = len(effective_locked_journals) == len(journals)
         reporting_ready = bool(
             public_accounting_enabled and fiscal_lock_satisfied and journal_lock_complete
         )

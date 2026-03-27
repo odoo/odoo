@@ -1,3 +1,5 @@
+from psycopg2 import IntegrityError
+
 from odoo.tests.common import TransactionCase
 
 
@@ -22,22 +24,37 @@ class TestGovAuditoriaCycle(TransactionCase):
             }
         )
         cls.orgao = cls.env.ref("gov_auditoria.gov_auditoria_orgao_tce")
+        cls.env.user.write(
+            {
+                "group_ids": [
+                    (4, cls.env.ref("gov_auditoria.group_auditoria_manager").id),
+                    (4, cls.env.ref("gov_auditoria.group_auditoria_admin").id),
+                ]
+            }
+        )
 
     def test_cycle_unique_constraint(self):
+        orgao_unique = self.env["gov.auditoria.orgao"].create(
+            {
+                "name": "Tribunal Teste Unicidade",
+                "sigla": "TTU",
+                "tipo": "tce",
+            }
+        )
         self.env["gov.auditoria.ciclo"].create(
             {
                 "company_id": self.company.id,
                 "exercicio_id": self.fiscal_year.id,
-                "orgao_id": self.orgao.id,
+                "orgao_id": orgao_unique.id,
                 "tipo_prestacao": "ordinaria",
             }
         )
-        with self.assertRaises(Exception):
+        with self.cr.savepoint(), self.assertRaises(IntegrityError):
             self.env["gov.auditoria.ciclo"].create(
                 {
                     "company_id": self.company.id,
                     "exercicio_id": self.fiscal_year.id,
-                    "orgao_id": self.orgao.id,
+                    "orgao_id": orgao_unique.id,
                     "tipo_prestacao": "ordinaria",
                 }
             )

@@ -52,6 +52,7 @@ class GovAuditoriaDocumento(models.Model):
     protocolo_externo = fields.Char()
     versao = fields.Integer(default=1, required=True)
     versao_anterior_id = fields.Many2one("gov.auditoria.documento", ondelete="set null")
+    resumo = fields.Text()
     state = fields.Selection(
         [
             ("rascunho", "Rascunho"),
@@ -85,3 +86,13 @@ class GovAuditoriaDocumento(models.Model):
         for rec in self.filtered("attachment_id"):
             raw = base64.b64decode(rec.attachment_id.datas or b"")
             rec.hash_sha256 = hashlib.sha256(raw).hexdigest() if raw else False
+
+    def action_mark_sent(self):
+        now = fields.Datetime.now()
+        for rec in self:
+            rec.write(
+                {
+                    "state": "enviado",
+                    "data_envio": rec.data_envio or now,
+                }
+            )

@@ -15,6 +15,42 @@
             </list>
         </field>
     </record>
+    <record id="view_gov_auditoria_documento_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.documento.form</field>
+        <field name="model">gov.auditoria.documento</field>
+        <field name="arch" type="xml">
+            <form string="Documento de Auditoria">
+                <header>
+                    <button name="action_mark_sent" string="Marcar como Enviado" type="object" class="btn-primary" invisible="state == 'enviado'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="rascunho,finalizado,enviado,substituido"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ciclo_id"/>
+                            <field name="event_id"/>
+                            <field name="nome"/>
+                            <field name="tipo"/>
+                            <field name="anexo_4320_numero" invisible="tipo != 'anexo_4320'"/>
+                            <field name="origem"/>
+                        </group>
+                        <group>
+                            <field name="attachment_id"/>
+                            <field name="protocolo_externo"/>
+                            <field name="data_envio"/>
+                            <field name="versao"/>
+                            <field name="versao_anterior_id"/>
+                            <field name="hash_sha256" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="resumo"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
     <record id="action_gov_auditoria_documento" model="ir.actions.act_window">
         <field name="name">Documentos</field>
         <field name="res_model">gov.auditoria.documento</field>
@@ -35,6 +71,36 @@
             </list>
         </field>
     </record>
+    <record id="view_gov_auditoria_evento_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.evento.form</field>
+        <field name="model">gov.auditoria.evento</field>
+        <field name="arch" type="xml">
+            <form string="Evento de Auditoria">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ciclo_id"/>
+                            <field name="tipo"/>
+                            <field name="data_evento"/>
+                            <field name="data_limite"/>
+                        </group>
+                        <group>
+                            <field name="responsavel_id"/>
+                            <field name="origem"/>
+                            <field name="state"/>
+                            <field name="documento_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="descricao"/>
+                    </group>
+                    <group>
+                        <field name="documento_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
     <record id="view_gov_auditoria_prazo_list" model="ir.ui.view">
         <field name="name">gov.auditoria.prazo.list</field>
         <field name="model">gov.auditoria.prazo</field>
@@ -48,6 +114,38 @@
                 <field name="data_fim_real"/>
                 <field name="state"/>
             </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_prazo_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.prazo.form</field>
+        <field name="model">gov.auditoria.prazo</field>
+        <field name="arch" type="xml">
+            <form string="Prazo de Auditoria">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ciclo_id"/>
+                            <field name="evento_id"/>
+                            <field name="tipo"/>
+                            <field name="descricao"/>
+                        </group>
+                        <group>
+                            <field name="data_inicio"/>
+                            <field name="data_fim_legal"/>
+                            <field name="data_fim_real" readonly="1"/>
+                            <field name="dias_restantes" readonly="1"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <field name="suspensao_ids">
+                        <list editable="bottom">
+                            <field name="data_inicio_suspensao"/>
+                            <field name="data_fim_suspensao"/>
+                            <field name="motivo"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
         </field>
     </record>
     <record id="view_gov_auditoria_espelho_list" model="ir.ui.view">
@@ -79,6 +177,99 @@
             </list>
         </field>
     </record>
+    <record id="view_gov_auditoria_apontamento_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.apontamento.form</field>
+        <field name="model">gov.auditoria.apontamento</field>
+        <field name="arch" type="xml">
+            <form string="Apontamento">
+                <header>
+                    <button name="action_open_resposta_wizard" string="Registrar Resposta" type="object" class="btn-primary" invisible="state in ('acatado', 'rejeitado')"/>
+                    <button name="action_mark_acatado" string="Acatar" type="object" class="btn-secondary" invisible="state == 'acatado'"/>
+                    <button name="action_mark_rejeitado" string="Rejeitar" type="object" class="btn-secondary" invisible="state == 'rejeitado'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="aberto,respondido,acatado,rejeitado"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ciclo_id"/>
+                            <field name="codigo"/>
+                            <field name="tipo"/>
+                        </group>
+                        <group>
+                            <field name="valor_multa"/>
+                            <field name="prazo_defesa_id"/>
+                            <field name="decisao_id"/>
+                            <field name="responsavel_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="descricao"/>
+                        <field name="resposta"/>
+                        <field name="data_resposta"/>
+                        <field name="documento_resposta_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_decisao_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.decisao.list</field>
+        <field name="model">gov.auditoria.decisao</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ciclo_id"/>
+                <field name="tipo"/>
+                <field name="numero_acordao"/>
+                <field name="data_acordao"/>
+                <field name="data_limite_recurso"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_decisao_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.decisao.form</field>
+        <field name="model">gov.auditoria.decisao</field>
+        <field name="arch" type="xml">
+            <form string="Decisao">
+                <header>
+                    <button name="action_mark_transitado" string="Marcar Transitada" type="object" class="btn-primary" invisible="state == 'transitado'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="minuta,publicado,transitado"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ciclo_id"/>
+                            <field name="tipo"/>
+                            <field name="numero_acordao"/>
+                            <field name="data_acordao"/>
+                            <field name="data_publicacao"/>
+                        </group>
+                        <group>
+                            <field name="valor_condenacao"/>
+                            <field name="prazo_recurso_dias"/>
+                            <field name="data_limite_recurso" readonly="1"/>
+                            <field name="data_transito"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="ementa"/>
+                        <field name="apontamento_ids" widget="many2many_tags"/>
+                    </group>
+                    <field name="determination_ids">
+                        <list editable="bottom">
+                            <field name="descricao"/>
+                            <field name="prazo_cumprimento"/>
+                            <field name="prazo_id" readonly="1"/>
+                            <field name="responsavel_id"/>
+                            <field name="data_cumprimento"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
     <record id="view_gov_auditoria_checklist_template_list" model="ir.ui.view">
         <field name="name">gov.auditoria.checklist.template.list</field>
         <field name="model">gov.auditoria.checklist.template</field>
@@ -88,6 +279,92 @@
                 <field name="orgao_id"/>
                 <field name="active"/>
             </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_checklist_list" model="ir.ui.view">
+        <field name="name">gov.auditoria.checklist.list</field>
+        <field name="model">gov.auditoria.checklist</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ciclo_id"/>
+                <field name="orgao_id"/>
+                <field name="progresso"/>
+                <field name="item_done_count"/>
+                <field name="item_pending_count"/>
+                <field name="item_blocked_count"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_checklist_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.checklist.form</field>
+        <field name="model">gov.auditoria.checklist</field>
+        <field name="arch" type="xml">
+            <form string="Checklist do Ciclo">
+                <header>
+                    <button name="action_open_pending_items" string="Ver Pendencias" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ciclo_id" readonly="1"/>
+                            <field name="orgao_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="progresso" readonly="1"/>
+                            <field name="item_done_count" readonly="1"/>
+                            <field name="item_pending_count" readonly="1"/>
+                            <field name="item_blocked_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="item_ids">
+                        <list>
+                            <button name="action_mark_ok" string="OK" type="object" class="btn-link"/>
+                            <button name="action_mark_na" string="N/A" type="object" class="btn-link"/>
+                            <button name="action_mark_blocked" string="Bloquear" type="object" class="btn-link"/>
+                            <button name="action_reset_state" string="Resetar" type="object" class="btn-link"/>
+                            <field name="sequence"/>
+                            <field name="descricao"/>
+                            <field name="obrigatorio"/>
+                            <field name="responsavel_id"/>
+                            <field name="documento_id"/>
+                            <field name="state"/>
+                            <field name="observacao"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_gov_auditoria_checklist_item_form" model="ir.ui.view">
+        <field name="name">gov.auditoria.checklist.item.form</field>
+        <field name="model">gov.auditoria.checklist.item</field>
+        <field name="arch" type="xml">
+            <form string="Item de Checklist">
+                <header>
+                    <button name="action_mark_ok" string="Marcar OK" type="object" class="btn-primary"/>
+                    <button name="action_mark_na" string="Marcar N/A" type="object" class="btn-secondary"/>
+                    <button name="action_mark_blocked" string="Bloquear" type="object" class="btn-secondary"/>
+                    <button name="action_reset_state" string="Resetar" type="object" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pendente,ok,na,bloqueado"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="checklist_id" readonly="1"/>
+                            <field name="sequence"/>
+                            <field name="descricao"/>
+                            <field name="obrigatorio"/>
+                        </group>
+                        <group>
+                            <field name="responsavel_id"/>
+                            <field name="documento_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="observacao"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
@@ -111,9 +388,19 @@
         <field name="res_model">gov.auditoria.apontamento</field>
         <field name="view_mode">list,form</field>
     </record>
+    <record id="action_gov_auditoria_decisao" model="ir.actions.act_window">
+        <field name="name">Decisoes</field>
+        <field name="res_model">gov.auditoria.decisao</field>
+        <field name="view_mode">list,form</field>
+    </record>
     <record id="action_gov_auditoria_checklist_template" model="ir.actions.act_window">
         <field name="name">Templates de Checklist</field>
         <field name="res_model">gov.auditoria.checklist.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_gov_auditoria_checklist" model="ir.actions.act_window">
+        <field name="name">Checklists</field>
+        <field name="res_model">gov.auditoria.checklist</field>
         <field name="view_mode">list,form</field>
     </record>
 </odoo>

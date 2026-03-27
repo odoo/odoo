@@ -28,6 +28,7 @@ class GovAccountConfig(models.Model):
         "account.account",
         string="Conta de Despesa (debito NE)",
         required=True,
+        ondelete="cascade",
         domain="[('account_type','in',['expense','off_balance'])]",
         help="Conta debitada na emissao da Nota de Empenho.",
     )
@@ -35,6 +36,7 @@ class GovAccountConfig(models.Model):
         "account.account",
         string="Conta Empenho a Pagar (credito NE)",
         required=True,
+        ondelete="cascade",
         domain="[('account_type','=','liability_current')]",
         help=(
             "Conta creditada na emissao da NE. "
@@ -44,6 +46,7 @@ class GovAccountConfig(models.Model):
     account_liquidacao_pagar_id = fields.Many2one(
         "account.account",
         string="Conta Liquidacao a Pagar (credito NL)",
+        ondelete="cascade",
         domain="[('account_type','=','liability_current')]",
         help=(
             "Conta creditada na liquidacao. "
@@ -54,6 +57,7 @@ class GovAccountConfig(models.Model):
     account_banco_id = fields.Many2one(
         "account.account",
         string="Conta Bancaria (debito OP)",
+        ondelete="cascade",
         domain="[('account_type','in',['asset_cash','asset_current'])]",
         help=(
             "Conta debitada no pagamento (Ordem de Pagamento). "

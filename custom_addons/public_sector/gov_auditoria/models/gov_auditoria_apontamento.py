@@ -45,3 +45,27 @@ class GovAuditoriaApontamento(models.Model):
         required=True,
     )
     decisao_id = fields.Many2one("gov.auditoria.decisao", ondelete="set null")
+
+    def action_open_resposta_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Registrar Resposta",
+            "res_model": "gov.auditoria.apontamento.resposta.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_ciclo_id": self.ciclo_id.id,
+                "default_apontamento_id": self.id,
+            },
+        }
+
+    def action_mark_acatado(self):
+        for rec in self:
+            rec.state = "acatado"
+        return True
+
+    def action_mark_rejeitado(self):
+        for rec in self:
+            rec.state = "rejeitado"
+        return True

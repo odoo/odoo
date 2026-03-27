@@ -36,6 +36,7 @@ class GovAuditoriaOrgao(models.Model):
     portal_url = fields.Char()
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ("gov_auditoria_orgao_sigla_unique", "unique(sigla)", "A sigla do orgao deve ser unica."),
-    ]
+    _sigla_unique = models.Constraint(
+        "unique(sigla)",
+        "A sigla do orgao deve ser unica.",
+    )

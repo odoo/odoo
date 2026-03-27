@@ -57,9 +57,15 @@ class GovAuditoriaEvento(models.Model):
         default="manual",
         required=True,
     )
+    documento_count = fields.Integer(compute="_compute_documento_count", store=False)
 
     @api.onchange("data_limite")
     def _onchange_data_limite(self):
         for rec in self:
             if rec.data_limite and rec.data_limite < fields.Date.today():
                 rec.state = "vencido"
+
+    @api.depends("documento_ids")
+    def _compute_documento_count(self):
+        for rec in self:
+            rec.documento_count = len(rec.documento_ids)

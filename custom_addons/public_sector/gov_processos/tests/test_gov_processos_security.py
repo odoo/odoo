@@ -19,7 +19,7 @@ class TestGovProcessosSecurity(TransactionCase):
                 "email": "operador.uga@example.com",
                 "company_id": cls.company_a.id,
                 "company_ids": [(6, 0, [cls.company_a.id])],
-                "groups_id": [(6, 0, [group_operador.id])],
+                "group_ids": [(6, 0, [group_operador.id])],
             }
         )
         cls.user_gestor = cls.env["res.users"].with_context(no_reset_password=True).create(
@@ -29,7 +29,7 @@ class TestGovProcessosSecurity(TransactionCase):
                 "email": "gestor.multi@example.com",
                 "company_id": cls.company_a.id,
                 "company_ids": [(6, 0, [cls.company_a.id, cls.company_b.id])],
-                "groups_id": [(6, 0, [group_gestor.id])],
+                "group_ids": [(6, 0, [group_gestor.id])],
             }
         )
 
