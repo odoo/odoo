@@ -54,7 +54,6 @@ PAYMENT_METHODS_MAPPING = {
     "open_banking": "paybybank",
     "samsung_pay": "samsungpay",
     "sepa_direct_debit": "sepadirectdebit",
-    "sofort": "directEbanking",
     "unionpay": "cup",
     "wallets_india": "wallet_IN",
     "wechat_pay": "wechatpayQR",

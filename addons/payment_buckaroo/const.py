@@ -34,7 +34,6 @@ PAYMENT_METHODS_MAPPING = {
     "paypal": "paypal",
     "poste_pay": "PostePay",
     "sepa_direct_debit": "SepaDirectDebit",
-    "sofort": "sofortueberweisung",
     "tinka": "Tinka",
     "trustly": "Trustly",
     "wechat_pay": "WeChatPay",

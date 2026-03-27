@@ -3183,37 +3183,6 @@
         />
     </record>
 
-    <record id="payment_method_sofort" model="payment.method">
-        <field name="name">Sofort</field>
-        <field name="code">sofort</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="bytes" file="payment/static/img/sofort.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_manual_capture">none</field>
-        <field name="support_refund">partial</field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.de'),
-                         ref('base.at'),
-                         ref('base.be'),
-                         ref('base.nl'),
-                         ref('base.es'),
-                         ref('base.ch'),
-                         ref('base.pl'),
-                         ref('base.it'),
-                         ref('base.uk'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.EUR'),
-                         ref('base.CHF'),
-                     ])]"
-        />
-    </record>
-
     <record id="payment_method_souhoola" model="payment.method">
         <field name="name">Souhoola</field>
         <field name="code">souhoola</field>
