@@ -3250,7 +3250,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_race_conditions_update_program', login="pos_user")
 
     def test_loyalty_in_trusted_pos(self):
-        """This test ensures that when a order is loaded in trusted pos, loyalty is shown"""
+        """This test ensures that when a order is loaded in trusted pos, loyalty is shown and valide"""
         self.env['loyalty.program'].search([]).write({'active': False})
         trusted_pos_config = self.main_pos_config.copy()
         loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
@@ -3259,6 +3259,25 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_id': loyalty_program.id,
             'partner_id': partner.id,
             'points': 0,
+        })
+        self.env['loyalty.program'].create({
+            'name': 'Auto Discount 10%',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': self.whiteboard_pen,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': self.whiteboard_pen.ids,
+            })],
         })
         self.main_pos_config.trusted_config_ids += trusted_pos_config
         trusted_pos_config.trusted_config_ids += self.main_pos_config
