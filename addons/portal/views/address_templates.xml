@@ -26,10 +26,7 @@
                 </div>
                 <t t-call="portal.address_list" addresses="delivery_addresses"/>
                 <t t-set="address_type" t-valuef="billing"/>
-                <t
-                        t-set="new_address_url"
-                        t-valuef="{{address_url}}?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
-                />
+                <t t-set="new_address_url" t-valuef="{{address_url}}?address_type={{address_type}}"/>
                 <div class="d-flex justify-content-between align-items-start gap-3 mt-4 pt-2">
                     <h5 class="mb-0">Billing address</h5>
                     <a
