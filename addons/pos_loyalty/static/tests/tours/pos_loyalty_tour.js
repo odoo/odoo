@@ -769,3 +769,34 @@ registry.category("web_tour.tours").add("test_race_conditions_update_program", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos_make_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("Loyalty Test Product", "1", "100"),
+            PosLoyalty.hasRewardLine("10% on Loyalty Test Product", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.saveOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_in_trusted_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.selectOrder("-0001"),
+            TicketScreen.loadSelectedOrder(),
+            PosLoyalty.hasRewardLine("10% on Loyalty Test Product", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
