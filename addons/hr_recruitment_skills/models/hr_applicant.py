@@ -133,6 +133,20 @@ class HrApplicant(models.Model):
                 mapped_commands.append(command)
         return mapped_commands
 
+    def action_job_add_applicants(self):
+        res = super().action_job_add_applicants()
+        if len(self.ids) == 1:
+            res["context"]["active_applicant_skill_ids"] = self.skill_ids.ids
+            res["context"]["active_applicant_id"] = self.id
+            applicant_job_ids = self.job_id
+            if self.pool_applicant_id:
+                applicant_job_ids += self.pool_applicant_id.linked_applicant_ids.job_id
+            else:
+                domain = self._get_similar_applicants_domain()
+                applicant_job_ids += self.env["hr.applicant"].search(domain).job_id
+            res["context"]["active_applicant_job_ids"] = applicant_job_ids.ids
+        return res
+
     def action_add_to_job(self):
         self.with_context(just_moved=True).write(
             {

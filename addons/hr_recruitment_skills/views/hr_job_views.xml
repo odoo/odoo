@@ -5,10 +5,13 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.hr_job_view_tree_inherit"/>
         <field name="arch" type="xml">
-            <field name="department_id" position="after">
-                <field name="applicant_matching_score" widget="progressbar"
-                    groups="hr_recruitment.group_hr_recruitment_interviewer"
-                    invisible="not applicant_matching_score" column_invisible="not context.get('active_applicant_id')"/>
+            <field name="open_application_count" position="before">
+                <field name="applicant_matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}"
+                    column_invisible="not context.get('active_applicant_id') and not context.get('active_applicant_skill_ids')"/>
+                <field name="matching_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_skill_ids')"/>
+                <field name="missing_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_skill_ids')"/>
             </field>
         </field>
     </record>
