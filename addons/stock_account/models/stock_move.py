@@ -249,10 +249,52 @@ class StockMove(models.Model):
         if len(self.product_id) > 1:
             return 0
         total_qty = sum(m._get_valued_qty() for m in self)
+<<<<<<< c201e0bb738e169607588a82f6f348af62a1fd6c
         if not total_qty:
             return 0
         return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' or \
             (self.product_id.lot_valuated and self.product_id.cost_method == 'average') else self.product_id.standard_price
+||||||| 8fc2f95276fae5830b8a0d66d2d15300b9288759
+        if not total_qty:
+            return 0
+        valued_consigned_qty = self._get_valued_consigned_qty()
+        total_qty += valued_consigned_qty
+        if self.product_id.cost_method == 'fifo' or valued_consigned_qty or\
+            (self.product_id.lot_valuated and self.product_id.cost_method == 'average'):
+            return sum(self.mapped('value')) / total_qty
+        else:
+            return self.product_id.standard_price
+
+    @api.model
+    def _get_valued_types(self):
+        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
+        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
+        valued.
+
+        :returns: a list of `valued_type`
+        :rtype: list
+        """
+        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+=======
+        valued_consigned_qty = self._get_valued_consigned_qty()
+        total_valued_qty = total_qty + valued_consigned_qty
+        if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
+            (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
+            return sum(self.mapped('value')) / total_valued_qty
+        else:
+            return self.product_id.standard_price
+
+    @api.model
+    def _get_valued_types(self):
+        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
+        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
+        valued.
+
+        :returns: a list of `valued_type`
+        :rtype: list
+        """
+        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+>>>>>>> df96389928f223c08985f41de5fb2c7ec89a7440
 
     def _set_value(self, correction_quantity=None):
         """Set the value of the move.
