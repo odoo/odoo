@@ -56,6 +56,7 @@
                         <field name="reply_to" placeholder="e.g. info@company.com"
                             invisible="reply_to_mode == 'update'"
                             required="reply_to_mode != 'update'"/>
+                        <field name="attachment_links" nolabel="1" colspan="2" invisible="not attachment_links"/>
                     </group>
                     <field name="can_edit_body" invisible="1"/>
                     <div invisible="composition_mode == 'mass_mail'">
@@ -81,6 +82,9 @@
                         </page>
                     </notebook>
                     <footer>
+                        <div invisible="not attachment_links_info" class="alert alert-info py-1 my-0 align-right w-100" role="alert">
+                            <field name="attachment_links_info" nolabel="1"/>
+                        </div>
                         <button string="Send" name="action_send_mail"
                                 type="object" class="btn-primary o_mail_send" data-hotkey="q"
                                 invisible="(subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date) or not partner_ids_all_have_email"/>

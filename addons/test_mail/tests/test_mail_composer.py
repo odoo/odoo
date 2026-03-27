@@ -273,6 +273,31 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
         self.assertFalse(composer_form.subtype_is_log)
 
+    def test_mail_composer_form_attachments_in_body(self):
+        # Only 1 attachment won't trigger the warning but 2 attachments will
+        # because one of them is in the body, we should not show the warning
+        self.env['ir.config_parameter'].set_float('base.default_max_email_size', 19)
+        attachments = self.env['ir.attachment'].create([{
+            "name": "test",
+            "raw": b"a" * 10 * 1024 * 1024,
+        } for _ in range(2)])
+        self.assertEqual(attachments.mapped("file_size"), [10 * 1024 * 1024, 10 * 1024 * 1024])
+
+        composer_form = Form(
+            self.env['mail.compose.message'].with_context({
+                'default_composition_mode': 'comment',
+                'default_model': self.test_record._name,
+                'default_res_ids': self.test_record.ids,
+            })
+        )
+        composer_form.body = f'<a href="/web/content/{attachments[0].id}"/>'
+        composer_form.attachment_ids = attachments
+        self.assertFalse(composer_form.attachment_links_info)
+
+        # Now no attachment are in the body, the limit is reached
+        composer_form.body = 'No attachment in body'
+        self.assertIn("Your attachments exceed", composer_form.attachment_links_info or "")
+
     @users('employee')
     def test_mail_composer_comment_wtpl(self):
         composer_form = Form(self.env['mail.compose.message'].with_context(

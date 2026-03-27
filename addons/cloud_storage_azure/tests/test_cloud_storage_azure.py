@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import re
 import requests
 
 from datetime import datetime, timezone, timedelta
@@ -216,6 +217,10 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
     def test_cloud_storage_attachments(self):
         """Cloud attachments should be converted to links in outgoing emails."""
 
+        def count_attachment_link_in(body, attachment):
+            return len(re.findall(
+                rf"<a.*/web/content/{attachment.id}\?download=1.*access_token={attachment.access_token}", body))
+
         thread_model = self.env["res.partner"].create({"name": "Cloud Test Partner", "email": "cloud@test.com"})
         cloud_attachment = self.env["ir.attachment"].create({
                 "name": "cloud_attachment.txt",
@@ -246,10 +251,8 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         self.assertEqual(len(self._mails), 2, "Two emails should be sent.")
 
         for body, attachment in zip([m["body"] for m in self._mails], self._new_mails.attachment_ids):
-            large_attachment_link = str(self.env["ir.qweb"]._render("mail.mail_attachment_links", {"attachments": attachment}))
-            self.assertEqual(body.count(large_attachment_link), 1,
-                    "Sending mail with cloud_storage attachment should rendered it as a link in the outgoing email.",
-            )
+            self.assertEqual(count_attachment_link_in(body, attachment), 1,
+                             "Sending mail with cloud_storage attachment should rendered it as a link in the outgoing email.")
 
         # A cloud attachment and small txt attachment sent -> 1st should become a link, 2nd should be sent with the message
         small_attachment = self.env["ir.attachment"].create({
@@ -283,10 +286,9 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
                 "Only text attachment should be sent in the message")
 
         for body, attachment in zip([m["body"] for m in self._mails], self._new_mails.attachment_ids):
-            large_attachment_link = str(self.env["ir.qweb"]._render("mail.mail_attachment_links", {"attachments": cloud_attachment}))
-            self.assertEqual(body.count(large_attachment_link), 1,
-                    "Sending mail with cloud_storage attachment should rendered it as a link in the outgoing email.",
-            )
+            self.assertEqual(
+                count_attachment_link_in(body, cloud_attachment), 1,
+                "Sending mail with cloud_storage attachment should rendered it as a link in the outgoing email.")
 
         # A large txt attachment and 2 cloud attachments sent -> All 3 shall became links
         cloud_attachment2 = self.env["ir.attachment"].create({
@@ -324,8 +326,8 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         for body, attachment in zip([m["body"] for m in self._mails], self._new_mails.attachment_ids):
             cloud_attachment_present = body.count(cloud_attachment.access_token) == body.count(cloud_attachment.name) == 1
             cloud_attachment2_present = body.count(cloud_attachment2.access_token) == body.count(cloud_attachment2.name) == 1
-            large_attachment_link = str(self.env["ir.qweb"]._render("mail.mail_attachment_links", {"attachments": large_attachment}))
-            self.assertTrue(body.count(large_attachment_link) == 1 and cloud_attachment_present and cloud_attachment2_present,
+            large_attachment_link_present = count_attachment_link_in(body, large_attachment) == 1
+            self.assertTrue(large_attachment_link_present and cloud_attachment_present and cloud_attachment2_present,
                 "Two cloud and one large attachments should be converted and sent as links in the outgoing email.",
             )
 

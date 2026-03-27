@@ -15,6 +15,7 @@ from dateutil.parser import parse
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo.addons.mail.tools.attachment import extract_attachment_ids_from_html
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.registry import Registry
 
@@ -476,9 +477,7 @@ class MailMail(models.Model):
         # Prepare attachments:
         # Remove attachments if user send the link with the access_token.
         if body and attachments:
-            link_ids = {int(link) for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body)}
-            if link_ids:
-                attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
+            attachments = attachments - self.env['ir.attachment'].browse(extract_attachment_ids_from_html(body))
 
         # Convert URL-only attachments (e.g. cloud or plain external links) into email links
         url_attachments = attachments.sudo().filtered(
@@ -502,7 +501,7 @@ class MailMail(models.Model):
                 record_owned_attachments.sudo().generate_access_token()
                 attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links',
                                                                 {'attachments': record_owned_attachments})
-                body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
+                body = tools.mail.prepend_html_content(str(body), str(attachments_links))
                 attachments -= record_owned_attachments
         # attachments sorted by increasing ID to match front-end and upload ordering
         attachments.sudo().fetch(['name', 'raw', 'mimetype'])

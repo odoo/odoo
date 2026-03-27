@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import alias_error
+from . import attachment
 from . import discuss
 from . import link_preview
 from . import parser
