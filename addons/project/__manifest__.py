@@ -14,6 +14,7 @@
         'mail',
         'portal',
         'rating',
+        'portal_rating',
         'resource',
         'web',
         'web_tour',
