@@ -498,9 +498,11 @@ class AccountMove(models.Model):
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_base_line_tax)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         for grouping_key, values in values_per_grouping_key.items():
-            tax_record = values['base_line_x_taxes_data'][0][1][0]['tax']
-            if not tax_record:
+            taxes_data = values['base_line_x_taxes_data']
+            if not taxes_data[0][1]:
                 continue
+
+            tax_record = taxes_data[0][1][0]['tax']
 
             is_withholding = values['grouping_key']['tax_rate'] < 0.0
             tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax_record}, round=True)

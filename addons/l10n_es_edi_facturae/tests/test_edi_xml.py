@@ -725,3 +725,16 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_2.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    @freeze_time('2023-01-01')
+    def test_out_invoice_no_tax(self):
+        """ Ensure no crash when generating a facturae XML for an invoice without taxes (opw-6067715) """
+        invoice = self.create_invoice(
+            partner_id=self.partner_a.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': []}],
+        )
+        invoice.action_post()
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        self.assertTrue(generated_file)
