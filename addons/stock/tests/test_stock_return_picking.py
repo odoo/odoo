@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.fields import Command
 from odoo.tests import Form
+
 
 class TestReturnPicking(TestStockCommon):
 
@@ -239,6 +241,160 @@ class TestReturnPicking(TestStockCommon):
         self.assertListEqual(exchange_picking.move_line_ids.lot_id.ids, [])
         self.assertEqual(exchange_picking.move_ids.display_assign_serial, True)
 
+<<<<<<< 26e0bb2d8239c3b8d2dfe3b8139bd8fe33f9fedd
+||||||| df6e8827ed72a526b675326f24f1c7975dc6499b
+    def test_stock_picking_report_has_return(self):
+        """
+        Ensures that only returned serialized products are marked as returned.
+
+        Scenario:
+        - A delivery of two serialized units
+        - One unit is returned
+
+        Expected:
+        - The stock lot report lists two entries
+        - Only the returned unit has `has_return = True`, the other remains `False`
+        """
+        wh_stock = self.env['stock.location'].browse(self.stock_location)
+        partner = self.env['res.partner'].create({'name': 'Test Customer'})
+
+        product_serial = self.env['product.product'].create({
+            'name': 'Tracked by SN',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+
+        serial_1 = self.env['stock.lot'].create({'name': 'SN1', 'product_id': product_serial.id})
+        serial_2 = self.env['stock.lot'].create({'name': 'SN2', 'product_id': product_serial.id})
+
+        self.env['stock.quant']._update_available_quantity(product_serial, wh_stock, 1.0, lot_id=serial_1)
+        self.env['stock.quant']._update_available_quantity(product_serial, wh_stock, 1.0, lot_id=serial_2)
+
+        picking = self.PickingObj.create({
+            'partner_id': partner.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_ids': [(0, 0, {
+                'name': 'Move SN',
+                'product_id': product_serial.id,
+                'product_uom_qty': 2,
+                'product_uom': product_serial.uom_id.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })],
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking').create({})
+        return_wizard.product_return_moves.quantity = 1
+        res = return_wizard.action_create_returns()
+        return_picking = self.PickingObj.browse(res["res_id"])
+
+        return_picking.action_confirm()
+        return_picking.move_ids.picked = True
+        return_picking.button_validate()
+        self.env['stock.move.line'].flush_model()
+
+        lot_report = self.env['stock.lot.report'].search([
+            ('partner_id', '=', partner.id),
+        ], order='id')
+        self.assertRecordValues(lot_report, [
+            {'lot_id': serial_1.id, 'has_return': True},
+            {'lot_id': serial_2.id, 'has_return': False},
+        ])
+
+=======
+    def test_stock_picking_report_has_return(self):
+        """
+        Ensures that only returned serialized products are marked as returned.
+
+        Scenario:
+        - A delivery of two serialized units
+        - One unit is returned
+
+        Expected:
+        - The stock lot report lists two entries
+        - Only the returned unit has `has_return = True`, the other remains `False`
+        """
+        wh_stock = self.env['stock.location'].browse(self.stock_location)
+        partner = self.env['res.partner'].create({'name': 'Test Customer'})
+        product_serial = self.env['product.product'].create({
+            'name': 'Tracked by SN',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        serial_1, serial_2, serial_3 = self.env['stock.lot'].create([
+            {'name': 'SN1', 'product_id': product_serial.id},
+            {'name': 'SN2', 'product_id': product_serial.id},
+            {'name': 'SN3', 'product_id': product_serial.id},
+        ])
+        self.env['stock.quant']._update_available_quantity(product_serial, wh_stock, 1.0, lot_id=serial_1)
+        self.env['stock.quant']._update_available_quantity(product_serial, wh_stock, 1.0, lot_id=serial_2)
+        self.env['stock.quant']._update_available_quantity(product_serial, wh_stock, 1.0, lot_id=serial_3)
+        picking = self.PickingObj.create({
+            'partner_id': partner.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'move_ids': [
+                Command.create({
+                    'name': 'Move SN',
+                    'product_id': product_serial.id,
+                    'product_uom_qty': 3,
+                    'product_uom': product_serial.uom_id.id,
+                    'location_id': self.stock_location,
+                    'location_dest_id': self.customer_location,
+                }),
+            ],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+        # return only one of the three SN of product_serial
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking').create({})
+        return_wizard.product_return_moves.quantity = 1
+        res = return_wizard.action_create_returns()
+        return_picking = self.PickingObj.browse(res["res_id"])
+        return_picking.action_confirm()
+        return_picking.button_validate()
+
+        self.env['stock.move.line'].flush_model()
+        lot_report = self.env['stock.lot.report'].search([
+            ('partner_id', '=', partner.id),
+        ], order='id')
+        self.assertRecordValues(lot_report, [
+            {'lot_id': serial_1.id, 'has_return': True},
+            {'lot_id': serial_2.id, 'has_return': False},
+            {'lot_id': serial_3.id, 'has_return': False},
+        ])
+
+        # return the other unit
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking').create({})
+        return_wizard.product_return_moves.quantity = 1
+        res = return_wizard.action_create_returns()
+        return_picking_2 = self.PickingObj.browse(res["res_id"])
+        return_picking_2.action_confirm()
+        return_picking_2.button_validate()
+
+        self.env['stock.move.line'].flush_model()
+        lot_report.invalidate_recordset(['has_return'], flush=False)
+        lot_report = self.env['stock.lot.report'].search([
+            ('partner_id', '=', partner.id),
+        ], order='id')
+        self.assertRecordValues(lot_report, [
+            {'lot_id': serial_1.id, 'has_return': True},
+            {'lot_id': serial_2.id, 'has_return': True},
+            {'lot_id': serial_3.id, 'has_return': False},
+        ])
+
+>>>>>>> 07c0a78199d2ed135b6427bf2c36ee0df030ec52
     def test_product_quantities_in_return_for_exchange(self):
         """ Ensure that on-hand and forecast quantities are correctly computed
         whe doing an exchange on an incoming picking. """
