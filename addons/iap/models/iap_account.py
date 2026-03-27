@@ -50,12 +50,8 @@ class IapAccount(models.Model):
                 ))
 
     def web_read(self, *args, **kwargs):
-        if not self.env.context.get('disable_iap_fetch'):
-            self._get_account_information_from_iap()
+        self._get_account_information_from_iap()
         return super().web_read(*args, **kwargs)
-
-    def web_save(self, *args, **kwargs):
-        return super(IapAccount, self.with_context(disable_iap_fetch=True)).web_save(*args, **kwargs)
 
     def write(self, values):
         res = super().write(values)
