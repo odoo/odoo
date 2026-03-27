@@ -424,8 +424,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         Category = request.env['product.public.category']
         categs_domain = Domain('parent_id', '=', False) & website_domain
-        if not self.env.user._is_internal():
-            categs_domain &= Domain('has_published_products', '=', True)
         if search:
             search_categories = Category.search(
                 Domain('product_tmpl_ids', 'in', search_product.ids) & website_domain
@@ -441,10 +439,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if not category_entries:
                 parent = category.parent_id
                 category_entries = not search and parent.child_id or parent.child_id.filtered(lambda c: c.id in search_categories.ids)
+            if not search and not request.env.user._is_internal():
+                # We know the user has access to `categs` and `search_categories` because they come
+                # from a regular `search`, but we have not checked access to `category`'s children,
+                # nor its siblings or itself.
+                category_entries = category_entries.filtered("has_published_products")
         else:
             category_entries = categs
-        if not request.env.user._is_internal():
-            category_entries = category_entries.filtered('has_published_products')
 
         # products for current pager
 
