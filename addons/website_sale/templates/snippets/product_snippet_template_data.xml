@@ -73,12 +73,81 @@
                         <i class="oi oi-close" role="presentation"/>
                     </button>
                     <div class="o_wsale_product_information flex-grow-1 flex-shrink-1">
+<<<<<<< b1cd6d141710dbf23e52224d4de3fbb043796574
                         <t
                             t-call="website_sale.product_title_and_details"
                             product="product_template"
                             product_href="product.website_url"
                             show_combination_name="not data.get('hide_variants')"
                         />
+||||||| 2e4ebcbcde87ff8fe0d48e4034897f433876a848
+                        <div class="o_wsale_product_info_attributes_wrapper">
+                            <div class="o_wsale_product_information_text">
+                                <!-- Product Name -->
+                                <h6 class="o_wsale_products_item_title text-break">
+                                    <a
+                                        class="text-decoration-none"
+                                        t-att-href="product.website_url"
+                                        t-att-content="data.get('display_name')"
+                                        t-att-title="data.get('display_name')"
+                                        t-out="data.get('display_name')"
+                                    />
+                                </h6>
+                                <!-- Description -->
+                                <div class="oe_subdescription_wrapper">
+                                    <div
+                                        class="oe_subdescription text-muted small"
+                                        contenteditable="false"
+                                    >
+                                        <div t-field="product.description_sale"/>
+                                    </div>
+                                </div>
+                                <!-- Rating -->
+                                <div
+                                    t-if="is_view_active('website_sale.product_comment')"
+                                    class="o_wsale_product_rating_wrapper"
+                                >
+                                    <t t-call="portal_rating.rating_widget_stars_static"
+                                        rating_avg="record.rating_avg"
+                                        rating_count="record.rating_count"/>
+                                </div>
+                            </div>
+                        </div>
+=======
+                        <div class="o_wsale_product_info_attributes_wrapper">
+                            <div class="o_wsale_product_information_text">
+                                <!-- Product Name -->
+                                <h6 class="o_wsale_products_item_title text-break">
+                                    <a
+                                        class="text-decoration-none"
+                                        t-att-href="product.website_url"
+                                        t-att-content="data.get('display_name')"
+                                        t-att-title="data.get('display_name')"
+                                        t-out="data.get('display_name')"
+                                    />
+                                </h6>
+                                <!-- Description -->
+                                <div class="oe_subdescription_wrapper">
+                                    <div
+                                        class="oe_subdescription text-muted small"
+                                        contenteditable="false"
+                                    >
+                                        <div t-field="product.description_sale"/>
+                                    </div>
+                                </div>
+                                <!-- Rating -->
+                                <div
+                                    t-if="is_view_active('website_sale.product_comment')"
+                                    class="o_wsale_product_rating_wrapper"
+                                >
+                                    <t t-call="portal_rating.rating_widget_stars_static"
+                                        rating_avg="record.sudo().rating_avg"
+                                        rating_count="record.rating_count"/>
+                                        <!-- sudo: product.product - visitor can access product average rating -->
+                                </div>
+                            </div>
+                        </div>
+>>>>>>> 9f2f8cb6c5f65cd3de2606f2660c68ff3aa6fe79
                         <div class="o_wsale_product_sub justify-content-between gap-2">
                             <!-- Price(s) -->
                             <div class="product_price" aria-label="Price information">
