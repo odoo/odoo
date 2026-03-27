@@ -1,0 +1,601 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Codificação e idioma ─────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Layout ───────────────────────────────────────────────────────────
+\usepackage[top=3.0cm,bottom=3.0cm,left=3.5cm,right=2.5cm,headheight=16pt]{geometry}
+
+% ── Cores ────────────────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{ltblue}{HTML}{D6E4F0}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\definecolor{legalbg}{HTML}{F0FDF4}
+\definecolor{legalbdr}{HTML}{16A34A}
+\definecolor{infobg}{HTML}{EFF6FF}
+\definecolor{infobdr}{HTML}{3B82F6}
+\definecolor{warnbg}{HTML}{FEF2F2}
+\definecolor{warnbdr}{HTML}{DC2626}
+
+% ── Cabeçalho / rodapé ───────────────────────────────────────────────
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[C]{\footnotesize\color{navy}
+  Portaria SMS n.\textsuperscript{o} \portNum/\exercicio ---
+  Designação de Gestor e Fiscal da ARP \arpNum/\exercicio}
+\fancyfoot[C]{\footnotesize Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{%
+  \hbox to\headwidth{\color{medblue}\leaders\hrule height 0.4pt\hfill}}
+
+% ── Caixas coloridas ─────────────────────────────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{legalbox}[1][Base Legal]{enhanced,breakable,
+  colback=legalbg,colframe=legalbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{legalbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=legalbg,colframe=legalbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{infobox}[1][Informação]{enhanced,breakable,
+  colback=infobg,colframe=infobdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{infobdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=infobg,colframe=infobdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{warnbox}[1][Atenção]{enhanced,breakable,
+  colback=warnbg,colframe=warnbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{warnbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnbg,colframe=warnbdr,arc=3pt,boxrule=0.6pt}}
+
+% ── Tabelas ──────────────────────────────────────────────────────────
+\usepackage{booktabs,array,tabularx,multirow,colortbl}
+\renewcommand{\arraystretch}{1.45}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% ── Utilitários ──────────────────────────────────────────────────────
+\usepackage{float,enumitem,setspace,chngcntr,graphicx}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=3pt,topsep=3pt,parsep=0pt}
+\setlist[itemize]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\counterwithout{footnote}{section}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=medblue,
+  pdfborder={0 0 0}]{hyperref}
+
+% ── Macros ───────────────────────────────────────────────────────────
+\newcommand{\art}[1]{art.\,#1}
+\newcommand{\blank}[1]{\underline{\hspace{#1}}}
+\newcommand{\assinatura}[4]{%
+  \begin{center}\vspace{0.2cm}
+  \rule{8cm}{0.5pt}\\[3pt]
+  \textbf{#1}\\
+  \small #2\\
+  \small #3\\
+  \small Mat./CPF: #4
+  \end{center}}
+
+% ── Formatação específica de Portaria ────────────────────────────────
+% Considerandos numerados
+\newcounter{consid}
+\newcommand{\considerando}[1]{%
+  \stepcounter{consid}%
+  \noindent\textbf{CONSIDERANDO} #1;\\[4pt]}
+
+% Artigos da Portaria
+\newcounter{artigo}
+\newcommand{\artigo}[1]{%
+  \stepcounter{artigo}%
+  \medskip\noindent\textbf{Art.\,\theartigo.\textsuperscript{o}} #1}
+\newcommand{\paragrafo}[2]{%
+  \par\noindent\textbf{\S\,#1.\textsuperscript{o}} #2}
+\newcommand{\inciso}[2]{%
+  \par\noindent\hspace{1.2em}\textbf{#1 ---} #2}
+
+% ── Dados do ato ─────────────────────────────────────────────────────
+\newcommand{\portNum}{[NNN]}          % número sequencial da portaria
+\newcommand{\exercicio}{2025}
+\newcommand{\arpNum}{001}
+\newcommand{\arpRef}{ARP n.\textsuperscript{o} 001/2025}
+\newcommand{\editalRef}{Edital PE/SMS-BORBA-001/2025}
+\newcommand{\trRef}{TR-SMS/BORBA-001/2025}
+\newcommand{\procNum}{[NÚMERO DO PROCESSO SEI/E-DOC]}
+\newcommand{\pubData}{[DATA DE PUBLICAÇÃO DA ARP NO PNCP]}
+\newcommand{\portData}{[DATA DA PORTARIA]}
+\newcommand{\doeData}{[DATA DE PUBLICAÇÃO NO DIÁRIO OFICIAL]}
+
+% Gestor
+\newcommand{\gestorNome}{[NOME COMPLETO DO GESTOR]}
+\newcommand{\gestorCargo}{[CARGO]}
+\newcommand{\gestorMat}{[MATRÍCULA]}
+\newcommand{\gestorCPF}{[CPF]}
+\newcommand{\gestorLotacao}{[LOTAÇÃO / SETOR]}
+
+% Fiscal Técnico
+\newcommand{\fiscalNome}{[NOME COMPLETO DO FISCAL]}
+\newcommand{\fiscalCargo}{[CARGO]}
+\newcommand{\fiscalMat}{[MATRÍCULA]}
+\newcommand{\fiscalCPF}{[CPF]}
+\newcommand{\fiscalLotacao}{[LOTAÇÃO / SETOR]}
+
+% Fiscal Administrativo (suplente)
+\newcommand{\fiscalAdmNome}{[NOME COMPLETO]}
+\newcommand{\fiscalAdmCargo}{[CARGO]}
+\newcommand{\fiscalAdmMat}{[MATRÍCULA]}
+\newcommand{\fiscalAdmCPF}{[CPF]}
+\newcommand{\fiscalAdmLotacao}{[LOTAÇÃO / SETOR]}
+
+% Secretária/o
+\newcommand{\secretarioNome}{[NOME COMPLETO]}
+\newcommand{\secretarioCargo}{Secretário(a) Municipal de Saúde}
+
+% ═════════════════════════════════════════════════════════════════════
+\begin{document}
+\setlength{\parindent}{0pt}
+% ═════════════════════════════════════════════════════════════════════
+
+% ── Brasão / Cabeçalho institucional ─────────────────────────────────
+\begin{center}
+  % Se houver brasão em arquivo: \includegraphics[height=2cm]{brasao.png}\\[4pt]
+  {\large\bfseries\color{navy}PREFEITURA MUNICIPAL DE BORBA}\\[2pt]
+  {\normalsize\bfseries\color{navy}SECRETARIA MUNICIPAL DE SAÚDE}\\[2pt]
+  {\small\color{medblue}Estado do Amazonas}\\[0.6cm]
+  \textcolor{navy!30}{\rule{0.85\linewidth}{1.2pt}}\\[0.5cm]
+
+  {\LARGE\bfseries\color{navy}PORTARIA SMS}\\[3pt]
+  {\Large\bfseries N.\textsuperscript{o} \portNum/\exercicio}\\[0.5cm]
+  \textcolor{navy!30}{\rule{0.85\linewidth}{0.6pt}}
+\end{center}
+
+\vspace{0.4cm}
+\begin{center}
+\begin{minipage}{0.92\linewidth}
+\small\centering\itshape
+Designa Gestor da Ata de Registro de Preços, Fiscal Técnico e Fiscal
+Administrativo (Suplente) para a \arpRef, decorrente do \editalRef ---
+Aquisição de Materiais de Limpeza e Higiene para a Rede de Atenção à
+Saúde do Município de Borba/AM --- e dá outras providências.
+\end{minipage}
+\end{center}
+
+\vspace{0.6cm}
+\begin{center}
+  \textbf{O(A) SECRETÁRIO(A) MUNICIPAL DE SAÚDE DE BORBA/AM},
+\end{center}
+
+\noindent no uso das atribuições que lhe são conferidas pela Lei Orgânica do
+Município de Borba e pelo Decreto Municipal n.\textsuperscript{o}
+\blank{0.8cm}/\exercicio, que regulamenta as contratações públicas no âmbito
+do Poder Executivo Municipal,
+
+\vspace{0.4cm}
+
+\considerando{que em \pubData\ foi publicada no Portal Nacional de Contratações
+Públicas (PNCP) a \arpRef, decorrente do \editalRef, referente ao processo
+administrativo \procNum}
+
+\considerando{que o \art{117} da Lei n.\textsuperscript{o}~14.133, de
+1.\textsuperscript{o} de abril de 2021, impõe à Administração a designação de
+gestor e fiscal do contrato e/ou da ata de registro de preços, com publicação no
+Diário Oficial, como condição de validade da gestão do instrumento}
+
+\considerando{que a IN SEGES/MGI n.\textsuperscript{o}~58/2022 e o Decreto
+Municipal n.\textsuperscript{o} \blank{0.8cm}/\exercicio disciplinam os
+requisitos e as competências do gestor e do fiscal}
+
+\considerando{que os servidores abaixo designados possuem as qualificações
+técnicas necessárias ao exercício das funções de gestor e fiscal da \arpRef,
+conforme declarações juntadas ao processo \procNum}
+
+\considerando{que a presente designação deve ocorrer \textbf{previamente à
+emissão da primeira Ordem de Fornecimento}, nos termos da Cláusula~5 da
+\arpRef}
+
+\vspace{0.3cm}
+\begin{center}\textbf{RESOLVE:}\end{center}
+\vspace{0.3cm}
+
+% ── Art. 1 — Gestor ──────────────────────────────────────────────────
+\artigo{Designar o(a) servidor(a) \textbf{\gestorNome}, ocupante do cargo de
+\gestorCargo, matrícula n.\textsuperscript{o}~\gestorMat, lotado(a) em
+\gestorLotacao, para exercer a função de \textbf{GESTOR(A) DA ATA DE REGISTRO
+DE PREÇOS n.\textsuperscript{o}~\arpNum/\exercicio}, no âmbito da Secretaria
+Municipal de Saúde de Borba/AM.}
+
+\paragrafo{1}{Ao Gestor da ARP competem as seguintes atribuições, nos termos
+do \art{117}, \S\,1.\textsuperscript{o}, da Lei n.\textsuperscript{o}~14.133/2021:}
+
+\begin{enumerate}[label=\Roman*.]
+  \item Coordenar e supervisionar a execução da \arpRef, garantindo o cumprimento
+    de todas as cláusulas e condições pactuadas;
+
+  \item Emitir e controlar as \textbf{Ordens de Fornecimento (OF)}, observando
+    o saldo físico-financeiro de cada item registrado;
+
+  \item Manter atualizado o \textbf{painel de controle} da ARP, com registro de
+    todas as OF emitidas, quantidades fornecidas, valores empenhados e pagos,
+    e saldo remanescente;
+
+  \item Decidir sobre pedidos de \textbf{reequilíbrio econômico-financeiro},
+    após instrução pelo Fiscal Técnico, submetendo à autoridade competente
+    os casos que superem sua competência;
+
+  \item Propor à autoridade competente a \textbf{prorrogação, cancelamento ou
+    rescisão} da ARP, devidamente fundamentados;
+
+  \item Comunicar às Fornecedoras Registradas quaisquer alterações nas condições
+    da ARP, inclusive eventuais restrições orçamentárias;
+
+  \item Publicar trimestralmente no PNCP os \textbf{preços praticados}, nos
+    termos do \art{82}, \S\,2.\textsuperscript{o}, da Lei n.\textsuperscript{o}
+    14.133/2021;
+
+  \item Elaborar e submeter à autoridade competente o \textbf{Relatório
+    Trimestral de Gestão} da ARP, contendo o acompanhamento dos indicadores
+    de desempenho (KPIs) previstos na Cláusula~\ref*{sec:kpis} da \arpRef;
+
+  \item Comunicar imediatamente ao Pregoeiro e à autoridade competente qualquer
+    irregularidade ou inadimplência da Fornecedora Registrada;
+
+  \item Instruir os eventuais processos sancionatórios, em parceria com o
+    Fiscal Técnico.
+\end{enumerate}
+
+\paragrafo{2}{O Gestor deverá ser substituído nas hipóteses de impedimento,
+afastamento ou vacância, mediante nova portaria de designação.}
+
+\vspace{0.5cm}
+
+% ── Art. 2 — Fiscal Técnico ──────────────────────────────────────────
+\artigo{Designar o(a) servidor(a) \textbf{\fiscalNome}, ocupante do cargo de
+\fiscalCargo, matrícula n.\textsuperscript{o}~\fiscalMat, lotado(a) em
+\fiscalLotacao, para exercer a função de \textbf{FISCAL TÉCNICO(A) DA ATA DE
+REGISTRO DE PREÇOS n.\textsuperscript{o}~\arpNum/\exercicio}.}
+
+\paragrafo{1}{Ao Fiscal Técnico competem as seguintes atribuições:}
+
+\begin{enumerate}[label=\Roman*.]
+  \item Verificar, em cada entrega, a \textbf{conformidade técnica} dos produtos
+    com as especificações do Termo de Referência \trRef, incluindo marca,
+    modelo, concentração, prazo de validade residual e condições das embalagens;
+
+  \item Confirmar, em tempo real no portal da ANVISA, a \textbf{validade dos
+    registros, notificações e autorizações} de funcionamento dos produtos
+    dos Lotes 01 a 05;
+
+  \item Emitir o \textbf{Termo de Recebimento Provisório (TRP)}, em até 2 dias
+    úteis após a entrega, e o \textbf{Termo de Recebimento Definitivo (TRD)},
+    em até 10 dias úteis após o TRP;
+
+  \item Emitir \textbf{Notificações de Não Conformidade (NNC)} e controlar os
+    prazos de substituição dos produtos devolvidos;
+
+  \item Monitorar os \textbf{indicadores de desempenho (KPIs)} definidos na
+    Cláusula~12 da \arpRef\ e reportar mensalmente ao Gestor;
+
+  \item Registrar e encaminhar ao Gestor toda não conformidade, atraso ou
+    recusa de entrega, com a documentação necessária à instrução de eventual
+    processo sancionatório;
+
+  \item Analisar as \textbf{Fichas de Dados de Segurança (FISPQ)} dos produtos
+    dos Lotes 01 a 05 e verificar sua adequação às normas da ABNT NBR 14.725
+    e da NR-32 (MTE);
+
+  \item Elaborar o \textbf{Relatório Mensal de Fiscalização}, juntando ao
+    processo \procNum\ em até 5 dias úteis após o encerramento de cada mês.
+\end{enumerate}
+
+\paragrafo{2}{O Fiscal Técnico \textbf{não} tem competência para autorizar
+alterações nas condições da ARP, emitir Ordens de Fornecimento ou autorizar
+pagamentos; tais atos são de competência exclusiva do Gestor e da autoridade
+competente.}
+
+\vspace{0.5cm}
+
+% ── Art. 3 — Fiscal Administrativo (Suplente) ────────────────────────
+\artigo{Designar o(a) servidor(a) \textbf{\fiscalAdmNome}, ocupante do cargo
+de \fiscalAdmCargo, matrícula n.\textsuperscript{o}~\fiscalAdmMat, lotado(a)
+em \fiscalAdmLotacao, para exercer a função de \textbf{FISCAL ADMINISTRATIVO(A)
+(SUPLENTE) DA ATA DE REGISTRO DE PREÇOS n.\textsuperscript{o}~\arpNum/\exercicio}.}
+
+\paragrafo{1}{Ao Fiscal Administrativo compete:}
+
+\begin{enumerate}[label=\Roman*.]
+  \item Substituir o Fiscal Técnico nos casos de impedimento, afastamento legal
+    ou vacância, assumindo integralmente suas atribuições;
+
+  \item Verificar a regularidade documental da NF-e e das certidões de
+    regularidade fiscal, previdenciária e trabalhista exigidas como condição
+    de pagamento;
+
+  \item Instruir os processos de empenho e liquidação de despesa,
+    verificando a correspondência entre a NF-e, a OF e o TRD;
+
+  \item Manter o arquivo físico e eletrônico de todos os documentos da ARP
+    (OF, TRP, TRD, NNC, NF-e, certidões) pelo prazo legal de guarda.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ── Art. 4 — Vedações ────────────────────────────────────────────────
+\artigo{É vedado ao Gestor e aos Fiscais designados:}
+
+\begin{enumerate}[label=\Roman*.]
+  \item Atestar o recebimento de produtos não entregues ou não inspecionados;
+  \item Autorizar fornecimento sem a correspondente Ordem de Fornecimento e
+    nota de empenho;
+  \item Receber, em nome próprio ou de terceiros, qualquer vantagem pecuniária
+    ou presente das Fornecedoras Registradas;
+  \item Delegar as atribuições de fiscalização a servidor não designado por
+    portaria específica.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ── Art. 5 — Responsabilidade e capacitação ─────────────────────────
+\artigo{Os servidores designados por esta Portaria deverão, no prazo de
+\textbf{10 (dez) dias úteis} contados de sua publicação:}
+
+\begin{enumerate}[label=\Roman*.]
+  \item Tomar ciência integral do conteúdo do Edital \editalRef, do Termo de
+    Referência \trRef\ e da \arpRef;
+  \item Assinar o \textbf{Termo de Ciência e Responsabilidade} (Anexo~I desta
+    Portaria), a ser juntado ao processo \procNum;
+  \item Participar de capacitação interna sobre gestão e fiscalização de ARP
+    sob a Lei n.\textsuperscript{o}~14.133/2021, caso ainda não a tenham
+    realizado.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ── Art. 6 — Vigência ────────────────────────────────────────────────
+\artigo{Esta Portaria entra em vigor na data de sua publicação no Diário Oficial
+do Município de Borba, com efeitos a partir da data de publicação da \arpRef\ no
+PNCP (\pubData), e vigorará enquanto perdurar a vigência daquela Ata, incluídas
+eventuais prorrogações.}
+
+\vspace{0.5cm}
+
+% ── Art. 7 — Revogação e publicidade ─────────────────────────────────
+\artigo{Revogam-se as disposições em contrário. Publique-se no Diário Oficial
+do Município de Borba e encaminhe-se cópia ao processo \procNum.}
+
+\vspace{1.0cm}
+
+\begin{center}
+  Borba/AM, \portData.\\[1.2cm]
+  \rule{9cm}{0.5pt}\\[3pt]
+  \textbf{\secretarioNome}\\
+  \small \secretarioCargo\\
+  \small Secretaria Municipal de Saúde de Borba/AM
+\end{center}
+
+\vspace{0.4cm}
+\begin{center}
+  \small\itshape
+  Publicada no Diário Oficial do Município de Borba em \doeData.\\
+  Processo \procNum.
+\end{center}
+
+% ─────────────────────────────────────────────────────────────────────
+% ANEXO I — TERMO DE CIÊNCIA E RESPONSABILIDADE
+% ─────────────────────────────────────────────────────────────────────
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}ANEXO I DA PORTARIA SMS N.\textsuperscript{o}
+    \portNum/\exercicio}\\[6pt]
+  \textbf{\large TERMO DE CIÊNCIA E RESPONSABILIDADE}\\[4pt]
+  {\normalsize Gestor / Fiscal --- \arpRef}
+\end{center}
+
+\vspace{0.5cm}
+\begin{legalbox}[Fundamentação]
+\small Art.\,117, \S\,2.\textsuperscript{o}, da Lei n.\textsuperscript{o}~14.133/2021:
+o gestor e o fiscal respondem \textbf{pessoalmente} por danos causados ao erário
+em decorrência de atos praticados com dolo ou culpa.
+\end{legalbox}
+
+\vspace{0.4cm}
+\noindent Eu, \blank{7cm}, servidor(a) público(a) municipal, inscrito(a) no
+CPF sob o n.\textsuperscript{o} \blank{4cm}, matrícula
+n.\textsuperscript{o}~\blank{3cm}, ocupante do cargo de \blank{6cm},
+lotado(a) em \blank{5cm}, \textbf{DECLARO}, para os fins de cumprimento da
+Portaria SMS n.\textsuperscript{o}~\portNum/\exercicio e do \art{117} da Lei
+n.\textsuperscript{o}~14.133/2021, que:
+
+\begin{enumerate}
+  \item \textbf{Tomei ciência} integral do conteúdo dos seguintes documentos
+    que regem a \arpRef:
+    \begin{itemize}
+      \item Edital \editalRef\ e todos os seus anexos;
+      \item Termo de Referência \trRef;
+      \item \arpRef\ (instrumento original e eventuais aditivos);
+      \item Proposta(s) da(s) Fornecedora(s) Registrada(s);
+    \end{itemize}
+
+  \item \textbf{Compreendo e aceito} as atribuições que me foram conferidas
+    pela Portaria SMS n.\textsuperscript{o}~\portNum/\exercicio;
+
+  \item \textbf{Declaro não possuir} impedimento legal, suspeição ou
+    conflito de interesse que me impeça de exercer as funções de
+    \blank{5cm} (gestor/fiscal técnico/fiscal administrativo) da \arpRef;
+
+  \item \textbf{Estou ciente} de que responderei, na forma da lei, por
+    eventuais danos ao erário decorrentes de omissão, negligência ou
+    irregularidade no exercício das funções ora assumidas, nos termos do
+    \art{117}, \S\,2.\textsuperscript{o}, da Lei n.\textsuperscript{o}
+    14.133/2021 e do \art{37}, \S\,6.\textsuperscript{o}, da Constituição
+    Federal;
+
+  \item \textbf{Comprometo-me} a comunicar imediatamente ao meu superior
+    hierárquico qualquer situação de impedimento, suspeição ou conflito de
+    interesse que surja durante a vigência da ARP;
+
+  \item \textbf{Comprometo-me} a manter sigilo sobre as informações
+    estratégicas e os preços sigilosos constantes do processo
+    \procNum, nos termos da Lei n.\textsuperscript{o}~12.527/2011 (LAI).
+\end{enumerate}
+
+\vspace{1.2cm}
+\begin{center}
+  Borba/AM, \blank{0.8cm} de \blank{3cm} de \exercicio.
+\end{center}
+
+\vspace{1.2cm}
+\begin{minipage}{0.47\linewidth}
+  \assinatura{[Nome do Servidor]}{Função na ARP: Gestor(a)}{Mat.: \blank{2cm}}{CPF: \blank{3cm}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+  \assinatura{[Nome do Servidor]}{Função na ARP: Fiscal Técnico(a)}{Mat.: \blank{2cm}}{CPF: \blank{3cm}}
+\end{minipage}
+
+\vspace{0.8cm}
+\begin{center}
+  \assinatura{[Nome do Servidor]}{Função na ARP: Fiscal Administrativo(a) --- Suplente}{Mat.: \blank{2cm}}{CPF: \blank{3cm}}
+\end{center}
+
+\vspace{0.6cm}
+\begin{center}
+  \textbf{Ciente:}\\[0.8cm]
+  \rule{9cm}{0.5pt}\\[3pt]
+  \textbf{\secretarioNome}\\
+  \small \secretarioCargo\\
+  \small Secretaria Municipal de Saúde de Borba/AM
+\end{center}
+
+% ─────────────────────────────────────────────────────────────────────
+% ANEXO II — FICHA DE CONTROLE DA ARP
+% ─────────────────────────────────────────────────────────────────────
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}ANEXO II --- FICHA DE CONTROLE DA ARP}\\[4pt]
+  {\normalsize \arpRef\ --- Processo \procNum}\\
+  {\small (a ser mantida atualizada pelo Gestor e juntada ao processo mensalmente)}
+\end{center}
+
+\vspace{0.4cm}
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} L{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Identificação}} \\
+\midrule
+ARP:                       & \arpRef \\
+\rowcolor{rowalt}
+Processo:                  & \procNum \\
+Gestor:                    & \gestorNome\ --- Mat.: \gestorMat \\
+\rowcolor{rowalt}
+Fiscal Técnico:            & \fiscalNome\ --- Mat.: \fiscalMat \\
+Fiscal Administrativo:     & \fiscalAdmNome\ --- Mat.: \fiscalAdmMat \\
+\rowcolor{rowalt}
+Vigência:                  & De \pubData\ a \blank{3cm} (12 meses) \\
+Valor total registrado:    & R\$ 2.000.000,00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\begin{table}[H]\centering
+\caption*{\textbf{\color{navy}Controle de Saldo por Lote}}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.9cm} L{5.0cm} C{2.5cm} C{2.5cm} C{2.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Lote} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Valor Reg. (R\$)} &
+  \color{white}\textbf{Total OF (R\$)} &
+  \color{white}\textbf{Saldo (R\$)} \\
+  \toprule
+  01 & Álcoois e antissépticos                & 820.000,00 & & \\
+  02 & Saneantes hospitalares                  & 480.000,00 & & \\
+  03 & EPI de limpeza e descartáveis          & 300.000,00 & & \\
+  04 & Sacos para resíduos                     & 180.000,00 & & \\
+  05 & Desinfetantes e complementares         & 120.000,00 & & \\
+  06 & Utensílios gerais                       & 100.000,00 & & \\
+  \rowcolor{ltblue}
+  \multicolumn{2}{c}{\textbf{TOTAL}} &
+    \textbf{2.000.000,00} & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\begin{table}[H]\centering
+\caption*{\textbf{\color{navy}Registro Cronológico de Ordens de Fornecimento}}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.0cm} C{0.8cm} C{1.6cm} C{1.6cm} C{2.2cm} C{1.0cm} C{1.8cm} C{1.8cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{OF n.\textsuperscript{o}} &
+  \color{white}\textbf{Lote} &
+  \color{white}\textbf{Data\newline Emissão} &
+  \color{white}\textbf{Prazo\newline Entrega} &
+  \color{white}\textbf{Valor\newline (R\$)} &
+  \color{white}\textbf{NE\newline n.\textsuperscript{o}} &
+  \color{white}\textbf{Data\newline TRD} &
+  \color{white}\textbf{Data\newline Pagto.} \\
+  \toprule
+  & & & & & & & \\
+  & & & & & & & \\
+  & & & & & & & \\
+  & & & & & & & \\
+  & & & & & & & \\
+  & & & & & & & \\
+  & & & & & & & \\
+  & & & & & & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\begin{table}[H]\centering
+\caption*{\textbf{\color{navy}Registro de Ocorrências (NNC / Penalidades / Revisões)}}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.5cm} C{1.5cm} L{4.5cm} C{1.5cm} L{4.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Data} &
+  \color{white}\textbf{Lote/Item} &
+  \color{white}\textbf{Descrição da Ocorrência} &
+  \color{white}\textbf{Tipo} &
+  \color{white}\textbf{Resolução / Providência} \\
+  \toprule
+  & & & & \\
+  & & & & \\
+  & & & & \\
+  & & & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.4cm}
+\begin{warnbox}[Guarda do Processo]
+\small
+A Ficha de Controle (Anexo~II) deve ser juntada ao processo \procNum\ ao final
+de cada trimestre, acompanhada do Relatório Trimestral de Gestão. O prazo de
+guarda do processo é de \textbf{5 anos} após o encerramento da ARP, nos termos
+da Resolução CFM n.\textsuperscript{o}~[NORMA DE GESTÃO DOCUMENTAL DO MUNICÍPIO].
+\end{warnbox}
+
+% ── Referências normativas ───────────────────────────────────────────
+\vspace{1.0cm}
+\noindent\textcolor{navy!30}{\rule{\linewidth}{0.5pt}}
+
+\noindent{\footnotesize\itshape
+\textbf{Base normativa:}
+Lei n.\textsuperscript{o}~14.133/2021, arts.\,117--120 \textbullet{}
+Decreto n.\textsuperscript{o}~11.462/2023 \textbullet{}
+IN SEGES/MGI n.\textsuperscript{o}~58/2022 \textbullet{}
+Decreto Municipal n.\textsuperscript{o} \blank{1cm}/\exercicio \textbullet{}
+Lei Orgânica do Município de Borba \textbullet{}
+Lei n.\textsuperscript{o}~12.527/2011 (LAI) \textbullet{}
+CF/88, arts.\,37 e 70.}
+
+\end{document}

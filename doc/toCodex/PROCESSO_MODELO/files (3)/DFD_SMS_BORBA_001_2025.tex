@@ -1,0 +1,759 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Codificação e idioma ─────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Layout ───────────────────────────────────────────────────────────
+\usepackage[top=2.8cm,bottom=2.8cm,left=3.0cm,right=2.5cm,headheight=16pt]{geometry}
+
+% ── Cores ────────────────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{ltblue}{HTML}{D6E4F0}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\definecolor{legalbg}{HTML}{F0FDF4}
+\definecolor{legalbdr}{HTML}{16A34A}
+\definecolor{alertbg}{HTML}{FFF8E1}
+\definecolor{alertbdr}{HTML}{E59C0A}
+\definecolor{warnbg}{HTML}{FEF2F2}
+\definecolor{warnbdr}{HTML}{DC2626}
+\definecolor{infobg}{HTML}{EFF6FF}
+\definecolor{infobdr}{HTML}{3B82F6}
+
+% ── Cabeçalho / rodapé ───────────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize\color{navy}\textbf{DFD} --- Formalização de Demanda --- Borba/AM}
+\fancyhead[R]{\footnotesize\color{navy}Lei n.\textsuperscript{o} 14.133/2021}
+\fancyfoot[C]{\footnotesize\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{medblue}\leaders\hrule height 0.5pt\hfill}}
+
+% ── Caixas coloridas ─────────────────────────────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{legalbox}[1][Base Legal]{enhanced,breakable,
+  colback=legalbg,colframe=legalbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{legalbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=legalbg,colframe=legalbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{alertbox}[1][Atenção]{enhanced,breakable,
+  colback=alertbg,colframe=alertbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{navy},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=alertbdr!25,colframe=alertbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{warnbox}[1][Requisito]{enhanced,breakable,
+  colback=warnbg,colframe=warnbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{warnbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnbg,colframe=warnbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{infobox}[1][Informação]{enhanced,breakable,
+  colback=infobg,colframe=infobdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{infobdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=infobg,colframe=infobdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{conclusabox}{enhanced,
+  colback=navy!8,colframe=navy,boxrule=1pt,arc=5pt,
+  left=12pt,right=12pt,top=8pt,bottom=8pt}
+
+% ── Títulos ──────────────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}[\color{navy}\titlerule]
+\titlespacing{\section}{0pt}{20pt}{8pt}
+\titleformat{\subsection}{\color{medblue}\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing{\subsection}{0pt}{14pt}{5pt}
+
+% ── Tabelas ──────────────────────────────────────────────────────────
+\usepackage{booktabs,array,tabularx,longtable,multirow,colortbl}
+\renewcommand{\arraystretch}{1.45}
+
+% ── Utilitários ──────────────────────────────────────────────────────
+\usepackage{float,graphicx,enumitem,setspace,amsmath}
+\setlist[itemize]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=medblue,pdfborder={0 0 0}]{hyperref}
+\usepackage{chngcntr}
+\counterwithout{footnote}{section}
+
+% ── Macro: linha de assinatura ────────────────────────────────────────
+\newcommand{\assinatura}[3]{%
+  \begin{center}
+    \vspace{0.2cm}
+    \rule{7cm}{0.5pt}\\[3pt]
+    \textbf{#1}\\
+    \small #2\\
+    \small Matrícula: \underline{\hspace{2.5cm}}\\
+    \small #3
+  \end{center}}
+
+% ── Dados do processo ─────────────────────────────────────────────────
+\newcommand{\dfdNum}{DFD-SMS/BORBA-001/2025}
+\newcommand{\etpRef}{ETP-SMS/BORBA-001/2025}
+\newcommand{\procNum}{[NÚMERO DO PROCESSO SEI/E-DOC]}
+\newcommand{\unidade}{Secretaria Municipal de Saúde de Borba/AM}
+\newcommand{\exercicio}{2025}
+
+% ─────────────────────────────────────────────────────────────────────
+\begin{document}
+% ─────────────────────────────────────────────────────────────────────
+
+% ══════════════════════════════════════════════════════════════════════
+%  CAPA
+% ══════════════════════════════════════════════════════════════════════
+\begin{titlepage}
+  \pagecolor{navy}\color{white}
+  \setlength{\parindent}{0pt}
+  \centering\vspace*{1cm}
+
+  {\small\bfseries\color{ltblue} PREFEITURA MUNICIPAL DE BORBA}\\[2pt]
+  {\small\color{ltblue!70} SECRETARIA MUNICIPAL DE SAÚDE}\\[0.4cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.6cm]
+
+  {\fontsize{11}{14}\selectfont\bfseries\color{ltblue!80}
+    DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA --- DFD}\\[0.4cm]
+
+  {\fontsize{22}{28}\selectfont\bfseries
+    Aquisição de Materiais de\\[4pt]
+    Limpeza e Higiene}\\[0.25cm]
+
+  {\fontsize{13}{16}\selectfont\color{ltblue!80}
+    Ata de Registro de Preços --- Rede de Atenção à Saúde}\\[0.6cm]
+
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[1cm]
+
+  \begin{tabular}{@{}r@{\hspace{8pt}}p{0.56\linewidth}@{}}
+    \color{ltblue!70}\small\bfseries N.\textsuperscript{o} do DFD: &
+      \small \dfdNum \\[4pt]
+    \color{ltblue!70}\small\bfseries ETP vinculado: &
+      \small \etpRef \\[4pt]
+    \color{ltblue!70}\small\bfseries Processo: &
+      \small \procNum \\[4pt]
+    \color{ltblue!70}\small\bfseries Área Demandante: &
+      \small Gerência de Infraestrutura e Serviços de Saúde --- SMS Borba \\[4pt]
+    \color{ltblue!70}\small\bfseries Responsável: &
+      \small [NOME, CARGO E MATRÍCULA] \\[4pt]
+    \color{ltblue!70}\small\bfseries Exercício: &
+      \small \exercicio \\[4pt]
+    \color{ltblue!70}\small\bfseries Base Legal: &
+      \small Art.\,12, VII; Art.\,18 e Art.\,40, Lei n.\textsuperscript{o} 14.133/2021;
+      IN SEGES/MGI n.\textsuperscript{o} 58/2022 \\[4pt]
+    \color{ltblue!70}\small\bfseries Prioridade: &
+      \small \textbf{ALTA} --- insumo crítico para funcionamento da rede de saúde \\[4pt]
+  \end{tabular}
+
+  \vfill
+  \textcolor{ltblue!40}{\rule{0.85\linewidth}{0.4pt}}\\[0.3cm]
+  {\tiny\color{ltblue!50}
+    Documento elaborado em conformidade com o art.\,12, VII, da Lei n.\textsuperscript{o}
+    14.133/2021 e com a Instrução Normativa SEGES/MGI n.\textsuperscript{o} 58, de 8 de
+    agosto de 2022.}
+\end{titlepage}
+\nopagecolor
+\setlength{\parindent}{1.2cm}
+
+% ── Ficha de identificação ────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption*{\textbf{\color{navy}FICHA DE IDENTIFICAÇÃO DO DOCUMENTO DE FORMALIZAÇÃO DE DEMANDA}}
+\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados do Documento}} \\
+\midrule
+N.\textsuperscript{o} do DFD:         & \dfdNum \\
+\rowcolor{rowalt}
+ETP vinculado:                         & \etpRef \\
+N.\textsuperscript{o} do Processo:    & \procNum \\
+\rowcolor{rowalt}
+Unidade Demandante:                    & \unidade \\
+Área Responsável:                      & Gerência de Infraestrutura e Serviços de Saúde \\
+\rowcolor{rowalt}
+Objeto da Demanda:                     & Aquisição de materiais de limpeza e higiene para
+                                         a Rede de Atenção à Saúde de Borba/AM mediante
+                                         Ata de Registro de Preços \\
+Exercício Orçamentário:                & \exercicio \\
+\rowcolor{rowalt}
+Valor Estimado:                        & R\$\,2.000.000,00 (dois milhões de reais) \\
+Prioridade:                            & \textbf{ALTA} \\
+\rowcolor{rowalt}
+Vinculação ao PCA:                     & Sim --- Plano de Contratações Anual \exercicio,
+                                         item [INSERIR CÓDIGO PCA] \\
+Data de elaboração:                    & Borba/AM, \today \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.4cm}
+\tableofcontents
+\clearpage
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Identificação da Área Demandante}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Base Legal --- Art.\,12, VII e Art.\,18, \textit{caput}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+O processo de contratação deve ser iniciado com \textbf{formalização da demanda} pela
+área requisitante, em conformidade com o planejamento estratégico e o Plano de
+Contratações Anual (PCA), permitindo a instrução do processo com o Estudo Técnico
+Preliminar (ETP) subsequente.
+\end{legalbox}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados da Unidade Demandante}} \\
+\midrule
+Órgão:                  & Prefeitura Municipal de Borba --- Estado do Amazonas \\
+\rowcolor{rowalt}
+Secretaria:             & Secretaria Municipal de Saúde de Borba/AM \\
+Área Técnica:           & Gerência de Infraestrutura e Serviços de Saúde \\
+\rowcolor{rowalt}
+Responsável pela Demanda: & [NOME, CARGO, MATRÍCULA] \\
+Telefone / E-mail:      & [TELEFONE] \,/\, [E-MAIL INSTITUCIONAL] \\
+\rowcolor{rowalt}
+Superior Hierárquico:   & Secretário(a) Municipal de Saúde \\
+CNPJ do Órgão:          & [CNPJ DA PREFEITURA MUNICIPAL DE BORBA] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Descrição e Justificativa da Necessidade}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Base Legal --- Art.\,18, I; IN SEGES/MGI n.\textsuperscript{o} 58/2022, Art.\,4.\textsuperscript{o}]
+\small
+A formalização da demanda deve conter a \textbf{descrição sucinta e clara do objeto},
+a justificativa da necessidade e a sua vinculação ao interesse público, ao
+planejamento estratégico da unidade e ao PCA do exercício.
+\end{legalbox}
+
+\subsection{Objeto da Demanda}
+
+Aquisição de \textbf{materiais de limpeza e higiene} --- compreendendo saneantes,
+antissépticos, equipamentos de proteção individual (EPI) de limpeza, sacos para
+resíduos de saúde e utensílios de higienização --- destinados ao abastecimento contínuo
+da \textbf{Rede de Atenção à Saúde do Município de Borba/AM}, mediante celebração de
+\textbf{Ata de Registro de Preços}, nos termos do art.\,82 da Lei n.\textsuperscript{o}
+14.133/2021.
+
+\subsection{Justificativa da Necessidade}
+
+\subsubsection{Contextualização da Rede de Saúde}
+
+A rede assistencial do Município de Borba é composta por \textbf{10 unidades de
+saúde} --- 9 Unidades Básicas de Saúde (UBS) e o \textbf{Hospital Municipal Vó
+Mundoca}, com 40 leitos operacionais e área total de higienização de
+5.150\,m\textsuperscript{2} --- que atendem uma população estimada de
+\textbf{34.869 habitantes} (IBGE, 2025).
+
+\subsubsection{Obrigação Legal de Salubridade}
+
+A higienização ambiental das unidades de saúde constitui obrigação legal e técnica
+irrenunciável, estabelecida nas seguintes normas:
+
+\begin{itemize}
+  \item \textbf{RDC ANVISA n.\textsuperscript{o} 216/2004} --- Boas Práticas para
+    Serviços de Saúde;
+  \item \textbf{RDC ANVISA n.\textsuperscript{o} 15/2012} --- Processamento de
+    Artigos Críticos, Semicríticos e Não Críticos;
+  \item \textbf{NR-32 (MTE)} --- Segurança e Saúde no Trabalho em Serviços de Saúde;
+  \item \textbf{PNSP/MS (2013)} --- Programa Nacional de Segurança do Paciente, com
+    foco na prevenção de Infecções Relacionadas à Assistência à Saúde (IRAS).
+\end{itemize}
+
+\subsubsection{Situação Atual --- Diagnóstico}
+
+O contrato vigente de fornecimento de materiais de limpeza e higiene da SMS de Borba
+encontra-se em iminente término de prazo ou com quantitativos insuficientes para suprir
+a demanda do exercício \exercicio, conforme levantamento realizado pelo Almoxarifado
+Central em [DATA DO LEVANTAMENTO]. A ausência de novo instrumento contratual até
+[DATA-LIMITE] implicará:
+
+\begin{enumerate}
+  \item \textbf{Ruptura de estoque} de saneantes críticos (álcool 70\%, hipoclorito,
+    detergente enzimático), com risco direto à esterilização de artigos hospitalares;
+  \item \textbf{Comprometimento da higienização} das 9 UBS, com exposição de
+    34.869 pacientes e profissionais de saúde a riscos biológicos;
+  \item \textbf{Autuação pela Vigilância Sanitária} por descumprimento das normas RDC
+    n.\textsuperscript{o} 216/2004 e NR-32, com possibilidade de interdição das
+    unidades;
+  \item \textbf{Responsabilização do gestor} por omissão, nos termos do art.\,148
+    da Lei n.\textsuperscript{o} 14.133/2021.
+\end{enumerate}
+
+\begin{warnbox}[Urgência da Demanda]
+\small
+A contratação tem caráter de \textbf{alta prioridade}. A interrupção do fornecimento
+de insumos críticos de higienização em unidade hospitalar com 40 leitos configura
+situação de risco à vida, não podendo ser suprida por compra emergencial nos limites
+do art.\,75 da Lei n.\textsuperscript{o} 14.133/2021 dada a magnitude da demanda
+anual estimada (R\$\,2.000.000,00).
+\end{warnbox}
+
+\subsection{Vinculação ao Planejamento Institucional}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Vinculação Estratégica}} \\
+\midrule
+Plano Municipal de Saúde:   & PMS 2022--2025 --- Eixo Estratégico III:
+                               \textit{``Qualificação da infraestrutura e dos insumos
+                               da rede de atenção à saúde''} \\
+\rowcolor{rowalt}
+PCA \exercicio:             & Item [CÓDIGO PCA] --- ``Aquisição de materiais de
+                               higienização e limpeza --- rede de saúde'' \\
+Programa Orçamentário:      & [PROGRAMA], Ação [AÇÃO], Elemento de Despesa 33.90.30
+                               (Material de Consumo) \\
+\rowcolor{rowalt}
+Fonte de Recurso:           & [FONTE] --- Recurso próprio do Município / Transferência
+                               Fundo a Fundo (FMS $\to$ SMS) \\
+Lei Orçamentária Anual:     & LOA \exercicio --- Lei Municipal n.\textsuperscript{o}
+                               [NÚMERO/ANO], Dotação n.\textsuperscript{o} [DOTAÇÃO] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Especificação Preliminar do Objeto}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Base Legal --- Art.\,18, II e Art.\,40, I, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+A DFD deve conter a \textbf{especificação preliminar do objeto}, em nível suficiente
+para orientar a elaboração do ETP e do Termo de Referência subsequentes, sem constituir
+especificação técnica definitiva.
+\end{legalbox}
+
+\subsection{Descrição Resumida dos Grupos de Itens}
+
+\begin{table}[H]
+\centering
+\caption{Grupos de itens da demanda por classificação ABC}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{1.4cm}
+                p{5.0cm}
+                p{6.8cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Grupo} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Exemplos de Itens} \\
+  \toprule
+  \textbf{A --- Crítico} &
+    Saneantes de uso hospitalar, antissépticos e EPI de limpeza &
+    Álcool 70\%; Hipoclorito 1\%; Detergente enzimático; Glutaraldeído 2\%;
+    Clorexidina 2\%; Luva látex; Avental TNT; Papel toalha hospitalar \\
+  \textbf{B --- Intermediário} &
+    Produtos de desinfecção e acondicionamento de resíduos &
+    Saco lixo infectante vermelho 100\,L; Saco lixo comum preto 100\,L;
+    Desinfetante quaternário de amônio; Álcool isopropílico; Sabão em pó \\
+  \textbf{C --- Geral} &
+    Utensílios e consumíveis de limpeza doméstica &
+    Detergente neutro; Água sanitária; Vassoura; Rodo; Pano de chão; Balde; Esponja \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Exigências Técnicas Mínimas}
+
+\begin{itemize}
+  \item Todos os \textbf{saneantes} dos Grupos A e B devem possuir \textbf{registro ou
+    notificação ANVISA} vigente, nos termos da Lei n.\textsuperscript{o} 6.360/1976 e
+    RDC n.\textsuperscript{o} 59/2021;
+  \item Os produtos devem ser \textbf{biodegradáveis} sempre que disponível no mercado,
+    com laudo de laboratório acreditado pelo INMETRO (RDC ANVISA n.\textsuperscript{o}
+    59/2021 e art.\,11, IV, Lei n.\textsuperscript{o} 14.133/2021);
+  \item O fornecimento deve ser realizado em preço \textbf{CIF Borba/AM}, incluindo
+    frete fluvial Manaus--Borba, dada a exclusiva acessibilidade hidroviária do
+    Município no trecho do Rio Madeira;
+  \item Os itens devem atender às especificações da ABNT e às fichas de dados de
+    segurança (FISPQ --- NBR 14.725).
+\end{itemize}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Estimativa Preliminar de Quantidades e Valor}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Base Legal --- Art.\,18, II; Art.\,23, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+A estimativa de quantidades e valor apresentada nesta DFD tem caráter \textbf{preliminar},
+destinando-se a orientar o planejamento orçamentário e o início da instrução do processo.
+A estimativa definitiva consta do ETP e será detalhada no Termo de Referência.
+\end{legalbox}
+
+\subsection{Memória de Cálculo Resumida}
+
+A estimativa de quantidades baseia-se nos seguintes parâmetros:
+
+\begin{table}[H]
+\centering
+\caption{Parâmetros técnicos de dimensionamento}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{p{5.0cm}
+                >{\centering\arraybackslash}p{2.2cm}
+                p{6.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Parâmetro} &
+  \color{white}\textbf{Valor} &
+  \color{white}\textbf{Fonte / Método} \\
+  \toprule
+  População atendida               & 34.869 hab.  & IBGE 2025 \\
+  Unidades assistenciais           & 10 unidades  & Cadastro SMS Borba \\
+  Leitos hospitalares              & 40 leitos    & Hospital Vó Mundoca \\
+  Área total de higienização       & 5.150 m\textsuperscript{2} & Levantamento físico \\
+  Área crítica ($A_C$)             & 2.500 m\textsuperscript{2} & RDC ANVISA n.\textsuperscript{o} 15/2012 \\
+  Área não crítica ($A_{nc}$)      & 2.650 m\textsuperscript{2} & RDC ANVISA n.\textsuperscript{o} 15/2012 \\
+  Prazo de reposição (cheia)       & 20 dias      & Logística fluvial Manaus--Borba \\
+  Prazo de reposição (seca)        & 30 dias      & Período jul.--out. --- Rio Madeira \\
+  Consumo mensal de álcool 70\%    & $\approx$ 1.680 Fr  & Série histórica 12 meses \\
+  Período de vigência da ARP       & 12 meses     & Art.\,84, §1.\textsuperscript{o} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Estimativa de Valor Global}
+
+\begin{table}[H]
+\centering
+\caption{Estimativa preliminar de valor por grupo de itens}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{1.4cm}
+                p{5.8cm}
+                >{\centering\arraybackslash}p{2.8cm}
+                >{\centering\arraybackslash}p{2.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Grupo} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Valor Est. (R\$)} &
+  \color{white}\textbf{\% do Total} \\
+  \toprule
+  A & Saneantes críticos, EPI, papel toalha hospitalar & 1.600.000,00 & 80\% \\
+  B & Resíduos, desinfetantes, sabonetes               &   300.000,00 & 15\% \\
+  C & Utensílios e consumíveis gerais                  &   100.000,00 &  5\% \\
+  \rowcolor{ltblue}
+  \multicolumn{2}{c}{\textbf{TOTAL GERAL}}             & \textbf{2.000.000,00} & \textbf{100\%} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{alertbox}[Metodologia de Estimativa de Preços]
+\small
+O valor estimado foi obtido mediante: (i) consulta ao \textbf{Painel de Preços do
+Governo Federal}; (ii) consulta ao \textbf{BPS --- Banco de Preços em Saúde/MS};
+(iii) cotações junto a 3 fornecedores atacadistas de Manaus; (iv) análise dos contratos
+anteriores da SMS (2022--2024). O valor inclui o frete fluvial Manaus--Borba
+(8--15\% do valor FOB Manaus) e perdas de transporte (1--3\%). Metodologia
+detalhada consta do ETP (\etpRef).
+\end{alertbox}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Estimativa de Data para Início da Contratação}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Base Legal --- Art.\,12, VII; Art.\,18, \textit{caput}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+O PCA deve conter as \textbf{datas previstas} para o início dos processos de
+contratação, permitindo o planejamento da capacidade operacional do setor de compras.
+\end{legalbox}
+
+\begin{table}[H]
+\centering
+\caption{Cronograma preliminar do processo de contratação}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{0.6cm}
+                p{6.0cm}
+                >{\centering\arraybackslash}p{2.2cm}
+                >{\centering\arraybackslash}p{2.2cm}
+                p{2.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{\#} &
+  \color{white}\textbf{Etapa do Processo} &
+  \color{white}\textbf{Resp.} &
+  \color{white}\textbf{Prazo Prev.} &
+  \color{white}\textbf{Status} \\
+  \toprule
+  1 & Elaboração e aprovação do DFD           & SMS   & [DATA] & \textbf{Em curso} \\
+  2 & Elaboração do ETP (\etpRef)             & SMS   & [DATA] & Pendente \\
+  3 & Elaboração do Termo de Referência (TR)  & SMS   & [DATA] & Pendente \\
+  4 & Aprovação jurídica (PGM) --- minuta TR  & PGM   & [DATA] & Pendente \\
+  5 & Aprovação da autoridade competente      & Prefeito/Secretário & [DATA] & Pendente \\
+  6 & Publicação do edital no PNCP            & CPL   & [DATA] & Pendente \\
+  7 & Sessão do Pregão Eletrônico             & CPL   & [DATA] & Pendente \\
+  8 & Homologação e assinatura da ARP         & Prefeito & [DATA] & Pendente \\
+  9 & Início do fornecimento                  & Fornecedor & [DATA-LIMITE] & \textbf{Crítico} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{warnbox}[Data-Limite para Início do Fornecimento]
+\small
+O \textbf{prazo máximo para início do fornecimento} é [DATA-LIMITE], correspondente
+ao término do contrato/ARP vigente. O processo licitatório deve ser iniciado com
+antecedência mínima de \textbf{90 dias} em relação a essa data, para assegurar a
+conclusão do pregão eletrônico sem ruptura de estoque.
+\end{warnbox}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Indicação dos Recursos Orçamentários}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Base Legal --- Art.\,11, IV; Art.\,18, \textit{caput}; Art.\,40,
+  \S\,1.\textsuperscript{o}, IV, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+A instrução do processo de contratação deve indicar os \textbf{recursos orçamentários}
+destinados ao custeio da contratação, com identificação do programa de trabalho,
+natureza da despesa e fonte de recursos, nos termos do art.\,40, \S\,1.\textsuperscript{o}, IV.
+\end{legalbox}
+
+\begin{table}[H]
+\centering
+\caption{Indicação orçamentária da despesa}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados Orçamentários}} \\
+\midrule
+Unidade Orçamentária:   & [CÓDIGO UO] --- Fundo Municipal de Saúde / SMS Borba \\
+\rowcolor{rowalt}
+Programa de Trabalho:   & [CÓDIGO PROGRAMA] \\
+Ação Orçamentária:      & [CÓDIGO AÇÃO] --- Manutenção da Rede de Atenção à Saúde \\
+\rowcolor{rowalt}
+Natureza da Despesa:    & 33.90.30 --- Material de Consumo \\
+Fonte de Recurso:       & [FONTE --- ex.: Rec. Próprio / FMS / SUS] \\
+\rowcolor{rowalt}
+Dotação Disponível:     & R\$\,2.000.000,00 (confirmada pelo setor de orçamento em [DATA]) \\
+LOA de Referência:      & Lei Municipal n.\textsuperscript{o} [N.º/ANO] --- LOA \exercicio \\
+\rowcolor{rowalt}
+Declaração de Suficiência: & A ser emitida pelo Setor de Contabilidade/Finanças após
+                              conclusão do TR e da pesquisa de preços definitiva \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{infobox}[Empenho e Bloqueio Orçamentário]
+\small
+O \textbf{empenho prévio} somente será realizado após a homologação do pregão e a
+assinatura da Ata de Registro de Preços, conforme art.\,58 da Lei n.\textsuperscript{o}
+4.320/1964 e art.\,82, \S\,4.\textsuperscript{o} da Lei n.\textsuperscript{o}
+14.133/2021. Para fins de planejamento, o Setor de Orçamento deve realizar o
+\textbf{bloqueio preventivo} do valor estimado a partir da aprovação do TR.
+\end{infobox}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Modalidade Licitatória Sugerida}
+% ══════════════════════════════════════════════════════════════════════
+
+A área demandante sugere, com base nas características do objeto e no valor estimado,
+a adoção das seguintes definições:
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} p{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Configuração Licitatória Sugerida}} \\
+\midrule
+Modalidade:             & Pregão Eletrônico (art.\,17, I, c/c art.\,28, I) \\
+\rowcolor{rowalt}
+Critério de julgamento: & Menor Preço por item/lote (art.\,33, I) \\
+Instrumento:            & Ata de Registro de Preços --- art.\,82 \\
+\rowcolor{rowalt}
+Parcelamento:           & Sim --- 6 lotes por afinidade técnica (art.\,40, \S\,1.\textsuperscript{o}) \\
+Modo de disputa:        & Aberto (art.\,56, I) \\
+\rowcolor{rowalt}
+Vigência da ARP:        & 12 meses, prorrogável --- art.\,84, \S\,1.\textsuperscript{o} \\
+Sistema:                & PNCP --- Portal Nacional de Contratações Públicas \\
+\rowcolor{rowalt}
+ME/EPP:                 & Benefícios LC n.\textsuperscript{o} 123/2006 aplicáveis \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{infobox}[Justificativa do Registro de Preços]
+\small
+A opção pela \textbf{Ata de Registro de Preços} justifica-se pelo art.\,82, I, da
+Lei n.\textsuperscript{o} 14.133/2021 --- \textit{``quando, pelas características do
+bem ou serviço, houver necessidade de contratações frequentes''}. A logística fluvial
+de Borba exige pedidos parcelados ao longo do ano, incompatíveis com um único contrato
+de fornecimento com entrega única, tornando a ARP o instrumento mais adequado para
+calibrar as ordens de fornecimento ao ciclo hidrológico do Rio Madeira.
+\end{infobox}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Requisitos Adicionais Relevantes para a Contratação}
+% ══════════════════════════════════════════════════════════════════════
+
+\subsection{Logística Fluvial --- Atrito Amazônico}
+
+O Município de Borba localiza-se no médio Rio Madeira, com acesso exclusivamente
+fluvial a partir de Manaus (aprox.\ 300 km). O transporte de cargas é realizado por
+embarcações que operam rotas regulares Manaus--Borba com frequência semanal a quinzenal,
+dependendo do período hidrológico. Isso impõe:
+
+\begin{itemize}
+  \item \textbf{Estoque de Reserva Estratégica (ERE) de 60 dias} para itens Classe A,
+    especialmente no período de estiagem (julho--outubro), quando o Prazo de Reposição
+    pode atingir 30 dias;
+  \item Exigência de que o fornecedor possua ou contrate \textbf{capacidade logística
+    fluvial} para entrega em Borba/AM;
+  \item Entrega em \textbf{preço CIF Borba}, incluindo frete, seguro e todos os custos
+    de transporte até o almoxarifado da SMS.
+\end{itemize}
+
+\subsection{Vigilância Sanitária e Registro ANVISA}
+
+Todos os saneantes dos Grupos A e B devem possuir registro ou notificação ANVISA em
+vigor, conforme Lei n.\textsuperscript{o} 6.360/1976 e RDC ANVISA n.\textsuperscript{o}
+59/2021. O TR deverá prever:
+
+\begin{itemize}
+  \item Confirmação do registro ANVISA no ato da entrega de cada partida;
+  \item Obrigação do fornecedor de comunicar eventual cancelamento ou alteração do
+    registro durante a vigência da ARP;
+  \item Sanção de rescisão imediata por entrega de produto com registro vencido ou
+    cancelado.
+\end{itemize}
+
+\subsection{Sustentabilidade}
+
+Nos termos do art.\,11, IV, da Lei n.\textsuperscript{o} 14.133/2021, as especificações
+do TR incorporarão:
+
+\begin{itemize}
+  \item Preferência por produtos \textbf{biodegradáveis} com laudo INMETRO;
+  \item Preferência por \textbf{embalagens recicláveis} e com menor volume de resíduo;
+  \item Obrigação de destinação ambientalmente adequada das embalagens (PNRS ---
+    Lei n.\textsuperscript{o} 12.305/2010).
+\end{itemize}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Providências Necessárias antes da Publicação do Edital}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{table}[H]
+\centering
+\caption{Lista de verificação (\textit{checklist}) pré-publicação}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\centering\arraybackslash}p{0.5cm}
+                p{7.8cm}
+                >{\centering\arraybackslash}p{2.2cm}
+                >{\centering\arraybackslash}p{2.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{\#} &
+  \color{white}\textbf{Providência} &
+  \color{white}\textbf{Responsável} &
+  \color{white}\textbf{Status} \\
+  \toprule
+  1  & Aprovação do DFD pelo Secretário de Saúde          & Secretário SMS  & Pendente \\
+  2  & Elaboração e aprovação do ETP (\etpRef)            & SMS / Gerência  & Em curso \\
+  3  & Elaboração e aprovação do Termo de Referência (TR) & SMS / Gerência  & Pendente \\
+  4  & Pesquisa de preços definitiva (IN SEGES 65/2021)   & SMS / Compras   & Pendente \\
+  5  & Declaração de suficiência orçamentária             & Finanças/Contab.& Pendente \\
+  6  & Análise jurídica da minuta do edital (PGM)         & PGM             & Pendente \\
+  7  & Designação do Gestor e Fiscal da futura ARP        & Secretário SMS  & Pendente \\
+  8  & Adequação do almoxarifado (armazenagem)            & Gerência Infra  & Pendente \\
+  9  & Publicação no PNCP --- art.\,174                   & CPL             & Pendente \\
+  10 & Portaria de designação do Pregoeiro                & Prefeito        & Pendente \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Declaração da Área Demandante}
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{conclusabox}
+\begin{center}
+  \textbf{\color{navy}\large DECLARAÇÃO DA ÁREA DEMANDANTE}
+\end{center}
+\medskip
+Declaro, para os devidos fins, que:
+
+\begin{enumerate}
+  \item A presente demanda é \textbf{real, lícita e prioritária}, oriunda de necessidade
+    continuada da rede de saúde do Município de Borba, com impacto direto na saúde de
+    34.869 habitantes;
+  \item A contratação está \textbf{prevista no PCA \exercicio} e é compatível com as
+    dotações orçamentárias disponíveis;
+  \item As especificações preliminares constantes deste DFD foram definidas com base
+    em critérios \textbf{técnicos objetivos}, sem direcionamento para fornecedor
+    específico, em observância ao art.\,9.\textsuperscript{o}, IV, da Lei
+    n.\textsuperscript{o} 14.133/2021;
+  \item A área demandante se compromete a \textbf{colaborar prontamente} na elaboração
+    do ETP e do Termo de Referência, bem como na designação de servidor para exercer
+    as funções de gestor e fiscal da futura Ata de Registro de Preços;
+  \item Estou \textbf{ciente} de que eventuais inconsistências nas informações aqui
+    prestadas poderão acarretar responsabilização nos termos dos arts.\,148 e 155
+    da Lei n.\textsuperscript{o} 14.133/2021.
+\end{enumerate}
+\end{conclusabox}
+
+\vspace{1.5cm}
+
+% ── Assinaturas ───────────────────────────────────────────────────────
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Responsável pela Elaboração do DFD}{Secretaria Municipal de Saúde de Borba/AM}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Secretário(a) Municipal de Saúde}{Aprovação Hierárquica}
+\end{minipage}
+
+\vspace{1cm}
+\noindent\hfill{\small Borba/AM, \today}
+
+% ── Despacho de Encaminhamento ────────────────────────────────────────
+\vspace{1.5cm}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{p{13.5cm}}
+  \rowcolor{navy!10}
+  \multicolumn{1}{c}{\textbf{\color{navy}DESPACHO DE ENCAMINHAMENTO --- AUTORIDADE COMPETENTE}} \\
+  \midrule
+  \vspace{0.1cm}
+  \textbf{Ao Setor de Compras / CPL:} \\[4pt]
+  Autorizo o prosseguimento do processo administrativo para a contratação em epígrafe,
+  determinando: (i) a inclusão no Plano de Contratações Anual \exercicio, caso ainda
+  não inserida; (ii) a elaboração do Estudo Técnico Preliminar, do Termo de Referência
+  e da pesquisa de preços; (iii) o encaminhamento à Procuradoria-Geral do Município
+  (PGM) para análise jurídica prévia à publicação do edital. \\[4pt]
+  Borba/AM, \underline{\hspace{1.5cm}} de \underline{\hspace{2.5cm}} de \exercicio. \\[0.8cm]
+  \hfill\rule{7cm}{0.5pt}\hspace{1cm} \\
+  \hfill\textbf{[Nome e Cargo do Prefeito / Secretário]} \\
+  \hfill\small Autoridade Competente \\
+  \vspace{0.1cm}
+\end{tabular}
+\end{table}
+
+\vspace{1.2cm}
+\noindent\textcolor{navy!30}{\rule{\linewidth}{0.5pt}}
+
+\noindent{\footnotesize\itshape
+\textbf{Referências Normativas:}
+Lei n.\textsuperscript{o} 14.133, de 1.\textsuperscript{o}/4/2021 (NLLCA);
+IN SEGES/MGI n.\textsuperscript{o} 58, de 8/8/2022 (PCA e DFD);
+IN SEGES/MGI n.\textsuperscript{o} 65/2021 (Pesquisa de Preços);
+RDC ANVISA n.\textsuperscript{o} 59/2021 (Saneantes);
+RDC ANVISA n.\textsuperscript{o} 15/2012 (Artigos Hospitalares);
+RDC ANVISA n.\textsuperscript{o} 216/2004 (Serviços de Saúde);
+NR-32 (MTE --- Segurança em Serviços de Saúde);
+LC n.\textsuperscript{o} 123/2006 (ME e EPP);
+Lei n.\textsuperscript{o} 12.305/2010 (PNRS);
+Lei n.\textsuperscript{o} 4.320/1964 (Normas de Direito Financeiro);
+ABNT NBR 14.725/7.500.}
+
+\end{document}

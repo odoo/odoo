@@ -1,0 +1,1228 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Codificação e idioma ─────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Layout ───────────────────────────────────────────────────────────
+\usepackage[top=2.8cm,bottom=2.8cm,left=3.0cm,right=2.5cm,headheight=16pt]{geometry}
+
+% ── Cores ────────────────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{ltblue}{HTML}{D6E4F0}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\definecolor{legalbg}{HTML}{F0FDF4}
+\definecolor{legalbdr}{HTML}{16A34A}
+\definecolor{alertbg}{HTML}{FFF8E1}
+\definecolor{alertbdr}{HTML}{E59C0A}
+\definecolor{warnbg}{HTML}{FEF2F2}
+\definecolor{warnbdr}{HTML}{DC2626}
+\definecolor{infobg}{HTML}{EFF6FF}
+\definecolor{infobdr}{HTML}{3B82F6}
+
+% ── Cabeçalho / rodapé ───────────────────────────────────────────────
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize\color{navy}\textbf{ARP n.\textsuperscript{o}
+  \arpNum/\exercicio} --- Materiais de Limpeza e Higiene --- Borba/AM}
+\fancyhead[R]{\footnotesize\color{navy}Lei n.\textsuperscript{o} 14.133/2021}
+\fancyfoot[C]{\footnotesize Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{%
+  \hbox to\headwidth{\color{medblue}\leaders\hrule height 0.5pt\hfill}}
+
+% ── Caixas coloridas ─────────────────────────────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{legalbox}[1][Base Legal]{enhanced,breakable,
+  colback=legalbg,colframe=legalbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{legalbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=legalbg,colframe=legalbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{alertbox}[1][Atenção]{enhanced,breakable,
+  colback=alertbg,colframe=alertbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{navy},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=alertbdr!25,colframe=alertbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{warnbox}[1][Obrigação]{enhanced,breakable,
+  colback=warnbg,colframe=warnbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{warnbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnbg,colframe=warnbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{infobox}[1][Informação]{enhanced,breakable,
+  colback=infobg,colframe=infobdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{infobdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=infobg,colframe=infobdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{conclusabox}{enhanced,
+  colback=navy!8,colframe=navy,boxrule=1pt,arc=5pt,
+  left=12pt,right=12pt,top=8pt,bottom=8pt}
+
+% ── Títulos ──────────────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\section}{\color{navy}\large\bfseries}{CLÁUSULA \thesection\,---}{0.5em}{}
+  [\color{navy}\titlerule]
+\titlespacing{\section}{0pt}{22pt}{8pt}
+\titleformat{\subsection}{\color{medblue}\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing{\subsection}{0pt}{14pt}{5pt}
+
+% ── Tabelas ──────────────────────────────────────────────────────────
+\usepackage{booktabs,array,tabularx,longtable,multirow,colortbl}
+\renewcommand{\arraystretch}{1.40}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ── Utilitários ──────────────────────────────────────────────────────
+\usepackage{float,enumitem,amsmath,caption,chngcntr,pdflscape}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=3pt,topsep=3pt,parsep=0pt}
+\setlist[itemize]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\counterwithout{footnote}{section}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=medblue,
+  pdfborder={0 0 0}]{hyperref}
+
+% ── Macros ───────────────────────────────────────────────────────────
+\newcommand{\art}[1]{art.\,#1}
+\newcommand{\Rs}{R\$\,}
+\newcommand{\blank}[1]{\underline{\hspace{#1}}}
+\newcommand{\assinatura}[3]{%
+  \begin{center}\vspace{0.3cm}
+  \rule{7.5cm}{0.5pt}\\[3pt]
+  \textbf{#1}\\\small #2\\\small #3
+  \end{center}}
+
+% ── Dados do processo ─────────────────────────────────────────────────
+\newcommand{\arpNum}{001}          % número sequencial da ARP
+\newcommand{\exercicio}{2025}
+\newcommand{\editalRef}{EDITAL PE/SMS-BORBA-001/2025}
+\newcommand{\trRef}{TR-SMS/BORBA-001/2025}
+\newcommand{\procNum}{[NÚMERO DO PROCESSO SEI/E-DOC]}
+\newcommand{\homologData}{[DATA DA HOMOLOGAÇÃO]}
+\newcommand{\pubData}{[DATA DE PUBLICAÇÃO NO PNCP]}
+\newcommand{\vigFim}{[DATA DE TÉRMINO --- 12 MESES APÓS PUBLICAÇÃO]}
+% Órgão gerenciador
+\newcommand{\munCNPJ}{[CNPJ DA PREFEITURA MUNICIPAL DE BORBA]}
+\newcommand{\secretario}{[NOME E CARGO DO(A) SECRETÁRIO(A) MUNICIPAL DE SAÚDE]}
+% Fornecedores (preencher por lote após homologação)
+\newcommand{\fornUm}{[RAZÃO SOCIAL LOTE 01]}
+\newcommand{\cnpjUm}{[CNPJ LOTE 01]}
+\newcommand{\repUm}{[REPRESENTANTE LEGAL LOTE 01]}
+
+
+% ═════════════════════════════════════════════════════════════════════
+\begin{document}
+% ═════════════════════════════════════════════════════════════════════
+
+% ── Capa ─────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \pagecolor{navy}\color{white}\setlength{\parindent}{0pt}\centering
+  \vspace*{0.8cm}
+  {\small\bfseries\color{ltblue}PREFEITURA MUNICIPAL DE BORBA --- ESTADO DO AMAZONAS}\\[2pt]
+  {\small\color{ltblue!70}SECRETARIA MUNICIPAL DE SAÚDE}\\[0.4cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.5cm]
+  {\fontsize{11}{14}\selectfont\bfseries\color{ltblue!85}
+    ATA DE REGISTRO DE PREÇOS}\\[0.3cm]
+  {\fontsize{14}{18}\selectfont\bfseries\color{ltblue!70}
+    N.\textsuperscript{o} \arpNum/\exercicio}\\[0.5cm]
+  {\fontsize{20}{26}\selectfont\bfseries
+    Aquisição de Materiais de\\[4pt]Limpeza e Higiene}\\[0.25cm]
+  {\fontsize{12}{16}\selectfont\color{ltblue!80}
+    Rede de Atenção à Saúde do Município de Borba/AM}\\[0.6cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.8cm]
+  \begin{tabular}{@{}r@{\hspace{8pt}}p{0.56\linewidth}@{}}
+    \color{ltblue!70}\small\bfseries N.\textsuperscript{o} da ARP: &
+      \small ARP n.\textsuperscript{o} \arpNum/\exercicio \\[4pt]
+    \color{ltblue!70}\small\bfseries Edital de origem: &
+      \small \editalRef \\[4pt]
+    \color{ltblue!70}\small\bfseries TR de referência: &
+      \small \trRef \\[4pt]
+    \color{ltblue!70}\small\bfseries Processo: &
+      \small \procNum \\[4pt]
+    \color{ltblue!70}\small\bfseries Órgão gerenciador: &
+      \small Secretaria Municipal de Saúde de Borba/AM \\[4pt]
+    \color{ltblue!70}\small\bfseries Homologação: &
+      \small \homologData \\[4pt]
+    \color{ltblue!70}\small\bfseries Publicação (PNCP): &
+      \small \pubData \\[4pt]
+    \color{ltblue!70}\small\bfseries Vigência: &
+      \small 12 meses a contar de \pubData \\[4pt]
+    \color{ltblue!70}\small\bfseries Valor total registrado: &
+      \small \Rs 2.000.000,00 (dois milhões de reais) --- teto máximo \\[4pt]
+    \color{ltblue!70}\small\bfseries Base Legal: &
+      \small Arts.\,82--86, Lei n.\textsuperscript{o} 14.133/2021;
+        Decreto n.\textsuperscript{o} 11.462/2023 \\[4pt]
+  \end{tabular}
+  \vfill
+  \textcolor{ltblue!40}{\rule{0.85\linewidth}{0.4pt}}\\[0.3cm]
+  {\tiny\color{ltblue!50}
+    Documento elaborado em conformidade com os arts.\,82 a 86 da Lei
+    n.\textsuperscript{o} 14.133/2021 e com o Decreto n.\textsuperscript{o}
+    11.462, de 31 de março de 2023 --- Borba/AM, \exercicio}
+\end{titlepage}
+\nopagecolor
+\setlength{\parindent}{1.2cm}
+
+% ── Preâmbulo ─────────────────────────────────────────────────────────
+\begin{table}[H]\centering\small
+\caption*{\textbf{\color{navy}FICHA DE IDENTIFICAÇÃO DA ATA DE REGISTRO DE PREÇOS}}
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} L{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados do Instrumento}} \\
+\midrule
+N.\textsuperscript{o} da ARP:          & ARP n.\textsuperscript{o} \arpNum/\exercicio \\
+\rowcolor{rowalt}
+Processo administrativo:               & \procNum \\
+Edital de origem:                      & \editalRef \\
+\rowcolor{rowalt}
+Homologação:                           & \homologData \\
+Publicação no PNCP:                    & \pubData \\
+\rowcolor{rowalt}
+Vigência:                              & 12 meses --- até \vigFim \\
+Órgão gerenciador:                     & Secretaria Municipal de Saúde de Borba/AM \\
+\rowcolor{rowalt}
+CNPJ do Município:                     & \munCNPJ \\
+Gestor da ARP:                         & [NOME, CARGO E MATRÍCULA DO GESTOR] \\
+\rowcolor{rowalt}
+Fiscal Técnico:                        & [NOME, CARGO E MATRÍCULA DO FISCAL] \\
+N.\textsuperscript{o} de lotes:        & 6 (seis) \\
+\rowcolor{rowalt}
+Valor total registrado (teto):         & \Rs 2.000.000,00 \\
+Base legal:                            & Arts.\,82--86, Lei n.\textsuperscript{o}
+                                         14.133/2021; Decreto n.\textsuperscript{o}
+                                         11.462/2023 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\tableofcontents
+\clearpage
+
+% ── Abertura Solene ──────────────────────────────────────────────────
+\begin{center}
+{\large\bfseries\color{navy}ATA DE REGISTRO DE PREÇOS N.\textsuperscript{o}
+  \arpNum/\exercicio}\\[4pt]
+{\normalsize\bfseries Pregão Eletrônico --- Sistema de Registro de Preços}\\
+{\small Processo: \procNum\ --- Edital: \editalRef}
+\end{center}
+
+\bigskip
+\noindent Aos \blank{0.8cm} dias do mês de \blank{2.5cm} do ano de
+\textbf{\exercicio}, o \textbf{Município de Borba}, Estado do Amazonas, pessoa
+jurídica de direito público, inscrito no CNPJ sob o n.\textsuperscript{o}
+\munCNPJ, com sede na \blank{5cm}, Borba/AM, por intermédio da
+\textbf{Secretaria Municipal de Saúde}, neste ato representada pelo(a)
+\secretario, no uso de suas atribuições legais, doravante denominado
+\textbf{ÓRGÃO GERENCIADOR}, e as empresas qualificadas nas Cláusulas seguintes,
+doravante denominadas \textbf{FORNECEDORAS REGISTRADAS}, firmam a presente
+\textbf{Ata de Registro de Preços}, nos termos da Lei n.\textsuperscript{o}~
+14.133, de 1.\textsuperscript{o} de abril de 2021, do Decreto
+n.\textsuperscript{o}~11.462, de 31 de março de 2023, e das condições do
+Edital \editalRef, do Termo de Referência \trRef e da proposta da Fornecedora
+Registrada, documentos que integram esta Ata independentemente de transcrição,
+mediante as seguintes cláusulas e condições:
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DO OBJETO}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{82}, \textit{caput}, Lei n.\textsuperscript{o} 14.133/2021]
+\small A Ata de Registro de Preços é o \textbf{instrumento vinculante} de
+compromisso para futura contratação, com indicação dos fornecedores registrados,
+preços, quantidades e condições a serem praticadas nas contratações decorrentes.
+\end{legalbox}
+
+\noindent A presente Ata tem por objeto o \textbf{registro de preços} de materiais
+de limpeza e higiene para abastecimento da Rede de Atenção à Saúde do Município de
+Borba/AM, conforme especificações e quantitativos do Termo de Referência \trRef
+(Anexo~I do Edital \editalRef), organizados em \textbf{6 (seis) lotes}, conforme
+quadro abaixo:
+
+\begin{table}[H]\centering
+\caption{Lotes e fornecedores registrados}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.0cm} L{5.8cm} C{1.2cm} C{3.0cm} L{3.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Lote} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Classe} &
+  \color{white}\textbf{Valor Reg. (R\$)} &
+  \color{white}\textbf{Fornecedora Registrada} \\
+  \toprule
+  01 & Álcoois e antissépticos topológicos                        & A & 820.000,00
+     & \blank{3cm} \\
+  02 & Saneantes hospitalares                                      & A & 480.000,00
+     & \blank{3cm} \\
+  03 & EPI de limpeza e descartáveis                              & A & 300.000,00
+     & \blank{3cm} \\
+  04 & Sacos para resíduos de saúde e comuns                      & B & 180.000,00
+     & \blank{3cm} \\
+  05 & Desinfetantes, sabonetes e complementares                  & B & 120.000,00
+     & \blank{3cm} \\
+  06 & Utensílios de limpeza e consumíveis gerais                 & C & 100.000,00
+     & \blank{3cm} \\
+  \rowcolor{ltblue}
+  \multicolumn{3}{c}{\textbf{TOTAL REGISTRADO (teto máximo)}} &
+    \textbf{2.000.000,00} & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{infobox}[Natureza não Obrigatória da ARP]
+\small
+A presente Ata \textbf{não obriga} o Órgão Gerenciador a adquirir os quantitativos
+registrados, nos termos do \art{83} da Lei n.\textsuperscript{o}~14.133/2021.
+As contratações efetivas ocorrerão mediante emissão de Ordens de Fornecimento,
+de acordo com a necessidade da Rede de Atenção à Saúde.
+\end{infobox}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DA QUALIFICAÇÃO DAS FORNECEDORAS REGISTRADAS}
+% ═════════════════════════════════════════════════════════════════════
+
+\noindent As empresas registradas nesta Ata são qualificadas conforme quadros abaixo.
+Para cada lote adjudicado, preencher os dados da respectiva vencedora:
+
+\bigskip
+\noindent\textbf{Lote 01 --- Álcoois e Antissépticos Topológicos}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.2cm} L{9.8cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Fornecedora Registrada --- Lote 01}} \\
+\midrule
+Razão Social:          & \blank{9cm} \\
+\rowcolor{rowalt}
+CNPJ:                  & \blank{5cm} \\
+Inscrição Estadual:    & \blank{5cm} \\
+\rowcolor{rowalt}
+Endereço:              & \blank{9cm} \\
+Cidade / UF / CEP:     & \blank{9cm} \\
+\rowcolor{rowalt}
+Representante Legal:   & \blank{9cm} \\
+CPF do Representante:  & \blank{5cm} \\
+\rowcolor{rowalt}
+Telefone:              & \blank{4cm} \quad E-mail: \blank{4.5cm} \\
+Banco / Agência / C/C: & \blank{9cm} \\
+\rowcolor{rowalt}
+Aut. Func. ANVISA:     & \blank{5cm} \quad Validade: \blank{3cm} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textit{(Replicar tabela para os Lotes 02 a 06, conforme adjudicação.)}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DOS PREÇOS REGISTRADOS}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{82}, \S\,2.\textsuperscript{o}; \art{84}, Lei n.\textsuperscript{o} 14.133/2021]
+\small Os preços registrados devem ser publicados trimestralmente pelo órgão
+gerenciador, podendo ser revistos na hipótese do \art{84},
+\S\,3.\textsuperscript{o}, quando tornarem-se superiores ao mercado.
+\end{legalbox}
+
+\subsection{Preços Registrados por Lote}
+
+Os preços registrados, em reais \textbf{CIF Borba/AM} (incluídos frete fluvial
+Manaus--Borba, seguro e todos os encargos), são os constantes nas tabelas abaixo,
+válidas para toda a vigência da ARP, ressalvadas as hipóteses de revisão previstas
+na Cláusula~\ref{sec:reajuste}.
+
+\begin{landscape}
+\begin{longtable}{C{0.5cm} L{4.2cm} C{0.9cm} C{1.5cm} C{1.8cm} C{2.2cm} C{2.2cm} L{3.5cm}}
+\caption{Preços unitários registrados por item --- ARP n.\textsuperscript{o}
+  \arpNum/\exercicio} \label{tab:precos} \\
+\rowcolor{navy}
+\color{white}\small\textbf{It.} &
+\color{white}\small\textbf{Descrição} &
+\color{white}\small\textbf{Un.} &
+\color{white}\small\textbf{Qtde.\newline Anual} &
+\color{white}\small\textbf{Pr. Unit.\newline (R\$)} &
+\color{white}\small\textbf{Pr. Total\newline 12 m (R\$)} &
+\color{white}\small\textbf{Marca /\newline Fabricante} &
+\color{white}\small\textbf{Reg. ANVISA /\newline Ref. Técnica} \\
+\toprule
+\endfirsthead
+\multicolumn{8}{l}{\footnotesize\textit{(continuação --- ARP n.\textsuperscript{o} \arpNum/\exercicio)}}\\
+\rowcolor{navy}
+\color{white}\small\textbf{It.} &
+\color{white}\small\textbf{Descrição} &
+\color{white}\small\textbf{Un.} &
+\color{white}\small\textbf{Qtde.\newline Anual} &
+\color{white}\small\textbf{Pr. Unit.\newline (R\$)} &
+\color{white}\small\textbf{Pr. Total\newline 12 m (R\$)} &
+\color{white}\small\textbf{Marca /\newline Fabricante} &
+\color{white}\small\textbf{Reg. ANVISA /\newline Ref. Técnica} \\
+\toprule
+\endhead
+\bottomrule\endfoot\bottomrule\endlastfoot
+
+% Lote 01
+\rowcolor{navy!8}\multicolumn{8}{l}{\textbf{\small Lote 01 --- Álcoois e Antissépticos --- Fornecedora: \blank{4cm} --- CNPJ: \blank{3cm}}} \\
+\rowcolor{rowalt}
+01 & Álcool Etílico Hidratado 70\% --- fr. 500\,mL   & Fr  & 20.160 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+02 & Álcool Etílico Hidratado 70\% --- galão 5\,L     & Gl  &  2.016 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{rowalt}
+03 & Álcool Isopropílico 70\% --- fr. 1\,L            & Fr  &    300 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+04 & Sabonete Antisséptico Clorexidina 2\% --- 1\,L   & Fr  &  1.080 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{ltblue}\multicolumn{5}{r}{\small\textbf{Subtotal Lote 01 (R\$)}} &
+  \blank{1.8cm} & & \\
+
+% Lote 02
+\rowcolor{navy!8}\multicolumn{8}{l}{\textbf{\small Lote 02 --- Saneantes Hospitalares --- Fornecedora: \blank{4cm} --- CNPJ: \blank{3cm}}} \\
+\rowcolor{rowalt}
+05 & Detergente Enzimático Concentrado --- fr. 1\,L   & Fr  &    360 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+06 & Hipoclorito de Sódio 1\% --- emb. 5\,L           & Fr  &  3.360 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{rowalt}
+07 & Glutaraldeído 2\% Tamponado --- fr. 1\,L         & Fr  &    144 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{ltblue}\multicolumn{5}{r}{\small\textbf{Subtotal Lote 02 (R\$)}} &
+  \blank{1.8cm} & & \\
+
+% Lote 03
+\rowcolor{navy!8}\multicolumn{8}{l}{\textbf{\small Lote 03 --- EPI de Limpeza e Descartáveis --- Fornecedora: \blank{4cm} --- CNPJ: \blank{3cm}}} \\
+\rowcolor{rowalt}
+08 & Luva de Proc. Látex Não Estéril M --- cx. 100\,un. & Cx  &    960 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+09 & Avental Descartável TNT --- cx. 50\,un.           & Cx  &    360 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{rowalt}
+10 & Papel Toalha Branco 2 dobras --- pct. 1.000\,fls. & Pct &    432 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{ltblue}\multicolumn{5}{r}{\small\textbf{Subtotal Lote 03 (R\$)}} &
+  \blank{1.8cm} & & \\
+
+% Lote 04
+\rowcolor{navy!8}\multicolumn{8}{l}{\textbf{\small Lote 04 --- Sacos para Resíduos de Saúde --- Fornecedora: \blank{4cm} --- CNPJ: \blank{3cm}}} \\
+\rowcolor{rowalt}
+11 & Saco Lixo Infectante Vermelho 100\,L --- rl. 100\,un. & Rl &    720 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+12 & Saco Lixo Doméstico Preto 100\,L --- rl. 100\,un.     & Rl &    480 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{ltblue}\multicolumn{5}{r}{\small\textbf{Subtotal Lote 04 (R\$)}} &
+  \blank{1.8cm} & & \\
+
+% Lote 05
+\rowcolor{navy!8}\multicolumn{8}{l}{\textbf{\small Lote 05 --- Desinfetantes e Complementares --- Fornecedora: \blank{4cm} --- CNPJ: \blank{3cm}}} \\
+\rowcolor{rowalt}
+13 & Desinfetante Quaternário de Amônio --- emb. 5\,L & Fr  &    540 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+14 & Sabão em Pó Multiuso --- emb. 1\,kg              & Pct &    600 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{rowalt}
+15 & Detergente Líquido Neutro --- fr. 500\,mL        & Fr  &    720 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{ltblue}\multicolumn{5}{r}{\small\textbf{Subtotal Lote 05 (R\$)}} &
+  \blank{1.8cm} & & \\
+
+% Lote 06
+\rowcolor{navy!8}\multicolumn{8}{l}{\textbf{\small Lote 06 --- Utensílios e Consumíveis Gerais --- Fornecedora: \blank{4cm} --- CNPJ: \blank{3cm}}} \\
+\rowcolor{rowalt}
+16 & Água Sanitária --- emb. 2\,L                     & Fr  &  1.440 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+17 & Vassoura Nylon Profissional                       & Un  &    144 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{rowalt}
+18 & Rodo 60\,cm --- Cabo Alumínio                    & Un  &    120 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+19 & Pano de Chão Algodão 55$\times$75\,cm            & Un  &    360 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{rowalt}
+20 & Balde Plástico 20\,L c/ Alça Metálica           & Un  &     60 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+21 & Esponja Dupla Face Verde/Amarela                  & Un  &    480 & \blank{1.5cm} & \blank{1.8cm} & \blank{2.5cm} & \blank{2.5cm} \\
+\rowcolor{ltblue}\multicolumn{5}{r}{\small\textbf{Subtotal Lote 06 (R\$)}} &
+  \blank{1.8cm} & & \\
+
+\rowcolor{navy}\multicolumn{5}{r}{\color{white}\textbf{TOTAL GERAL REGISTRADO (R\$)}} &
+  \color{white}\blank{1.8cm} & & \\
+
+\end{longtable}
+\end{landscape}
+
+\subsection{Validade dos Preços Registrados}
+
+Os preços registrados na presente Ata são válidos pelo prazo de \textbf{12 (doze)
+meses} contados da data de publicação no PNCP, podendo ser revistos nas hipóteses
+previstas na Cláusula~\ref{sec:reajuste}.
+
+\begin{alertbox}[Publicação Trimestral dos Preços]
+\small
+O Órgão Gerenciador publicará trimestralmente no PNCP os preços registrados,
+nos termos do \art{82}, \S\,2.\textsuperscript{o}, da Lei
+n.\textsuperscript{o}~14.133/2021, para fins de transparência e comparação com
+os preços praticados no mercado.
+\end{alertbox}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DA VIGÊNCIA}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{84}, \S\,1.\textsuperscript{o}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+A vigência da Ata de Registro de Preços será de até 12 (doze) meses, contados a
+partir da data de publicação, podendo ser prorrogada por igual período, desde que
+comprovada a vantagem.
+\end{legalbox}
+
+\begin{enumerate}
+  \item A presente Ata terá vigência de \textbf{12 (doze) meses} a contar da data
+    de sua publicação no PNCP, encerrando-se em \vigFim;
+
+  \item A vigência poderá ser \textbf{prorrogada} por igual período, mediante:
+    \begin{itemize}
+      \item pesquisa de preços demonstrando que os preços registrados permanecem
+        vantajosos para a Administração;
+      \item concordância expressa da Fornecedora Registrada;
+      \item publicação de termo aditivo no PNCP;
+    \end{itemize}
+
+  \item A prorrogação não depende de nova licitação, mas os preços poderão ser
+    atualizados pelo IPCA acumulado do período, nos termos da Cláusula~\ref{sec:reajuste};
+
+  \item O encerramento da vigência da ARP, sem prorrogação, implica a extinção
+    automática das obrigações decorrentes desta Ata, ressalvadas as Ordens de
+    Fornecimento já emitidas e em andamento.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DO GERENCIAMENTO DA ARP}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Arts.\,117--120; \art{82}, \S\,3.\textsuperscript{o},
+  Lei n.\textsuperscript{o} 14.133/2021]
+\small
+O órgão gerenciador acompanhará a evolução dos preços de mercado e dará publicidade
+mensal dos itens registrados, devendo comunicar às fornecedoras registradas qualquer
+alteração nas condições ou nas necessidades da Administração.
+\end{legalbox}
+
+\subsection{Gestor da ARP}
+
+O \textbf{Gestor da ARP} é o servidor [NOME, CARGO E MATRÍCULA], designado pela
+Portaria SMS n.\textsuperscript{o}~\blank{0.5cm}/\exercicio, publicada em
+\blank{2cm}, com as seguintes atribuições:
+
+\begin{enumerate}
+  \item Emitir e controlar as Ordens de Fornecimento;
+  \item Manter atualizado o saldo físico e financeiro da ARP;
+  \item Decidir sobre pedidos de reequilíbrio econômico-financeiro e reajuste;
+  \item Propor a prorrogação, cancelamento ou rescisão da ARP à autoridade
+    competente;
+  \item Comunicar às Fornecedoras Registradas qualquer alteração nas condições da
+    ARP;
+  \item Publicar trimestralmente no PNCP os preços praticados.
+\end{enumerate}
+
+\subsection{Fiscal Técnico da ARP}
+
+O \textbf{Fiscal Técnico} é o servidor [NOME, CARGO E MATRÍCULA], designado pela
+mesma Portaria, com as seguintes atribuições:
+
+\begin{enumerate}
+  \item Verificar a conformidade técnica de cada entrega com as especificações
+    do TR \trRef;
+  \item Emitir os Termos de Recebimento Provisório (TRP) e Definitivo (TRD);
+  \item Registrar não conformidades e emitir Notificações de Não Conformidade (NNC);
+  \item Confirmar o registro ANVISA vigente de cada produto no ato do recebimento;
+  \item Monitorar os indicadores de desempenho (KPIs) definidos na Cláusula~\ref{sec:kpis};
+  \item Instruir os autos de eventual processo sancionatório.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DAS ORDENS DE FORNECIMENTO}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{enumerate}
+  \item O fornecimento dos itens registrados ocorrerá exclusivamente mediante
+    emissão de \textbf{Ordens de Fornecimento (OF)}, numeradas sequencialmente e
+    assinadas pelo Gestor da ARP;
+
+  \item As OF serão emitidas com antecedência mínima de \textbf{20 dias corridos}
+    em relação à data prevista para a entrega, respeitando a logística fluvial
+    Manaus--Borba;
+
+  \item A Fornecedora Registrada deverá \textbf{confirmar o recebimento} da OF
+    no prazo de \textbf{2 dias úteis}, via sistema eletrônico ou ofício;
+
+  \item O modelo padrão da Ordem de Fornecimento consta do \textbf{Anexo~I}
+    desta Ata;
+
+  \item As quantidades solicitadas em cada OF serão calibradas ao ciclo hidrológico
+    do Rio Madeira, observando as coberturas mínimas por período:
+    \begin{itemize}
+      \item \textbf{Período de cheia} (janeiro a junho): cobertura de 30 a 45 dias;
+      \item \textbf{Período de estiagem} (julho a outubro): cobertura de 45 a 60
+        dias --- Estoque de Reserva Estratégica (ERE);
+      \item \textbf{Período de transição} (novembro a dezembro): cobertura de 30 dias;
+    \end{itemize}
+
+  \item O intervalo mínimo entre OF para o mesmo item é de \textbf{30 dias},
+    salvo emergência documentada;
+
+  \item A OF não poderá superar o saldo registrado na ARP para o respectivo item,
+    ficando vedado o fornecimento além do quantitativo máximo registrado.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DO LOCAL, PRAZO E CONDIÇÕES DE ENTREGA}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Local de Entrega}
+
+Todos os itens deverão ser entregues no \textbf{Almoxarifado Central da Secretaria
+Municipal de Saúde de Borba/AM}, sito à [ENDEREÇO COMPLETO --- RUA, N.\textsuperscript{o},
+BAIRRO, CEP], Borba/AM, em dias úteis, no horário das 08:00 às 12:00 horas e das
+14:00 às 17:00 horas, mediante agendamento prévio com o Fiscal Técnico.
+
+\subsection{Prazos de Entrega}
+
+\begin{table}[H]\centering
+\caption{Prazos máximos de entrega por lote e período hidrológico}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.0cm} L{6.5cm} C{3.0cm} C{3.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Lote(s)} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Cheia (jan--jun)} &
+  \color{white}\textbf{Seca (jul--out)} \\
+  \toprule
+  01--02 & Álcoois, antissépticos e saneantes hospitalares &
+    25 dias corridos & 35 dias corridos \\
+  03     & EPI de limpeza e descartáveis &
+    25 dias corridos & 35 dias corridos \\
+  04--05 & Sacos para resíduos, desinfetantes e complementares &
+    30 dias corridos & 40 dias corridos \\
+  06     & Utensílios de limpeza e consumíveis &
+    30 dias corridos & 40 dias corridos \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Os prazos são contados em \textbf{dias corridos} a partir do recebimento
+da Ordem de Fornecimento. Períodos de transição (nov--dez) seguem os prazos
+da coluna ``Cheia''.
+
+\subsection{Condições de Entrega}
+
+\begin{enumerate}
+  \item Preço \textbf{CIF Borba/AM}: todos os custos de frete fluvial,
+    seguro e manuseio são de responsabilidade exclusiva da Fornecedora Registrada;
+  \item As embalagens devem estar em perfeitas condições, sem violação, amassamento
+    ou vazamento, adequadas ao transporte fluvial de longa distância;
+  \item Os produtos devem ser acompanhados de \textbf{nota fiscal eletrônica (NF-e)}
+    e da respectiva Ficha de Dados de Segurança (FISPQ), para os itens dos
+    Lotes 01 a 05 (primeira entrega e a cada alteração de lote);
+  \item Todos os produtos deverão apresentar \textbf{prazo de validade residual
+    mínimo de 12 meses} a contar da data de entrega, salvo especificação diferente
+    no TR \trRef;
+  \item Os números de \textbf{lote de fabricação e data de fabricação} devem estar
+    impressos nas embalagens para fins de rastreabilidade.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DO RECEBIMENTO E DA ACEITAÇÃO}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{140}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+\end{legalbox}
+
+\subsection{Recebimento Provisório}
+
+O servidor responsável pelo almoxarifado realizará o recebimento provisório no ato
+da entrega, verificando a conformidade quantitativa e a integridade das embalagens.
+O \textbf{Termo de Recebimento Provisório (TRP)} será emitido em até \textbf{2 dias
+úteis} após a entrega.
+
+\subsection{Recebimento Definitivo}
+
+O Fiscal Técnico realizará o recebimento definitivo em até \textbf{10 dias úteis}
+após a emissão do TRP, mediante verificação da conformidade qualitativa com as
+especificações do TR, confirmação do registro ANVISA e análise da FISPQ.
+O \textbf{Termo de Recebimento Definitivo (TRD)} liberará o pagamento.
+
+\subsection{Recusa e Substituição}
+
+Produtos não conformes serão devolvidos via Notificação de Não Conformidade (NNC),
+com prazo de \textbf{5 dias úteis} para substituição às expensas da Fornecedora
+Registrada, sem prejuízo das penalidades aplicáveis.
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DO PAGAMENTO}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{141}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+\end{legalbox}
+
+\begin{enumerate}
+  \item O pagamento será realizado em até \textbf{30 dias corridos} contados da
+    apresentação da NF-e ao Setor de Finanças da SMS, após a emissão do TRD;
+
+  \item A NF-e deverá ser emitida \textbf{após} a emissão do TRD, contendo:
+    número da OF, número desta ARP, discriminação dos itens, quantidades, preços
+    unitários e totais, e o número do processo administrativo (\procNum);
+
+  \item O pagamento será realizado por \textbf{transferência bancária (TED/PIX)}
+    para a conta corrente da Fornecedora Registrada, previamente cadastrada;
+
+  \item São \textbf{condições suspensivas} do pagamento:
+    \begin{itemize}
+      \item Certidão Negativa de Débitos Federais (PGFN/RFB) válida;
+      \item Certificado de Regularidade do FGTS (CRF) válido;
+      \item Certidão Negativa de Débitos Trabalhistas (CNDT/TST) válida;
+      \item Ausência de sanção impeditiva de contratação;
+    \end{itemize}
+
+  \item Havendo \textbf{atraso no pagamento por culpa do Órgão Gerenciador},
+    incidirão sobre o valor devido correção monetária pelo IPCA e juros de mora
+    de 0,5\% ao mês, \textit{pro rata die} (\art{141},
+    \S\,3.\textsuperscript{o});
+
+  \item O pagamento não será realizado mediante emissão de títulos ou duplicatas;
+
+  \item É vedada qualquer forma de \textbf{antecipação de pagamento} ou de
+    pagamento anterior ao recebimento definitivo.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DAS OBRIGAÇÕES DA FORNECEDORA REGISTRADA}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{warnbox}[Obrigações Contratuais da Fornecedora]
+\small
+O descumprimento das obrigações abaixo sujeita a Fornecedora Registrada às
+penalidades previstas na Cláusula~\ref{sec:sancoes}.
+\end{warnbox}
+
+A Fornecedora Registrada obriga-se a:
+
+\begin{enumerate}
+  \item Manter, durante toda a vigência desta Ata, as mesmas condições de
+    habilitação exigidas na licitação, comprovando-as quando solicitado;
+
+  \item Cumprir rigorosamente os prazos de entrega estabelecidos nas Ordens
+    de Fornecimento, ressalvada a hipótese de caso fortuito ou força maior
+    devidamente comprovados;
+
+  \item Comunicar ao Gestor da ARP, com antecedência mínima de \textbf{15 dias
+    corridos}, qualquer dificuldade logística que possa comprometer o cumprimento
+    de uma OF, sob pena de não ser considerada a excludente;
+
+  \item Substituir, às suas expensas e no prazo de \textbf{5 dias úteis},
+    os produtos devolvidos por não conformidade com as especificações do TR;
+
+  \item Manter vigentes todos os registros e notificações ANVISA dos itens
+    registrados; em caso de cancelamento, comunicar imediatamente ao Gestor e
+    providenciar produto substituto para análise técnica;
+
+  \item Apresentar Ficha de Dados de Segurança (FISPQ) atualizada sempre que
+    houver alteração na formulação dos produtos dos Lotes 01 a 05;
+
+  \item Responsabilizar-se integralmente pelo transporte fluvial,
+    acondicionamento e seguro dos produtos até o Almoxarifado da SMS;
+
+  \item Permitir e facilitar a \textbf{auditoria} em suas instalações pelo
+    Fiscal Técnico ou por órgão de controle, quando convocada;
+
+  \item Não subcontratar o fornecimento sem prévia autorização escrita do
+    Gestor da ARP;
+
+  \item Emitir as Notas Fiscais Eletrônicas conforme requisitos da
+    Cláusula~\ref{sec:pagamento};
+
+  \item Observar as normas de \textbf{destinação ambientalmente adequada}
+    das embalagens de produtos perigosos (PNRS --- Lei
+    n.\textsuperscript{o}~12.305/2010, \art{33}).
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DAS OBRIGAÇÕES DO ÓRGÃO GERENCIADOR}
+% ═════════════════════════════════════════════════════════════════════
+
+O Órgão Gerenciador obriga-se a:
+
+\begin{enumerate}
+  \item Emitir as Ordens de Fornecimento com antecedência mínima de 20 dias
+    corridos;
+
+  \item Efetuar o pagamento no prazo estipulado, após a emissão do TRD e
+    verificação das certidões de regularidade;
+
+  \item Designar formalmente o Gestor e o Fiscal da ARP, com publicação em
+    Diário Oficial, previamente à primeira OF;
+
+  \item Notificar formalmente a Fornecedora Registrada, com prazo de defesa,
+    antes de aplicar qualquer penalidade;
+
+  \item Manter o Almoxarifado da SMS em condições adequadas de recebimento e
+    armazenagem (ABNT NBR 14.725; NR-32);
+
+  \item Publicar trimestralmente no PNCP os preços praticados, nos termos do
+    \art{82}, \S\,2.\textsuperscript{o};
+
+  \item Providenciar a disponibilidade orçamentária correspondente a cada OF
+    antes de sua emissão, nos termos do \art{58} da Lei
+    n.\textsuperscript{o}~4.320/1964.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DOS INDICADORES DE DESEMPENHO (KPIs)}
+\label{sec:kpis}
+% ═════════════════════════════════════════════════════════════════════
+
+\noindent O desempenho das Fornecedoras Registradas será aferido pelo Fiscal
+Técnico com base nos seguintes indicadores, podendo embasar a aplicação de
+sanções ou a revisão das condições da ARP:
+
+\begin{table}[H]\centering
+\caption{Indicadores de desempenho --- ARP n.\textsuperscript{o} \arpNum/\exercicio}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{4.5cm} L{4.0cm} C{2.0cm} C{2.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Indicador (KPI)} &
+  \color{white}\textbf{Fórmula de Cálculo} &
+  \color{white}\textbf{Meta} &
+  \color{white}\textbf{Frequência} \\
+  \toprule
+  Taxa de Ruptura de Estoque &
+    Dias em falta / Dias do período & $<\,0{,}1\%$ & Mensal \\
+  Custo por m\textsuperscript{2} Higienizado &
+    Custo total / 5.150\,m\textsuperscript{2} &
+    $\leq$ \Rs 8,50 & Trimestral \\
+  Aderência ao Prazo de Entrega &
+    OF entregues no prazo / Total OF & $>\,95\%$ & Mensal \\
+  Perda por Validade / Deterioração &
+    Valor descartado / Valor adquirido & $<\,2\%$ & Semestral \\
+  Cobertura do Estoque de Segurança &
+    $E_{\text{atual}} / ES_{\text{calc}}$ & $>\,100\%$ & Quinzenal \\
+  Taxa de Não Conformidade de Entregas &
+    NNC emitidas / Total OF & $<\,2\%$ & Mensal \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent O Gestor consolidará os KPIs em \textbf{relatório trimestral de gestão}
+a ser juntado ao processo \procNum\ e disponibilizado à autoridade competente.
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DO REAJUSTE E DO REEQUILÍBRIO ECONÔMICO-FINANCEIRO}
+\label{sec:reajuste}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{92}, I; \art{124}, I, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+\end{legalbox}
+
+\subsection{Reajuste Anual}
+
+\begin{enumerate}
+  \item Os preços registrados serão reajustados anualmente, de ofício pelo Gestor,
+    com base no \textbf{IPCA acumulado} nos 12 meses imediatamente anteriores à
+    data do aniversário desta ARP;
+
+  \item O reajuste somente incidirá em caso de prorrogação da ARP além dos
+    12 meses iniciais;
+
+  \item O novo preço reajustado será formalizado por termo aditivo à ARP e
+    publicado no PNCP.
+\end{enumerate}
+
+\subsection{Reequilíbrio Econômico-Financeiro}
+
+\begin{enumerate}
+  \item A Fornecedora Registrada poderá solicitar revisão dos preços na hipótese
+    de fato superveniente, imprevisível e extraordinário (\textit{áleas econômicas
+    extraordinárias}), nos termos do \art{124}, I;
+
+  \item A solicitação deverá ser encaminhada ao Gestor por escrito, acompanhada
+    de documentação comprobatória (notas fiscais de insumos, índices setoriais,
+    laudos técnicos);
+
+  \item O Gestor terá \textbf{30 dias} para analisar e decidir o pedido;
+
+  \item Em caso de recusa do reequilíbrio, a Fornecedora poderá solicitar o
+    cancelamento de seu registro sem penalidade (\art{84},
+    \S\,2.\textsuperscript{o});
+
+  \item Quando os preços de mercado recuarem, o Órgão Gerenciador convocará a
+    Fornecedora para negociar redução, podendo cancelar o registro em caso de
+    recusa (\art{84}, \S\,3.\textsuperscript{o}).
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DAS SANÇÕES ADMINISTRATIVAS}
+\label{sec:sancoes}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Arts.\,155 a 163, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+As sanções serão aplicadas pelo Órgão Gerenciador, assegurado o \textbf{contraditório
+e a ampla defesa}, com prazo de \textbf{10 dias úteis} para apresentação de defesa
+prévia (\art{157}).
+\end{legalbox}
+
+\begin{table}[H]\centering
+\caption{Tabela de infrações e sanções aplicáveis}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{4.5cm} C{2.0cm} L{7.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Infração} &
+  \color{white}\textbf{Sanção} &
+  \color{white}\textbf{Parâmetro e Gradação} \\
+  \toprule
+  Atraso na entrega (por dia) &
+    Multa moratória &
+    0,5\% ao dia sobre o valor da OF, até o 30.\textsuperscript{o} dia \\
+  Atraso superior a 30 dias &
+    Multa + rescisão &
+    Multa compensatória de 10\% do valor total desta ARP (\art{162}) \\
+  Entrega de produto não conforme &
+    Advertência ou multa &
+    Advertência na 1.\textsuperscript{a} ocorrência; 5\% da OF nas seguintes \\
+  Não substituição no prazo (5 d.u.) &
+    Multa &
+    2\% ao dia sobre o valor do item, até o 5.\textsuperscript{o} dia útil \\
+  Entrega sem registro ANVISA &
+    Rescisão + multa &
+    10\% do valor desta ARP; comunicação formal à ANVISA \\
+  Subcontratação não autorizada &
+    Multa &
+    5\% do valor da OF; possibilidade de rescisão \\
+  Fraude, conluio ou falsidade &
+    Declaração de inidoneidade &
+    Mínimo de 3 anos, com publicação no PNCP (\art{156}, IV) \\
+  Reincidência em qualquer infração &
+    Impedimento de licitar &
+    Até 3 anos, no âmbito da Administração Municipal (\art{156}, III) \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{warnbox}[Defesa Prévia Obrigatória]
+\small
+Antes de aplicada qualquer sanção, garantir-se-á à Fornecedora Registrada
+\textbf{prazo de 10 dias úteis} para apresentação de defesa. O processo sancionatório
+será instruído pelo Fiscal Técnico e decidido pelo Secretário(a) Municipal de Saúde.
+\end{warnbox}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DO CANCELAMENTO DO REGISTRO}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{84}, \S\,2.\textsuperscript{o}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+\end{legalbox}
+
+\noindent O registro de preços de uma fornecedora poderá ser cancelado nas seguintes
+hipóteses:
+
+\subsection{Por Iniciativa do Órgão Gerenciador}
+
+\begin{enumerate}
+  \item A Fornecedora Registrada não cumprir as obrigações desta Ata;
+  \item A Fornecedora Registrada não retirar a Ordem de Fornecimento no prazo
+    de 5 dias úteis sem justificativa aceita;
+  \item Os preços registrados tornarem-se superiores aos praticados no mercado e
+    a Fornecedora se recusar a reduzi-los;
+  \item A Fornecedora Registrada praticar atos fraudulentos ou sofrer processo
+    de falência, recuperação judicial ou extrajudicial;
+  \item Por razão de interesse público, mediante ato motivado.
+\end{enumerate}
+
+\subsection{Por Iniciativa da Fornecedora Registrada}
+
+\begin{enumerate}
+  \item Mediante comprovação de impossibilidade de cumprimento das exigências,
+    por fato superveniente, aceita pelo Órgão Gerenciador;
+  \item Em caso de recusa de reequilíbrio (\art{84}, \S\,2.\textsuperscript{o},
+    IV), sem aplicação de penalidade.
+\end{enumerate}
+
+\begin{infobox}[Cancelamento Parcial]
+\small
+O cancelamento do registro de uma Fornecedora em um lote \textbf{não implica}
+o cancelamento da ARP nos demais lotes. O Órgão Gerenciador poderá convocar a
+segunda colocada do lote cancelado ou realizar nova licitação restrita ao lote.
+\end{infobox}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DOS ÓRGÃOS NÃO PARTICIPANTES (\textit{CARONAS})}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{86}, \S\,4.\textsuperscript{o}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+É vedada a adesão à Ata de Registro de Preços por órgão não participante
+(\textit{carona}) quando comprometer as quantidades registradas ou onerar o
+gerenciamento da Ata.
+\end{legalbox}
+
+\begin{enumerate}
+  \item Fica \textbf{vedada} a adesão de órgãos não participantes (\textit{caronas})
+    a esta ARP sem autorização expressa e motivada do Órgão Gerenciador;
+
+  \item Eventual adesão autorizada ficará limitada ao saldo remanescente de cada
+    item e não poderá comprometer o fornecimento ao Órgão Gerenciador;
+
+  \item A adesão, se autorizada, deverá ser formalizada por aditivo à ARP e
+    publicada no PNCP.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{DAS DISPOSIÇÕES GERAIS}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{enumerate}
+  \item Esta Ata vincula-se ao Edital \editalRef, ao Termo de Referência \trRef
+    e às propostas das Fornecedoras Registradas, que integram o presente instrumento
+    independentemente de transcrição;
+
+  \item Os casos omissos serão resolvidos com fundamento na Lei
+    n.\textsuperscript{o}~14.133/2021 e, subsidiariamente, nos princípios gerais
+    do Direito Administrativo;
+
+  \item As alterações desta Ata serão formalizadas por \textbf{termos aditivos},
+    previamente justificados nos autos, e publicados no PNCP;
+
+  \item Fica eleito o \textbf{foro da Comarca de Borba/AM} para dirimir quaisquer
+    litígios decorrentes desta Ata, com renúncia expressa a qualquer outro, por
+    mais privilegiado que seja;
+
+  \item A presente Ata, depois de lida e achada conforme, é assinada pelas
+    partes e pelas testemunhas abaixo identificadas.
+\end{enumerate}
+
+\vspace{0.8cm}
+\noindent\hfill Borba/AM, \blank{0.8cm} de \blank{2.5cm} de \exercicio.
+
+% ── Assinaturas Órgão Gerenciador ─────────────────────────────────────
+\vspace{1.0cm}
+\begin{center}
+  \textbf{\color{navy}\large PELO ÓRGÃO GERENCIADOR}\\[0.2cm]
+  \textit{\small Secretaria Municipal de Saúde de Borba/AM}
+\end{center}
+
+\vspace{0.6cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Secretário(a) Municipal de Saúde}{CNPJ: \munCNPJ}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Gestor da ARP n.\textsuperscript{o} \arpNum/\exercicio}{Mat.: \blank{2cm}}
+\end{minipage}
+
+% ── Assinaturas por Lote ──────────────────────────────────────────────
+\vspace{1.0cm}
+\begin{center}
+  \textbf{\color{navy}\large PELAS FORNECEDORAS REGISTRADAS}
+\end{center}
+
+\noindent\textit{(Incluir bloco de assinatura para cada empresa adjudicada,
+um por lote.)}
+
+\vspace{0.5cm}
+\noindent\textbf{Lote 01 --- Álcoois e Antissépticos --- \blank{5cm}}
+
+\begin{minipage}{0.47\linewidth}
+\assinatura{\blank{5cm}}{Representante Legal}{CNPJ: \blank{3cm}}
+\end{minipage}
+
+\bigskip\noindent\textit{(Repetir para Lotes 02 a 06)}
+
+% ── Testemunhas ───────────────────────────────────────────────────────
+\vspace{1.0cm}
+\begin{center}\textbf{TESTEMUNHAS}\end{center}
+
+\vspace{0.3cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{1.\textsuperscript{a} Testemunha}{Nome: \blank{4cm}}{CPF: \blank{3cm}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{2.\textsuperscript{a} Testemunha}{Nome: \blank{4cm}}{CPF: \blank{3cm}}
+\end{minipage}
+
+% ═════════════════════════════════════════════════════════════════════
+%  ANEXO I — MODELO DE ORDEM DE FORNECIMENTO
+% ═════════════════════════════════════════════════════════════════════
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}ANEXO I --- MODELO DE ORDEM DE FORNECIMENTO (OF)}\\[4pt]
+  {\normalsize ARP n.\textsuperscript{o} \arpNum/\exercicio --- \editalRef}
+\end{center}
+
+\vspace{0.3cm}
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.5cm} L{9.5cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}ORDEM DE FORNECIMENTO
+  N.\textsuperscript{o} \blank{0.5cm}/\exercicio}} \\
+\midrule
+ARP de Referência:    & ARP n.\textsuperscript{o} \arpNum/\exercicio \\
+\rowcolor{rowalt}
+Lote:                 & \blank{1cm} --- \blank{8cm} \\
+Fornecedora:          & \blank{9cm} \\
+\rowcolor{rowalt}
+CNPJ:                 & \blank{5cm} \\
+Data de emissão:      & \blank{3cm} \\
+\rowcolor{rowalt}
+Prazo de entrega:     & \blank{3cm} (data) --- Período: ( ) Cheia ( ) Seca ( ) Transição \\
+Local de entrega:     & Almoxarifado Central SMS --- [ENDEREÇO], Borba/AM \\
+\rowcolor{rowalt}
+Horário de entrega:   & Das 08:00 às 12:00 e das 14:00 às 17:00 --- dias úteis \\
+Agendamento com:      & Fiscal Técnico --- Tel.: \blank{3cm} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]\centering
+\caption*{\textbf{Itens solicitados nesta OF}}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.6cm} L{5.5cm} C{0.9cm} C{1.8cm} C{2.2cm} C{2.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{It.} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Un.} &
+  \color{white}\textbf{Qtde.\newline Solicitada} &
+  \color{white}\textbf{Pr. Unit.\newline Reg. (R\$)} &
+  \color{white}\textbf{Valor Total\newline (R\$)} \\
+  \toprule
+  & & & & & \\
+  & & & & & \\
+  & & & & & \\
+  \rowcolor{ltblue}
+  \multicolumn{4}{r}{\textbf{Total da OF (R\$)}} & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.5cm} L{9.5cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados Financeiros}} \\
+\midrule
+Nota de Empenho n.\textsuperscript{o}: & \blank{6cm} \\
+\rowcolor{rowalt}
+Dotação Orçamentária:                   & \blank{9cm} \\
+Fonte de Recurso:                       & \blank{6cm} \\
+\rowcolor{rowalt}
+Saldo remanescente na ARP (este lote):  & R\$ \blank{3cm} (após esta OF) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.6cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Gestor da ARP n.\textsuperscript{o} \arpNum/\exercicio}{SMS de Borba/AM}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Secretário(a) Municipal de Saúde}{Autorização}
+\end{minipage}
+
+\vspace{0.4cm}
+\begin{center}
+  \textbf{Confirmação de recebimento pela Fornecedora:}\\[6pt]
+  \blank{7cm} \quad em \blank{1cm}/\blank{1cm}/\exercicio\\
+  \small (assinatura e carimbo do representante legal)
+\end{center}
+
+% ═════════════════════════════════════════════════════════════════════
+%  ANEXO II — MODELO DE TERMO DE RECEBIMENTO
+% ═════════════════════════════════════════════════════════════════════
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}ANEXO II --- MODELOS DE TERMOS DE RECEBIMENTO}\\[4pt]
+  {\normalsize ARP n.\textsuperscript{o} \arpNum/\exercicio --- \editalRef}
+\end{center}
+
+\subsection*{II-A --- Termo de Recebimento Provisório (TRP)}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.5cm} L{9.5cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}TERMO DE RECEBIMENTO
+  PROVISÓRIO N.\textsuperscript{o} \blank{0.5cm}/\exercicio}} \\
+\midrule
+OF de referência:       & OF n.\textsuperscript{o} \blank{2cm}/\exercicio \\
+\rowcolor{rowalt}
+Fornecedora:            & \blank{8cm} \\
+Data de entrega:        & \blank{3cm} \\
+\rowcolor{rowalt}
+Recebido por:           & \blank{6cm} (servidor do almoxarifado) \\
+\midrule
+\rowcolor{ltblue}
+\multicolumn{2}{l}{\textbf{Verificações realizadas no ato do recebimento}} \\
+\midrule
+Quantidade:             & ( ) Conforme \quad ( ) Divergência: \blank{4cm} \\
+\rowcolor{rowalt}
+Integridade embalagens: & ( ) Aprovado \quad ( ) Reprovado: \blank{4cm} \\
+Rótulos / validade:     & ( ) Aprovado \quad ( ) Reprovado: \blank{4cm} \\
+\rowcolor{rowalt}
+Temperatura de transp.: & ( ) N/A \quad ( ) Conforme \quad Temp. aferida: \blank{2cm} \\
+\midrule
+Resultado:              & ( ) \textbf{APROVADO} --- emitir TRD \quad
+                          ( ) \textbf{PENDÊNCIAS}: \blank{3cm} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\assinatura{[Nome]}{Servidor Responsável pelo Almoxarifado}{SMS de Borba/AM --- Mat.: \blank{2cm}}
+
+\vspace{0.8cm}
+\subsection*{II-B --- Termo de Recebimento Definitivo (TRD)}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.5cm} L{9.5cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}TERMO DE RECEBIMENTO
+  DEFINITIVO N.\textsuperscript{o} \blank{0.5cm}/\exercicio}} \\
+\midrule
+TRP de referência:          & TRP n.\textsuperscript{o} \blank{2cm}/\exercicio \\
+\rowcolor{rowalt}
+Data do TRD:                & \blank{3cm} \\
+Fiscal Técnico:             & \blank{6cm} --- Mat.: \blank{2cm} \\
+\midrule
+\rowcolor{ltblue}
+\multicolumn{2}{l}{\textbf{Verificações técnicas realizadas}} \\
+\midrule
+Conformidade c/ TR \trRef:  & ( ) Conforme \quad ( ) Não conforme: \blank{3cm} \\
+\rowcolor{rowalt}
+Registro ANVISA (portal):   & ( ) Válido \quad ( ) Cancelado / Vencido \\
+FISPQ apresentada:          & ( ) Sim \quad ( ) N/A (Lote 06) \\
+\rowcolor{rowalt}
+Validade residual:          & \blank{2cm} meses --- ( ) $\geq$ 12\,m \quad ( ) Insuficiente \\
+Amostras aprovadas:         & ( ) Sim \quad ( ) N/A \\
+\midrule
+\rowcolor{rowalt}
+Resultado:                  & ( ) \textbf{APROVADO} --- autorizado para faturamento
+                              \quad ( ) \textbf{REJEITADO}: \blank{3cm} \\
+NF-e a ser emitida:         & Valor: R\$ \blank{3cm} \quad OF n.\textsuperscript{o}:
+                              \blank{2cm} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\assinatura{[Nome e Cargo]}{Fiscal Técnico da ARP n.\textsuperscript{o} \arpNum/\exercicio}{SMS de Borba/AM}
+
+% ── Referências normativas ───────────────────────────────────────────
+\vspace{1.5cm}
+\noindent\textcolor{navy!30}{\rule{\linewidth}{0.5pt}}
+
+\noindent{\footnotesize\itshape
+\textbf{Base normativa:}
+Lei n.\textsuperscript{o}~14.133/2021 (NLLCA) \textbullet{}
+Decreto n.\textsuperscript{o}~11.462/2023 (SRP) \textbullet{}
+IN SEGES/MGI n.\textsuperscript{o}~65/2021 \textbullet{}
+RDC ANVISA n.\textsuperscript{o}~59/2021 \textbullet{}
+RDC ANVISA n.\textsuperscript{o}~15/2012 \textbullet{}
+RDC ANVISA n.\textsuperscript{o}~216/2004 \textbullet{}
+Lei n.\textsuperscript{o}~6.360/1976 \textbullet{}
+NR-32 (MTE) \textbullet{}
+LC n.\textsuperscript{o}~123/2006 \textbullet{}
+Lei n.\textsuperscript{o}~12.305/2010 (PNRS) \textbullet{}
+Lei n.\textsuperscript{o}~4.320/1964 \textbullet{}
+ABNT NBR 14.725 \textbullet{}
+ABNT NBR 9.191 \textbullet{}
+ABNT NBR 13.392.}
+
+\end{document}

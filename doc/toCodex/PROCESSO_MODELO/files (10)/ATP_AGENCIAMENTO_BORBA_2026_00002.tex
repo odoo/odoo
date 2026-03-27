@@ -1,0 +1,1100 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Codificação e idioma ─────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Layout ───────────────────────────────────────────────────────────
+\usepackage[top=2.8cm,bottom=2.8cm,left=3.0cm,right=2.5cm,headheight=16pt]{geometry}
+
+% ── Cores ────────────────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{ltblue}{HTML}{D6E4F0}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\definecolor{legalbg}{HTML}{F0FDF4}
+\definecolor{legalbdr}{HTML}{16A34A}
+\definecolor{alertbg}{HTML}{FFF8E1}
+\definecolor{alertbdr}{HTML}{E59C0A}
+\definecolor{warnbg}{HTML}{FEF2F2}
+\definecolor{warnbdr}{HTML}{DC2626}
+\definecolor{infobg}{HTML}{EFF6FF}
+\definecolor{infobdr}{HTML}{3B82F6}
+\definecolor{corrbg}{HTML}{FFF0F6}
+\definecolor{corrbdr}{HTML}{9333EA}
+
+% ── Cabeçalho / rodapé ───────────────────────────────────────────────
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize\color{navy}\textbf{ATP --- Agenciamento Fluvial}
+  --- Processo 2026.00002 --- Borba/AM}
+\fancyhead[R]{\footnotesize\color{navy}Lei n.\textsuperscript{o} 14.133/2021}
+\fancyfoot[C]{\footnotesize Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{%
+  \hbox to\headwidth{\color{medblue}\leaders\hrule height 0.5pt\hfill}}
+
+% ── Caixas coloridas ─────────────────────────────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{legalbox}[1][Base Legal]{enhanced,breakable,
+  colback=legalbg,colframe=legalbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{legalbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=legalbg,colframe=legalbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{alertbox}[1][Atenção]{enhanced,breakable,
+  colback=alertbg,colframe=alertbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{navy},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=alertbdr!25,colframe=alertbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{warnbox}[1][Risco]{enhanced,breakable,
+  colback=warnbg,colframe=warnbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{warnbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnbg,colframe=warnbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{infobox}[1][Informação]{enhanced,breakable,
+  colback=infobg,colframe=infobdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{infobdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=infobg,colframe=infobdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{corrbox}[1][Correção Aplicada]{enhanced,breakable,
+  colback=corrbg,colframe=corrbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{corrbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=corrbg,colframe=corrbdr,arc=3pt,boxrule=0.6pt}}
+
+% ── Títulos ──────────────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}
+  [\color{navy}\titlerule]
+\titlespacing{\section}{0pt}{22pt}{8pt}
+\titleformat{\subsection}{\color{medblue}\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing{\subsection}{0pt}{14pt}{5pt}
+\titleformat{\subsubsection}{\color{navy!80}\normalsize\bfseries\itshape}
+  {\thesubsubsection}{0.5em}{}
+\titlespacing{\subsubsection}{0pt}{10pt}{4pt}
+
+% ── Tabelas ──────────────────────────────────────────────────────────
+\usepackage{booktabs,array,tabularx,longtable,multirow,colortbl}
+\renewcommand{\arraystretch}{1.40}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ── Utilitários ──────────────────────────────────────────────────────
+\usepackage{float,enumitem,setspace,amsmath,caption,chngcntr,pdflscape}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=3pt,topsep=3pt,parsep=0pt}
+\setlist[itemize]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\counterwithout{footnote}{section}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=medblue,
+  pdfborder={0 0 0}]{hyperref}
+
+% ── Macros ───────────────────────────────────────────────────────────
+\newcommand{\art}[1]{art.\,#1}
+\newcommand{\Rs}{R\$\,}
+
+% ── Dados do processo ─────────────────────────────────────────────────
+\newcommand{\procNum}{2026.00002}
+\newcommand{\exercicio}{2026}
+\newcommand{\municipio}{Prefeitura Municipal de Borba/AM}
+\newcommand{\valorTotal}{2.800.000,00}
+
+% ═════════════════════════════════════════════════════════════════════
+\begin{document}
+% ═════════════════════════════════════════════════════════════════════
+
+% ── Capa ─────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \pagecolor{navy}\color{white}\setlength{\parindent}{0pt}\centering
+  \vspace*{0.8cm}
+  {\small\bfseries\color{ltblue}PREFEITURA MUNICIPAL DE BORBA ---
+    ESTADO DO AMAZONAS}\\[2pt]
+  {\small\color{ltblue!70}SECRETARIA MUNICIPAL DE SAÚDE --- PROCESSO
+    \procNum}\\[0.4cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.5cm]
+  {\fontsize{11}{14}\selectfont\bfseries\color{ltblue!85}
+    ANÁLISE TÉCNICA PRELIMINAR --- ATP}\\[0.3cm]
+  {\fontsize{11}{14}\selectfont\color{ltblue!70}
+    Fundamento para o Estudo Técnico Preliminar (ETP) ---
+    IN SEGES/MGI n.\textsuperscript{o} 58/2022}\\[0.5cm]
+  {\fontsize{20}{26}\selectfont\bfseries
+    Contratação de Empresa\\[4pt]Especializada em
+    Agenciamento\\[4pt]de Transporte Fluvial\\[4pt]de Passageiros}\\[0.3cm]
+  {\fontsize{12}{16}\selectfont\color{ltblue!80}
+    Corredor Borba--Manaus (Rio Madeira) --- \exercicio}\\[0.6cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.8cm]
+  \begin{tabular}{@{}r@{\hspace{8pt}}p{0.56\linewidth}@{}}
+    \color{ltblue!70}\small\bfseries Processo: &
+      \small \procNum \\[4pt]
+    \color{ltblue!70}\small\bfseries Objeto: &
+      \small Serviço de agenciamento de passagens fluviais \\[4pt]
+    \color{ltblue!70}\small\bfseries Natureza da despesa: &
+      \small 33.90.39 --- Outros Serviços de Terceiros PJ \\[4pt]
+    \color{ltblue!70}\small\bfseries CATSER principal: &
+      \small 3719 --- Agenciamento de Passagens \\[4pt]
+    \color{ltblue!70}\small\bfseries Valor estimado: &
+      \small \Rs \valorTotal\ (dois milhões e oitocentos mil reais) \\[4pt]
+    \color{ltblue!70}\small\bfseries Modalidade proposta: &
+      \small Pregão Eletrônico --- SRP (Lei n.\textsuperscript{o}
+        14.133/2021) \\[4pt]
+    \color{ltblue!70}\small\bfseries Vigência projetada: &
+      \small 12 meses prorrogáveis (\art{84}, \S\,1.\textsuperscript{o}) \\[4pt]
+    \color{ltblue!70}\small\bfseries Elaborado em: &
+      \small Borba/AM, \exercicio \\[4pt]
+  \end{tabular}
+  \vfill
+  \textcolor{ltblue!40}{\rule{0.85\linewidth}{0.4pt}}\\[0.3cm]
+  {\tiny\color{ltblue!50}
+    Documento elaborado em conformidade com o \art{18} da Lei
+    n.\textsuperscript{o} 14.133/2021 e com a IN SEGES/MGI n.\textsuperscript{o}
+    58/2022, com fundamento no princípio da eficiência (\art{37}, CF/88) e no
+    planejamento da contratação}
+\end{titlepage}
+\nopagecolor
+\setlength{\parindent}{1.2cm}
+
+\tableofcontents
+\clearpage
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Precisão Jurídica do Objeto: Agenciamento \textit{vs.}
+  Aquisição de Passagens}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[Distinção Fundamental --- \art{6.\textsuperscript{o}},
+  XXIII, ``a'', Lei n.\textsuperscript{o} 14.133/2021]
+\small
+O objeto desta contratação é um \textbf{serviço continuado}, nos termos do
+\art{6.\textsuperscript{o}}, XVI, da Lei n.\textsuperscript{o}~14.133/2021.
+Não se trata de compra de bem (passagem) nem de contratação direta junto às
+armadoras, mas de \textbf{intermediação profissional especializada}.
+\end{legalbox}
+
+A precisão do objeto é o alicerce de toda a estrutura licitatória. A tentação
+de classificar este processo como ``aquisição de passagens fluviais'' produz
+três consequências deletérias: (i) erro na natureza da despesa orçamentária,
+que deve ser \textbf{33.90.39} (Outros Serviços de Terceiros --- Pessoa Jurídica),
+e não 33.90.30 (Material de Consumo); (ii) inadequação do CATSER, que é
+\textbf{3719 --- Agenciamento de Passagens}, não um código de produto; e (iii)
+estrutura contratual incorreta --- a passagem é o \textit{insumo} do serviço,
+não o objeto do contrato.
+
+\begin{table}[H]\centering\small
+\caption{Distinção jurídica entre agenciamento e aquisição direta}
+\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{4.0cm} L{5.0cm} L{5.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Dimensão} &
+  \color{white}\textbf{Agenciamento (objeto correto)} &
+  \color{white}\textbf{Aquisição direta (objeto incorreto)} \\
+  \toprule
+  Natureza jurídica       & Prestação de serviço continuado
+                            (\art{6.\textsuperscript{o}}, XVI) &
+                            Compra de bem (\art{6.\textsuperscript{o}}, XIV) \\
+  Natureza da despesa     & 33.90.39 & 33.90.30 \\
+  CATSER/CATMAT           & CATSER 3719 &
+                            Não há CATMAT para passagens fluviais \\
+  Instrumento contratual  & Contrato de serviço + ARP &
+                            Apenas ARP ou empenho direto \\
+  Quem remunera o armador & A agência, com seus recursos;
+                            a prefeitura paga a agência &
+                            A prefeitura diretamente ao armador \\
+  Vantagem para a gestão  & Fatura unificada, bilhetes eletrônicos,
+                            controle por centro de custo &
+                            Reembolsos pulverizados, risco de superfaturamento \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{corrbox}[Correção 1 --- DPVAT $\to$ DPEM]
+\small
+O estudo de origem menciona o \textbf{DPVAT} como seguro obrigatório das
+embarcações. Este seguro foi \textbf{extinto pela Lei n.\textsuperscript{o}
+14.071, de 13 de outubro de 2020}. Para embarcações, o seguro obrigatório
+vigente é o \textbf{DPEM --- Dano Pessoal Causado por Embarcações ou por
+sua Carga}, regulado pela \textbf{Resolução CNSP n.\textsuperscript{o}
+373/2018}, que estabelece os valores mínimos de indenização por morte e
+invalidez permanente de passageiro. O TR deverá exigir a certidão de apólice
+DPEM vigente como requisito habilitatório das embarcações cadastradas pela
+agência.
+\end{corrbox}
+
+\begin{corrbox}[Correção 2 --- Natureza da Contratação e Estrutura de Lotes]
+\small
+O estudo de origem estrutura três ``itens'' (passagem fluvial, agenciamento e
+frete de carga) como se fossem itens paralelos de igual natureza. A estrutura
+correta é:
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item \textbf{Lote único de serviço}: agenciamento de passagens fluviais
+    (CATSER 3719) com os lances incidindo sobre a \textbf{taxa de agenciamento
+    por bilhete emitido};
+  \item O frete de volumes acompanhantes (\textit{bagagem de porão}) pode
+    ser item separado dentro do mesmo lote (CATSER 17892), desde que o TR
+    justifique o agrupamento por unidade funcional (\art{40},
+    \S\,1.\textsuperscript{o}, II, Lei n.\textsuperscript{o}~14.133/2021);
+  \item \textbf{O preço da passagem não é licitado}: é preço de mercado
+    regulado pela ARSEP-AM e repassado ao Município sem margem; a competição
+    ocorre exclusivamente sobre a taxa de agenciamento.
+\end{itemize}
+\end{corrbox}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Fundamentos Matemáticos e Estruturação Orçamentária}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Custo Total do Serviço e Capacidade Operacional de Transporte}
+
+O orçamento de \Rs \valorTotal\ representa o \textbf{teto de empenho} da Ata
+de Registro de Preços e deve ser decomposto no \textbf{Custo Total do Serviço
+de Agenciamento} ($CTSA$):
+
+\begin{equation}
+  CTSA = \underbrace{N_{bilhetes} \times \bar{P}}_{\text{repasse ao armador}}
+       + \underbrace{N_{bilhetes} \times T_{ag}}_{\text{remuneração da agência}}
+       + \underbrace{N_{kg} \times P_{frete}}_{\text{frete de volumes}}
+  \label{eq:ctsa}
+\end{equation}
+
+onde $N_{bilhetes}$ é o número de passagens emitidas no período, $\bar{P}$
+a média ponderada das tarifas ARSEP-AM por modal, $T_{ag}$ a taxa de
+agenciamento por bilhete e $N_{kg} \times P_{frete}$ o custo do serviço
+de despacho de carga associado.
+
+\medskip
+A \textbf{Capacidade Operacional de Transporte} ($COT$), derivada diretamente
+do orçamento disponível, é dada por:
+
+\begin{equation}
+  COT = \frac{O_{total} - C_{frete}}{\bar{P} + T_{ag}}
+  \label{eq:cot}
+\end{equation}
+
+onde $C_{frete}$ é a reserva orçamentária para frete de volumes (estimada em
+5\% do total, conforme histórico de contratos similares na SEFAZ-AM):
+
+\begin{align}
+  C_{frete}   &= 0{,}05 \times 2{.}800{.}000 = \Rs 140{.}000 \notag\\
+  O_{passagens} &= 2{.}800{.}000 - 140{.}000 = \Rs 2{.}660{.}000 \notag
+\end{align}
+
+\begin{table}[H]\centering
+\caption{Projeção estática de volume por modal de transporte (orçamento
+  para passagens: \Rs 2.660.000)}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{4.5cm} C{2.0cm} C{2.0cm} C{2.2cm} C{2.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Modalidade} &
+  \color{white}\textbf{Tarifa\newline ARSEP (R\$)} &
+  \color{white}\textbf{Taxa\newline Ag. (R\$)} &
+  \color{white}\textbf{CUF (R\$)} &
+  \color{white}\textbf{Cap. Máx.\newline (bilhetes)} \\
+  \toprule
+  Lancha rápida (A-Jato) & 335,00 & 0,01 & 335,01 & 7.940 \\
+  Barco motor (Recreio)  & 185,00 & 0,01 & 185,01 & 14.378 \\
+  Misto (60\% recreio / 40\% jato) &
+    245,00 & 0,01 & 245,01 & 10.856 \\
+  \rowcolor{ltblue}
+  \multicolumn{4}{l}{\textbf{Cenário base adotado (60/40)}} &
+    \textbf{10.856 bilhetes} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent O mix 60/40 (recreio/jato) reflete o perfil histórico de uso
+institucional: pacientes de TFD e servidores em deslocamento rotineiro
+preferem o recreio pelo custo e conforto em viagens diurnas; urgências
+médicas e deslocamentos de gestores utilizam o A-Jato.
+
+\subsection{Análise de Inexequibilidade da Taxa de Agenciamento}
+
+\begin{warnbox}[Risco Jurídico --- Taxa Simbólica]
+\small
+A taxa de \Rs 0,01 por bilhete, embora documentada no PE 376/23-CSC (SEFAZ-AM),
+pode ser impugnada como oferta \textbf{inexequível} nos termos do \art{59}, II,
+da Lei n.\textsuperscript{o}~14.133/2021, caso a empresa não demonstre seu
+modelo de remuneração indireta. O TR deve exigir que o licitante comprove,
+na fase de habilitação econômica, a \textbf{viabilidade financeira da taxa
+ofertada}, indicando a receita acessória que sustenta a operação (float
+financeiro, comissão das armadoras, etc.).
+\end{warnbox}
+
+A sustentabilidade de taxas simbólicas repousa em três fontes de receita
+indireta que o TR deve admitir explicitamente e a Administração deve monitorar:
+
+\begin{enumerate}
+  \item \textbf{Float financeiro}: a prefeitura paga a fatura com 15 a 30 dias
+    de atraso em relação ao embarque; nesse intervalo, a agência retém os
+    recursos e obtém rendimento em aplicações financeiras;
+  \item \textbf{Comissão das armadoras}: as empresas de navegação remuneram
+    canais de venda com 5--10\% do valor da passagem; essa receita não é
+    debitada ao Município;
+  \item \textbf{Retorno de bilhetes não utilizados (No-Show)}: discutido na
+    Seção~\ref{sec:noshow}.
+\end{enumerate}
+
+O TR deve estabelecer que a taxa de agenciamento é o \textbf{único valor
+licitado} e que qualquer comissão recebida pela agência das armadoras deve ser
+declarada ao Gestor sem que isso implique redução do valor da passagem para o
+Município.
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Dinâmica Hidrológica do Rio Madeira e Impacto nos Custos}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Coeficiente de Ajuste Logístico}
+
+O Rio Madeira exibe um regime hidrológico bimodal com amplitude de nível
+d'água superior a 12 metros entre a cheia plena e a seca extrema. Esta
+amplitude, a maior entre os tributários do Rio Amazonas, produz impactos
+diretos sobre a distância efetiva percorrida e o consumo de combustível:
+
+\begin{equation}
+  C_{log} = \frac{D_{vazante}}{D_{cheia}} \times \frac{C_{comb}}{C_{base}}
+  \label{eq:clog}
+\end{equation}
+
+\begin{table}[H]\centering
+\caption{Matriz de risco climático e variação de custos --- corredor
+  Borba--Manaus}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{3.2cm} C{2.0cm} C{2.0cm} C{2.2cm} C{2.2cm} C{2.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Cenário\newline Hidrológico} &
+  \color{white}\textbf{Período} &
+  \color{white}\textbf{$\Delta$\newline Distância} &
+  \color{white}\textbf{$\Delta$\newline Consumo} &
+  \color{white}\textbf{Reajuste\newline Provável} &
+  \color{white}\textbf{Tarifa Méd.\newline B--M (R\$)} \\
+  \toprule
+  Cheia plena        & Jan--Mai & $+0\%$  & $+0\%$  & Base     & 320,00 \\
+  Vazante moderada   & Jun--Ago & $+8\%$  & $+12\%$ & $+10\%$  & 352,00 \\
+  Seca extrema       & Set--Nov & $+15\%$ & $+25\%$ & $+20\%$  & 384,00 \\
+  Enchente inicial   & Dez      & $+3\%$  & $+5\%$  & $+3\%$   & 330,00 \\
+  \rowcolor{ltblue}
+  \multicolumn{4}{l}{\textbf{Média ponderada anual (dias por período)}} &
+    $+8{,}5\%$ & \textbf{345,00} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent A média ponderada de \Rs 345,00 por passagem, incorporando a
+variabilidade sazonal, fundamenta o valor orçado e substitui a tarifa
+estática de \Rs 260,00 do cenário misto, que subestimava os efeitos de
+seca extrema observados em 2023 e 2024.
+
+\subsection{Sazonalidade de Demanda e Picos Festivos}
+
+Além da sazonalidade hidrológica, há uma sazonalidade de \textbf{demanda}
+que pressiona tanto a disponibilidade de vagas quanto as tarifas de mercado:
+
+\begin{table}[H]\centering
+\caption{Sazonalidade de demanda no corredor Borba--Manaus}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.2cm} C{1.8cm} L{4.5cm} C{2.2cm} C{2.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Mês} &
+  \color{white}\textbf{Período\newline Hidrológico} &
+  \color{white}\textbf{Evento / Fator} &
+  \color{white}\textbf{Fator de\newline Demanda ($\alpha$)} &
+  \color{white}\textbf{Correção\newline de Volume} \\
+  \toprule
+  Jan & Cheia    & Retorno pós-festas               & 1,40 & $+40\%$ \\
+  Fev & Cheia    & Carnaval (Manaus)                 & 1,25 & $+25\%$ \\
+  Mar & Cheia    & Normal                            & 1,00 & Base \\
+  Abr & Cheia    & Semana Santa                      & 1,20 & $+20\%$ \\
+  Mai & Cheia    & Normal                            & 1,00 & Base \\
+  Jun & Vazante  & Festa de Santo Antônio de Borba
+                   (13/06)                           & 1,60 & $+60\%$ \\
+  Jul & Vazante  & Férias escolares + seca incipiente& 1,35 & $+35\%$ \\
+  Ago & Vazante  & Seca moderada                     & 0,90 & $-10\%$ \\
+  Set & Seca     & Seca extrema (risco de cancelamento)& 0,80 & $-20\%$ \\
+  Out & Seca     & Início da enchente                & 0,85 & $-15\%$ \\
+  Nov & Enchente & Normal                            & 1,00 & Base \\
+  Dez & Enchente & Natal / Réveillon                 & 1,50 & $+50\%$ \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+O TR deverá exigir que a agência \textbf{antecipe reservas} nos meses com
+fator $\alpha > 1{,}30$ (janeiro, junho, julho e dezembro), mediante plano
+de contingência de embarque apresentado 30 dias antes do evento, sob pena
+de multa por indisponibilidade de vagas.
+
+A Festa de Santo Antônio de Borba (13 de junho) merece atenção especial: é
+o maior evento cultural do município, com fluxo intensificado nos 5 dias
+anteriores e 3 dias posteriores ao dia principal. O pico de $\alpha = 1{,}60$
+é o mais crítico de todo o calendário e coincide com o início da vazante,
+quando o número de embarcações operando regularmente começa a diminuir.
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Modelo de Gestão do No-Show e Créditos de Bilhetes}
+\label{sec:noshow}
+% ═════════════════════════════════════════════════════════════════════
+
+O \textit{No-Show} --- situação em que o passageiro não comparece ao embarque
+--- representa um dos maiores riscos de desperdício de recursos públicos em
+contratos de agenciamento. A modelagem matemática do fenômeno é essencial para
+dimensionar a perda potencial e definir as cláusulas contratuais adequadas.
+
+\subsection{Modelo Probabilístico de No-Show}
+
+Seja $p_{ns}$ a probabilidade de no-show por bilhete emitido. Com base em
+contratos similares (SEMA-AM, SSP-AM, PE 376/23-CSC), estima-se
+$p_{ns} \in [0{,}08;\,0{,}15]$ para o transporte fluvial institucional,
+onde 8\% é o cenário otimista (com política de confirmação obrigatória 24h
+antes) e 15\% o cenário pessimista (sem controle).
+
+A perda financeira esperada anual por no-show não gerenciado é:
+
+\begin{equation}
+  L_{ns} = N_{bilhetes} \times p_{ns} \times \bar{P} \times (1 - r_{rec})
+  \label{eq:noshow}
+\end{equation}
+
+onde $r_{rec}$ é a taxa de recuperação (remarcação ou crédito) que a agência
+consegue negociar com o armador. Cenários:
+
+\begin{table}[H]\centering
+\caption{Impacto financeiro do No-Show --- cenários anuais}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{3.8cm} C{1.5cm} C{1.5cm} C{2.5cm} C{2.5cm} C{2.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Cenário} &
+  \color{white}\textbf{$p_{ns}$} &
+  \color{white}\textbf{$r_{rec}$} &
+  \color{white}\textbf{Bilhetes\newline Perdidos} &
+  \color{white}\textbf{Perda Anual\newline (R\$)} &
+  \color{white}\textbf{\% do\newline Contrato} \\
+  \toprule
+  Sem controle algum      & 15\% & 0\%  & 1.628 & 561.660 & 20,1\% \\
+  Gestão mínima da agência& 12\% & 40\% & 782   & 269.790 &  9,6\% \\
+  Gestão ativa (meta TR)  &  8\% & 75\% & 218   &  75.210 &  2,7\% \\
+  \rowcolor{ltblue}
+  \multicolumn{3}{l}{\textbf{Meta contratual obrigatória}} &
+    \multicolumn{3}{c}{\textbf{$p_{ns} \leq 10\%$ e $r_{rec} \geq 70\%$}} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+O TR deve estabelecer como \textbf{KPI mandatório}: taxa de no-show
+$\leq 10\%$ e taxa de recuperação $\geq 70\%$ (remarcação ou crédito para
+uso em 60 dias). O descumprimento desses índices por 2 meses consecutivos
+configurará inexecução parcial e embasará a aplicação de multa.
+
+\subsection{Fluxo de Gestão do No-Show}
+
+A cláusula contratual deve estabelecer o seguinte fluxo:
+
+\begin{enumerate}
+  \item O passageiro comunica o no-show à agência com antecedência mínima
+    de \textbf{4 horas} antes do horário de embarque;
+  \item A agência tenta remarcação em embarcação do mesmo armador, sem ônus
+    para o Município;
+  \item Impossível a remarcação, gera-se \textbf{crédito} vinculado ao centro
+    de custo da secretaria solicitante, válido por \textbf{60 dias corridos};
+  \item Crédito não utilizado em 60 dias é convertido em
+    \textbf{glosa na fatura} do mês subsequente;
+  \item A agência apresenta relatório mensal de no-shows, remarcações e
+    créditos, que o Fiscal Técnico concilia com as Ordens de Transporte emitidas.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Análise de Demanda Setorial e Estrutura de Consumo}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Escopo do Contrato: Municipal ou Setorial?}
+
+\begin{alertbox}[Decisão Estratégica Prévia ao ETP]
+\small
+O processo \procNum, instaurado pela \textbf{Secretaria Municipal de Saúde},
+pode ser estruturado como:
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item \textbf{Contrato setorial} (SMS como único contratante):
+    valor menor, TR mais simples, menor poder de barganha;
+  \item \textbf{ARP municipal} (SMS como órgão gerenciador, demais secretarias
+    como participantes): poder de compra consolidado, maior competitividade,
+    melhor gestão do float. \textbf{Recomendado.}
+\end{itemize}
+A opção pela ARP municipal exige que as demais secretarias formalizem
+adesão ao processo antes da publicação do edital, mediante DFD setorial
+encaminhado à SMS (\art{82}, \S\,3.\textsuperscript{o},
+Lei n.\textsuperscript{o}~14.133/2021).
+\end{alertbox}
+
+\subsection{Estimativa de Demanda por Secretaria}
+
+A demanda por transporte fluvial institucional em Borba apresenta perfil
+\textbf{predominantemente probabilístico}, não determinístico. Os dados
+abaixo constituem projeções estatísticas baseadas em:
+(i) séries históricas de empenhos da prefeitura (2022--2025);
+(ii) média de Tratamentos Fora do Domicílio (TFD) homologados pelo SUS;
+(iii) calendário escolar e administrativo.
+
+\begin{table}[H]\centering
+\caption{Estimativa de demanda anual por secretaria --- Processo \procNum}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{3.2cm} L{3.2cm} C{2.0cm} C{2.0cm} C{2.8cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Secretaria} &
+  \color{white}\textbf{Perfil\newline de Usuário} &
+  \color{white}\textbf{Pass./Mês\newline (estimado)} &
+  \color{white}\textbf{Pass./Ano} &
+  \color{white}\textbf{Custo Anual\newline Estimado (R\$)} \\
+  \toprule
+  Saúde (SMS)    & Pacientes + acomp. TFD     & 450 & 5.400 & 1.863.000 \\
+  Educação (SEMED) & Professores + técnicos   & 200 & 2.400 &   828.000 \\
+  Assist. Social & Famílias vulneráveis       & 100 & 1.200 &   414.000 \\
+  Administração  & Servidores / diligências   & 150 & 1.800 &   621.000 \\
+  \rowcolor{ltblue}
+  \textbf{Total} & & \textbf{900} & \textbf{10.800} &
+    \textbf{3.726.000} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{alertbox}[Análise do Valor Projetado \textit{vs.} Orçamento]
+\small
+A projeção ``bruta'' totaliza \Rs 3.726.000, superior ao orçamento de
+\Rs 2.800.000. Isso é \textbf{esperado e correto} em uma ARP: o valor
+registrado é o \textit{teto de empenho}, não um compromisso de consumo
+total. O dimensionamento deve acomodar que: (i) nem todas as passagens
+estimadas se concretizarão (fator de realização histórico: 70--80\%);
+(ii) a negociação de descontos coletivos pela agência reduzirá o custo
+unitário em relação à tarifa ARSEP de balcão.
+\end{alertbox}
+
+Aplicando o fator de realização histórico de 75\%:
+
+\begin{align}
+  \text{Demanda realizada estimada} &= 10.800 \times 0{,}75 = 8.100
+  \text{ passagens/ano} \notag\\
+  \text{Custo médio ajustado} &= \Rs 345{,}00 \times 0{,}95
+  \text{ (desconto coletivo de 5\%)} = \Rs 327{,}75 \notag\\
+  \text{Custo total projetado} &= 8.100 \times 327{,}75 =
+  \Rs 2.654.775 \notag
+\end{align}
+
+Este valor de \Rs 2.654.775 é compatível com o orçamento de \Rs 2.800.000,
+deixando uma reserva de \Rs 145.225 (5,2\%) para o frete de volumes e para
+eventuais picos de demanda não previstos.
+
+\subsection{Tratamento Fora do Domicílio (TFD) --- Especificidades}
+
+O TFD é obrigação constitucional de saúde (\art{196} da CF/88) e responde
+por aproximadamente 56\% da demanda estimada da SMS. Suas características
+operacionais impõem exigências específicas ao agenciamento:
+
+\begin{enumerate}
+  \item \textbf{Flexibilidade de data de retorno}: a alta médica ou o
+    reagendamento de exame pode alterar a data de volta com menos de 24h de
+    antecedência; o contrato deve prever \textbf{remarcação gratuita} em até
+    2 ocorrências por paciente por mês;
+
+  \item \textbf{Acompanhante legal}: toda remoção de paciente gera
+    \textbf{2 bilhetes} (paciente + acompanhante), nos termos do
+    \art{16} da Lei n.\textsuperscript{o}~10.741/2003 (Estatuto do Idoso)
+    e do \art{12} da Lei n.\textsuperscript{o}~8.069/1990 (ECA) para
+    crianças; o TR deve prever este multiplicador;
+
+  \item \textbf{Urgências e emergências}: o TR deve distinguir o
+    \textbf{agenciamento de urgência} (embarque em até 4h da solicitação)
+    do \textbf{agenciamento padrão} (embarque programado com 48h de
+    antecedência), com SLAs diferentes e possível sobrepreço de taxa de
+    urgência limitado a \Rs [X] por bilhete, a ser definido na pesquisa
+    de mercado;
+
+  \item \textbf{Pacientes acamados ou cadeirantes}: embarcações de linha
+    regular possuem acessibilidade limitada; o TR deve exigir da agência
+    a indicação de embarcações adaptadas quando disponíveis, e a
+    justificativa por escrito quando não houver.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Estrutura Jurídico-Administrativa sob a Lei 14.133/2021}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Modalidade, Instrumento e Código de Classificação}
+
+\begin{table}[H]\centering\small
+\caption{Parâmetros jurídico-administrativos do Processo \procNum}
+\rowcolors{2}{rowalt}{white}
+\begin{tabular}{>{\bfseries\color{navy}}p{4.5cm} L{9.5cm}}
+\midrule
+Modalidade:                & Pregão Eletrônico (\art{28}, I,
+                             Lei n.\textsuperscript{o}~14.133/2021) \\
+\rowcolor{rowalt}
+Instrumento:               & Ata de Registro de Preços ---
+                             ARP (\art{82}) \\
+Critério de julgamento:    & Menor taxa de agenciamento por bilhete
+                             emitido (\art{33}, I) \\
+\rowcolor{rowalt}
+Natureza da despesa:       & \textbf{33.90.39} --- Outros Serviços de
+                             Terceiros --- Pessoa Jurídica \\
+CATSER principal:          & \textbf{3719} --- Agenciamento de Passagens \\
+\rowcolor{rowalt}
+CATSER secundário:         & \textbf{17892} --- Transporte de Passageiros
+                             (frete volumes) \\
+Unidade de medida:         & Bilhete emitido (passagem A/V) \\
+\rowcolor{rowalt}
+Vigência da ARP:           & 12 meses prorrogáveis (\art{84},
+                             \S\,1.\textsuperscript{o}) \\
+Publicidade obrigatória:   & PNCP + Diário Oficial dos Municípios
+                             do Amazonas (\art{174}) \\
+\rowcolor{rowalt}
+Controle externo:          & TCE-AM + Portal da Transparência Municipal \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Justificativa do SRP para Serviço de Agenciamento}
+
+O Sistema de Registro de Preços é especialmente adequado para este objeto
+por quatro razões convergentes:
+
+\begin{enumerate}
+  \item \textbf{Demanda imprevisível} (\art{82}, I): o número exato de
+    passagens é probabilístico, não determinístico --- o SRP permite empenhos
+    parciais conforme a necessidade efetiva, sem o risco de sub ou
+    superempenhamento;
+
+  \item \textbf{Entregas parceladas} (\art{82}, II): as passagens são emitidas
+    diariamente, em volumes variáveis, ao longo de 12 meses;
+
+  \item \textbf{Conveniência do registro} (\art{82}, IV): múltiplas secretarias
+    podem aderir ao mesmo instrumento, eliminando a proliferação de processos
+    licitatórios paralelos para o mesmo serviço;
+
+  \item \textbf{Impossibilidade de definir quantidades exatas}: a própria
+    natureza do TFD --- dependente de diagnósticos, alta hospitalar e
+    agendamentos do SUS --- impede a fixação de quantitativos precisos
+    antes da licitação.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Requisitos Técnicos e Regulatórios das Embarcações}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{corrbox}[Correção 1 já aplicada --- DPVAT $\to$ DPEM]
+\small
+Todos os requisitos de seguro obrigatório referem-se ao
+\textbf{DPEM --- Dano Pessoal Causado por Embarcações ou por sua Carga},
+regulado pela Resolução CNSP n.\textsuperscript{o}~373/2018 e administrado
+pela SUSEP. O DPVAT foi extinto em 2020 (Lei n.\textsuperscript{o}~14.071/2020)
+e não tem aplicação para embarcações.
+\end{corrbox}
+
+\begin{table}[H]\centering
+\caption{Requisitos técnicos mínimos para embarcações cadastradas pela agência}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{4.5cm} L{4.0cm} L{4.0cm} L{1.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Requisito} &
+  \color{white}\textbf{Lancha Rápida (A-Jato)} &
+  \color{white}\textbf{Barco Motor (Recreio)} &
+  \color{white}\textbf{Base Legal} \\
+  \toprule
+  Registro ANTAQ   & Obrigatório & Obrigatório & Res. ANTAQ 22/2013 \\
+  Autori. ARSEP-AM & Obrigatório & Obrigatório & Dec. Est. AM 34.536/14 \\
+  DPEM (SUSEP)     & Obrigatório & Obrigatório & CNSP Res. 373/2018 \\
+  Salva-vidas      & 110\% da lotação & 110\% da lotação & NORMAM-02/DPC \\
+  Certificado de\newline Segurança &
+    Marinha do Brasil (DPC) & Marinha do Brasil (DPC) & NORMAM-01/DPC \\
+  Arq. de Bordagem & Obrigatório & Obrigatório & CONTRAN/ANTAQ \\
+  Ar condicionado  & Padrão & Opcional (suítes) & TR \\
+  Velocidade de\newline cruzeiro &
+    25--35 nós & 8--12 nós & Projeto naval \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+A agência deverá manter e apresentar mensalmente ao Gestor:
+
+\begin{itemize}
+  \item Banco de dados atualizado com nome, identificação ANTAQ, registro
+    ARSEP e apólice DPEM de cada embarcação utilizada;
+  \item Relatório de embarcações com documentação vencida, com prazo de 5 dias
+    para substituição;
+  \item Lista de embarcações adaptadas para mobilidade reduzida, quando
+    disponíveis no corredor.
+\end{itemize}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Fluxo Operacional: Ordem de Transporte}
+% ═════════════════════════════════════════════════════════════════════
+
+O instrumento operacional que substitui a ``compra no guichê'' é a
+\textbf{Ordem de Transporte (OT)}, documento emitido pelo Gestor ou por
+servidor autorizado de cada secretaria, que aciona a agência para emissão
+do(s) bilhete(s). O fluxo deve ser detalhado no TR:
+
+\begin{table}[H]\centering\small
+\caption{Fluxo operacional da Ordem de Transporte}
+\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.6cm} L{4.0cm} L{4.5cm} C{2.0cm} L{2.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Etapa} &
+  \color{white}\textbf{Ação} &
+  \color{white}\textbf{Responsável} &
+  \color{white}\textbf{Prazo} &
+  \color{white}\textbf{Documento} \\
+  \toprule
+  1 & Solicitação de viagem com dados do passageiro &
+    Secretaria solicitante & $D-48h$ (padrão) ou $D-4h$ (urgência) &
+    OT via sistema ou e-mail \\
+  2 & Verificação de disponibilidade e tarifa &
+    Agência & 1h após OT & Confirmação de reserva \\
+  3 & Emissão do bilhete eletrônico (QR Code) &
+    Agência & 2h após confirmação & Bilhete digital (e-mail/app) \\
+  4 & Confirmação de embarque &
+    Agência / armador & No embarque & Manifesto digital \\
+  5 & Relatório mensal consolidado &
+    Agência & Até 5\textdegree\ dia útil & Fatura + manifesto \\
+  6 & Conciliação e atestado &
+    Fiscal Técnico & Até 10.\textdegree\ dia útil &
+    TRD (equivalente) \\
+  7 & Pagamento &
+    Setor financeiro & Até 30 dias após fatura & OB/TED/PIX \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent A OT deve conter, no mínimo: nome completo e CPF do passageiro;
+secretaria de origem e centro de custo; trecho (ida/volta ou só ida); data e
+horário preferencial de embarque; modal preferencial (justificar se jato);
+natureza da viagem (TFD, serviço, diligência, outro).
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Requisitos Tecnológicos da Agência}
+% ═════════════════════════════════════════════════════════════════════
+
+A contratada deve disponibilizar plataforma tecnológica com as seguintes
+funcionalidades, como condição de habilitação técnica:
+
+\begin{enumerate}
+  \item \textbf{Portal de self-booking} ou canal de atendimento 24/7 via
+    aplicativo de mensagens (WhatsApp Business API ou equivalente), dado
+    que embarcações de linha regular em Borba frequentemente partem ou
+    chegam em horários noturnos;
+
+  \item \textbf{Bilhete eletrônico} com QR Code, nome do passageiro e
+    número da OT gravado no código, permitindo auditoria pelo TCE-AM;
+
+  \item \textbf{Dashboard de gestão} acessível ao Fiscal Técnico e ao Gestor,
+    com visão em tempo real de: bilhetes emitidos por secretaria, créditos
+    abertos por no-show, saldo de ARP por lote e KPIs do contrato;
+
+  \item \textbf{Integração contábil}: exportação de relatório mensal em
+    formato compatível com o sistema de contabilidade do Município
+    (planilha CSV/XLSX), com campos de centro de custo, número da OT,
+    CPF do passageiro e valor por bilhete, para conciliação com o SICONFI;
+
+  \item \textbf{Backup de contingência}: canal alternativo de atendimento
+    (telefone fixo) para operação em caso de falha do sistema digital,
+    considerando a conectividade intermitente de Borba.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Fórmula de Reajuste e Reequilíbrio Econômico-Financeiro}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Reajuste Paramétrico Anual}
+
+O contrato de agenciamento está exposto a dois vetores inflacionários
+distintos: o custo operacional da agência (capturado pelo IPCA) e o custo
+do combustível das embarcações (que, no interior do Amazonas, supera a
+inflação geral pelo custo do frete de abastecimento por balsa).
+
+A fórmula paramétrica proposta pondera esses dois vetores:
+
+\begin{equation}
+  \hat{R} = 0{,}60\left(\frac{D_1}{D_0}\right)
+           + 0{,}40\left(\frac{IPCA_1}{IPCA_0}\right)
+  \label{eq:reajuste}
+\end{equation}
+
+onde $D_1/D_0$ é a variação do preço médio do óleo diesel marítimo pesquisado
+pela ANP no Estado do Amazonas no período de referência, e $IPCA_1/IPCA_0$
+a variação do índice oficial de inflação no mesmo período. O peso de 60\%
+para o diesel reflete sua participação de 45--60\% na estrutura de custos
+da navegação amazônica.
+
+\begin{table}[H]\centering
+\caption{Simulação de reajuste em três cenários --- 12 meses}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{3.5cm} C{2.0cm} C{2.0cm} C{2.5cm} C{3.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Cenário} &
+  \color{white}\textbf{$\Delta$ Diesel\newline (\%)} &
+  \color{white}\textbf{IPCA\newline (\%)} &
+  \color{white}\textbf{$\hat{R}$\newline (\%)} &
+  \color{white}\textbf{Impacto no\newline Contrato (R\$)} \\
+  \toprule
+  Inflação baixa       &  $+5\%$  & $+4\%$  &  4,6\% &  128.800 \\
+  Cenário base         & $+10\%$  & $+5\%$  &  8,0\% &  224.000 \\
+  Choque de combustível& $+25\%$  & $+7\%$  & 17,8\% &  498.400 \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent O reajuste somente incide sobre a taxa de agenciamento por bilhete
+(parcela fixa), \textbf{não sobre o valor da passagem}, que é reajustado
+autonomamente pela ARSEP-AM via revisão tarifária.
+
+\subsection{Reequilíbrio por Alteração Tarifária da ARSEP-AM}
+
+Se a ARSEP-AM publicar nova tabela de tarifas durante a vigência da ARP, o
+Município não poderá ser onerado além do registrado. A cláusula de
+reequilíbrio deve prever:
+
+\begin{enumerate}
+  \item \textbf{Aumento tarifário}: a agência absorve a diferença por 30 dias
+    e, ao fim desse período, apresenta pedido de revisão fundamentado com
+    portaria da ARSEP-AM; o Gestor tem 15 dias para autorizar o novo preço
+    de passagem a ser repassado;
+  \item \textbf{Redução tarifária}: o benefício é imediatamente repassado ao
+    Município; vedada qualquer retenção pela agência.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Matriz de Riscos Expandida}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{table}[H]\centering
+\caption{Matriz de riscos --- contratação de agenciamento fluvial}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.6cm} L{3.8cm} C{1.3cm} C{1.3cm} C{1.3cm} L{4.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{R\#} &
+  \color{white}\textbf{Risco} &
+  \color{white}\textbf{Prob.\newline (1--5)} &
+  \color{white}\textbf{Impacto\newline (1--5)} &
+  \color{white}\textbf{Score} &
+  \color{white}\textbf{Mitigação} \\
+  \toprule
+  R1 & Seca extrema reduz oferta de embarcações & 4 & 5 & 20 &
+    Cadastro mínimo de 5 armadores por modal; cláusula de contingência \\
+  R2 & Agência em dificuldade financeira
+    (insolvência / interrupção) & 2 & 5 & 10 &
+    Exigir garantia contratual de 5\% (\art{96}, Lei 14.133/2021);
+    monitorar certidões mensalmente \\
+  R3 & Pico de demanda em Santo Antônio /
+    Natal sem vagas disponíveis & 4 & 4 & 16 &
+    Plano de contingência 30 dias antes; reserva antecipada obrigatória \\
+  R4 & No-show elevado ($> 15\%$) & 3 & 3 & 9 &
+    KPI contratual + glosa automática de créditos não utilizados \\
+  R5 & Reajuste tarifário ARSEP-AM não previsto & 3 & 4 & 12 &
+    Cláusula de reequilíbrio automático (Seção~8.2) \\
+  R6 & Embarcação sem DPEM vigente utilizada
+    para passageiro público & 2 & 5 & 10 &
+    Agência reporta apólices mensalmente; Fiscal verifica in loco \\
+  R7 & Choque do preço do diesel (+30\%) & 3 & 4 & 12 &
+    Fórmula paramétrica $\hat{R}$ com gatilho automático \\
+  R8 & Falha de sistema / bilhete não gerado
+    em urgência & 3 & 4 & 12 &
+    SLA de contingência: bilhete em papel assinado pelo gerente,
+    digitalizado em 24h \\
+  R9 & Conluio entre armadoras para elevar tarifa
+    acima da ARSEP & 2 & 4 & 8 &
+    Agência cadastra $\geq 5$ armadores; monitoramento mensal de tarifas \\
+  R10 & Cancelamento de viagem por acidente
+    fluvial & 2 & 5 & 10 &
+    Seguro DPEM cobre passageiros; agência tem 4h para reacomodar \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Indicadores de Desempenho (KPIs) do Contrato}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{table}[H]\centering
+\caption{KPIs propostos para o contrato de agenciamento ---
+  Processo \procNum}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{4.5cm} L{4.0cm} C{2.0cm} C{2.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Indicador} &
+  \color{white}\textbf{Fórmula} &
+  \color{white}\textbf{Meta} &
+  \color{white}\textbf{Freq.} \\
+  \toprule
+  Taxa de no-show &
+    Bilhetes sem embarque / Total emitido & $\leq 10\%$ & Mensal \\
+  Taxa de recuperação (remarcação) &
+    Remarcações / No-shows & $\geq 70\%$ & Mensal \\
+  Tempo de emissão --- padrão &
+    Tempo entre OT e bilhete digital (h) & $\leq 2h$ & Mensal \\
+  Tempo de emissão --- urgência &
+    Tempo entre OT urgência e bilhete (h) & $\leq 1h$ & Mensal \\
+  Conformidade documental das embarc. &
+    Embarcações c/ DPEM e ANTAQ válidos /
+    Total embarcações & $= 100\%$ & Mensal \\
+  Disponibilidade em picos ($\alpha > 1{,}3$) &
+    OT atendidas em picos / OT solicitadas & $\geq 95\%$ & Por evento \\
+  Tempestividade do relatório mensal &
+    Entregue até 5.\textdegree\ d.u. do mês & $= 100\%$ & Mensal \\
+  Satisfação do usuário (escala 1--5) &
+    Pesquisa de satisfação semestral & $\geq 4{,}0$ & Semestral \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Conformidade Regulatória e Papel da ARSEP-AM}
+% ═════════════════════════════════════════════════════════════════════
+
+A Agência Reguladora de Serviços Públicos Delegados e Contratados do Estado
+do Amazonas (ARSEP-AM) exerce competência sobre o transporte aquaviário de
+passageiros intermunicipal, definindo as tarifas máximas para o corredor
+Borba--Manaus e as condições operacionais mínimas das embarcações autorizadas.
+
+A agência contratada pelo Município deverá:
+
+\begin{enumerate}
+  \item Contratar \textbf{exclusivamente} embarcações detentoras de
+    Autorização de Transporte de Passageiros emitida pela ARSEP-AM;
+
+  \item Respeitar as tarifas máximas da tabela ARSEP-AM vigente ao momento
+    de emissão de cada bilhete; vedada a prática de tarifas acima do teto
+    regulado;
+
+  \item Comunicar ao Gestor, no prazo de 48h, qualquer alteração publicada
+    pela ARSEP-AM na tabela tarifária do corredor Borba--Manaus;
+
+  \item Não contratar embarcações em situação de operação clandestina
+    (sem autorização ARSEP/ANTAQ), ainda que ofereçam tarifas menores;
+    essa prática expõe o Município a responsabilidade solidária por danos
+    a passageiros.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Governança e Vantagens da Centralização}
+% ═════════════════════════════════════════════════════════════════════
+
+A contratação de empresa de agenciamento, em vez da compra direta pulverizada,
+produz as seguintes vantagens mensuráveis para a governança municipal:
+
+\begin{table}[H]\centering
+\caption{Comparativo de modelos: agenciamento \textit{vs.} compra direta}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{4.5cm} L{4.5cm} L{4.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Dimensão} &
+  \color{white}\textbf{Agenciamento (recomendado)} &
+  \color{white}\textbf{Compra direta} \\
+  \toprule
+  Auditoria pelo TCE-AM &
+    Fatura única com manifesto e QR Code; rastreável por CPF &
+    Reembolsos com notas manuais; difícil conciliação \\
+  Controle por secretaria &
+    Dashboard por centro de custo em tempo real &
+    Planilhas manuais; reconciliação mensal \\
+  Negociação de tarifas &
+    Desconto coletivo de 5--15\% sobre tabela ARSEP &
+    Tarifa de balcão; sem poder de barganha \\
+  Gestão de no-show &
+    Sistema de crédito e remarcação automática &
+    Passagem perdida sem recuperação \\
+  Processos de dispensa &
+    Eliminados; um único contrato anual &
+    Dezenas de dispensas de pequena monta \\
+  Risco de superfaturamento &
+    Controlado pela fatura da agência + manifesto &
+    Alto risco (reembolso sem comprovação de embarque) \\
+  Carga administrativa &
+    Baixa (Gestor valida fatura mensal) &
+    Alta (Gestor processa cada reembolso) \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Síntese e Conclusão: Viabilidade do Orçamento de
+  \Rs \valorTotal}
+% ═════════════════════════════════════════════════════════════════════
+
+O presente estudo valida, com a correção e o detalhamento necessários, o
+montante de \textbf{\Rs \valorTotal} como adequado e suficiente para um
+ciclo anual de agenciamento de transporte fluvial no corredor Borba--Manaus,
+com cobertura das quatro principais secretarias do Município.
+
+A validade repousa em quatro premissas verificáveis:
+
+\begin{enumerate}
+  \item Demanda realizada de \textbf{8.100 passagens/ano} (fator de
+    realização 75\% sobre a projeção bruta), compatível com o porte
+    demográfico de Borba (34.869 hab.) e com a estrutura do TFD-SUS;
+
+  \item Custo médio ponderado de \textbf{\Rs 327,75 por passagem}
+    (tarifa ARSEP com desconto coletivo de 5\%), coerente com os praticados
+    no corredor em 2024--2025;
+
+  \item Reserva de \textbf{5\% do orçamento} (\Rs 140.000) para frete de
+    volumes e eventos de pico não previstos;
+
+  \item Fórmula paramétrica de reajuste com gatilho no diesel que protege
+    a Administração de revisões orçamentárias no ano seguinte.
+\end{enumerate}
+
+O risco residual mais relevante é o \textbf{R1} (seca extrema), com score 20,
+que deverá ser integralmente absorvido pela cláusula de contingência e pelo
+plano de embarque em picos. Os demais riscos têm score $\leq 16$ e são
+mitigáveis pelas cláusulas do TR e pelos KPIs contratuais.
+
+\vspace{1.0cm}
+\noindent\hfill Borba/AM, \exercicio.
+
+\vspace{1.2cm}
+\begin{minipage}{0.47\linewidth}
+\begin{center}
+  \rule{7.5cm}{0.5pt}\\[3pt]
+  \textbf{[Nome e Cargo]}\\
+  \small Elaborador(a) da ATP\\
+  \small Secretaria Municipal de Saúde de Borba/AM
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\begin{center}
+  \rule{7.5cm}{0.5pt}\\[3pt]
+  \textbf{[Nome e Cargo]}\\
+  \small Secretário(a) Municipal de Saúde\\
+  \small Aprovação
+\end{center}
+\end{minipage}
+
+\vspace{1.2cm}
+\noindent\textcolor{navy!30}{\rule{\linewidth}{0.5pt}}
+
+\noindent{\footnotesize\itshape
+\textbf{Base normativa e referências técnicas:}
+Lei n.\textsuperscript{o}~14.133/2021 \textbullet{}
+Decreto n.\textsuperscript{o}~11.462/2023 \textbullet{}
+IN SEGES/MGI n.\textsuperscript{o}~58/2022 \textbullet{}
+IN SEGES/MGI n.\textsuperscript{o}~65/2021 \textbullet{}
+CNSP Resolução n.\textsuperscript{o}~373/2018 (DPEM) \textbullet{}
+Lei n.\textsuperscript{o}~14.071/2020 (extinção do DPVAT) \textbullet{}
+NORMAM-01/DPC e NORMAM-02/DPC (Marinha do Brasil) \textbullet{}
+Res. ANTAQ n.\textsuperscript{o}~22/2013 \textbullet{}
+Dec. Est. AM n.\textsuperscript{o}~34.536/2014 (ARSEP-AM) \textbullet{}
+Lei n.\textsuperscript{o}~10.741/2003 (Estatuto do Idoso) \textbullet{}
+Lei n.\textsuperscript{o}~8.069/1990 (ECA) \textbullet{}
+CF/88, arts.\,37 e 196 \textbullet{}
+PE 376/23-CSC (SEFAZ-AM) --- referência de mercado.}
+
+\end{document}

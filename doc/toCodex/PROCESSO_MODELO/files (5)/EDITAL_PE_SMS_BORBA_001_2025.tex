@@ -1,0 +1,1178 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Codificação e idioma ─────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Layout ───────────────────────────────────────────────────────────
+\usepackage[top=2.8cm,bottom=2.8cm,left=3.0cm,right=2.5cm,headheight=16pt]{geometry}
+
+% ── Cores ────────────────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{ltblue}{HTML}{D6E4F0}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\definecolor{legalbg}{HTML}{F0FDF4}
+\definecolor{legalbdr}{HTML}{16A34A}
+\definecolor{alertbg}{HTML}{FFF8E1}
+\definecolor{alertbdr}{HTML}{E59C0A}
+\definecolor{warnbg}{HTML}{FEF2F2}
+\definecolor{warnbdr}{HTML}{DC2626}
+\definecolor{infobg}{HTML}{EFF6FF}
+\definecolor{infobdr}{HTML}{3B82F6}
+
+% ── Cabeçalho / rodapé ───────────────────────────────────────────────
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize\color{navy}\textbf{EDITAL} --- Pregão Eletrônico
+  SRP --- Borba/AM}
+\fancyhead[R]{\footnotesize\color{navy}Lei n.\textsuperscript{o} 14.133/2021}
+\fancyfoot[C]{\footnotesize Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{%
+  \hbox to\headwidth{\color{medblue}\leaders\hrule height 0.5pt\hfill}}
+
+% ── Caixas coloridas ─────────────────────────────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{legalbox}[1][Base Legal]{enhanced,breakable,
+  colback=legalbg,colframe=legalbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{legalbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=legalbg,colframe=legalbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{alertbox}[1][Atenção]{enhanced,breakable,
+  colback=alertbg,colframe=alertbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{navy},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=alertbdr!25,colframe=alertbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{warnbox}[1][Vedação]{enhanced,breakable,
+  colback=warnbg,colframe=warnbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{warnbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnbg,colframe=warnbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{infobox}[1][Informação]{enhanced,breakable,
+  colback=infobg,colframe=infobdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{infobdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=infobg,colframe=infobdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{conclusabox}{enhanced,
+  colback=navy!8,colframe=navy,boxrule=1pt,arc=5pt,
+  left=12pt,right=12pt,top=8pt,bottom=8pt}
+
+% ── Títulos ──────────────────────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}
+  [\color{navy}\titlerule]
+\titlespacing{\section}{0pt}{22pt}{8pt}
+\titleformat{\subsection}{\color{medblue}\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing{\subsection}{0pt}{14pt}{5pt}
+\titleformat{\subsubsection}{\color{navy!80}\normalsize\bfseries\itshape}
+  {\thesubsubsection}{0.5em}{}
+\titlespacing{\subsubsection}{0pt}{10pt}{4pt}
+
+% ── Tabelas ──────────────────────────────────────────────────────────
+\usepackage{booktabs,array,tabularx,longtable,multirow,colortbl}
+\renewcommand{\arraystretch}{1.40}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ── Utilitários ──────────────────────────────────────────────────────
+\usepackage{float,enumitem,setspace,amsmath,caption,chngcntr}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=3pt,topsep=3pt,parsep=0pt}
+\setlist[itemize]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\counterwithout{footnote}{section}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=medblue,
+  pdfborder={0 0 0}]{hyperref}
+
+% ── Macros ───────────────────────────────────────────────────────────
+\newcommand{\art}[1]{art.\,#1}
+\newcommand{\Rs}{R\$\,}
+\newcommand{\clausula}[1]{\vspace{6pt}\noindent\textbf{Cláusula #1.}}
+\newcommand{\assinatura}[3]{%
+  \begin{center}\vspace{0.2cm}
+  \rule{7cm}{0.5pt}\\[3pt]
+  \textbf{#1}\\\small #2\\\small Mat.: \underline{\hspace{2cm}}\\\small #3
+  \end{center}}
+
+% ── Dados do processo ─────────────────────────────────────────────────
+\newcommand{\editalNum}{EDITAL PE/SMS-BORBA-001/2025}
+\newcommand{\trRef}{TR-SMS/BORBA-001/2025}
+\newcommand{\etpRef}{ETP-SMS/BORBA-001/2025}
+\newcommand{\procNum}{[NÚMERO DO PROCESSO SEI/E-DOC]}
+\newcommand{\dataAberturaStr}{[DATA DA ABERTURA]}
+\newcommand{\horaStr}{10h00 (horário de Brasília)}
+\newcommand{\sistemaStr}{[SISTEMA ELETRÔNICO / PNCP]}
+\newcommand{\exercicio}{2025}
+
+% ═════════════════════════════════════════════════════════════════════
+\begin{document}
+% ═════════════════════════════════════════════════════════════════════
+
+% ── Capa ─────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \pagecolor{navy}\color{white}\setlength{\parindent}{0pt}\centering
+  \vspace*{0.8cm}
+  {\small\bfseries\color{ltblue}PREFEITURA MUNICIPAL DE BORBA --- ESTADO DO AMAZONAS}\\[2pt]
+  {\small\color{ltblue!70}SECRETARIA MUNICIPAL DE SAÚDE --- COMISSÃO PERMANENTE
+    DE LICITAÇÕES}\\[0.4cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.5cm]
+  {\fontsize{11}{14}\selectfont\bfseries\color{ltblue!85}
+    EDITAL DE LICITAÇÃO}\\[0.2cm]
+  {\fontsize{14}{18}\selectfont\bfseries\color{ltblue!70}
+    PREGÃO ELETRÔNICO --- SISTEMA DE REGISTRO DE PREÇOS}\\[0.4cm]
+  {\fontsize{20}{26}\selectfont\bfseries
+    Aquisição de Materiais de\\[4pt]Limpeza e Higiene}\\[0.25cm]
+  {\fontsize{12}{16}\selectfont\color{ltblue!80}
+    Rede de Atenção à Saúde do Município de Borba/AM}\\[0.6cm]
+  \textcolor{ltblue!50}{\rule{0.85\linewidth}{0.8pt}}\\[0.8cm]
+  \begin{tabular}{@{}r@{\hspace{8pt}}p{0.56\linewidth}@{}}
+    \color{ltblue!70}\small\bfseries N.\textsuperscript{o} do Edital: &
+      \small \editalNum \\[4pt]
+    \color{ltblue!70}\small\bfseries Processo: &
+      \small \procNum \\[4pt]
+    \color{ltblue!70}\small\bfseries Modalidade: &
+      \small Pregão Eletrônico (\art{28}, I --- Lei n.\textsuperscript{o} 14.133/2021) \\[4pt]
+    \color{ltblue!70}\small\bfseries Critério: &
+      \small Menor Preço por Lote (\art{33}, I) \\[4pt]
+    \color{ltblue!70}\small\bfseries Instrumento: &
+      \small Ata de Registro de Preços (\art{82}) \\[4pt]
+    \color{ltblue!70}\small\bfseries Sistema: &
+      \small \sistemaStr \\[4pt]
+    \color{ltblue!70}\small\bfseries Abertura: &
+      \small \dataAberturaStr\ --- \horaStr \\[4pt]
+    \color{ltblue!70}\small\bfseries Valor Estimado: &
+      \small \Rs 2.000.000,00 (dois milhões de reais) \\[4pt]
+    \color{ltblue!70}\small\bfseries Base Legal: &
+      \small Lei n.\textsuperscript{o} 14.133/2021; Decreto
+        n.\textsuperscript{o} 11.462/2023 \\[4pt]
+  \end{tabular}
+  \vfill
+  \textcolor{ltblue!40}{\rule{0.85\linewidth}{0.4pt}}\\[0.3cm]
+  {\tiny\color{ltblue!50}
+    Edital publicado no PNCP --- Portal Nacional de Contratações Públicas
+    (\art{174}, Lei n.\textsuperscript{o} 14.133/2021) --- Borba/AM, \exercicio}
+\end{titlepage}
+\nopagecolor
+\setlength{\parindent}{1.2cm}
+
+% ── Ficha de identificação ────────────────────────────────────────────
+\begin{table}[H]\centering\small
+\caption*{\textbf{\color{navy}FICHA DE IDENTIFICAÇÃO DO EDITAL}}
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} L{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados da Licitação}} \\
+\midrule
+N.\textsuperscript{o} do Edital:        & \editalNum \\
+\rowcolor{rowalt}
+N.\textsuperscript{o} do Processo:      & \procNum \\
+TR de referência:                        & \trRef \\
+\rowcolor{rowalt}
+ETP de referência:                       & \etpRef \\
+Órgão licitante:                         & Secretaria Municipal de Saúde de Borba/AM \\
+\rowcolor{rowalt}
+Modalidade:                              & Pregão Eletrônico \\
+Critério de julgamento:                  & Menor Preço por Lote (\art{33}, I) \\
+\rowcolor{rowalt}
+Instrumento:                             & Ata de Registro de Preços (\art{82}) \\
+N.\textsuperscript{o} de lotes:          & 6 (seis) \\
+\rowcolor{rowalt}
+Valor estimado total:                    & \Rs 2.000.000,00 (dois milhões de reais) \\
+Data e hora de abertura:                 & \dataAberturaStr\ --- \horaStr \\
+\rowcolor{rowalt}
+Sistema eletrônico:                      & \sistemaStr \\
+Pregoeiro(a):                            & [NOME E MATRÍCULA] \\
+\rowcolor{rowalt}
+Equipe de apoio:                         & [NOMES E MATRÍCULAS] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.4cm}
+\tableofcontents
+\clearpage
+
+% ── Preâmbulo ────────────────────────────────────────────────────────
+\begin{center}
+{\large\bfseries\color{navy}\editalNum}\\[4pt]
+{\normalsize\bfseries PREGÃO ELETRÔNICO --- SISTEMA DE REGISTRO DE PREÇOS}
+\end{center}
+
+\medskip
+\noindent A \textbf{Prefeitura Municipal de Borba}, por intermédio da
+\textbf{Secretaria Municipal de Saúde}, torna público que realizará licitação na
+modalidade \textbf{Pregão Eletrônico}, do tipo \textbf{Menor Preço por Lote}, na
+forma \textbf{eletrônica}, com fundamento na Lei n.\textsuperscript{o}~14.133, de
+1.\textsuperscript{o} de abril de 2021, no Decreto n.\textsuperscript{o}~11.462, de
+31 de março de 2023, e nas demais normas aplicáveis, mediante as condições
+estabelecidas neste Edital.
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Objeto}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Descrição}
+
+A presente licitação tem por objeto a \textbf{aquisição de materiais de limpeza e
+higiene} --- compreendendo saneantes de uso hospitalar e doméstico, antissépticos,
+equipamentos de proteção individual (EPI) de limpeza, sacos para acondicionamento
+de resíduos de serviços de saúde (RSS) e utensílios de higienização --- para
+abastecimento da Rede de Atenção à Saúde do Município de Borba/AM, conforme
+especificações, quantidades e exigências do \textbf{Termo de Referência \trRef}
+(Anexo~I deste Edital), que dele é parte integrante.
+
+\subsection{Estrutura de Lotes}
+
+\begin{table}[H]\centering
+\caption{Estrutura de lotes e valores estimados}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.2cm} L{7.0cm} C{1.5cm} C{2.8cm} C{1.6cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Lote} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Classe} &
+  \color{white}\textbf{Valor Est. (R\$)} &
+  \color{white}\textbf{Itens} \\
+  \toprule
+  01 & Álcoois e antissépticos topológicos                           & A & 820.000,00 & 4 \\
+  02 & Saneantes hospitalares (enzimático, glutaraldeído, hipoclorito)& A & 480.000,00 & 3 \\
+  03 & EPI de limpeza e materiais descartáveis                       & A & 300.000,00 & 3 \\
+  04 & Sacos para resíduos de saúde e comuns                         & B & 180.000,00 & 2 \\
+  05 & Desinfetantes, sabonetes e complementares                     & B & 120.000,00 & 3 \\
+  06 & Utensílios de limpeza e consumíveis gerais                    & C & 100.000,00 & 6 \\
+  \rowcolor{ltblue}
+  \multicolumn{3}{c}{\textbf{TOTAL}} & \textbf{2.000.000,00} & \textbf{21} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{infobox}[ARP --- Natureza das Quantidades]
+\small
+As quantidades indicadas representam o \textbf{teto máximo} para fins de registro de
+preços. A Administração \textbf{não se obriga} a adquirir o total registrado, nos
+termos do \art{83} da Lei n.\textsuperscript{o}~14.133/2021. O fornecimento efetivo
+ocorrerá mediante emissão de Ordens de Fornecimento ao longo da vigência da ARP.
+\end{infobox}
+
+\subsection{Código(s) de Classificação}
+
+\begin{table}[H]\centering\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.2cm} L{5.0cm} L{7.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Lote} &
+  \color{white}\textbf{CATMAT/CATSER} &
+  \color{white}\textbf{CNAE do Fornecedor} \\
+  \toprule
+  01--03 & [CÓDIGO CATMAT] --- Saneantes e antissépticos &
+    46.89-3 --- Comércio atacadista de produtos de higiene e limpeza \\
+  04--05 & [CÓDIGO CATMAT] --- Sacos e descartáveis &
+    46.89-3 --- Comércio atacadista de produtos de higiene e limpeza \\
+  06     & [CÓDIGO CATMAT] --- Utensílios de limpeza &
+    46.89-3 / 47.89-0 --- Comércio de artigos de uso doméstico \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Data, Hora e Local da Sessão Pública}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.8cm} L{9.2cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados da Sessão}} \\
+\midrule
+Data de abertura:        & \dataAberturaStr \\
+\rowcolor{rowalt}
+Horário:                 & \horaStr \\
+Modo de disputa:         & Aberto (\art{56}, I) --- lances sucessivos em sessão pública \\
+\rowcolor{rowalt}
+Sistema eletrônico:      & \sistemaStr \\
+Envio de propostas:      & A partir da publicação até \dataAberturaStr\ às
+                           \horaStr \\
+\rowcolor{rowalt}
+Retirada do Edital:      & PNCP (\art{174}) e sítio eletrônico oficial do Município:
+                           \url{[ENDEREÇO DO SITE]} \\
+Esclarecimentos:         & Até [DATA --- 3 dias úteis antes da abertura],
+                           pelo sistema eletrônico \\
+\rowcolor{rowalt}
+Impugnações:             & Até [DATA --- 3 dias úteis antes da abertura],
+                           pelo sistema eletrônico (\art{164}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{alertbox}[Horário de Brasília]
+\small
+Todos os horários referidos neste Edital correspondem ao \textbf{horário oficial de
+Brasília --- DF}. O sistema eletrônico registrará a hora oficial automaticamente.
+\end{alertbox}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Condições de Participação}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{9.\textsuperscript{o}} e \art{14}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+Poderão participar desta licitação os interessados que atenderem a todas as exigências
+deste Edital, inclusive quanto à documentação de habilitação, e que não se enquadrarem
+nas vedações previstas no \art{14} e no \art{9.\textsuperscript{o}} da Lei
+n.\textsuperscript{o}~14.133/2021.
+\end{legalbox}
+
+\subsection{Participantes Admitidos}
+
+Poderão participar desta licitação:
+
+\begin{enumerate}
+  \item Pessoas jurídicas que explorem atividade econômica compatível com o objeto
+    desta licitação, que atendam os requisitos de habilitação e que estejam
+    regularmente estabelecidas no Brasil;
+  \item Microempresas (ME) e Empresas de Pequeno Porte (EPP), que farão jus aos
+    benefícios previstos nos arts.\,44 e 45 da Lei Complementar n.\textsuperscript{o}
+    123/2006.
+\end{enumerate}
+
+\subsection{Vedações à Participação}
+
+\begin{warnbox}[Vedações --- Art.\,14, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+\textbf{Não poderão participar} desta licitação:
+\end{warnbox}
+
+\begin{enumerate}
+  \item Pessoa física ou jurídica que se encontre, ao tempo da licitação, impossibilitada
+    de participar da licitação em decorrência de sanção que lhe foi imposta
+    (\art{14}, I);
+  \item Pessoa jurídica cujos dirigentes, gerentes, sócios ou componentes do conselho
+    técnico, consultivo, deliberativo ou administrativo sejam servidores ou empregados
+    públicos do órgão licitante (\art{9.\textsuperscript{o}}, III);
+  \item Pessoas físicas ou jurídicas que, nos termos do \art{14}, II a V:
+    \begin{itemize}
+      \item tenham elaborado o projeto básico ou o projeto executivo, salvo se
+        autorizado pela lei (inaplicável ao caso --- compra);
+      \item sejam cônjuge, companheiro ou parente, em linha reta, colateral ou por
+        afinidade, até o terceiro grau, de agentes públicos do Município de Borba
+        que atuem no processo licitatório;
+      \item estejam reunidas em consórcio (vedação expressa neste Edital, dada a
+        simplicidade do objeto);
+      \item se enquadrem em qualquer das hipóteses de impedimento do \art{14}.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Benefícios para ME e EPP}
+
+\begin{enumerate}
+  \item \textbf{Empate ficto} (\art{44}, LC n.\textsuperscript{o} 123/2006): serão
+    consideradas empatadas as propostas de ME/EPP cujo preço seja até \textbf{5\%}
+    superior à melhor proposta de empresa de médio ou grande porte, assegurando-se
+    à ME/EPP o direito de apresentar proposta de preço inferior;
+
+  \item \textbf{Regularização fiscal} (\art{43}): A ME/EPP que apresentar restrição
+    em qualquer documento de regularidade fiscal ou trabalhista terá prazo de
+    \textbf{5 dias úteis}, prorrogável por igual período, para regularização;
+
+  \item \textbf{Preferência de contratação}, em caso de empate, conforme ordem do
+    \art{44}, \S\S\,1.\textsuperscript{o} e 2.\textsuperscript{o}.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Credenciamento e Acesso ao Sistema Eletrônico}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{17}, \S\,1.\textsuperscript{o}; \art{56}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+O pregão será realizado em sessão pública, por meio de sistema eletrônico que
+promova a comunicação pela internet, com utilização de recursos de criptografia e
+autenticação.
+\end{legalbox}
+
+\begin{enumerate}
+  \item Para participar do pregão, o licitante deverá estar previamente cadastrado
+    no \textbf{sistema eletrônico} adotado pelo Município --- \sistemaStr ---
+    e no \textbf{PNCP};
+
+  \item O credenciamento implica a responsabilidade legal do licitante ou seu
+    representante e a presunção de sua capacidade técnica para realização das
+    transações inerentes a este Pregão;
+
+  \item O uso da senha de acesso é de responsabilidade exclusiva do licitante,
+    não cabendo à Administração responsabilidade por eventuais danos decorrentes de
+    uso indevido da senha, ainda que por terceiros;
+
+  \item É de responsabilidade do licitante acompanhar as operações no sistema
+    eletrônico durante a sessão pública do Pregão, ficando responsável pelo ônus
+    decorrente da perda de negócios diante da inobservância de quaisquer mensagens
+    emitidas pelo sistema ou de sua desconexão.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Proposta de Preços}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Requisitos da Proposta}
+
+As propostas deverão ser encaminhadas por meio do sistema eletrônico até a data
+e o horário de abertura, observando-se:
+
+\begin{enumerate}
+  \item Preços expressos em \textbf{reais}, com \textbf{duas casas decimais},
+    devendo o licitante declarar o preço unitário e o preço global de cada item
+    do lote;
+
+  \item Preços em regime \textbf{CIF Borba/AM}, incluídos todos os custos de
+    frete fluvial Manaus--Borba, seguro, impostos, taxas e encargos; vedada
+    a oferta em preço FOB Manaus ou ex-works;
+
+  \item Indicação de \textbf{marca, modelo e fabricante} para cada item ofertado,
+    sob pena de desclassificação;
+
+  \item Para os Lotes 01 a 05: indicação do \textbf{número de registro, notificação
+    ou isenção ANVISA} de cada produto;
+
+  \item Prazo de validade da proposta: \textbf{mínimo de 60 dias} contados da data
+    de abertura da sessão;
+
+  \item A simples participação no sistema eletrônico implica a plena aceitação das
+    condições deste Edital.
+\end{enumerate}
+
+\subsection{Limite Máximo de Aceitabilidade}
+
+Serão desclassificadas as propostas cujo \textbf{preço unitário} superar em mais
+de \textbf{10\%} o valor de referência constante do orçamento sigiloso da
+Administração (mantido nos autos até o encerramento da fase de lances), nos termos
+do \art{24} combinado com o \art{59}, IV, da Lei n.\textsuperscript{o}~14.133/2021.
+
+\begin{alertbox}[Sigilosidade do Orçamento]
+\small
+O orçamento estimado \textbf{por item} é sigiloso até o encerramento da fase de
+lances. O valor estimado \textbf{por lote} está publicado no Edital e no PNCP.
+Após a adjudicação, o orçamento detalhado será tornado público nos autos.
+\end{alertbox}
+
+\subsection{Amostras}
+
+O licitante \textbf{primeiro colocado} em cada lote, após o encerramento da fase de
+lances, deverá apresentar \textbf{amostras} dos itens do respectivo lote no prazo
+de \textbf{5 dias úteis}, para avaliação técnica pelo fiscal designado. A não
+apresentação de amostras ou a reprovação técnica implicará a desclassificação do
+licitante naquele lote e a convocação do segundo colocado.
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Procedimento do Pregão}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Abertura das Propostas}
+
+\begin{enumerate}
+  \item Na data e horário indicados, o Pregoeiro abrirá a sessão pública e verificará
+    as propostas encaminhadas, examinando a conformidade com os requisitos
+    estabelecidos no Edital;
+
+  \item As propostas não serão desclassificadas antes da fase de lances por vícios
+    sanáveis (\art{59}, \S\,1.\textsuperscript{o}).
+\end{enumerate}
+
+\subsection{Fase de Lances}
+
+\begin{enumerate}
+  \item O Pregoeiro classificará as propostas em ordem crescente de valor global
+    por lote e iniciará a \textbf{fase de lances abertos};
+
+  \item Os licitantes poderão oferecer lances \textbf{sucessivos e decrescentes}
+    em relação ao seu último lance registrado no sistema;
+
+  \item Os lances deverão ser ofertados em valores \textbf{globais por lote},
+    com decremento mínimo de \textbf{R\$\,100,00};
+
+  \item O intervalo entre os lances será de, no mínimo, \textbf{30 (trinta)
+    segundos};
+
+  \item Será adotado o modo de disputa \textbf{aberto} (\art{56}, I), com
+    \textbf{tempo randômico} ao final para encerramento da disputa, de acordo
+    com as regras do sistema eletrônico;
+
+  \item Após o encerramento dos lances, o Pregoeiro poderá \textbf{negociar
+    diretamente} com o licitante melhor classificado para obter melhor proposta,
+    devendo a negociação ser registrada no sistema (\art{61}, \S\,3.\textsuperscript{o}).
+\end{enumerate}
+
+\subsection{Desempate}
+
+Em caso de empate entre propostas, o desempate obedecerá à seguinte ordem:
+
+\begin{enumerate}
+  \item Disputa final entre as licitantes empatadas, por meio de lances sobre
+    o valor da proposta (\art{60});
+  \item Benefício de ME/EPP em caso de empate ficto (LC n.\textsuperscript{o}
+    123/2006, \art{44});
+  \item Sorteio realizado em sessão pública pelo Pregoeiro, quando nenhuma das
+    hipóteses anteriores resolver o empate.
+\end{enumerate}
+
+\subsection{Julgamento e Desclassificação}
+
+Serão \textbf{desclassificadas} as propostas que:
+
+\begin{enumerate}
+  \item Não atendam às especificações técnicas mínimas do TR (Anexo~I);
+  \item Apresentem preço global do lote com variação superior a 10\% acima do
+    valor estimado por lote;
+  \item Apresentem preço unitário de algum item acima de 10\% do valor de
+    referência unitário sigiloso;
+  \item Apresentem preços manifestamente inexequíveis, assim considerados aqueles
+    que não demonstrem viabilidade técnica e econômica (\art{59}, II);
+  \item Omitam informações obrigatórias (marca, registro ANVISA, etc.).
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Habilitação}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[arts. 62 a 70, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+Os documentos de habilitação serão exigidos \textbf{somente do licitante vencedor},
+após o encerramento da fase de lances e da negociação, nos termos do \art{63},
+\S\,1.\textsuperscript{o}.
+\end{legalbox}
+
+\subsection{Habilitação Jurídica}
+
+\begin{itemize}
+  \item Registro comercial, no caso de empresa individual;
+  \item Ato constitutivo, estatuto ou contrato social em vigor, com todas as
+    alterações, devidamente registrado na Junta Comercial;
+  \item Decreto de autorização, em se tratando de empresa ou sociedade estrangeira.
+\end{itemize}
+
+\subsection{Habilitação Fiscal, Social e Trabalhista}
+
+\begin{itemize}
+  \item CNPJ ativo perante a Receita Federal do Brasil;
+  \item Certidão Negativa de Débitos Federais (Receita Federal e PGFN);
+  \item Certidão Negativa de Débitos Estaduais do domicílio do licitante;
+  \item Certidão Negativa de Débitos Municipais do domicílio do licitante;
+  \item Certificado de Regularidade do FGTS (CRF --- Caixa Econômica Federal);
+  \item Certidão Negativa de Débitos Trabalhistas (CNDT --- TST).
+\end{itemize}
+
+\subsection{Habilitação Técnica}
+
+\begin{enumerate}
+  \item \textbf{Autorização de Funcionamento ANVISA} para distribuição de saneantes
+    de uso domissanitário (Lotes 01 a 05), expedida pela ANVISA, nos termos da Lei
+    n.\textsuperscript{o}~6.360/1976 e Portaria SVS n.\textsuperscript{o}~2.814/1998,
+    para o Lote 06: dispensada;
+
+  \item \textbf{Comprovação de logística fluvial} para entrega em Borba/AM,
+    mediante carta emitida por empresa de navegação que opere no trecho
+    Manaus--Borba (Rio Madeira), ou contrato de fretamento com empresa autorizada
+    pela ANTAQ, com prazo compatível com a vigência da ARP;
+
+  \item \textbf{Atestado de Capacidade Técnica}, fornecido por pessoa jurídica de
+    direito público ou privado, comprovando o fornecimento de materiais de limpeza
+    e higiene em quantidade equivalente a no mínimo \textbf{50\%} do quantitativo
+    anual do respectivo lote.
+\end{enumerate}
+
+\subsection{Habilitação Econômico-Financeira}
+
+\begin{itemize}
+  \item Capital social ou patrimônio líquido mínimo de \textbf{10\%} do valor
+    estimado do lote a que concorrer (\art{69}, I);
+  \item Certidão negativa de falência, recuperação judicial ou extrajudicial,
+    expedida pelo distribuidor da sede do licitante.
+\end{itemize}
+
+\subsection{Disposições Gerais sobre a Habilitação}
+
+\begin{enumerate}
+  \item Os documentos de habilitação deverão ser encaminhados exclusivamente por
+    meio do sistema eletrônico, no prazo indicado pelo Pregoeiro após o encerramento
+    da fase de lances;
+
+  \item Os documentos com prazo de validade vencido serão aceitos mediante
+    comprovação, em tempo real, da regularidade no portal eletrônico do órgão
+    emissor;
+
+  \item A habilitação incompleta ou incorreta ensejará a inabilitação do licitante
+    e a convocação do segundo colocado;
+
+  \item Será verificada, em tempo real, a situação do licitante no \textbf{SICAF}
+    e em sistemas estaduais de cadastro, dispensando-se os documentos já cadastrados.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Recursos}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{165}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+Qualquer licitante poderá, motivadamente, apresentar recurso contra:
+(i) julgamento das propostas; (ii) habilitação ou inabilitação; (iii) anulação
+ou revogação do pregão.
+\end{legalbox}
+
+\begin{enumerate}
+  \item Ao final da sessão, o Pregoeiro informará os licitantes sobre a possibilidade
+    de interposição de recurso e registrará em ata quem manifestou intenção
+    de recorrer;
+
+  \item O licitante que manifestar intenção de recorrer terá \textbf{3 (três) dias
+    úteis} para apresentar as razões de recurso (\art{165}, \S\,1.\textsuperscript{o}),
+    pelo sistema eletrônico;
+
+  \item Os demais licitantes ficarão intimados a apresentar contrarrazões no mesmo
+    prazo de 3 dias úteis, contados do término do prazo do recorrente;
+
+  \item O Pregoeiro apreciará e, se não reconsiderar, encaminhará o recurso à
+    autoridade competente, que decidirá no prazo de \textbf{10 (dez) dias úteis};
+
+  \item A falta de manifestação imediata e motivada importará a decadência do
+    direito de recurso (\art{165}, \S\,1.\textsuperscript{o});
+
+  \item Os recursos \textbf{não} terão efeito suspensivo automático, salvo quando
+    a autoridade superior concedê-lo motivadamente.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Adjudicação e Homologação}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{enumerate}
+  \item Constatada a regularidade dos atos praticados e inexistindo recurso ou após
+    o julgamento dos recursos interpostos, o Pregoeiro \textbf{adjudicará} o objeto
+    ao licitante vencedor de cada lote;
+
+  \item A \textbf{homologação} compete à autoridade competente (Prefeito Municipal
+    ou Secretário de Saúde, conforme delegação interna), que declarará encerrado
+    o procedimento licitatório;
+
+  \item A adjudicação \textbf{não} importa direito à contratação; o licitante
+    adjudicatário poderá ser convocado para assinar a ARP em prazo não superior
+    a \textbf{60 dias} (\art{90}, \S\,4.\textsuperscript{o});
+
+  \item Em caso de recusa do adjudicatário em assinar a ARP no prazo convocado,
+    a Administração convocará o segundo colocado, nas condições da proposta do
+    primeiro, ou revogará o item/lote.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Ata de Registro de Preços}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[arts. 82 a 86, Lei n.\textsuperscript{o} 14.133/2021; Decreto n.\textsuperscript{o} 11.462/2023]
+\small
+A ARP \textbf{não} obriga a Administração a contratar, facultando-se a realização
+de licitação específica para a aquisição pretendida, sendo assegurada ao licitante
+registrado preferência em igualdade de condições (\art{83}, \S\,1.\textsuperscript{o}).
+\end{legalbox}
+
+\subsection{Assinatura e Vigência}
+
+\begin{enumerate}
+  \item O licitante adjudicatário será convocado para assinar a ARP no prazo de
+    \textbf{10 dias úteis} contados da convocação, podendo ser prorrogado por
+    igual período mediante justificativa;
+
+  \item A ARP terá vigência de \textbf{12 (doze) meses} a contar de sua publicação,
+    prorrogável por igual período mediante termo aditivo (\art{84},
+    \S\,1.\textsuperscript{o}), desde que o preço permaneça vantajoso;
+
+  \item A ARP será publicada no \textbf{PNCP} no prazo de \textbf{até 8 dias úteis}
+    contados da assinatura.
+\end{enumerate}
+
+\subsection{Gerenciamento da ARP}
+
+\begin{enumerate}
+  \item O \textbf{órgão gerenciador} da ARP é a Secretaria Municipal de Saúde de
+    Borba/AM, responsável pela emissão de Ordens de Fornecimento e pelo controle
+    do saldo físico-financeiro;
+
+  \item \textbf{Não} haverá órgão participante (\textit{carona}) sem autorização
+    expressa do órgão gerenciador (\art{86}, \S\,4.\textsuperscript{o});
+
+  \item O fornecedor registrado poderá ter seu registro cancelado nas hipóteses do
+    \art{84}, \S\,2.\textsuperscript{o}: recusa a manter os preços; inviabilidade
+    de cumprimento; interesse público superveniente.
+\end{enumerate}
+
+\subsection{Revisão de Preços Registrados}
+
+\begin{enumerate}
+  \item Os preços registrados poderão ser revisados (\textit{reequilíbrio}) nas
+    hipóteses do \art{124}, I, mediante solicitação fundamentada e comprovação
+    documental de fato superveniente imprevisível;
+
+  \item Na hipótese de recusa à redução de preços quando o mercado retrair, a
+    Administração poderá cancelar o registro e contratar com o segundo colocado ou
+    realizar nova licitação (\art{84}, \S\,3.\textsuperscript{o}).
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Condições de Fornecimento}
+% ═════════════════════════════════════════════════════════════════════
+
+\subsection{Ordens de Fornecimento}
+
+O fornecimento será \textbf{parcelado}, exclusivamente mediante emissão de
+\textbf{Ordens de Fornecimento (OF)} pelo órgão gerenciador, observando-se:
+
+\begin{enumerate}
+  \item As OF serão emitidas com antecedência mínima de \textbf{20 dias} em relação
+    à data prevista de entrega;
+  \item O licitante deverá confirmar o recebimento da OF no prazo de \textbf{2 dias
+    úteis};
+  \item Os prazos de entrega estão definidos no TR (Anexo~I), por lote e por período
+    hidrológico do Rio Madeira;
+  \item O local de entrega é o Almoxarifado Central da SMS, sito à
+    [ENDEREÇO COMPLETO], Borba/AM.
+\end{enumerate}
+
+\subsection{Recebimento}
+
+\begin{enumerate}
+  \item \textbf{Provisório}: pelo servidor do almoxarifado, no ato da entrega, com
+    verificação quantitativa e de integridade das embalagens;
+  \item \textbf{Definitivo}: pelo fiscal técnico, em até 10 dias úteis, com
+    verificação qualitativa e confirmação do registro ANVISA em tempo real.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Pagamento}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{enumerate}
+  \item O pagamento será efetuado em até \textbf{30 dias corridos} contados da
+    apresentação da Nota Fiscal Eletrônica (NF-e) ao setor financeiro da SMS,
+    após emissão do Termo de Recebimento Definitivo (TRD);
+
+  \item A NF-e deverá ser emitida \textbf{após} a emissão do TRD, discriminando
+    os itens, quantidades, preços e o número da Ordem de Fornecimento;
+
+  \item O pagamento será realizado por transferência bancária (TED/PIX) para conta
+    corrente do fornecedor previamente cadastrada;
+
+  \item São \textbf{condições suspensivas} do pagamento a manutenção de todas as
+    certidões de regularidade fiscal, previdenciária e trabalhista;
+
+  \item Havendo atraso no pagamento por culpa da Administração, incidirão correção
+    monetária pelo IPCA e juros de mora de 0,5\% ao mês;
+
+  \item Vedada qualquer forma de antecipação de pagamento ou de pagamento sem o
+    correspondente fornecimento e recebimento definitivo.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Sanções Administrativas}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[arts. 155 a 163, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+As sanções serão aplicadas pelo órgão gerenciador, assegurado o contraditório e
+a ampla defesa, com prazo de defesa de 10 dias úteis (\art{157}).
+\end{legalbox}
+
+\begin{table}[H]\centering
+\caption{Quadro de sanções administrativas}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{L{5.0cm} C{2.0cm} L{6.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Infração} &
+  \color{white}\textbf{Sanção} &
+  \color{white}\textbf{Parâmetro / Gradação} \\
+  \toprule
+  Atraso na entrega &
+    Multa moratória &
+    0,5\% ao dia sobre o valor da OF, até o 30.\textsuperscript{o} dia \\
+  Atraso superior a 30 dias &
+    Multa + rescisão &
+    Multa compensatória de 10\% do valor da ARP (\art{162}) \\
+  Entrega de produto não conforme &
+    Advertência ou multa &
+    Advertência na 1.\textsuperscript{a} vez; 5\% da OF nas seguintes \\
+  Entrega sem registro ANVISA &
+    Rescisão imediata + multa &
+    10\% do valor total da ARP; comunicação à ANVISA \\
+  Não substituição no prazo &
+    Multa &
+    2\% ao dia, até o 5.\textsuperscript{o} dia útil \\
+  Fraude ou conluio &
+    Declaração de inidoneidade &
+    Mínimo 3 anos (\art{156}, IV) \\
+  Reincidência &
+    Impedimento de licitar &
+    Até 3 anos (\art{156}, III) \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Impugnações e Pedidos de Esclarecimento}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{legalbox}[\art{164}, Lei n.\textsuperscript{o} 14.133/2021]
+\small
+Qualquer pessoa poderá impugnar o Edital, até \textbf{3 dias úteis} antes da
+data de abertura da sessão. Pedidos de esclarecimento deverão ser enviados no
+mesmo prazo.
+\end{legalbox}
+
+\begin{enumerate}
+  \item As impugnações e os pedidos de esclarecimento deverão ser enviados
+    \textbf{exclusivamente pelo sistema eletrônico};
+
+  \item O Pregoeiro responderá os pedidos de esclarecimento no prazo de
+    \textbf{3 dias úteis} (\art{164}, \S\,3.\textsuperscript{o});
+
+  \item As impugnações serão decididas pela autoridade competente no prazo de
+    \textbf{3 dias úteis}; se procedentes, será designada nova data para a sessão;
+
+  \item As respostas às impugnações e esclarecimentos serão disponibilizadas no
+    sistema eletrônico e no PNCP, integrando o Edital para todos os fins.
+\end{enumerate}
+
+% ═════════════════════════════════════════════════════════════════════
+\section{Disposições Gerais}
+% ═════════════════════════════════════════════════════════════════════
+
+\begin{enumerate}
+  \item A participação nesta licitação implica aceitação integral e irretratável
+    de todos os termos, condições e exigências deste Edital e de seus Anexos;
+
+  \item A Administração reserva-se o direito de \textbf{revogar} esta licitação
+    por razões de interesse público (\art{71}) ou \textbf{anulá-la} por ilegalidade,
+    sem que caiba qualquer indenização aos licitantes, salvo nos casos previstos em
+    lei;
+
+  \item A \textbf{falsidade} de qualquer documento apresentado ou a inverdade das
+    informações nele contidas implicará a imediata desclassificação ou inabilitação
+    do licitante, sem prejuízo das sanções penais e administrativas cabíveis;
+
+  \item Nenhuma indenização será devida aos licitantes pela elaboração e apresentação
+    de documentos relativos a esta licitação;
+
+  \item O resultado desta licitação e os demais atos do processo serão publicados
+    no \textbf{PNCP} (\art{174}) e no Diário Oficial do Município de Borba;
+
+  \item Fica eleito o \textbf{foro da Comarca de Borba/AM} para dirimir quaisquer
+    questões relativas a este Edital e à ARP dele decorrente;
+
+  \item Este Edital foi submetido à análise jurídica pela
+    \textbf{Procuradoria-Geral do Município (PGM)}, conforme Parecer Jurídico
+    n.\textsuperscript{o}\ [NÚMERO/\exercicio], juntado ao processo.
+\end{enumerate}
+
+\vspace{0.5cm}
+\noindent Borba/AM, \today.
+
+\vspace{1.2cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Pregoeiro(a) Designado(a)}{CPL --- SMS Borba/AM}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Secretário(a) Municipal de Saúde}{Autoridade Competente}
+\end{minipage}
+
+% ═════════════════════════════════════════════════════════════════════
+%  ANEXOS
+% ═════════════════════════════════════════════════════════════════════
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}RELAÇÃO DE ANEXOS}
+\end{center}
+
+\begin{table}[H]\centering\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.5cm} L{9.0cm} C{3.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Anexo} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Referência} \\
+  \toprule
+  I   & Termo de Referência (TR) --- especificações técnicas, quantitativos,
+        prazos e modelo de gestão & \trRef \\
+  II  & Modelo de Proposta de Preços & (ver abaixo) \\
+  III & Declaração de Cumprimento dos Requisitos Habilitatórios & (ver abaixo) \\
+  IV  & Declaração de Enquadramento ME/EPP (se aplicável) & LC 123/2006 \\
+  V   & Declaração de Inexistência de Impedimentos & \art{14} \\
+  VI  & Minuta da Ata de Registro de Preços & \art{82} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ── ANEXO II — MODELO DE PROPOSTA ─────────────────────────────────────
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}ANEXO II --- MODELO DE PROPOSTA DE PREÇOS}
+\end{center}
+
+\vspace{0.5cm}
+\noindent\textbf{PREGÃO ELETRÔNICO --- \editalNum}\\
+\textbf{PROCESSO:} \procNum
+
+\bigskip
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{3.5cm} L{10cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}{\textbf{\color{navy}Dados do Proponente}} \\
+\midrule
+Razão Social:       & \underline{\hspace{9cm}} \\
+\rowcolor{rowalt}
+CNPJ:               & \underline{\hspace{9cm}} \\
+Endereço:           & \underline{\hspace{9cm}} \\
+\rowcolor{rowalt}
+Cidade / UF / CEP:  & \underline{\hspace{9cm}} \\
+Telefone / E-mail:  & \underline{\hspace{9cm}} \\
+\rowcolor{rowalt}
+Representante:      & \underline{\hspace{9cm}} \\
+Validade proposta:  & \underline{\hspace{4cm}} dias (mínimo 60 dias) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\bigskip
+\noindent\textbf{Lote [NÚMERO] --- [DESCRIÇÃO DO LOTE]}
+
+\begin{table}[H]\centering
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.6cm} L{5.0cm} C{0.8cm} C{1.0cm} C{2.0cm} C{2.0cm} C{2.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{It.} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Un.} &
+  \color{white}\textbf{Qtde.} &
+  \color{white}\textbf{Marca/Fab.} &
+  \color{white}\textbf{Pr. Unit. (R\$)} &
+  \color{white}\textbf{Pr. Total (R\$)} \\
+  \toprule
+  01 & & & & & & \\
+  02 & & & & & & \\
+  03 & & & & & & \\
+  \rowcolor{ltblue}
+  \multicolumn{5}{c}{\textbf{TOTAL DO LOTE (R\$)}} & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent \textit{Obs.: (i) Preços CIF Borba/AM; (ii) Indicar número de registro
+ANVISA nos campos de Marca/Fab. dos Lotes 01 a 05; (iii) Replicar tabela para
+cada lote que o licitante concorrer.}
+
+\vspace{0.8cm}
+\begin{center}
+[LOCAL], \underline{\hspace{1cm}} de \underline{\hspace{2.5cm}} de \exercicio.
+\end{center}
+
+\vspace{0.8cm}
+\begin{center}
+\rule{8cm}{0.5pt}\\[3pt]
+\textbf{[Nome Completo do Representante Legal]}\\
+\small CPF: \underline{\hspace{3cm}} --- Cargo: \underline{\hspace{3cm}}
+\end{center}
+
+% ── ANEXO III — DECLARAÇÃO DE HABILITAÇÃO ─────────────────────────────
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}ANEXO III --- DECLARAÇÃO DE CUMPRIMENTO DOS
+    REQUISITOS HABILITATÓRIOS}
+\end{center}
+
+\vspace{0.5cm}
+\noindent\textbf{PREGÃO ELETRÔNICO --- \editalNum}
+
+\bigskip
+\noindent\textbf{DECLARAÇÃO}
+
+\bigskip
+\noindent[RAZÃO SOCIAL], CNPJ n.\textsuperscript{o} \underline{\hspace{3cm}},
+sediada em [ENDEREÇO COMPLETO], por intermédio de seu representante legal,
+Sr./Sra. \underline{\hspace{4cm}}, \textbf{DECLARA}, para fins de participação
+no Pregão Eletrônico acima identificado, sob as penas da Lei, que:
+
+\begin{enumerate}
+  \item \textbf{Cumpre integralmente} todos os requisitos de habilitação exigidos
+    no Edital \editalNum, incluindo os requisitos jurídicos, fiscais, trabalhistas,
+    técnicos e econômico-financeiros;
+  \item \textbf{Não se enquadra} em qualquer das vedações previstas no \art{14}
+    da Lei n.\textsuperscript{o}~14.133/2021;
+  \item \textbf{Não mantém} em seu quadro funcional menores de 18 (dezoito) anos
+    em trabalho noturno, perigoso ou insalubre, e menores de 16 (dezesseis) anos
+    em qualquer trabalho, salvo na condição de aprendiz, a partir de 14 anos (CF,
+    \art{7.\textsuperscript{o}}, XXXIII);
+  \item Está ciente de que a falsidade desta declaração sujeita a empresa às
+    sanções previstas em lei, incluindo a nulidade do contrato e a declaração
+    de inidoneidade (\art{155}, IV, Lei n.\textsuperscript{o}~14.133/2021).
+\end{enumerate}
+
+\vspace{1.5cm}
+\begin{center}
+[LOCAL], \underline{\hspace{1cm}} de \underline{\hspace{2.5cm}} de \exercicio.
+
+\vspace{1.2cm}
+\rule{8cm}{0.5pt}\\[3pt]
+\textbf{[Nome Completo do Representante Legal]}\\
+\small CPF: \underline{\hspace{3cm}} --- Cargo: \underline{\hspace{3cm}}
+\end{center}
+
+% ── ANEXO VI — MINUTA DA ARP ──────────────────────────────────────────
+\clearpage
+\begin{center}
+  \textbf{\large\color{navy}ANEXO VI --- MINUTA DA ATA DE REGISTRO DE PREÇOS}
+\end{center}
+
+\vspace{0.3cm}
+\begin{center}
+  \textbf{ATA DE REGISTRO DE PREÇOS N.\textsuperscript{o}\
+  \underline{\hspace{1cm}}/\exercicio}\\[4pt]
+  Pregão Eletrônico \editalNum --- Processo \procNum
+\end{center}
+
+\bigskip
+\noindent Aos \underline{\hspace{0.8cm}} dias do mês de
+\underline{\hspace{2.5cm}} do ano de \exercicio, o \textbf{Município de Borba},
+por intermédio da \textbf{Secretaria Municipal de Saúde}, CNPJ
+n.\textsuperscript{o} [CNPJ], representado pelo(a)
+Secretário(a) Municipal de Saúde, Sr./Sra. \underline{\hspace{4cm}}, e a empresa
+\textbf{[RAZÃO SOCIAL DO FORNECEDOR]}, inscrita no CNPJ sob o
+n.\textsuperscript{o} \underline{\hspace{3cm}}, com sede em
+\underline{\hspace{5cm}}, representada por \underline{\hspace{4cm}},
+firmam a presente Ata de Registro de Preços, nos termos dos arts.\,82 a 86 da
+Lei n.\textsuperscript{o}~14.133/2021, do Decreto n.\textsuperscript{o}~11.462/2023
+e das condições do Edital \editalNum, que rege esta licitação.
+
+\bigskip
+\clausula{1.\textsuperscript{a} --- Do Objeto}
+
+A presente ARP tem por objeto o \textbf{registro de preços} dos itens do
+\textbf{Lote \underline{\hspace{0.5cm}}} --- [DESCRIÇÃO DO LOTE] ---
+conforme especificações e quantitativos do Termo de Referência \trRef
+(Anexo~I do Edital \editalNum), que integram a presente Ata independentemente
+de transcrição.
+
+\bigskip
+\clausula{2.\textsuperscript{a} --- Do Preço Registrado}
+
+Os preços registrados, expressos em \textbf{reais CIF Borba/AM}, para o Lote
+\underline{\hspace{0.5cm}}, são os seguintes:
+
+\begin{table}[H]\centering\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.6cm} L{5.5cm} C{0.8cm} C{1.2cm} C{2.2cm} C{2.5cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{It.} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Un.} &
+  \color{white}\textbf{Qtde. Anual} &
+  \color{white}\textbf{Pr. Unit. (R\$)} &
+  \color{white}\textbf{Pr. Total (R\$)} \\
+  \toprule
+  & & & & & \\
+  & & & & & \\
+  \rowcolor{ltblue}
+  \multicolumn{4}{c}{\textbf{Total Registrado (R\$)}} & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\bigskip
+\clausula{3.\textsuperscript{a} --- Da Vigência}
+
+A presente Ata terá vigência de \textbf{12 (doze) meses} a contar de sua
+publicação no PNCP, podendo ser prorrogada por igual período mediante termo
+aditivo, desde que o preço permaneça vantajoso e o fornecedor concorde
+(\art{84}, \S\,1.\textsuperscript{o}).
+
+\bigskip
+\clausula{4.\textsuperscript{a} --- Das Condições de Fornecimento}
+
+O fornecimento se dará de forma \textbf{parcelada}, mediante emissão de Ordens
+de Fornecimento pelo órgão gerenciador, nas condições dos Capítulos 4 a 9 do
+Termo de Referência \trRef, que integra a presente Ata.
+
+\bigskip
+\clausula{5.\textsuperscript{a} --- Do Pagamento}
+
+O pagamento obedecerá às condições da Cláusula 10 do Edital e da Seção 7 do
+Termo de Referência, em até 30 dias corridos após a emissão do Termo de
+Recebimento Definitivo.
+
+\bigskip
+\clausula{6.\textsuperscript{a} --- Das Sanções}
+
+As sanções aplicáveis são aquelas previstas na Cláusula 11 do Edital e na
+Seção 10 do Termo de Referência, observado o contraditório e a ampla defesa.
+
+\bigskip
+\clausula{7.\textsuperscript{a} --- Da Revisão e do Cancelamento}
+
+Os preços registrados poderão ser revistos ou a ARP cancelada nas hipóteses
+dos arts.\,84 e 85 da Lei n.\textsuperscript{o}~14.133/2021 e do Decreto
+n.\textsuperscript{o}~11.462/2023.
+
+\bigskip
+\clausula{8.\textsuperscript{a} --- Do Foro}
+
+Fica eleito o foro da \textbf{Comarca de Borba/AM} para dirimir quaisquer
+litígios decorrentes desta Ata, renunciando as partes a qualquer outro.
+
+\vspace{1.5cm}
+\noindent\hfill Borba/AM, \underline{\hspace{1cm}} de
+\underline{\hspace{2.5cm}} de \exercicio.
+
+\vspace{1.2cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Nome e Cargo]}{Secretário(a) Municipal de Saúde}{Órgão Gerenciador --- SMS Borba/AM}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{[Razão Social / Representante Legal]}{Fornecedor Registrado}{CNPJ: \underline{\hspace{2.5cm}}}
+\end{minipage}
+
+\vspace{1.5cm}
+\noindent\textbf{Testemunhas:}
+
+\vspace{0.5cm}
+\begin{minipage}{0.47\linewidth}
+\assinatura{1.\textsuperscript{a} [Nome]}{CPF: \underline{\hspace{2.5cm}}}{}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+\assinatura{2.\textsuperscript{a} [Nome]}{CPF: \underline{\hspace{2.5cm}}}{}
+\end{minipage}
+
+% ── Referências finais ────────────────────────────────────────────────
+\vspace{1.5cm}
+\noindent\textcolor{navy!30}{\rule{\linewidth}{0.5pt}}
+
+\noindent{\footnotesize\itshape
+\textbf{Base normativa do Edital:}
+Lei n.\textsuperscript{o}~14.133/2021 (NLLCA) \textbullet{}
+Decreto n.\textsuperscript{o}~11.462/2023 (SRP) \textbullet{}
+IN SEGES/MGI n.\textsuperscript{o}~65/2021 (Pesquisa de Preços) \textbullet{}
+IN SEGES/MGI n.\textsuperscript{o}~58/2022 (PCA e DFD) \textbullet{}
+RDC ANVISA n.\textsuperscript{o}~59/2021 \textbullet{}
+RDC ANVISA n.\textsuperscript{o}~15/2012 \textbullet{}
+RDC ANVISA n.\textsuperscript{o}~216/2004 \textbullet{}
+Lei n.\textsuperscript{o}~6.360/1976 \textbullet{}
+NR-32 (MTE) \textbullet{}
+LC n.\textsuperscript{o}~123/2006 \textbullet{}
+Lei n.\textsuperscript{o}~12.305/2010 (PNRS) \textbullet{}
+Lei n.\textsuperscript{o}~4.320/1964 \textbullet{}
+ABNT NBR 14.725 \textbullet{}
+ABNT NBR 9.191 \textbullet{}
+ABNT NBR 13.392.}
+
+\end{document}

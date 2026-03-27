@@ -1,0 +1,593 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Codificação e idioma ─────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Layout ───────────────────────────────────────────────────────────
+\usepackage[top=2.5cm,bottom=2.5cm,left=3.0cm,right=2.5cm,headheight=16pt]{geometry}
+
+% ── Cores ────────────────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navy}{HTML}{1A3A5C}
+\definecolor{medblue}{HTML}{2E75B6}
+\definecolor{ltblue}{HTML}{D6E4F0}
+\definecolor{rowalt}{HTML}{EBF3FB}
+\definecolor{legalbg}{HTML}{F0FDF4}
+\definecolor{legalbdr}{HTML}{16A34A}
+\definecolor{alertbg}{HTML}{FFF8E1}
+\definecolor{alertbdr}{HTML}{E59C0A}
+\definecolor{warnbg}{HTML}{FEF2F2}
+\definecolor{warnbdr}{HTML}{DC2626}
+\definecolor{infobg}{HTML}{EFF6FF}
+\definecolor{infobdr}{HTML}{3B82F6}
+
+% ── Cabeçalho / rodapé ───────────────────────────────────────────────
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize\color{navy}\textbf{NNC n.\textsuperscript{o}
+  \nncNum/\exercicio} --- ARP n.\textsuperscript{o} \arpNum/\exercicio ---
+  SMS Borba/AM}
+\fancyhead[R]{\footnotesize\color{navy}Lei n.\textsuperscript{o} 14.133/2021}
+\fancyfoot[C]{\footnotesize Página \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{%
+  \hbox to\headwidth{\color{medblue}\leaders\hrule height 0.4pt\hfill}}
+
+% ── Caixas coloridas ─────────────────────────────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{legalbox}[1][Base Legal]{enhanced,breakable,
+  colback=legalbg,colframe=legalbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{legalbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=legalbg,colframe=legalbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{warnbox}[1][Atenção]{enhanced,breakable,
+  colback=warnbg,colframe=warnbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{warnbdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=warnbg,colframe=warnbdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{infobox}[1][Informação]{enhanced,breakable,
+  colback=infobg,colframe=infobdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{infobdr},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=infobg,colframe=infobdr,arc=3pt,boxrule=0.6pt}}
+
+\newtcolorbox{alertbox}[1][Atenção]{enhanced,breakable,
+  colback=alertbg,colframe=alertbdr,boxrule=0.8pt,arc=4pt,
+  left=10pt,right=10pt,top=5pt,bottom=5pt,
+  title=\textbf{#1},fonttitle=\small\bfseries\color{navy},
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=alertbdr!25,colframe=alertbdr,arc=3pt,boxrule=0.6pt}}
+
+% ── Tabelas ──────────────────────────────────────────────────────────
+\usepackage{booktabs,array,tabularx,multirow,colortbl,longtable}
+\renewcommand{\arraystretch}{1.45}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% ── Utilitários ──────────────────────────────────────────────────────
+\usepackage{float,enumitem,amsmath,chngcntr,titlesec}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=3pt,topsep=3pt,parsep=0pt}
+\setlist[itemize]{leftmargin=1.8em,itemsep=2pt,topsep=3pt,parsep=0pt}
+\counterwithout{footnote}{section}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection.}{0.6em}{}
+  [\color{navy}\titlerule]
+\titlespacing{\section}{0pt}{18pt}{7pt}
+\usepackage[colorlinks=true,linkcolor=navy,urlcolor=medblue,
+  pdfborder={0 0 0}]{hyperref}
+
+% ── Macros ───────────────────────────────────────────────────────────
+\newcommand{\art}[1]{art.\,#1}
+\newcommand{\blank}[1]{\underline{\hspace{#1}}}
+
+% ── Dados do processo ─────────────────────────────────────────────────
+\newcommand{\nncNum}{[NNN]}
+\newcommand{\arpNum}{001}
+\newcommand{\exercicio}{2025}
+\newcommand{\arpRef}{ARP n.\textsuperscript{o} 001/2025}
+\newcommand{\trRef}{TR-SMS/BORBA-001/2025}
+\newcommand{\procNum}{[NÚMERO DO PROCESSO SEI/E-DOC]}
+\newcommand{\ofRef}{OF n.\textsuperscript{o} [NNN]/2025}
+\newcommand{\trpRef}{TRP n.\textsuperscript{o} [NNN]/2025}
+\newcommand{\nncData}{[DATA DE EMISSÃO DA NNC]}
+\newcommand{\prazoSubst}{[DATA LIMITE PARA SUBSTITUIÇÃO --- 5 d.u.]}
+\newcommand{\fornNome}{[RAZÃO SOCIAL DA FORNECEDORA]}
+\newcommand{\fornCNPJ}{[CNPJ DA FORNECEDORA]}
+\newcommand{\fiscalNome}{[NOME DO FISCAL TÉCNICO]}
+\newcommand{\fiscalMat}{[MATRÍCULA]}
+\newcommand{\gestorNome}{[NOME DO GESTOR]}
+
+% ═════════════════════════════════════════════════════════════════════
+\begin{document}
+\setlength{\parindent}{0pt}
+% ═════════════════════════════════════════════════════════════════════
+
+% ══════════════════════════════════════════════════════════════════════
+%  PARTE I — NOTIFICAÇÃO DE NÃO CONFORMIDADE (NNC)
+% ══════════════════════════════════════════════════════════════════════
+
+\begin{center}
+  {\large\bfseries\color{navy}PREFEITURA MUNICIPAL DE BORBA}\\[1pt]
+  {\normalsize\bfseries\color{navy}SECRETARIA MUNICIPAL DE SAÚDE}\\[0.4cm]
+  \textcolor{navy!25}{\rule{0.90\linewidth}{1pt}}\\[0.4cm]
+  {\LARGE\bfseries\color{warnbdr}NOTIFICAÇÃO DE NÃO CONFORMIDADE}\\[4pt]
+  {\Large\bfseries N.\textsuperscript{o} \nncNum/\exercicio}\\[0.3cm]
+  \textcolor{navy!25}{\rule{0.90\linewidth}{0.6pt}}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{warnbox}[Efeito desta Notificação]
+\small
+Esta NNC \textbf{suspende} o prazo de recebimento definitivo e \textbf{bloqueia}
+o faturamento até a substituição ou regularização dos itens apontados.
+O prazo de substituição conta da data de ciência da Fornecedora, nos termos
+da Cláusula~8, item~8.3 da \arpRef\ e do \art{140},
+\S\,3.\textsuperscript{o}, da Lei n.\textsuperscript{o}~14.133/2021.
+\end{warnbox}
+
+\vspace{0.3cm}
+
+% ── Identificação ─────────────────────────────────────────────────────
+\begin{table}[H]\centering\small
+\caption*{\textbf{\color{navy}IDENTIFICAÇÃO}}
+\begin{tabular}{>{\bfseries\color{navy}}p{4.6cm} L{9.4cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}
+  {\textbf{\color{navy}Dados do Documento}} \\
+\midrule
+N.\textsuperscript{o} da NNC:           & \nncNum/\exercicio \\
+\rowcolor{rowalt}
+ARP de origem:                           & \arpRef \\
+OF vinculada:                            & \ofRef \\
+\rowcolor{rowalt}
+TRP vinculado:                           & \trpRef \\
+Processo:                                & \procNum \\
+\rowcolor{rowalt}
+Data de emissão:                         & \nncData \\
+\midrule
+\rowcolor{navy!10}\multicolumn{2}{l}
+  {\textbf{\color{navy}Fornecedora Notificada}} \\
+\midrule
+Razão Social:                            & \fornNome \\
+\rowcolor{rowalt}
+CNPJ:                                    & \fornCNPJ \\
+\midrule
+\rowcolor{navy!10}\multicolumn{2}{l}
+  {\textbf{\color{navy}Fiscal Técnico Emitente}} \\
+\midrule
+Nome:                                    & \fiscalNome \\
+\rowcolor{rowalt}
+Matrícula:                               & \fiscalMat \\
+Prazo para substituição:                 & \textbf{\prazoSubst} (5 dias úteis) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Itens com não conformidade ────────────────────────────────────────
+\vspace{0.2cm}
+\begin{table}[H]\centering
+\caption*{\textbf{\color{navy}ITENS COM NÃO CONFORMIDADE IDENTIFICADA}}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.6cm} L{4.0cm} C{0.8cm} C{1.5cm} C{1.5cm} L{5.2cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{It.} &
+  \color{white}\textbf{Descrição} &
+  \color{white}\textbf{Un.} &
+  \color{white}\textbf{Qtde.\newline Entregue} &
+  \color{white}\textbf{Qtde.\newline Reprovada} &
+  \color{white}\textbf{Não Conformidade Identificada} \\
+  \toprule
+  & & & & & \\[2pt]
+  & & & & & \\[2pt]
+  & & & & & \\[2pt]
+  & & & & & \\[2pt]
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ── Classificação da não conformidade ────────────────────────────────
+\vspace{0.2cm}
+{\color{navy}\bfseries CLASSIFICAÇÃO DA(S) NÃO CONFORMIDADE(S)}
+\vspace{4pt}
+
+\begin{table}[H]\centering\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.5cm} L{5.5cm} C{1.5cm} C{6.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{\#} &
+  \color{white}\textbf{Tipo de Não Conformidade} &
+  \color{white}\textbf{Detectado?} &
+  \color{white}\textbf{Descrição / Fundamentação no TR} \\
+  \toprule
+  1 & Quantidade inferior à OF &
+    ( ) S\quad( ) N &
+    Qtde. entregue diverge da OF; TR \trRef, Seção~5 \\
+  2 & Embalagem violada, amassada ou com vazamento &
+    ( ) S\quad( ) N &
+    TR \trRef, Seção~3.1, item~4 \\
+  3 & Rótulo ilegível / ausente &
+    ( ) S\quad( ) N &
+    TR \trRef, Seção~3.1, item~5 \\
+  4 & Validade residual $<$ 12 meses &
+    ( ) S\quad( ) N &
+    TR \trRef, Seção~3.1, item~3; validade
+    constante: \blank{2.5cm} \\
+  5 & Produto sem registro / notificação ANVISA &
+    ( ) S\quad( ) N &
+    TR \trRef, Seção~3.1, item~1; ANVISA consultado em:
+    \blank{2.5cm} \\
+  6 & Especificação técnica divergente do TR &
+    ( ) S\quad( ) N &
+    Detalhar: \blank{4.5cm} \\
+  7 & Marca / modelo diferente da amostra aprovada sem equivalência &
+    ( ) S\quad( ) N &
+    TR \trRef, Seção~2.3 \\
+  8 & Temperatura de transporte inadequada &
+    ( ) S\quad( ) N &
+    Item: \blank{2cm}; Temp. aferida: \blank{1.5cm}\,\textdegree C \\
+  9 & FISPQ ausente (1.\textsuperscript{a} entrega do lote) &
+    ( ) S\quad( ) N &
+    TR \trRef, Seção~3.1, item~2 \\
+  10 & Outra: \blank{3.5cm} &
+    ( ) S\quad( ) N &
+    \blank{5.5cm} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+% ── Descrição detalhada ───────────────────────────────────────────────
+\vspace{0.3cm}
+{\color{navy}\bfseries DESCRIÇÃO DETALHADA DA(S) NÃO CONFORMIDADE(S)}
+\vspace{4pt}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{14cm}}
+\rowcolor{navy!8}
+\blank{14cm}\\
+\blank{14cm}\\
+\blank{14cm}\\
+\blank{14cm}\\
+\blank{14cm}\\
+\end{tabular}
+\end{table}
+
+% ── Providências exigidas ─────────────────────────────────────────────
+\vspace{0.2cm}
+{\color{navy}\bfseries PROVIDÊNCIAS EXIGIDAS DA FORNECEDORA}
+\vspace{4pt}
+
+\begin{enumerate}
+  \item \textbf{Retirar imediatamente} os itens reprovados do Almoxarifado da SMS
+    e providenciar o retorno ao seu estabelecimento, às suas expensas;
+
+  \item \textbf{Substituir os itens} reprovados por produtos que atendam
+    integralmente às especificações do TR \trRef, em até
+    \textbf{5 (cinco) dias úteis} a contar da ciência desta NNC (\prazoSubst),
+    sem qualquer ônus adicional ao Município de Borba;
+
+  \item \textbf{Apresentar laudo técnico ou documentação} comprobatória
+    (quando aplicável) que demonstre a conformidade dos produtos substitutos
+    com os parâmetros do TR, antes da nova entrega;
+
+  \item \textbf{Comunicar ao Fiscal Técnico}, com antecedência mínima de
+    \textbf{2 dias úteis}, a data prevista para a nova entrega, para fins
+    de agendamento.
+\end{enumerate}
+
+\begin{alertbox}[Penalidades Aplicáveis]
+\small
+O não atendimento das providências acima no prazo de \textbf{5 dias úteis}
+sujeitará a Fornecedora à multa de \textbf{2\% ao dia} sobre o valor dos
+itens reprovados, nos termos da Cláusula~13 da \arpRef, sem prejuízo das
+demais sanções previstas na Lei n.\textsuperscript{o}~14.133/2021.
+A reincidência poderá ensejar a \textbf{rescisão do registro} deste lote.
+\end{alertbox}
+
+% ── Assinaturas ───────────────────────────────────────────────────────
+\vspace{0.5cm}
+\begin{minipage}{0.47\linewidth}
+  \begin{center}
+    \vspace{0.3cm}\rule{7.5cm}{0.5pt}\\[3pt]
+    \textbf{\fiscalNome}\\
+    \small Fiscal Técnico da \arpRef\\
+    \small Mat.: \fiscalMat
+  \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+  \begin{center}
+    \vspace{0.3cm}\rule{7.5cm}{0.5pt}\\[3pt]
+    \textbf{\gestorNome}\\
+    \small Gestor(a) da \arpRef\\
+    \small (ciência e encaminhamento)
+  \end{center}
+\end{minipage}
+
+\vspace{0.8cm}
+{\color{navy}\bfseries CIÊNCIA DA FORNECEDORA NOTIFICADA}
+\vspace{4pt}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.6cm} L{9.4cm}}
+\midrule
+Data e horário de ciência:    & \blank{4cm} --- \blank{2cm}h \\
+\rowcolor{rowalt}
+Recebido por:                  & \blank{7cm} \\
+Cargo / Função:                & \blank{7cm} \\
+\rowcolor{rowalt}
+Assinatura:                    & \vspace{0.8cm}\blank{7cm}\vspace{0.2cm} \\
+Meio de notificação:           & ( ) Presencial \quad ( ) E-mail \quad
+                                  ( ) Sistema \quad ( ) AR Postal \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{infobox}[Recusa de Ciência]
+\small
+Em caso de \textbf{recusa de ciência} pela Fornecedora, o Fiscal lavrará
+Declaração de Recusa, devidamente testemunhada por dois servidores, e a
+notificação será encaminhada por \textbf{Aviso de Recebimento (AR)}, com
+prazo contando da data da postagem.
+\end{infobox}
+
+% ══════════════════════════════════════════════════════════════════════
+%  PARTE II — TERMO DE DEVOLUÇÃO DE MERCADORIAS
+% ══════════════════════════════════════════════════════════════════════
+\clearpage
+
+% Atualizar cabeçalho para o Termo de Devolução
+\fancyhead[L]{\footnotesize\color{navy}\textbf{TERMO DE DEVOLUÇÃO} ---
+  NNC n.\textsuperscript{o} \nncNum/\exercicio --- SMS Borba/AM}
+
+\begin{center}
+  {\large\bfseries\color{navy}PREFEITURA MUNICIPAL DE BORBA}\\[1pt]
+  {\normalsize\bfseries\color{navy}SECRETARIA MUNICIPAL DE SAÚDE}\\[0.4cm]
+  \textcolor{navy!25}{\rule{0.90\linewidth}{1pt}}\\[0.4cm]
+  {\LARGE\bfseries\color{navy}TERMO DE DEVOLUÇÃO DE MERCADORIAS}\\[4pt]
+  {\large\bfseries NNC n.\textsuperscript{o} \nncNum/\exercicio}\\[0.3cm]
+  \textcolor{navy!25}{\rule{0.90\linewidth}{0.6pt}}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{legalbox}[Fundamento]
+\small
+\art{140}, \S\,3.\textsuperscript{o}, da Lei n.\textsuperscript{o}~14.133/2021:
+constatada a não conformidade, os bens serão devolvidos ao fornecedor às
+suas expensas, sem que isso configure recusa de recebimento para fins contratuais.
+O prazo para substituição não interrompe o prazo contratual original de entrega.
+\end{legalbox}
+
+\vspace{0.3cm}
+
+\begin{table}[H]\centering\small
+\caption*{\textbf{\color{navy}IDENTIFICAÇÃO DO TERMO DE DEVOLUÇÃO}}
+\begin{tabular}{>{\bfseries\color{navy}}p{4.6cm} L{9.4cm}}
+\rowcolor{navy!10}\multicolumn{2}{l}
+  {\textbf{\color{navy}Dados do Ato}} \\
+\midrule
+NNC de referência:                & NNC n.\textsuperscript{o} \nncNum/\exercicio \\
+\rowcolor{rowalt}
+Data e hora da devolução:         & \blank{4cm} --- \blank{2cm}h \\
+Local:                             & Almoxarifado Central da SMS --- Borba/AM \\
+\rowcolor{rowalt}
+Servidor responsável (SMS):       & \blank{6cm} --- Mat.: \blank{2cm} \\
+Representante da Fornecedora:     & \blank{6cm} \\
+\rowcolor{rowalt}
+CNPJ da Fornecedora:              & \fornCNPJ \\
+Veículo / Embarcação de retirada: & \blank{6cm} --- Placa/Registro: \blank{3cm} \\
+\rowcolor{rowalt}
+Motorista / Tripulante:           & \blank{6cm} --- CNH/Doc: \blank{3cm} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.2cm}
+\begin{table}[H]\centering
+\caption*{\textbf{\color{navy}RELAÇÃO DOS ITENS DEVOLVIDOS}}
+\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{0.6cm} L{4.5cm} C{0.8cm} C{1.8cm} C{2.2cm} L{3.6cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{It.} &
+  \color{white}\textbf{Descrição do Item} &
+  \color{white}\textbf{Un.} &
+  \color{white}\textbf{Qtde.\newline Devolvida} &
+  \color{white}\textbf{Valor Unit.\newline Reg. (R\$)} &
+  \color{white}\textbf{Motivo da Devolução\newline (remissão à NNC)} \\
+  \toprule
+  & & & & & \\[4pt]
+  & & & & & \\[4pt]
+  & & & & & \\[4pt]
+  & & & & & \\[4pt]
+  \rowcolor{ltblue}
+  \multicolumn{3}{r}{\small\textbf{Valor Total Devolvido (R\$):}} &
+  \multicolumn{3}{l}{\blank{3.5cm}} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+{\color{navy}\bfseries CONDIÇÕES DA DEVOLUÇÃO}
+\vspace{4pt}
+
+\begin{enumerate}
+  \item Os itens devolvidos são entregues à Fornecedora \textbf{no estado em
+    que foram recebidos} pelo Almoxarifado da SMS, conforme descrito na NNC
+    n.\textsuperscript{o}~\nncNum/\exercicio;
+
+  \item A devolução \textbf{não exonera} a Fornecedora da obrigação de
+    substituição no prazo de \textbf{5 dias úteis} contados da ciência da NNC,
+    nem das eventuais multas de mora incidentes sobre o prazo original de entrega;
+
+  \item Os custos de \textbf{retirada e retorno dos itens} (frete fluvial,
+    seguro, embalagem) são de inteira responsabilidade da Fornecedora;
+
+  \item Não haverá \textbf{desconto no valor da NF-e} antes da substituição;
+    a NF-e somente deverá ser emitida após o TRD dos itens substitutos;
+
+  \item Este Termo constitui documento hábil para fins de \textbf{controle de
+    estoque} da SMS e de eventual instrução de processo sancionatório.
+\end{enumerate}
+
+\vspace{0.3cm}
+{\color{navy}\bfseries DECLARAÇÃO DE RECEBIMENTO PELA FORNECEDORA}
+\vspace{4pt}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{>{\bfseries\color{navy}}p{4.6cm} L{9.4cm}}
+\midrule
+Declaro ter recebido os itens &
+  relacionados acima, nas condições descritas neste Termo, e estou \textbf{ciente}
+  da obrigação de substituição até \textbf{\prazoSubst}. \\
+\rowcolor{rowalt}
+Data e horário:                & \blank{4cm} --- \blank{2cm}h \\
+Assinatura do representante:   & \vspace{0.8cm}\blank{7cm}\vspace{0.2cm} \\
+\rowcolor{rowalt}
+Nome legível:                  & \blank{7cm} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.5cm}
+\begin{minipage}{0.47\linewidth}
+  \begin{center}
+    \vspace{0.3cm}\rule{7.5cm}{0.5pt}\\[3pt]
+    \textbf{\fiscalNome}\\
+    \small Fiscal Técnico da \arpRef\\
+    \small Mat.: \fiscalMat
+  \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.47\linewidth}
+  \begin{center}
+    \vspace{0.3cm}\rule{7.5cm}{0.5pt}\\[3pt]
+    Servidor do Almoxarifado Central\\
+    \small SMS de Borba/AM\\
+    \small Mat.: \blank{2.5cm}
+  \end{center}
+\end{minipage}
+
+% ══════════════════════════════════════════════════════════════════════
+%  PARTE III — CONTROLE DE ACOMPANHAMENTO DA NNC
+% ══════════════════════════════════════════════════════════════════════
+\clearpage
+
+\fancyhead[L]{\footnotesize\color{navy}\textbf{Acompanhamento NNC
+  \nncNum/\exercicio} --- SMS Borba/AM}
+
+\begin{center}
+  {\large\bfseries\color{navy}FICHA DE ACOMPANHAMENTO DA NNC
+    N.\textsuperscript{o} \nncNum/\exercicio}\\[4pt]
+  {\normalsize (uso exclusivo do Fiscal Técnico --- juntada ao processo
+    \procNum)}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{table}[H]\centering\small\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.8cm} C{1.8cm} L{4.5cm} C{1.2cm} L{4.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Data} &
+  \color{white}\textbf{Responsável} &
+  \color{white}\textbf{Ação / Evento} &
+  \color{white}\textbf{Status} &
+  \color{white}\textbf{Observações} \\
+  \toprule
+  \nncData & Fiscal Técnico    & Emissão da NNC e Termo de Devolução &
+    Emitido & Ciência em: \blank{2cm} \\
+  \prazoSubst & Fornecedora    & Prazo limite para substituição &
+    Pendente & \\
+           & Fiscal Técnico    & Inspeção dos itens substitutos (TRP) &
+    & \\
+           & Fiscal Técnico    & Emissão do TRD dos itens substitutos &
+    & \\
+           & Gestor            & Liberação para faturamento (NF-e) &
+    & \\
+           & Gestor            & Aplicação de multa (se atraso) &
+    & Portaria SMS: \blank{2cm} \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{table}[H]\centering\small
+\caption*{\textbf{\color{navy}Resultado Final da NNC}}
+\begin{tabular}{>{\bfseries\color{navy}}p{5.0cm} L{9.0cm}}
+\midrule
+Situação encerrada em:          & \blank{3.5cm} \\
+\rowcolor{rowalt}
+Resultado:                       &
+  ( ) Substituição aceita no prazo \quad
+  ( ) Substituição aceita com atraso \quad
+  ( ) Rescisão do lote \\
+Multa aplicada:                  &
+  ( ) Não \quad ( ) Sim --- Portaria n.\textsuperscript{o} \blank{2cm} ---
+  Valor: R\$ \blank{2.5cm} \\
+\rowcolor{rowalt}
+NF-e autorizada em:              & \blank{3.5cm} (após TRD dos itens substitutos) \\
+Observações finais:              & \blank{9cm} \\
+\rowcolor{rowalt}
+Assinatura do Fiscal:            & \vspace{0.7cm}\blank{8cm}\vspace{0.1cm} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.4cm}
+
+\begin{table}[H]\centering\small
+\caption*{\textbf{\color{navy}Quadro Acumulado de NNC por Lote ---
+  \arpRef}}
+\rowcolors{2}{rowalt}{white}
+\begin{tabular}{C{1.0cm} C{1.2cm} C{1.8cm} C{1.8cm} C{1.8cm} C{1.8cm} C{3.0cm}}
+  \rowcolor{navy}
+  \color{white}\textbf{Lote} &
+  \color{white}\textbf{NNC\newline Total} &
+  \color{white}\textbf{Resolvidas\newline no Prazo} &
+  \color{white}\textbf{Resolvidas\newline c/ Atraso} &
+  \color{white}\textbf{Em\newline Aberto} &
+  \color{white}\textbf{Rescisões} &
+  \color{white}\textbf{Taxa NC\newline (meta $<$ 2\%)} \\
+  \toprule
+  01 & & & & & & \\
+  02 & & & & & & \\
+  03 & & & & & & \\
+  04 & & & & & & \\
+  05 & & & & & & \\
+  06 & & & & & & \\
+  \rowcolor{ltblue}
+  \textbf{Total} & & & & & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+\begin{infobox}[Guarda e Arquivamento]
+\small
+Esta NNC, o Termo de Devolução e a Ficha de Acompanhamento devem ser juntados
+ao processo \procNum\ em até \textbf{2 dias úteis} da emissão. Constituem
+documentos essenciais para a aferição do KPI ``Taxa de Não Conformidade de
+Entregas'' ($<2\%$) e, se houver multa, para a instrução do processo
+sancionatório.
+\end{infobox}
+
+\vspace{0.6cm}
+\noindent\textcolor{navy!25}{\rule{\linewidth}{0.5pt}}
+\noindent{\footnotesize\itshape
+\textbf{Base normativa:}
+Lei n.\textsuperscript{o}~14.133/2021, arts.\,117, 140 e 155--163 \textbullet{}
+Cláusulas 7, 8, 12 e 13 da \arpRef \textbullet{}
+TR \trRef, Seções 3, 5 e 10 \textbullet{}
+RDC ANVISA n.\textsuperscript{o}~59/2021 \textbullet{}
+ABNT NBR 14.725.}
+
+\end{document}
