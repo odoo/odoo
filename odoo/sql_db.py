@@ -307,7 +307,7 @@ class Cursor(_CursorProtocol):
 
     def __exit__(self, exc_type, exc_value, traceback):
         try:
-            if exc_type is None:
+            if exc_type is None and not self.closed:
                 self.commit()
         finally:
             self.close()

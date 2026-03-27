@@ -3,6 +3,8 @@ from __future__ import annotations
 import typing
 from datetime import datetime
 
+import psycopg2
+
 import odoo.modules
 from odoo.sql_db import Cursor, Savepoint, _logger
 
@@ -69,7 +71,8 @@ class TestCursor(Cursor):
         self._cursors_stack.append(self)
 
     def execute(self, *args, **kwargs) -> None:
-        assert not self.closed, "Cannot use a closed cursor"
+        if self.closed:
+            raise psycopg2.InterfaceError("Cursor already closed")
         if self._now is None:
             self._now = datetime.now()
         self._cnx._check_savepoint()
