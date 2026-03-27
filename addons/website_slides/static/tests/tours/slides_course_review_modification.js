@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("course_review_modification", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: "a:contains(Basics of Gardening - Test)",
@@ -49,7 +48,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
-            trigger: "#chatterRoot:shadow button:contains(Delete)",
+            trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
             run: "click",
         },
         {
@@ -196,7 +195,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
-            trigger: "#chatterRoot:shadow button:contains(Delete)",
+            trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
             run: "click",
         },
         {
@@ -253,7 +252,6 @@ registry.category("web_tour.tours").add("course_review_modification", {
 });
 
 registry.category("web_tour.tours").add("course_review_modification_by_admin", {
-    undeterministicTour_doNotCopy: true,
     steps: () => [
         {
             trigger: "a:text(Basics of Gardening - Test)",
@@ -273,9 +271,8 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
             run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
-            run: "hover && click #chatterRoot:shadow button[name='edit']",
+            trigger: "#chatterRoot:shadow button[name='edit']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -318,7 +315,7 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow button:text(Delete)",
+            trigger: "#chatterRoot:shadow .modal button:text(Delete)",
             run: "click",
         },
         {
