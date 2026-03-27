@@ -919,6 +919,51 @@ class TestPartnerAddressCompany(TransactionCase):
                 self.assertEqual(partner.company_registry, 'new')
                 self.assertEqual(partner.industry_id, self.test_industries[1])
 
+    @users('employee')
+    def test_commercial_field_sync_archived(self):
+        """ Specific case of synchronisation when archived records are involved. """
+        sync_commercial_fields = self.env['res.partner']._synced_commercial_fields()
+
+        individual = self.env['res.partner'].create({
+            'active': False,
+            'company_registry': 'contact_registry',
+            'industry_id': self.test_industries[0].id,
+            'name': 'Individual',
+            'ref': 'REFINDIVIDUAL',
+            'vat': 'BEINDIVIDUAL',
+            **self.test_address_values,
+        })
+        # create a company through "quick create", which would have partial default
+        # values for some company values
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            company = self.env['res.partner'].create({
+                'active': False,
+                'name': 'Company',
+                'ref': 'COMPANYREF',
+            })
+            individual.write({'parent_id': company})
+        self.assertEqual(company.ref, 'COMPANYREF')
+        self.assertEqual(company.vat, 'BEINDIVIDUAL')
+        self.assertEqual(individual.ref, 'COMPANYREF')
+        self.assertEqual(individual.vat, 'BEINDIVIDUAL')
+
+        # propagate to archived children
+        with patch.object(
+            self.env['res.partner'].__class__, '_synced_commercial_fields',
+            lambda self: sync_commercial_fields + ['ref'],
+        ):
+            company.write({
+                'company_registry': 'new_company_registry',
+                'vat': 'BENEWER',
+            })
+        self.assertEqual(company.company_registry, 'new_company_registry')
+        self.assertEqual(company.vat, 'BENEWER')
+        self.assertEqual(individual.company_registry, 'new_company_registry')
+        self.assertEqual(individual.vat, 'BENEWER')
+
     def test_commercial_field_sync_reset(self):
         """ Test voiding fields propagation. We would like to allow forcing void
         values from parent, but limiting upstream reset from children. """

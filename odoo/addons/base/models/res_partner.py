@@ -205,9 +205,12 @@ class ResPartner(models.Model):
     name = fields.Char(index=True, default_export_compatible=True)
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     parent_id: ResPartner = fields.Many2one('res.partner', string='Related Company', index=True)
-    # It's Stored intentionally and will act in place of `company_name`
     parent_name = fields.Char(related='parent_id.name', readonly=True, store=False, string='Parent name')
     child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
+    child_all_ids = fields.One2many(
+        'res.partner', 'parent_id', string='Contacts (incl. archived)',
+        context={'active_test': False},
+    )
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
                             compute='_compute_lang', readonly=False, store=True,
@@ -716,7 +719,7 @@ class ResPartner(models.Model):
         if fields_to_sync is None:
             fields_to_sync = self._commercial_fields()
         sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
-        sync_children = self.child_ids.filtered(lambda c: not c.is_company)
+        sync_children = self.child_all_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_descendants(fields_to_sync)
         sync_children.write(sync_vals)
@@ -772,17 +775,17 @@ class ResPartner(models.Model):
         self._children_sync(values)
 
     def _children_sync(self, values):
-        if not self.child_ids:
+        if not self.child_all_ids:
             return
         # 2a. Commercial Fields: sync if commercial entity
         if self.commercial_partner_id == self:
             fields_to_sync = values.keys() & self._commercial_fields()
             self.sudo()._commercial_sync_to_descendants(fields_to_sync)
-        # 2b. Address fields: sync if address changed
+        # 2b. Address fields: sync if address changed, only active contacts
         address_fields = self._address_fields()
         if any(field in values for field in address_fields):
-            contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
-            contacts._update_address(values)
+            active_contacts = self.child_all_ids.filtered(lambda c: c.active and c.type == 'contact')
+            active_contacts._update_address(values)
 
     def _handle_first_contact_creation(self):
         """ On creation of first contact for a company (or root) that has no address, assume contact address
