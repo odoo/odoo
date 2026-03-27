@@ -25,7 +25,7 @@
                 If you don't recognize it, you should change your password immediately via this link:<br/>
                 <div style="margin: 16px 0px 16px 0px">
                     <a t-attf-href="{{ user.get_base_url() }}/web/reset_password"
-                        style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px">
+                        style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px">
                         Reset Password
                     </a>
                 </div>
