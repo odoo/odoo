@@ -21,7 +21,7 @@ MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 """ How many times retrying() is allowed to retry. """
 
 
-def retrying[T](func: Callable[[], T], env: Environment) -> T:
+def retrying[T](func: Callable[[], T], env: Environment, *, close_on_commit: bool = True) -> T:
     """
     Call ``func``in a loop until the SQL transaction commits with no
     serialisation error. It rollbacks the transaction in between calls.
@@ -40,10 +40,11 @@ def retrying[T](func: Callable[[], T], env: Environment) -> T:
     backoff: ``random.uniform(0.0, 2 ** i)`` where ``i`` is the n° of
     the current attempt and starts at 1.
 
-    :param callable func: The function to call, you can pass arguments
+    :param func: The function to call, you can pass arguments
         using :func:`functools.partial`.
-    :param odoo.api.Environment env: The environment where the registry
+    :param env: The environment where the registry
         and the cursor are taken.
+    :param close_on_commit: Close the cursor after committing
     """
     try:
         for tryno in range(1, MAX_TRIES_ON_CONCURRENCY_FAILURE + 1):
@@ -111,6 +112,7 @@ def retrying[T](func: Callable[[], T], env: Environment) -> T:
         raise
 
     if not env.cr.closed:
+        env.cr._closing = close_on_commit  # cursor should not be used after the commit
         env.cr.commit()  # effectively commits and execute post-commits
     env.registry.signal_changes()
     return result
