@@ -93,8 +93,12 @@ export class EventPage extends Component {
     }
 
     validateQuestion(question, value) {
-        if (question.is_mandatory_answer && !value?.trim()) {
-            return false;
+        if (question.is_mandatory_answer) {
+            if (question.question_type === 'checkbox') {
+                return (value || []).length > 0;
+            } else if (!value?.trim()) {
+                return false;
+            }
         }
         if (!value) {
             return true;
@@ -330,8 +334,21 @@ export class EventPage extends Component {
         this.state.slotTicketAvailabilities = avaibilityByTicket;
     }
 
-    updateTicketDetail(ticketId, index, questionId, title, value) {
+    updateTicketDetail(ticketId, index, questionId, title, questionType, value, isChecked) {
         const key = `${ticketId}_${index}`;
+        if (questionType === 'checkbox') {
+            this.state.ticketDetails[key] ??= {};
+            this.state.ticketDetails[key][questionId] ??= { title, value: []};
+            if (isChecked) {
+                this.state.ticketDetails[key][questionId]['value'].push(value);
+            } else {
+                this.state.ticketDetails[key][questionId]['value'] =
+                    Object.values(this.state.ticketDetails[key][questionId]['value'])
+                        .filter((v) => v !== value);
+            }
+            return;
+        }
+
         this.state.ticketDetails = {
             ...this.state.ticketDetails,
             [key]: {
@@ -341,7 +358,17 @@ export class EventPage extends Component {
         };
     }
 
-    updateGlobalAnswer(questionId, value) {
+    updateGlobalAnswer(questionId, questionType, value, isChecked) {
+        if (questionType === 'checkbox') {
+            this.state.globalAnswers[questionId] ??= [];
+            if (isChecked) {
+                this.state.globalAnswers[questionId].push(value);
+            } else {
+                this.state.globalAnswers[questionId] =
+                    Object.values(this.state.globalAnswers[questionId]).filter((v) => v !== value);
+            }
+            return;
+        }
         this.state.globalAnswers[questionId] = value;
     }
 
@@ -394,7 +421,8 @@ export class EventPage extends Component {
                 ),
                 ...details,
             };
-            const { userData, simpleChoice, textAnswer } = this.extractAnswers(mergedDetails);
+            const { userData, simpleChoice, checkboxAnswers, textAnswer } =
+                this.extractAnswers(mergedDetails);
 
             this.selfOrder.models["event.registration"].create({
                 ...userData,
@@ -406,6 +434,7 @@ export class EventPage extends Component {
                 registration_answer_ids: [
                     ...this.formatTextAnswers(textAnswer),
                     ...this.formatChoiceAnswers(simpleChoice),
+                    ...this.formatCheckboxAnswers(checkboxAnswers),
                 ],
             });
         }
@@ -414,6 +443,7 @@ export class EventPage extends Component {
     extractAnswers(details) {
         const userData = {};
         const simpleChoice = {};
+        const checkboxAnswers = {};
         const textAnswer = {};
 
         for (const [questionId, { value }] of Object.entries(details)) {
@@ -424,34 +454,50 @@ export class EventPage extends Component {
             if (this.isUserDataFields(question)) {
                 userData[question.question_type] = value;
             }
-            if (question.question_type === "simple_choice") {
+            if (["simple_choice", "radio"].includes(question.question_type)) {
                 simpleChoice[questionId] = value;
-            } else if (value) {
+            } else if (question.question_type === "checkbox") {
+                // Here, value is an array
+                checkboxAnswers[questionId] = value;
+            } else {
                 textAnswer[questionId] = value;
             }
         }
-        return { userData, simpleChoice, textAnswer };
+        return { userData, simpleChoice, checkboxAnswers, textAnswer };
     }
 
     formatTextAnswers(textAnswer) {
-        return Object.entries(textAnswer).map(([questionId, answer]) => [
-            "create",
-            {
-                question_id: this.selfOrder.models["event.question"].get(parseInt(questionId)),
-                value_text_box: answer,
-            },
-        ]);
+        return Object.entries(textAnswer).map(([questionId, answer]) =>
+            this.getAnswerCreateValues(questionId, answer, false)
+        );
     }
     formatChoiceAnswers(simpleChoice) {
-        return Object.entries(simpleChoice).map(([questionId, answer]) => [
-            "create",
-            {
-                question_id: this.selfOrder.models["event.question"].get(parseInt(questionId)),
-                value_answer_id: this.selfOrder.models["event.question.answer"].get(
-                    parseInt(answer)
-                ),
-            },
-        ]);
+        return Object.entries(simpleChoice).map(([questionId, answer]) => 
+            this.getAnswerCreateValues(questionId, answer, true)
+        );
+    }
+    formatCheckboxAnswers(checkboxAnswers) {
+        return Object.entries(checkboxAnswers).reduce(
+            (acc, [questionId, answers]) => {
+                answers.forEach((answer) => {
+                    acc.push(this.getAnswerCreateValues(questionId, answer, true));
+                })
+                return acc;
+            }, []
+        );
+    }
+    getAnswerCreateValues(questionId, value, isSelectionAnswer) {
+        const vals = {
+            question_id: this.selfOrder.models["event.question"].get(parseInt(questionId))
+        }
+        if (isSelectionAnswer) {
+            vals["value_answer_id"] = this.selfOrder.models["event.question.answer"].get(
+                parseInt(value)
+            );
+        } else {
+            vals["value_text_box"] = value;
+        }
+        return vals
     }
 
     goBack() {
