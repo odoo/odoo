@@ -43,6 +43,8 @@ from .misc import file_open, file_path, frozendict, get_iso_codes, split_every, 
 if typing.TYPE_CHECKING:
     import types
 
+    from collections.abc import Callable
+    from typing import Literal
     from odoo.api import Environment
     from odoo.orm.fields_textual import BaseString
 
@@ -727,6 +729,31 @@ class ParsedTranslation:
             return 'X'
 
         self.structure = field.translate(translate_func, value)
+
+
+def adapt_translated_field_value(
+    env: Environment,
+    val: dict[str, str] | str | Literal[False] | None,
+    adapter: Callable[[str, str], str],
+) -> dict[str, str] | str | Literal[False] | None:
+    """Apply an adapter to a translated field value, handling all supported value formats.
+
+    Translated fields accept either a plain string (single language) or a dict mapping
+    language codes to translated strings. This function normalizes both formats by
+    applying the adapter to each value, preserving None and False as-is.
+
+    :param env: the Odoo environment
+    :param val: the value to adapt; can be a dict {lang: value}, a plain string,
+                or None/False
+    :param adapter: callable(lang, value) -> str; receives language code and value,
+                    returns the adapted value for each translation
+    :return: the adapted value
+    """
+    if val is None or val is False:
+        return val
+    if not isinstance(val, dict):
+        return adapter(env.lang or 'en_US', val)
+    return {k: adapter(k, v) for k, v in val.items()}
 
 
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:

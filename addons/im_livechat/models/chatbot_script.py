@@ -108,8 +108,9 @@ class ChatbotScript(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        field_title = self._fields['title']
         operator_partners_values = [{
-            'name': vals['title'],
+            'name': field_title.convert_to_cache(vals['title'], self, validate=False),  # adapt in case `isinstance(vals['title'], dict)` for translated field
             'image_1920': vals.get('image_1920', False),
             'active': False,
         } for vals in vals_list if 'operator_partner_id' not in vals and 'title' in vals]

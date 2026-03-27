@@ -772,8 +772,11 @@ class AccountJournal(models.Model):
             # will raise if writing name on more than 1 record, using self[0] is safe
             if (not self.env['mail.alias']._is_encodable(vals['alias_name']) or
                 not self.env['mail.alias']._sanitize_alias_name(vals['alias_name'])):
+                val_name = vals.get('name', self.name)
+                if isinstance(val_name, dict):
+                    val_name = val_name.get(self.env.lang or 'en_US', self.name)
                 vals['alias_name'] = self._alias_prepare_alias_name(
-                    False, vals.get('name', self.name), vals.get('code', self.code), self[0].type, self[0].company_id)
+                    False, val_name, vals.get('code', self.code), self[0].type, self[0].company_id)
 
         for journal in self:
             company = journal.company_id

@@ -220,7 +220,8 @@ class ResGroups(models.Model):
 
     def write(self, vals):
         if 'name' in vals:
-            if vals['name'].startswith('-'):
+            names = v.values() if isinstance((v := vals['name']), dict) else [v]
+            if any(n_.startswith('-') for n_ in names):
                 raise UserError(self.env._('The name of the group can not start with "-"'))
 
         # invalidate caches before updating groups, since the recomputation of

@@ -3,6 +3,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
 from odoo.tools import SQL, is_html_empty
+from odoo.tools.translate import adapt_translated_field_value
 from datetime import date
 from odoo.fields import Domain
 
@@ -51,8 +52,11 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         # Clear empty public description content to avoid side-effects on product page
         # when there is no content to display anyway.
-        if vals.get('public_description') and is_html_empty(vals['public_description']):
-            vals['public_description'] = ''
+        if (public_description := vals.get('public_description')):
+            vals['public_description'] = adapt_translated_field_value(
+                self.env, public_description,
+                lambda lang, v: '' if is_html_empty(v) else v
+            )
         return super().write(vals)
 
     @api.depends('pos_categ_ids')

@@ -4,7 +4,7 @@ from odoo.fields import Command, Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
-from odoo.tools.translate import html_translate
+from odoo.tools.translate import html_translate, adapt_translated_field_value
 
 from collections import defaultdict
 from collections.abc import Iterable
@@ -622,8 +622,12 @@ class AccountTax(models.Model):
         sanitized = vals.copy()
 
         # Wrap plain text in <div> if description has no HTML tags to avoid the padding with automatically added <p>
-        if sanitized.get('description') and not re.search(r'<[^>]+>', sanitized['description']):
-            sanitized['description'] = f"<div>{sanitized['description']}</div>"
+        if sanitized.get('description'):
+            sanitized['description'] = adapt_translated_field_value(
+                self.env,
+                sanitized.get('description'),
+                lambda lang, v: f"<div>{v}</div>" if not re.search(r'<[^>]+>', v) else v
+            )
 
         # Allow to provide invoice_repartition_line_ids and refund_repartition_line_ids by dispatching them
         # correctly in the repartition_line_ids

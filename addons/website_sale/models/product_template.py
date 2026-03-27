@@ -10,7 +10,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.sql import SQL, column_exists, create_column
-from odoo.tools.translate import html_translate
+from odoo.tools.translate import adapt_translated_field_value, html_translate
 
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
@@ -217,15 +217,16 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
-        if (
-            (description_ecommerce := vals.get("description_ecommerce"))
-            and is_html_empty(description_ecommerce)
-            and not (
-                "media_iframe_video" in description_ecommerce
-                or "data-embedded" in description_ecommerce
-            )  # don't remove "empty" video div
-        ):
-            vals["description_ecommerce"] = ""
+        if vals.get("description_ecommerce"):
+            vals["description_ecommerce"] = adapt_translated_field_value(
+                self.env,
+                vals["description_ecommerce"],
+                lambda lang, v: (  # noqa: ARG005
+                    ""
+                    if is_html_empty(v) and not ("media_iframe_video" in v or "data-embedded" in v)
+                    else v
+                ),
+            )
         return super().write(vals)
 
     # === BUSINESS METHODS ===#

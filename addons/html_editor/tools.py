@@ -13,6 +13,7 @@ from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.image import image_process
+from odoo.tools.translate import adapt_translated_field_value
 
 logger = logging.getLogger(__name__)
 
@@ -197,7 +198,16 @@ def handle_history_divergence(record, html_field_name, vals):
     # Do not handle history divergence if in module installation mode.
     if record.env.context.get('install_module'):
         return
-    incoming_html = vals[html_field_name]
+
+    if record._fields[html_field_name].translate:
+        vals[html_field_name] = adapt_translated_field_value(
+            record.env, vals[html_field_name],
+            lambda lang, v: _handle_history_divergence(record.with_context(lang=lang), html_field_name, v))
+    else:
+        vals[html_field_name] = _handle_history_divergence(record, html_field_name, vals[html_field_name])
+
+
+def _handle_history_divergence(record, html_field_name, incoming_html):
     incoming_history_matches = re.search(diverging_history_regex, incoming_html or '')
     # When there is no incoming history id, it means that the value does not
     # comes from the odoo editor or the collaboration was not activated. In
@@ -215,7 +225,7 @@ def handle_history_divergence(record, html_field_name, vals):
                 'notificationPayload': {'last_step_id': None},
             }
             request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
-        return
+        return incoming_html
     incoming_history_ids = incoming_history_matches[1].split(',')
     last_step_id = incoming_history_ids[-1]
 
@@ -244,4 +254,4 @@ def handle_history_divergence(record, html_field_name, vals):
                 ))
 
     # Save only the latest id.
-    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
+    return incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
