@@ -4900,23 +4900,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         )
         self.assertEqual(discounted_amount, 52.95)
 
-    def test_search_move_sent_values(self):
-        # Create a partner to only get invoices from this test
-        partner = self.env['res.partner'].create({
-            'name': 'Test Partner',
-        })
-
-        invoice_sent = self.init_invoice('out_invoice', products=self.product_a, partner=partner, post=True)
-        invoice_sent._generate_and_send()
-
-        invoice_not_sent = self.init_invoice('out_invoice', products=self.product_a, partner=partner, post=True)
-
-        res = self.env['account.move'].search([('partner_id', '=', partner.id), ('move_sent_values', '=', 'sent')])
-        self.assertEqual(invoice_sent, res)
-
-        res = self.env['account.move'].search([('partner_id', '=', partner.id), ('move_sent_values', '=', 'not_sent')])
-        self.assertEqual(invoice_not_sent, res)
-
     def test_invoice_currency_rate_round_globally(self):
         """Ensure that when the tax rounding method is set to 'global', changing the currency rate directly
          on the invoice results in journal entries that are rounded globally, not per line. """

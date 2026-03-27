@@ -666,15 +666,6 @@ class AccountMove(models.Model):
         compute='_compute_is_being_sent'
     )
 
-    move_sent_values = fields.Selection(
-        selection=[
-            ('sent', 'Sent'),
-            ('not_sent', 'Not Sent'),
-        ],
-        string='Sent',
-        compute='compute_move_sent_values',
-        search='_search_move_sent_values',
-    )
     invoice_user_id = fields.Many2one(
         string='Salesperson',
         comodel_name='res.users',
@@ -818,16 +809,6 @@ class AccountMove(models.Model):
     def _compute_is_being_sent(self):
         for move in self:
             move.is_being_sent = bool(move.sending_data)
-
-    @api.depends('is_move_sent')
-    def compute_move_sent_values(self):
-        for move in self:
-            move.move_sent_values = 'sent' if move.is_move_sent else 'not_sent'
-
-    def _search_move_sent_values(self, operator, value):
-        if operator != 'in' or value - {'sent', 'not_sent'}:
-            return NotImplemented
-        return [('is_move_sent', 'in', [elem == 'sent' for elem in value])]
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -1340,13 +1321,6 @@ class AccountMove(models.Model):
                 f"WHEN {alias}.state = 'draft' THEN 'draft' "
                 f"WHEN {alias}.state = 'cancel' THEN 'cancel' "
                 f"ELSE {alias}.payment_state "
-                "END"
-            )
-        elif fname == 'move_sent_values':
-            return SQL(
-                "CASE "
-                f"WHEN {alias}.is_move_sent THEN 'sent' "
-                f"ELSE 'not_sent' "
                 "END"
             )
         return super()._field_to_sql(alias, fname, query=query)

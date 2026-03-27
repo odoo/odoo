@@ -39,7 +39,7 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='move_sent_values']" position="after">
+            <xpath expr="//field[@name='move_type']" position="after">
                 <field name="l10n_in_ewaybill_name" optional="hide"/>
             </xpath>
         </field>
