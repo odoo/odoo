@@ -282,9 +282,9 @@ test("odoo links are replaced with their label", async function () {
         serverData: getMenuServerData(),
     });
     const frozenData = await freezeOdooData(model);
-    expect(frozenData.sheets[0].cells.A1).toBe("menu_xml");
-    expect(frozenData.sheets[0].cells.A2).toBe("menu_id");
-    expect(frozenData.sheets[0].cells.A3).toBe("odoo_view");
+    expect(frozenData.sheets[0].cells.A1).toBe("[menu_xml](neutralized:link)");
+    expect(frozenData.sheets[0].cells.A2).toBe("[menu_id](neutralized:link)");
+    expect(frozenData.sheets[0].cells.A3).toBe("[odoo_view](neutralized:link)");
     expect(frozenData.sheets[0].cells.A4).toBe("[external_link](https://odoo.com)");
     expect(frozenData.sheets[0].cells.A5).toBe("[internal_link](o-spreadsheet://Sheet1)");
 });
@@ -317,7 +317,7 @@ test("spilled pivot table", async function () {
     );
 });
 
-test("empty string computed measure is exported as =\"\"", async function () {
+test('empty string computed measure is exported as =""', async function () {
     const { model } = await createSpreadsheetWithPivot();
     setCellContent(model, "A10", "=PIVOT(1)");
     expect(getEvaluatedCell(model, "B12").value).toBe(""); // empty value

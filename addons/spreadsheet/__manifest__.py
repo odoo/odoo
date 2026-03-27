@@ -78,6 +78,7 @@
             'spreadsheet/static/src/pivot/pivot_helpers.js',
             'spreadsheet/static/src/o_spreadsheet/odoo_module.js',
             'spreadsheet/static/src/helpers/helpers.js',
+            'spreadsheet/static/src/helpers/neutralized_link.js',
             'spreadsheet/static/src/public_readonly_app/**/*.xml',
             'spreadsheet/static/src/public_readonly_app/**/*.scss',
             'spreadsheet/static/src/public_readonly_app/**/*',
