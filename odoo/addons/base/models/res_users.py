@@ -621,7 +621,7 @@ class ResUsers(models.Model):
         # clear_cache/clear_caches methods pretty much just end up calling
         # Registry.clear_cache
         invalidation_fields = self._get_invalidation_fields()
-        if not invalidation_fields.isdisjoint(vals):
+        if not invalidation_fields.isdisjoint(vals) and any(self._ids):
             self.env.registry.clear_cache()
 
         return res
