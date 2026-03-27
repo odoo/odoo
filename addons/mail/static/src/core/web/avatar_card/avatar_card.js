@@ -119,6 +119,7 @@ export class AvatarCard extends Component {
 
     async onClickViewProfile(newWindow) {
         const action = await this.getProfileAction();
+        this.props.close();
         if (!action) {
             return;
         }

@@ -1751,7 +1751,7 @@ test("Partner's avatar card should be opened after clicking on their mention", a
     });
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
-    await openFormView("res.partner", partnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await click("button:text('Send message')");
     await insertText(".o-mail-Composer-input", "@Te");
     await click(".o-mail-Composer-suggestion strong:text('Test Partner')");
@@ -1759,6 +1759,10 @@ test("Partner's avatar card should be opened after clicking on their mention", a
     await click(".o-mail-Composer-send:enabled");
     await click(".o_mail_redirect");
     await contains(".o_avatar_card:contains('Test Partner')");
+    // Ensure clicking the button closes the popover
+    await click(".o_avatar_card_buttons button:text('View Profile')");
+    await contains(".o_last_breadcrumb_item:text('Test Partner')");
+    await contains(".o_avatar_card", { count: 0 });
 });
 
 test("Channel should be opened after clicking on its mention", async () => {
