@@ -26,7 +26,7 @@ export class PttAdBanner extends Component {
     get isVisible() {
         return (
             !this.pttExtService.isEnabled &&
-            this.store.settings.use_push_to_talk &&
+            this.store.settings.usePushToTalk &&
             !isMobileOS() &&
             !this.state.wasDiscarded
         );

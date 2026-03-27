@@ -492,7 +492,7 @@ export class Rtc extends Record {
                 this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
             }
         });
-        onChange(this.store.settings, ["voiceActivationThreshold", "use_push_to_talk"], () => {
+        onChange(this.store.settings, ["voiceActivationThreshold", "usePushToTalk"], () => {
             this.linkVoiceActivationDebounce();
         });
         onChange(this.store.settings, "audioInputDeviceId", async () => {
@@ -579,7 +579,7 @@ export class Rtc extends Record {
     isPushToTalkRelease(ev) {
         if (
             !this.localChannel ||
-            !this.store.settings.use_push_to_talk ||
+            !this.store.settings.usePushToTalk ||
             (ev instanceof KeyboardEvent && !this.store.settings.isPushToTalkKey(ev)) ||
             !this.localSession.isTalking ||
             this.pttExtService.voiceActivated
@@ -616,14 +616,14 @@ export class Rtc extends Record {
             if (!this.localSession?.isMute) {
                 this.soundEffectsService.play("ptt-release");
             }
-        }, Math.max(this.store.settings.voice_active_duration || 0, duration));
+        }, Math.max(this.store.settings.voiceActiveDuration || 0, duration));
     }
 
     onPushToTalk() {
         if (
             !this.localChannel ||
             this.store.settings.isRegisteringKey ||
-            !this.store.settings.use_push_to_talk
+            !this.store.settings.usePushToTalk
         ) {
             return;
         }
@@ -2197,7 +2197,7 @@ export class Rtc extends Record {
         if (!this.localSession) {
             return;
         }
-        if (this.store.settings.use_push_to_talk || !this.localChannel || !this.micAudioTrack) {
+        if (this.store.settings.usePushToTalk || !this.localChannel || !this.micAudioTrack) {
             this.localSession.isTalking = false;
             await this.refreshMicAudioStatus();
             return;

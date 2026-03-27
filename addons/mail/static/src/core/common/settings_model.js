@@ -37,15 +37,15 @@ export class Settings extends Record {
             this.cameraFacingMode = undefined;
         },
     });
-    use_push_to_talk = false;
-    voice_active_duration = 200;
+    usePushToTalk = fields.Attr(false, { localStorage: true });
+    voiceActiveDuration = fields.Attr(200, { localStorage: true });
     volumes = fields.Many("Volume");
     volumeSettingsTimeouts = new Map();
     // Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
     voiceActivationThreshold = fields.Attr(0.05, { localStorage: true });
     // true if listening to keyboard input to register the push to talk key.
     isRegisteringKey = false;
-    push_to_talk_key;
+    pushToTalkKey = fields.Attr("", { localStorage: true });
 
     // Video settings
     backgroundBlurAmount = fields.Attr(10, { localStorage: true });
@@ -93,10 +93,10 @@ export class Settings extends Record {
     }
 
     get pushToTalkKeyText() {
-        if (!this.push_to_talk_key) {
+        if (!this.pushToTalkKey) {
             return "";
         }
-        const [shiftKey, ctrlKey, altKey, key] = this.push_to_talk_key.split(".");
+        const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
         const f = (k, name) => (k ? name : "");
         const keys = [f(ctrlKey, "Ctrl"), f(altKey, "Alt"), f(shiftKey, "Shift"), key].filter(
             Boolean
@@ -192,13 +192,12 @@ export class Settings extends Record {
      * @param {string} value
      */
     setDelayValue(value) {
-        this.voice_active_duration = parseInt(value, 10);
-        this._saveSettings();
+        this.voiceActiveDuration = parseInt(value, 10);
     }
     /**
      * @param {event} ev
      */
-    async setPushToTalkKey(ev) {
+    setPushToTalkKey(ev) {
         const nonElligibleKeys = new Set(["Shift", "Control", "Alt", "Meta"]);
         let pushToTalkKey = `${ev.shiftKey || ""}.${ev.ctrlKey || ev.metaKey || ""}.${
             ev.altKey || ""
@@ -206,8 +205,7 @@ export class Settings extends Record {
         if (!nonElligibleKeys.has(ev.key)) {
             pushToTalkKey += `.${ev.key === " " ? "Space" : ev.key}`;
         }
-        this.push_to_talk_key = pushToTalkKey;
-        this._saveSettings();
+        this.pushToTalkKey = pushToTalkKey;
     }
     /**
      * @param {Object} param0
@@ -256,10 +254,10 @@ export class Settings extends Record {
      * @param {Object} param1
      */
     isPushToTalkKey(ev) {
-        if (!this.use_push_to_talk || !this.push_to_talk_key) {
+        if (!this.usePushToTalk || !this.pushToTalkKey) {
             return false;
         }
-        const [shiftKey, ctrlKey, altKey, key] = this.push_to_talk_key.split(".");
+        const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
         const settingsKeySet = this.buildKeySet({ shiftKey, ctrlKey, altKey, key });
         const eventKeySet = this.buildKeySet({
             shiftKey: ev.shiftKey,
@@ -271,28 +269,6 @@ export class Settings extends Record {
             return [...settingsKeySet].every((key) => eventKeySet.has(key));
         }
         return settingsKeySet.has(ev.key === "Meta" ? "Alt" : ev.key);
-    }
-    setPushToTalk(value) {
-        this.use_push_to_talk = value;
-        this._saveSettings();
-    }
-    /**
-     * @private
-     */
-    async _onSaveGlobalSettingsTimeout() {
-        this.globalSettingsTimeout = undefined;
-        await this.store.env.services.orm.call(
-            "res.users.settings",
-            "set_res_users_settings",
-            [[this.id]],
-            {
-                new_settings: {
-                    push_to_talk_key: this.push_to_talk_key,
-                    use_push_to_talk: this.use_push_to_talk,
-                    voice_active_duration: this.voice_active_duration,
-                },
-            }
-        );
     }
     /**
      * @param {Object} param0
@@ -307,19 +283,6 @@ export class Settings extends Record {
             "set_volume_setting",
             [[this.id], partnerId, volume],
             { guest_id: guestId }
-        );
-    }
-    /**
-     * @private
-     */
-    async _saveSettings() {
-        if (!this.store.self_user) {
-            return;
-        }
-        browser.clearTimeout(this.globalSettingsTimeout);
-        this.globalSettingsTimeout = browser.setTimeout(
-            () => this._onSaveGlobalSettingsTimeout(),
-            2000
         );
     }
 }

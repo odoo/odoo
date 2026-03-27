@@ -10,14 +10,14 @@
                 <div class="flex-grow-1"/>
                 <DeviceSelect kind="'audioinput'"/>
             </label>
-            <button class="btn border-transparent d-flex gap-2" t-on-click="() => this.store.settings.use_push_to_talk = !this.store.settings.use_push_to_talk">
+            <button class="btn border-transparent d-flex gap-2" t-on-click="() => this.store.settings.usePushToTalk = !this.store.settings.usePushToTalk">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer">
                     <span class="text-truncate text-wrap me-2">Push-to-Talk</span>
-                    <span t-if="this.store.settings.push_to_talk_key" class="opacity-50" t-out="this.pttKeyDisplayText"/>
+                    <span t-if="this.store.settings.pushToTalkKey" class="opacity-50" t-out="this.pttKeyDisplayText"/>
                 </label>
                 <div class="flex-grow-1"/>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.store.settings.use_push_to_talk ? 'checked' : ''"/>
+                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.store.settings.usePushToTalk ? 'checked' : ''"/>
                 </div>
             </button>
             <label class="btn border-transparent d-flex flex-column align-items-baseline cursor-default">

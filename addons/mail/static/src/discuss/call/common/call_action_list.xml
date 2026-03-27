@@ -6,7 +6,7 @@
             <div class="o-discuss-CallActionList-bar d-flex align-items-center justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': this.isSmall }">
                 <ActionList actions="this.actions" inline="true" hasBtnBg="true"/>
             </div>
-            <div t-if="this.isMobileOS and this.store.settings.use_push_to_talk and this.isOfActiveCall" class="d-flex align-items-center flex-wrap justify-content-between p-2">
+            <div t-if="this.isMobileOS and this.store.settings.usePushToTalk and this.isOfActiveCall" class="d-flex align-items-center flex-wrap justify-content-between p-2">
                 <button class="o-discuss-CallActionList-pushToTalk btn btn-primary d-flex w-100 border-0 shadow-none"
                     aria-label="Push-to-talk"
                     t-on-touchstart.stop="this.rtc.onPushToTalk"
