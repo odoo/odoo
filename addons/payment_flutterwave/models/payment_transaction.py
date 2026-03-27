@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
@@ -84,7 +86,7 @@ class PaymentTransaction(models.Model):
             "customer": {
                 "email": self.partner_email,
                 "name": self.partner_name,
-                "phonenumber": self.partner_phone,
+                "phonenumber": re.sub(r"[^\d]", "", (self.partner_phone or "").replace("+", "00")),
             },
             "customizations": {
                 "title": self.company_id.name,
