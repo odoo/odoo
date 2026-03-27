@@ -30,7 +30,19 @@ from collections import defaultdict, OrderedDict
 from enum import auto, IntEnum
 from json.encoder import c_make_encoder
 from opcode import opmap, opname
-from types import CodeType, NoneType
+from types import (
+    BuiltinMethodType,
+    ClassMethodDescriptorType,
+    CodeType,
+    FunctionType,
+    GetSetDescriptorType,
+    MemberDescriptorType,
+    MethodDescriptorType,
+    MethodType,
+    ModuleType,
+    NoneType,
+    WrapperDescriptorType,
+)
 from weakref import WeakKeyDictionary
 
 import werkzeug
@@ -707,21 +719,27 @@ class _SafeChecker:
 
     def __init__(self):
         self.__hooks: WeakKeyDictionary[type, typing.Callable | None] = WeakKeyDictionary()
-        # Add hooks
+
+        # Primary hooks
+        self.add_hook(ModuleType, self._hook_module)
+        self.add_hook(type, self._hook_class)
+        self.add_hook(FunctionType, self._hook_function)
+        # Secondary hooks
+        self.add_hook(MethodType, self._hook_method)
+        self.add_hook(BuiltinMethodType, self._hook_builtin_method)  # is `BuiltinFunctionType`
+        self.add_hook(MethodDescriptorType, self._hook_descriptor)
+        self.add_hook(MemberDescriptorType, self._hook_descriptor)
+        self.add_hook(GetSetDescriptorType, self._hook_descriptor)
+        self.add_hook(ClassMethodDescriptorType, self._hook_class_method_descriptor)
+        self.add_hook(WrapperDescriptorType, self._hook_wrapper_descriptor)
+        # Serialization hooks
         for t in _SafeWhitelist.TRUSTED_CLASSES: self.add_hook(t, None)  # Optimization to save time when serializing these types  # noqa: E701
         for t in self.SEQUENCES: self.add_hook(t, list)  # noqa: E701
         for t in self.MAPPINGS: self.add_hook(t, dict)  # noqa: E701
         for t in self.ITERATORS: self.add_hook(t, self._hook_iterator)  # noqa: E701
-        self.add_hook(type, self._hook_class)
-        self.add_hook(types.ModuleType, self._hook_module)
-        self.add_hook(types.BuiltinFunctionType, self._hook_builtin_function)
-        self.add_hook(types.BuiltinMethodType, self._hook_builtin_function)
-        self.add_hook(types.FunctionType, self._hook_function)
-        self.add_hook(types.MethodType, self._hook_function)
-        self.add_hook(types.MethodDescriptorType, self._hook_descriptor)
+        self.add_hook(types.GeneratorType, None)
         self.add_hook(functools.partial, self._hook_partial)
         self.add_hook(lazy, self._hook_lazy)
-        self.add_hook(types.GeneratorType, None)
         d = {}
         self.add_hook(type(d.items()), list)
         self.add_hook(type(d.keys()), list)
@@ -802,26 +820,60 @@ class _SafeChecker:
 
         return hook(obj)
 
-    def _hook_iterator(self, obj):
-        return obj.__reduce__()
-
     def _hook_module(self, obj):
-        safe_whitelist.check_module(obj)
+        raise UnsafeModuleError(obj)
 
-    def _hook_builtin_function(self, obj):
-        if obj in safe_whitelist.TRUSTED_FUNCTIONS:
-            return
-        safe_whitelist.check_function(obj)
+    def _hook_class(self, obj) -> None:
+        if obj not in safe_whitelist.TRUSTED_CLASSES:
+            safe_whitelist.check_class(obj)
 
-    def _hook_function(self, obj):
-        if obj is safe_call or obj in safe_whitelist.TRUSTED_FUNCTIONS:
+    def _hook_instance(self, obj) -> None:
+        if type(obj) not in safe_whitelist.TRUSTED_CLASSES:
+            safe_whitelist.check_instance(obj)
+
+    def _hook_function(self, obj) -> None:
+        # At runtime if `__name__` is present in globals, `__module__` will
+        # be present on the user defined function
+        if obj is safe_call or not getattr(obj, '__module__', False):
             return
-        if getattr(obj, '__module__', False):  # Not user-defined
+        if obj not in _SafeWhitelist.TRUSTED_FUNCTIONS:
             safe_whitelist.check_function(obj)
+
+    def _hook_method(self, obj):
+        bound_obj = obj.__self__
+        try:
+            return (self._hook_class if isinstance(bound_obj, type) else self._hook_instance)(bound_obj)
+        except UnsafeObjectError:
+            return self._hook_function(obj)
+
+    def _hook_builtin_method(self, obj):
+        bound_obj = obj.__self__
+        # Try trusted with bound object (which can be a module)
+        if isinstance(bound_obj, ModuleType):
+            return self._hook_function(obj)
+        try:
+            return (self._hook_class if isinstance(bound_obj, type) else self._hook_instance)(bound_obj)
+        except UnsafeObjectError:
+            return self._hook_function(obj)
 
     def _hook_descriptor(self, obj):
-        if hasattr(obj, '__objclass__'):  # Not bound
-            safe_whitelist.check_function(obj)
+        try:
+            return self._hook_class(obj.__objclass__)
+        except UnsafeObjectError:
+            return self._hook_function(obj)
+
+    def _hook_class_method_descriptor(self, obj):
+        # C-level class methods, used for protocol hooks
+        # These are effectively "only" exposed as dunder methods
+        raise UnsafeFunctionError(obj)
+
+    def _hook_wrapper_descriptor(self, obj):
+        # C-level slot wrappers (e.g. __add__, __len__)
+        # These are always exposed as dunder methods
+        raise UnsafeFunctionError(obj)
+
+    def _hook_iterator(self, obj):
+        return obj.__reduce__()
 
     def _hook_partial(self, obj):
         return (obj.func, obj.args, obj.keywords)
@@ -830,16 +882,6 @@ class _SafeChecker:
         if getattr(obj, '_func', None) is None:
             return obj._cached_value
         return (obj._func, obj._args, obj._kwargs)
-
-    def _hook_class(self, obj):
-        if obj in safe_whitelist.TRUSTED_CLASSES:
-            return
-        safe_whitelist.check_class(obj)
-
-    def _hook_instance(self, obj):
-        if type(obj) in safe_whitelist.TRUSTED_CLASSES:
-            return
-        safe_whitelist.check_instance(obj)
 
 
 class _SafeWhitelist:
@@ -878,7 +920,7 @@ class _SafeWhitelist:
         # string and conversion
         chr, ord, repr,
         # collections and iterables
-        all, any, len, sorted,
+        all, any, len, sorted, iter,
         # introspection and type checking
         hasattr, isinstance,
         # others
@@ -921,10 +963,6 @@ class _SafeWhitelist:
 
     def add_instance(self, qualname: str) -> None:
         self._instances.append(qualname)
-        # Trust function of the class/instance implicitly
-        if not qualname.endswith('.*'):
-            qualname += '.*'
-        self.add_function(qualname)
         vars(self).pop('_re_instance', None)
 
     def add_function(self, qualname: str) -> None:
@@ -979,9 +1017,6 @@ class _SafeWhitelist:
     def check_function(self, obj):
         if not self._re_function.fullmatch(self.get_full_path(obj)):
             raise UnsafeFunctionError(obj)
-
-    def check_module(self, obj):
-        raise UnsafeModuleError(obj)
 
 
 safe_transformer = _SafeTransformer()
@@ -1059,28 +1094,38 @@ def add_monitoring(code):
 
 @functools.cache
 def _initialize_safe_whitelist():
-    # Primitive types and builtins (C functions)
-    safe_whitelist.add_function('bool.*')
-    safe_whitelist.add_function('int.*')
-    safe_whitelist.add_function('float.*')
-    safe_whitelist.add_function('str.*')
-    safe_whitelist.add_function('bytes.*')
-    safe_whitelist.add_function('list.*')
-    safe_whitelist.add_function('tuple.*')
-    safe_whitelist.add_function('set.*')
-    safe_whitelist.add_function('dict.*')
-    safe_whitelist.add_function('mappingproxy.*')
-    safe_whitelist.add_function('defaultdict.*')
-    safe_whitelist.add_function('OrderedDict.*')
+    # Wrapped modules
+    safe_whitelist.add_class('datetime.date')
+    safe_whitelist.add_class('datetime.datetime')
+    safe_whitelist.add_class('datetime.time')
+    safe_whitelist.add_class('datetime.timedelta')
+    safe_whitelist.add_class('datetime.timezone')
+    safe_whitelist.add_class('datetime.tzinfo')
+    safe_whitelist.add_class('dateutil.tz.tz.tzutc')
+    safe_whitelist.add_function('dateutil.parser.isoparser.isoparser.isoparse')
+    safe_whitelist.add_function('dateutil.parser._parser.parse')
+    safe_whitelist.add_class('dateutil.relativedelta.relativedelta')
+    safe_whitelist.add_class('dateutil.rrule.rrule')
+    safe_whitelist.add_class('dateutil.rrule.rruleset')
+    safe_whitelist.add_instance('dateutil.rrule._rrulestr')
+    safe_whitelist.add_function('json.dumps')
+    safe_whitelist.add_function('json.loads')
+    safe_whitelist.add_function('time.time')
+    safe_whitelist.add_function('time.strptime')
+    safe_whitelist.add_function('time.strftime')
+    safe_whitelist.add_function('time.sleep')
     # Monkey patches
     safe_whitelist.add_class('odoo._monkeypatches.zoneinfo.ZoneInfo')
     safe_whitelist.add_function('odoo._monkeypatches.*')
     # Core
     safe_whitelist.add_class('odoo.addons.*')  # TODO: Restrict addons
+    safe_whitelist.add_function('odoo.addons.*')  # TODO: remove with restrict addons
     safe_whitelist.add_class('odoo.upgrade.*')
+    safe_whitelist.add_function('odoo.upgrade.*')
     safe_whitelist.add_class('odoo.orm.domains.*')
     safe_whitelist.add_class('odoo.orm.fields.*')
     safe_whitelist.add_class('odoo.orm.fields_binary.*')
+    safe_whitelist.add_class('odoo.orm.fields_properties.*')
     safe_whitelist.add_class('odoo.orm.fields_selection.*')
     safe_whitelist.add_class('odoo.orm.models.*')
     safe_whitelist.add_class('odoo.orm.commands.Command')
@@ -1132,23 +1177,6 @@ def _initialize_safe_whitelist():
     # Cursor
     safe_whitelist.add_function('cursor.fetchall')
     safe_whitelist.add_function('cursor.fetchone')
-    # Dates - Times - Timezone
-    safe_whitelist.add_class('datetime.date')
-    safe_whitelist.add_class('datetime.datetime')
-    safe_whitelist.add_class('datetime.time')
-    safe_whitelist.add_class('datetime.timedelta')
-    safe_whitelist.add_class('datetime.timezone')
-    safe_whitelist.add_class('datetime.tzinfo')
-    safe_whitelist.add_function('date.*')
-    safe_whitelist.add_function('datetime.*')
-    safe_whitelist.add_function('time.*')
-    safe_whitelist.add_function('timedelta.*')
-    safe_whitelist.add_function('timezone.*')
-    safe_whitelist.add_function('tzinfo.*')
-    safe_whitelist.add_class('dateutil.relativedelta.relativedelta')
-    safe_whitelist.add_instance('pytz.tzfile.UTC')
-    safe_whitelist.add_function('pytz.tzinfo.DstTzInfo.localize')
-    safe_whitelist.add_function('pytz.UTC.localize')
     # Collections
     safe_whitelist.add_class('collections.defaultdict')
     safe_whitelist.add_class('collections.OrderedDict')
