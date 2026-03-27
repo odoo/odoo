@@ -161,6 +161,7 @@ class AccountPayment(models.Model):
         compute='_compute_stat_buttons_from_reconciliation')
     reconciled_bill_ids = fields.Many2many('account.move', string="Reconciled Bills",
         compute='_compute_stat_buttons_from_reconciliation',
+        search='_search_reconciled_invoice_ids',
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
@@ -464,7 +465,7 @@ class AccountPayment(models.Model):
             if payment.journal_id.company_id not in payment.company_id.parent_ids:
                 payment.company_id = (payment.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('reconciled_invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
+    @api.depends('reconciled_invoice_ids.payment_state', 'reconciled_bill_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
         payments_is_matched_to_recompute = self.env['account.payment']
         for payment in self:
@@ -479,8 +480,10 @@ class AccountPayment(models.Model):
                     'in_process'
                 )
             if (
-                payment.state == 'in_process' and payment.reconciled_invoice_ids and
-                all(invoice.payment_state == 'paid' for invoice in payment.reconciled_invoice_ids)
+                payment.state == 'in_process' and (
+                    payment.reconciled_invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.reconciled_invoice_ids)
+                    or payment.reconciled_bill_ids and all(bill.payment_state == 'paid' for bill in payment.reconciled_bill_ids)
+                )
             ):
                 # The access to invoice.payment_state will trigger a flush_model on account_payment.is_matched in its compute.
                 # This flush will then trigger _compute_reconciliation_status. However, the payment.state will then be changed by this next line of code.
