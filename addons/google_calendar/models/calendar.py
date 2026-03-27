@@ -341,7 +341,12 @@ class CalendarEvent(models.Model):
                 'useDefault': False,
             }
         }
-        if not self.google_id and not self.videocall_location and not self.location:
+        if (
+            not self.google_id
+            and not self.videocall_location
+            and not self.location
+            and not self.env['ir.config_parameter'].sudo().get_bool('google_calendar.disable_auto_videocall_link')
+        ):
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.google_id and not self.videocall_location:
             values['conferenceData'] = None
