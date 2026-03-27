@@ -99,6 +99,7 @@ class WebsiteForm(http.Controller):
         # Ex: crm.lead.probability which is a float between 0 and 1
         # TODO: How to get the name of the erroneous field ?
         except IntegrityError:
+            request.env.cr.rollback()
             return json.dumps(False)
 
         request.session['form_builder_model_model'] = model_record.model
