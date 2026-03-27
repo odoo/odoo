@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
+            <t t-set="user" t-value="this.channel?.correspondent?.persona?.main_user_id"/>
+            <t t-if="user and user.meetingStatus">
+                <span class="o-mail-DiscussContent-meetingStatus smaller" style="color: gray;">
+                Busy until <t t-out="user.meetingStatus"/>
+                </span>
+            </t>
+        </xpath>
+    </t>
+</templates>

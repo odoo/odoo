@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-DiscussContent-header')]" position="before">
+            <t t-set="user" t-value="this.thread?.channel?.correspondent?.persona?.main_user_id"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-DiscussContent-header')]" position="attributes">
+            <attribute name="t-att-class">
+                { 'py-1': !this.state.correspondentLocalDateTimeFormatted and !(user and user.meetingStatus) }
+            </attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='this.showsChatLocalDateTime']" position="replace">
+            <div t-if="this.showsChatLocalDateTime or (user and user.meetingStatus)"
+                 class="o-mail-DiscussContent-correspondentStatus d-flex align-items-center text-muted smaller ms-1">
+                <t t-if="user and user.meetingStatus">
+                    <span class="o-mail-DiscussContent-meetingStatus">
+                        <i class="fa fa-calendar me-1"/>
+                        In a meeting until <t t-out="user.meetingStatus"/>
+                    </span>
+                    <span t-if="this.showsChatLocalDateTime" class="mx-2">|</span>
+                </t>
+                <t t-if="this.showsChatLocalDateTime">
+                    <span>
+                        <i class="fa fa-clock-o me-1"/>
+                        <t t-out="this.state.correspondentLocalDateTimeFormatted"/>
+                    </span>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

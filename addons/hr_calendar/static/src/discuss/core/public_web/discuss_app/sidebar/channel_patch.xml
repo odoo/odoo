@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o-mail-DiscussContent-meetingStatus')]" position="attributes">
+            <attribute name="t-if">user and user.meetingStatus and !this.channel.correspondent?.partner_id?.outOfOfficeDateEndText</attribute>
+        </xpath>
+    </t>
+</templates>
