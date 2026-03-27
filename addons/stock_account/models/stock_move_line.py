@@ -70,5 +70,5 @@ class StockMoveLine(models.Model):
         the _should_exclude_for_valuation criteria (.i.e the line would have been valued if it wasn't consigned)
         """
         return self.picked and self._should_exclude_for_valuation() and\
-            (self.move_id._is_in() and not self.location_id._should_be_valued() and self.location_dest_id._should_be_valued()
-            or self.move_id._is_out() and self.location_id._should_be_valued() and not self.location_dest_id._should_be_valued())
+            (not self.location_id._should_be_valued() and self.location_dest_id._should_be_valued()
+            or self.location_id._should_be_valued() and not self.location_dest_id._should_be_valued())
