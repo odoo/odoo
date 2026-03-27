@@ -972,10 +972,7 @@ class MrpProduction(models.Model):
                     production.name = picking_type.sequence_id.next_by_id()
                     moves_to_reassign |= production.move_raw_ids
 
-        if 'qty_producing' in vals:
-            res = super(MrpProduction, self.with_context(auto_conso=True)).write(vals)
-        else:
-            res = super().write(vals)
+        res = super().write(vals)
 
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
