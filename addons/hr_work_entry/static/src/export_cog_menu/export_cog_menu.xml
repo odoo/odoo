@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_work_entry.ExportCogMenu">
+        <Dropdown>
+            <button t-attf-class="{{ is_actionmenu ? 'btn btn-secondary' : '' }}">
+                <t t-call="hr_work_entry.ExportIcon"/>
+                Export
+            </button>
+            <t t-set-slot="content">
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="hr_work_entry.ExportIcon">
+        <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="o_ui_app_icon oi-large">
+            <rect x="6" y="6" width="38" height="38" rx="3" fill="var(--oi-color, #4CAF50)"/>
+            <rect x="12" y="12" width="26" height="4" fill="white" opacity="0.8"/>
+            <rect x="23.5" y="20" width="3" height="14" fill="white"/>
+            <path d="M19 27L25 17L31 27H27V35H23V27H19Z" fill="white"/>
+            <rect x="6" y="44" width="38" height="2" fill="black" opacity="0.15"/>
+        </svg>
+    </t>
+</templates>

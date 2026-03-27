@@ -21,6 +21,11 @@
     'demo': [
         'data/hr_work_entry_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'hr_work_entry/static/src/**/*',
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

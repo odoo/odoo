@@ -75,7 +75,7 @@ class HrEmployee(models.Model):
         actions = self.env['ir.actions.server'].sudo()
         for xmlid in server_action_xmlids:
             actions += actions.env.ref(f"hr_presence.{xmlid}")
-        return actions.read(['id', 'value'])
+        return actions.read(['id', 'name', 'value'])
 
     def _action_set_manual_presence(self, state):
         if not self.env.user.has_group('hr.group_hr_manager'):

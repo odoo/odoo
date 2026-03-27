@@ -1,12 +1,8 @@
-import { ActionMenus } from "@web/search/action_menus/action_menus";
+import { patch } from "@web/core/utils/patch";
+import { HrActionMenus } from "@hr/search/hr_action_menus/hr_action_menus";
 import { getActionRecords, getPresenceActionItems } from "../../views/hooks";
 
-/**
- * @extends ActionMenus
- */
-export class HrPresenceActionMenus extends ActionMenus {
-    static template = "hr_presence.actionmenu";
-
+patch(HrActionMenus.prototype, {
     get PresenceActionItems() {
         return (this.presenceActionItems || []).map((action) => {
             return {
@@ -16,11 +12,8 @@ export class HrPresenceActionMenus extends ActionMenus {
                 groupNumber: action.groupNumber,
             };
         });
-    }
+    },
 
-    /**
-     * @override
-     */
     async getActionItems(props) {
         const records = await getActionRecords(this.orm);
         const result = getPresenceActionItems(props.items.action, records);
@@ -30,4 +23,4 @@ export class HrPresenceActionMenus extends ActionMenus {
 
         return await super.getActionItems(props);
     }
-}
+});
