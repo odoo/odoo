@@ -1,0 +1,1515 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_stock
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#, fuzzy
+msgid "% On-Time Delivery"
+msgstr "% O‘z vaqtida yetkazib berish"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, fuzzy
+msgid "%(otd)s %%"
+msgstr "%(otd)s %%"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+#, fuzzy
+msgid "%(value)s for %(quantity)s %(unit)s from %(bills)s"
+msgstr "%(quantity)s %(unit)s uchun %(bills)sdan %(value)s"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+msgid "%(value)s for %(quantity)s %(unit)s from %(quotation)s (not billed)"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid "+ %d day(s)"
+msgstr "+ %d kun"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+#, fuzzy
+msgid "<span class=\"o_stat_text\">On-time Rate</span>"
+msgstr ""
+"<span class=\"o_stat_text\">O‘z vaqtida yetkazib berish darajasi</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Xaridlar</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+#, fuzzy
+msgid "<span class=\"o_stat_value\">%</span>"
+msgstr "<span class=\"o_stat_value\">%</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<span class=\"text-info fw-bold fs-5 me-1\">Suggest</span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<span class=\"text-muted small me-1\">Monthly Demand:</span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<span class=\"text-muted small ms-1\">Forecasted</span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#, fuzzy
+msgid "<span invisible=\"on_time_rate &gt;= 0\">No data yet</span>"
+msgstr "<span invisible=\"on_time_rate &gt;= 0\">Hali ma'lumot yo‘q</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+#, fuzzy
+msgid "<span> / </span>"
+msgstr "<span> / </span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#, fuzzy
+msgid "<span> days</span>"
+msgstr "<span> kun</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+#, fuzzy
+msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
+msgstr "<strong class=\"d-block mt-3\">Yetkazib berish manzili</strong>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+#, fuzzy
+msgid "<strong>Incoterm:</strong>"
+msgstr "<strong>Incoterm:</strong>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+#, fuzzy
+msgid "<strong>Requested Ship Date:</strong>"
+msgstr "<strong>So‘ralgan jo‘natish sanasi:</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
+#, fuzzy
+msgid "A storable product is a product for which you manage stock."
+msgstr "Saqlanadigan mahsulot - bu siz zaxirasini boshqaradigan mahsulotdir."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+#, fuzzy
+msgid ""
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"Mahsulot konfiguratsiyasiga ko‘ra, qabul qilingan miqdor mexanizm tomonidan "
+"avtomatik ravishda hisoblanishi mumkin: - Qo‘lda: miqdor qatorda qo‘lda "
+"o‘rnatiladi - Zaxira harakatlari: miqdor tasdiqlangan terimlardan olinadi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
+#, fuzzy
+msgid "Action"
+msgstr "Harakat"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+#, fuzzy
+msgid "Add All"
+msgstr "Hammasini qo‘shish"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "After next month last year"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#, fuzzy
+msgid ""
+"Allow Make to Order, or automate PO, when a product is sold and get direct "
+"links between documents."
+msgstr ""
+"Mahsulot sotilganda buyurtma berishga ruxsat berish yoki xarid buyurtmasini "
+"avtomatlashtirish va hujjatlar o‘rtasida to‘g‘ridan-to‘g‘ri aloqalarni "
+"o‘rnatish."
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__all
+#, fuzzy
+msgid "Always"
+msgstr "Har doim"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__available_vendor
+#, fuzzy
+msgid "Any vendor on the product's pricelist"
+msgstr "Mahsulotning narxlar ro‘yxatidagi istalgan sotuvchi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
+#, fuzzy
+msgid "Arrival"
+msgstr "Kelish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__available_vendor
+#, fuzzy
+msgid "Available Vendor"
+msgstr "Mavjud sotuvchi"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+#, fuzzy
+msgid "Based on"
+msgstr "Asosida"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
+#: model:stock.route,name:purchase_stock.route_warehouse0_buy
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
+#, fuzzy
+msgid "Buy"
+msgstr "Sotib olish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_pull_id
+#, fuzzy
+msgid "Buy rule"
+msgstr "Sotib olish qoidasi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
+#, fuzzy
+msgid "Buy to Resupply"
+msgstr "Qayta ta'minlash uchun sotib olish"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_company
+#, fuzzy
+msgid "Companies"
+msgstr "Kompaniyalar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
+#, fuzzy
+msgid "Completion date of the first receipt order."
+msgstr "Birinchi qabul qilish buyurtmasining tugash sanasi."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Sozlamalarni moslash"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_partner
+#, fuzzy
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, fuzzy
+msgid "Corresponding receipt not found."
+msgstr "Tegishli kvitansiya topilmadi."
+
+#. module: purchase_stock
+#: model:ir.model,website_form_label:purchase_stock.model_res_partner
+#, fuzzy
+msgid "Create a Customer"
+msgstr "Mijoz yaratish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
+#, fuzzy
+msgid "Created Purchase Order Lines"
+msgstr "Xarid buyurtmasi satrlari yaratildi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
+#, fuzzy
+msgid "Custom Description"
+msgstr "Maxsus tavsif"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__day
+#, fuzzy
+msgid "Daily"
+msgstr "Kunlik"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
+#, fuzzy
+msgid "Days To Arrive"
+msgstr "Yetib kelish kunlari"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+#, fuzzy
+msgid "Days needed to confirm a PO"
+msgstr "Xarid buyurtmasini tasdiqlash uchun kerakli kunlar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
+#, fuzzy
+msgid "Days needed to confirm a PO, define when a PO should be validated"
+msgstr ""
+"Xarid buyurtmasini tasdiqlash uchun kerakli kunlar, xarid buyurtmasi qachon "
+"tasdiqlanishi kerakligini belgilaydi"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
+#, fuzzy
+msgid "Days to Purchase"
+msgstr "Xarid uchun kunlar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_res_partner__group_rfq
+#: model:ir.model.fields,help:purchase_stock.field_res_users__group_rfq
+msgid ""
+"Define if RFQ should be grouped         together based on expected arrival, "
+"except for dropship operations.\n"
+"         On Order: Replenishment needs will be grouped together except for "
+"MTO.\n"
+"         Daily: Replenishment needs will be grouped if the expected arrival "
+"is the same day\n"
+"         Weekly: Replenishment needs will be grouped if the expected arrival "
+"is the same week or week day\n"
+"         Always: Replenishment needs will always be grouped."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
+#, fuzzy
+msgid "Delay Pass"
+msgstr "Kechikish ruxsati"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
+#, fuzzy
+msgid "Deliver To"
+msgstr "Yetkazib berish"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
+#, fuzzy
+msgid "Delivery Time"
+msgstr "Yetkazib berish vaqti"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
+#, fuzzy
+msgid "Destination Location Type"
+msgstr "Belgilangan joy turi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_reference__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_route__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__display_name
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatish nomi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
+#, fuzzy
+msgid "Downstream moves alt"
+msgstr "Keyingi harakatlar alt"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
+#, fuzzy
+msgid "Dropship Address"
+msgstr "Dropship manzili"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
+#, fuzzy
+msgid "Dropshipping"
+msgstr "Dropshipping"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__date
+#, fuzzy
+msgid "Effective Date"
+msgstr "Kuchga kirish sanasi"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+#, fuzzy
+msgid "Effective Date Last Year"
+msgstr "O‘tgan yilgi kuchga kirish sanasi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
+#, fuzzy
+msgid "Effective Days To Arrival"
+msgstr "Yetib kelishgacha bo‘lgan samarali kunlar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__effective_vendor_id
+#, fuzzy
+msgid "Effective Vendor"
+msgstr "Samarali yetkazib beruvchi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__effective_vendor_id
+#, fuzzy
+msgid ""
+"Either the vendor set directly or the one computed to be used by this "
+"replenishment"
+msgstr ""
+"To‘g‘ridan-to‘g‘ri belgilangan yoki ushbu to‘ldirish uchun hisoblangan "
+"yetkazib beruvchi"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#, fuzzy
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr "Xarid buyurtmasida (buyurtmalarida) istisno(lar) yuz berdi:"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#, fuzzy
+msgid "Exception(s):"
+msgstr "Istisno(lar):"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__default
+#, fuzzy
+msgid "Expected Date"
+msgstr "Kutilayotgan sana"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#, fuzzy
+msgid "Forecast Report"
+msgstr "Prognoz hisoboti"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Forecasted"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
+#, fuzzy
+msgid "Forecasted Issue"
+msgstr "Bashorat qilingan masala"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__5
+#, fuzzy
+msgid "Friday"
+msgstr "Juma"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
+#, fuzzy
+msgid "Fully Received"
+msgstr "To‘liq qabul qilindi"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, fuzzy
+msgid "Generate the draft vendor bill."
+msgstr "Yetkazib beruvchining hisob-faktura loyihasini yarating."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+#, fuzzy
+msgid ""
+"Get recommendations of products to purchase at %(vendorName)s based on stock "
+"on hand, incoming quantities, and expected sales volumes.\n"
+"\n"
+" Set a reference period to estimate sales, and use the percentage to take "
+"into account seasonality and the increase/decrease of business."
+msgstr ""
+"Mavjud zaxiralar, kiruvchi miqdorlar va kutilayotgan sotuv hajmlariga "
+"asoslanib, %(vendorName)s dan xarid qilish uchun mahsulotlar bo‘yicha "
+"tavsiyalar oling.   Sotuvlarni baholash uchun ma'lum davrni belgilang va "
+"mavsumiylik hamda biznes o‘sishi/pasayishini hisobga olish uchun foizdan "
+"foydalaning."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, fuzzy
+msgid "Go back to the purchase order to generate the vendor bill."
+msgstr ""
+"Yetkazib beruvchining hisob-fakturasini yaratish uchun xarid buyurtmasiga "
+"qayting."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
+#, fuzzy
+msgid "Goods Received Not Invoiced"
+msgstr "Qabul qilingan, lekin hisob-fakturasi yozilmagan tovarlar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_rfq
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__group_rfq
+#, fuzzy
+msgid "Group RFQ"
+msgstr "Guruhli narx so‘rovi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
+#: model:ir.model.fields,field_description:purchase_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__id
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__id
+#: model:ir.model.fields,field_description:purchase_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__id
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_reference__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_option__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_route__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__id
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
+#, fuzzy
+msgid "Incoming Shipment count"
+msgstr "Kiruvchi jo‘natmalar soni"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#, fuzzy
+msgid "Incoming Shipments"
+msgstr "Kiruvchi jo‘natmalar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
+#, fuzzy
+msgid "Incoterm Location"
+msgstr "Inkoterm joylashuvi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_route
+#, fuzzy
+msgid "Inventory Routes"
+msgstr "Inventar yo‘nalishlari"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
+#, fuzzy
+msgid "Is Shipped"
+msgstr "Yuborilgan"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
+#, fuzzy
+msgid "Is the Sale Module Installed"
+msgstr "Sotuv moduli o‘rnatilganmi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move
+#, fuzzy
+msgid "Journal Entry"
+msgstr "Buxgalteriya yozuvi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move_line
+#, fuzzy
+msgid "Journal Item"
+msgstr "Buxgalteriya yozuvi elementi"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 12 months"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 3 months"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 30 days"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 7 days"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
+#, fuzzy
+msgid "Last Purchase"
+msgstr "Oxirgi xarid"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last year quarter"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
+#, fuzzy
+msgid "Location from procurement"
+msgstr "Xarid joylashuvi"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Logistics"
+msgstr "Logistika"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_lot
+#, fuzzy
+msgid "Lot/Serial"
+msgstr "Partiya/Seriya raqami"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#, fuzzy
+msgid "Manual actions may be needed."
+msgstr "Qo‘lda bajariladigan harakatlar kerak bo‘lishi mumkin."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
+#, fuzzy
+msgid "Minimum Inventory Rule"
+msgstr "Minimal zaxira qoidasi"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__1
+#, fuzzy
+msgid "Monday"
+msgstr "Dushanba"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__monthly_demand
+#, fuzzy
+msgid "Monthly Demand"
+msgstr "Oylik talab"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Next month last year"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#, fuzzy
+msgid "Next transfer(s) impacted:"
+msgstr "Ta'sir qilingan keyingi o‘tkazmalar:"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
+#, fuzzy
+msgid "No receipt yet! Automate them with purchase orders."
+msgstr "Hali chek yo‘q! Ularni xarid buyurtmalari bilan avtomatlashtiring."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid "No supplier has been found to replenish"
+msgstr "To‘ldirish uchun yetkazib beruvchi topilmadi"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
+#, fuzzy
+msgid "Not Received"
+msgstr "Qabul qilinmagan"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/purchase_dashboard/purchase_dashboard.xml:0
+#, fuzzy
+msgid "OTD"
+msgstr "O‘z vaqtida yetkazib berish"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+#, fuzzy
+msgid "On"
+msgstr "Yoqilgan"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__default
+#, fuzzy
+msgid "On Order"
+msgstr "Buyurtmada"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
+#, fuzzy
+msgid "On-Time Delivery"
+msgstr "O‘z vaqtida yetkazib berish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
+#, fuzzy
+msgid "On-Time Delivery Rate"
+msgstr "O‘z vaqtida yetkazib berish darajasi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
+#, fuzzy
+msgid "On-Time Quantity"
+msgstr "O‘z vaqtida yetkazilgan miqdor"
+
+#. module: purchase_stock
+#: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+#, fuzzy
+msgid "On-time Delivery"
+msgstr "O‘z vaqtida yetkazib berish"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+#, fuzzy
+msgid "On-time Rate"
+msgstr "O‘z vaqtida yetkazib berish ko‘rsatkichi"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid "Order Deadline"
+msgstr "Buyurtma muddati"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
+#, fuzzy
+msgid "Orderpoint"
+msgstr "Buyurtma nuqtasi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
+#, fuzzy
+msgid ""
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
+msgstr ""
+"O‘tgan x kun davomida; o‘z vaqtida qabul qilingan mahsulotlar sonining "
+"buyurtma qilingan mahsulotlar soniga nisbati. Bu yerda x - tizim parametri "
+"purchase_stock.on_time_delivery_days yoki standart 365 kun"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
+#, fuzzy
+msgid "PO Lines"
+msgstr "Xarid buyurtmasi qatorlari"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
+#, fuzzy
+msgid "Partially Received"
+msgstr "Qisman qabul qilingan"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, fuzzy
+msgid "Process all the receipt quantities."
+msgstr "Barcha qabul qilingan miqdorlarni qayta ishlash"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_template
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__product_id
+#, fuzzy
+msgid "Product"
+msgstr "Mahsulot"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__category_id
+#, fuzzy
+msgid "Product Category"
+msgstr "Mahsulot toifasi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_replenish
+#, fuzzy
+msgid "Product Replenish"
+msgstr "Mahsulotni to‘ldirish"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenish_mixin
+#, fuzzy
+msgid "Product Replenish Mixin"
+msgstr "Mahsulotni to‘ldirish aralashmasi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_product
+#, fuzzy
+msgid "Product Variant"
+msgstr "Mahsulot varianti"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
+#, fuzzy
+msgid "Propagate cancellation"
+msgstr "Bekor qilishni tarqatish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
+#, fuzzy
+msgid "Purchase Lines"
+msgstr "Xarid qatorlari"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order
+#, fuzzy
+msgid "Purchase Order"
+msgstr "Xarid buyurtmasi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
+#, fuzzy
+msgid "Purchase Order Line"
+msgstr "Xarid buyurtmasi qatori"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+#, fuzzy
+msgid "Purchase Orders"
+msgstr "Xarid buyurtmalari"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_report
+#, fuzzy
+msgid "Purchase Report"
+msgstr "Xarid hisoboti"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
+#, fuzzy
+msgid "Purchase order count"
+msgstr "Xarid buyurtmalari soni"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_reference__purchase_ids
+#, fuzzy
+msgid "Purchases"
+msgstr "Xaridlar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
+#, fuzzy
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Agar yetkazib beruvchidan to‘g‘ridan-to‘g‘ri mijozga yetkazib bermoqchi "
+"bo‘lsangiz, manzilni kiriting. Aks holda, o‘z kompaniyangizga yetkazib "
+"berish uchun bo‘sh qoldiring."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#, fuzzy
+msgid "Receipt"
+msgstr "Qabul qilish"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid "Receipt Date"
+msgstr "Qabul qilingan sana"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
+#, fuzzy
+msgid "Receipt Status"
+msgstr "Qabul qilish holati"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+#, fuzzy
+msgid "Receive"
+msgstr "Qabul qilmoq"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, fuzzy
+msgid "Receive the ordered products."
+msgstr "Buyurtma qilingan mahsulotlarni qabul qiling."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+#, fuzzy
+msgid "Received Qty Method"
+msgstr "Qabul qilingan miqdor usuli"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
+#, fuzzy
+msgid "Receptions"
+msgstr "Qabullar"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__receipt_status
+#, fuzzy
+msgid ""
+"Red: Late\n"
+"            Orange: To process today\n"
+"            Green: On time"
+msgstr "Qizil: Kechikkan Sariq: Bugun qayta ishlash kerak Yashil: O‘z vaqtida"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_reference
+#, fuzzy
+msgid "Reference between stock documents"
+msgstr "Omborxona hujjatlari orasidagi havola"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__reference_ids
+#, fuzzy
+msgid "References"
+msgstr "Havolalar"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+#, fuzzy
+msgid "Replenish for"
+msgstr "Uchun to‘ldirish"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Request your vendors to deliver to your customers"
+msgstr "Yetkazib beruvchilardan mijozlarga yetkazib berishni so‘rang"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
+#, fuzzy
+msgid "Requests for quotation :"
+msgstr "Narx so‘rovlari:"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
+#, fuzzy
+msgid "Reservation"
+msgstr "Band qilish"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_return_picking
+#, fuzzy
+msgid "Return Picking"
+msgstr "Qaytarish jarayoni"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Same month last year"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
+#, fuzzy
+msgid "Saturday"
+msgstr "Shanba"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
+#, fuzzy
+msgid "Set as Supplier"
+msgstr "Yetkazib beruvchi sifatida belgilash"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
+#, fuzzy
+msgid "Show Set Supplier Button"
+msgstr "Yetkazib beruvchi tugmasini ko‘rsatish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__show_vendor
+#, fuzzy
+msgid "Show Vendor"
+msgstr "Yetkazib beruvchini ko‘rsatish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__show_vendor_tab
+#, fuzzy
+msgid "Show Vendor Tab"
+msgstr "Yetkazib beruvchi yorlig‘ini ko‘rsatish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
+#, fuzzy
+msgid "Show supplier column"
+msgstr "Yetkazib beruvchi ustunini ko‘rsatish"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_move
+#, fuzzy
+msgid "Stock Move"
+msgstr "Zaxira harakati"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+#, fuzzy
+msgid "Stock Moves"
+msgstr "Zaxira harakatlari"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
+#, fuzzy
+msgid "Stock Replenishment Report"
+msgstr "Zaxiralarni to‘ldirish hisoboti"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_rule
+#, fuzzy
+msgid "Stock Rule"
+msgstr "Zaxira qoidasi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+#, fuzzy
+msgid "Stock rule report"
+msgstr "Zaxira qoidasi hisoboti"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_info
+#, fuzzy
+msgid "Stock supplier replenishment information"
+msgstr "Yetkazib beruvchi zaxirasini to‘ldirish ma'lumoti"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_option
+#, fuzzy
+msgid "Stock warehouse replenishment option"
+msgstr "Omborxona zaxirasini to‘ldirish varianti"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+#, fuzzy
+msgid "Suggest"
+msgstr "Taklif qilish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__suggest_based_on
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__suggest_based_on
+#, fuzzy
+msgid "Suggest Based On"
+msgstr "Asosida taklif etish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__suggest_days
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__suggest_days
+#, fuzzy
+msgid "Suggest Days"
+msgstr "Kunlarni taklif qilish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__suggest_estimated_price
+#, fuzzy
+msgid "Suggest Estimated Price"
+msgstr "Taxminiy narxni taklif qilish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__suggest_percent
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__suggest_percent
+#, fuzzy
+msgid "Suggest Percent"
+msgstr "Foizni taklif qilish"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_search_catalog
+msgid "Suggested"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__suggested_qty
+#, fuzzy
+msgid "Suggested Qty"
+msgstr "Tavsiya etilgan miqdor"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__7
+#, fuzzy
+msgid "Sunday"
+msgstr "Yakshanba"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id_placeholder
+#, fuzzy
+msgid "Supplier Id Placeholder"
+msgstr "Ta'minotchi identifikatori joysoqchisi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_supplierinfo
+#, fuzzy
+msgid "Supplier Pricelist"
+msgstr "Ta'minotchi narxlar ro‘yxati"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
+#, fuzzy
+msgid "Supplierinfo"
+msgstr "Ta'minotchi ma'lumoti"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
+#, fuzzy
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Jo‘natish manzilini ko‘rsatish uchun ishlatiladigan texnik maydon"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#, fuzzy
+msgid "The following replenishment order has been generated"
+msgstr "Quyidagi to‘ldirish buyurtmasi yaratildi"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, fuzzy
+msgid "The purchase order %s this receipt is linked to was cancelled."
+msgstr "Ushbu kvitansiya bog‘langan %s xarid buyurtmasi bekor qilindi."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+#, fuzzy
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund."
+msgstr ""
+"Xarid buyurtmangizdagi miqdorlar hisob-kitob qilinganidan kamligini "
+"ko‘rsatmoqda. Pulni qaytarishni so‘rashingiz kerak."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+#, fuzzy
+msgid ""
+"The warehouse of operation type (%(operation_type)s) is inconsistent with "
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
+msgstr ""
+"Operatsiya turi ombori (%(operation_type)s) %(product)s mahsuloti uchun "
+"qayta buyurtma qilish qoidasining (%(reordering_rule)s) joylashuvi (%"
+"(location)s) bilan mos emas. Operatsiya turini o‘zgartiring yoki narx "
+"so‘rovini bekor qiling."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid ""
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
+msgstr ""
+"%s mahsuloti uchun xarid buyurtmasini yaratishga mos ta'minotchi narxi "
+"mavjud emas (ta'minotchi aniqlanmagan, minimal miqdorga yetilmagan, sanalar "
+"yaroqsiz, ...). Mahsulot shakliga o‘ting va ta'minotchilar ro‘yxatini "
+"to‘ldiring."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#, fuzzy
+msgid ""
+"This adds a Replenish On Order (MTO) route to apply on products in order to "
+"generate on-demand replenishment linked to your sales orders (for example) "
+"as soon as they are confirmed, with a direct link. Purchase orders, "
+"manufacturing orders, etc. are triggered based on what way to replenish is "
+"set on the product (Buy or Manufacture route)."
+msgstr ""
+"Bu mahsulotlarga sotuv buyurtmalaringiz (masalan) tasdiqlanishi bilanoq "
+"to‘g‘ridan-to‘g‘ri bog‘liq bo‘lgan talab asosidagi to‘ldirishni yaratish "
+"uchun Buyurtma asosida to‘ldirish (MTO) yo‘nalishini qo‘shadi. Xarid "
+"buyurtmalari, ishlab chiqarish buyurtmalari va boshqalar mahsulotda "
+"to‘ldirishning qaysi usuli (Xarid qilish yoki ishlab chiqarish yo‘nalishi) "
+"o‘rnatilganiga qarab ishga tushiriladi."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#, fuzzy
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
+msgstr ""
+"Bu ta'minotchilaringizdan mijozlaringizga yetkazib berishni so‘rash uchun "
+"mahsulotlarga qo‘llash uchun dropshipping yo‘nalishini qo‘shadi. Dropship "
+"uchun mahsulot sotuv buyurtmasi tasdiqlangandan so‘ng narx so‘rovi uchun "
+"xarid so‘rovini yaratadi. Bu talab asosidagi jarayondir. So‘ralgan yetkazib "
+"berish manzili omboringiz emas, balki mijozning yetkazib berish manzili "
+"bo‘ladi."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/product.py:0
+#, fuzzy
+msgid "This product has the \"Buy\" route checked but is not purchasable."
+msgstr ""
+"Ushbu mahsulotning \"Xarid qilish\" yo‘nalishi belgilangan, lekin xarid "
+"qilish imkonsiz."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
+#, fuzzy
+msgid "This will determine operation type of incoming shipment"
+msgstr "Bu kiruvchi jo‘natmaning operatsiya turini aniqlaydi"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, fuzzy
+msgid "Those dates have been updated accordingly on the receipt %s."
+msgstr "Bu sanalar %s kvitansiyada tegishli ravishda yangilandi."
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__4
+#, fuzzy
+msgid "Thursday"
+msgstr "Payshanba"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/time_period_selection_fields.js:0
+#, fuzzy
+msgid "Time Perdiod Selection"
+msgstr "Vaqt oralig‘ini tanlash"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_search_catalog
+#, fuzzy
+msgid "To Order"
+msgstr "Buyurtma berish"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
+#, fuzzy
+msgid "Total Quantity"
+msgstr "Umumiy miqdor"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
+#, fuzzy
+msgid "Track Inventory"
+msgstr "Inventarni kuzatish"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_picking
+#, fuzzy
+msgid "Transfer"
+msgstr "O‘tkazish"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__2
+#, fuzzy
+msgid "Tuesday"
+msgstr "Seshanba"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "Units"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, fuzzy
+msgid "Validate the receipt of all ordered products."
+msgstr "Barcha buyurtma qilingan mahsulotlar qabul qilinganini tasdiqlang."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__supplier_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__supplier_id
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__partner_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_warehouse_orderpoint_tree_editable_inherited_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_stock.warehouse_orderpoint_search_inherit
+#, fuzzy
+msgid "Vendor"
+msgstr "Ta'minotchi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_vendor_delay_report
+#, fuzzy
+msgid "Vendor Delay Report"
+msgstr "Ta'minotchi kechikishi hisoboti"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid "Vendor Lead Time"
+msgstr "Ta'minotchi yetkazib berish muddati"
+
+#. module: purchase_stock
+#: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
+#, fuzzy
+msgid "Vendor On-time Delivery analysis"
+msgstr "Ta'minotchining o‘z vaqtida yetkazib berish tahlili"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
+#, fuzzy
+msgid "Vendor Pricelist"
+msgstr "Sotuvchi narxlar ro‘yxati"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_ids
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
+#, fuzzy
+msgid "Vendors"
+msgstr "Sotuvchilar"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
+#, fuzzy
+msgid "Warehouse"
+msgstr "Ombor"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/product.py:0
+#, fuzzy
+msgid "Warning!"
+msgstr "Ogohlantirish!"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__3
+#, fuzzy
+msgid "Wednesday"
+msgstr "Chorshanba"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_on
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__group_on
+#, fuzzy
+msgid "Week Day"
+msgstr "Hafta kuni"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__week
+#, fuzzy
+msgid "Weekly"
+msgstr "Haftalik"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
+#, fuzzy
+msgid "When products are bought, they can be delivered to this warehouse"
+msgstr ""
+"Mahsulotlar sotib olinganda, ularni ushbu omborga yetkazib berish mumkin"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
+msgstr ""
+"<b>%s</b> da mahsulotlar kerak bo‘lganda, <br/> ehtiyojni qondirish uchun "
+"narx so‘rovi tuziladi.<br/>Eslatma: Bu qoida qabul qilish yo‘nalishi "
+"(yo‘nalishlari) qoidalari bilan birgalikda qo‘llaniladi<br/>"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, fuzzy
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "%s hamkor uchun ta'minotchi manzilini belgilashingiz zarur"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+#, fuzzy
+msgid "day(s)"
+msgstr "kun"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#, fuzzy
+msgid "of"
+msgstr "...dan"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+#, fuzzy
+msgid "ordered instead of"
+msgstr "o‘rniga buyurtma berildi"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, fuzzy
+msgid "this product should be manually replenished."
+msgstr "bu mahsulot qo‘lda to‘ldirilishi kerak."
+
+#, fuzzy
+#~ msgid "Stock Valuation"
+#~ msgstr "Zaxira baholash"
+
+#, fuzzy
+#~ msgid ""
+#~ "Define if RFQ should be grouped         together based on expected "
+#~ "arrival.\n"
+#~ "         On Order: Replenishment needs will be grouped together except "
+#~ "for MTO.\n"
+#~ "         Daily: Replenishment needs will be grouped if the expected "
+#~ "arrival is the same day\n"
+#~ "         Weekly: Replenishment needs will be grouped if the expected "
+#~ "arrival is the same week or week day\n"
+#~ "         Always: Replenishment needs will always be grouped."
+#~ msgstr ""
+#~ "Narx so‘rovlari kutilayotgan kelish vaqtiga asoslanib guruhlanishi "
+#~ "kerakligini aniqlang. Buyurtma asosida: To‘ldirish ehtiyojlari MTO dan "
+#~ "tashqari guruhlanadi. Kunlik: Agar kutilayotgan kelish bir kunda bo‘lsa, "
+#~ "to‘ldirish ehtiyojlari guruhlanadi. Haftalik: Agar kutilayotgan kelish "
+#~ "bir hafta yoki hafta kunida bo‘lsa, to‘ldirish ehtiyojlari guruhlanadi. "
+#~ "Har doim: To‘ldirish ehtiyojlari har doim guruhlanadi."

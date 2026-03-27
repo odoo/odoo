@@ -6,7 +6,6 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
-const { DateTime } = luxon;
 
 export class TimeOffCalendarModel extends CalendarModel {
     setup(params, services) {
@@ -34,11 +33,6 @@ export class TimeOffCalendarModel extends CalendarModel {
             if (!result.title.startsWith(employee)) {
                 result.title = [employee, result.title].join(" ");
             }
-        }
-        if (rawRecord.date_from && rawRecord.date_to) {
-            const dateFrom = DateTime.fromSQL(rawRecord.date_from);
-            const dateTo = DateTime.fromSQL(rawRecord.date_to);
-            result.sameDay = dateFrom.hasSame(dateTo, 'day');
         }
         if (rawRecord.request_unit_half) {
             result.requestDateFromPeriod = rawRecord.request_date_from_period;
@@ -116,7 +110,11 @@ export class TimeOffCalendarModel extends CalendarModel {
     }
 
     get employeeId() {
-        return (this.meta.context.employee_id && this.meta.context.employee_id[0]) || this.meta.context.active_id || null;
+        return (
+            (this.meta.context.employee_id && this.meta.context.employee_id[0]) ||
+            (this.meta.context.active_model === "hr.employee" && this.meta.context.active_id) ||
+            null
+        );
     }
 
     fetchRecords(data) {

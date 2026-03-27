@@ -9,7 +9,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
 
         useSubEnv({
             ...this.env,
-            selectedSectionId: this.env.searchModel.selectedSection?.sectionId,
+            selectedSectionId: this.env.searchModel.selectedSection.sectionId,
         });
     },
 

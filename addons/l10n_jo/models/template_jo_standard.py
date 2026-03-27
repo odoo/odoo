@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import _, models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -38,5 +38,26 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'jo_account_200401',
                 'expense_account_id': 'jo_account_500101',
                 'income_account_id': 'jo_account_400101',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'jo_account_100502',
+            },
+        }
+
+    @template('jo_standard', 'account.journal')
+    def _get_jo_standard_account_journal(self):
+        return {
+            'cash': {
+                'name': _("Cash"),
+                'type': 'cash',
+                'show_on_dashboard': True,
+            },
+        }
+
+    @template('jo_standard', 'account.account')
+    def _get_jo_standard_account_account(self):
+        return {
+            'jo_account_100502': {
+                'account_stock_expense_id': 'jo_account_500907',
+                'account_stock_variation_id': 'jo_account_500905',
             },
         }

@@ -30,13 +30,15 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2025-09-16 15:23+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-14 09:32+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/crm/fi/>"
 "\n"
 "Language: fi\n"
@@ -44,7 +46,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -104,7 +106,7 @@ msgstr "%s:n myyntimahdollisuus"
 #. odoo-python
 #: code:addons/crm/models/res_users.py:0
 msgid "(Team Leader)"
-msgstr ""
+msgstr "(Tiiminvetäjä)"
 
 #. module: crm
 #. odoo-javascript
@@ -200,9 +202,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
-"\"Tämän muutoksen tallentamalla tallennetaan myös asiakkaan sähköpostiosoite."
-"\" invisible=\"not partner_email_update\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Tämän muutoksen tallentamalla tallennetaan myös asiakkaan "
+"sähköpostiosoite.\" invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -211,9 +213,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
-"\"Tämän muutoksen tallentamalla tallennetaan myös asiakkaan puhelinnumero.\" "
-"invisible=\"not partner_phone_update\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Tämän muutoksen tallentamalla tallennetaan myös asiakkaan "
+"puhelinnumero.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -223,10 +225,10 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\""
-">Samankaltaiset liidit </span>\n"
-"                                    <span class=\"o_stat_text\" invisible="
-"\"duplicate_lead_count &gt; 1\">Samanlainen liidi</span>"
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; "
+"2\">Samankaltaiset liidit </span>\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"duplicate_lead_count &gt; 1\">Samanlainen liidi</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -236,8 +238,8 @@ msgid ""
 "invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Liidit</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"use_leads\""
-">Myyntimahdollisuudet</span>"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Myyntimahdollisuudet</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -249,19 +251,6 @@ msgstr "<span class=\"o_stat_text\">Liidiä</span>"
 msgid ""
 "<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"> at </span>"
 msgstr "<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"></span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid ""
-"<span class=\"opacity-50 p-2\" groups=\"crm.group_use_recurring_revenues\"> "
-"+ </span>\n"
-"                                        <span class=\"opacity-50 p-2\" "
-"groups=\"!crm.group_use_recurring_revenues\"> at </span>"
-msgstr ""
-"<span class=\"opacity-50 p-2\" groups=\"crm.group_use_recurring_revenues\"> +"
-" </span>\n"
-"                                        <span class=\"opacity-50 p-2\" "
-"groups=\"!crm.group_use_recurring_revenues\"> </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -307,8 +296,8 @@ msgid ""
 msgstr ""
 "<span>Kohdista liidejä säännöllisesti prioriteettien ja suodattimien "
 "perusteella.</span><br/>\n"
-"                                    <span invisible="
-"\"not crm_use_auto_assignment\">\n"
+"                                    <span invisible=\"not "
+"crm_use_auto_assignment\">\n"
 "                                          Kaikki myyntitiimit käyttävät tätä "
 "asetusta oletuksena, jollei\n"
 "                                                    ole määritelty toisin.\n"
@@ -364,7 +353,7 @@ msgid ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Hi <t t-out=\"object.partner_id and "
-"object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
+"object.partner_id.name or ''\">Acme Corporation</t>,<br/><br/>\n"
 "                            Welcome to <t t-out=\"object.company_id.name or "
 "''\">My Company (San Francisco)</t>.\n"
 "                            It's great to meet you! Now that you're on "
@@ -431,28 +420,27 @@ msgid ""
 msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
-"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 24px; background-color: white; color: #454748; border-"
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 24px; background-color: white; color: #454748; border-"
 "collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"100%\" style=\"background-color: white; padding: 0; border-"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"100%\" style=\"background-color: white; padding: 0; border-"
 "collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Liidisi/"
 "Myyntimahdollisuutesi</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;"
-"\" t-out=\"object.name or ''\">Kiinnostus tuotteitasi kohtaan</span>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.name or ''\">Kiinnostus tuotteitasi kohtaan</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src="
-"\"/logo.png?company={{ object.company_id.id }}\" style="
-"\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt="
-"\"object.company_id.name\"/>\n"
+"                    <img t-attf-src=\"/logo.png?"
+"company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                    <hr width=\"100%\" style=\"background-"
@@ -465,36 +453,34 @@ msgstr ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hei <t t-out="
-"\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><"
-"br/>\n"
-"                            Tervetuloa <t t-out="
-"\"object.company_id.name or ''\">Yritykseeni (Kerava)</t>.\n"
-"                            Hauska tavata! Nyt kun olet mukana, voit "
-"tutustua yrityksemme <t t-out=\"object.company_id.name or ''\">Yritys "
-"(Kerava)</t> tarjoantaan. Minä olen <t t-out=\"object.user_id.name or ''\""
-">Marc Demo</t> ja autan sinua saamaan kaiken irti Odoosta. Voisimmeko "
-"järjestää pikaisen esittelyn pian?<br/>\n"
-"                            Ota rohkeasti yhteyttä milloin tahansa!<br/><br/>"
-"\n"
+"                            Hei <t t-out=\"object.partner_id and "
+"object.partner_id.name or ''\">Acme Corporation</t>,<br/><br/>\n"
+"                            Tervetuloa <t t-out=\"object.company_id.name or "
+"''\">Yritykseeni (Kerava)</t>.\n"
+"                            Mukava tavata! Nyt kun olet mukana, pääset "
+"käsiksi kaikkiin <t t-out=\"object.company_id.name or ''\">Yritykseni "
+"(Kerava)</t> tarjoamiin mahdollisuuksiin. Nimeni on <t t-"
+"out=\"object.user_id.name or ''\">Marc Demo</t> ja autan sinua saamaan "
+"kaiken irti Odoosta. Voisimmeko sopia nopean demon pian?<br/>\n"
+"                            Ota rohkeasti yhteyttä koska tahansa!<br/><br/>\n"
 "                            Parhain terveisin,<br/>\n"
-"                           <t t-if=\"object.user_id\"> \n"
-"                               <b><t t-out=\"object.user_id.name or ''\""
-">Marc Demo</t></b>\n"
-"                               <br/>Sähköposti: <t t-out="
-"\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                               <br/>Puhelin: <t t-out="
-"\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                           </t>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or "
+"''\">Marc Demo</t></b>\n"
+"                                <br/>Sähköposti: <t t-"
+"out=\"object.user_id.email or ''\">mark.brown23@esimerkki.com</t>\n"
+"                                <br/>Puhelin: <t t-"
+"out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
 "                            <t t-else=\"\">\n"
-"                                <t t-out=\"object.company_id.name or ''\""
-">Yritykseni (Kerava)</t>\n"
+"                                <t t-out=\"object.company_id.name or "
+"''\">Yritykseni (Kerava)</t>\n"
 "                            </t>\n"
 "                        </div>\n"
 "                    </td>\n"
@@ -509,22 +495,20 @@ msgstr ""
 "            <hr width=\"100%\" style=\"background-"
 "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
 "size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
-"            <b t-out=\"object.company_id.name or ''\">OmaYritys (Kerava)</b><"
-"br/>\n"
+"            <b t-out=\"object.company_id.name or ''\">Yritykseni (Kerava)</"
+"b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
-"                <t t-out=\"object.company_id.phone or ''\">+1 "
-"650-123-4567</t>\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</"
+"t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
-"                    | <a t-attf-href="
-"\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none;"
-" color: #999999;\" t-out=\"object.company_id.email or ''\""
-">info@yourcompany.com</a>\n"
+"                    | <a t-attf-href=\"'mailto:%s' % "
+"{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+"#999999;\" t-out=\"object.company_id.email or ''\">info@yritykseni.com</a>\n"
 "                </t>\n"
 "                <t t-if=\"object.company_id.website\">\n"
-"                    | <a t-attf-href="
-"\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; "
-"color: #999999;\" t-out=\"object.company_id.website or ''\""
-">http://www.example.com</a>\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}"
+"\" style=\"text-decoration:none; color: #999999;\" t-"
+"out=\"object.company_id.website or ''\">http://www.esimerkki.com</a>\n"
 "                </t>\n"
 "            </div>\n"
 "        </td>\n"
@@ -534,10 +518,9 @@ msgstr ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    Palvelinta pyörittää <a target=\"_blank\" href="
-"\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" t-attf-style="
-"\"color: {{object.company_id.email_secondary_color or '#875A7B'}};;\""
-">Odoo</a>\n"
+"    Palvelun tarjoaa <a target=\"_blank\" href=\"https://www.odoo.com?"
+"utm_source=db&amp;utm_medium=email\" t-attf-style=\"color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}};;\">Odoo</a>\n"
 "</td></tr>\n"
 "</table>\n"
 "        "
@@ -779,7 +762,7 @@ msgstr "Alias-domain"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias-domain-nimi"
+msgstr "Alias-domainin nimi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
@@ -846,8 +829,8 @@ msgstr ""
 "Koska et ole minkään myyntitiimin jäsen, sinulle näytetään <b>oletuksena "
 "ensimmäisen tiimin</b>myyntiputki.\n"
 "                                        Jotta voisit työskennellä CRM-"
-"järjestelmässä, sinun on <a name=\"%d\" type=\"action\" tabindex=\"-1\""
-">liityttävä tiimiin</a>"
+"järjestelmässä, sinun on <a name=\"%d\" type=\"action\" "
+"tabindex=\"-1\">liityttävä tiimiin</a>"
 
 #. module: crm
 #. odoo-python
@@ -1039,7 +1022,7 @@ msgstr "Peruuta"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Capacity"
-msgstr ""
+msgstr "Kapasiteetti"
 
 #. module: crm
 #. odoo-python
@@ -1516,7 +1499,7 @@ msgstr "Sulkemispäivä"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Päivien lukumäärä tämän resurssin viimeisimmän päivityksen jälkeen"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1526,7 +1509,7 @@ msgstr "Päivää"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Päivää erääntymisestä"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1541,7 +1524,7 @@ msgstr "Päivää sulkemiseen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Päivää erääntymiseen"
 
 #. module: crm
 #. odoo-python
@@ -1648,7 +1631,7 @@ msgstr "Näyttönimi"
 #: code:addons/crm/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Sinulla ei ole pääsyoikeutta, ohita tämä tieto käyttäjien  yhteenvetopostissa"
+"Ei pääsyoikeutta, jätä nämä tiedot pois käyttäjän yhteenvetosähköpostista"
 
 #. module: crm
 #. odoo-python
@@ -1895,12 +1878,12 @@ msgid ""
 "For a sales team, there is nothing worse than being dry on leads. "
 "Fortunately, in just a few clicks, you can generate leads specifically "
 "targeted to your needs: company size, industry, etc. To help you test the "
-"feature, we offer you 200 credits for free."
+"feature, we offer you 20 credits for free."
 msgstr ""
-"Mikään ei ole myyntitiimille pahempaa kuin se, että liidit ovat vähissä. "
-"Onneksi voit muutamalla klikkauksella luoda liidejä, jotka on kohdennettu "
-"juuri sinun tarpeisiisi: yrityksen koon, toimialan jne. mukaan. Jotta voisit "
-"testata ominaisuutta, tarjoamme sinulle 200 krediittiä ilmaiseksi."
+"Myyntitiimille ei ole mitään pahempaa kuin liidien puute. Onneksi voit luoda "
+"juuri sinun tarpeisiisi kohdistettuja liidejä muutamalla klikkauksella: "
+"yrityksen koko, toimiala, jne. Testataksesi ominaisuutta, tarjoamme sinulle "
+"20 krediittiä ilmaiseksi."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1989,6 +1972,10 @@ msgid ""
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"Korosta myyntimahdollisuudet, joita ei ole päivitetty näin moneen "
+"päivään.         Aseta arvoksi 0 poistaaksesi käytöstä. Tämän parametrin "
+"muuttaminen ei vaikuta vanhentumistilaan/eräpäivään resursseissa, joiden "
+"viimeisin päivitys on tehty ennen tätä muutosta."
 
 #. module: crm
 #. odoo-javascript
@@ -2083,8 +2070,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Jos sähköpostiosoite on markkinointikiellossa, yhteystieto ei vastaanota "
-"postituksia miltään postituslistalta."
+"Jos sähköpostiosoite on mustalla listalla, yhteystieto ei vastaanota "
+"postituksia miltään postituslistalta"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
@@ -2109,7 +2096,7 @@ msgstr "Tuo mallipohja liideille & myyntimahdollisuuksille"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Inactive"
-msgstr "Passiivinen"
+msgstr "Epäaktiivinen"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__incorrect
@@ -2171,7 +2158,8 @@ msgstr "Onko automaattinen todennäköisyys?"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr "JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
+msgstr ""
+"JSON, joka kartoittaa many2one-kentän tunnukset käytetyiksi sekunneiksi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -2481,8 +2469,8 @@ msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means "
 "that no duplicates were found"
 msgstr ""
-"Valitsemiesi liidien kaksoiskappaleet. Jos lista on tyhjä, se tarkoittaa, "
-"ettei kaksoiskappaleita löytynyt."
+"Valitsemasi liidit, joilla on kaksoiskappale. Tyhjä lista tarkoittaa, ettei "
+"kaksoiskappaleita löytynyt"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2628,7 +2616,7 @@ msgstr "Alin"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.xml:0
 msgid "MRR"
-msgstr ""
+msgstr "kuukausittain toistuva laskutus"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2745,7 +2733,8 @@ msgstr "Tapaamiset"
 msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
-msgstr "Käyttäjän %(user)s ja tiimin %(team)s kohdistusalue on muotoiltu väärin"
+msgstr ""
+"Käyttäjän %(user)s ja tiimin %(team)s kohdistusalue on muotoiltu väärin"
 
 #. module: crm
 #. odoo-python
@@ -2968,6 +2957,8 @@ msgstr "Tietoja ei löytynyt!"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
 msgstr ""
+"Ei kiertoteitä, ei viivästyksiä – %(stage_name)s:sta alkaen suoraan "
+"voittoon! 🚀"
 
 #. module: crm
 #. odoo-python
@@ -3069,11 +3060,13 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Tälle jäsenelle viimeisen 24 tunnin aikana osoitetut liidit (poislukien "
+"hävityt liidit)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "Tälle jäsenelle viimeisen 30 päivän aikana osoitetut liidit"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3332,7 +3325,7 @@ msgstr "Odottaa"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Phew, that took some effort — but you nailed it. Good job!"
-msgstr ""
+msgstr "Huh, se vaati hieman vaivaa — mutta onnistuit hienosti. Hyvää työtä!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3357,7 +3350,7 @@ msgstr "Puhelujen laatu"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Phone:"
-msgstr "Phone:"
+msgstr "Puhelin:"
 
 #. module: crm
 #. odoo-python
@@ -3611,7 +3604,7 @@ msgstr "Ringover VOIP-puhelin"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "Erääntyminen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3764,7 +3757,7 @@ msgstr "Asetukset"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Shared with all teams"
-msgstr ""
+msgstr "Jaettu kaikkien tiimien kanssa"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -3924,7 +3917,7 @@ msgstr "Katu..."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street2
 msgid "Street2"
-msgstr "Katuosoite2"
+msgstr "Katu2"
 
 #. module: crm
 #. odoo-python
@@ -4069,8 +4062,8 @@ msgstr "Tämä analyysi näyttää, kuinka monta liidiä on luotu kuukaudessa."
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
-"Tämä palkki antaa mahdollisuuden suodattaa myyntimahdollisuuksia "
-"aikataulutettujen tehtävien perusteella."
+"Tämän palkin avulla voit suodattaa myyntimahdollisuuksia aikataulutettujen "
+"toimenpiteiden perusteella."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4107,7 +4100,8 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
 msgid "This field is used to set/get locales for user"
-msgstr "Tämän kentän avulla haetaan/asetetaan käyttäjän aluekohtaiset asetukset"
+msgstr ""
+"Tämän kentän avulla haetaan/asetetaan käyttäjän aluekohtaiset asetukset"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -4138,6 +4132,8 @@ msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
+"%(creation_source)s loi uuden liidin, joka osoitettiin automaattisesti "
+"tiimin johtajalle %(user_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4392,8 +4388,8 @@ msgid ""
 "Use the <i>New</i> button, or send an email to %(email_link)s to test the "
 "email gateway."
 msgstr ""
-"Käytä <i>Uusi</i>-painiketta tai lähetä sähköpostiviesti osoitteeseen "
-"%(email_link)s testataksesi sähköpostiyhteyden."
+"Käytä <i>Uusi</i>-painiketta tai lähetä sähköpostiviesti osoitteeseen %"
+"(email_link)s testataksesi sähköpostiyhteyden."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
@@ -4495,7 +4491,7 @@ msgstr "Viikot"
 #. module: crm
 #: model:mail.template,name:crm.mail_template_demo_crm_lead
 msgid "Welcome Demo"
-msgstr "Tervetuloa Demo"
+msgstr "Tervetuliaisdemo"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -4528,19 +4524,19 @@ msgstr "Voitettu/Hävitty"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "Vau, se oli nopeaa. Tämän sopimuksen suhteen ei ollut epäilystäkään!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "Hienoa, ensimmäinen voittosi %(utm_source_name)s!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "Kyllä! Tiimin paras sopimus viimeisen 7 päivän ajalta."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4581,7 +4577,7 @@ msgstr "Olet juuri parantanut omaa ennätystäsi 7 päivän ajalta."
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
-msgstr ""
+msgstr "Laajensit juuri karttaa! Ensimmäinen voitto: %(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4600,13 +4596,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "Olet voittoputkessa. 3 kauppaa 3 päivässä, onnittelut!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "Olet tulessa! Viides kauppa tänään 🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4622,6 +4618,11 @@ msgstr "Postinumero"
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "alias"
 msgstr "alias"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
+msgstr "-"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4680,7 +4681,7 @@ msgstr "sisältää arvon"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "saapuva sähköposti"
 
 #. module: crm
 #. odoo-python
@@ -4764,6 +4765,249 @@ msgstr "kelvollinen sähköpostiosoite"
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr "kelvollinen puhelinnumero"
+
+#~ msgid ""
+#~ "<span class=\"opacity-50 p-2\" "
+#~ "groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+#~ "                                        <span class=\"opacity-50 p-2\" "
+#~ "groups=\"!crm.group_use_recurring_revenues\"> at </span>"
+#~ msgstr ""
+#~ "<span class=\"opacity-50 p-2\" "
+#~ "groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+#~ "                                        <span class=\"opacity-50 p-2\" "
+#~ "groups=\"!crm.group_use_recurring_revenues\"> </span>"
+
+#~ msgid ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+#~ "top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-"
+#~ "serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+#~ "align=\"center\">\n"
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+#~ "style=\"padding: 24px; background-color: white; color: #454748; border-"
+#~ "collapse:separate;\">\n"
+#~ "<tbody>\n"
+#~ "    <!-- HEADER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"100%\" style=\"background-color: white; padding: 0; border-"
+#~ "collapse:separate;\">\n"
+#~ "                <tr><td valign=\"middle\">\n"
+#~ "                    <span style=\"font-size: 10px;\">Your Lead/"
+#~ "Opportunity</span><br/>\n"
+#~ "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+#~ "out=\"object.name or ''\">Interest in your products</span>\n"
+#~ "                </td><td valign=\"middle\" align=\"right\">\n"
+#~ "                    <img t-attf-src=\"/logo.png?"
+#~ "company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+#~ "height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
+#~ "                </td></tr>\n"
+#~ "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+#~ "                    <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+#~ "                </td></tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- CONTENT -->\n"
+#~ "    <tr>\n"
+#~ "        <td style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+#~ "0px 8px 0px 8px; border-collapse:separate;\">\n"
+#~ "                <tr>\n"
+#~ "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+#~ "                        <div>\n"
+#~ "                            Hi <t t-out=\"object.partner_id and "
+#~ "object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
+#~ "                            Welcome to <t t-out=\"object.company_id.name "
+#~ "or ''\">My Company (San Francisco)</t>.\n"
+#~ "                            It's great to meet you! Now that you're on "
+#~ "board, you'll discover what <t t-out=\"object.company_id.name or ''\">My "
+#~ "Company (San Francisco)</t> has to offer. My name is <t t-"
+#~ "out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the "
+#~ "most out of Odoo. Could we plan a quick demo soon?<br/>\n"
+#~ "                            Feel free to reach out at any time!<br/><br/"
+#~ ">\n"
+#~ "                            Best,<br/>\n"
+#~ "                            <t t-if=\"object.user_id\">\n"
+#~ "                                <b><t t-out=\"object.user_id.name or "
+#~ "''\">Marc Demo</t></b>\n"
+#~ "                                <br/>Email: <t t-"
+#~ "out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+#~ "                                <br/>Phone: <t t-"
+#~ "out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+#~ "                            </t>\n"
+#~ "                            <t t-else=\"\">\n"
+#~ "                                <t t-out=\"object.company_id.name or "
+#~ "''\">My Company (San Francisco)</t>\n"
+#~ "                            </t>\n"
+#~ "                        </div>\n"
+#~ "                    </td>\n"
+#~ "                </tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- FOOTER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 "
+#~ "8px; font-size:11px;\">\n"
+#~ "            <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+#~ "            <b t-out=\"object.company_id.name or ''\">My Company (San "
+#~ "Francisco)</b><br/>\n"
+#~ "            <div style=\"color: #999999;\">\n"
+#~ "                <t t-out=\"object.company_id.phone or ''\">+1 "
+#~ "650-123-4567</t>\n"
+#~ "                <t t-if=\"object.company_id.email\">\n"
+#~ "                    | <a t-attf-href=\"'mailto:%s' % "
+#~ "{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</"
+#~ "a>\n"
+#~ "                </t>\n"
+#~ "                <t t-if=\"object.company_id.website\">\n"
+#~ "                    | <a t-attf-href=\"'%s' % "
+#~ "{{ object.company_id.website }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.website or ''\">http://"
+#~ "www.example.com</a>\n"
+#~ "                </t>\n"
+#~ "            </div>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "</tbody>\n"
+#~ "</table>\n"
+#~ "</td></tr>\n"
+#~ "<!-- POWERED BY -->\n"
+#~ "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?"
+#~ "utm_source=db&amp;utm_medium=email\" t-attf-style=\"color: "
+#~ "{{object.company_id.email_secondary_color or '#875A7B'}};;\">Odoo</a>\n"
+#~ "</td></tr>\n"
+#~ "</table>\n"
+#~ "        "
+#~ msgstr ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+#~ "top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-"
+#~ "serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+#~ "align=\"center\">\n"
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+#~ "style=\"padding: 24px; background-color: white; color: #454748; border-"
+#~ "collapse:separate;\">\n"
+#~ "<tbody>\n"
+#~ "    <!-- HEADER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"100%\" style=\"background-color: white; padding: 0; border-"
+#~ "collapse:separate;\">\n"
+#~ "                <tr><td valign=\"middle\">\n"
+#~ "                    <span style=\"font-size: 10px;\">Liidisi/"
+#~ "Myyntimahdollisuutesi</span><br/>\n"
+#~ "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+#~ "out=\"object.name or ''\">Kiinnostus tuotteitasi kohtaan</span>\n"
+#~ "                </td><td valign=\"middle\" align=\"right\">\n"
+#~ "                    <img t-attf-src=\"/logo.png?"
+#~ "company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+#~ "height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
+#~ "                </td></tr>\n"
+#~ "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+#~ "                    <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+#~ "                </td></tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- CONTENT -->\n"
+#~ "    <tr>\n"
+#~ "        <td style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+#~ "0px 8px 0px 8px; border-collapse:separate;\">\n"
+#~ "                <tr>\n"
+#~ "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+#~ "                        <div>\n"
+#~ "                            Hei <t t-out=\"object.partner_id and "
+#~ "object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
+#~ "                            Tervetuloa <t t-out=\"object.company_id.name "
+#~ "or ''\">Yritykseeni (Kerava)</t>.\n"
+#~ "                            Hauska tavata! Nyt kun olet mukana, voit "
+#~ "tutustua yrityksemme <t t-out=\"object.company_id.name or ''\">Yritys "
+#~ "(Kerava)</t> tarjontaan. Minä olen <t t-out=\"object.user_id.name or "
+#~ "''\">Marc Demo</t> ja autan sinua saamaan kaiken irti Odoosta. Voisimmeko "
+#~ "sopia pian nopean esittelyn?<br/>\n"
+#~ "                            Ota rohkeasti yhteyttä milloin tahansa!<br/"
+#~ "><br/>\n"
+#~ "                            Parhain terveisin,<br/>\n"
+#~ "                           <t t-if=\"object.user_id\"> \n"
+#~ "                               <b><t t-out=\"object.user_id.name or "
+#~ "''\">Marc Demo</t></b>\n"
+#~ "                               <br/>Sähköposti: <t t-"
+#~ "out=\"object.user_id.email or ''\">mark.brown23@esimerkki.com</t>\n"
+#~ "                               <br/>Puhelin: <t t-"
+#~ "out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+#~ "                           </t>\n"
+#~ "                            <t t-else=\"\">\n"
+#~ "                                <t t-out=\"object.company_id.name or "
+#~ "''\">Yritykseni (Kerava)</t>\n"
+#~ "                            </t>\n"
+#~ "                        </div>\n"
+#~ "                    </td>\n"
+#~ "                </tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- FOOTER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 "
+#~ "8px; font-size:11px;\">\n"
+#~ "            <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+#~ "            <b t-out=\"object.company_id.name or ''\">OmaYritys (Kerava)</"
+#~ "b><br/>\n"
+#~ "            <div style=\"color: #999999;\">\n"
+#~ "                <t t-out=\"object.company_id.phone or ''\">+1 "
+#~ "650-123-4567</t>\n"
+#~ "                <t t-if=\"object.company_id.email\">\n"
+#~ "                    | <a t-attf-href=\"'mailto:%s' % "
+#~ "{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.email or "
+#~ "''\">info@yrityksesinimi.com</a>\n"
+#~ "                </t>\n"
+#~ "                <t t-if=\"object.company_id.website\">\n"
+#~ "                    | <a t-attf-href=\"'%s' % "
+#~ "{{ object.company_id.website }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.website or ''\">http://"
+#~ "www.esimerkki.com</a>\n"
+#~ "                </t>\n"
+#~ "            </div>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "</tbody>\n"
+#~ "</table>\n"
+#~ "</td></tr>\n"
+#~ "<!-- POWERED BY -->\n"
+#~ "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "    Palvelun tarjoaa <a target=\"_blank\" href=\"https://www.odoo.com?"
+#~ "utm_source=db&amp;utm_medium=email\" t-attf-style=\"color: "
+#~ "{{object.company_id.email_secondary_color or '#875A7B'}};;\">Odoo</a>\n"
+#~ "</td></tr>\n"
+#~ "</table>\n"
+#~ "        "
+
+#~ msgid ""
+#~ "For a sales team, there is nothing worse than being dry on leads. "
+#~ "Fortunately, in just a few clicks, you can generate leads specifically "
+#~ "targeted to your needs: company size, industry, etc. To help you test the "
+#~ "feature, we offer you 200 credits for free."
+#~ msgstr ""
+#~ "Mikään ei ole myyntitiimille pahempaa kuin se, että liidit ovat vähissä. "
+#~ "Onneksi voit muutamalla klikkauksella luoda liidejä, jotka on kohdennettu "
+#~ "juuri sinun tarpeisiisi: yrityksen koon, toimialan jne. mukaan. Jotta "
+#~ "voisit testata ominaisuutta, tarjoamme sinulle 200 krediittiä ilmaiseksi."
 
 #~ msgid "# Meetings"
 #~ msgstr "Tapaamisten lkm"

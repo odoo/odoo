@@ -38,6 +38,7 @@ class HrEmployee(models.Model):
             res['views']['search']['arch'] = res['views']['search']['arch'].replace('today_location_name', dayfield)
         if 'list' in res['views']:
             res['views']['list']['arch'] = res['views']['list']['arch'].replace('work_location_name', dayfield)
+        res["models"][self._name]["fields"].update(self.fields_get([dayfield]))
         return res
 
     def _compute_exceptional_location_id(self):
@@ -56,8 +57,8 @@ class HrEmployee(models.Model):
         super()._compute_presence_icon()
         dayfield = self._get_current_day_location_field()
         for employee in self:
-            today_employee_location_id = employee.exceptional_location_id or employee[dayfield]
-            if not today_employee_location_id or employee.hr_icon_display.startswith('presence_holiday'):
+            today_employee_location_id = employee.sudo().exceptional_location_id or employee[dayfield]
+            if not today_employee_location_id:
                 continue
             employee.hr_icon_display = f'presence_{today_employee_location_id.location_type}'
             employee.show_hr_icon_display = True

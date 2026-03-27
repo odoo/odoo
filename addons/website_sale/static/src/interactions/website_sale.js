@@ -3,6 +3,8 @@ import { registry } from '@web/core/registry';
 import { hasTouch, isBrowserFirefox } from '@web/core/browser/feature_detection';
 import { redirect, url } from '@web/core/utils/urls';
 import { uniqueId } from '@web/core/utils/functions';
+import { setElementContent } from "@web/core/utils/html";
+import { _t } from "@web/core/l10n/translation";
 import { markup } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import { ProductImageViewer } from '@website_sale/js/components/website_sale_image_viewer';
@@ -47,6 +49,7 @@ export class WebsiteSale extends Interaction {
         this.filmStripIsDown = false;
         this.filmStripScrollLeft = 0;
         this.filmStripMoved = false;
+        this.imageRatio = this.el.dataset.imageRatio;
     }
 
     start() {
@@ -210,11 +213,12 @@ export class WebsiteSale extends Interaction {
         if (salePage.dataset.ecomZoomClick) {
             // In this case we want all the images not just the ones that are "zoomables"
             const images = this.el.querySelectorAll('.product_detail_img');
-            for (const image of images ) {
+            for (const [idx, image] of images.entries()) {
                 const handler = () => {
                     this.services.dialog.add(ProductImageViewer, {
-                        selectedImageIdx: [...images].indexOf(image),
+                        selectedImageIdx: idx,
                         images,
+                        imageRatio: this.imageRatio,
                     });
                 };
                 image.addEventListener("click", handler);
@@ -243,7 +247,7 @@ export class WebsiteSale extends Interaction {
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
-        if (images && !this._isEditorEnabled()) {
+        if (images && !this._isEditorEnabled() && newImages ) {
             images.insertAdjacentHTML('beforebegin', markup(newImages));
             images.remove();
 
@@ -338,7 +342,7 @@ export class WebsiteSale extends Interaction {
         const button = ev.target;
         const isExpanded = button.getAttribute('aria-expanded') === 'true';
 
-        button.innerHTML = isExpanded ? "View Less" : "View More";
+        setElementContent(button, isExpanded ? _t("View Less") : _t("View More"))
     }
 
     /**

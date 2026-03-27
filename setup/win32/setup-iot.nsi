@@ -89,6 +89,7 @@ RequestExecutionLevel admin
 !insertmacro GetOptions
 
 Var /GLOBAL cmdLineParams
+Var /GLOBAL ProxyTokenPwd
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
@@ -134,6 +135,7 @@ LangString DESC_FinishPage_Link ${LANG_ENGLISH} "Contact Odoo for Partnership an
 LangString TITLE_Odoo_IoT ${LANG_ENGLISH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_ENGLISH} "Nginx WebServer"
 LangString TITLE_Ghostscript ${LANG_ENGLISH} "Ghostscript interpreter"
+LangString TITLE_SumatraPDF ${LANG_ENGLISH} "PDF interpreter"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
 LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
@@ -143,6 +145,7 @@ LangString DESC_FinishPage_Link ${LANG_FRENCH} "Contactez Odoo pour un Partenari
 LangString TITLE_Odoo_IoT ${LANG_FRENCH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_FRENCH} "Installation du serveur web Nginx"
 LangString TITLE_Ghostscript ${LANG_FRENCH} "Installation de l'interpréteur Ghostscript"
+LangString TITLE_SumatraPDF ${LANG_FRENCH} "Installation de l'interpréteur PDF"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
 LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 n'est pas recommandé.$\nVoulez-vous continuer ?"
 
@@ -170,7 +173,7 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
 
     # Cloning odoo
     DetailPrint "Cloning Odoo"
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b saas-18.4 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b 19.0 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
 
     DetailPrint "Configuring Sparse Checkout for IoT modules"
     nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout init --no-cone'
@@ -206,6 +209,11 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
+
+    nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\odoo\odoo-bin" genproxytoken'
+    pop $0
+    pop $ProxyTokenPwd
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "proxy_access_token" "$ProxyTokenPwd"
 
     Call RestartOdooService
 SectionEnd
@@ -262,6 +270,27 @@ Section -$(TITLE_Ghostscript) SectionGhostscript
         /D=$INSTDIR\Ghostscript'
 SectionEnd
 
+Section -$(TITLE_SumatraPDF) SectionSumatraPDF
+    SetOutPath '$TEMP'
+    VAR /GLOBAL sumatra_exe_filename
+    VAR /GLOBAL sumatra_url
+
+    StrCpy $sumatra_exe_filename "SumatraPDF-3.5.2-64-install.exe"
+    StrCpy $sumatra_url "https://www.sumatrapdfreader.org/dl/rel/3.5.2/$sumatra_exe_filename"
+
+    DetailPrint "Downloading Sumatra PDF"
+    NScurl::http get "$sumatra_url" "$TEMP\$sumatra_exe_filename" /PAGE /END
+    DetailPrint "Temp dir: $TEMP\$sumatra_exe_filename"
+
+    Rmdir /r "INSTDIR\SumatraPDF"
+    DetailPrint "Installing Sumatra PDF"
+    ExecWait '"$TEMP\$sumatra_exe_filename" \
+        -install -silent \
+        -d "$INSTDIR\SumatraPDF"'
+    SetOutPath "$INSTDIR\SumatraPDF"
+    File "conf\iot\sumatrapdfrestrict.ini"
+SectionEnd
+
 Section -Post
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "InstallLocation" "$INSTDIR"
@@ -282,12 +311,14 @@ SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "Uninstall"
+    SetRegView 64
     # Check if the server is installed
     !insertmacro IfKeyExists "HKLM" "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     Pop $R0
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
     ExecWait '"$INSTDIR\Ghostscript\uninstgs.exe" /S'
+    ExecWait '"$INSTDIR\SumatraPDF\SumatraPDF.exe" -uninstall -silent'
 
     nsExec::Exec "net stop ${SERVICENAME}"
     nsExec::Exec "sc delete ${SERVICENAME}"

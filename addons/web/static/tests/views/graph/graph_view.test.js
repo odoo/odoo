@@ -1256,6 +1256,27 @@ test("no content helper after update", async () => {
     expect(".abc").toHaveCount(0);
 });
 
+test("display the provided no content helper when search has no matching data", async () => {
+    Foo._records = [];
+
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        noContentHelp: /* xml */ `
+            <p class="abc">This helper should be displayed</p>
+        `,
+    });
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    expect(".o_view_nocontent").toHaveCount(0);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("color");
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(0);
+    expect(".o_nocontent_help:contains(This helper should be displayed)").toHaveCount(1);
+});
+
 test("can reload with other group by", async () => {
     const view = await mountView({
         type: "graph",
@@ -1850,6 +1871,7 @@ test("clicking on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1864,6 +1886,7 @@ test("clicking on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1889,6 +1912,7 @@ test("middle click on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1903,6 +1927,7 @@ test("middle click on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1928,6 +1953,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1942,6 +1968,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1969,6 +1996,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1983,6 +2011,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
@@ -2017,6 +2046,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -2031,6 +2061,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
@@ -2109,6 +2140,24 @@ test("graph view with invisible attribute on field", async () => {
         message: "there should be only two menu items in the measures dropdown (count and foo)",
     });
     expect(".o_menu_item:contains(Revenue)").toHaveCount(0);
+});
+
+test("graph view reserved word", async () => {
+    // Check that the use of reserved words does not interfere with the view.
+    Product._records.push({ id: 150, name: "constructor" });
+    Foo._records.at(-1).product_id = 150;
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph order="DESC">
+                <field name="product_id" />
+            </graph>
+        `,
+    });
+    checkLabels(view, ["xphone", "xpad", "constructor"]);
+    checkDatasets(view, ["data", "label"], [{ data: [4, 3, 1], label: "Count" }]);
 });
 
 test("graph view sort by measure", async () => {
@@ -2292,8 +2341,6 @@ test("empty graph view with sample data", async () => {
 
     expect(".o_graph_view .o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(".ribbon").toHaveCount(1);
-    expect(".ribbon").toHaveText("SAMPLE DATA");
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
 
     await toggleSearchBarMenu();
@@ -2301,7 +2348,6 @@ test("empty graph view with sample data", async () => {
 
     expect(".o_graph_view .o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(0);
-    expect(".ribbon").toHaveCount(0);
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
 });
 
@@ -2326,7 +2372,6 @@ test("non empty graph view with sample data", async () => {
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(0);
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
-    expect(".ribbon").toHaveCount(0);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("False Domain");
@@ -2334,7 +2379,6 @@ test("non empty graph view with sample data", async () => {
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_graph_canvas_container canvas").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(".ribbon").toHaveCount(0);
 });
 
 test("empty graph view without sample data after filter", async () => {

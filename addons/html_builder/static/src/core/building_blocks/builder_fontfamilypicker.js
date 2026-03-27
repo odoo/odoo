@@ -28,7 +28,7 @@ export class BuilderFontFamilyPicker extends Component {
         this.fonts = [];
         onWillStart(async () => {
             const fontsData = await this.env.editor.shared.builderFont.getFontsData();
-            this.fonts = fontsData._fonts;
+            this.fonts = fontsData._fonts.slice().sort((a, b) => a.string.localeCompare(b.string));
         });
     }
     forwardProps(fontValue) {

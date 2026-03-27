@@ -6,7 +6,6 @@ import itertools
 import socket
 
 from datetime import datetime
-
 from unittest.mock import DEFAULT
 from unittest.mock import patch
 
@@ -27,20 +26,23 @@ from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 @tagged('mail_gateway')
 class TestEmailParsing(MailCommon):
 
-    def test_message_parse_and_replace_binary_octetstream(self):
-        """ Incoming email containing a wrong Content-Type as described in RFC2046/section-3 """
-        received_mail = self.from_string(test_mail_data.MAIL_MULTIPART_BINARY_OCTET_STREAM)
-        with self.assertLogs('odoo.addons.mail.models.mail_thread', level="WARNING") as capture:
-            extracted_mail = self.env['mail.thread']._message_parse_extract_payload(received_mail, {})
+    def test_message_parse_and_replace_bad_content_type(self):
+        """Incoming emails with unsupported attachment Content-Types should not crash parsing."""
+        for content_type in ('binary/octet-stream', '*/*', 'bin/plain'):
+            with self.subTest(content_type=content_type):
+                received_mail = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime=content_type)
+                self.assertIn(f"Content-Type: {content_type}", received_mail, f"{content_type} content-type not found")
+                with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as capture:
+                    extracted_mail = self.env['mail.thread'].message_parse(self.from_string(received_mail))
 
-        self.assertEqual(len(extracted_mail['attachments']), 1)
-        attachment = extracted_mail['attachments'][0]
-        self.assertEqual(attachment.fname, 'hello_world.dat')
-        self.assertEqual(attachment.content, b'Hello world\n')
-        self.assertEqual(capture.output, [
-            ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
-             "Content-Type 'binary/octet-stream', assuming 'application/octet-stream'"),
-        ])
+                self.assertEqual(len(extracted_mail['attachments']), 1)
+                attachment = extracted_mail['attachments'][0]
+                self.assertEqual(attachment.fname, 'scan_soraya.lernout_1691652648.pdf')
+                self.assertEqual(attachment.content, test_mail_data.PDF_PARSED)
+                self.assertEqual(capture.output, [
+                    ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
+                    f"Content-Type '{content_type}', assuming 'application/octet-stream'"),
+                ])
 
     def test_message_parse_body(self):
         # test pure plaintext
@@ -203,7 +205,10 @@ class MailGatewayCommon(MailCommon):
         })
 
         # Set a first message on public group to test update and hierarchy
-        cls.fake_email = cls._create_gateway_message(cls.test_record, '123456')
+        cls.fake_email = cls._create_gateway_message(
+            cls.test_record, '123456',
+            date=datetime(2025, 11, 19, 10, 30, 0),
+        )
 
     def _reinject(self, force_msg_id=False, debug_log=False):
         """ Tool to automatically 'inject' an outgoing mail into the gateway.
@@ -226,6 +231,7 @@ class MailGatewayCommon(MailCommon):
     def _create_gateway_message(cls, record, msg_id_prefix, **values):
         msg_values = {
             'author_id': cls.partner_1.id,
+            'date': cls.env.cr.now(),
             'email_from': cls.partner_1.email_formatted,
             'body': '<p>Generic body</p>',
             'message_id': f'<{msg_id_prefix}-openerp-{record.id}-{record._name}@{socket.gethostname()}>',
@@ -1301,7 +1307,18 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
         self.assertEqual(other_record.message_bounce, 10)
         self.assertEqual(yet_other_record.message_bounce, 10)
+        # MAX_BOUNCE_LIMIT in discuss_channel is set to 10,
+        # If this partner exceeds the limit, remove them from the channel.
         self.assertNotIn(self.partner_1, test_channel.channel_partner_ids)
+
+        # On a new successful incoming email, the partner bounce counter should be reset.
+        self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            f'groups@{self.alias_domain}',
+            subject='Test Working Email Subject',
+            extra=f'In-Reply-To:\r\n\t{self.fake_email.message_id}\n',
+        )
+        self.assertEqual(self.partner_1.message_bounce, 0)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_records_partner(self):
@@ -1317,6 +1334,49 @@ class TestMailgateway(MailGatewayCommon):
         self.assertFalse(record)
         self.assertEqual(self.partner_1.message_bounce, 1)
         self.assertEqual(self.test_record.message_bounce, 0)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_records_partner_multi(self):
+        """Bounce must only affect the notification matching the bounced email."""
+
+        bounce_email = 'specific.bounce.address@example.com'
+
+        message = self._create_gateway_message(
+            self.test_record,
+            'bounce_multi',
+            body='Test message',
+            message_type='email',
+            partner_ids=(self.partner_1 + self.partner_employee).ids,
+            subject='Test Multi Partner',
+        )
+
+        notif_partner, notif_employee = self.env['mail.notification'].create([
+            {
+                'mail_message_id': message.id,
+                'res_partner_id': self.partner_1.id,
+                'notification_type': 'email',
+                'notification_status': 'sent',
+                'mail_email_address': bounce_email,
+            },
+            {
+                'mail_message_id': message.id,
+                'res_partner_id': self.partner_employee.id,
+                'notification_type': 'email',
+                'notification_status': 'sent',
+            },
+        ])
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                test_mail_data.MAIL_BOUNCE,
+                bounce_email,
+                f'groups@{self.alias_domain}',
+                subject='Undelivered Mail Returned to Sender',
+                extra=message.message_id,
+            )
+
+        self.assertEqual(notif_partner.notification_status, 'bounce')
+        self.assertEqual(notif_employee.notification_status, 'sent')
 
     # --------------------------------------------------
     # Thread formation
@@ -1396,78 +1456,113 @@ class TestMailgateway(MailGatewayCommon):
             'alias_model_id': self.env['ir.model']._get(self.test_record._name).id,
             'alias_contact': 'everyone',
         })
-        reply1 = self._create_gateway_message(
-            self.test_record, 'reply1', parent_id=self.fake_email.id,
-        )
-        reply2 = self._create_gateway_message(
-            self.test_record, 'reply2', parent_id=self.fake_email.id,
-            subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-        )
-        reply1_1 = self._create_gateway_message(
-            self.test_record, 'reply1_1', parent_id=reply1.id,
-            subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-        )
-        reply2_1 = self._create_gateway_message(
-            self.test_record, 'reply2_1', parent_id=reply2.id,
-        )
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
+            reply1 = self._create_gateway_message(
+                self.test_record, 'reply1', parent_id=self.fake_email.id,
+            )
+            reply2 = self._create_gateway_message(
+                self.test_record, 'reply2', parent_id=self.fake_email.id,
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            )
+            reply1_1 = self._create_gateway_message(
+                self.test_record, 'reply1_1', parent_id=reply1.id,
+                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            )
+            reply2_1 = self._create_gateway_message(
+                self.test_record, 'reply2_1', parent_id=reply2.id,
+            )
 
         # reply to reply1 using multiple references
-        self.format_and_process(
-            MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
-            subject='Reply to reply1',
-            extra=f'References: {reply1.message_id} {self.fake_email.message_id}'
-        )
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
+                subject='Reply to reply1',
+                extra=f'References: {reply1.message_id} {self.fake_email.message_id}',
+            )
         new_msg = self.test_record.message_ids[0]
         self.assertEqual(new_msg.parent_id, reply1, 'Newer parent found should be selected')
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: reply to a comment should be a comment')
 
-        self.format_and_process(
-            MAIL_TEMPLATE, self.email_from, f'test.gateway@{self.alias_domain}',
-            subject='Reply to reply1_1 (with noise)',
-            extra=f'References: {reply1_1.message_id} {reply1.message_id} {reply1.message_id}'
-        )
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, f'test.gateway@{self.alias_domain}',
+                subject='Reply to reply1_1 (with noise)',
+                extra=f'References: {reply1_1.message_id} {reply1.message_id} {reply1.message_id}',
+            )
         new_msg = self.test_record.message_ids[0]
         self.assertEqual(new_msg.parent_id, reply1_1, 'Newer parent found should be selected')
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_note'), 'Mail: reply to a note should be a note')
 
         # ordering should not impact
-        self.format_and_process(
-            MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
-            subject='Reply to reply1 (order issue)',
-            extra=f'References: {self.fake_email.message_id} {reply1.message_id}'
-        )
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
+                subject='Reply to reply1 (order issue)',
+                extra=f'References: {self.fake_email.message_id} {reply1.message_id}',
+            )
         new_msg = self.test_record.message_ids[0]
         self.assertEqual(new_msg.parent_id, reply1, 'Mail: flattening attach to original message')
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: reply to a comment should be a comment')
 
         # history with last one being a note
-        self.format_and_process(
-            MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
-            subject='Reply to reply1_1',
-            extra=f'References: {reply1_1.message_id} {self.fake_email.message_id}'
-        )
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
+                subject='Reply to reply1_1',
+                extra=f'References: {reply1_1.message_id} {self.fake_email.message_id}',
+            )
         new_msg = self.test_record.message_ids[0]
         self.assertEqual(new_msg.parent_id, reply1_1, 'Mail: flattening attach to original message')
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_note'), 'Mail: reply to a note should be a note')
 
         # messed up history (two child branches): gateway initial parent is newest one
-        self.format_and_process(
-            MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
-            subject='Reply to reply2_1 (with noise)',
-            date=datetime.now(),
-            extra=f'References: {reply1_1.message_id} {reply2_1.message_id}'
-        )
-        new_msg = self.test_record.message_ids[0]
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)), \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
+                subject='Reply to reply2_1 (with noise)',
+                date=datetime(2025, 11, 20, 10, 30, 0),
+                extra=f'References: {reply1_1.message_id} {reply2_1.message_id}',
+            )
+        new_msg = self._new_msgs
+        self.assertEqual(new_msg, self.test_record.message_ids[0])
+        self.assertEqual(new_msg.date, datetime(2025, 11, 20, 10, 30, 0))
         self.assertEqual(new_msg.parent_id, reply2_1, 'Mail: flattening attach to original message')
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment')
 
         # no references: new discussion thread started. Alias allows to post on
-        # a record without replying, aka without references, which means no parent_id
-        self.format_and_process(
-            MAIL_TEMPLATE, self.email_from, alias_update.alias_full_name,
-            subject='New thread',
-            extra='References:'
-        )
+        # a record without replying, aka without references, which means parent
+        # set to last email / discussion message
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
+            old_msg = self._create_gateway_message(
+                self.test_record, 'old_msg',
+                date=datetime(2024, 11, 20, 10, 30, 0),
+                parent_id=reply1.id,
+            )
+        self.assertEqual(old_msg.date, datetime(2024, 11, 20, 10, 30, 0))
+        with self.mock_datetime_and_now(datetime(2024, 11, 20, 10, 30, 0)):
+            old_disturbing_msg = self._create_gateway_message(
+                self.test_record, 'old_disturbinh_msg',
+                date=False,
+                parent_id=reply1.id,
+            )
+
+        self.env.cr.execute("""
+            UPDATE mail_message
+            SET date = NULL, create_date = NULL
+            WHERE id = %s
+        """, (old_disturbing_msg.id,))
+        self.env.invalidate_all()
+
+        self.assertFalse(old_disturbing_msg.create_date)
+        self.assertFalse(old_disturbing_msg.date)
+
+        with self.mock_datetime_and_now(datetime(2025, 11, 19, 10, 30, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, alias_update.alias_full_name,
+                subject='New thread',
+                extra='References:'
+            )
         last_msg = self.test_record.message_ids[0]
         self.assertEqual(last_msg.parent_id, new_msg, 'No free message, attached to last thread comment / email')
         self.assertEqual(last_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment')
@@ -1782,7 +1877,7 @@ class TestMailgateway(MailGatewayCommon):
     def test_message_process_file_encoding(self):
         """ Incoming email with file encoding """
         file_content = 'Hello World'
-        for encoding in ['', 'UTF-8', 'UTF-16LE', 'UTF-32BE']:
+        for encoding in ['', 'UTF-8', 'UTF-16LE', 'UTF-32BE', 'cp-850']:
             file_content_b64 = base64.b64encode(file_content.encode(encoding or 'utf-8')).decode()
             record = self.format_and_process(test_mail_data.MAIL_FILE_ENCODING,
                 self.email_from, f'groups@{self.alias_domain}',
@@ -1792,7 +1887,7 @@ class TestMailgateway(MailGatewayCommon):
             )
             attachment = record.message_ids.attachment_ids
             self.assertEqual(file_content, attachment.raw.decode(encoding or 'utf-8'))
-            if encoding not in ['', 'UTF-8']:
+            if encoding not in ['', 'UTF-8', 'cp-850']:
                 self.assertNotEqual(file_content, attachment.raw.decode('utf-8'))
 
     def test_message_hebrew_iso8859_8_i(self):
@@ -2111,6 +2206,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
                 'author_id': self.other_partner.id,
                 'model': test_updates[0]._name,
                 'res_id': test_updates[0].id,
+                'message_type': 'email'
             } for x in range(4)  # 4 + 1 posted before = 5 aka threshold
         ])
         with self.mock_mail_gateway():

@@ -19,7 +19,7 @@ class AccountChartTemplate(models.AbstractModel):
                     ('type', '=', 'sale'),
                 ], limit=1)
             moves.update({
-                'l10n_pk_demo_invoice_1': {
+                self.company_xmlid('l10n_pk_demo_invoice_1'): {
                     'move_type': 'out_invoice',
                     'partner_id': 'l10n_pk.res_partner_punjab',
                     'invoice_user_id': 'base.user_demo',
@@ -54,7 +54,7 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ],
                 },
-                'l10n_pk_demo_invoice_2': {
+                self.company_xmlid('l10n_pk_demo_invoice_2'): {
                     'move_type': 'out_invoice',
                     'partner_id': 'l10n_pk.res_partner_punjab',
                     'invoice_user_id': 'base.user_demo',
@@ -80,7 +80,7 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ],
                 },
-                'l10n_pk_demo_invoice_3': {
+                self.company_xmlid('l10n_pk_demo_invoice_3'): {
                     'move_type': 'out_invoice',
                     'partner_id': 'base.res_partner_3',
                     'invoice_user_id': 'base.user_demo',
@@ -96,7 +96,7 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ]
                 },
-                'l10n_pk_demo_reconcile_1': {
+                self.company_xmlid('l10n_pk_demo_reconcile_1'): {
                     'move_type': 'out_refund',
                     'partner_id': 'l10n_pk.res_partner_punjab',
                     'invoice_date': fields.Datetime.today() - relativedelta(days=1),
@@ -129,7 +129,7 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ],
                 },
-                'l10n_pk_demo_reconcile_2': {
+                self.company_xmlid('l10n_pk_demo_reconcile_2'): {
                     'move_type': 'out_refund',
                     'partner_id': 'base.res_partner_3',
                     'invoice_date': fields.Datetime.today() - relativedelta(days=2),
@@ -143,7 +143,7 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ]
                 },
-                'l10n_pk_demo_vendor_bill_1': {
+                self.company_xmlid('l10n_pk_demo_vendor_bill_1'): {
                     'ref': 'INV/001',
                     'move_type': 'in_invoice',
                     'partner_id': 'l10n_pk.res_partner_islamabad',
@@ -170,7 +170,7 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ]
                 },
-                'l10n_pk_demo_vendor_bill_2': {
+                self.company_xmlid('l10n_pk_demo_vendor_bill_2'): {
                     'ref': 'INV/002',
                     'move_type': 'in_invoice',
                     'partner_id': 'l10n_pk.res_partner_islamabad',
@@ -196,7 +196,7 @@ class AccountChartTemplate(models.AbstractModel):
                         }),
                     ]
                 },
-                'l10n_pk_demo_vendor_bill_3': {
+                self.company_xmlid('l10n_pk_demo_vendor_bill_3'): {
                     'ref': 'INV/003',
                     'move_type': 'in_invoice',
                     'partner_id': 'l10n_pk.res_partner_islamabad',

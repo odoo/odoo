@@ -7,13 +7,14 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2025-09-16 08:11+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:38+0000\n"
+"PO-Revision-Date: 2025-11-08 19:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/spreadsheet/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -29,7 +30,8 @@ msgstr ""
 msgid ""
 " A string, possible empty, or a reference to a valid string. If empty, the "
 "text will be simply concatenated."
-msgstr " 字串（可能為空）或對有效字串的引用。如果為空，則文本將簡單地連接起來。"
+msgstr ""
+" 字串（可能為空）或對有效字串的引用。如果為空，則文本將簡單地連接起來。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -509,6 +511,12 @@ msgstr "包含考慮為假期的日期的範圍或陣列常數。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A reference to a cell."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A segment of a string."
 msgstr "字串內的一段。"
 
@@ -596,6 +604,12 @@ msgstr "絕對值"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Absolute value of a number."
 msgstr "一個數字的絕對值。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid "Access Error"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1113,7 +1127,7 @@ msgstr "從X軸到點（x,y）的角度，以弧度(rad)為單位。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Annual"
-msgstr ""
+msgstr "每年"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1829,7 +1843,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Carousel"
-msgstr ""
+msgstr "圖片循環播放"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1973,9 +1987,17 @@ msgstr "剔選方格"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Checks whether there is a reference to a cell that contains a formula, and "
+"returns TRUE or FALSE."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Chip"
-msgstr ""
+msgstr "晶片"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2238,6 +2260,20 @@ msgstr "逗號"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Compare two numeric values, returning 1 if they're equal."
 msgstr "比較兩個數值，如果它們相等，則傳回 1。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
+msgid ""
+"Compatibility version of ODOO.FILTER.VALUE for v18 spreadsheets. Required "
+"for date filters. Optional for others."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Compute from totals"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2973,7 +3009,7 @@ msgstr "提供日期的星期幾（數字）。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_feature_plugin.js:0
 msgid "Days"
-msgstr ""
+msgstr "天"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3082,7 +3118,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Delete item"
-msgstr ""
+msgstr "刪除項目"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3222,7 +3258,7 @@ msgstr "維度不符樞紐分析定義"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_values_list/filter_values_list.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "捨棄"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3238,6 +3274,7 @@ msgstr "基於價格的證券貼現率。"
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_ir_http__display_name
+#: model:ir.model.fields,field_description:spreadsheet.field_ir_model__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency_rate__display_name
 #: model:ir.model.fields,field_description:spreadsheet.field_res_lang__display_name
@@ -3486,6 +3523,12 @@ msgstr "複製"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Duration"
 msgstr "時長"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "E.g. 1234567 -> %(value)s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4117,8 +4160,24 @@ msgstr "函數 [[FUNCTION_NAME]] 要求 criteria_range 及 criteria 有同樣維
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
-msgstr "函數 [[FUNCTION_NAME]] 要求的值為 %s，但收到的是 %s。"
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
+"value."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4397,7 +4456,7 @@ msgstr "組合列 %s - %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Groups"
-msgstr ""
+msgstr "群組"
 
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_ir_http
@@ -4528,7 +4587,7 @@ msgstr "特定時間的小時部份。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_feature_plugin.js:0
 msgid "Hours"
-msgstr ""
+msgstr "小時"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4568,6 +4627,7 @@ msgstr "任何實數的雙曲正切。"
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_ir_http__id
+#: model:ir.model.fields,field_description:spreadsheet.field_ir_model__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_currency_rate__id
 #: model:ir.model.fields,field_description:spreadsheet.field_res_lang__id
@@ -4910,7 +4970,7 @@ msgstr "插入表格。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Integer"
-msgstr ""
+msgstr "整數"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5018,6 +5078,12 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Invalid reference"
 msgstr "無效引用"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Invalid regular expression"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5494,12 +5560,6 @@ msgstr "磁力"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-msgid "Make numbers human-readable"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "March"
 msgstr "三月"
@@ -5581,7 +5641,7 @@ msgstr "類表格範圍內的最大值。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Maximum value"
-msgstr ""
+msgstr "最大值"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5743,7 +5803,7 @@ msgstr "類表格範圍內的最小值。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Minimum value"
-msgstr ""
+msgstr "最小值"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5792,6 +5852,11 @@ msgstr "缺漏右括號。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Missing opening parenthesis"
 msgstr "缺漏左括號。"
+
+#. module: spreadsheet
+#: model:ir.model,name:spreadsheet.model_ir_model
+msgid "Models"
+msgstr "型號"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5858,7 +5923,7 @@ msgstr "月初至今"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_feature_plugin.js:0
 msgid "Months"
-msgstr ""
+msgstr "月"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6257,6 +6322,24 @@ msgstr "Odoo 棒形圖"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Combo Chart"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Funnel Chart"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Geo Chart"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Line Chart"
 msgstr "Odoo 折線圖"
 
@@ -6269,14 +6352,44 @@ msgstr "Odoo 圓形圖"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Pyramid Chart"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Radar Chart"
 msgstr "Odoo 雷達圖"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Scatter Chart"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/hooks.js:0
 msgid "Odoo Spreadsheet"
 msgstr "Odoo 試算表"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Sunburst Chart"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Treemap Chart"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Waterfall Chart"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6362,7 +6475,7 @@ msgstr "排序方式"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Others"
-msgstr ""
+msgstr "其他"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6735,13 +6848,13 @@ msgstr "特定日期所在的季度"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Quarterly"
-msgstr ""
+msgstr "每季"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_feature_plugin.js:0
 msgid "Quarters"
-msgstr ""
+msgstr "季度"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12336,6 +12449,12 @@ msgstr "未知函數：%s"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+msgid "Unnamed Field"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Unsorted"
 msgstr "未排序"
@@ -12374,6 +12493,12 @@ msgstr "更新"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Use col %(column_name)s as headers"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Use compact format"
 msgstr ""
 
 #. module: spreadsheet
@@ -12428,10 +12553,8 @@ msgstr "鍵值的值變化"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Value for parameter %d is missing, while the function [[FUNCTION_NAME]] "
-"expect a number or a range."
-msgstr "缺漏參數 %d 的值。函數 [[FUNCTION_NAME]] 要求的值是一個數字或範圍。"
+msgid "Value for parameter %s is missing in [[FUNCTION_NAME]]."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12753,7 +12876,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_feature_plugin.js:0
 msgid "Weeks"
-msgstr ""
+msgstr "星期"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13058,7 +13181,7 @@ msgstr "年初至今"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_feature_plugin.js:0
 msgid "Years"
-msgstr ""
+msgstr "年"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13080,9 +13203,16 @@ msgstr "你不可建立重疊的表格。"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Zoom"
-msgstr ""
+msgstr "縮放比例"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13306,7 +13436,7 @@ msgstr "負數"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "not"
-msgstr ""
+msgstr "不是"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13469,6 +13599,15 @@ msgstr "昨天"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "零"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+#~ msgstr "函數 [[FUNCTION_NAME]] 要求的值為 %s，但收到的是 %s。"
+
+#~ msgid ""
+#~ "Value for parameter %d is missing, while the function [[FUNCTION_NAME]] "
+#~ "expect a number or a range."
+#~ msgstr "缺漏參數 %d 的值。函數 [[FUNCTION_NAME]] 要求的值是一個數字或範圍。"
 
 #~ msgid "%s %s and %s"
 #~ msgstr "%s %s 及 %s"

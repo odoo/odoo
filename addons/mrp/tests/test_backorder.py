@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, freeze_time
 
 
 class TestMrpProductionBackorder(TestMrpCommon):
@@ -558,10 +558,13 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
         self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 2)
 
+        location = self.env['stock.location'].search([], limit=1)
+        mo.production_group_id.production_ids.location_final_id = location
         # Merge them back
         expected_origin = ",".join([mo1.name, mo2.name, mo3.name])
         action = (mo1 + mo2 + mo3).action_merge()
         mo = self.env[action['res_model']].browse(action['res_id'])
+        self.assertEqual(mo.location_final_id, location)
         # Check origin & initial quantity
         self.assertEqual(mo.origin, expected_origin)
         self.assertEqual(mo.product_qty, 10)
@@ -660,6 +663,39 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(len(mo.production_group_id.production_ids), 10)
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
+
+    def test_split_multiple_MOs(self):
+        """
+        Test that when multiple MOs are selected and the split
+        action is triggered, each MO is processed and split correctly.
+        """
+        mos = self.env['mrp.production'].create([
+            {
+                'product_id': self.product_4.id,
+                'product_qty': 10,
+            }, {
+                'product_id': self.product_6.id,
+                'product_qty': 20,
+            }
+        ])
+        for mo in mos:
+            self.assertEqual(mo.state, 'draft')
+
+        # trigger the split wizard for both MOs
+        action = mos.action_split()
+        wizard = Form.from_action(self.env, action)
+        wizard_record = wizard.save()
+
+        # simulate clicking the “Split Production” button for each MO line
+        for line in wizard_record.production_ids:
+            split_action = line.action_prepare_split()
+            split_wizard = Form.from_action(self.env, split_action)
+            split_wizard.max_batch_size = 5
+            split_wizard.save().action_split()
+
+        # verify that each MO is split into expected number of productions
+        self.assertEqual(len(mos[0].production_group_id.production_ids), 2)
+        self.assertEqual(len(mos[1].production_group_id.production_ids), 4)
 
     def test_split_mo_partially_available(self):
         """
@@ -884,6 +920,33 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertRecordValues(mo_ask, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
         self.assertRecordValues(mo_never, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
 
+    def test_cancel_backorder_3_step_no_propagation(self):
+        '''
+        Ensure the post-prod -> stock picking for the produced quantity doesn't
+        get cancelled with the backorder production.
+        '''
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        # 3 steps Manufacture
+        warehouse.write({'manufacture_steps': 'pbm_sam'})
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+            'product_qty': 5,
+            'location_src_id': warehouse.pbm_loc_id.id,
+        })
+        mo.action_confirm()
+        mo.picking_ids.button_validate()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        action = mo.button_mark_done()
+        Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save().action_backorder()
+        self.assertEqual(len(mo.production_group_id.production_ids), 2)
+
+        # Cancel backorder
+        mo.production_group_id.production_ids[-1].action_cancel()
+        self.assertFalse(mo.picking_ids.filtered(lambda p: p.state == 'cancel' and p.product_id == self.product_6))
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
@@ -931,6 +994,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         cls.bom_finished1.bom_line_ids[0].operation_id = cls.bom_finished1.operation_ids[0].id
         cls.bom_finished1.bom_line_ids[1].operation_id = cls.bom_finished1.operation_ids[1].id
 
+    @freeze_time('2025-10-27 12:00:00')
     def test_mrp_backorder_operations(self):
         """
         Checks that the operations'data are correclty set on a backorder:
@@ -984,8 +1048,8 @@ class TestMrpWorkorderBackorder(TransactionCase):
         op_6.button_finish()
         bo_2.button_mark_done()
         self.assertRecordValues(bo_2.workorder_ids, [
-            {'state': 'cancel', 'qty_remaining': 0.0},
-            {'state': 'done', 'qty_remaining': 0.0}
+            {'state': 'cancel', 'qty_remaining': 0.0, 'duration': 0.0},
+            {'state': 'done', 'qty_remaining': 0.0, 'duration': 240.0}
         ])
 
     def test_kit_bom_order_splitting(self):

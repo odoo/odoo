@@ -33,7 +33,7 @@ class AccountMoveLine(models.Model):
             ("sale_eco_9_5", "ECO 9(5)"),
             ("sale_out_of_scope", "Out of Scope"),
             ("purchase_b2b_regular", "B2B Regular"),
-            ("purchase_b2c_regular", "B2C Regular"),
+            ("purchase_b2c_regular", "B2C Regular"),  # will be removed in master
             ("purchase_b2b_rcm", "B2B RCM"),
             ("purchase_b2c_rcm", "B2C RCM"),
             ("purchase_imp_services", "IMP(service)"),
@@ -48,7 +48,7 @@ class AccountMoveLine(models.Model):
             ("purchase_out_of_scope", "Out of Scope"),
             ],
         string="GSTR Section",
-        index=True,
+        index="btree_not_null",
     )
 
     # withholding related fields
@@ -83,19 +83,20 @@ class AccountMoveLine(models.Model):
         return False
 
     def _get_l10n_in_tax_tag_ids(self):
-
-        def get_tag_ids(*refs):
-            return [self.env.ref(ref).id for ref in refs]
-
+        xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
+        tag_refs = {
+            'sgst': ['l10n_in.tax_tag_base_sgst', 'l10n_in.tax_tag_sgst'],
+            'cgst': ['l10n_in.tax_tag_base_cgst', 'l10n_in.tax_tag_cgst'],
+            'igst': ['l10n_in.tax_tag_base_igst', 'l10n_in.tax_tag_igst'],
+            'cess': ['l10n_in.tax_tag_base_cess', 'l10n_in.tax_tag_cess'],
+            'eco_9_5': ['l10n_in.tax_tag_eco_9_5'],
+        }
         return {
-            'sgst': get_tag_ids('l10n_in.tax_tag_base_sgst', 'l10n_in.tax_tag_sgst'),
-            'cgst': get_tag_ids('l10n_in.tax_tag_base_cgst', 'l10n_in.tax_tag_cgst'),
-            'igst': get_tag_ids('l10n_in.tax_tag_base_igst', 'l10n_in.tax_tag_igst'),
-            'cess': get_tag_ids('l10n_in.tax_tag_base_cess', 'l10n_in.tax_tag_cess'),
-            'eco_9_5': get_tag_ids('l10n_in.tax_tag_eco_9_5'),
+            categ: [xmlid_to_res_id(xml_id) for xml_id in ref]
+            for categ, ref in tag_refs.items()
         }
 
-    def _set_l10n_in_gstr_section(self):
+    def _get_l10n_in_gstr_section(self, tax_tags_dict):
 
         def tags_have_categ(line_tax_tags, categories):
             return any(tag in line_tax_tags for category in categories for tag in tax_tags_dict.get(category, []))
@@ -113,9 +114,9 @@ class AccountMoveLine(models.Model):
             return any(tax.l10n_in_reverse_charge for tax in line.tax_ids | line.tax_line_id)
 
         def is_lut_tax(line):
-            return any(tax.l10n_in_is_lut for tax in line.tax_ids)
+            return any(tax.l10n_in_is_lut for tax in line.tax_ids | line.tax_line_id)
 
-        def get_sales_section(line, tax_tags_dict):
+        def get_sales_section(line):
             move = line.move_id
             gst_treatment = move.l10n_in_gst_treatment
             transaction_type = get_transaction_type(move)
@@ -223,7 +224,7 @@ class AccountMoveLine(models.Model):
             # If none of the above match, default to out of scope
             return 'sale_out_of_scope'
 
-        def get_purchase_section(line, tax_tags_dict):
+        def get_purchase_section(line):
             move = line.move_id
             gst_treatment = move.l10n_in_gst_treatment
             line_tags = line.tax_tag_ids.ids
@@ -256,10 +257,8 @@ class AccountMoveLine(models.Model):
                     return 'purchase_b2b_regular'
 
                 # B2C Unregistered or Consumer sales with gst tags
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
-                    if is_reverse_charge_tax(line):
-                        return 'purchase_b2c_rcm'
-                    return 'purchase_b2c_regular'
+                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
+                    return 'purchase_b2c_rcm'
 
                 # export service type products purchases
                 if gst_treatment == 'overseas' and any(tax.tax_scope == 'service' for tax in line.tax_ids | line.tax_line_id) and tags_have_categ(line_tags, ['igst', 'cess']):
@@ -277,10 +276,8 @@ class AccountMoveLine(models.Model):
                     return 'purchase_cdnr_regular'
 
                 # credit notes for b2c purchases
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']):
-                    if is_reverse_charge_tax(line):
-                        return 'purchase_cdnur_rcm'
-                    return 'purchase_cdnur_regular'
+                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
+                    return 'purchase_cdnur_rcm'
 
                 if not is_reverse_charge_tax(line):
                     if gst_treatment == 'deemed_export' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess'])\
@@ -305,11 +302,17 @@ class AccountMoveLine(models.Model):
         )
         # No Indian sale or purchase lines to process
         if not indian_sale_moves_lines and not indian_moves_purchase_lines:
-            return
-        tax_tags_dict = self._get_l10n_in_tax_tag_ids()
+            return {}
 
-        for move_line in indian_sale_moves_lines:
-            move_line.l10n_in_gstr_section = get_sales_section(move_line, tax_tags_dict)
+        move_lines_by_gstr_section = {
+            **indian_sale_moves_lines.grouped(get_sales_section),
+            **indian_moves_purchase_lines.grouped(get_purchase_section),
+        }
 
-        for move_line in indian_moves_purchase_lines:
-            move_line.l10n_in_gstr_section = get_purchase_section(move_line, tax_tags_dict)
+        return move_lines_by_gstr_section
+
+    def _set_l10n_in_gstr_section(self, tax_tags_dict):
+        move_lines_by_gstr_section = self._get_l10n_in_gstr_section(tax_tags_dict)
+        if move_lines_by_gstr_section:
+            for gstr_section, move_lines in move_lines_by_gstr_section.items():
+                move_lines.l10n_in_gstr_section = gstr_section

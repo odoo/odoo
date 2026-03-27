@@ -6,21 +6,23 @@
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2025-09-14 21:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 17:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: account_check_printing
@@ -255,6 +257,22 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Manuale: paga o ricevi pagamenti con qualsiasi metodo al di fuori di Odoo.\n"
+"Fornitori di servizi di pagamento: ogni fornitore di servizi di pagamento ha "
+"il proprio metodo di pagamento. Richiedi una transazione su/verso una carta "
+"grazie a un token di pagamento salvato dal partner al momento dell'acquisto "
+"o dell'abbonamento online.\n"
+"Assegno: paga le fatture con assegno e stampalo da Odoo.\n"
+"Deposito in batch: raccogli più assegni dei clienti contemporaneamente "
+"generando e inviando un deposito in batch alla tua banca. È necessario il "
+"modulo account_batch_payment.\n"
+"Bonifico SEPA: effettua pagamenti nella zona SEPA inviando un file di "
+"bonifico SEPA alla tua banca. È necessario il modulo account_iso20022.\n"
+"Addebito diretto SEPA: ricevi pagamenti nella zona SEPA grazie a un mandato "
+"che il tuo partner ti avrà concesso. È necessario il modulo "
+"account_iso20022.\n"
+"U.S. ISO20022: paga negli Stati Uniti inviando un file ISO20022 alla tua "
+"banca. È necessario il modulo account_iso20022.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -391,6 +409,16 @@ msgstr ""
 "Qualcosa non ha funzionato con la struttura dell'assegno. Riprovare "
 "selezionando un'altra struttura nelle impostazioni di Fatturazione/"
 "Contabilità."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
+"Il numero di assegno inserito (%(num)s) supera il valore massimo consentito "
+"di %(max)d. Inserisci un numero più piccolo."
 
 #. module: account_check_printing
 #. odoo-python

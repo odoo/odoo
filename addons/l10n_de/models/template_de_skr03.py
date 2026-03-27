@@ -33,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_vst_19_skr03',
                 'expense_account_id': 'account_3400',
                 'income_account_id': 'account_8400',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'account_7200',
             },
         }
 
@@ -134,5 +136,14 @@ class AccountChartTemplate(models.AbstractModel):
                         'label': 'Loss of receivables-19%',
                     }),
                 ],
+            },
+        }
+
+    @template('de_skr03', 'account.account')
+    def _get_de_skr03_account_account(self):
+        return {
+            'account_7200': {
+                'account_stock_expense_id': 'account_3000',
+                'account_stock_variation_id': 'account_3955',
             },
         }

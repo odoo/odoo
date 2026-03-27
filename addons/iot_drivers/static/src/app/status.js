@@ -127,6 +127,10 @@ class StatusPage extends Component {
                                 <td class="col-3"><i class="me-1 fa fa-fw fa-id-card"/>Identifier</td>
                                 <td class="col-3" t-out="state.data.identifier"/>
                             </tr>
+                            <tr>
+                                <td class="col-3"><i class="me-1 fa fa-fw fa-address-book"/>Mac Address</td>
+                                <td class="col-3" t-out="state.data.mac_address"/>
+                            </tr>
                             <tr t-if="state.data.server_status">
                                 <td class="col-3"><i class="me-1 fa fa-fw fa-database"/>Database</td>
                                 <td class="col-3" t-out="state.data.server_status"/>

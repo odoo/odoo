@@ -7,13 +7,15 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 08:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-19 07:19+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/stock/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: stock
 #. odoo-python
@@ -83,6 +85,14 @@ msgid ""
 msgstr ""
 "\n"
 "（%(serial_number)s）存在於位置 %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -832,7 +842,7 @@ msgstr "<span class=\"text-muted small\"> 在庫</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span>天</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -888,8 +898,8 @@ msgstr "<strong>聯絡人</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>客戶地址</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -900,6 +910,11 @@ msgstr "<strong>已送貨</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>送貨地址</strong>："
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -993,7 +1008,7 @@ msgstr "<strong>收件人地址</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
-msgstr ""
+msgstr "請<strong>儲存</strong>變更，然後返回此處，進一步設定功能。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1093,7 +1108,7 @@ msgstr "動作"
 #. odoo-javascript
 #: code:addons/stock/static/src/fields/stock_action_field.js:0
 msgid "Action Name"
-msgstr ""
+msgstr "動作名稱"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction
@@ -1276,7 +1291,7 @@ msgstr "之後"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_3
 msgid "After next month last year"
-msgstr ""
+msgstr "去年下個月後"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1306,7 +1321,6 @@ msgstr "全部調撥"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "All Warehouses"
 msgstr "全部倉庫"
 
@@ -1315,7 +1329,7 @@ msgstr "全部倉庫"
 msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
-msgstr "我們全部的合作關係都將受國家法律管轄."
+msgstr "我們所有的合約關係及契約，均完全及只受美國法律管轄。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -1536,7 +1550,7 @@ msgstr "分配擁有者"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 msgid "Assign to"
-msgstr ""
+msgstr "分配給"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
@@ -1634,7 +1648,7 @@ msgstr "自動化"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Automatic"
-msgstr ""
+msgstr "自動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1650,6 +1664,7 @@ msgstr "自動，不增加步驟"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__available
@@ -1761,7 +1776,7 @@ msgstr "合法的EAN條碼"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__based_on
 msgid "Based on"
-msgstr ""
+msgstr "根據"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1874,7 +1889,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
 msgstr "取消"
@@ -1947,10 +1961,10 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
-"某些國家根據其國內立法對應收憑單金額實行源頭預扣.任何源頭預扣稅將由客戶支付給"
-"稅務機關.在任何情況下，My Company (Chicago) "
-"都不得捲入與某個國家/地區的立法相關的費用.因此，應收憑單金額將全部支付給 My "
-"Company (Chicago)，不包括與客戶所在國家/地區的法律相關的任何費用."
+"部份國家/地區會按照國內法例，在源頭對發票金額實施預扣稅安排。任何在源頭預扣的"
+"稅款，應由客戶支付給稅務機關。在任何情況下，My Company (Chicago) 都不可參與支"
+"付或處理該等國家/地區法例所引致的費用。因此，發票金額應全數支付給 My Company "
+"(Chicago)，此金額不包括客戶所在國家/地區法例的任何相關費用。"
 
 #. module: stock
 #. odoo-python
@@ -2015,6 +2029,11 @@ msgstr "選擇摘要格式"
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Choose Type of Labels To Print"
 msgstr "選擇要列印的標籤類型"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Choose Warehouses"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -2290,6 +2309,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
 msgid "Container"
 msgstr ""
@@ -2366,7 +2386,7 @@ msgstr "盤點表"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Counted"
-msgstr ""
+msgstr "點算總數"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -3002,7 +3022,7 @@ msgstr "3步出貨(揀貨+打包+發貨)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "Delivered"
-msgstr ""
+msgstr "已送貨"
 
 #. module: stock
 #. odoo-python
@@ -3018,8 +3038,6 @@ msgid "Deliveries"
 msgstr "交貨"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
 msgid "Delivery"
@@ -3029,6 +3047,12 @@ msgstr "送貨"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Delivery Address"
 msgstr "收貨地址"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Delivery Date"
+msgstr "交貨日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
@@ -3192,7 +3216,7 @@ msgstr "目的地包裝識別碼域名"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__location_dest_id
 msgid "Destination"
-msgstr ""
+msgstr "目的地"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -3325,6 +3349,7 @@ msgstr "尺寸"
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Discard"
 msgstr "捨棄"
 
@@ -3510,6 +3535,12 @@ msgstr "重複序號警告"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__dymo
 msgid "Dymo"
 msgstr "Dymo"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Earliest Possible Arrival"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -3969,7 +4000,7 @@ msgstr "產生批次號碼"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr "產生序列號碼"
+msgstr "產生序號"
 
 #. module: stock
 #. odoo-javascript
@@ -4187,8 +4218,9 @@ msgid ""
 "payment date, My Company (Chicago) reserves the right to call on the "
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
-msgstr "如果在到期付款日後六十天仍未付款，My Company (Chicago) "
-"保留要求債務追償公司提供服務的權利.全部法律費用將由客戶支付."
+msgstr ""
+"若款項逾期超過六十 (60) 天仍未清繳，My Company (Chicago) 保留委託催收/追債公"
+"司處理的權利。所有法律費用將由客戶承擔。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4386,8 +4418,10 @@ msgstr "如果這個送貨被拆分，該欄位連接到包括了已經處理的
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
-msgid "If ticked, you will be able to select entire packages to move"
-msgstr "如果勾選此項，您將被允許可以選擇整個包裝來進行移動"
+msgid ""
+"If ticked, packages to move will be directly displayed in Barcode instead of "
+"the products they contain"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
@@ -4467,8 +4501,9 @@ msgid ""
 "any claim by means of a letter sent by recorded delivery to its registered "
 "office within 8 days of the delivery of the goods or the provision of the "
 "services."
-msgstr "為了使其被受理，必須在交付貨物或提供服務後 8 "
-"天內通過以掛號信方式將任何索賠通知 My Company (Chicago) 到其註冊辦事處."
+msgstr ""
+"索賠/申索必須在貨物完成交付或服務提供後 8 天內，透過掛號信件/掛號郵遞，寄送"
+"至 My Company (Chicago) 的註冊辦事處通知該公司，否則索賠/申索將不獲接納。"
 
 #. module: stock
 #. odoo-javascript
@@ -4517,7 +4552,7 @@ msgstr "呈現產品的理論數量與其盤點數量之間的差距."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Information"
-msgstr ""
+msgstr "資訊"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -4723,12 +4758,6 @@ msgid "Inventory Name"
 msgstr "庫存名稱"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-msgid "Inventory On Hand"
-msgstr "在庫庫存"
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
 msgstr "庫存狀況"
@@ -4766,6 +4795,11 @@ msgid "Inventory at Date"
 msgstr "庫存日期"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "是空的"
@@ -4793,6 +4827,11 @@ msgstr "是否多位置"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "是部分包裝"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -4951,7 +4990,7 @@ msgstr "最近12個月"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_year
 msgid "Last 12 months"
-msgstr ""
+msgstr "過去 12 個月"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4961,7 +5000,7 @@ msgstr "最近3個月"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__three_months
 msgid "Last 3 months"
-msgstr ""
+msgstr "最近3個月"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4971,12 +5010,12 @@ msgstr "過去30天"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_month
 msgid "Last 30 days"
-msgstr ""
+msgstr "最近30天"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_week
 msgid "Last 7 days"
-msgstr ""
+msgstr "最近7天"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
@@ -5098,7 +5137,7 @@ msgstr "上次已更新數量"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_quarter
 msgid "Last year quarter"
-msgstr ""
+msgstr "去年季度"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -5144,6 +5183,12 @@ msgstr "前置時間"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Lead Time Information"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Lead Time:"
 msgstr ""
@@ -5156,7 +5201,7 @@ msgstr "最少包裝"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Leave empty to create new"
-msgstr ""
+msgstr "留空以建立新一項"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__company_id
@@ -5676,7 +5721,8 @@ msgid "Move Quantity"
 msgstr "移動數量"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Move a Pack"
 msgstr ""
 
@@ -5757,10 +5803,10 @@ msgid ""
 "to appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
-"My Company (Chicago) 承諾盡最大努力在約定的時間範圍內及時提供高效服務.但是，"
-"其任何義務都不能被視為實現結果的義務. My Company (Chicago) "
-"在任何情況下都不能被客戶要求在最終消費者向客戶提出的任何損害索賠的背景下作為"
-"第三方出現."
+"My Company (Chicago) 承諾竭盡所能，依照約定時限，如期提供高效服務。然而，該公"
+"司的任何責任，均不可視為達成特定結果之責任及承諾。在任何情況下，如有最終消費"
+"者針對任何損害，向客戶提出申索/索賠，客戶均不得要求 My Company (Chicago) 作為"
+"第三方加入相關申索/索賠。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -5888,7 +5934,7 @@ msgstr "下一個應盤點日期."
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year_2
 msgid "Next month last year"
-msgstr ""
+msgstr "去年下個月"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -6154,7 +6200,9 @@ msgstr "辦公室椅"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
+#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
@@ -6327,7 +6375,7 @@ msgstr "訂單由%s簽名"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "Ordered"
-msgstr ""
+msgstr "已訂購"
 
 #. module: stock
 #. odoo-javascript
@@ -6408,11 +6456,10 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services "
 "without prior warning in the event of late payment."
 msgstr ""
-"我們的應收憑單應在 21 "
-"個工作日內支付，除非應收憑單或訂單上註明了另一個付款時間範圍.如果在到期日之前"
-"未付款，My Company (Chicago) 保留要求支付固定利息的權利，"
-"金額為剩餘到期金額的 10% o.如果逾期付款，My Company (Chicago) "
-"將被授權在沒有事先警告的情況下暫停任何服務的提供."
+"發票款項須在 21 個工作天內支付，除非發票或訂單有註明其他付款期限。若在到期日"
+"前仍未付款，My Company (Chicago) 保留要求支付固定利息的權利，金額為到期未付款"
+"項的 10%。若有逾期付款，My Company (Chicago) 將獲授權，可在沒有事先警告的情況"
+"下，暫停提供任何服務。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -6427,6 +6474,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
@@ -6826,7 +6874,7 @@ msgstr "合作夥伴特定指示"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
 msgid "Percent Factor"
-msgstr ""
+msgstr "百分比因子"
 
 #. module: stock
 #. odoo-python
@@ -6980,7 +7028,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
 msgid "Price Unit"
-msgstr ""
+msgstr "單價"
 
 #. module: stock
 #. odoo-javascript
@@ -7081,7 +7129,6 @@ msgstr "已生產數量"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_id
@@ -7139,6 +7186,7 @@ msgstr "產品類別"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -7716,8 +7764,6 @@ msgid "Reason for relocation"
 msgstr "遷移原因"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 msgid "Receipt"
 msgstr "收貨"
@@ -7862,7 +7908,7 @@ msgstr "編號："
 #: model:ir.ui.menu,name:stock.menu_stock_references
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_tree_view
 msgid "References"
-msgstr ""
+msgstr "客戶成功案例"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_stock_quant_relocate
@@ -7900,7 +7946,7 @@ msgstr "下架策略 %s 沒有實現."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list_editable
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -7967,8 +8013,6 @@ msgid "Replenish wizard"
 msgstr "補貨引導"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
@@ -8019,7 +8063,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
 msgid "Replenishments"
-msgstr ""
+msgstr "補貨"
 
 #. module: stock
 #: model:ir.model,name:stock.model_ir_actions_report
@@ -8350,7 +8394,7 @@ msgstr "S0001"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__stock_confirmation_type__sms
 msgid "SMS"
-msgstr ""
+msgstr "電話短訊（SMS）"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -8377,18 +8421,23 @@ msgstr "SSCC(系列貨運包裝箱代碼):"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "標准銷售條款和條件"
+msgstr "標準銷售條款及條件"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__last_year
 msgid "Same month last year"
-msgstr ""
+msgstr "去年同月"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Sample data"
 msgstr "範例資料"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -8399,7 +8448,7 @@ msgstr "更新在庫數量之前，請儲存產品表單。"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_date
 msgid "Scheduled"
-msgstr ""
+msgstr "已排程"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -8528,13 +8577,11 @@ msgid "Search not supported without a value."
 msgstr "不支援沒有值的搜尋。"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
-msgid "Select"
-msgstr ""
-
-#. module: stock
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#: code:addons/stock/static/src/views/list/stock_add_package_list_view.js:0
+#: code:addons/stock/static/src/views/picking_form/stock_move_one2many.js:0
 msgid "Select Packages to Move"
 msgstr ""
 
@@ -9240,6 +9287,12 @@ msgid "Stock Text Validation with stock move"
 msgstr ""
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "Stock To Reserve:"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Stock level to reach when replenishing."
@@ -9512,9 +9565,10 @@ msgid ""
 "these were drawn up after these standard terms and conditions of sale. In "
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
-msgstr "客戶明確放棄其自己的標準條款和條件，"
-"即使這些是在這些標准銷售條款和條件之後製定的. "
-"為了有效，任何減損必須事先以書面形式明確同意."
+msgstr ""
+"客戶明確放棄其本身的標準條款及條件，即使該等條款是於本標準銷售條款及條件制定"
+"後才擬定。任何例外、免責、減損權利的條款，必須事先獲各方以書面形式明確同意，"
+"才可生效。"
 
 #. module: stock
 #. odoo-python
@@ -9759,14 +9813,6 @@ msgid "There are no inventory adjustments to revert."
 msgstr "沒有要恢復的庫存調整."
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "還沒有產品移動"
@@ -9939,8 +9985,8 @@ msgstr "如果此產品有庫存移動屬於另一間公司，便不可更改產
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
-msgid "This record already exists."
-msgstr "此記錄已存在."
+msgid "This record already exists"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10000,6 +10046,12 @@ msgid "Time Horizon"
 msgstr "時間範圍"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+msgid "Time to replenish:"
+msgstr ""
+
+#. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_1
 msgid "Tip: Monitor Lot details"
@@ -10057,8 +10109,6 @@ msgid "To Location"
 msgstr "前往位置"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
@@ -10099,6 +10149,7 @@ msgstr "待重新排序"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -10152,7 +10203,7 @@ msgstr "入庫總計"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Total On Hand"
-msgstr "在庫總計"
+msgstr "在庫總數"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -10613,6 +10664,7 @@ msgstr "供應商位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "檢視"
 
@@ -10640,7 +10692,7 @@ msgstr "檢視和分配收到的數量."
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Virtual"
-msgstr ""
+msgstr "虛擬"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -11208,8 +11260,8 @@ msgstr "不可更改已取消的庫存移動。請改為建立新一行。"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
-msgstr "已完成或取消的轉移，不可更改預定日期。"
+msgid "You cannot change the Scheduled Date on a cancelled transfer."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -11366,12 +11418,6 @@ msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
 msgstr "您需要啟動儲存位置才能執行內部操作類型."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/product_replenish.py:0
-msgid "You need to select a route to replenish your products"
-msgstr "您需要選擇補貨的路線"
 
 #. module: stock
 #. odoo-python
@@ -11599,7 +11645,7 @@ msgstr "最接近的"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "day(s)"
-msgstr ""
+msgstr "天"
 
 #. module: stock
 #. odoo-javascript
@@ -11691,6 +11737,12 @@ msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
 msgstr "例：d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+msgid "expected on"
+msgstr ""
+
+#. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
 msgstr "先進先出"
@@ -11754,12 +11806,6 @@ msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
-msgid "reserved"
-msgstr "已預留"
-
-#. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph
 msgid "stock.click_dashboard_graph"
 msgstr "stock.click_dashboard_graph"
@@ -11807,6 +11853,31 @@ msgstr "單位"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 送貨單 (參照 {{ object.name or 'n/a' }})"
+
+#~ msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
+#~ msgstr "<span groups=\"!uom.group_uom\">在庫</span>"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>客戶地址</strong>"
+
+#~ msgid "If ticked, you will be able to select entire packages to move"
+#~ msgstr "如果勾選此項，您將被允許可以選擇整個包裝來進行移動"
+
+#~ msgid "Inventory On Hand"
+#~ msgstr "在庫庫存"
+
+#~ msgid "This record already exists."
+#~ msgstr "此記錄已存在."
+
+#~ msgid ""
+#~ "You cannot change the Scheduled Date on a done or cancelled transfer."
+#~ msgstr "已完成或取消的轉移，不可更改預定日期。"
+
+#~ msgid "You need to select a route to replenish your products"
+#~ msgstr "您需要選擇補貨的路線"
+
+#~ msgid "reserved"
+#~ msgstr "已預留"
 
 #~ msgid ""
 #~ "* Vendor Location: Virtual location representing the source location for "

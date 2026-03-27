@@ -20,13 +20,15 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-16 15:29+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2026-02-20 11:55+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "sale_stock/fi/>\n"
 "Language: fi\n"
@@ -34,7 +36,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -44,6 +46,12 @@ msgid ""
 msgstr ""
 ".\n"
 "                Manuaalisia toimenpiteitä saatetaan tarvita."
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "1 Quotation"
+msgstr "1 Tarjous"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -84,8 +92,8 @@ msgid ""
 "Shipped\n"
 "                                    </span>"
 msgstr ""
-"<span class="
-"\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
 "                                        <i class=\"fa fa-fw fa-truck\"/> "
 "Lähetetty\n"
 "                                    </span>"
@@ -99,7 +107,7 @@ msgstr "<strong>Asiakasviite</strong>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm</strong>"
-msgstr "<strong>Incoterm</strong><br/>"
+msgstr "<strong>Incoterm</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
@@ -125,6 +133,11 @@ msgstr ""
 "  - Työaikakirjaukset: määrä on tähän myyntiriviin linkitettyjen tehtävissä "
 "olevien kirjattujen tuntien summa\n"
 "  - Varastosiirrot: määrä tulee vahvistetuista keräilyistä\n"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr "Ohjattu jaksotettujen tilausten toiminto"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -209,7 +222,7 @@ msgstr "Vakiovarasto"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Delivered"
-msgstr ""
+msgstr "Toimitettu"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -240,6 +253,7 @@ msgstr ""
 "minimi- tai maksimiliidiaikoja."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -250,7 +264,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
@@ -338,7 +351,7 @@ msgstr "Täysin toimitettu"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Delivered Not Invoiced"
-msgstr ""
+msgstr "Toimitetut tuotteet, joita ei ole laskutettu"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -346,6 +359,7 @@ msgid "Has late picking"
 msgstr "Keräily myöhässä"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -356,7 +370,6 @@ msgstr "Keräily myöhässä"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
@@ -388,7 +401,7 @@ msgstr "Vaikuttaa siirtoihin:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
 msgid "Incoterm"
-msgstr "Toimituslauseke"
+msgstr "Incoterm"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
@@ -398,12 +411,12 @@ msgstr "Incotermin sijainti"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr "Incotermien tiedot"
+msgstr "Incotermin tiedot"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Incoterm:"
-msgstr "Toimitusehto:"
+msgstr "Incoterm:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -437,7 +450,7 @@ msgstr "Päiväkirjan kirjaus"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Päiväkirjamerkintä"
+msgstr "Kirjausrivi"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -511,7 +524,7 @@ msgstr "Ei tulevaa saatavuutta"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Available"
-msgstr ""
+msgstr "Ei saatavilla"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
@@ -548,7 +561,7 @@ msgstr "Osittain toimitettu"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr "Poimintakäytäntö"
+msgstr "Keräilykäytäntö"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -588,19 +601,19 @@ msgid ""
 "                replenishment propositions, shipping connectors, barcode "
 "scanner, etc."
 msgstr ""
-"Vähennä jälkitoimituksia varausten, sijaintien hallinnan, älykkäiden\n"
-"                täydennysehdotuksien, logistiikka-integraatioiden, "
-"viivakoodinlukijan jne. avulla."
+"Vähennä jälkitoimituksia varausten, sijaintihallinnan, älykkäiden\n"
+"                täydennysehdotusten, logistiikkayhteyksien, "
+"viivakoodinlukijoiden, jne. avulla."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Viite varastoasiakirjojen välillä"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
 msgid "References"
-msgstr ""
+msgstr "Viitteet"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -655,7 +668,7 @@ msgstr "Myyntitilausten määrä"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_reference__sale_ids
 msgid "Sales"
-msgstr ""
+msgstr "Myynti"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -732,7 +745,7 @@ msgstr "Lähetyssäännöt"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Shipping Status"
-msgstr ""
+msgstr "Toimituksen tila"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
@@ -765,11 +778,6 @@ msgstr "Varaston sääntö"
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
 msgstr "Varaston sääntöjen raportti"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -881,7 +889,7 @@ msgstr "Kun kaikki tuotteet ovat valmiita"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr "Lähetysten ajoitus"
+msgstr "Milloin lähetys aloitetaan"
 
 #. module: sale_stock
 #. odoo-python
@@ -929,6 +937,9 @@ msgstr "käsitelty"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr "tulee olemaan myöhässä."
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Varaston arvonmääritys"
 
 #~ msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
 #~ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Valmistelussa</b>"

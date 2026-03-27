@@ -24,12 +24,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'chart_2117',
                 'income_currency_exchange_account_id': 'chart_7861',
                 'expense_currency_exchange_account_id': 'chart_6863',
+                'tax_calculation_rounding_method': 'round_globally',
                 'account_journal_early_pay_discount_loss_account_id': 'chart_682',
                 'account_journal_early_pay_discount_gain_account_id': 'chart_728',
                 'account_sale_tax_id': 'iva_pt_sale_normal',
                 'account_purchase_tax_id': 'iva_pt_purchase_normal',
                 'income_account_id': 'chart_711',
                 'expense_account_id': 'chart_311',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'chart_331',
             },
         }
 
@@ -42,3 +45,12 @@ class AccountChartTemplate(models.AbstractModel):
             if 'bank' in vals:
                 vals['bank']['default_account_id'] = 'chart_12'
         return vals
+
+    @template('pt', 'account.account')
+    def _get_pt_account_account(self):
+        return {
+            'chart_331': {
+                'account_stock_expense_id': 'chart_612',
+                'account_stock_variation_id': 'chart_6228',
+            },
+        }

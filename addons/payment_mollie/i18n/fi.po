@@ -3,13 +3,15 @@
 # * payment_mollie
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2025-09-16 15:35+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-16 13:51+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "payment_mollie/fi/>\n"
 "Language: fi\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_mollie
 #: model_terms:ir.ui.view,arch_db:payment_mollie.payment_provider_form
@@ -36,10 +38,16 @@ msgid "Code"
 msgstr "Koodi"
 
 #. module: payment_mollie
-#. odoo-python
-#: code:addons/payment_mollie/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "Yhteyttä API:in ei voitu muodostaa."
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__id
+msgid "ID"
+msgstr "Tunnus"
 
 #. module: payment_mollie
 #: model:ir.model.fields.selection,name:payment_mollie.selection__payment_provider__code__mollie
@@ -50,12 +58,6 @@ msgstr "Mollie"
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__mollie_api_key
 msgid "Mollie API Key"
 msgstr "Mollie API-avain"
-
-#. module: payment_mollie
-#. odoo-python
-#: code:addons/payment_mollie/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
 
 #. module: payment_mollie
 #: model:ir.model,name:payment_mollie.model_payment_provider
@@ -70,24 +72,29 @@ msgstr "Maksutapahtuma"
 #. module: payment_mollie
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
-msgid "Received data with invalid payment status: %s"
-msgstr "Vastaanotetut tiedot, joiden maksutila on virheellinen: %s"
+msgid "Received data with invalid payment status: %s."
+msgstr "Vastaanotetut tiedot, joiden maksun tila on virheellinen: %s."
 
 #. module: payment_mollie
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__mollie_api_key
-msgid ""
-"The Test or Live API Key depending on the configuration of the provider"
+msgid "The Test or Live API Key depending on the configuration of the provider"
 msgstr "Testi- tai Live-API-avain palveluntarjoajan kokoonpanon mukaan"
-
-#. module: payment_mollie
-#. odoo-python
-#: code:addons/payment_mollie/models/payment_provider.py:0
-msgid ""
-"The communication with the API failed. Mollie gave us the following "
-"information: %s"
-msgstr "Yhteys API:in epäonnistui. Mollie palautti seuraavat tiedot: %s"
 
 #. module: payment_mollie
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "Yhteyttä API:in ei voitu muodostaa."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
+
+#~ msgid "Received data with invalid payment status: %s"
+#~ msgstr "Vastaanotetut tiedot, joiden maksutila on virheellinen: %s"
+
+#~ msgid ""
+#~ "The communication with the API failed. Mollie gave us the following "
+#~ "information: %s"
+#~ msgstr "Yhteys API:in epäonnistui. Mollie palautti seuraavat tiedot: %s"

@@ -47,6 +47,9 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             content: "Make sure the snippets menu is hidden",
             trigger: "html:not(:has(.o-snippets-menu))",
         },
+        {
+            trigger: ".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_basic_theme",
+        },
         ...stepUtils.saveForm(),
         {
             content: "Click on the New button to create another mailing",

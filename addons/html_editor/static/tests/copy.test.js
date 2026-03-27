@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 describe("range collapsed", () => {
     test("should ignore copying an empty selection with empty clipboardData", async () => {
@@ -43,7 +44,10 @@ describe("range not collapsed", () => {
     test.tags("focus required");
     test("should copy a selection as text/plain, text/html and application/vnd.odoo.odoo-editor in table", async () => {
         await setupEditor(
-            `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`
+            `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`,
+            // Exclude the selection placeholder plugin so we have a DOM that
+            // really starts with a table.
+            { config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "selectionPlaceholder") } }
         );
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });
@@ -179,5 +183,48 @@ describe("range not collapsed", () => {
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
             `<p><img src="${base64Img}"></p>`
         );
+    });
+
+    test("should copy style and font of ancestors up to a block", async () => {
+        await setupEditor("<p>a<b>b[c]d</b>e</p>");
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/plain")).toBe("c");
+        expect(clipboardData.getData("text/html")).toBe("<p><b>c</b></p>");
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe("<p><b>c</b></p>");
+    });
+
+    test("should not clone ancestors outside the contenteditable (block)", async () => {
+        await setupEditor(
+            `<div contenteditable="false"><p contenteditable="true">a<b>b[c]d</b>e</p></div>`
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/plain")).toBe("c");
+        expect(clipboardData.getData("text/html")).toBe("<b>c</b>");
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe("<b>c</b>");
+    });
+
+    test("should not clone ancestors outside the contenteditable (inline)", async () => {
+        await setupEditor(
+            `<div contenteditable="false"><p>a<b contenteditable="true">b[c]d</b>e</p></div>`
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/plain")).toBe("c");
+        expect(clipboardData.getData("text/html")).toBe("c");
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe("c");
+    });
+
+    test("should not copy to odoo-editor clipboard when selection is outside the contenteditable", async () => {
+        await setupEditor(
+            `<div contenteditable="false"><p>a[b<b contenteditable="true">c</b>d]e</p></div>`
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/plain")).toBe("bcd");
+        expect(clipboardData.getData("text/html")).toBe(`<p>b<b contenteditable="true">c</b>d</p>`);
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe("");
+        expect(clipboardData.types).not.toInclude("application/vnd.odoo.odoo-editor");
     });
 });

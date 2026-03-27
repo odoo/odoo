@@ -26,9 +26,13 @@ test("should replace splitElementBlock with insertLineBreak (selection end)", as
 });
 test("should not split a contenteditable='false'", async () => {
     const { editor, el } = await setupEditor(`<p contenteditable="false">ab</p>`);
-    const p = el.querySelector("p");
+    const p = el.querySelector("p[contenteditable=false]");
     editor.shared.split.splitBlockNode({ targetNode: p, targetOffset: 0 });
-    expect(getContent(el)).toBe(`<p contenteditable="false">ab</p>`);
+    expect(getContent(el)).toBe(
+        '<p data-selection-placeholder=""><br></p>' +
+            '<p contenteditable="false">ab</p>' +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>'
+    );
 });
 test("should split an explicit contenteditable='true' if its ancestor isContentEditable", async () => {
     await testEditor({
@@ -44,22 +48,44 @@ test("should insert a newline instead of splitting an explicit contenteditable='
         contentAfter: `<div contenteditable="false"><p contenteditable="true">ab<br>[]<br></p></div>`,
     });
 });
-test("should keep the last line break in the old paragraph", async () => {
+test("should split a div (if it is eligible for baseContainer)", async () => {
+    await testEditor({
+        contentBefore: `<div>a[]b</div>`,
+        stepFunction: splitBlock,
+        contentAfter: `<div>a</div><div>[]b</div>`,
+        config: { baseContainers: ["P", "DIV"] },
+    });
+});
+test("should not split a div (if it isn't eligible for baseContainer)", async () => {
+    await testEditor({
+        contentBefore: `<div>a[]b</div>`,
+        stepFunction: splitBlock,
+        contentAfter: `<div>a<br>[]b</div>`,
+        config: { baseContainers: ["P"] },
+    });
+});
+test("should keep the last line break in the old paragraph (1)", async () => {
     await testEditor({
         contentBefore: "<div><p>abc<br>[]<br></p></div>",
         stepFunction: splitBlock,
         contentAfter: "<div><p>abc<br><br></p><p>[]<br></p></div>",
     });
+});
+test("should keep the last line break in the old paragraph (2)", async () => {
     await testEditor({
         contentBefore: "<div><p>abc<br>[]<br>def</p></div>",
         stepFunction: splitBlock,
         contentAfter: "<div><p>abc<br><br></p><p>[]<br>def</p></div>",
     });
+});
+test("should keep the last line break in the old paragraph (3)", async () => {
     await testEditor({
         contentBefore: "<div><p>abc<br>[]<br><br></p></div>",
         stepFunction: splitBlock,
         contentAfter: "<div><p>abc<br><br></p><p>[]<br><br></p></div>",
     });
+});
+test("should keep the last line break in the old paragraph (4)", async () => {
     await testEditor({
         contentBefore: "<div><p><br>[]<br></p></div>",
         stepFunction: splitBlock,

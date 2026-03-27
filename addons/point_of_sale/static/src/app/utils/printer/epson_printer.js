@@ -2,6 +2,7 @@ import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
+import { getLNATargetAddressSpace } from "../init_lna";
 
 const STATUS_ROLL_PAPER_HAS_RUN_OUT = 0x00080000;
 const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
@@ -26,8 +27,13 @@ function ePOSPrint(children) {
 export class EpsonPrinter extends BasePrinter {
     setup({ ip }) {
         super.setup(...arguments);
-        this.url = window.location.protocol + "//" + ip;
+
+        const protocol = odoo.use_lna ? "http:" : window.location.protocol;
+        this.url = protocol + "//" + ip;
         this.address = this.url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+        if (odoo.use_lna) {
+            this.lnaTargetAddressSpace = getLNATargetAddressSpace(this.address);
+        }
     }
 
     /**
@@ -63,11 +69,18 @@ export class EpsonPrinter extends BasePrinter {
      * @override
      */
     async sendPrintingJob(img) {
+        const params = {
+            method: "POST",
+            body: img,
+            signal: AbortSignal.timeout(15000),
+        };
+
+        if (this.lnaTargetAddressSpace) {
+            params.targetAddressSpace = this.lnaTargetAddressSpace;
+        }
+
         try {
-            const res = await fetch(this.address, {
-                method: "POST",
-                body: img,
-            });
+            const res = await fetch(this.address, params);
             const body = await res.text();
             const parser = new DOMParser();
             const parsedBody = parser.parseFromString(body, "application/xml");

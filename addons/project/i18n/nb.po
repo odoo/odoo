@@ -11,13 +11,14 @@
 # Henning Fyllingsnes, 2023
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2025-09-16 18:40+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 18:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
 "project/nb_NO/>\n"
 "Language: nb\n"
@@ -1544,7 +1545,7 @@ msgstr "Link til kundeportal"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Customer Rating"
-msgstr ""
+msgstr "Kundevurdering"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1842,6 +1843,7 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
@@ -2049,7 +2051,7 @@ msgstr "Finans"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
-msgstr ""
+msgstr "Minimert"
 
 #. module: project
 #. odoo-javascript
@@ -2268,6 +2270,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -2409,7 +2412,7 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
+msgid "Invalid Display Name"
 msgstr ""
 
 #. module: project
@@ -2580,6 +2583,12 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "Senere"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -3303,7 +3312,7 @@ msgstr "Tilgangslink for portal"
 #. module: project
 #: model:ir.model,name:project.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Portaldeling"
 
 #. module: project
 #. odoo-python
@@ -4648,12 +4657,6 @@ msgid "Tasks in Recurrence"
 msgstr ""
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr ""
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr ""
@@ -4692,7 +4695,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Templates"
-msgstr ""
+msgstr "Maler"
 
 #. module: project
 #. odoo-javascript
@@ -5296,6 +5299,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "Bruker"
+
+#. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr "Bruker innstillinger"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user

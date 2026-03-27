@@ -76,8 +76,9 @@ class UtmMixin(models.AbstractModel):
         standard ACLs, and is mainly a wrapper for UTM models.
 
         :return: id of newly created or found record. As the magic of call_kw
-        for create is not called anymore we have to manually return an id
-        instead of a recordset. """
+            for create is not called anymore we have to manually return an id
+            instead of a recordset.
+        """
         if model_name in self._tracking_models():
             record = self._find_or_create_record(model_name, name)
         else:

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.LivechatChannelInfoList">
         <ActionPanel title.translate="Information" minWidth="200" initialWidth="env.inMeetingView ? 400 : 300" icon="'fa fa-info'">
-            <a t-if="visitorProfileURL" class="btn btn-primary mt-1" t-on-click="openVisitorProfile" t-att-href="visitorProfileURL" title="View Contact">
+            <a t-if="visitorProfileURL" class="btn btn-primary mt-1" t-on-click.prevent="openVisitorProfile" t-att-href="visitorProfileURL" title="View Contact">
                 View Contact
             </a>
             <div t-if="!props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
@@ -22,12 +22,12 @@
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Notes</h6>
-                <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
+                <textarea class="form-control" t-att-disabled="!store.has_access_livechat"  rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
             </div>
             <div class="d-flex flex-column bg-inherit gap-1" t-ref="tagsContainer">
                 <h6 class="align-items-baseline pt-3 d-flex">
                     <span class="pt-3 mb-1">Tags</span>
-                    <button class="btn btn-link text-dark opacity-75 opacity-100-hover p-0 ms-1" t-on-click="onClickEditTags"><i class="oi oi-plus"/></button>
+                    <button t-if="store.has_access_livechat" class="btn btn-link text-dark opacity-75 opacity-100-hover p-0 ms-1" t-on-click="onClickEditTags"><i class="oi oi-plus"/></button>
                 </h6>
                 <div t-if="conversationTags.length" class="d-flex flex-wrap flex-grow-1 gap-1">
                     <TagsList displayText="true" tags="conversationTags"/>
@@ -43,23 +43,29 @@
                     </div>
                 </t>
             </div>
-            <div t-if="expertiseTags.length" class="d-flex flex-column bg-inherit gap-1">
+            <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Expertise</h6>
-                <div class="d-flex flex-wrap gap-1">
-                    <TagsList displayText="true" tags="expertiseTags"/>
+                <ExpertiseTagsAutocomplete channel="props.thread" disabled="!store.has_access_livechat"/>
+            </div>
+            <div t-if="props.thread.correspondentCountry or props.thread.livechat_lang_id">
+                <h6 class="pt-3">Country &amp; Language</h6>
+                <div class="d-flex bg-inherit align-items-center gap-1">
+                    <img t-if="props.thread.showCorrespondentCountry" class="o_country_flag" t-att-src="props.thread.correspondentCountry.flagUrl" t-att-title="props.thread.correspondentCountry.code or props.thread.correspondentCountry.name" aria-label="Country"/>
+                    <span t-if="props.thread.livechat_lang_id" title="Language" t-esc="props.thread.livechat_lang_id.name"/>
                 </div>
             </div>
             <t t-name="extra_infos"/>
             <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Send conversation</h6>
                 <TranscriptSender thread="props.thread"/>
+                <a class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="props.thread.transcriptUrl"><i class="pe-2 fa fa-download"/>Download</a>
             </div>
         </ActionPanel>
     </t>
 
     <t t-name="im_livechat.LivechatChannelInfoList.info_links">
         <div t-if="templateParams.info_records.length" class="d-flex flex-column bg-inherit gap-1">
-            <h3 class="pt-3" t-out="templateParams.title"/>
+            <h6 class="pt-3" t-out="templateParams.title"/>
             <t t-foreach="templateParams.info_records" t-as="record" t-key="record.localId">
                 <a
                     class="btn btn-sm btn-secondary d-flex align-items-center justify-content-start gap-1 px-3 py-1 rounded-3"

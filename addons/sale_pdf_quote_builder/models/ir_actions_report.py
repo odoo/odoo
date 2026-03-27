@@ -5,7 +5,7 @@ import io
 import json
 
 from odoo import _, api, models
-from odoo.tools import format_amount, format_date, format_datetime, pdf
+from odoo.tools import format_amount, format_date, format_datetime, pdf, str2bool
 from odoo.tools.pdf import (
     NameObject,
     NumberObject,
@@ -24,17 +24,15 @@ class IrActionsReport(models.Model):
         if self._get_report(report_ref).report_name != 'sale.report_saleorder':
             return result
 
+        ICP = self.env['ir.config_parameter'].sudo()
+        always_include = str2bool(ICP.get_param('sale.always_include_selected_documents'))
         orders = self.env['sale.order'].browse(res_ids)
 
         for order in orders:
             if (
-                order.state == 'sale'
-                or order.id not in result
-                or 'stream' not in result[order.id]
+                (order.state != 'sale' or always_include)
+                and (initial_stream := result.get(order.id, {}).get('stream'))
             ):
-                continue
-            initial_stream = result[order.id]['stream']
-            if initial_stream:
                 quotation_documents = order.quotation_document_ids
                 headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
                 footers = quotation_documents - headers
@@ -218,6 +216,9 @@ class IrActionsReport(models.Model):
                 # Modifying the annots that hold every information about the form fields
                 for j in range(len(page['/Annots'])):
                     reader_annot = page['/Annots'][j].getObject()
+                    # Check parent object for '/T' if missing.
+                    if '/T' not in reader_annot and '/Parent' in reader_annot:
+                        reader_annot = reader_annot['/Parent'].getObject()
                     if reader_annot.get('/T') in field_names:
                         # Prefix all form fields in the document with the document identifier.
                         # This is necessary to know which value needs to be taken when filling the forms.

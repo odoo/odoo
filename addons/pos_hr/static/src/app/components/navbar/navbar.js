@@ -9,4 +9,8 @@ patch(Navbar.prototype, {
             return false;
         }
     },
+    get showBackend() {
+        const cashier = this.pos.getCashierUserId();
+        return !this.pos.config.module_pos_hr || (cashier && cashier.id === this.pos.user?.id);
+    },
 });

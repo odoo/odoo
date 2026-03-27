@@ -297,13 +297,12 @@ class HrLeaveType(models.Model):
             holiday_status.virtual_remaining_leaves = leave_type_tuple[1].get('virtual_remaining_leaves', 0)
 
     def _compute_allocation_count(self):
-        min_datetime = fields.Datetime.to_string(datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
-        max_datetime = fields.Datetime.to_string(datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
+        today = fields.Date.to_string(date.today())
         domain = [
             ('holiday_status_id', 'in', self.ids),
-            ('date_from', '>=', min_datetime),
-            ('date_from', '<=', max_datetime),
-            ('state', 'in', ('confirm', 'validate', 'validate1')),
+            ('date_from', '<=', today),
+            '|', ('date_to', '=', False), ('date_to', '>=', today),
+            ('state', 'in', ('confirm', 'validate')),
         ]
 
         grouped_res = self.env['hr.leave.allocation']._read_group(
@@ -486,7 +485,9 @@ class HrLeaveType(models.Model):
         leave_types = self.search(domain, order='id')
         employee = self.env['hr.employee']._get_contextual_employee()
         if employee:
-            return leave_types.get_allocation_data(employee, target_date)[employee]
+            allocation_data = leave_types.get_allocation_data(employee, target_date)[employee]
+            result = [data for data in allocation_data if data[1].get('max_leaves', False)]
+            return result
         return []
 
     def get_allocation_data(self, employees, target_date=None):
@@ -505,8 +506,6 @@ class HrLeaveType(models.Model):
 
         for employee in employees:
             for leave_type in leave_type_requires_allocation:
-                if len(allocations_leaves_consumed[employee][leave_type]) == 0:
-                    continue
                 lt_info = (
                     leave_type.name,
                     {
@@ -614,8 +613,7 @@ class HrLeaveType(models.Model):
                     'closest_allocation_duration': closest_allocation_duration,
                     'holds_changes': holds_changes,
                 })
-                if not self.env.context.get('from_dashboard', False) or lt_info[1]['max_leaves']:
-                    allocation_data[employee].append(lt_info)
+                allocation_data[employee].append(lt_info)
         for employee in allocation_data:
             for leave_type_data in allocation_data[employee]:
                 for key, value in leave_type_data[1].items():
@@ -677,8 +675,8 @@ class HrLeaveType(models.Model):
     def _get_carried_over_days_expiration_data(self, allocations, target_date):
         fake_allocations = self.env['hr.leave.allocation']
         for allocation in allocations:
-            fake_allocations |= self.env['hr.leave.allocation'].with_context(default_date_from=target_date).new(origin=allocation)
-        fake_allocations.sudo().with_context(default_date_from=target_date)._process_accrual_plans(target_date, log=False)
+            fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
+        fake_allocations.sudo()._process_accrual_plans(target_date, log=False)
         carried_over_days_expiration_data = {
             fake_allocation._origin:
             {

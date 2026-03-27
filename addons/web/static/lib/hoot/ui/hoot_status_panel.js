@@ -115,7 +115,10 @@ export class HootStatusPanel extends Component {
     static props = {};
 
     static template = xml`
-        <div class="${HootStatusPanel.name} flex items-center justify-between gap-3 px-3 py-1 bg-gray-300 dark:bg-gray-700" t-att-class="state.className">
+        <div
+            class="${HootStatusPanel.name} flex items-center justify-between gap-3 px-3 py-1 min-h-10 bg-gray-300 dark:bg-gray-700"
+            t-att-class="state.className"
+        >
             <div class="flex items-center gap-2 overflow-hidden">
                 <t t-if="runnerState.status === 'ready'">
                     Ready

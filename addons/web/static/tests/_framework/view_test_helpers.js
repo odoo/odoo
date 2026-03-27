@@ -1,13 +1,17 @@
-import { after, expect, getFixture } from "@odoo/hoot";
 import {
+    after,
+    animationFrame,
     click,
+    Deferred,
+    expect,
     formatXml,
+    getFixture,
     queryAll,
     queryAllTexts,
     queryFirst,
     runAllTimers,
-} from "@odoo/hoot-dom";
-import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
+    tick,
+} from "@odoo/hoot";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -19,6 +23,11 @@ import { registerInlineViewArchs } from "./mock_server/mock_model";
 
 /**
  * @typedef {import("@web/views/view").Config} Config
+ *
+ * @typedef {{
+ *  value?: string;
+ *  index?: number;
+ * }} EditSelectMenuParams
  *
  * @typedef {ViewProps & {
  *  archs?: Record<string, string>
@@ -37,12 +46,7 @@ import { registerInlineViewArchs } from "./mock_server/mock_model";
  *  text?: string;
  * }} SelectorOptions
  *
- *  * @typedef {{
- *  value?: string;
- *  index?: number;
- * }} EditSelectMenuParams
- *
- * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
+ * @typedef {import("@odoo/hoot").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("@web/views/view").ViewProps} ViewProps
  * @typedef {import("./mock_server/mock_model").ViewType} ViewType
  */

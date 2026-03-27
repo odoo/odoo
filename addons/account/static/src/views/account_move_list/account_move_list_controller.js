@@ -19,15 +19,21 @@ export class AccountMoveListController extends FileUploadListController {
     }
 
     get actionMenuProps() {
-        return {
+        const actionMenuProps = {
             ...super.actionMenuProps,
             printDropdownTitle: _t("Print"),
-            loadExtraPrintItems: this.loadExtraPrintItems.bind(this),
         };
+        if (this.props.resModel === "account.move") {
+            actionMenuProps.loadExtraPrintItems = this.loadExtraPrintItems.bind(this);
+        }
+        return actionMenuProps;
     }
 
     async loadExtraPrintItems() {
-        return this.orm.call("account.move", "get_extra_print_items", [this.actionMenuProps.getActiveIds()]);
+        if (this.actionMenuProps.resModel === "account.move") {
+            return this.orm.call("account.move", "get_extra_print_items", [this.actionMenuProps.getActiveIds()]);
+        }
+        return []
     }
 
     async onDeleteSelectedRecords() {

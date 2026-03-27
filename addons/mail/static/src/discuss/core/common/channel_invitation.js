@@ -1,11 +1,11 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
@@ -28,8 +28,6 @@ export class ChannelInvitation extends Component {
         this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
-        this.ui = useService("ui");
-        this.inputRef = useRef("input");
         this.sequential = useSequential();
         this.state = useState({
             searchResultCount: 0,
@@ -44,24 +42,12 @@ export class ChannelInvitation extends Component {
             this.fetchPartnersToInvite.bind(this),
             250
         );
+        this.inputRef = useAutofocus({ refName: "input" });
         onWillStart(() => {
             if (this.store.self_partner) {
                 this.fetchPartnersToInvite();
             }
         });
-        onMounted(() => {
-            if (this.store.self_partner && this.props.thread) {
-                this.inputRef.el.focus();
-            }
-        });
-        useEffect(
-            () => {
-                if (this.props.autofocus) {
-                    this.inputRef.el?.focus();
-                }
-            },
-            () => [this.props.autofocus]
-        );
     }
 
     get selectablePartners() {
@@ -111,7 +97,10 @@ export class ChannelInvitation extends Component {
     }
 
     get searchPlaceholder() {
-        return this.props.state?.searchPlaceholder ?? _t("Search people to invite");
+        if (this.props.thread?.allow_invite_by_email) {
+            return _t("Invite people or email");
+        }
+        return _t("Search people to invite");
     }
 
     async fetchPartnersToInvite() {
@@ -186,17 +175,28 @@ export class ChannelInvitation extends Component {
     }
 
     async onClickCopy(ev) {
-        await navigator.clipboard.writeText(this.props.thread.invitationLink);
-        this.notification.add(_t("Link copied!"), { type: "success" });
+        let notification = _t("Invitation link copied!");
+        let type = "success";
+        const clipboard = this.env.inDiscussCallView?.isPip
+            ? this.rtc.pipService.pipWindow?.navigator.clipboard
+            : navigator.clipboard;
+        try {
+            await clipboard.writeText(this.props.thread.invitationLink);
+        } catch {
+            notification = _t("Invitation link copy failed (Permission denied?)!");
+            type = "danger";
+        }
+        this.notification.add(notification, { type });
     }
 
     async onClickInvite() {
         if (this.props.thread.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
-            if (this.props.thread.correspondent) {
+            if (this.props.thread.correspondent?.partner_id) {
                 partnerIds.unshift(this.props.thread.correspondent.partner_id.id);
             }
             await this.store.startChat(partnerIds);
+            this.props.close?.();
             return;
         }
         const invitePromises = [];
@@ -235,8 +235,10 @@ export class ChannelInvitation extends Component {
                     return _t("Invite");
                 }
                 if (this.selectedPartners.length === 1) {
-                    const alreadyChat = Object.values(this.store.Thread.records).some((thread) =>
-                        thread.correspondent?.partner_id.eq(this.selectedPartners[0])
+                    const alreadyChat = Object.values(this.store.Thread.records).some(
+                        (thread) =>
+                            thread.channel_type === "chat" &&
+                            thread.correspondent?.partner_id?.eq(this.selectedPartners[0])
                     );
                     if (alreadyChat) {
                         return _t("Go to conversation");

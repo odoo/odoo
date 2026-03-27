@@ -18,13 +18,14 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2025-09-16 21:16+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-20 17:34+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/lunch/sv/"
 ">\n"
 "Language: sv\n"
@@ -32,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -65,8 +66,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
 "title=\"Receive button\"/>"
 msgstr ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Mottagningsknapp\" title="
-"\"Mottagningsknapp\"/>"
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Mottagningsknapp\" "
+"title=\"Mottagningsknapp\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -101,8 +102,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Pengar\" title=\"Pengar\""
-"/>"
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Pengar\" title=\"Pengar\"/"
+">"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -119,8 +120,8 @@ msgid ""
 "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
 "title=\"Order button\"/>"
 msgstr ""
-"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Beställningsknapp\" title="
-"\"Beställningsknapp\"/>"
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Beställningsknapp\" "
+"title=\"Beställningsknapp\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -128,8 +129,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel button\"/>"
 msgstr ""
-"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Avbryt-knappen\" title"
-"=\"Avbryt-knappen\"/>"
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Avbryt-knappen\" "
+"title=\"Avbryt-knappen\"/>"
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -367,7 +368,7 @@ msgstr "Aktivitet undantaget dekoration"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
 msgid "Activity State"
-msgstr "Aktivitetsläge"
+msgstr "Aktivitetsstatus"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
@@ -377,7 +378,7 @@ msgstr "Ikon för aktivitetstyp"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Add To Cart"
-msgstr "Lägg till i varukorgen"
+msgstr "Lägg i varukorg"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__address
@@ -630,19 +631,21 @@ msgid ""
 "title=\"Cancel button\"></span> red X to announce that the order isn't "
 "available."
 msgstr ""
-"Klicka på <span class=\"fa-phone text-success\" title=\"Beställningsknapp\""
-"></span> för att meddela att ordern är beställd.<br>\n"
-"            Klicka på <span class=\"fa fa-check text-success\" title="
-"\"Receive button\"></span> för att meddela att ordern är mottagen.<br>\n"
-"            Klicka på <span class=\"fa fa-times-circle text-danger\" title="
-"\"Cancel button\"></span> röda X för att meddela att ordern inte är "
+"Klicka på <span class=\"fa-phone text-success\" "
+"title=\"Beställningsknapp\"></span> för att meddela att ordern är beställd."
+"<br>\n"
+"            Klicka på <span class=\"fa fa-check text-success\" "
+"title=\"Receive button\"></span> för att meddela att ordern är mottagen."
+"<br>\n"
+"            Klicka på <span class=\"fa fa-times-circle text-danger\" "
+"title=\"Cancel button\"></span> röda X för att meddela att ordern inte är "
 "tillgänglig."
 
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_club
@@ -948,7 +951,7 @@ msgstr "Följare"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (kontakter)"
+msgstr "Följare (partners)"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_type_icon
@@ -1049,12 +1052,13 @@ msgstr "Ikon för att indikera en undantagsaktivitet."
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
+msgstr ""
+"Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad, några meddelanden har leveransfel."
+msgstr "Om ikryssad, så finns det meddelanden som inte kunde levereras."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1920
@@ -1116,7 +1120,7 @@ msgstr "Är favorit"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
 msgid "Is Follower"
-msgstr "Är Följare"
+msgstr "Är följare"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
@@ -1296,32 +1300,32 @@ msgid "Lunch: Supplier Order"
 msgstr "Lunch Beställning av leverantör"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_230
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_231
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Lunch: meddelande om chattvarning (Alert for Office 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Lunch: skicka automatiskt e-post till Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_226
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_227
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Lunch: skicka automatiskt e-post till Lunchleverantören"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Lunch: skicka automatiskt e-post till Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_234
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Lunch: skicka automatiskt e-post till Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_234
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Lunch: skicka automatiskt e-post till The Corner"
 
@@ -1353,7 +1357,7 @@ msgstr "Meddelande"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error
 msgid "Message Delivery error"
-msgstr "Meddelande leveransfel"
+msgstr "Leveransfelmeddelande"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_ids
@@ -1516,7 +1520,7 @@ msgstr "Ej mottagen"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__note
 msgid "Notes"
-msgstr "Noter"
+msgstr "Anteckningar"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
@@ -1562,7 +1566,7 @@ msgstr "Antal fel"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Antal meddelanden som kräver åtgärd"
+msgstr "Antal meddelanden som kräver en åtgärd"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter

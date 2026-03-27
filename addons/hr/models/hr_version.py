@@ -29,7 +29,7 @@ class HrVersion(models.Model):
     _rec_name = 'name'
 
     def _get_default_address_id(self):
-        address = self.env.user.company_id.partner_id.address_get(['default'])
+        address = self.env.company.partner_id.address_get(['default'])
         return address['default'] if address else False
 
     def _default_salary_structure(self):
@@ -113,10 +113,10 @@ class HrVersion(models.Model):
             ('contractor', 'Contractor'),
             ('freelance', 'Freelancer'),
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user", tracking=True)
-    department_id = fields.Many2one('hr.department', check_company=True, tracking=True)
+    department_id = fields.Many2one('hr.department', check_company=True, tracking=True, index=True)
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
-    job_id = fields.Many2one('hr.job', check_company=True, tracking=True)
+    job_id = fields.Many2one('hr.job', check_company=True, tracking=True, index=True)
     job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
         string="Job Title", tracking=True)
     is_custom_job_title = fields.Boolean(compute='_compute_is_custom_job_title', store=True, default=False, groups="hr.group_hr_user")
@@ -133,7 +133,7 @@ class HrVersion(models.Model):
 
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason",
                                           groups="hr.group_hr_user", copy=False, ondelete='restrict', tracking=True)
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
 
     resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=True)
@@ -217,11 +217,12 @@ class HrVersion(models.Model):
 
     @api.depends("private_country_id")
     def _compute_allowed_country_state_ids(self):
-        states = self.env["res.country.state"].search([])
-        for version in self:
-            if version.private_country_id:
-                version.allowed_country_state_ids = version.private_country_id.state_ids
-            else:
+        versions_with_countries = self.filtered("private_country_id")
+        for version in versions_with_countries:
+            version.allowed_country_state_ids = version.private_country_id.state_ids
+        if versions_without_countries := (self - versions_with_countries):
+            states = self.env["res.country.state"].search([])
+            for version in versions_without_countries:
                 version.allowed_country_state_ids = states
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
@@ -290,11 +291,11 @@ class HrVersion(models.Model):
     def write(self, vals):
         # Employee Versions Validation
         if 'employee_id' in vals:
-            if self.filtered(lambda v: len(v.employee_id.version_ids) == 1 and vals['employee_id'] != v.employee_id.id):
-                raise ValidationError(self.env._("Cannot unassign the only active record of an employee."))
+            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
+                raise ValidationError(self.env._("Cannot unassign all the active versions of an employee."))
         if 'active' in vals and not vals['active']:
-            if self.filtered(lambda v: len(v.employee_id.version_ids) == 1):
-                raise ValidationError(self.env._("Cannot archive the only active record of an employee."))
+            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self):
+                raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
 
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
             return super().write(vals)
@@ -324,27 +325,53 @@ class HrVersion(models.Model):
         for employee, versions in multiple_versions.grouped('employee_id').items():
 
             dates_vals = {}
+            first_version = next(iter(versions), versions)
 
             if "contract_date_start" in vals:
                 dates_vals["contract_date_start"] = fields.Date.to_date(vals.get('contract_date_start'))
             else:
-                dates_vals["contract_date_start"] = versions[0].contract_date_start
+                dates_vals["contract_date_start"] = first_version.contract_date_start
             if "contract_date_end" in vals:
                 dates_vals["contract_date_end"] = fields.Date.to_date(vals.get('contract_date_end'))
             else:
-                dates_vals["contract_date_end"] = versions[0].contract_date_end
+                dates_vals["contract_date_end"] = first_version.contract_date_end
 
-            if versions[0].contract_date_start:
+            if first_version.contract_date_start:
                 versions_to_sync = employee._get_contract_versions(
-                    date_start=versions[0].contract_date_start,
-                    date_end=versions[0].contract_date_end,
+                    date_start=first_version.contract_date_start,
+                    date_end=first_version.contract_date_end,
                 )
+                all_versions_to_sync = self.env['hr.version']
                 for contract_versions in versions_to_sync.values():
-                    next(iter(contract_versions.values())).with_context(sync_contract_dates=True).write(dates_vals)
+                    all_versions_to_sync |= next(iter(contract_versions.values()))
+
+                if all_versions_to_sync:
+                    all_versions_to_sync.with_context(sync_contract_dates=True).write(dates_vals)
+
             else:
                 versions.with_context(sync_contract_dates=True).write(dates_vals)
 
         return super(HrVersion, multiple_versions).write(new_vals)
+
+    def get_formview_action(self, access_uid=None):
+        """
+        Override this method in order to redirect many2one towards the right model
+            - Contract template -> hr.version
+            - Employee record -> hr.employee(.public) with version_id in context
+        """
+        res = super().get_formview_action(access_uid=access_uid)
+        context = res.get('context', {})
+        if self.employee_id:
+            user = self.env.user
+            if access_uid:
+                user = self.env['res.users'].browse(access_uid)
+            res['res_model'] = 'hr.employee' if user.has_group('hr.group_hr_user') else 'hr.employee.public'
+            res['res_id'] = self.employee_id.id
+            res['context'] = dict(context, version_id=self.id)
+        else:
+            if not context.get('form_view_ref', False):
+                res['context'] = dict(context, form_view_ref='hr.hr_contract_template_form_view')
+        return res
 
     @api.depends_context('lang')
     @api.depends('date_version')
@@ -383,9 +410,12 @@ class HrVersion(models.Model):
         :param date date_from: the start of the period
         :param date date_to: the stop of the period
         """
-        if not self.contract_date_start:
+        if not (self.contract_date_start and date_from and date_to):
             return False
-        return self.date_start <= date_to and (not self.date_end or self.date_end >= date_from)
+        period_start = date_from or date.min
+        period_end = date_to or date.max
+        contract_end = self.date_end or date.max
+        return period_start <= contract_end and self.date_start <= period_end
 
     def _is_fully_flexible(self):
         """ return True if the version has a fully flexible working calendar """
@@ -407,7 +437,8 @@ class HrVersion(models.Model):
     def get_values_from_contract_template(self, contract_template_id):
         if not contract_template_id:
             return {}
-        whitelist = self._get_whitelist_fields_from_template()
+        company = contract_template_id.company_id or self.env.company
+        whitelist = self.with_company(company)._get_whitelist_fields_from_template()
         contract_template_vals = contract_template_id.copy_data()[0]
         return {
             field: value

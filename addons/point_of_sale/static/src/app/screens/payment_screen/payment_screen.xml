@@ -72,7 +72,7 @@
             }">
             <div class="total text-center text-dark"
                 t-att-style="!ui.isSmall? 'font-size: 125px;' : ''" >
-                <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.getTotalDue())" />
+                <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.totalDue)" />
             </div>
         </section>
     </t>
@@ -108,8 +108,9 @@
         <div class="payment-buttons d-flex flex-column gap-1">
             <div class="d-flex flex-column flex-sm-row gap-1 w-100">
                 <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or pos.config.iface_cashdrawer or pos.config.ship_later" />
-                <button class="button partner-button btn btn-secondary btn-lg w-100 w-md-50 lh-lg text-truncate"
+                <button class="button partner-button btn btn-lg w-100 w-md-50 lh-lg text-truncate"
                     t-att-class="{ 'highlight text-action': currentOrder.getPartner() }"
+                    t-attf-class="{{ currentOrder.isCustomerRequired ? 'btn-primary' : 'btn-secondary' }}"
                     t-on-click="() => this.pos.selectPartner()">
                     <i class="fa fa-user me-2" role="img" title="Customer" />
                     <span class="partner-name">
@@ -136,9 +137,9 @@
                         <t t-esc="env.utils.formatCurrency(currentOrder.getTip())" />
                     </t>
                 </button>
-                <button t-if="pos.config.iface_cashdrawer" class="button col js_cashdrawer btn btn-light py-3 text-start rounded-0 border-top border-start border-end"
+                <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
                     t-on-click="openCashbox">
-                    <i class="fa fa-archive me-2" />Open Cashbox 
+                    <i class="fa fa-archive me-2" />Open Cashbox
                 </button>
                 <button t-if="pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getShippingDate() }"
                     t-on-click="toggleShippingDatePicker">
@@ -156,6 +157,7 @@
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': ui.isSmall, 'd-flex flex-column gap-lg-2': !ui.isSmall }">
                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
                     <div t-if="!(this.pos.cashier._role === 'minimal' and paymentMethod.type === 'pay_later')" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
+                        role="button"
                         t-att-class="{'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal, 'd-flex justify-content-between align-items-center': true}"
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">

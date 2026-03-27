@@ -1,6 +1,19 @@
 import { nodeToTree } from "@html_editor/core/history_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { memoize } from "@web/core/utils/functions";
+import { renderToElement } from "@web/core/utils/render";
+
+/**
+ * @typedef { Object } EmbeddedComponentShared
+ * @property { EmbeddedComponentPlugin['renderBlueprintToElement'] } renderBlueprintToElement
+ */
+
+/**
+ * @typedef {((arg: { name, env, props }) => void)[]} mount_component_handlers
+ * @typedef {(() => void)[]} post_mount_component_handlers
+ */
 
 /**
  * This plugin is responsible with providing the API to manipulate/insert
@@ -8,10 +21,12 @@ import { memoize } from "@web/core/utils/functions";
  */
 export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
-    static dependencies = ["history", "protectedNode"];
+    static dependencies = ["history", "protectedNode", "selection"];
+    static shared = ["renderBlueprintToElement"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        normalize_handlers: this.normalize.bind(this),
+        normalize_handlers: withSequence(0, this.normalize.bind(this)),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         attribute_change_handlers: this.onChangeAttribute.bind(this),
         restore_savepoint_handlers: () => this.handleComponents(this.editable),
@@ -20,6 +35,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
         external_step_added_handlers: () => this.handleComponents(this.editable),
 
+        before_sanitize_processors: this.preProcessSanitizedElem.bind(this),
+        after_sanitize_processors: this.postProcessSanitizedElem.bind(this),
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
@@ -31,8 +48,9 @@ export class EmbeddedComponentPlugin extends Plugin {
         // map from node to component info
         this.nodeMap = new WeakMap();
         this.app = this.config.embeddedComponentInfo.app;
-        this.env = this.config.embeddedComponentInfo.env;
+        this.env = this.config.embeddedComponentInfo.env ?? {};
         this.hostToStateChangeManagerMap = new WeakMap();
+        this.hostToOnComponentInsertedMap = new WeakMap();
         this.embeddedComponents = memoize((embeddedComponents = []) => {
             const result = {};
             for (const embedding of embeddedComponents) {
@@ -162,11 +180,16 @@ export class EmbeddedComponentPlugin extends Plugin {
     ) {
         const props = getProps?.(host) || {};
         const env = Object.create(this.env);
+        env.editorShared = {};
         if (getStateChangeManager) {
             env.getStateChangeManager = this.getStateChangeManager.bind(this);
         }
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
+            // Enable the automatic selection restoration feature in @see useEditableDescendants
+            Object.assign(env.editorShared, {
+                selection: { ...this.dependencies.selection },
+            });
         }
         this.dispatchTo("mount_component_handlers", { name, env, props });
         const root = this.app.createRoot(Component, {
@@ -184,6 +207,12 @@ export class EmbeddedComponentPlugin extends Plugin {
             fiberComplete.call(fiber);
             this.dispatchTo("post_mount_component_handlers");
         };
+        const onComponentInserted = this.extractOnComponentInserted(host);
+        if (onComponentInserted) {
+            // If a pending operation should be executed after the first mount
+            // of an inserted blueprint, add it as the last `onMounted` callback
+            root.node.mounted.push(onComponentInserted);
+        }
         const info = {
             root,
             host,
@@ -259,6 +288,29 @@ export class EmbeddedComponentPlugin extends Plugin {
         }
     }
 
+    /**
+     * @param {String} template blueprint for the embedded Component
+     * @param {Object} [context] rendering context
+     * @param {Function} [onComponentInserted] function to be executed when
+     *        it is first mounted after it was inserted in the DOM. It will not
+     *        be executed if the blueprint is removed from the DOM before the
+     *        first mount nor if the component is mounted again afterwards.
+     * @returns {HTMLElement} host
+     */
+    renderBlueprintToElement(template, context = {}, onComponentInserted = undefined) {
+        const host = renderToElement(template, context);
+        if (onComponentInserted) {
+            this.hostToOnComponentInsertedMap.set(host, onComponentInserted);
+        }
+        return host;
+    }
+
+    extractOnComponentInserted(host) {
+        const onComponentInserted = this.hostToOnComponentInsertedMap.get(host);
+        this.hostToOnComponentInsertedMap.delete(host);
+        return onComponentInserted;
+    }
+
     normalize(elem) {
         this.forEachEmbeddedComponentHost(elem, (host, { getEditableDescendants }) => {
             this.dependencies.protectedNode.setProtectingNode(host, true);
@@ -282,5 +334,35 @@ export class EmbeddedComponentPlugin extends Plugin {
             delete host.dataset.oeProtected;
             delete host.dataset.embeddedState;
         });
+    }
+
+    preProcessSanitizedElem(elem) {
+        if (elem?.nodeType !== Node.ELEMENT_NODE) {
+            return elem;
+        }
+        for (const host of selectElements(elem, "[data-embedded-props], [data-embedded-state]")) {
+            if (host.dataset.embeddedProps) {
+                host.dataset.embeddedProps = encodeURIComponent(host.dataset.embeddedProps);
+            }
+            if (host.dataset.embeddedState) {
+                host.dataset.embeddedState = encodeURIComponent(host.dataset.embeddedState);
+            }
+        }
+        return elem;
+    }
+
+    postProcessSanitizedElem(elem) {
+        if (elem?.nodeType !== Node.ELEMENT_NODE) {
+            return elem;
+        }
+        for (const host of selectElements(elem, "[data-embedded-props], [data-embedded-state]")) {
+            if (host.dataset.embeddedProps) {
+                host.dataset.embeddedProps = decodeURIComponent(host.dataset.embeddedProps);
+            }
+            if (host.dataset.embeddedState) {
+                host.dataset.embeddedState = decodeURIComponent(host.dataset.embeddedState);
+            }
+        }
+        return elem;
     }
 }

@@ -33,6 +33,7 @@ declare module "models" {
     }
     export interface Thread {
         _computeOfflineMembers: () => ChannelMember[];
+        allow_invite_by_email: Readonly<boolean>;
         areAllMembersLoaded: Readonly<boolean>;
         channel_member_ids: ChannelMember[];
         channel_name_member_ids: ChannelMember[];
@@ -47,13 +48,14 @@ declare module "models" {
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
+        has_mail_thread: boolean | undefined;
         hasMemberList: Readonly<boolean>;
         hasOtherMembersTyping: boolean;
         hasSeenFeature: boolean;
         hasSelfAsMember: Readonly<boolean>;
         invited_member_ids: ChannelMember[];
-        last_interest_dt: luxon.DateTime;
-        lastInterestDt: luxon.DateTime;
+        last_interest_dt: import("luxon").DateTime;
+        lastInterestDt: import("luxon").DateTime;
         lastMessageSeenByAllId: undefined|number;
         lastSelfMessageSeenByEveryone: Message;
         markedAsUnread: boolean;
@@ -68,6 +70,7 @@ declare module "models" {
         otherTypingMembers: ChannelMember[];
         scrollUnread: boolean;
         self_member_id: ChannelMember;
+        shouldSubscribeToBusChannel: Readonly<boolean>;
         showCorrespondentCountry: Readonly<boolean>;
         showUnreadBanner: Readonly<boolean>;
         toggleBusSubscription: boolean;

@@ -1,18 +1,8 @@
 import { registry } from "@web/core/registry";
 import { assert } from "@stock/../tests/tours/tour_helper";
-import {
-    goToCatalogFromPO,
-    goToPOFromCatalog,
-    toggleSuggest,
-    setSuggestParameters,
-    checkKanbanRecordHighlight,
-} from "./tour_helper";
-import { selectPOVendor, selectPOWarehouse } from "@purchase/../tests/tours/tour_helper";
+import { catalogSuggestion } from "./tour_helper";
+import { purchaseForm, productCatalog } from "@purchase/../tests/tours/tour_helper";
 
-/**
- * Checks that the Suggest UI in the search panel works well
- * (estimated price, warehouse logic, toggling, saving defaults)
- */
 registry.category("web_tour.tours").add("test_purchase_order_suggest_search_panel_ux", {
     steps: () => [
         /*
@@ -22,15 +12,12 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * ----------------------------------------------------------------
          */
         { trigger: ".o_purchase_order" },
+        ...purchaseForm.createNewPO(),
+        ...purchaseForm.selectVendor("Test Vendor"),
+        ...purchaseForm.selectWarehouse("Other Warehouse: Receipts"),
+        ...purchaseForm.openCatalog(),
         {
-            content: "Create a New PO",
-            trigger: ".o_list_button_add",
-            run: "click",
-        },
-        ...selectPOVendor("Julia Agrolait"),
-        ...goToCatalogFromPO(),
-        {
-            content: "Check suggest fields hidden when suggest is off (should be OFF by default)",
+            content: "Checks suggest is off by default and suggest fields hidden when suggest off",
             trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view",
             run() {
                 const els = document.querySelectorAll(
@@ -39,107 +26,123 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
                 assert(els.length, 0, "Toggle did not hide elements");
             },
         },
-        ...goToPOFromCatalog(),
-        ...goToCatalogFromPO(),
-        { trigger: 'div[name="search-suggest-toggle"] input:not(:checked)' }, // Should still be off
-        ...toggleSuggest(true),
-        ...setSuggestParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
+
+        // --- Check that suggestion feature does not appear on non draft POs ---
+        ...productCatalog.goBackToOrder(),
+        { trigger: ".o_purchase_order" },
+        {
+            content: "Confirm PO",
+            trigger: 'button[name="button_confirm"]',
+            run: "click",
+        },
+        ...purchaseForm.openCatalog(),
+        { trigger: 'body:not(:has(div[name="search_panel_suggestion"]))' }, // Suggest should not show on non draft POs
+        ...productCatalog.goBackToOrder(),
+        {
+            content: "Cancel PO",
+            trigger: 'button[name="button_cancel"]',
+            run: "click",
+        },
+        {
+            content: "Reset to draft",
+            trigger: 'button[name="button_draft"]',
+            run: "click",
+        },
+        ...purchaseForm.openCatalog(),
+
+        // --- Check suggestion uses PO warehouse (this WH only has 1 delivery) ---
+        ...catalogSuggestion.toggleSuggest(true),
+        {
+            content: "Toggling Suggestion activates filter for products in PO or suggested",
+            trigger: '.o_facet_value:contains("Suggested")', // Suggested
+        },
+        ...catalogSuggestion.setParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
         { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" },
-        ...goToPOFromCatalog(),
-        ...selectPOWarehouse("Base Warehouse: Receipts"), // Still the same PO, no need to reset vendor
-        ...goToCatalogFromPO(),
-        { trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view" },
-        { trigger: 'div[name="search-suggest-toggle"] input:checked' }, // Should still be ON
-        ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
-        // Now for the correct WH suggest should be 12 units/week * 4 weeks * 20$/ unit * 50% = 480$
-        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
-        {
-            content: "Add all suggestion to the PO",
-            trigger: 'button[name="suggest_add_all"]',
-            run: "click",
-        }, // Should save suggest params when "ADD ALL"
-        ...goToPOFromCatalog(),
-        {
-            content: "Check test_product was added to PO",
-            trigger: "div.o_field_product_label_section_and_note_cell span",
-            run() {
-                const order_line = this.anchor.textContent.trim();
-                assert(order_line.includes("test_product"), true, `Product not added to PO`);
-            },
-        },
-        {
-            content: "Create a New PO",
-            trigger: ".o_form_button_create",
-            run: "click",
-        },
-        { trigger: ".o_form_view.o_purchase_order" },
-        ...selectPOVendor("Julia Agrolait"),
-        ...selectPOWarehouse("Base Warehouse: Receipts"),
-        ...goToCatalogFromPO(),
-        {
-            content: "Check number days saved",
-            trigger: "input.o_PurchaseSuggestInput:eq(0)",
-            run() {
-                const days = parseInt(this.anchor.value);
-                assert(days, 28, `Expected days to be saved to 28, but got ${days}`);
-            },
-        },
-        {
-            content: "Check percent factor saved",
-            trigger: "input.o_PurchaseSuggestInput:eq(1)",
-            run() {
-                const percent = parseInt(this.anchor.value);
-                assert(percent, 50, `Expected percent factor to be saved to 50% got ${percent}`);
-            },
-        },
-        {
-            content: "Check based on saved",
-            trigger: ".o_TimePeriodSelectionField",
-            run() {
-                const i = this.anchor.querySelector(".o_select_menu_toggler");
-                assert(i.value, "Last 7 days", `based_on = ${i.value},should be "Last 7 days"`);
-            },
-        },
-        ...setSuggestParameters({ basedOn: "Forecasted", nbDays: 30, factor: 50 }),
-        // Suggest total should be -100 units forcasted * 50% * 20 = 1,000$
-        { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
+        ...productCatalog.goBackToOrder(),
+        ...purchaseForm.selectWarehouse("Inventory Test Company: Receipts"),
+        ...purchaseForm.openCatalog(),
+        ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" }, // 12 units/week * 4 weeks * 20$/ unit * 50% = 480$
+
+        // --- Check Add All: suggest qty added and suggest parameters are saved on vendor
+        ...catalogSuggestion.addAllSuggestions(),
+        ...productCatalog.goBackToOrder(),
+        ...purchaseForm.checkLineValues(0, { product: "test_product", quantity: "24.00" }),
+        ...purchaseForm.createNewPO(),
+        ...purchaseForm.selectVendor("Test Vendor"),
+        ...purchaseForm.selectWarehouse("Inventory Test Company: Receipts"),
+        ...purchaseForm.openCatalog(),
+        ...catalogSuggestion.assertParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
         /*
          * -----------------  PART 2 : Kanban Interactions -----------------
-         * Checks that the Suggest UI and the Kanban record interactions
-         * (monthly demand, suggest_qtys, ADD suggested qtys
-         * TODO: Check monthly demand and Suggested qty when changing warehouse,
-         * TODO: Use check highlight to check correct order preserved on multiple
+         * Checks the Suggest UI and the Kanban record interactions
+         * (monthly demand, suggested_qty, forecasted + record ordering)
          * ------------------------------------------------------------------
          */
-        ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
+        ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }), // 1 order of 12 used in computation of demand // 28 days --> forecast uses both 50 delivery
         { trigger: "span[name='suggest_total']:visible:contains('480')" },
-        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" }, // ceil(12 * 30/ 7)
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
-        checkKanbanRecordHighlight("test_product", 1),
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24, forecast: 100 }),
+        ...catalogSuggestion.checkKanbanRecordPosition("test_product", 0),
 
-        ...setSuggestParameters({ basedOn: "Last 30 days" }),
-        { trigger: "span[name='suggest_total']:visible:contains('240')" },
-        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // 2 orders of 12
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('12')" }, // 24 * 1 (28 days ~= 1 month) * 50% = 12
+        ...catalogSuggestion.setParameters({ basedOn: "Last 30 days", factor: 10 }), // 2 orders of 12
+        { trigger: "span[name='suggest_total']:visible:contains('60')" },
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 24, suggest: 3 }),
 
-        ...setSuggestParameters({ basedOn: "Last 3 months" }),
-        { trigger: "span[name='suggest_total']:visible:contains('80')" },
-        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('8')" }, // 24 / 3 = 8 with quaterly
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('4')" }, // 24 / 3* 1 (28 days ~= 1 month) * 50% = 4
-        ...toggleSuggest(false),
+        ...catalogSuggestion.setParameters({ basedOn: "Last 3 months", factor: 500 }), // 2 orders of 12
+        { trigger: "span[name='suggest_total']:visible:contains('740')" },
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 8, suggest: 37 }),
+
+        // --- Check with Forecasted quantities
+        ...catalogSuggestion.setParameters({ basedOn: "Forecasted", nbDays: 18, factor: 100 }),
+        { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
+        ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 50, suggest: 50 }), // 18 days --> forecast uses only one 50 delivery
+
+        ...catalogSuggestion.setParameters({ nbDays: 7 }),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Move out of 100 in 20days, so no suggest for 7 days
+        { trigger: ".o_view_nocontent_smiling_face" }, // Should suggest no products
+
+        // --- Check with suggest OFF we come back to normal
+        ...catalogSuggestion.toggleSuggest(false),
+        ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 100, monthly: 24 }),
+        ...catalogSuggestion.checkKanbanRecordPosition("Other product", 0),
         { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // Should come back to normal monthly demand
-        checkKanbanRecordHighlight("test_product", 1, false), // expected order 1 not checked, just that highligh is off
-        ...toggleSuggest(true),
 
-        ...setSuggestParameters({ basedOn: "Forecasted", factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('2,000')" },
-        { trigger: "span[name='o_kanban_forecasted_qty']:visible:contains('100')" }, // Move out of 100 in 20days
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('100')" }, // 100 * 100%
-        ...setSuggestParameters({ factor: 200 }),
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('200')" }, // 100 * 200%
-        ...setSuggestParameters({ factor: 50 }),
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('50')" }, // 100 * 50%
-        ...goToPOFromCatalog(),
+        /*
+         * -------------------  PART 3 : KANBAN FILTERS ---------------------
+         * Checks suggest and searchModel (filters) interactions
+         * (Add / Remove with filters), category filters
+         * ------------------------------------------------------------------
+         */
+
+        // ---- Check Adding non suggested product works with suggest
+        ...productCatalog.addProduct("Other product"),
+        ...productCatalog.waitForQuantity("Other product", 1),
+        ...catalogSuggestion.toggleSuggest(true),
+
+        // ---- Check toggling suggest OFF with filters manually removed still works
+        ...catalogSuggestion.removeSuggestFilter(),
+        ...catalogSuggestion.toggleSuggest(false),
+        ...catalogSuggestion.checkKanbanRecordPosition("Other product", 0), // == suggest is off
+
+        // --- Turning suggest on with non suggested product works as expected
+        // Because Add product can be slow to reach server and because when toggling suggest we filter
+        // products in the order, we go back to catalog and come back (similar to an await).
+        // (This will probably not be need in following PR when we remove debounce on AddProduct)
+        ...productCatalog.goBackToOrder(),
+        ...purchaseForm.openCatalog(),
+        ...catalogSuggestion.toggleSuggest(true),
+        ...catalogSuggestion.checkKanbanRecordPosition("Other product", 1), // Other product still shown because in order but after suggested products
+
+        // Check that categories work well with suggestions
+        ...productCatalog.selectSearchPanelCategory("Goods"),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Should recompute estimated price
+        ...productCatalog.selectSearchPanelCategory("Test Category"),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+        ...catalogSuggestion.removeSuggestFilter(), // Shouldn't impact categories
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+
+        // ---- Finally done :)
+        ...productCatalog.goBackToOrder(),
         {
             content: "Go back to the dashboard",
             trigger: ".o_menu_brand",

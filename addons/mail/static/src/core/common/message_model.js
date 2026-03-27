@@ -5,8 +5,9 @@ import {
     EMOJI_REGEX,
     convertBrToLineBreak,
     decorateEmojis,
+    generateEmojisOnHtml,
+    getNonEditableMentions,
     htmlToTextContentInline,
-    prettifyMessageContent,
 } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
@@ -59,6 +60,7 @@ export class Message extends Record {
         },
     });
     composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r.delete() });
+    composerAsReplyToMessage = fields.One("Composer", { inverse: "replyToMessage" });
     date = fields.Datetime();
     /** @type {string} */
     default_subject;
@@ -72,6 +74,17 @@ export class Message extends Record {
             );
         },
     });
+    /** attachments not already clearly visible in the body, unlike inlined images */
+    extra_body_attachment_ids = fields.Attr("ir.attachment", {
+        compute() {
+            const parsedBody = createDocumentFragmentFromContent(this.body);
+            const inlinedImageAttachmentIds = [
+                ...parsedBody.querySelectorAll("img[data-attachment-id]"),
+            ].map((img) => parseInt(img.dataset.attachmentId));
+
+            return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
+        },
+    });
     hasLink = fields.Attr(false, {
         compute() {
             if (this.isBodyEmpty) {
@@ -79,6 +92,15 @@ export class Message extends Record {
             }
             const div = createElementWithContent("div", this.body);
             return Boolean(div.querySelector("a:not([data-oe-model])"));
+        },
+    });
+    hasMailNotificationSummary = fields.Attr(false, {
+        compute() {
+            return Boolean(
+                createDocumentFragmentFromContent(this.body).querySelector(
+                    '[summary="o_mail_notification"]'
+                )
+            );
         },
     });
     /** @type {number|string} */
@@ -302,13 +324,15 @@ export class Message extends Record {
     isTranslatable(thread) {
         return (
             !this.isEmpty &&
+            !this.isBodyEmpty &&
+            !this.hasMailNotificationSummary &&
             this.store.hasMessageTranslationFeature &&
             !["discuss.channel", "mail.box"].includes(thread?.model)
         );
     }
 
     get hasTextContent() {
-        return !this.isBodyEmpty;
+        return !this.isBodyEmpty || this.edited;
     }
 
     isEmpty = fields.Attr(false, {
@@ -418,7 +442,6 @@ export class Message extends Record {
         return Boolean(
             !this.is_transient &&
                 !this.isPending &&
-                this.thread &&
                 this.store.self_partner?.main_user_id?.share === false &&
                 this.persistent
         );
@@ -480,7 +503,8 @@ export class Message extends Record {
             !this.is_transient &&
                 !this.isPending &&
                 this.thread?.can_react &&
-                !this.thread.isTransient
+                !this.thread.isTransient &&
+                this.thread.has_mail_thread
         );
     }
 
@@ -527,18 +551,18 @@ export class Message extends Record {
         attachments = [],
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
-        const bodyEl = createElementWithContent("div", this.body);
-        bodyEl.querySelector("span.o-mail-Message-edited")?.remove();
-        if (
-            createElementWithContent("div", body).innerHTML === bodyEl.innerHTML &&
-            attachments.length === 0
-        ) {
+        const messageBodyEl = createElementWithContent("div", this.body);
+        const updatedBodyEl = createElementWithContent("div", body);
+        messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        updatedBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        if (updatedBodyEl.innerHTML === messageBodyEl.innerHTML && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
+            thread: this.thread,
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const updateData = {
@@ -548,7 +572,7 @@ export class Message extends Record {
             attachment_tokens: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.ownership_token),
-            body: await prettifyMessageContent(body, { validMentions }),
+            body: await generateEmojisOnHtml(body),
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             role_ids: validMentions?.roles?.map((role) => role.id),
         };
@@ -566,14 +590,29 @@ export class Message extends Record {
     }
 
     /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
-    enterEditMode(thread) {
+    async enterEditMode(thread) {
+        const doc = createDocumentFragmentFromContent(this.body);
+        const validChannels = (
+            await Promise.all(
+                Array.from(
+                    doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
+                ).map(async (el) =>
+                    this.store.Thread.getOrFetch({ id: el.dataset.oeId, model: "discuss.channel" })
+                )
+            )
+        ).filter((channel) => channel?.exists());
+        const validRoles = Array.from(
+            doc.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']")
+        ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         const text = convertBrToLineBreak(this.body);
         if (thread?.messageInEdition) {
             thread.messageInEdition.composer = undefined;
         }
         this.composer = {
+            composerHtml: getNonEditableMentions(this.body),
+            mentionedChannels: validChannels,
             mentionedPartners: this.partner_ids,
-            composerHtml: this.body,
+            mentionedRoles: validRoles,
             selection: {
                 start: text.length,
                 end: text.length,
@@ -598,7 +637,12 @@ export class Message extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return this.thread?.getPersonaName(persona) || persona.displayName || persona.name;
+        return (
+            this.thread?.getPersonaName(persona) ||
+            persona?.displayName ||
+            persona?.name ||
+            _t("Unnamed")
+        );
     }
 
     async onClickToggleTranslation() {

@@ -41,11 +41,18 @@ class DeliveryCarrier(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('delivery_type') == 'in_store':
-                vals['integration_level'] = 'rate'
+                vals.update(self._get_in_store_default_vals())
 
                 # Set the default warehouses and publish if one is found.
+                if 'company_id' in vals:
+                    company_id = vals.get('company_id')
+                else:
+                    company_id = (
+                        self.env['product.product'].browse(vals.get('product_id')).company_id.id
+                        or self.env.company.id
+                    )
                 warehouses = self.env['stock.warehouse'].search(
-                    [('company_id', 'in', self.env.company.id)]
+                    [('company_id', 'in', company_id)]
                 )
                 vals.update({
                     'warehouse_ids': [Command.set(warehouses.ids)],
@@ -55,8 +62,18 @@ class DeliveryCarrier(models.Model):
 
     def write(self, vals):
         if vals.get('delivery_type') == 'in_store':
-            vals['integration_level'] = 'rate'
+            vals.update(self._get_in_store_default_vals())
         return super().write(vals)
+
+    @staticmethod
+    def _get_in_store_default_vals():
+        return {
+            "integration_level": "rate",
+            "allow_cash_on_delivery": False,
+            "country_ids": False,
+            "state_ids": False,
+            "zip_prefix_ids": False,
+        }
 
     # === BUSINESS METHODS ===#
 

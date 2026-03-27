@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                     <span name="website_menu">
-                        <label for="website_menu" string="Website Submenu"/>
-                        <field name="website_menu"/>
+                        <label for="website_menu" string="Website Submenu" class="me-1"/>
+                        <field name="website_menu" class="me-3"/>
                     </span>
                     <span name="community_menu" invisible="1">
-                        <label for="community_menu" string="Community"/>
-                        <field name="community_menu"/>
+                        <label for="community_menu" string="Community" class="me-1"/>
+                        <field name="community_menu" class="me-3"/>
                     </span>
             </xpath>
         </field>

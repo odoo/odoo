@@ -12,6 +12,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 class ImageFormatOptionPlugin extends Plugin {
     static id = "imageFormatOption";
     static shared = ["computeAvailableFormats"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SetImageFormatAction,
@@ -56,7 +57,7 @@ class ImageFormatOptionPlugin extends Plugin {
         ];
         const mimetypeBeforeConversion = data.mimetypeBeforeConversion;
         widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion, true];
-        if (mimetypeBeforeConversion !== this.config.defaultImageMimetype ?? "image/webp") {
+        if (mimetypeBeforeConversion !== (this.config.defaultImageMimetype ?? "image/webp")) {
             // Avoid a key collision by subtracting 0.1 - putting the default image mimetype
             // above the original format one of the same size.
             widths[maxWidth - 0.1] = [

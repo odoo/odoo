@@ -116,7 +116,7 @@ class HrExpenseSplit(models.TransientModel):
             'manager_id': self.manager_id.id,
         }
 
-        account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+        account = self.product_id.with_company(self.company_id).product_tmpl_id._get_product_accounts()['expense']
         if account:
             vals['account_id'] = account.id
         return vals

@@ -19,13 +19,14 @@
 # Robin Calvin, 2022
 # Stephen Schmidt <stephen.schmidt@linserv.se>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-16 21:23+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-03-20 17:35+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "sale_management/sv/>\n"
 "Language: sv\n"
@@ -33,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -144,7 +145,7 @@ msgstr "Beskrivning"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
 msgid "Digest"
-msgstr "Sammanställning"
+msgstr "Sammanfattning"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
@@ -235,7 +236,7 @@ msgstr "Senast uppdaterad den"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Lines"
-msgstr "Linjer"
+msgstr "Rader"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
@@ -267,6 +268,12 @@ msgstr "Elektronisk signatur"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_optional
 msgid "Optional Line"
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Optional Products Section"
 msgstr ""
 
 #. module: sale_management
@@ -403,6 +410,13 @@ msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Set Optional"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid ""
 "Struggling with a complex product catalog? Try out the Product Configurator "
@@ -470,6 +484,13 @@ msgid "Unit"
 msgstr "Enhet"
 
 #. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Unset Optional"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
@@ -477,8 +498,8 @@ msgid ""
 "online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Använd mallar för att skapa fina, professionella offertförslag inom minuter."
-"\n"
+"Använd mallar för att skapa fina, professionella offertförslag inom "
+"minuter.\n"
 "Skicka dessa offertförslag via e-post och låt dina kunder signera online.\n"
 "Använd korsförsäljning och rabatter för att driva och öka dina försäljningar."
 
@@ -500,22 +521,33 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Din mall kan inte innehålla produkter från flera företag."
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas "
-"your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from "
-"other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Din mall innehåller produkter från företaget %(product_company)s medan din "
-"mall tillhör företaget %(template_company)s. \n"
-" Vänligen ändra företaget för din mall eller ta bort produkterna från andra "
-"företag."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -526,6 +558,20 @@ msgstr "dagar"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "t.ex. Standardkonsultpaket"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Din mall kan inte innehålla produkter från flera företag."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Din mall innehåller produkter från företaget %(product_company)s medan "
+#~ "din mall tillhör företaget %(template_company)s. \n"
+#~ " Vänligen ändra företaget för din mall eller ta bort produkterna från "
+#~ "andra företag."
 
 #~ msgid "Add to cart"
 #~ msgstr "Lägg i varukorgen"

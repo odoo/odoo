@@ -23,7 +23,7 @@ AVAILABLE_PRIORITIES = [
 class HrApplicant(models.Model):
     _name = 'hr.applicant'
     _description = "Applicant"
-    _order = "priority desc, id desc"
+    _order = "priority desc, sequence, id desc"
     _inherit = ['mail.thread.cc',
                'mail.thread.main.attachment',
                'mail.thread.blacklist',
@@ -36,7 +36,6 @@ class HrApplicant(models.Model):
     _mailing_enabled = True
     _primary_email = 'email_from'
     _track_duration_field = 'stage_id'
-    _order = "sequence"
 
     sequence = fields.Integer(string='Sequence', index=True, default=10)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
@@ -91,7 +90,7 @@ class HrApplicant(models.Model):
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
-    job_id = fields.Many2one('hr.job', "Job Position", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True, copy=False)
+    job_id = fields.Many2one('hr.job', "Job Position", domain="company_id and [('company_id', '=', company_id)] or []", tracking=True, index=True, copy=False)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_proposed = fields.Float("Proposed", aggregator="avg", help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
@@ -246,11 +245,11 @@ class HrApplicant(models.Model):
                         email_normalized: {'lang': self.env.lang}
                     },
                 )
-            if applicant.partner_name and not applicant.partner_id.name:
+            if applicant.partner_name and applicant.partner_name != applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
-            if email_normalized and not applicant.partner_id.email:
+            if email_normalized and email_normalized != applicant.partner_id.email:
                 applicant.partner_id.email = applicant.email_from
-            if applicant.partner_phone and not applicant.partner_id.phone:
+            if applicant.partner_phone and applicant.partner_phone != applicant.partner_id.phone:
                 applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile")
@@ -267,22 +266,7 @@ class HrApplicant(models.Model):
         Note: If self has pool_applicant_id, email, phone number or linkedin set
         this method will include self in the returned count
         """
-        all_emails = {a.email_normalized for a in self if a.email_normalized}
-        all_phones = {a.partner_phone_sanitized for a in self if a.partner_phone_sanitized}
-        all_linkedins = {a.linkedin_profile for a in self if a.linkedin_profile}
-        all_pool_applicants = {a.pool_applicant_id.id for a in self if a.pool_applicant_id}
-
-        domain = Domain.FALSE
-        if all_emails:
-            domain |= Domain("email_normalized", "in", list(all_emails))
-        if all_phones:
-            domain |= Domain("partner_phone_sanitized", "in", list(all_phones))
-        if all_linkedins:
-            domain |= Domain("linkedin_profile", "in", list(all_linkedins))
-        if all_pool_applicants:
-            domain |= Domain("pool_applicant_id", "in", list(all_pool_applicants))
-
-        domain &= Domain("talent_pool_ids", "=", False)
+        domain = self._get_similar_applicants_domain(ignore_talent=True)
         matching_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
 
         email_map = defaultdict(set)
@@ -333,14 +317,12 @@ class HrApplicant(models.Model):
         Returns:
             Domain()
         """
-        domain = Domain.AND([
-            Domain('company_id', 'in', self.mapped('company_id.id')),
-            Domain.OR([
-                Domain("id", "in", self.ids),
-                Domain("email_normalized", "in", [email for email in self.mapped("email_normalized") if email]),
-                Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone]),
-                Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped("linkedin_profile") if linkedin_profile]),
-            ])
+        domain = Domain.OR([
+            Domain("id", "in", self.ids),
+            Domain("email_normalized", "in", [email for email in self.mapped("email_normalized") if email]),
+            Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone]),
+            Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped("linkedin_profile") if linkedin_profile]),
+            Domain("pool_applicant_id", "in", [pool_applicant.id for pool_applicant in self.mapped("pool_applicant_id") if pool_applicant]),
         ])
         if ignore_talent:
             domain &= Domain("talent_pool_ids", "=", False)
@@ -641,6 +623,10 @@ class HrApplicant(models.Model):
                 vals['email_from'] = vals['email_from'].strip()
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
+
+        for applicant in applicants:
+            if applicant.talent_pool_ids and not applicant.pool_applicant_id:
+                applicant.pool_applicant_id = applicant
 
         if (applicants.interviewer_ids.partner_id - self.env.user.partner_id):
             for applicant in applicants:
@@ -1072,7 +1058,11 @@ class HrApplicant(models.Model):
             'res_model': 'applicant.get.refuse.reason',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_applicant_ids': self.ids, 'active_test': False},
+            'context': {
+                'default_applicant_ids': self.ids,
+                'active_test': False,
+                'hide_mail_template_management_options': True,
+            },
             'views': [[False, 'form']]
         }
 

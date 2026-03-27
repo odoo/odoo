@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2025-09-16 04:43+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-10-23 07:34+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "stock_dropshipping/id/>\n"
 "Language: id\n"
@@ -30,11 +31,11 @@ msgstr "Perusahaan"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__display_name
-#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__display_name
@@ -66,11 +67,11 @@ msgstr "Dropship"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__id
-#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__id
@@ -109,6 +110,11 @@ msgid "Purchase Order"
 msgstr "Order Pembelian"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Baris Order Pembelian"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
 msgid "Sales Order"
 msgstr "Order Penjualan"
@@ -119,14 +125,9 @@ msgid "Sales Order Line"
 msgstr "Baris Pesanan Penjualan"
 
 #. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_stock_move
-msgid "Stock Move"
-msgstr "Pergerakkan Stok"
-
-#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
 msgid "Stock Rule"
-msgstr "Peraturan Sto"
+msgstr "Peraturan Stok"
 
 #. module: stock_dropshipping
 #: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
@@ -143,8 +144,8 @@ msgstr "Transfer"
 msgid "Type of Operation"
 msgstr "Tipe Operasi"
 
+#~ msgid "Stock Move"
+#~ msgstr "Pergerakkan Stok"
+
 #~ msgid "Procurement Group"
 #~ msgstr "Grup Pengadaan"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Baris Order Pembelian"

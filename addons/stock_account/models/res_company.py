@@ -48,20 +48,29 @@ class ResCompany(models.Model):
 
     def action_close_stock_valuation(self, at_date=None, auto_post=False):
         self.ensure_one()
+        if at_date and isinstance(at_date, str):
+            at_date = fields.Date.from_string(at_date)
+        last_closing_date = self._get_last_closing_date()
+        if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
+            raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
         aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
             raise UserError(_("Everything is correctly closed"))
+        if not self.account_stock_journal_id:
+            raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
+        if not self.account_stock_valuation_id:
+            raise UserError(self.env._("Please set the Valuation Account for Inventory Valuation in the settings."))
 
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,
-            'date': fields.Date.today(),
+            'date': at_date or fields.Date.today(),
             'ref': _('Stock Closing'),
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
         }
         account_move = self.env['account.move'].create(moves_vals)
-
+        self._save_closing_id(account_move.id)
         if auto_post:
             account_move._post()
 
@@ -156,60 +165,59 @@ class ResCompany(models.Model):
         return extra_balance
 
     def _get_location_valuation_vals(self, at_date=None, location_domain=False):
-        location_domain = (location_domain or []) + [('valuation_account_id', '!=', False)]
+        location_domain = Domain.AND([
+            location_domain or [],
+            [('valuation_account_id', '!=', False)],
+            [('company_id', '=', self.id)],
+        ])
         amls_vals_list = []
         valued_location = self.env['stock.location'].search(location_domain)
-        moves_base_domain = Domain([('product_id.is_storable', '=', True)])
+        last_closing_date = self._get_last_closing_date()
+        moves_base_domain = Domain([
+            ('product_id.is_storable', '=', True),
+            ('product_id.valuation', '=', 'periodic')
+        ])
+        if last_closing_date:
+            moves_base_domain &= Domain([('date', '>', last_closing_date)])
         if at_date:
             moves_base_domain &= Domain([('date', '<=', at_date)])
         moves_in_domain = Domain([
             ('is_out', '=', True),
+            ('company_id', '=', self.id),
             ('location_dest_id', 'in', valued_location.ids),
         ]) & moves_base_domain
         moves_in_by_location = self.env['stock.move']._read_group(
             moves_in_domain,
-            ['location_dest_id'],
+            ['location_dest_id', 'product_category_id'],
             ['value:sum'],
         )
         moves_out_domain = Domain([
             ('is_in', '=', True),
+            ('company_id', '=', self.id),
             ('location_id', 'in', valued_location.ids),
         ]) & moves_base_domain
         moves_out_by_location = self.env['stock.move']._read_group(
             moves_out_domain,
-            ['location_id'],
+            ['location_id', 'product_category_id'],
             ['value:sum'],
         )
         account_balance = defaultdict(float)
-        incoming_value_by_location = dict(moves_in_by_location)
-        outgoing_value_by_location = dict(moves_out_by_location)
-        locations = incoming_value_by_location.keys() | outgoing_value_by_location.keys()
-        for location in locations:
-            # TODO: It would be better to replay the period to get the exact correct value.
-            inventory_value = incoming_value_by_location.get(location, 0.0) - outgoing_value_by_location.get(location, 0.0)
-            account_balance[location.valuation_account_id] += inventory_value
-        amls_domain = Domain([
-            ('account_id', 'in', valued_location.valuation_account_id.ids),
-            ('company_id', '=', self.id),
-            ('parent_state', '=', 'posted'),
-        ])
-        if at_date:
-            amls_domain &= Domain([('date', '<=', at_date)])
-        current_valuation = self.env['account.move.line']._read_group(
-            amls_domain,
-            groupby=['account_id'],
-            aggregates=['balance:sum'],
-        )
-        for account, balance in current_valuation:
-            account_balance[account] -= balance
-        for account, balance in account_balance.items():
+        for location, category, value in moves_in_by_location:
+            stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
+            account_balance[location.valuation_account_id, stock_valuation_acc] += value
+
+        for location, category, value in moves_out_by_location:
+            stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
+            account_balance[location.valuation_account_id, stock_valuation_acc] -= value
+
+        for (location_account, stock_account), balance in account_balance.items():
             if balance == 0:
                 continue
             amls_vals = self._prepare_inventory_aml_vals(
-                account,
-                self.account_stock_valuation_id,
+                location_account,
+                stock_account,
                 balance,
-                _('Closing: Location Reclassification - [%(account)s]', account=account.display_name),
+                _('Closing: Location Reclassification - [%(account)s]', account=location_account.display_name),
             )
             amls_vals_list += amls_vals
         return amls_vals_list
@@ -221,16 +229,17 @@ class ResCompany(models.Model):
 
         extra_balance = self._get_extra_balance(extra_aml_vals_list)
 
-        inventory_data = self.stock_value(accounts_by_product, at_date)
+        if 'inventory_data' in self.env.context:
+            inventory_data = self.env.context.get('inventory_data')
+        else:
+            inventory_data = self.stock_value(accounts_by_product, at_date)
         accounting_data = self.stock_accounting_value(accounts_by_product, at_date)
 
         accounts = inventory_data.keys() | accounting_data.keys()
         for account in accounts:
-            account_variation = False
-            if account.account_stock_variation_id:
-                account_variation = account.account_stock_variation_id
-            if not account_variation and account.account_stock_expense_id:
-                account_variation = account.account_stock_expense_id
+            account_variation = account.account_stock_variation_id
+            if not account_variation:
+                account_variation = self.expense_account_id
             if not account_variation:
                 continue
             balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)
@@ -316,6 +325,35 @@ class ResCompany(models.Model):
             'credit': 0,
             'product_id': product_id,
         }]
+
+    def _get_last_closing_date(self):
+        self.ensure_one()
+        key = f'{self.id}.stock_valuation_closing_ids'
+        closing_ids = self.env['ir.config_parameter'].sudo().get_param(key)
+        closing_ids = closing_ids.split(',') if closing_ids else []
+        closing = self.env['account.move']
+        while not closing and closing_ids:
+            closing_id = closing_ids.pop(-1)
+            closing_id = int(closing_id)
+            closing = self.env['account.move'].browse(closing_id).exists().filtered(lambda am: am.state == 'posted')
+        if not closing:
+            return False
+        am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
+        state_tracking = closing.message_ids.sudo().tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
+        create_date = state_tracking[-1:].create_date
+        if create_date and create_date.date() == closing.date:
+            return create_date
+        return fields.Datetime.to_datetime(closing.date)
+
+    def _save_closing_id(self, move_id):
+        self.ensure_one()
+        key = f'{self.id}.stock_valuation_closing_ids'
+        closing_ids = self.env['ir.config_parameter'].sudo().get_param(key)
+        ids = closing_ids.split(',') if closing_ids else []
+        ids.append(str(move_id))
+        if len(ids) > 10:
+            ids = ids[1:]
+        self.env['ir.config_parameter'].sudo().set_param(key, ','.join(ids))
 
     def _set_category_defaults(self):
         for company in self:

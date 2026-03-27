@@ -7,13 +7,15 @@
 # Niyas Raphy, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2025-09-16 13:39+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2025-11-20 13:20+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/ar/>\n"
 "Language: ar\n"
@@ -75,14 +77,14 @@ msgstr "%(project_name)s (%(days)sd)"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr "%(project_name)s (%(hours)sh%(minutes)s)"
+msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
+msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-msgid "%(project_name)s (%(hours)sh)"
-msgstr "%(project_name)s (%(hours)sh)"
+msgid "%(project_name)s (%(sign)s%(hours)sh)"
+msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
@@ -91,8 +93,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project '%"
 "(project_name)s' linked to the timesheet."
 msgstr ""
-"الخطط التحليلية '%(missing_plan_names)s' المطلوبة في المشروع '%(project_name)"
-"s' المرتبطة بالجدول الزمني."
+"الخطط التحليلية '%(missing_plan_names)s' المطلوبة في المشروع '%"
+"(project_name)s' المرتبطة بالجدول الزمني."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -161,37 +163,10 @@ msgstr "<span class=\"text-nowrap\">الوقت المقضي في المهام ا
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        Uh-oh! The employee you’re trying to delete still "
-"has some timesheets hanging around and can’t be deleted.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            So here are your two options: either delete "
-"those timesheets or consider archiving the employee instead.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Please first delete all of their timesheets.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
+"<span invisible=\"has_timesheet\">\n"
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        أوه أوه! لا يزال لدى الموظف الذي تحاول حذفه بعض "
-"الجداول الزمنية العالقة ولا يمكن حذفه.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            لذا أمامك خياران: إما حذف تلك الجداول الزمنية أو "
-"يمكنك النظر في أرشفة الموظف عوضاً عن ذلك.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups="
-"\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                             يرجى أولا حذف كافة الجداول الزمنية الخاصة بهم.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
-"                        هل أنت متأكد من أنك ترغب في حذف هؤلاء الموظفين؟\n"
-"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -593,7 +568,7 @@ msgstr "لديه صلاحيات وصول مدير القسم"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__has_timesheet
 msgid "Has Timesheet"
-msgstr ""
+msgstr "يحتوي على جداول زمنية"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
@@ -761,6 +736,12 @@ msgstr "لا توجد أي بيانات بعد!"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "لا شيء"
@@ -799,6 +780,11 @@ msgstr "الشريك"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Please first delete all of their timesheets."
 msgstr ""
 
 #. module: hr_timesheet
@@ -852,7 +838,7 @@ msgstr "الجداول الزمنية للمشروع"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "موظف في القطاع العام"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -971,6 +957,14 @@ msgstr ""
 "المهام!"
 
 #. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
+
+#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
 msgid "Sub-Task of '"
 msgstr "مهمة فرعية لـ \""
@@ -1074,7 +1068,8 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid ""
 "This task cannot be private because there are some timesheets linked to it."
-msgstr "لا يمكن أن تكون هذه المهمة خاصة لوجود بعض الجداول الزمنية المرتبطة بها."
+msgstr ""
+"لا يمكن أن تكون هذه المهمة خاصة لوجود بعض الجداول الزمنية المرتبطة بها."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1322,12 +1317,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "لا يمكن أن يتم إنشاء الجداول الزمنية في مهمة خاصة."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr ""
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1351,8 +1340,8 @@ msgid "Timesheets of %(name)s"
 msgstr "الجداول الزمنية لـ%(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr ""
 
@@ -1428,6 +1417,17 @@ msgid "Training"
 msgstr "التدريب"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid ""
+"Uh-oh! The employee you’re trying to delete still has some timesheets "
+"hanging around and can’t be deleted.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            So here are your two options: either delete "
+"those timesheets or consider archiving the employee instead.\n"
+"                        </span>"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
@@ -1442,6 +1442,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"استخدم هذه الكلمات المفتاحية في العنوان لتعيين مهام جديدة:\n"
+"\n"
+"        30h لتخصيص 30 ساعة للمهمة\n"
+"        #tags لتعيين علامات تصنيف للمهمة\n"
+"        @user لإسناد المهمة إلى أحد المستخدمين\n"
+"        ! لتعيين أولوية متوسطة للمهمة\n"
+"        !! لتعيين أولوية عالية للمهمة\n"
+"        !!! لتعيين أولوية عاجلة للمهمة\n"
+" \n"
+"        تأكد من استخدام التنسيق والترتيب الصحيحين، على سبيل المثال: تحسين "
+"شاشة الإعدادات 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1528,7 +1539,7 @@ msgstr "التاريخ"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr ""
+msgstr "مثال: إرسال رسائل البريد الإلكتروني"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
@@ -1558,8 +1569,48 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "في\n"
-"                        <span class=\"fw-bold text-dark\"> المهام "
-"الفرعية</span>)"
+"                        <span class=\"fw-bold text-dark\"> المهام الفرعية</"
+"span>)"
+
+#~ msgid "%(project_name)s (%(hours)sh%(minutes)s)"
+#~ msgstr "%(project_name)s (%(hours)sh%(minutes)s)"
+
+#~ msgid "%(project_name)s (%(hours)sh)"
+#~ msgstr "%(project_name)s (%(hours)sh)"
+
+#~ msgid ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        Uh-oh! The employee you’re trying to delete still "
+#~ "has some timesheets hanging around and can’t be deleted.\n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            So here are your two options: either delete "
+#~ "those timesheets or consider archiving the employee instead.\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                            Please first delete all of their timesheets.\n"
+#~ "                        </span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                        Are you sure you want to delete these employees?\n"
+#~ "                    </span>"
+#~ msgstr ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        أوه أوه! لا يزال لدى الموظف الذي تحاول حذفه بعض "
+#~ "الجداول الزمنية العالقة ولا يمكن حذفه.\n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            لذا أمامك خياران: إما حذف تلك الجداول الزمنية "
+#~ "أو يمكنك النظر في أرشفة الموظف عوضاً عن ذلك.\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                             يرجى أولا حذف كافة الجداول الزمنية الخاصة "
+#~ "بهم.\n"
+#~ "                        </span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                        هل أنت متأكد من أنك ترغب في حذف هؤلاء الموظفين؟\n"
+#~ "                    </span>"
 
 #~ msgid "%s Spent"
 #~ msgstr "%s مقضي "

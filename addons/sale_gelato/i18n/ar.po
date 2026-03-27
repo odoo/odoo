@@ -3,13 +3,15 @@
 # * sale_gelato
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-04 14:39+0000\n"
-"PO-Revision-Date: 2025-09-16 13:44+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-05 17:59+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "sale_gelato/ar/>\n"
 "Language: ar\n"
@@ -25,50 +27,105 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                    Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                    Hello <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>,<br/><br/>\n"
 "                    <!-- Order in transit body -->\n"
 "                    <t t-if=\"ctx.get('tracking_data')\">\n"
-"                        We are glad to inform you that your order is in transit.\n"
+"                        We are glad to inform you that your order is in "
+"transit.\n"
 "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
-"                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            Your tracking number is <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <t t-set=\"tracking_url\" t-"
+"value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Your tracking number is <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
 "                            <br/><br/>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            Your tracking numbers are:\n"
 "                            <ul>\n"
-"                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
-"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                    <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
 "                                </li>\n"
 "                            </ul>\n"
 "                        </t>\n"
 "                    </t>\n"
 "                    <!-- Order delivered body -->\n"
 "                    <t t-if=\"ctx.get('order_delivered')\">\n"
-"                        We are glad to inform you that your order has been delivered.\n"
+"                        We are glad to inform you that your order has been "
+"delivered.\n"
 "                        <br/><br/>\n"
 "                    </t>\n"
 "                    Thank you,\n"
-"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+"container=\"1\">\n"
 "                        <br/>\n"
-"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "                    </t>\n"
 "                </p>\n"
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    مرحباً <t t-out=\"object.partner_id.name or ''\">براندن "
+"فريمان</t>،<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        يسعدنا إبلاغك بأن طلبك قيد النقل.\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-"
+"value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            رقم التتبع الخاص بك هو <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            أرقام التتبع الخاصة بك هي:\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                    <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        يسعدنا إبلاغك بأنه قد تم توصيل طلبك.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    نشكرك على تعاونك،\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                        <br/>\n"
+"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
+"quote=\"1\">ميتشل آدمن</t></div>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid ""
-"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
-"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" "
+"class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" "
+"invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-"
+"danger fs-3 me-3\"/>"
 msgstr ""
-"<i title=\"تم إعداد كافة الصور المطبوعة\" invisible=\"gelato_missing_images\""
-" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
-"                        <i title=\"بعض الصور المطبوعة مفقودة \" invisible="
-"\"not gelato_missing_images\" class="
-"\"fa fa-question-circle text-danger fs-3 me-3\"/>"
+"<i title=\"تم إعداد كافة الصور المطبوعة\" "
+"invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success "
+"fs-3 me-3\"/>\n"
+"                        <i title=\"بعض الصور المطبوعة مفقودة \" "
+"invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-"
+"danger fs-3 me-3\"/>"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
@@ -101,6 +158,24 @@ msgstr "تعذر إنشاء الاتصال بالواجهة البرمجية ل�
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Could not synchronize with Gelato"
 msgstr "لم نتمكن من المزامنة مع Gelato"
+
+#. module: sale_gelato
+#: model:ir.model,website_form_label:sale_gelato.model_res_partner
+msgid "Create a Customer"
+msgstr "Create a Customer"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_product_document__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_res_partner__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
 
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.express_delivery
@@ -164,9 +239,15 @@ msgstr "سر Webhook Gelato"
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid ""
-"Gelato could not proceed with the fulfillment of order %(order_reference)s: "
-"%(gelato_message)s"
+"Gelato could not proceed with the fulfillment of order %(order_reference)s: %"
+"(gelato_message)s"
 msgstr "لم يتمكن Gelato من تلبية الطلب %(order_reference)s: %(gelato_message)s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/controlers/main.py:0
+msgid "Gelato has canceled order %(reference)s."
+msgstr ""
 
 #. module: sale_gelato
 #. odoo-python
@@ -178,6 +259,25 @@ msgstr "لدى Gelato طلب مرتجع %(reference)s."
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
 msgstr "Gelato: تم تحديث حالة الطلب"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:sale_gelato.field_product_document__id
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__id
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__id
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__id
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_gelato.field_res_partner__id
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order_line__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/delivery_carrier.py:0
+msgid "Invalid source document type"
+msgstr "نوع المستند الأصلي غير صالح"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
@@ -300,7 +400,7 @@ msgstr "طريقة التوصيل غير متاحة لهذا الطلب."
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/models/delivery_carrier.py:0
+#: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The following required address fields are missing: %s"
 msgstr "حقول العنوان المطلوبة التالية ناقصة: %s"
 
@@ -321,6 +421,18 @@ msgstr ""
 "السبب: %(error_message)s"
 
 #. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to confirm the order %s on Gelato."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to delete the order %s on Gelato."
+msgstr ""
+
+#. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Webhook Secret"
 msgstr "سر Webhook"
@@ -336,3 +448,92 @@ msgstr "لا يمكنك خلط منتجات Gelato مع منتجات غير تا
 #: model:mail.template,subject:sale_gelato.order_status_update
 msgid "{{ object.reference }}"
 msgstr "{{ object.reference }}"
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "                <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+#~ "\">\n"
+#~ "                    Hello <t t-out=\"object.partner_id.name or "
+#~ "''\">Brandon Freeman</t>,<br/><br/>\n"
+#~ "                    <!-- Order in transit body -->\n"
+#~ "                    <t t-if=\"ctx.get('tracking_data')\">\n"
+#~ "                        We are glad to inform you that your order is in "
+#~ "transit.\n"
+#~ "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+#~ "                            <t t-set=\"tracking_url\" t-"
+#~ "value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+#~ "                            Your tracking number is <a t-attf-"
+#~ "href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+#~ "                            <br/><br/>\n"
+#~ "                        </t>\n"
+#~ "                        <t t-else=\"\">\n"
+#~ "                            Your tracking numbers are:\n"
+#~ "                            <ul>\n"
+#~ "                                <li t-foreach=\"ctx['tracking_data']\" t-"
+#~ "as=\"tracking_url\">\n"
+#~ "                                    <a t-attf-href=\"{{tracking_url}}\" t-"
+#~ "out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+#~ "                                </li>\n"
+#~ "                            </ul>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                    <!-- Order delivered body -->\n"
+#~ "                    <t t-if=\"ctx.get('order_delivered')\">\n"
+#~ "                        We are glad to inform you that your order has "
+#~ "been delivered.\n"
+#~ "                        <br/><br/>\n"
+#~ "                    </t>\n"
+#~ "                    Thank you,\n"
+#~ "                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+#~ "container=\"1\">\n"
+#~ "                        <br/>\n"
+#~ "                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+#~ "quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
+#~ "quote=\"1\">Mitchell Admin</t></div>\n"
+#~ "                    </t>\n"
+#~ "                </p>\n"
+#~ "            </div>\n"
+#~ "        "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "                <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
+#~ "\">\n"
+#~ "                    مرحباً <t t-out=\"object.partner_id.name or "
+#~ "''\">براندن فريمان</t>،<br/><br/>\n"
+#~ "                    <!-- Order in transit body -->\n"
+#~ "                    <t t-if=\"ctx.get('tracking_data')\">\n"
+#~ "                        يسعدنا إبلاغك بأن طلبك قيد النقل.\n"
+#~ "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+#~ "                            <t t-set=\"tracking_url\" t-"
+#~ "value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+#~ "                            رقم التتبع الخاص بك هو <a t-attf-"
+#~ "href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+#~ "                            <br/><br/>\n"
+#~ "                        </t>\n"
+#~ "                        <t t-else=\"\">\n"
+#~ "                            أرقام التتبع الخاصة بك هي:\n"
+#~ "                            <ul>\n"
+#~ "                                <li t-foreach=\"ctx['tracking_data']\" t-"
+#~ "as=\"tracking_url\">\n"
+#~ "                                    <a t-attf-href=\"{{tracking_url}}\" t-"
+#~ "out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+#~ "                                </li>\n"
+#~ "                            </ul>\n"
+#~ "                        </t>\n"
+#~ "                    </t>\n"
+#~ "                    <!-- Order delivered body -->\n"
+#~ "                    <t t-if=\"ctx.get('order_delivered')\">\n"
+#~ "                        يسعدنا إبلاغك بأنه قد تم توصيل طلبك.\n"
+#~ "                        <br/><br/>\n"
+#~ "                    </t>\n"
+#~ "                    نشكرك على تعاونك،\n"
+#~ "                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+#~ "container=\"1\">\n"
+#~ "                        <br/>\n"
+#~ "                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+#~ "quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
+#~ "quote=\"1\">ميتشل آدمن</t></div>\n"
+#~ "                    </t>\n"
+#~ "                </p>\n"
+#~ "            </div>\n"
+#~ "        "

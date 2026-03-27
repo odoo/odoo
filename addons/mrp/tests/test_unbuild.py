@@ -1117,3 +1117,114 @@ class TestUnbuild(TestMrpCommon):
                     {'product_id': self.product_2.id, 'quantity': 24, 'state': 'done'},  # Wood
                     {'product_id': self.product_1.id, 'quantity': 48, 'state': 'done'},  # Courage
                 ])
+
+    def test_unbuild_tracked_component_multiple_unbuilds_same_mo(self):
+        """
+        Create a Manufacturing Order producing 2 units of a serial-tracked finished product
+        from a serial-tracked component, and verify that during two successive unbuilds,
+        the correct component serial numbers are restored.
+
+        - The MO produces 2 units of P1, consuming serials SN1 and SN2 of C1
+        - Unbuild the first P1 → serial SN1 of C1 is restored
+        - Unbuild the second P1 → serial SN2 of C1 is restored (SN1 must not be reused)
+        """
+        (self.bom_4.product_id | self.bom_4.bom_line_ids.product_id).is_storable = True
+        (self.bom_4.product_id | self.bom_4.bom_line_ids.product_id).tracking = 'serial'
+        component = self.bom_4.bom_line_ids.product_id
+        # Serials for component
+        sn1 = self.env['stock.lot'].create({
+            'name': 'SN1',
+            'product_id': component.id,
+        })
+        sn2 = self.env['stock.lot'].create({
+            'name': 'SN2',
+            'product_id': component.id,
+        })
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn1)
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn2)
+        # Serials for finished product
+        fp_sn1 = self.env['stock.lot'].create({
+            'name': 'SN1-P1',
+            'product_id': self.bom_4.product_id.id,
+        })
+        fp_sn2 = self.env['stock.lot'].create({
+            'name': 'SN2-P1',
+            'product_id': self.bom_4.product_id.id,
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_4.product_id.id,
+            'product_qty': 2.0,
+            'bom_id': self.bom_4.id,
+            'product_uom_id': self.bom_4.product_uom_id.id,
+        })
+        mo.action_confirm()
+        mo.lot_producing_ids = fp_sn1 + fp_sn2
+        mo._set_qty_producing()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.move_line_ids.lot_id, sn1 + sn2)
+
+        unbuild_1 = self.env['mrp.unbuild'].create({
+            'mo_id': mo.id,
+            'product_id': self.bom_4.product_id.id,
+            'lot_id': fp_sn1.id,
+        })
+        unbuild_1.action_unbuild()
+        self.assertEqual(unbuild_1.state, 'done')
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(component, self.stock_location, lot_id=sn1),
+            1, 'SN1 should be restored after first unbuild'
+        )
+        unbuild_2 = self.env['mrp.unbuild'].create({
+            'mo_id': mo.id,
+            'product_id': self.bom_4.product_id.id,
+            'lot_id': fp_sn2.id,
+        })
+        unbuild_2.action_unbuild()
+        self.assertEqual(unbuild_2.state, 'done')
+        self.assertEqual(
+            self.env['stock.quant']._get_available_quantity(component, self.stock_location, lot_id=sn2),
+            1, 'SN2 should be restored after second unbuild'
+        )
+
+    def test_unbuild_more_than_manufactured(self):
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 5.0
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
+        # Check quantity in stock before unbuild.
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 5, 'You should have the 5 final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 80, 'You should have 80 products in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 0, 'You should have consumed all the 5 product in stock')
+
+        # ---------------------------------------------------
+        #       unbuild
+        # ---------------------------------------------------
+
+        x = Form(self.env['mrp.unbuild'])
+        x.product_id = p_final
+        x.bom_id = bom
+        unbuild = x.save()
+
+        unbuild.mo_id = mo.id
+        unbuild.product_qty = 7
+        unbuild.action_unbuild()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, allow_negative=True), -2, 'You should have 2 less final product in stock than what you started with')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 108, 'You should have gained back 8 more products than what you started with')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 7, 'You should have gained back 2 more products than what you started with')
+
+        move_lines = unbuild.produce_line_ids.move_line_ids.sorted(lambda ml: ml.product_id.id)
+        self.assertRecordValues(move_lines, [
+            {'reference': unbuild.name, 'quantity': 7, 'product_id': p_final.id, 'state': 'done'},
+            {'reference': unbuild.name, 'quantity': 28, 'product_id': p1.id, 'state': 'done'},
+            {'reference': unbuild.name, 'quantity': 7, 'product_id': p2.id, 'state': 'done'},
+        ])

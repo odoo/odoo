@@ -10,7 +10,7 @@ class StockValuationReport(models.AbstractModel):
     @api.model
     def get_report_values(self, date=False):
         return {
-            'data': self._get_report_data(date=date),
+            'data': self.with_context(allowed_company_ids=self.env.company.ids)._get_report_data(date=date),
             'context': {},
         }
 
@@ -47,7 +47,6 @@ class StockValuationReport(models.AbstractModel):
             'value': 0,
             'lines_by_account_id': defaultdict(lambda: {
                 'value': 0,
-                'accounts': [],
             }),
         }
         ending_stock = {
@@ -55,7 +54,6 @@ class StockValuationReport(models.AbstractModel):
             'value': 0,
             'lines_by_account_id': defaultdict(lambda: {
                 'value': 0,
-                'accounts': [],
             }),
         }
 
@@ -76,7 +74,7 @@ class StockValuationReport(models.AbstractModel):
         location_valuation_vals = company._get_location_valuation_vals(
             date, location_domain=[('usage', '=', 'inventory')],
         )
-        stock_valuation_account_vals = company._get_stock_valuation_account_vals(
+        stock_valuation_account_vals = company.with_context(inventory_data=inventory_data)._get_stock_valuation_account_vals(
             accounts_by_product, date, company._get_location_valuation_vals(date))
 
         report_data = {

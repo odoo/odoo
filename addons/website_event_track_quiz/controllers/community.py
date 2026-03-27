@@ -33,7 +33,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
 
     def _get_community_leaderboard_render_values(self, event, search_term, page):
         values = self._get_leaderboard(event, search_term)
-        values.update({'event': event, 'search': search_term})
+        values.update({'event': event, 'search': search_term, 'slots': event.event_slot_ids._filter_open_slots().grouped('date')})
 
         user_count = len(values['visitors'])
         if user_count:

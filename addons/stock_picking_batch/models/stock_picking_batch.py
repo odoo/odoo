@@ -84,7 +84,7 @@ class StockPickingBatch(models.Model):
             estimated_shipping_volume = 0
             done_package_ids = set()
             # packs
-            for pack in self.move_line_ids.result_package_id:
+            for pack in batch.move_line_ids.result_package_id:
                 p_type = pack.package_type_id
                 if pack.shipping_weight:
                     # shipping_weight was computed, so base_weight should be included.
@@ -94,7 +94,7 @@ class StockPickingBatch(models.Model):
                     estimated_shipping_weight += p_type.base_weight or 0
                     estimated_shipping_volume += (p_type.packaging_length * p_type.width * p_type.height) / 1000.0**3
             # move without packs
-            for move_line in self.picking_ids.move_ids.move_line_ids:
+            for move_line in batch.picking_ids.move_ids.move_line_ids:
                 if move_line.result_package_id.id in done_package_ids:
                     continue
                 estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
@@ -254,8 +254,11 @@ class StockPickingBatch(models.Model):
 
         # Run sanity_check as a batch and ignore the one in button_validate() since it is done here.
         pickings._sanity_check(separate_pickings=False)
-        # Skip sanity_check in pickings button_validate() & remove 'waiting' pickings from the batch
-        context = {'skip_sanity_check': True, 'pickings_to_detach': empty_waiting_pickings.ids}
+        context = {
+            'skip_sanity_check': True,   # Skip sanity_check in pickings button_validate()
+            'pickings_to_detach': empty_waiting_pickings.ids,  # Remove 'waiting' pickings from the batch
+            'batches_to_validate': self.ids,  # Skip current batch in auto_wave
+        }
         if len(empty_pickings) != len(pickings):
             # If some pickings are at least partially done, other pickings (empty & waiting) will be removed from batch without being cancelled in case of no backorder
             pickings = pickings - empty_pickings
@@ -379,6 +382,19 @@ class StockPickingBatch(models.Model):
 
     def action_see_packages(self):
         self.ensure_one()
+        if self.state == 'done':
+            return {
+                'name': self.env._("Packages"),
+                'res_model': 'stock.package.history',
+                'view_mode': 'list',
+                'views': [(False, 'list')],
+                'type': 'ir.actions.act_window',
+                'domain': [('picking_ids', 'in', self.picking_ids.ids)],
+                'context': {
+                    'search_default_main_packages': True,
+                }
+            }
+
         return {
             'name': self.env._("Packages"),
             'res_model': 'stock.package',
@@ -387,7 +403,7 @@ class StockPickingBatch(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('picking_ids', 'in', self.picking_ids.ids)],
             'context': {
-                'picking_id': self.picking_ids[:1].id,
+                'picking_ids': self.picking_ids.ids,
                 'location_id': self.picking_ids[:1].location_id.id,
                 'can_add_entire_packs': self.picking_type_code != 'incoming',
                 'search_default_main_packages': True,
@@ -399,7 +415,8 @@ class StockPickingBatch(models.Model):
     # -------------------------------------------------------------------------
     @api.model
     def _prepare_name(self, picking_type, sequence_code, company_id):
-        sequence_prefix, sequence_number = (self.env['ir.sequence'].with_company(company_id).next_by_code(sequence_code) or '/').split('/')
+        sequence = self.env['ir.sequence'].with_company(company_id).next_by_code(sequence_code) or '/'
+        sequence_prefix, sequence_number = sequence.rsplit('/', 1)
         return f"{sequence_prefix}/{picking_type.sequence_code}/{sequence_number}"
 
     def _sanity_check(self):

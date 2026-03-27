@@ -1,6 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
+/**
+ * @typedef { Object } WebsiteSessionShared
+ * @property { WebsiteSessionPlugin['getSession'] } getSession
+ */
+
 export class WebsiteSessionPlugin extends Plugin {
     static id = "websiteSession";
     static shared = ["getSession"];

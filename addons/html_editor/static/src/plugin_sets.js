@@ -69,7 +69,6 @@ import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugi
 import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_video_plugin";
 import { EmbeddedYoutubePlugin } from "./others/embedded_components/plugins/video_plugin/embedded_youtube_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
-import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 import { EditorVersionPlugin } from "./core/editor_version_plugin";
@@ -77,52 +76,7 @@ import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
 import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_preview_plugin";
 import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
-
-/**
- * @typedef { Object } SharedMethods
- *
- * Core
- * @property { import("./core/base_container_plugin").BaseContainerShared } baseContainer
- * @property { import("./core/clipboard_plugin").ClipboardShared } clipboard
- * @property { import("./core/delete_plugin").DeleteShared } delete
- * @property { import("./core/dialog_plugin").DialogShared } dialog
- * @property { import("./core/dom_plugin").DomShared } dom
- * @property { import("./core/format_plugin").FormatShared } format
- * @property { import("./core/history_plugin").HistoryShared } history
- * @property { import("./core/line_break_plugin").LineBreakShared } lineBreak
- * @property { import("./core/overlay_plugin").OverlayShared } overlay
- * @property { import("./core/protected_node_plugin").ProtectedNodeShared } protectedNode
- * @property { import("./core/sanitize_plugin").SanitizeShared } sanitize
- * @property { import("./core/selection_plugin").SelectionShared } selection
- * @property { import("./core/split_plugin").SplitShared } split
- * @property { import("./core/style_plugin").StyleShared } style
- * @property { import("./core/user_command_plugin").UserCommandShared } userCommand
-
- *
- * Main
- * @property { import("./main/font/color_plugin").ColorShared } color
- * @property { import("./main/font/color_ui_plugin").ColorUIShared } colorUi
- * @property { import("./main/link/link_plugin").LinkShared } link
- * @property { import ("./main/link/link_selection_plugin").LinkSelectionShared } linkSelection
- * @property { import ("./main/media/media_plugin").MediaShared } media
- * @property { import("./main/powerbox/powerbox_plugin").PowerboxShared } powerbox
- * @property { import ("./main/table/table_plugin").TableShared } table
- * @property { import ("./main/toolbar/toolbar_plugin").ToolbarShared } toolbar
- * @property { import ("./main/emoji_plugin").EmojiShared } emoji
- * @property { import ("./main/local_overlay_plugin").LocalOverlayShared } localOverlay
- * @property { import ("./main/tabulation_plugin").TabulationShared } tabulation
- * @property { import ("./main/feff_plugin").FeffShared } feff
- * @property { import ("./main/media/image_plugin").ImageShared } image
- * @property { import ("./main/media/image_crop_plugin").ImageCropShared } imageCrop
- * @property { import ("./main/media/image_post_process_plugin").ImagePostProcessShared } imagePostProcess
- * @property { import ("./main/banner_plugin").BannerShared } banner
- * @property { import ("./main/media/image_save_plugin").ImageSaveShared } imageSave
- *
- * Others
- * @property { import("./others/collaboration/collaboration_odoo_plugin").CollaborationOdooShared } collaborationOdoo
- * @property { import("./others/collaboration/collaboration_plugin").CollaborationShared } collaboration
- * @property { import("./others/dynamic_placeholder_plugin").DynamicPlaceholderShared } dynamicPlaceholder
- */
+import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
 
 export const CORE_PLUGINS = [
     BaseContainerPlugin,
@@ -190,7 +144,9 @@ export const MAIN_PLUGINS = [
     TextDirectionPlugin,
     InlineCodePlugin,
     TableResizePlugin,
+    FilePlugin,
     PlaceholderPlugin,
+    SelectionPlaceholderPlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [
@@ -207,11 +163,10 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedVideoPlugin,
     EmbeddedYoutubePlugin,
     CaptionPlugin,
-    EmbeddedFilePlugin,
     SyntaxHighlightingPlugin,
 ];
 
-export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [FilePlugin, VideoPlugin, YoutubePlugin];
+export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [VideoPlugin, YoutubePlugin];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,

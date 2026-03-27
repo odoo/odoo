@@ -96,7 +96,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                     );
 
                     // WebP format
-                    const webpData = canvas.toDataURL("image/webp", 0.75).split(",")[1];
+                    const webpData = canvas.toDataURL("image/webp").split(",")[1];
                     const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
                         [
                             {
@@ -113,7 +113,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                     referenceId = referenceId || resizedId;
 
                     // JPEG format for compatibility
-                    const jpegData = canvas.toDataURL("image/jpeg", 0.75).split(",")[1];
+                    const jpegData = canvas.toDataURL("image/jpeg").split(",")[1];
                     await this.orm.call("ir.attachment", "create_unique", [
                         [
                             {
@@ -133,7 +133,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                 const ctx = canvas.getContext("2d");
                 ctx.drawImage(image, 0, 0, image.width, image.height);
 
-                const webpData = canvas.toDataURL("image/webp", 0.75).split(",")[1];
+                const webpData = canvas.toDataURL("image/webp").split(",")[1];
                 attachment.datas = webpData;
                 attachment.mimetype = "image/webp";
                 attachment.name = attachment.name.replace(/\.[^/.]+$/, ".webp");

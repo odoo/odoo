@@ -21,10 +21,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.cd',
                 'account_sale_tax_id': 'tva_sale_16',
                 'account_purchase_tax_id': 'tva_purchase_good_16',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'pcg_382',
             }
         )
         return company_values
 
     @template('cd', 'account.account')
     def _get_cd_account_account(self):
-        return self._parse_csv('cd', 'account.account', module='l10n_syscohada')
+        account_values = self._parse_csv('cd', 'account.account', module='l10n_syscohada')
+        account_values['pcg_382'].update({
+            'account_stock_expense_id': 'pcg_6021',
+            'account_stock_variation_id': 'pcg_6032',
+        })
+        return account_values

@@ -6,21 +6,22 @@
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2025-09-14 08:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/lunch/nl/>"
-"\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-18 17:58+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/lunch/nl/"
+">\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -304,27 +305,26 @@ msgid ""
 msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
-"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 16px; background-color: white; color: #454748; border-"
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
 "collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Lunchbestelling</span><"
-"br/>\n"
-"                </td><td valign=\"middle\" align=\"right\" t-if="
-"\"not user.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src="
-"\"/logo.png?company={{ user.company_id.id }}\" style="
-"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
-"\"user.company_id.name\"/>\n"
+"                    <span style=\"font-size: 10px;\">Lunchbestelling</"
+"span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
+"user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?"
+"company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-"
@@ -337,30 +337,30 @@ msgstr ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "    <div>\n"
 "        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "        <t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"        <t t-set=\"currency\" t-value="
-"\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"        <t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "        <p>\n"
-"        Beste <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,"
-"\n"
+"        Beste <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</"
+"t>,\n"
 "        </p><p>\n"
-"        Hier zijn de bestellingen van vandaag voor <t t-out="
-"\"order.get('company_name', '')\">LunchCompany</t>:\n"
+"        Hier zijn de bestellingen van vandaag voor <t t-"
+"out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
 "        </p>\n"
 "\n"
 "        <t t-if=\"sites\">\n"
 "            <br/>\n"
 "            <p>Locatie</p>\n"
 "            <t t-foreach=\"site\" t-as=\"site\">\n"
-"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out="
-"\"site['address'] or ''\"/></p>\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-"
+"out=\"site['address'] or ''\"/></p>\n"
 "            </t>\n"
 "            <br/>\n"
 "        </t>\n"
@@ -368,62 +368,55 @@ msgstr ""
 "        <table>\n"
 "            <thead>\n"
 "                <tr style=\"background-color:rgb(233,232,233);\">\n"
-"                    <th style="
-"\"width: 100%; min-width: 96px; font-size: 13px;\""
-"><strong>Product</strong></th>\n"
-"                    <th style="
-"\"width: 100%; min-width: 96px; font-size: 13px;\""
-"><strong>Opmerkingen</strong></th>\n"
-"                    <th style="
-"\"width: 100%; min-width: 96px; font-size: 13px;\""
-"><strong>Persoon</strong></th>\n"
-"                    <th style="
-"\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Site</strong></th>"
-"\n"
-"                    <th style="
-"\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\""
-"><strong>Aantal</strong></th>\n"
-"                    <th style="
-"\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\""
-"><strong>Prijs</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: "
+"13px;\"><strong>Product</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: "
+"13px;\"><strong>Opmerkingen</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: "
+"13px;\"><strong>Persoon</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: "
+"13px;\"><strong>Site</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: "
+"13px;\" align=\"center\"><strong>Aantal</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: "
+"13px;\" align=\"center\"><strong>Prijs</strong></th>\n"
 "                </tr>\n"
 "            </thead>\n"
 "            <tbody>\n"
 "                <tr t-foreach=\"lines\" t-as=\"line\">\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign="
-"\"top\" t-out=\"line['product'] or ''\">Sushi zalm</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign="
-"\"top\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" "
+"valign=\"top\" t-out=\"line['product'] or ''\">Sushi zalm</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" "
+"valign=\"top\">\n"
 "                    <t t-if=\"line['toppings']\">\n"
 "                        <t t-out=\"line['toppings'] or ''\">Sojasaus</t>\n"
 "                    </t>\n"
 "                    <t t-if=\"line['note']\">\n"
-"                        <div style=\"color: rgb(173,181,189);\" t-out="
-"\"line['note'] or ''\">Met wasabi.</div>\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-"
+"out=\"line['note'] or ''\">Met wasabi.</div>\n"
 "                    </t>\n"
 "                    </td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign="
-"\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign="
-"\"top\" t-out=\"line['site'] or ''\">Office 1</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign="
-"\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign="
-"\"top\" align=\"right\" t-out="
-"\"format_amount(line['price'], currency) or ''\">€ 1,00</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" "
+"valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" "
+"valign=\"top\" t-out=\"line['site'] or ''\">Office 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" "
+"valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" "
+"valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], "
+"currency) or ''\">€ 1,00</td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td/>\n"
 "                    <td/>\n"
 "                    <td/>\n"
 "                    <td/>\n"
-"                    <td style="
-"\"width: 100%; font-size: 13px; border-top: 1px solid black;\""
-"><strong>Totaal</strong></td>\n"
-"                    <td style="
-"\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align="
-"\"right\"><strong t-out=\"order.get('amount_total') and format_amount(order"
-"['amount_total'], currency) or ''\">€ 10,00</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: "
+"1px solid black;\"><strong>Totaal</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: "
+"1px solid black;\" align=\"right\"><strong t-out=\"order.get('amount_total') "
+"and format_amount(order['amount_total'], currency) or ''\">€ 10,00</strong></"
+"td>\n"
 "                </tr>\n"
 "            </tbody>\n"
 "        </table>\n"
@@ -445,31 +438,29 @@ msgstr ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
-"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style="
-"\"opacity: 0.7;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
 "                    <t t-out=\"user.company_id.phone or ''\">+1 "
 "650-123-4567</t>\n"
-"                    <t t-if=\"user.company_id.phone and ("
-"user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.phone and "
+"(user.company_id.email or user.company_id.website)\">|</t>\n"
 "                    <t t-if=\"user.company_id.email\">\n"
-"                        <a t-attf-href="
-"\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"user.company_id.email or ''\""
-">info@yourcompany.com</a>\n"
+"                        <a t-attf-href=\"'mailto:%s' % "
+"{{ user.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
-"                    <t t-if="
-"\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.email and "
+"user.company_id.website\">|</t>\n"
 "                    <t t-if=\"user.company_id.website\">\n"
-"                        <a t-attf-href="
-"\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color:"
-" #454748;\" t-out=\"user.company_id.website or ''\""
-">http://www.example.com</a>\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -481,12 +472,12 @@ msgstr ""
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
-"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
-" 8px; border-collapse:separate;\">\n"
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
 "        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" t-attf-"
-"style=\"color: {{user.company_id.email_secondary_color or '#875A7B'}};\""
-">Odoo</a>\n"
+"style=\"color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -557,7 +548,7 @@ msgstr "Activiteitensoort icoon"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Add To Cart"
-msgstr "Voeg toe aan mandje"
+msgstr "Toevoegen aan winkelmandje"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__address
@@ -639,7 +630,7 @@ msgstr "Beschikbaarheid"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Available Balance"
-msgstr ""
+msgstr "Beschikbaar saldo"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_on_date
@@ -798,7 +789,7 @@ msgstr "Plaats"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Clear Order"
-msgstr ""
+msgstr "Bestelling verwijderen"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -823,7 +814,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_club
@@ -865,7 +856,7 @@ msgstr "Configuratie"
 #. odoo-javascript
 #: code:addons/lunch/static/src/mixins/lunch_renderer_mixin.js:0
 msgid "Configure Your Order"
-msgstr "Configureer je order"
+msgstr "Configureer je bestelling"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -875,7 +866,7 @@ msgstr "Bevestigen"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr "Bevestig orders"
+msgstr "Bestellingen bevestigen"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
@@ -972,7 +963,7 @@ msgstr "Datum"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Decrease quantity"
-msgstr ""
+msgstr "Aantal verminderen"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__delivery
@@ -1017,7 +1008,7 @@ msgstr "Knop Toevoegen weergeven"
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:lunch.field_res_users__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
@@ -1278,7 +1269,7 @@ msgstr "Afbeelding 512"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Increase quantity"
-msgstr ""
+msgstr "Aantal verhogen"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -1478,32 +1469,32 @@ msgid "Lunch: Supplier Order"
 msgstr "Lunch: Leveranciersorders"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_230
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_231
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Lunch: waarschuwing chatbericht (bericht voor kantoor 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Lunch: stuur automatische e-mail naar Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_226
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_227
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Lunch: stuur automatische e-mail naar lunch leverancier"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Lunch: stuur automatische e-mail naar Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_234
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Lunch: stuur automatische e-mail naar Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_234
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Lunch: stuur automatische e-mail naar The Corner"
 
@@ -1624,7 +1615,7 @@ msgstr "Nieuw"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_form
 msgid "New Order"
-msgstr "Nieuw order"
+msgstr "Nieuwe order"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
@@ -1709,7 +1700,7 @@ msgstr "Niets te bestellen vandaag"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Nothing to order, add some meals to begin."
-msgstr ""
+msgstr "Niets om te bestellen. Voeg maaltijden toe om te starten."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
@@ -1844,7 +1835,7 @@ msgstr "NM"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Passed orders"
-msgstr ""
+msgstr "Doorgegeven bestellingen"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pasta
@@ -1998,7 +1989,7 @@ msgstr "Productenlijst"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__quantity
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree

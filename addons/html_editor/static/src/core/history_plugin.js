@@ -31,6 +31,7 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @property { SerializedSelection } selection
  * @property { HistoryMutation[] } mutations
  * @property { string } previousStepId
+ * @property { Object } extraStepInfos
  *
  * @typedef { Object } HistoryMutationCharacterData
  * @property { "characterData" } type
@@ -137,6 +138,39 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @property { HistoryPlugin['getIsCurrentStepModified'] } getIsCurrentStepModified
  */
 
+/**
+ * @typedef {((record: HistoryMutationRecord) => void)[]} attribute_change_handlers
+ * @typedef {(() => void)[]} before_add_step_handlers
+ * @typedef {((records: HistoryMutationRecord[]) => void)[]} before_filter_mutation_record_handlers
+ * @typedef {((root: HTMLElement) => void)[]} content_updated_handlers
+ * @typedef {(() => void)[]} external_step_added_handlers
+ * @typedef {((records: HistoryMutationRecord[], currentOperation: "original"|"undo"|"redo"|"restore") => void)[]} handleNewRecords
+ * @typedef {(() => void)[]} history_cleaned_handlers
+ * @typedef {(() => void)[]} history_reset_handlers
+ * @typedef {(() => void)[]} history_reset_from_steps_handlers
+ * @typedef {((revertedStep: HistoryStep) => void)[]} post_redo_handlers
+ * @typedef {((revertedStep: HistoryStep) => void)[]} post_undo_handlers
+ * @typedef {(() => void)[]} restore_savepoint_handlers
+ * @typedef {((arg: { step: HistoryStep, stepCommonAncestor: HTMLElement, isPreviewing: boolean }) => void)[]} step_added_handlers
+ *
+ * @typedef {((record: HistoryMutationRecord) => boolean)[]} savable_mutation_record_predicates
+ * @typedef {((step: HistoryStep) => boolean)[]} unreversible_step_predicates
+ *
+ * @typedef {((
+ *    arg: {
+ *      target: Node,
+ *      attributeName: string,
+ *      oldValue: string,
+ *      value: string,
+ *      reverse: boolean,
+ *    },
+ *    options: { forNewStep: boolean }
+ *  ) => string)[]} attribute_change_processors
+ * @typedef {((step: HistoryStep) => HistoryStep)[]} history_step_processors
+ * @typedef {((node: Node, childTreesToSerialize: Tree[]) => Tree[])[]} serializable_descendants_processors
+ * @typedef {((node: Node, attributeName: string, attributeValue: string) => boolean)[]} set_attribute_overrides
+ */
+
 export class HistoryPlugin extends Plugin {
     static id = "history";
     static dependencies = ["selection", "sanitize"];
@@ -165,6 +199,7 @@ export class HistoryPlugin extends Plugin {
         "setStepExtra",
         "getIsCurrentStepModified",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -209,13 +244,6 @@ export class HistoryPlugin extends Plugin {
             this.reset(this.config.content);
         },
         on_prepare_drag_handlers: this.disableIsCurrentStepModifiedWarning.bind(this),
-        // Resource definitions:
-        normalize_handlers: [
-            // (commonRootOfModifiedEl or editableEl) => {
-            //    clean up DOM before taking into account for next history step
-            //    remaining in edit mode
-            // }
-        ],
     };
 
     setup() {
@@ -304,13 +332,15 @@ export class HistoryPlugin extends Plugin {
                 focusNode: undefined,
                 focusOffset: undefined,
             },
-            mutations: childNodes(this.editable).map((node) => ({
-                type: "add",
-                parentNodeId: "root",
-                nodeId: this.nodeMap.getId(node),
-                serializedNode: this.serializeNode(node),
-                nextNodeId: null,
-            })),
+            mutations: childNodes(this.editable)
+                .filter((node) => this.nodeMap.hasNode(node))
+                .map((node) => ({
+                    type: "add",
+                    parentNodeId: "root",
+                    nodeId: this.nodeMap.getId(node),
+                    serializedNode: this.serializeNode(node),
+                    nextNodeId: null,
+                })),
             id: this.steps[this.steps.length - 1]?.id || this.generateId(),
             previousStepId: undefined,
         };
@@ -1112,10 +1142,10 @@ export class HistoryPlugin extends Plugin {
             revertedStep = this.steps[pos];
             this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
-            this.setSerializedSelection(revertedStep.selection);
-            this.currentStep.selection = revertedStep.selectionAfter;
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
+            this.setSerializedSelection(revertedStep.selection);
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ type: "undo", extraStepInfos: revertedStep.extraStepInfos });
             // Consider the last position of the history as an undo.
         }
@@ -1138,10 +1168,10 @@ export class HistoryPlugin extends Plugin {
             revertedStep = this.steps[pos];
             this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
-            this.setSerializedSelection(revertedStep.selection);
-            this.currentStep.selection = revertedStep.selectionAfter;
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
+            this.setSerializedSelection(revertedStep.selection);
+            this.currentStep.selection = revertedStep.selectionAfter;
             this.addStep({ type: "redo", extraStepInfos: revertedStep.extraStepInfos });
         }
         this.dispatchTo("post_redo_handlers", revertedStep);
@@ -1177,10 +1207,10 @@ export class HistoryPlugin extends Plugin {
     setSerializedFocus(activeElementId) {
         const elementToFocus =
             activeElementId === "root"
-                ? this.document.body
+                ? this.editable
                 : activeElementId && this.nodeMap.getNode(activeElementId);
-        if (elementToFocus !== this.document.activeElement) {
-            elementToFocus?.focus();
+        if (elementToFocus?.isConnected && elementToFocus !== this.document.activeElement) {
+            elementToFocus.focus();
         }
     }
     /**
@@ -1487,7 +1517,20 @@ export class HistoryPlugin extends Plugin {
             }
             applied = true;
             const stepIndex = this.steps.findLastIndex((item) => item === step);
-            this.restoreToStep(stepIndex);
+            const lastRevertedStep = this.restoreToStep(stepIndex);
+            if (lastRevertedStep?.selection && !draftMutations.length) {
+                selectionToRestore.setCursor((cursor) => {
+                    const anchorNode = this.nodeMap.getNode(
+                        lastRevertedStep.selection.anchorNodeId
+                    );
+                    const focusNode = this.nodeMap.getNode(lastRevertedStep.selection.focusNodeId);
+                    cursor.anchor.node = anchorNode;
+                    cursor.anchor.offset = lastRevertedStep.selection.anchorOffset;
+
+                    cursor.focus.node = focusNode;
+                    cursor.focus.offset = lastRevertedStep.selection.focusOffset;
+                });
+            }
             // Apply draft mutations to recover the same currentStep state
             // as before.
             this.applyMutations(draftMutations, { forNewStep: true });
@@ -1605,6 +1648,7 @@ export class HistoryPlugin extends Plugin {
      * steps's state to "discarded".
      *
      * @param {Number} stepIndex
+     * @returns {HistoryStep}
      */
     restoreToStep(stepIndex) {
         // Discard current draft.
@@ -1646,6 +1690,7 @@ export class HistoryPlugin extends Plugin {
         // Register resulting mutations as a new "restore" step (prevent undo).
         this.dispatchContentUpdated();
         this.addStep({ type: "restore" });
+        return lastRevertedStep;
     }
 
     setStepExtra(key, value) {
@@ -1727,13 +1772,13 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * @param {Tree} tree
-     * @returns {SerializedNode}
+     * @returns {SerializedNode|null}
      */
     serializeTree(tree) {
         const node = tree.node;
         const nodeId = this.nodeMap.getId(node);
         if (!nodeId) {
-            throw new Error("Missing nodeId for serialization");
+            return null;
         }
         const result = {
             nodeType: node.nodeType,

@@ -31,6 +31,9 @@ registry.category('web_tour.tours').add('mailing_campaign', {
             run: "click",
         },
         {
+            trigger: ":iframe .o_mass_mailing_value .o_layout",
+        },
+        {
             content: 'Fill in Subject',
             trigger: '#subject_0',
             run: "edit TestFromTour",

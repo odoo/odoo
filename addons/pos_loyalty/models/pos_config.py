@@ -16,7 +16,9 @@ class PosConfig(models.Model):
             ('pos_ok', '=', True),
             '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False),
             '|', ('date_from', '=', False), ('date_from', '<=', today),
-            '|', ('date_to', '=', False), ('date_to', '>=', today)
+            '|', ('date_to', '=', False), ('date_to', '>=', today),
+            '|', ('pricelist_ids', '=', False), ('pricelist_ids', 'in', self.available_pricelist_ids.ids),
+            ('currency_id', '=', self.currency_id.id)
         ]).filtered(lambda p: not p.limit_usage or p.sudo().total_order_count < p.max_usage)
 
     def _check_before_creating_new_session(self):
@@ -120,6 +122,7 @@ class PosConfig(models.Model):
                 'coupon_id': coupon.id,
                 'coupon_partner_id': coupon.partner_id.id,
                 'points': coupon.points,
+                'points_display': coupon.points_display,
                 'has_source_order': coupon._has_source_order(),
             },
         }

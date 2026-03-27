@@ -3,13 +3,15 @@
 # * payment_worldline
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-17 17:29+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-15 14:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "payment_worldline/ru/>\n"
 "Language: ru\n"
@@ -28,7 +30,7 @@ msgstr "Ключ API"
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
 msgid "API Secret"
-msgstr ""
+msgstr "Секрет API"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__code
@@ -36,16 +38,16 @@ msgid "Code"
 msgstr "Код"
 
 #. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "Не удалось установить соединение с API."
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Display Name"
 
 #. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
@@ -71,22 +73,11 @@ msgstr "Получены данные с отсутствующим состоя
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "Received data with missing reference %(ref)s."
-msgstr "Получены данные с отсутствующей ссылкой %(ref)s."
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid ""
-"Received invalid transaction status %(status)s with error code "
-"%(error_code)s."
+"Received invalid transaction status %(status)s with error code %"
+"(error_code)s."
 msgstr ""
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_provider.py:0
-msgid "The communication with the API failed. Details: %s"
-msgstr "Не удалось установить связь с API. Подробности: %s"
+"Получен неверный статус транзакции %(status)s с кодом ошибки %(error_code)s."
 
 #. module: payment_worldline
 #: model:ir.model.fields,help:payment_worldline.field_payment_provider__code
@@ -96,25 +87,19 @@ msgstr "Технический код данного провайдера пла
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "Транзакция не привязана к токену."
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid "Transaction cancelled with error code %(error_code)s."
-msgstr ""
+msgstr "Транзакция отменена с кодом ошибки %(error_code)s."
 
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid "Transaction declined with error code %(error_code)s."
-msgstr ""
+msgstr "Транзакция отклонена с кодом ошибки %(error_code)s."
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
 msgid "Webhook Key"
-msgstr ""
+msgstr "Ключ вебхука"
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
@@ -129,24 +114,39 @@ msgstr "Worldline"
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_api_key
 msgid "Worldline API Key"
-msgstr ""
+msgstr "Ключ API Worldline"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_api_secret
 msgid "Worldline API Secret"
-msgstr ""
+msgstr "Секрет API Worldline"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_pspid
 msgid "Worldline PSPID"
-msgstr ""
+msgstr "PSPID Worldline"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_webhook_key
 msgid "Worldline Webhook Key"
-msgstr ""
+msgstr "Ключ вебхука Worldline"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_webhook_secret
 msgid "Worldline Webhook Secret"
-msgstr ""
+msgstr "Секрет вебхука Worldline"
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "Не удалось установить соединение с API."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
+
+#~ msgid "Received data with missing reference %(ref)s."
+#~ msgstr "Получены данные с отсутствующей ссылкой %(ref)s."
+
+#~ msgid "The communication with the API failed. Details: %s"
+#~ msgstr "Не удалось установить связь с API. Подробности: %s"
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "Транзакция не привязана к токену."

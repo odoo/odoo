@@ -59,7 +59,6 @@ def run_cmd(cmd, chdir=None, timeout=None):
 
 
 def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
-    time.sleep(5)
     uid = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/common' % (addr, port)).authenticate(
         dbname, 'admin', 'admin', {}
     )
@@ -67,7 +66,6 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
         dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
     )
     if len(modules) > 1:
-        time.sleep(1)
         toinstallmodules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/object' % (addr, port)).execute(
             dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
         )
@@ -255,13 +253,13 @@ class Docker():
         logging.info('Starting to test Odoo install test')
         start_time = time.time()
         while self.is_running() and (time.time() - start_time) < INSTALL_TIMEOUT:
-            time.sleep(5)
+            time.sleep(5)  # give some time for odoo to install and start
             if os.path.exists(os.path.join(args.build_dir, 'odoo.pid')):
                 try:
                     _rpc_count_modules(port=self.exposed_port)
+                    return
                 finally:
                     self.stop()
-                return
         if self.is_running():
             self.stop()
             raise OdooTestTimeoutError('Odoo pid file never appeared after %s sec' % INSTALL_TIMEOUT)

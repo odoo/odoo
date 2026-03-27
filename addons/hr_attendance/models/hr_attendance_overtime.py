@@ -30,8 +30,8 @@ class HrAttendanceOvertimeLine(models.Model):
         store=True, readonly=False,
     )
 
-    time_start = fields.Datetime(string='Start')
-    time_stop = fields.Datetime(string='Stop')
+    time_start = fields.Datetime(string='Start')  # time_start will be equal to attendance.check_in
+    time_stop = fields.Datetime(string='Stop')  # time_stop will be equal to attendance.check_out
     amount_rate = fields.Float("Overtime pay rate", required=True, default=1.0)
 
     is_manager = fields.Boolean(compute="_compute_is_manager")
@@ -78,7 +78,7 @@ class HrAttendanceOvertimeLine(models.Model):
                 has_manager_right or
                 (
                     has_officer_right
-                    and overtime.employee_id.attendance_maneger_id == self.env.user
+                    and overtime.employee_id.attendance_manager_id == self.env.user
                 )
             )
 
@@ -90,7 +90,7 @@ class HrAttendanceOvertimeLine(models.Model):
 
     def _linked_attendances(self):
         return self.env['hr.attendance'].search([
-            ('date', 'in', self.mapped('date')),
+            ('check_in', 'in', self.mapped('time_start')),
             ('employee_id', 'in', self.employee_id.ids),
         ])
 

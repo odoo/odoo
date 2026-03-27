@@ -309,10 +309,10 @@ export class HierarchyNode {
     /**
      * Remove descendant nodes of the current one
      */
-    removeChildNodes() {
-        for (const childNode of this._nodes) {
-            if (!childNode.isLeaf) {
-                childNode.removeChildNodes();
+    removeChildNodes(rootNode = this) {
+        for (const childNode of this.nodes) {
+            if (!childNode.isLeaf && childNode !== rootNode) {
+                childNode.removeChildNodes(rootNode);
             }
         }
         this.tree.removeNodes(this._nodes);
@@ -684,9 +684,7 @@ export class HierarchyModel extends Model {
             const nodesToUpdate = [];
             if (!(children[0] instanceof Object)) {
                 const allNodeResIds = this.root.resIds;
-                const existingChildResIds = children.filter((childResId) =>
-                    allNodeResIds.includes(childResId)
-                );
+                let existingChildResIds = children.filter((childResId) => allNodeResIds.includes(childResId));
                 if (existingChildResIds.length) {
                     // special case with result found with the search view
                     for (const tree of this.root.trees) {
@@ -694,6 +692,13 @@ export class HierarchyModel extends Model {
                             existingChildResIds.includes(tree.root.resId) &&
                             tree.root.id !== node.id
                         ) {
+                            // don't re-root if both nodes are in the same tree
+                            if (node.tree.id === tree.id) {
+                                existingChildResIds = existingChildResIds.filter(
+                                    (resId) => resId !== tree.root.resId
+                                );
+                                continue;
+                            }
                             nodesToUpdate.push(tree.root);
                         }
                     }
@@ -872,7 +877,8 @@ export class HierarchyModel extends Model {
         }
         const formattedData = [];
         const recordIds = []; // to check if we have only one arborescence to display otherwise we display the data as the kanban view
-        for (const [parentId, records] of Object.entries(recordsPerParentId)) {
+        for (let [parentId, records] of Object.entries(recordsPerParentId)) {
+            records = [...new Map(records.map((record) => [record.id, record])).values()];
             if (!parentId || !(parentId in recordPerId)) {
                 formattedData.push(...records);
             } else {

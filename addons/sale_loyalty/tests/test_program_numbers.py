@@ -754,13 +754,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._apply_promo_code(order, 'test_10pc')
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
         # It should stay the same after a recompute, order matters
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.72)
-        self.assertEqual(order.amount_total, 23.86, "The promotion program should not make the order total go below 0be altered after recomputation")
+        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_total, 23.85, "The promotion program should not make the order total go below 0be altered after recomputation")
 
     def test_coupon_and_coupon_discount_fixed_amount_tax_incl(self):
         """ Ensure multiple coupon can cohexists without making
@@ -1287,6 +1287,42 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 2, 'The order must contain 2 order lines: 1x Product F and 1x 5$ discount')
         self.assertEqual(order.amount_total, 190.0, 'The price must be 190.0 since there is now 2x 5$ discount and 2x Product F')
         self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).price_unit, -5, 'The discount unit price should still be -5 after the quantity was manually changed')
+
+    def test_program_multi_product_max_discount(self):
+        order = self.empty_order
+        coupon_program = self.env['loyalty.program'].create({
+            'name': "50% off for cheapest product(max $30)",
+            'trigger': 'with_code',
+            'program_type': 'coupons',
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'discount_max_amount': 30,
+            })],
+        })
+
+        # create SOL
+        self.env['sale.order.line'].create({
+            'product_id': self.largeCabinet.id,
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        # generate and apply coupon
+        self.env['loyalty.generate.wizard'].with_context(active_id=coupon_program.id).create({
+            'coupon_qty': 1,
+            'points_granted': 1,
+        }).generate_coupons()
+
+        coupon = coupon_program.coupon_ids
+        self._apply_promo_code(order, coupon.code)
+
+        self.assertEqual(len(order.order_line), 2, "The order must contain 2 order lines")
+        self.assertEqual(
+            order.amount_total, 610.0, "The price must be 610.0 since the max discount is 30"
+        )
 
     def test_specific_discount_product_group(self):
         # Tests the following:
@@ -1864,6 +1900,76 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
         used_points = coupon.history_ids[0].used
         self.assertEqual(used_points, coupon.currency_id.round(used_points))
+
+    def test_rounding_program_application(self):
+        """Check that the loyalty program is applied with the currency settings of the order."""
+        JPY_company = self.env['res.company'].create({
+            'name': 'Test',
+            'currency_id': self.env.ref('base.JPY').id,
+        })
+        USD_pricelist = self.env['product.pricelist'].create({
+            'name': 'USD pricelist',
+            'company_id': JPY_company.id,
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'company_id': JPY_company.id,
+            'property_product_pricelist': USD_pricelist,
+        })
+        product_a = self._create_product(
+            name='product_a',
+            lst_price=0.4,
+            taxes_id=[Command.set([])],
+        )
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': '10% promotion',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({})],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+            'company_id': JPY_company.id
+        })
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 10,
+        })
+
+        order = self.env['sale.order'].with_company(JPY_company).create({
+            'partner_id': partner.id,
+            'pricelist_id': USD_pricelist.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_a.id,
+                }),
+            ],
+        })
+
+        self.assertEqual(len(order.order_line), 1, 'Promotion line should not be present')
+
+        order._update_programs_and_rewards()
+        rewards = order._get_claimable_rewards(loyalty_card)
+        applicable_reward = rewards.get(loyalty_card)
+
+        self.assertTrue(applicable_reward, 'Reward should be applicable')
+        self.assertTrue(applicable_reward.program_id, 'Promotion should be applicable')
+        self.assertEqual(applicable_reward.program_id.id, loyalty_program.id, '10% promotion should be applicable')
+
+        self._claim_reward(order, loyalty_program, loyalty_card)
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        reward_line = order.order_line.filtered(lambda x: x.is_reward_line)
+        self.assertTrue(reward_line, 'Promotion should add 1 line')
+        self.assertEqual(reward_line.reward_id.program_id.id, loyalty_program.id, 'Reward line should be 10% promotion')
+        self.assertEqual(order.reward_amount, -0.04, '10% promotion should be applied')
+        self.assertEqual(order.amount_total, 0.36, '10% promotion should be applied')
 
     def test_apply_order_and_specific_discounts(self):
         """Ensure you can apply a full-order discount, and then a product-specific discount."""

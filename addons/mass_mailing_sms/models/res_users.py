@@ -20,20 +20,27 @@ class ResUsers(models.Model):
         for activity in activities:
             if activity.get('model') == 'mailing.mailing':
                 activities.remove(activity)
-                query = """SELECT m.mailing_type, count(*), act.res_model as model, act.res_id,
-                            CASE
-                                WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'
-                                WHEN %(today)s::date - act.date_deadline::date > 0 Then 'overdue'
-                                WHEN %(today)s::date - act.date_deadline::date < 0 Then 'planned'
-                            END AS states
-                        FROM mail_activity AS act
-                        JOIN mailing_mailing AS m ON act.res_id = m.id
-                        WHERE act.res_model = 'mailing.mailing' AND act.user_id = %(user_id)s  
-                        GROUP BY m.mailing_type, states, act.res_model, act.res_id;
+                query = """
+                        WITH mailing_states AS (
+                            SELECT m.mailing_type, act.res_id,
+                                CASE
+                                    WHEN %(today)s::date - MIN(act.date_deadline)::date = 0 Then 'today'
+                                    WHEN %(today)s::date - MIN(act.date_deadline)::date > 0 Then 'overdue'
+                                    WHEN %(today)s::date - MIN(act.date_deadline)::date < 0 Then 'planned'
+                                END AS states
+                            FROM mail_activity AS act
+                            JOIN mailing_mailing AS m ON act.res_id = m.id
+                            WHERE act.res_model = 'mailing.mailing' AND act.user_id = %(user_id)s AND act.active in (TRUE, %(active)s)
+                            GROUP BY m.mailing_type, act.res_id
+                        )
+                        SELECT mailing_type, states, array_agg(res_id) AS res_ids, COUNT(res_id) AS count
+                        FROM mailing_states
+                        GROUP BY mailing_type, states
                         """
                 self.env.cr.execute(query, {
                     'today': fields.Date.context_today(self),
                     'user_id': self.env.uid,
+                    'active': self.env.context.get('active_test', True),
                 })
                 activity_data = self.env.cr.dictfetchall()
 
@@ -59,7 +66,7 @@ class ResUsers(models.Model):
                             'res_ids': res_ids,
                             "view_type": view_type,
                         }
-                    user_activities[act['mailing_type']]['res_ids'].add(act['res_id'])
+                    user_activities[act['mailing_type']]['res_ids'].update(act['res_ids'])
                     user_activities[act['mailing_type']]['%s_count' % act['states']] += act['count']
                     if act['states'] in ('today', 'overdue'):
                         user_activities[act['mailing_type']]['total_count'] += act['count']

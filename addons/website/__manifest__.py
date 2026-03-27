@@ -263,7 +263,7 @@
             'website/static/src/js/text_processing.js',
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
-            'website/static/src/components/user_switch.js',
+            'website/static/src/components/user_switch.*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -271,6 +271,7 @@
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
             'website/static/src/js/content/adapt_content.js',
+            'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
@@ -279,6 +280,7 @@
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
+            ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
@@ -353,6 +355,7 @@
             'website/static/tests/mock_server/**/*',
             'website/static/tests/redirect_field.test.js',
             'website/static/tests/new_content_systray_item.test.js',
+            'website/static/tests/page_url_field.test.js',
         ],
         'web.assets_unit_tests_setup': [
             'html_builder/static/src/utils/scrolling.js',
@@ -371,6 +374,7 @@
             'website/static/src/xml/**/*.xml',
             'website/static/src/snippets/s_table_of_content/000.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
+            'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
@@ -443,9 +447,7 @@
             ('remove', 'website/static/src/builder/**/*.edit.*'),
         ],
         'html_builder.iframe_add_dialog': [
-            'website/static/src/snippets/s_color_blocks_2/s_color_blocks_2.scss',
-            'website/static/src/snippets/s_ecomm_categories_showcase/categories_showcase.scss',
-            'website/static/src/snippets/s_floating_blocks/floating_blocks.scss',
+            'website/static/src/snippets/**/*.preview.scss',
         ],
     },
     'configurator_snippets': {

@@ -1,7 +1,16 @@
+import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { rightPos } from "@html_editor/utils/position";
+import {
+    generatePartnerMentionElement,
+    generateRoleMentionElement,
+    generateSpecialMentionElement,
+    generateThreadMentionElement,
+} from "@mail/utils/common/format";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { createTextNode } from "@web/core/utils/xml";
 
 export const DELAY_FETCH = 250;
 
@@ -86,6 +95,14 @@ export class UseSuggestion {
         let text = "";
         if (this.comp.composerService.htmlEnabled) {
             const selection = this.comp.editor.shared.selection.getEditableSelection();
+            if (
+                !isTextNode(selection.startContainer) ||
+                !isContentEditable(selection.startContainer) ||
+                !selection.isCollapsed
+            ) {
+                this.clearSearch();
+                return;
+            }
             start = selection.startOffset;
             end = selection.endOffset;
             text = selection.anchorNode.textContent;
@@ -163,23 +180,25 @@ export class UseSuggestion {
         this.clearSearch();
     }
     get thread() {
-        return this.composer.thread || this.composer.message.thread;
+        return this.composer.thread || this.composer.message?.thread;
     }
     insert(option) {
         let position = this.search.position + 1;
-        if ([":", "::"].includes(this.search.delimiter)) {
+        if (
+            [":", "::"].includes(this.search.delimiter) ||
+            (this.comp.composerService.htmlEnabled && this.search.delimiter !== "/")
+        ) {
             position = this.search.position;
         }
         if (this.comp.composerService.htmlEnabled) {
             const { startContainer, endContainer, endOffset } =
                 this.comp.editor.shared.selection.getEditableSelection();
-            const range = {
-                startContainer,
-                startOffset: position,
-                endContainer,
-                endOffset,
-            };
-            this.comp.editor.shared.delete.deleteRange(range);
+            this.comp.editor.shared.selection.setSelection({
+                anchorNode: startContainer,
+                anchorOffset: position,
+                focusNode: endContainer,
+                focusOffset: endOffset,
+            });
         }
         if (option.partner) {
             this.composer.mentionedPartners.add({ id: option.partner.id });
@@ -191,7 +210,22 @@ export class UseSuggestion {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
         if (this.comp.composerService.htmlEnabled) {
-            this.comp.editor.shared.dom.insert(option.label);
+            let inlineElement;
+            if (option.partner) {
+                inlineElement = generatePartnerMentionElement(option.partner, this.thread);
+            } else if (option.isSpecial) {
+                inlineElement = generateSpecialMentionElement(option.label);
+            } else if (option.role) {
+                inlineElement = generateRoleMentionElement(option.role);
+            } else if (option.thread) {
+                inlineElement = generateThreadMentionElement(option.thread);
+            } else {
+                inlineElement = createTextNode(option.label);
+            }
+            this.comp.editor.shared.dom.insert(inlineElement);
+            const [anchorNode, anchorOffset] = rightPos(inlineElement);
+            this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
+            this.comp.editor.shared.dom.insert("\u00A0");
             this.comp.editor.shared.history.addStep();
         } else {
             // remove the user-typed search delimiter
@@ -221,6 +255,9 @@ export class UseSuggestion {
     }
 
     async fetchSuggestions() {
+        if (!this.thread || status(this.comp) === "destroyed") {
+            return;
+        }
         let resetFetchingState = true;
         try {
             this.abortController?.abort();
@@ -242,7 +279,7 @@ export class UseSuggestion {
                 this.state.isFetching = false;
             }
         }
-        if (status(this.comp) === "destroyed") {
+        if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
         this.update();

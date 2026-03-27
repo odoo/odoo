@@ -22,15 +22,12 @@
 
     'assets': {
         'web._assets_primary_variables': [
-            # TODO DUAU: change when file is back in html_builder
-            ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/builder.variables.scss'),
             'html_builder/static/src/**/*.variables.scss',
         ],
         # this bundle is lazy loaded when the editor is ready
         'html_builder.assets': [
             ('include', 'web._assets_helpers'),
 
-            # TODO DUAU: change when file is back in html_builder
             'html_editor/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
@@ -40,6 +37,9 @@
             'html_builder/static/src/**/*',
             ('remove', 'html_builder/static/src/**/*.edit.*'),
             ('remove', 'html_builder/static/src/**/*.dark.scss'),
+        ],
+        'web.assets_frontend': [
+            'html_builder/static/src/scss/background.scss'
         ],
         'web.assets_web_dark': [
             'html_builder/static/src/**/*.dark.scss',

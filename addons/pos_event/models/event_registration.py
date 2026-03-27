@@ -35,10 +35,11 @@ class EventRegistration(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['id', 'event_id', 'event_ticket_id', 'event_slot_id', 'pos_order_line_id', 'pos_order_id', 'phone',
-                'company_name', 'email', 'name', 'registration_answer_ids', 'registration_answer_choice_ids', 'write_date']
+                'company_name', 'email', 'name', 'registration_answer_ids', 'write_date']
 
     @api.model_create_multi
     def create(self, vals_list):
+        self._populate_creation_vals(vals_list)
         result = super().create(vals_list)
         result._update_available_seat()
         return result
@@ -47,6 +48,17 @@ class EventRegistration(models.Model):
         result = super().write(vals)
         self._update_available_seat()
         return result
+
+    def _populate_creation_vals(self, vals_list):
+        for vals in vals_list:
+            if 'pos_order_line_id' in vals:
+                if 'partner_id' not in vals:
+                    pol = self.env['pos.order.line'].browse(vals['pos_order_line_id']).exists()
+                    if pol and pol.order_id.partner_id:
+                        vals['partner_id'] = pol.order_id.partner_id.id
+                for field in ["name", "email", "phone", "company_name"]:
+                    if field in vals and not vals[field]:
+                        vals.pop(field)
 
     def _update_available_seat(self):
         # Here sudo is used in order for pos_event to update the available seats to all open pos session when a ticket is sold in website for example

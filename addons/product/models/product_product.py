@@ -8,6 +8,7 @@ from odoo.fields import Domain
 from odoo.tools import float_compare, groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
+from odoo.tools.sql import SQL
 
 
 class ProductProduct(models.Model):
@@ -21,12 +22,12 @@ class ProductProduct(models.Model):
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
-        digits='Product Price',
+        min_display_digits='Product Price',
         help="This is the sum of the extra price of all attributes")
     # lst_price: catalog value + extra, context dependent (uom)
     lst_price = fields.Float(
         'Sales Price', compute='_compute_product_lst_price',
-        digits='Product Price', inverse='_set_product_lst_price',
+        min_display_digits='Product Price', inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -51,7 +52,7 @@ class ProductProduct(models.Model):
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
-        digits='Product Price',
+        min_display_digits='Product Price',
         groups="base.group_user",
         help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
@@ -64,6 +65,7 @@ class ProductProduct(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='product_id',
         compute='_compute_pricelist_rule_ids',
+        inverse='_inverse_pricelist_rule_ids',
         readonly=False,
     )
 
@@ -138,14 +140,26 @@ class ProductProduct(models.Model):
             else:
                 record[variant_field] = record[template_field]
 
-    @api.depends('product_tmpl_id')
+    @api.depends('product_tmpl_id.pricelist_rule_ids')
     def _compute_pricelist_rule_ids(self):
         for product in self:
             if not product.id:
                 product.pricelist_rule_ids = False
                 continue
             product.pricelist_rule_ids = product.product_tmpl_id.pricelist_rule_ids.filtered(
-                lambda rule: not rule.product_id or rule.product_id == product.id
+                lambda rule: rule.product_id <= product,
+            )
+
+    def _inverse_pricelist_rule_ids(self):
+        for product in self:
+            template = product.product_tmpl_id
+            template.pricelist_rule_ids = (
+                product.pricelist_rule_ids
+                # We have to manually keep the rules the current variant
+                # wasn't aware of because they targeted other variants.
+                | template.pricelist_rule_ids.filtered(
+                    lambda rule: rule.product_id and rule.product_id != product
+                )
             )
 
     @api.depends("product_tmpl_id.write_date")
@@ -168,11 +182,14 @@ class ProductProduct(models.Model):
         compute method is not subject to this restriction.  It therefore
         works as intended :-)
         """
+        now = self.env.cr.now()
         for record in self:
             if not record.id:
                 record.write_date = record._origin.write_date
                 continue
-            record.write_date = max(record.write_date or self.env.cr.now(), record.product_tmpl_id.write_date)
+            record.write_date = max(
+                record.write_date or now, record.product_tmpl_id.write_date or now
+            )
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""
@@ -446,7 +463,7 @@ class ProductProduct(models.Model):
 
         # Check if products still exists, in case they've been unlinked by unlinking their template
         existing_products = self.exists()
-        product_ids_by_template_id = {template.id: set(ids) for template, ids in self._read_group(
+        product_ids_by_template_id = {template.id: set(ids) for template, ids in self.with_context(active_test=False)._read_group(
             domain=[('product_tmpl_id', 'in', existing_products.product_tmpl_id.ids)],
             groupby=['product_tmpl_id'],
             aggregates=['id:array_agg'],
@@ -540,7 +557,7 @@ class ProductProduct(models.Model):
         return super()._search(domain, *args, **kwargs)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
-    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'formatted_display_name')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'formatted_display_name', 'lang')
     def _compute_display_name(self):
 
         def get_display_name(name, code):
@@ -604,19 +621,19 @@ class ProductProduct(models.Model):
 
     @api.model
     def _search_display_name(self, operator, value):
-        is_positive = not operator in Domain.NEGATIVE_OPERATORS
-        combine = Domain.OR if is_positive else Domain.AND
-        domains = [
-            [('name', operator, value)],
-            [('default_code', operator, value)],
-        ]
+        is_positive = operator not in Domain.NEGATIVE_OPERATORS
+        template_domains = [[('name', operator, value)]]
+        product_domains = [[('default_code', operator, value)]]
+
         if operator == 'in':
-            domains.append([('barcode', 'in', value)])
+            product_domains.append([('barcode', 'in', value)])
             for v in value:
                 if isinstance(v, str) and (m := re.search(r'(\[(.*?)\])', v)):
-                    domains.append([('default_code', '=', m.group(2))])
+                    product_domains.append([('default_code', '=', m.group(2))])
         elif operator.endswith('like') and is_positive:
-            domains.append([('barcode', 'in', [value])])
+            product_domains.append([('barcode', 'in', [value])])
+
+        supplier_domain = []
         if partner_id := self.env.context.get('partner_id'):
             supplier_domain = [
                 ('partner_id', '=', partner_id),
@@ -624,8 +641,40 @@ class ProductProduct(models.Model):
                 ('product_code', operator, value),
                 ('product_name', operator, value),
             ]
-            domains.append([('product_tmpl_id.seller_ids', 'any', supplier_domain)])
-        return combine(domains)
+
+        # AND clauses properly hit indexes so no need for custom sql in this case.
+        if operator in Domain.NEGATIVE_OPERATORS:
+            domains = template_domains + product_domains
+            if supplier_domain:
+                domains.append([('product_tmpl_id.seller_ids', 'any', supplier_domain)])
+            return Domain.AND(domains)
+
+        # Disable active_test to simplify subqueries
+        self_no_active_test = self.with_context(active_test=False)
+        queries = [
+            self_no_active_test._search([
+                ('product_tmpl_id', 'in', self_no_active_test.env['product.template']._search(Domain.OR(template_domains)))
+            ]),
+            self_no_active_test._search(Domain.OR(product_domains)),
+        ]
+        if supplier_domain:
+            queries.append(
+                self_no_active_test._search([
+                    (
+                        'product_tmpl_id',
+                        'in',
+                        self_no_active_test.env['product.supplierinfo']._search(supplier_domain).subselect('product_tmpl_id'),
+                    )
+                ])
+            )
+        query = SQL(
+            """(%s)""",
+            SQL("UNION ALL").join(
+                [SQL("(%s)", query.select()) for query in queries]
+            )
+        )
+
+        return [('id', 'in', query)]
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
@@ -838,8 +887,8 @@ class ProductProduct(models.Model):
 
     def get_product_multiline_description_sale(self):
         """ Compute a multiline description of this product, in the context of sales
-                (do not use for purchases or other display reasons that don't intend to use "description_sale").
-            It will often be used as the default description of a sale order line referencing this product.
+        (do not use for purchases or other display reasons that don't intend to use "description_sale").
+        It will often be used as the default description of a sale order line referencing this product.
         """
         name = self.display_name
         if self.description_sale:

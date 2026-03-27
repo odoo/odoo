@@ -186,15 +186,11 @@ test("load multiple spreadsheets", async () => {
 });
 
 test("load spreadsheet data with error", async () => {
-    onRpc(
-        "/spreadsheet/dashboard/data/*",
-        () => {
-            const error = new RPCError();
-            error.data = { message: "Bip" };
-            throw error;
-        },
-        { pure: true }
-    );
+    onRpc("/spreadsheet/dashboard/data/*", () => {
+        const error = new RPCError();
+        error.data = { message: "Bip" };
+        throw error;
+    });
     const loader = await createDashboardLoader();
     await loader.load();
     const result = loader.getDashboard(3);
@@ -271,20 +267,16 @@ test("Model is in dashboard mode [2]", async () => {
 });
 
 test("default currency format", async () => {
-    onRpc(
-        "/spreadsheet/dashboard/data/*",
-        () => ({
-            data: {},
-            revisions: [],
-            default_currency: {
-                code: "Odoo",
-                symbol: "θ",
-                position: "after",
-                decimalPlaces: 2,
-            },
-        }),
-        { pure: true }
-    );
+    onRpc("/spreadsheet/dashboard/data/*", () => ({
+        data: {},
+        revisions: [],
+        default_currency: {
+            code: "Odoo",
+            symbol: "θ",
+            position: "after",
+            decimalPlaces: 2,
+        },
+    }));
     const loader = await createDashboardLoader();
     await loader.load();
     const result = loader.getDashboard(3);

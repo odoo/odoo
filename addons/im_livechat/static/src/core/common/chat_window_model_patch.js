@@ -30,6 +30,10 @@ const chatWindowPatch = {
                     super.close(...arguments);
                     break;
                 }
+                if (!this.thread.hasSelfAsMember) {
+                    super.close(...arguments);
+                    break;
+                }
                 if (this.thread.livechat_end_dt) {
                     if (isSelfVisitor) {
                         this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;

@@ -27,10 +27,15 @@ export class HeaderStandard extends BaseHeader {
      */
     canTransition() {
         const scrollEl = this.scrollingElement;
-        const remainingScroll = (scrollEl.scrollHeight - scrollEl.clientHeight) - this.transitionPoint;
+        const remainingScroll =
+            scrollEl.scrollHeight - scrollEl.clientHeight - this.transitionPoint;
         const clonedHeader = this.el.cloneNode(true);
         scrollEl.append(clonedHeader);
-        clonedHeader.classList.add('o_header_is_scrolled', 'o_header_affixed', 'o_header_no_transition');
+        clonedHeader.classList.add(
+            "o_header_is_scrolled",
+            "o_header_affixed",
+            "o_header_no_transition"
+        );
         const endHeaderHeight = clonedHeader.offsetHeight;
         clonedHeader.remove();
         const requiredScroll = this.getHeaderHeight() - endHeaderHeight;
@@ -42,7 +47,7 @@ export class HeaderStandard extends BaseHeader {
 
         const scroll = this.scrollingElement.scrollTop;
 
-        const isScrolled = (scroll > this.transitionPoint);
+        const isScrolled = scroll > this.transitionPoint;
         if (this.isScrolled !== isScrolled) {
             this.transitionPossible = this.canTransition() || !isScrolled;
             if (this.transitionPossible) {
@@ -50,19 +55,21 @@ export class HeaderStandard extends BaseHeader {
             }
         }
 
-        const reachHeaderBottom = (scroll > this.getHeaderHeight() + this.topGap);
-        const reachTransitionPoint = (scroll > this.transitionPoint + this.topGap) && this.transitionPossible;
+        const reachHeaderBottom = scroll > this.getHeaderHeight() + this.topGap;
+        const reachTransitionPoint =
+            scroll > this.transitionPoint + this.topGap && this.transitionPossible;
 
         if (this.atTop == reachHeaderBottom) {
             this.el.classList.add("o_transformed_not_affixed");
         }
+        this.el.style.transition = this.atTop == reachHeaderBottom ? "none" : "";
         this.atTop = !reachHeaderBottom;
 
         reachTransitionPoint
             ? this.transformShow()
             : reachHeaderBottom
-                ? this.transformHide()
-                : this.transformShow()
+            ? this.transformHide()
+            : this.transformShow();
         void this.el.offsetWidth; // Force a paint refresh
 
         this.hideEl?.classList.toggle("hidden", reachHeaderBottom);
@@ -88,12 +95,8 @@ export class HeaderStandard extends BaseHeader {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.header_standard", HeaderStandard);
+registry.category("public.interactions").add("website.header_standard", HeaderStandard);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.header_standard", {
-        Interaction: HeaderStandard,
-    });
+registry.category("public.interactions.edit").add("website.header_standard", {
+    Interaction: HeaderStandard,
+});

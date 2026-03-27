@@ -3,11 +3,13 @@
 from odoo.service.common import exp_version
 from odoo import http, _
 from odoo.http import request
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import float_round, py_to_js_locale, SQL
 from odoo.tools.image import image_data_uri
 
 import datetime
+from requests.exceptions import RequestException
 
 class HrAttendance(http.Controller):
     @staticmethod
@@ -43,8 +45,8 @@ class HrAttendance(http.Controller):
                 'kiosk_delay': employee.company_id.attendance_kiosk_delay * 1000,
                 'attendance': {'check_in': employee.last_attendance_id.check_in,
                                'check_out': employee.last_attendance_id.check_out},
-                'overtime_today': request.env['hr.attendance.overtime.line'].sudo().search([
-                    ('employee_id', '=', employee.id), ('date', '=', datetime.date.today())]).duration or 0,
+                'overtime_today': sum(request.env['hr.attendance.overtime.line'].sudo().search([
+                    ('employee_id', '=', employee.id), ('date', '=', datetime.date.today())]).mapped('duration')) or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': employee.company_id.hr_attendance_display_overtime,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
@@ -57,21 +59,10 @@ class HrAttendance(http.Controller):
 
         if not device_tracking_enabled:
             return response
-
-        if latitude and longitude:
-            geo_obj = request.env['base.geocoder']
-            location_request = geo_obj._call_openstreetmap_reverse(latitude, longitude)
-            if location_request and location_request.get('display_name'):
-                location = location_request.get('display_name')
-            else:
-                location = _('Unknown')
-        else:
-            city = request.geoip.city.name
-            country = request.geoip.country.name
-            if city and country:
-                location = f"{city}, {country}"
-            else:
-                location = _('Unknown')
+        try:
+            location = request.env['base.geocoder']._get_localisation(latitude, longitude)
+        except (UserError, RequestException):
+            location = _("Unknown")
 
         response.update({
             'location': location,
@@ -210,6 +201,14 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/employees_infos', type="jsonrpc", auth="public")
     def employees_infos(self, token, limit, offset, domain):
+        for condition in domain:
+            field_name, operator, _value = condition  # Force '&' implicit syntax
+            if field_name not in ('name', 'department_id') or operator not in ('=', 'ilike'):
+                raise UserError(_(
+                    "Invalid domain, use 'name' and/or 'department_id' fields "
+                    "with '=' and/or 'ilike' operators.",
+                ))
+
         company = self._get_company(token)
         if company:
             domain = Domain(domain) & Domain('company_id', '=', company.id)

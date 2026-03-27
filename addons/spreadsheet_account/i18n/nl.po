@@ -3,13 +3,14 @@
 # * spreadsheet_account
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-14 08:07+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-16 11:00+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet_account/nl/>\n"
 "Language: nl\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -41,6 +42,12 @@ msgid "Account"
 msgstr "Rekening"
 
 #. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Bank and Cash"
+msgstr "Bank en kas"
+
+#. module: spreadsheet_account
 #. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 msgid "Cell Audit"
@@ -50,6 +57,66 @@ msgstr "Cell Audit"
 #: model:ir.model,name:spreadsheet_account.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Cost of Revenue"
+msgstr "Kosten van omzet"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Credit Card"
+msgstr "Creditcard"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Assets"
+msgstr "Vlottende activa"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Liabilities"
+msgstr "Kort vreemd vermogen"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Year Earnings"
+msgstr "Huidige jaarwinst"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Depreciation"
+msgstr "Afschrijving"
+
+#. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__display_name
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__display_name
+msgid "Display Name"
+msgstr "Weergavenaam"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Equity"
+msgstr "Eigen vermogen"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Expenses"
+msgstr "Kosten"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Fixed Assets"
+msgstr "Vaste activa"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -70,10 +137,71 @@ msgid "Get the total debit for the specified account(s) and period."
 msgstr "Geef het totale debit voor de bepaalde rekening(en) en periode."
 
 #. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__id
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Income"
+msgstr "Omzet"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Assets"
+msgstr "Langlopende activa"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Liabilities"
+msgstr "Lang vreemd vermogen"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Off-Balance Sheet"
+msgstr "Niet opgenomen in balans"
+
+#. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "Offset applied to the years."
 msgstr "De verschuiving die is toegepast op de jaren."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Other Income"
+msgstr "Overige opbrengsten"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Payable"
+msgstr "Crediteuren"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Prepayments"
+msgstr "Vooruitbetalingen"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Receivable"
+msgstr "Debiteuren"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the balance of accounts for the specified tag(s) and period"
+msgstr ""
+"Geef het saldo van de rekeningen voor de opgegeven labels en periode weer"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -123,6 +251,12 @@ msgstr "Gegevens bekijken"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "Set to TRUE to include unposted entries."
 msgstr "Stel in op TRUE om ongeboekte boekingen op te nemen."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The balance for given account tag could not be computed."
+msgstr "Het saldo voor het opgegeven rekeninglabel kon niet worden berekend."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -185,12 +319,6 @@ msgstr "Het voorvoegsel van de rekeningen."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The technical account type (possible values are: %s)."
-msgstr "Het technische rekeningsoort (mogelijke waarden zijn: %s)"
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid ""
 "The prefix of the accounts. If none provided, all receivable and payable "
 "accounts will be used."
@@ -204,3 +332,15 @@ msgstr ""
 msgid "The residual amount for given accounts could not be computed."
 msgstr ""
 "Het resterende bedrag voor de opgegeven accounts kon niet worden berekend."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The tag ids (separated by a comma)."
+msgstr "De label-id's (gescheiden door een komma)."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The technical account type (possible values are: %s)."
+msgstr "Het technische rekeningsoort (mogelijke waarden zijn: %s)"

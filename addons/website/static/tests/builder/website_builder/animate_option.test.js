@@ -1,13 +1,13 @@
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
-import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
+import { queryFirst, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
+import { setSelection, thirdClick } from "@html_editor/../tests/_helpers/selection";
+import { advanceTime } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
 
@@ -24,14 +24,13 @@ const styleContent = `
 `;
 
 test("visibility of animation animation=none", async () => {
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
-
-    await waitFor(".options-container");
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Effect']").not.toBeVisible();
     expect(".options-container [data-label='Direction']").not.toHaveCount();
     expect(".options-container [data-label='Trigger']").not.toBeVisible();
@@ -41,7 +40,7 @@ test("visibility of animation animation=none", async () => {
 });
 describe("onAppearance", () => {
     test("visibility of animation animation=onAppearance", async () => {
-        const { waitDomUpdated } = await setupWebsiteBuilder(
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -50,10 +49,11 @@ describe("onAppearance", () => {
             { styleContent }
         );
         await contains(":iframe .test-options-target img").click();
+        await waitSidebarUpdated();
 
         await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
-        await waitDomUpdated();
+        await waitSidebarUpdated();
         expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText(
             "On Appearance"
         );
@@ -69,7 +69,7 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
     test("visibility of animation animation=onAppearance effect=slide", async () => {
-        const { waitDomUpdated } = await setupWebsiteBuilder(
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -78,13 +78,14 @@ describe("onAppearance", () => {
             { styleContent }
         );
         await contains(":iframe .test-options-target img").click();
+        await waitSidebarUpdated();
 
         await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
 
         await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='o_anim_slide_in']").click();
-        await waitDomUpdated();
+        await waitSidebarUpdated();
         expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Slide");
 
         expect(".options-container [data-label='Direction'] .o-dropdown").toHaveText("From right");
@@ -97,7 +98,7 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
     test("visibility of animation animation=onAppearance effect=bounce", async () => {
-        const { waitDomUpdated } = await setupWebsiteBuilder(
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -106,13 +107,14 @@ describe("onAppearance", () => {
             { styleContent }
         );
         await contains(":iframe .test-options-target img").click();
+        await waitSidebarUpdated();
 
         await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
 
         await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='o_anim_bounce_in']").click();
-        await waitDomUpdated();
+        await waitSidebarUpdated();
         expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Bounce");
 
         expect(".options-container [data-label='Direction'] .o-dropdown").toHaveText("In place");
@@ -125,7 +127,7 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
     test("visibility of animation animation=onAppearance effect=flash", async () => {
-        const { waitDomUpdated } = await setupWebsiteBuilder(
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -134,13 +136,14 @@ describe("onAppearance", () => {
             { styleContent }
         );
         await contains(":iframe .test-options-target img").click();
+        await waitSidebarUpdated();
 
         await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
 
         await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='o_anim_flash']").click();
-        await waitDomUpdated();
+        await waitSidebarUpdated();
         expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
 
         expect(".options-container [data-label='Direction']").not.toHaveCount();
@@ -154,16 +157,17 @@ describe("onAppearance", () => {
     });
 });
 test("visibility of animation animation=onScroll", async () => {
-    const { waitDomUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='onScroll']").click();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText("On Scroll");
 
     expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Fade");
@@ -177,7 +181,7 @@ test("visibility of animation animation=onScroll", async () => {
     expect(".options-container [data-label='Scroll Zone']").toBeVisible();
 });
 test("animation=onScroll should not be visible when the animation is limited", async () => {
-    const { waitDomUpdated } = await setupWebsiteBuilder(
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `
                 <div class="test-options-target">
                     ${testImg}
@@ -186,19 +190,20 @@ test("animation=onScroll should not be visible when the animation is limited", a
         { styleContent }
     );
     await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
 
     await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='o_anim_flash']").click();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect(".o-dropdown--menu [data-action-value='onScroll']").not.toHaveCount();
 });
-test.skip("visibility of animation animation=onHover", async () => {
+test("visibility of animation animation=onHover", async () => {
     function expectOnHoverOptions(options) {
         const labels = [
             "Effect",
@@ -227,77 +232,72 @@ test.skip("visibility of animation animation=onHover", async () => {
         }
     }
 
-    const { waitDomUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
 
-    // NOTE: we use waitDomUpdated and waitForEndOfOperation because setting the
-    // hover effect may take some time (and setting "On Hover" sets a default)
+    // NOTE: we use waitSidebarUpdated because setting the hover effect may
+    // take some time (and setting "On Hover" sets a default)
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='onHover']").click();
-    await waitForEndOfOperation();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText("On Hover");
     expectOnHoverOptions({ Effect: "Overlay", Color: 1 });
 
     await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='image_zoom_in']").click();
-    await waitForEndOfOperation();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expectOnHoverOptions({ Effect: "Zoom In", Intensity: 1, Overlay: 1 });
 
     await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='image_zoom_out']").click();
-    await waitForEndOfOperation();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expectOnHoverOptions({ Effect: "Zoom Out", Intensity: 1, Overlay: 1 });
 
     await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='dolly_zoom']").click();
-    await waitForEndOfOperation();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expectOnHoverOptions({ Effect: "Dolly Zoom", Intensity: 1, Overlay: 1 });
 
     await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='outline']").click();
-    await waitForEndOfOperation();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expectOnHoverOptions({ Effect: "Outline", Color: 1, "Stroke Width": 1 });
 
     await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='image_mirror_blur']").click();
-    await waitForEndOfOperation();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expectOnHoverOptions({ Effect: "Mirror Blur", Intensity: 1 });
 });
 test("animation=onHover should not be visible when the image is a device shape", async () => {
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             <img data-shape="html_builder/devices/iphone_front_portrait" src='${base64Img}'>
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
-
+    await waitSidebarUpdated();
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 test("animation=onHover should not be visible when the image has a wrong mimetype", async () => {
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             <img data-attachment-id="1" data-original-id="1" data-mimetype="foo/bar" src='${base64Img}'>
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
-
+    await waitSidebarUpdated();
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 test("animation=onHover should not be visible when the image has a cors protected image", async () => {
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             <img data-attachment-id="1" data-original-id="1" src='/web/image/0-redirect/foo.jpg'>
         </div>
@@ -330,66 +330,64 @@ test("animation=onHover should not be visible when the image has a cors protecte
         { pure: true }
     );
     await contains(":iframe .test-options-target img").click();
-
+    await waitSidebarUpdated();
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect.verifySteps(["/web/image/0-redirect/foo.jpg"]);
     expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 
 test("image should not be lazy onAppearance", async () => {
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
-
+    await waitSidebarUpdated();
     expect(":iframe .test-options-target img").toHaveProperty("loading", "auto");
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
-
     expect(":iframe .test-options-target img").toHaveProperty("loading", "eager");
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='']").click();
-
     expect(":iframe .test-options-target img").toHaveProperty("loading", "auto");
 });
 
 test("should not show the animation options if the image has a parent [data-oe-type='image']", async () => {
-    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(`
+    const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
-
-    await waitFor(".options-container");
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Animation'] .dropdown-toggle").toBeVisible();
+
     const optionTarget = queryFirst(":iframe .test-options-target");
     optionTarget.setAttribute("data-oe-type", "image");
     editor.shared.history.addStep();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toHaveCount();
 });
 
 test("should not show the animation options if the image has is [data-oe-xpath]", async () => {
-    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(`
+    const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
-
-    await waitFor(".options-container");
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Animation'] .dropdown-toggle").toBeVisible();
     const optionTarget = queryFirst(":iframe .test-options-target img");
     optionTarget.setAttribute("data-oe-xpath", "/foo/bar");
     editor.shared.history.addStep();
-    await waitDomUpdated();
+
+    await waitSidebarUpdated();
     expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toHaveCount();
 });
 
@@ -608,6 +606,44 @@ describe("animate text in toolbar", () => {
         const span = queryOne(":iframe span");
         setSelection({ anchorNode: span, anchorOffset: 0, focusNode: span, focusOffset: 1 });
         await expandToolbar();
+        expect("button[title='Animate Text']").toHaveClass("active");
+    });
+
+    test("Applied animation from floating toolbar should not reset", async () => {
+        await setupWebsiteBuilder(`<div>
+            <h5>About us</h5>
+            <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.
+            <br><br>Our products are designed for small to medium size companies willing to optimize their performance.</p>
+        </div>`);
+        const paragraphEl = queryOne(":iframe p");
+        setSelection({
+            anchorNode: paragraphEl.firstChild,
+            anchorOffset: 0,
+            focusNode: paragraphEl.lastChild,
+            focusOffset: paragraphEl.lastChild.length,
+        });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+
+        // Apply text highlight from the floating toolbar.
+        await contains(".o-we-toolbar button[title='Apply highlight']").click();
+        await contains(".o_popover .o_text_highlight_underline").click();
+
+        // Reselect all the text in the paragraph and reopen toolbar.
+        await thirdClick(paragraphEl);
+        await advanceTime(500);
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+
+        // Apply the default animation to the selected text.
+        await contains(".o-we-toolbar button[title='Animate Text']").click();
+
+        // Reselect all the text again and verify animate button remains active.
+        await thirdClick(paragraphEl);
+        await advanceTime(500);
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+
         expect("button[title='Animate Text']").toHaveClass("active");
     });
 });

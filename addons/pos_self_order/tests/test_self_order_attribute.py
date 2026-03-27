@@ -121,11 +121,20 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.assertEqual(order.lines[1].price_unit, 15.0)
 
     def test_self_order_product_info(self):
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "background_color": 'rgb(249,250,251)',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
+
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'counter',
+            "floor_ids": [(6, 0, [floor.id])],
         })
 
         pos_categ_misc = self.env['pos.category'].create({
@@ -142,9 +151,42 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.pos_config.limit_categories = True
         self.pos_config.iface_available_categ_ids = [(4, pos_categ_misc.id)]
         self.pos_config.with_user(self.pos_user).open_ui()
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
 
         self.start_tour(self_route, "self_order_product_info")
+
+    def test_self_order_check_attributes_show_images(self):
+        self.pos_config.write({
+            'self_ordering_default_user_id': self.pos_admin.id,
+            'self_ordering_mode': "mobile",
+            'self_ordering_pay_after': "each",
+            'self_ordering_service_mode': "counter",
+            'available_preset_ids': [Command.clear()],
+        })
+        attributes = self.env['product.attribute'].create([
+            {
+                'name': "Colour",
+                'display_type': "color",
+                'create_variant': "always",
+                'value_ids': [
+                    Command.create({'name': "White", 'default_extra_price': 0, 'html_color': '#FAFAFA'}),
+                    Command.create({'name': "Blue", 'default_extra_price': 2, 'image': b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='}),
+                ],
+            },
+        ])
+
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': self.desk_organizer.product_tmpl_id.id,
+                'attribute_id': attr.id,
+                'value_ids': [Command.link(val.id) for val in attr.value_ids],
+            }
+            for attr in attributes
+        ])
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "self_attribute_selector_shows_images")
 
     def test_self_order_multi_check_attribute_with_extra_price(self):
         self.pos_config.write({

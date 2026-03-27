@@ -121,6 +121,7 @@ export class Interaction {
         this.__colibri__ = metadata;
         this.el = el;
         this.env = env;
+        /** @type {import("services").ServiceFactories} */
         this.services = env.services;
     }
 
@@ -188,7 +189,7 @@ export class Interaction {
      * has not been destroyed, and will also call `updateContent` after the
      * calling code has acted.
      */
-    waitFor(promise) {
+    waitFor(promise = Promise.resolve()) {
         const prom = new Promise((resolve, reject) => {
             promise
                 .then((result) => {

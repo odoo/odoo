@@ -155,7 +155,7 @@ class PaymentProvider(models.Model):
         The final URL follows the pattern `<_base>/V<_version>/<_endpoint>`.
         """
         if self.code != 'adyen':
-            return self._build_request_url(endpoint, endpoint_param=endpoint_param, **kwargs)
+            return super()._build_request_url(endpoint, endpoint_param=endpoint_param, **kwargs)
 
         version = const.API_ENDPOINT_VERSIONS[endpoint]
         endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)

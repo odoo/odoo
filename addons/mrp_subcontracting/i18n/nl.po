@@ -7,13 +7,15 @@
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-14 08:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-07 18:05+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "mrp_subcontracting/nl/>\n"
 "Language: nl\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -49,7 +51,7 @@ msgstr "Alle"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production_serials
 msgid "Assign serial numbers to production order"
-msgstr ""
+msgstr "Serienummers toewijzen aan productieorder"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -64,7 +66,7 @@ msgstr "Stuklijst"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
 msgid "BoM Type"
-msgstr "Stuklijstsoort"
+msgstr "Stuklijsttype"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
@@ -86,7 +88,7 @@ msgstr "Producthoeveelheid wijzigen"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
 msgid "Check Availability"
-msgstr ""
+msgstr "Controleer beschikbaarheid"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -115,7 +117,7 @@ msgstr "Contact"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
 msgid "Create New Production"
-msgstr ""
+msgstr "Nieuwe productie aanmaken"
 
 #. module: mrp_subcontracting
 #: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
@@ -167,7 +169,7 @@ msgstr "Details"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -302,6 +304,8 @@ msgstr "Order"
 msgid ""
 "Please set a lot/serial for the currently opened subcontracting MO first."
 msgstr ""
+"Stel eerst een partij-/serienummer in voor de huidige geopende PO voor "
+"uitbesteding."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -339,11 +343,6 @@ msgstr "Aantallen"
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 msgid "Ready"
 msgstr "Startklaar"
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
-msgid "Register Production"
-msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -392,6 +391,7 @@ msgstr "Geplande datum"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
 msgstr "Toon uitbestedersdetails zichtbaar"
 
@@ -453,8 +453,9 @@ msgstr "Uitbestedingslocaties"
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
 msgid "Subcontracting MOs"
-msgstr ""
+msgstr "PO's voor uitbesteding"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -475,6 +476,11 @@ msgstr "Uitbesteding bewerkingssoort"
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
 msgid "Subcontracting Portal"
 msgstr "Uitbestedingsportaal"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
+msgid "Subcontracting Productions"
+msgstr "Uitbestede producties"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -535,6 +541,12 @@ msgstr ""
 "uitbestedingsproces."
 
 #. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+msgid "The subcontracted goods have already been received."
+msgstr "De uitbestede goederen zijn al ontvangen."
+
+#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "There are currently no productions for your account."
 msgstr "Er zijn momenteel geen producties voor je account."
@@ -571,6 +583,14 @@ msgid ""
 msgstr ""
 "Je kunt een stuklijst met bewerkingen of bijproductregel niet instellen als "
 "uitbesteding."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/mrp_unbuild.py:0
+msgid "You can't unbuild a subcontracted Manufacturing Order."
+msgstr ""
+"Een productieorder dat aan een onderaannemer werd uitbesteed kan niet worden "
+"teruggedraaid."
 
 #. module: mrp_subcontracting
 #. odoo-python

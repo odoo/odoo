@@ -51,8 +51,12 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line')
     def _compute_website_order_line(self):
+        # group saler.order.line to prefetch all in one query
+        order_lines = self.env['sale.order.line'].search_fetch([('order_id', 'in', self.ids)])
         for order in self:
-            order.website_order_line = order.order_line.filtered(lambda sol: sol._show_in_cart())
+            order.website_order_line = order_lines.filtered(
+                lambda sol: sol.order_id == order and sol._show_in_cart(),
+            )
 
     @api.depends('order_line.price_total', 'order_line.price_subtotal')
     def _compute_amount_delivery(self):
@@ -233,6 +237,15 @@ class SaleOrder(models.Model):
     def _get_amount_total_excluding_delivery(self):
         return sum(self._get_non_delivery_lines().mapped('price_total'))
 
+    def _get_confirmation_template(self):
+        """Override of `sale` to use the website specific order confirmation email template if set."""
+        self.ensure_one()
+
+        if self.website_id and self.website_id.confirmation_email_template_id:
+            return self.website_id.confirmation_email_template_id
+
+        return super()._get_confirmation_template()
+
     def action_confirm(self):
         carts = self.filtered('website_id')
         if self.env.su:
@@ -258,10 +271,11 @@ class SaleOrder(models.Model):
     def _needs_customer_address(self):
         """Return whether we need the address details of the customer (country, street, ...).
 
-        If an order only has services, unless the customer wants an invoice, their checkout can
-        be sped up by allowing them to only provide their name, email and phone numbers.
+        Make it true by default as it's required before payment for taxes based on fiscal position.
         """
-        return not self.only_services
+        # TODO: should probably be removed in master, as we cannot skip the address form
+        # when the taxes applied on product/service depend on the fiscal position.
+        return True
 
     def _update_address(self, partner_id, fnames=None):
         if not fnames:
@@ -399,7 +413,12 @@ class SaleOrder(models.Model):
         if not filtered_sol:
             return self.env['sale.order.line']
 
-        if product.product_tmpl_id._has_no_variant_attributes():
+        has_configurable_no_variant_attributes = any(
+            len(line.value_ids) > 1 or line.attribute_id.display_type == 'multi'
+            for line in product.attribute_line_ids
+            if line.attribute_id.create_variant == 'no_variant'
+        )
+        if has_configurable_no_variant_attributes:
             filtered_sol = filtered_sol.filtered(
                 lambda sol:
                     sol.product_no_variant_attribute_value_ids.ids == no_variant_attribute_value_ids
@@ -613,7 +632,8 @@ class SaleOrder(models.Model):
         :returns: whether the combo quantities had to be updated
         """
         # Ensure all combo lines have the same quantity
-        combo_lines = line.linked_line_ids
+        if not (combo_lines := line.linked_line_ids):
+            return False
         available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
         if available_combo_quantity < line.product_uom_qty:
             line._set_shop_warning_stock(
@@ -875,8 +895,13 @@ class SaleOrder(models.Model):
                 "Your cart is not ready to be paid, please verify previous steps."
             ))
 
-        if not self.only_services and not self.carrier_id:
-            raise ValidationError(_("No shipping method is selected."))
+        if not self.only_services:
+            if not self.carrier_id:
+                raise ValidationError(_("No shipping method is selected."))
+            if self.carrier_id not in self._get_delivery_methods():
+                raise ValidationError(
+                    _("The delivery method is not compatible with your delivery address.")
+                )
 
     def _recompute_cart(self):
         """Recompute taxes and prices for the current cart."""

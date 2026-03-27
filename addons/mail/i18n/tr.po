@@ -31,15 +31,18 @@
 # Halil, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:47+0000\n"
-"PO-Revision-Date: 2025-09-16 04:44+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/mail/tr/>"
-"\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/mail/tr/"
+">\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +61,12 @@ msgid ""
 "will be added/removed from followers.\n"
 "        "
 msgstr ""
+"\n"
+"            - Belirli Takipçiler: kaydın takipçilerinden eklemek/çıkarmak "
+"için belirli kişileri seçin.\n"
+"            - Dinamik Takipçiler: Seçilen kaydın alanındaki tüm kişiler "
+"takipçilere eklenecek/takipçilerden çıkarılacaktır.\n"
+"        "
 
 #. module: mail
 #. odoo-python
@@ -81,8 +90,8 @@ msgstr ""
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                İzin Verilen Listeye adresler ekle\n"
 "            </p><p>\n"
-"                Sizi spam ve yanıt döngülerinden korumak için, Odoo her "
-"<b>%(minutes)i</b> dakikada\n"
+"                Sizi spam ve yanıt döngülerinden korumak için, Odoo her <b>%"
+"(minutes)i</b> dakikada\n"
 "                <b>%(threshold)i</b> e-postalık bir eşiği aşan e-postaları "
 "otomatik olarak engeller.\n"
 "                Ancak, çok sık güncelleme almanız gereken bazı adresler "
@@ -116,7 +125,7 @@ msgstr "\"%(hostname)s\" mikrofon erişimi gerektirir"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_count
 msgid "# Messages"
-msgstr ""
+msgstr "# Mesajlar"
 
 #. module: mail
 #. odoo-python
@@ -135,19 +144,19 @@ msgstr "%(channel name)s kanalından %(author name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "%(author)s started a call."
-msgstr ""
+msgstr "%(author)s bir arama başlattı."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(author_name)s has invited you to a channel"
-msgstr ""
+msgstr "%(author_name)s sizi bir kanala davet etti"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(caller)s started a call"
-msgstr ""
+msgstr "%(caller)s bir çağrı başlattı"
 
 #. module: mail
 #. odoo-javascript
@@ -159,7 +168,7 @@ msgstr "%(candidateType)s (%(protocol)s)"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "%(date)s at %(time)s"
-msgstr ""
+msgstr "%(date)s at %(time)s"
 
 #. module: mail
 #. odoo-python
@@ -211,19 +220,19 @@ msgstr "%(person1)s, %(person2)s ve %(person3)s, %(emoji)s ile tepki verdi"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/activity/activity_cell.js:0
 msgid "%(extraCount)s more"
-msgstr ""
+msgstr "%(extraCount)s daha fazla"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(file1)s and %(count)d other attachments"
-msgstr ""
+msgstr "%(file1)s ve %(count)d diğer ekler"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(file1)s and %(count)s other attachments"
-msgstr ""
+msgstr "%(file1)s ve %(count)s diğer ekler"
 
 #. module: mail
 #. odoo-javascript
@@ -231,7 +240,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(file1)s and %(file2)s"
-msgstr ""
+msgstr "%(file1)s ve %(file2)s"
 
 #. module: mail
 #. odoo-python
@@ -243,7 +252,7 @@ msgstr "%(model_name)s.%(field_path)s geçerli bir alan yolu gibi görünmüyor"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_bcc_list_popover.js:0
 msgid "%(name)s <%(email)s>"
-msgstr ""
+msgstr "%(name)s <%(email)s>"
 
 #. module: mail
 #. odoo-python
@@ -256,21 +265,19 @@ msgid ""
 "(bold_end)s to insert a canned response in your message.%(new_line)sType %"
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
+"%(new_line)s%(new_line)sBirinden bahsetmek ve dikkatini çekmek için %"
+"(bold_start)s@kullanıcıadı%(bold_end)s yazın.%(new_line)sBir kanaldan "
+"bahsetmek için %(bold_start)s#kanal%(bold_end)s yazın.%(new_line)sBir komut "
+"çalıştırmak için %(bold_start)s/command%(bold_end)s yazın.%"
+"(new_line)sMesajınıza hazır bir yanıt eklemek için %(bold_start)s::shortcut%"
+"(bold_end)s yazın.%(new_line)sMesajınıza bir emoji eklemek için %"
+"(bold_start)s:emoji:%(bold_end)s yazın."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "%(numberOfDays)sd"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
-"%(open_button)s%(icon)s%(open_em)sDüzenlemeyi göz ardı "
-"edin%(close_em)s%(close_button)s"
+msgstr "%(numberOfDays)sd"
 
 #. module: mail
 #. odoo-javascript
@@ -280,9 +287,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"Kaydetmek için %(open_samp)sEscape%(close_samp)s %(open_em)sto "
-"%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)s %(open_save)s%(close_save)s%(close_em)s"
+"Kaydetmek için %(open_samp)sEscape%(close_samp)s %(open_em)sto %"
+"(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%"
+"(close_samp)s %(open_em)s %(open_save)s%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -292,46 +299,51 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"Kyadetmek için %(open_samp)sEscape%(close_samp)s %(open_em)sto "
-"%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)s "
-"%(open_save)s%(close_save)s%(close_em)s"
+"Kyadetmek için %(open_samp)sEscape%(close_samp)s %(open_em)sto %"
+"(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%"
+"(close_samp)s %(open_em)s %(open_save)s%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 msgid "%(partner)s <%(email)s> (ID %(id)s)"
-msgstr ""
+msgstr "%(partner)s <%(email)s> (ID %(id)s)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 msgid "%(partner_name)s <%(partner_email)s>"
-msgstr ""
+msgstr "%(partner_name)s <%(partner_email)s>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s changed the channel name to %(name)s"
-msgstr ""
+msgstr "%(user)s kanal adını şu şekilde değiştirdi %(name)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s changed the thread name to %(name)s"
-msgstr ""
+msgstr "%(user)s Konu adını şu şekilde değiştirdi %(name)s"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
+msgstr "%(user)s konu başlığı silindi \"%(thread_name)s\""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
-msgid "%(user)s connected. This is their first connection. Wish them luck."
-msgstr "%(user)s bağlandı. Bu onların ilk bağlantısı. Onlara şans dileyin."
+msgid "%(user)s just connected for the first time. Wish them luck!"
+msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr ""
+msgstr "%(user)s bir konu başlattı: %(goto)s%(thread_name)s%(goto_end)s ."
 
 #. module: mail
 #. odoo-javascript
@@ -352,6 +364,8 @@ msgid ""
 "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
 "(strong_end)s channel."
 msgstr ""
+"%(user_name)s sizi %(strong_start)s%(channel_name)s%(strong_end)s kanalına "
+"davet etti."
 
 #. module: mail
 #. odoo-python
@@ -408,7 +422,7 @@ msgstr "%s Yeni mesajlar"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 msgid "%s others"
-msgstr ""
+msgstr "%s Diğerleri"
 
 #. module: mail
 #. odoo-javascript
@@ -420,7 +434,7 @@ msgstr "%s elini kaldırdı"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "%s's outgoing email"
-msgstr ""
+msgstr "%s'in giden e-postası"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_attachment_links
@@ -431,6 +445,18 @@ msgstr "&amp;#128229;"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "&amp;nbsp;&amp;nbsp;"
 msgstr "&amp;nbsp;&amp;nbsp;"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Keep formatting)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Remove formatting)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -465,7 +491,7 @@ msgstr "(başlangıçta"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_multi_invite
 msgid ") added you as a follower of"
-msgstr ""
+msgstr ") sizi takipçisi olarak ekledi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_invite
@@ -484,13 +510,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid ",<br/><br/>"
-msgstr ""
+msgstr ",<br/><br/>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "---------- Forwarded message ----------"
-msgstr ""
+msgstr "---------- İletilen mesaj ----------"
 
 #. module: mail
 #. odoo-javascript
@@ -504,12 +530,12 @@ msgstr "1 yeni mesaj"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 msgid "1 other"
-msgstr ""
+msgstr "1 diğer"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "111.222.333.444"
-msgstr ""
+msgstr "111.222.333.444"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_email_server_tree
@@ -518,6 +544,9 @@ msgid ""
 "                        No Incoming Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        Henüz Gelen Sunucu Yok\n"
+"                   </b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -535,6 +564,9 @@ msgid ""
 "\n"
 "            Here are some details about the connection:<br/>"
 msgstr ""
+"<br/><br/>\n"
+"\n"
+"            İşte bağlantı hakkında bazı detaylar:<br/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -616,27 +648,27 @@ msgstr "<span class=\"d-block w-75 py-2\">Buton Rengi</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Text</span>"
-msgstr ""
+msgstr "<span class=\"d-block w-75 py-2\">Buton Metni</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Credential:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">Kimlik:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Type:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">Tip:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">URI:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">URI:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Username:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">Kullanıcı adı:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -655,6 +687,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not "
 "has_external_mail_server\">Outgoing Mail Server</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not "
+"has_external_mail_server\">Giden Posta Sunucusu</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -691,6 +725,26 @@ msgid ""
 "appear in the messaging history.\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                        Mesaj, aşağıdaki alıcılara bir e-"
+"posta olarak gönderilecektir\n"
+"                                        şablonunda ve mesajlaşma geçmişinde "
+"görünmeyecektir.\n"
+"                                   </span>\n"
+"                                    <span invisible=\"mail_post_method != "
+"'note'\">\n"
+"                                        Mesaj, şirket içi not olarak şirket "
+"içi kullanıcılar tarafından görülebilecek şekilde gönderilecektir.\n"
+"                                        mesajlaşma geçmişindeki "
+"kullanıcılar.\n"
+"                                   </span>\n"
+"                                    <span invisible=\"mail_post_method != "
+"'comment'\">\n"
+"                                        Mesaj, kayıtta bir mesaj olarak "
+"yayınlanacaktır,\n"
+"                                        tüm takipçilere bildirir. Mesajlaşma "
+"geçmişinde görünecektir.\n"
+"                                   </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -698,6 +752,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Browser:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Tarayıcı:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -705,6 +761,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Date:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Tarih:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -712,6 +770,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    IP Address:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    IP Adresi:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -719,6 +779,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Location:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Konum:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -726,13 +788,15 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Platform:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Platform:</span>"
 
 #. module: mail
 #: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Güzel iş!</b> Bu gezintideki tüm adımların üzerinden "
-"geçitiniz.</span>"
+"<span><b>Güzel iş!</b> Bu gezintideki tüm adımların üzerinden geçitiniz.</"
+"span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -787,7 +851,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_presence_partner_or_guest_exists
 msgid "A mail presence must have a user or a guest."
-msgstr ""
+msgstr "Bir posta varlığının bir kullanıcısı veya misafiri olmalıdır."
 
 #. module: mail
 #. odoo-python
@@ -818,18 +882,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "A personal mail server is using that address, you can not use it."
-msgstr ""
+msgstr "Kişisel bir posta sunucusu bu adresi kullanıyor, kullanamazsınız."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
 msgid "A role with the same name already exists."
-msgstr ""
+msgstr "Aynı ada sahip bir rol zaten mevcut."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "A scheduled date is needed to schedule a message"
-msgstr ""
+msgstr "Bir mesaj planlamak için planlanmış bir tarih gereklidir"
 
 #. module: mail
 #. odoo-python
@@ -895,13 +959,13 @@ msgstr "Hesap"
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Account Auth Token"
-msgstr ""
+msgstr "Hesap Doğrulama Simgesi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Account SID"
-msgstr ""
+msgstr "Hesap SID'si"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
@@ -914,7 +978,7 @@ msgstr "Aksiyon"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__name
 msgid "Action Name"
-msgstr ""
+msgstr "İşlem Adı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction
@@ -1013,11 +1077,12 @@ msgstr "Aktiviteler, boş olmayan bir res_id ile kayıtlara bağlanmalıdır."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_user_id_is_set_if_model
 msgid "Activities must be assigned if not attached to a document."
-msgstr ""
+msgstr "Bir belgeye eklenmemişse faaliyetler atanmalıdır."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
+#: code:addons/mail/static/src/core/web/activity_menu.js:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model:ir.model,name:mail.model_mail_activity
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_act_window_view__view_mode__activity
@@ -1065,7 +1130,7 @@ msgstr "Aktivite Planları"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__activity_schedule_id
 msgid "Activity Schedule"
-msgstr ""
+msgstr "Etkinlik Takvimi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -1127,8 +1192,8 @@ msgid ""
 msgstr ""
 "Aktivite planları, yalnızca birkaç tıklamayla bir dizi aktivite atamak için "
 "kullanılır\n"
-"                    (örn. \"Oryantasyon\", \"Aday Takibi\", "
-"\"Proje Kilometre Taşı Toplantısı\", ...)"
+"                    (örn. \"Oryantasyon\", \"Aday Takibi\", \"Proje "
+"Kilometre Taşı Toplantısı\", ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1150,13 +1215,13 @@ msgstr "Aktivite: %s"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_followers_edit__operation__add
 msgid "Add"
-msgstr ""
+msgstr "Ekleyin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_attachment_selector.xml:0
 msgid "Add Attachment"
-msgstr ""
+msgstr "Eklenti Ekle"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1172,7 +1237,7 @@ msgstr "E-posta Kara Listesi Ekle"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Add Emojis"
-msgstr ""
+msgstr "Emojiler ekleyin"
 
 #. module: mail
 #. odoo-javascript
@@ -1186,19 +1251,13 @@ msgstr "Takipçi Ekle"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
 msgid "Add GIFs"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_reactions.xml:0
-msgid "Add Reaction"
-msgstr "Tepki Ekle"
+msgstr "GIF'ler ekleyin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add Star"
-msgstr ""
+msgstr "Yıldız Ekle"
 
 #. module: mail
 #. odoo-javascript
@@ -1268,7 +1327,7 @@ msgstr "Kanal ekle veya kanala katıl"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Add recipients..."
-msgstr ""
+msgstr "Alıcıları ekleyin..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
@@ -1278,7 +1337,7 @@ msgstr "İmza Ekle"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Takipçi Ekle/Kaldır"
 
 #. module: mail
 #. odoo-python
@@ -1318,7 +1377,7 @@ msgstr "Gelişmiş Seçenekler"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Gelişmiş Ayarlar"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
@@ -1400,8 +1459,8 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s "
-"(%(matching_id)s) ile bağlantılı ve %(parent_name)s %(parent_model_name)s "
+"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s (%"
+"(matching_id)s) ile bağlantılı ve %(parent_name)s %(parent_model_name)s "
 "tarafından kullanılıyor."
 
 #. module: mail
@@ -1411,8 +1470,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s "
-"(%(matching_id)s) ile bağlantılı."
+"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s (%"
+"(matching_id)s) ile bağlantılı."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1608,7 +1667,7 @@ msgstr "%(user_name)s (#%(user_id)s) portal hesabını sildiği için arşivlend
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Are you sure you want to bid farewell to this message forever?"
-msgstr ""
+msgstr "Bu mesaja sonsuza dek veda etmek istediğinizden emin misiniz?"
 
 #. module: mail
 #. odoo-javascript
@@ -1636,7 +1695,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Are you sure you want to unblacklist this email address?"
-msgstr "Bu e-posta adresini kara listeden çıkarmak istediğinizden emin misiniz?"
+msgstr ""
+"Bu e-posta adresini kara listeden çıkarmak istediğinizden emin misiniz?"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -1685,7 +1745,7 @@ msgstr "Bu noktada dil ayarının doğru şekilde yapılmış olması gerekir"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Attach Files"
-msgstr ""
+msgstr "Dosya Ekleme"
 
 #. module: mail
 #. odoo-javascript
@@ -1739,8 +1799,9 @@ msgstr "Ekler"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Audio Output"
-msgstr ""
+msgstr "Ses Çıkışı"
 
 #. module: mail
 #. odoo-javascript
@@ -1756,7 +1817,7 @@ msgstr "Kimliği Doğrulanmış İş Ortakları"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "Authentication"
-msgstr ""
+msgstr "Kimlik Doğrulama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_id
@@ -1823,13 +1884,13 @@ msgstr "Otomatik abonelik"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Auto: %(subject)s"
-msgstr ""
+msgstr "Oto: %(subject)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Autofocus speaker"
-msgstr ""
+msgstr "Otomatik odaklama hoparlörü"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
@@ -1855,6 +1916,11 @@ msgid ""
 msgstr ""
 "Geçerli etkinlik tamamlandı olarak işaretlendikten sonra bu etkinliği "
 "otomatik olarak zamanlayın."
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "Available everywhere"
+msgstr "Her yerde mevcut"
 
 #. module: mail
 #. odoo-javascript
@@ -1912,7 +1978,7 @@ msgstr "Dışarıda"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Background Blur Performance Warning"
-msgstr ""
+msgstr "Arka Plan Bulanıklığı Performans Uyarısı"
 
 #. module: mail
 #. odoo-javascript
@@ -1924,7 +1990,7 @@ msgstr "Arka plan bulanıklık yoğunluğu"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/badge_selection_icons/badge_selection_icons_field.js:0
 msgid "Badges with Icons"
-msgstr ""
+msgstr "Simgeli Rozetler"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -2005,9 +2071,14 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 msgid "Blur Background"
 msgstr "Arka Planı Bulanıklaştır"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
+msgid "Blur background"
+msgstr "Arka planı bulanıklaştır"
 
 #. module: mail
 #. odoo-javascript
@@ -2116,30 +2187,30 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring back"
-msgstr ""
+msgstr "Geri getirin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring call back"
-msgstr ""
+msgstr "Geri arama getirin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring the call back here"
-msgstr ""
+msgstr "Çağrıyı buraya geri getirin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Browser"
-msgstr ""
+msgstr "Tarayıcı"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
-msgid "Browser default"
-msgstr "Tarayıcı varsayılanı"
+msgid "Browser Default"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
@@ -2156,17 +2227,17 @@ msgstr "Tarayıcı anahtarları"
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
 msgid "Busy"
-msgstr ""
+msgstr "Meşgul"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "By Emails"
-msgstr ""
+msgstr "E-postalar ile"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "By order of server priority"
-msgstr ""
+msgstr "Sunucu önceliği sırasına göre"
 
 #. module: mail
 #. odoo-javascript
@@ -2189,7 +2260,7 @@ msgstr "Ara"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
 msgid "Call History"
-msgstr ""
+msgstr "Çağrı Geçmişi"
 
 #. module: mail
 #. odoo-javascript
@@ -2200,49 +2271,44 @@ msgstr "Arama Ayarları"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_channel_id_not_null_constraint
 msgid "Call history must have a channel"
-msgstr ""
+msgstr "Çağrı geçmişinin bir kanalı olmalıdır"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_start_dt_is_not_null_constraint
 msgid "Call history must have a start date"
-msgstr ""
+msgstr "Çağrı geçmişinin bir başlangıç tarihi olmalıdır"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "Call lasted %(duration)s."
-msgstr ""
+msgstr "Son çağrı %(duration)s."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Camera"
-msgstr ""
+msgstr "Kamera"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera access blocked. Enable in browser settings."
-msgstr ""
+msgstr "Kamera erişimi engellendi. Tarayıcı ayarlarında etkinleştirin."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera and microphone access blocked. Enable in browser settings."
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Camera is off"
-msgstr "Kamera kapalı"
+"Kamera ve mikrofon erişimi engellendi. Tarayıcı ayarlarında etkinleştirin."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Camera is unavailable outside the call tab."
-msgstr ""
+msgstr "Kamera, çağrı sekmesi dışında kullanılamıyor."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -2253,7 +2319,7 @@ msgstr "Gövdeyi Düzenleyebilir"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__can_edit_role
 msgid "Can Edit Role"
-msgstr ""
+msgstr "Rol Düzenleyebilir"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2276,13 +2342,13 @@ msgstr "bus.bus aracılığıyla mesaj gönderebilir"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't launch a plan without a record."
-msgstr ""
+msgstr "Kayıt olmadan bir plan başlatamazsınız."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't schedule activities without either a record or a user."
-msgstr ""
+msgstr "Bir kayıt veya kullanıcı olmadan faaliyetler planlanamıyor."
 
 #. module: mail
 #. odoo-javascript
@@ -2352,6 +2418,9 @@ msgid ""
 "in your messages. Type '::' followed by the name of your shortcut "
 "(e.g. ::hello) to use in your messages."
 msgstr ""
+"Mesajlarınızda otomatik olarak daha uzun içerikle değiştirilecek hazır "
+"yanıt. Mesajlarınızda kullanmak için kısayolunuzun adından önce '::' yazın "
+"(ör. ::merhaba)."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2362,7 +2431,7 @@ msgstr "Hazır yanıtlar"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
-msgstr ""
+msgstr "Alt kanalın yetkili grubu değiştirilemiyor: %(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -2383,6 +2452,8 @@ msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel "
 "or one of its sub-channels."
 msgstr ""
+"%(channels)s oluşturulamaz: ilk mesaj ana kanala veya alt kanallarından "
+"birine ait olmalıdır."
 
 #. module: mail
 #. odoo-python
@@ -2392,11 +2463,13 @@ msgid ""
 "of type 'channel' or 'group'. The sub-channel should have the same type as "
 "the parent."
 msgstr ""
+"%(channels)s oluşturulamıyor: ebeveyn bir alt kanal olmamalı ve 'kanal' veya "
+"'grup' türünde olmalıdır. Alt kanal, üst kanal ile aynı tipte olmalıdır."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Capture replies in the chatter"
-msgstr ""
+msgstr "Sohbet sırasında yanıtları yakalayın"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2462,7 +2535,7 @@ msgstr "Zincirleme Tip"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_res_users_my_fullpage
 msgid "Change My Preferences"
-msgstr ""
+msgstr "Tercihlerimi Değiştir"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
@@ -2486,7 +2559,7 @@ msgstr "Kanal"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Channel Actions"
-msgstr ""
+msgstr "Kanal Eylemleri"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
@@ -2500,7 +2573,7 @@ msgstr "Kanal Üyesi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_name_member_ids
 msgid "Channel Name Member"
-msgstr ""
+msgstr "Kanal Üyesi Adı"
 
 #. module: mail
 #. odoo-javascript
@@ -2530,13 +2603,13 @@ msgstr "Kanal üyeleri genel kullanıcıları içeremez."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Channel must have a name."
-msgstr ""
+msgstr "Kanalın bir adı olmalıdır."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Channel name"
-msgstr ""
+msgstr "Kanal adı"
 
 #. module: mail
 #. odoo-javascript
@@ -2572,7 +2645,7 @@ msgstr "Sohbet"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Chat Actions"
-msgstr ""
+msgstr "Sohbet Eylemleri"
 
 #. module: mail
 #. odoo-javascript
@@ -2606,7 +2679,7 @@ msgstr "Alt Mesajlar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a contact..."
-msgstr ""
+msgstr "Bir kişi seçin..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -2632,13 +2705,13 @@ msgstr "Talep üzerine atama yapılan aktiviteler için atama seçin."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "City, Region, Country"
-msgstr ""
+msgstr "Şehir, Bölge, Ülke"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Clear Time"
-msgstr ""
+msgstr "Sıfırlama Zamanı"
 
 #. module: mail
 #. odoo-javascript
@@ -2714,7 +2787,7 @@ msgstr "Aramayı kapat"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_participants.js:0
 msgid "Collapse participants"
-msgstr ""
+msgstr "Katılımcıları daraltın"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
@@ -2732,7 +2805,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy of recipients addresses"
-msgstr ""
+msgstr "Alıcı adreslerinin virgülle ayrılmış karbon kopyası"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2769,7 +2842,7 @@ msgstr "Yorum"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_comment_option
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__composition_comment_option
 msgid "Comment Options"
-msgstr ""
+msgstr "Yorum Seçenekleri"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_company
@@ -2814,7 +2887,7 @@ msgstr "Kompozisyon modu"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "Conference: %s"
-msgstr ""
+msgstr "Konferans: %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
@@ -2831,7 +2904,7 @@ msgstr "Ayarlar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure ICE Servers"
-msgstr ""
+msgstr "ICE Sunucularını Yapılandırma"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2876,14 +2949,14 @@ msgstr "Tebrikler, gelen kutunuz boş!"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Connection Test Successful!"
-msgstr ""
+msgstr "Bağlantı Testi Başarılı!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Connection failed"
-msgstr ""
+msgstr "Balantı sağlanamadı"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_smtp
@@ -2895,7 +2968,7 @@ msgstr "Bağlantı başarısız (giden posta sunucusu sorunu)"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.js:0
 msgid "Connection failed: %s"
-msgstr ""
+msgstr "Bağlantı başarısız oldu: %s"
 
 #. module: mail
 #. odoo-python
@@ -3005,9 +3078,15 @@ msgstr "İçerikler"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Continue with Full Composer?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
-msgstr ""
+msgstr "Konuşmalar"
 
 #. module: mail
 #. odoo-javascript
@@ -3019,7 +3098,7 @@ msgstr "Bağlantıyı kopyala"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Panoya kopyala"
 
 #. module: mail
 #. odoo-python
@@ -3028,6 +3107,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration."
 msgstr ""
+"Posta sunucusuyla bağlantı kurulamadı, lütfen giden e-posta sunucusu "
+"yapılandırmanızı kontrol edin."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -3052,13 +3133,13 @@ msgstr "Oluştur"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Create %(activity_name)s"
-msgstr ""
+msgstr "Oluştur %(activity_name)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 msgid "Create %s"
-msgstr ""
+msgstr "Oluştur %s"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
@@ -3070,13 +3151,13 @@ msgstr "Aktivite Oluştur"
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Create Channel"
-msgstr ""
+msgstr "Kanal Oluştur"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "Create Chat"
-msgstr ""
+msgstr "Sohbet Oluştur"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__create_date
@@ -3106,7 +3187,7 @@ msgstr "Kullanıcı Kimliği Oluştur"
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturma"
 
 #. module: mail
 #. odoo-python
@@ -3134,7 +3215,8 @@ msgstr "Yeni oluştur: %(document)s"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Create new %(document)s by sending an email to %(email_link)s"
-msgstr "Şu adrese e-posta göndererek %(email_link)s yeni %(document)s oluşturun"
+msgstr ""
+"Şu adrese e-posta göndererek %(email_link)s yeni %(document)s oluşturun"
 
 #. module: mail
 #. odoo-javascript
@@ -3270,17 +3352,17 @@ msgstr "Özel İletilmeyen Mesajı"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Server with Twilio"
-msgstr ""
+msgstr "Twilio ile Özel ICE Sunucusu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Servers"
-msgstr ""
+msgstr "Özel ICE Sunucuları"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom SFU Server"
-msgstr ""
+msgstr "Özel SFU Sunucusu"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -3300,12 +3382,12 @@ msgstr "Özel kanal adı"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
 msgid "Customer is required for inbox notification"
-msgstr ""
+msgstr "Gelen kutusu bildirimi için müşteri gereklidir"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_or_email_required
 msgid "Customer or email is required for inbox / email notification"
-msgstr ""
+msgstr "Gelen kutusu / e-posta bildirimi için müşteri veya e-posta gereklidir"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3339,18 +3421,18 @@ msgstr "Tarih"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_date_deadline
 msgid "Date Deadline"
-msgstr ""
+msgstr "Tarih Son Tarih"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__error_date
 msgid "Date of last failure, reset on success."
-msgstr ""
+msgstr "Son arıza tarihi, başarı durumunda sıfırlanır."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "Date:"
-msgstr ""
+msgstr "Tarih:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_schedule__scheduled_datetime
@@ -3366,7 +3448,7 @@ msgstr "Mesajın sabitlendiği tarih ve saat"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Bu kaynağın son güncellenmesinden bu yana geçen gün sayısı"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
@@ -3376,7 +3458,7 @@ msgstr "Gün"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Çürüyen Günler"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -3397,6 +3479,7 @@ msgstr "Zaman Sınırı: %s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Deafen"
 msgstr "Sağır Edici"
 
@@ -3422,7 +3505,7 @@ msgstr "Sayın Gönderici,"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "Decline"
-msgstr ""
+msgstr "Reddet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
@@ -3461,7 +3544,7 @@ msgstr "Varsayılan Not"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
-msgstr ""
+msgstr "Varsayılan Alıcılar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -3562,6 +3645,13 @@ msgstr "E-postaları Sil"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Delete Thread"
+msgstr "Konu Sil"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 msgid "Delete all previews"
 msgstr "Tüm ön izlemeleri sil"
@@ -3601,7 +3691,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Describe when this template should be used"
-msgstr ""
+msgstr "Bu şablonun ne zaman kullanılması gerektiğini açıklayın"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -3626,7 +3716,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_spam
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_spam
 msgid "Detected As Spam"
-msgstr ""
+msgstr "Spam Olarak Algılandı"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
@@ -3662,7 +3752,7 @@ msgstr "Doğrudan mesajlar"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Disable speaker autofocus"
-msgstr ""
+msgstr "Hoparlör otomatik odaklamayı devre dışı bırakma"
 
 #. module: mail
 #. odoo-javascript
@@ -3681,6 +3771,12 @@ msgstr "Sil"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Discard editing"
+msgstr "Düzenlemeyi at"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_tree
@@ -3690,8 +3786,8 @@ msgstr "Bağlantıyı Kes"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
-msgid "Disconnected from the RTC call by the server"
-msgstr "Sunucu tarafından RTC çağrısıyla bağlantısı kesildi"
+msgid "Disconnected from the call by the server"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
@@ -3732,7 +3828,7 @@ msgstr "Reddet"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Dismiss warning"
-msgstr ""
+msgstr "Uyarıyı iptal et"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
@@ -3836,7 +3932,7 @@ msgstr "Avatar adını göster"
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__res_users__manual_im_status__busy
 msgid "Do Not Disturb"
-msgstr ""
+msgstr "Rahatsız Etmeyin"
 
 #. module: mail
 #. odoo-javascript
@@ -3854,13 +3950,13 @@ msgstr "Bu önizlemeyi gerçekten silmek istiyor musunuz?"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to hear you in the meeting?"
-msgstr ""
+msgstr "Toplantıda insanların sizi duymasını mı istiyorsunuz?"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to see you in the meeting?"
-msgstr ""
+msgstr "İnsanların sizi toplantıda görmesini mi istiyorsunuz?"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
@@ -4010,7 +4106,7 @@ msgstr "Kopyalanmış E-posta"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__duration_hour
 msgid "Duration Hour"
-msgstr ""
+msgstr "Süre Saat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
@@ -4020,7 +4116,7 @@ msgstr "Ms cinsinden ses aktivitesinin süresi"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__followers_type__generic
 msgid "Dynamic Followers"
-msgstr ""
+msgstr "Dinamik Takipçiler"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_template_ids
@@ -4069,7 +4165,7 @@ msgstr "%(name)s kişisinin aboneliğini düzenle"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Edit Tags"
-msgstr ""
+msgstr "Etiketleri Düzenle"
 
 #. module: mail
 #. odoo-javascript
@@ -4142,7 +4238,7 @@ msgstr "E-posta Butonu Rengi"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Button Text"
-msgstr ""
+msgstr "E-posta Düğmesi Metni"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -4294,19 +4390,19 @@ msgstr "E-postalar"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__incoming_email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_message__incoming_email_cc
 msgid "Emails Cc"
-msgstr ""
+msgstr "E-postalar Cc"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__incoming_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__incoming_email_to
 msgid "Emails To"
-msgstr ""
+msgstr "E-postalar"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Emails sent via"
-msgstr ""
+msgstr "Üzerinden gönderilen e-postalar"
 
 #. module: mail
 #. odoo-javascript
@@ -4340,7 +4436,7 @@ msgstr "Sıralı İzlemeyi Etkinleştir"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__end_dt
 msgid "End Dt"
-msgstr ""
+msgstr "Bitiş Dt"
 
 #. module: mail
 #. odoo-javascript
@@ -4352,7 +4448,7 @@ msgstr "Giriş"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 msgid "Enter full screen!"
-msgstr ""
+msgstr "Tam ekrana girin!"
 
 #. module: mail
 #. odoo-javascript
@@ -4475,7 +4571,7 @@ msgstr "Tam Ekrandan Çık"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Exit Picture in Picture"
-msgstr ""
+msgstr "Resim İçinde Resimden Çık"
 
 #. module: mail
 #. odoo-javascript
@@ -4487,7 +4583,7 @@ msgstr "Genişlet"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_participants.js:0
 msgid "Expand participants"
-msgstr ""
+msgstr "Katılımcıları genişletin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__expiration_time
@@ -4502,7 +4598,7 @@ msgstr "Ek Yorumlar ..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Extra info"
-msgstr ""
+msgstr "Ek bilgi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -4609,7 +4705,7 @@ msgstr "Yıldızlı"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__feedback
 msgid "Feedback"
-msgstr ""
+msgstr "Geri bildirim"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -4653,7 +4749,7 @@ msgstr "Alan ayrıntıları"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__update_path
 #: model:ir.model.fields,field_description:mail.field_ir_cron__update_path
 msgid "Field to Update Path"
-msgstr ""
+msgstr "Güncellenecek Yol alanı"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__relation_field
@@ -4704,7 +4800,7 @@ msgstr "Dosyalar"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Filter Messages"
-msgstr ""
+msgstr "Mesajları Filtrele"
 
 #. module: mail
 #. odoo-javascript
@@ -4756,7 +4852,7 @@ msgstr "Takipçiler (İş ortakları)"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__followers_partner_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__followers_partner_field_name
 msgid "Followers Field"
-msgstr ""
+msgstr "Takipçiler Alanı"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -4767,18 +4863,18 @@ msgstr "Takipçi Formu"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__followers_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__followers_type
 msgid "Followers Type"
-msgstr ""
+msgstr "Takipçi Türü"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Followers added"
-msgstr ""
+msgstr "Takipçiler eklendi"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers_edit
 msgid "Followers edit wizard"
-msgstr ""
+msgstr "Takipçi düzenleme sihirbazı"
 
 #. module: mail
 #. odoo-javascript
@@ -4792,7 +4888,7 @@ msgstr "Yalnızca takipçiler"
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Followers removed"
-msgstr ""
+msgstr "Takipçiler kaldırıldı"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4808,7 +4904,7 @@ msgstr "Kaldırılacak takipçiler"
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Followers updated"
-msgstr ""
+msgstr "Takipçiler güncellendi"
 
 #. module: mail
 #. odoo-javascript
@@ -4880,12 +4976,21 @@ msgid ""
 "For Static values, the value will be used directly without evaluation, "
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
+"Python ifadeleri için, bu alan sunucu işlemindeki kod alanında "
+"kullanılabilecekdeğerlerle aynı değerlere erişebilen bir Python ifadesi "
+"içerebilir;örneğin, geçerli kullanıcının adını ayarlamak için "
+"'env.user.name' veya işlem yapılan kaydın kimliğini ayarlamak için "
+"'record.id'.\n"
+"\n"
+"Statik değerler için, değer doğrudan değerlendirme yapılmadan "
+"kullanılır;örneğin, '42', 'Benim özel adım' veya seçilen kayıt."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 msgid "For performance reasons, use \"=\" operators on rotting fields."
 msgstr ""
+"Performans nedenleriyle, çürüyen alanlarda \"=\" operatörlerini kullanın."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -4895,7 +5000,7 @@ msgstr "Göndermeye Zorla"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language"
-msgstr ""
+msgstr "Bir Dili Zorla"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -4904,17 +5009,23 @@ msgstr "Biçimlendirilmiş E-posta"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
-#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_comment_option__forward
-#: model:ir.model.fields.selection,name:mail.selection__mail_scheduled_message__composition_comment_option__forward
-msgid "Forward"
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Formatting can only be restored in Full Composer."
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_comment_option__forward
+#: model:ir.model.fields.selection,name:mail.selection__mail_scheduled_message__composition_comment_option__forward
+msgid "Forward"
+msgstr "İleri"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Forward Message"
-msgstr ""
+msgstr "Mesaj İlet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4939,7 +5050,7 @@ msgstr "Eşten:"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "From:"
-msgstr ""
+msgstr "Başlangıç:"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__default_display_mode__video_full_screen
@@ -4950,7 +5061,7 @@ msgstr "Tam ekran video"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Fullscreen"
-msgstr ""
+msgstr "Tam ekran"
 
 #. module: mail
 #. odoo-javascript
@@ -5088,16 +5199,18 @@ msgid ""
 "Hardware acceleration is disabled. Blur effect impacts performance "
 "significantly."
 msgstr ""
+"Donanım hızlandırma devre dışı. Bulanıklık etkisi performansı önemli ölçüde "
+"etkiler."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_attachments
 msgid "Has Attachments"
-msgstr ""
+msgstr "Ekleri Var"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_dynamic_reports
 msgid "Has Dynamic Reports"
-msgstr ""
+msgstr "Dinamik Raporlara Sahiptir"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_error
@@ -5107,7 +5220,7 @@ msgstr "Hata Var"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__has_external_mail_server
 msgid "Has External Mail Server"
-msgstr ""
+msgstr "Harici Posta Sunucusu Var"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_activity
@@ -5122,7 +5235,7 @@ msgstr "Mail Kara Listesi vardır"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_mail_server
 msgid "Has Mail Server"
-msgstr ""
+msgstr "Posta Sunucusu Var"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -5152,17 +5265,17 @@ msgstr "Mesaj Var"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_several_languages_installed
 msgid "Has Several Languages Installed"
-msgstr ""
+msgstr "Birkaç Dil Yüklüdür"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__has_thumbnail
 msgid "Has Thumbnail"
-msgstr ""
+msgstr "Küçük Resim Var"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
 msgid "Has Warning"
-msgstr ""
+msgstr "Uyarı Var"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -5216,6 +5329,12 @@ msgstr "Tüm sohbetleri gizle"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Hide camera preview"
+msgstr "Kamera önizlemesini gizle"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call.xml:0
 msgid "Hide sidebar"
 msgstr "Kenar çubuğunu gizle"
@@ -5250,7 +5369,7 @@ msgstr "Posta sunucusunun ana makine adı veya IP"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Hover on your message and add a star"
-msgstr ""
+msgstr "Mesajınızın üzerine gelin ve bir yıldız ekleyin"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -5263,12 +5382,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
 msgid "ICE Server"
-msgstr ""
+msgstr "ICE Sunucusu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "ICE Server Configuration"
-msgstr ""
+msgstr "ICE Sunucu Yapılandırması"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_ice_servers
@@ -5395,7 +5514,7 @@ msgstr "Anlık İleti Durumu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__manual_im_status
 msgid "IM status manually set by the user"
-msgstr ""
+msgstr "Kullanıcı tarafından manuel olarak ayarlanan IM durumu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -5447,7 +5566,7 @@ msgstr "Boş"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_edit__res_ids
 msgid "Ids of the followed resources"
-msgstr ""
+msgstr "Takip edilen kaynakların kimlikleri"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -5564,6 +5683,8 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
+"Tanımıyorsanız, bu bağlantı aracılığıyla şifrenizi hemen değiştirmelisiniz:"
+"<br/>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -5577,7 +5698,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_sfu_server
 msgid "If you want to setup SFU server for large group calls."
-msgstr ""
+msgstr "SFU sunucusunu büyük grup aramaları için kurmak istiyorsanız."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -5625,12 +5746,12 @@ msgstr "Görsel, bir bağlanttıdır"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "In %(country)s"
-msgstr ""
+msgstr "%(country)s  içinde"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "In Odoo"
-msgstr ""
+msgstr "Odoo'da"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__scheduled_date
@@ -5663,12 +5784,6 @@ msgid "Inbox"
 msgstr "Gelen Kutusu"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Call..."
-msgstr "Gelen Çağrı..."
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
@@ -5694,15 +5809,17 @@ msgstr "Gelen Posta Sunucuları"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Incoming Video Call..."
-msgstr "Gelen Görüntülü Arama..."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call"
-msgstr ""
+msgstr "Gelen arama"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Incoming call from %(inviter)s"
+msgstr "Gelen arama %(inviter)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -5733,7 +5850,7 @@ msgstr "Satır içi Tam Adres"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Insert a Canned response"
-msgstr ""
+msgstr "Konserve Yanıt Ekleme"
 
 #. module: mail
 #. odoo-javascript
@@ -5771,12 +5888,12 @@ msgstr "Aralık"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__interval_number
 msgid "Interval Number"
-msgstr ""
+msgstr "İç Numara"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__interval_type
 msgid "Interval Unit"
-msgstr ""
+msgstr "Aralık Birimi"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__invalid
@@ -5873,8 +5990,8 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
-"Geçersiz şablon veya görünüm kayıt kaynağı: %(svalue)s, bunun yerine: "
-"%(model)s"
+"Geçersiz şablon veya görünüm kayıt kaynağı: %(svalue)s, bunun yerine: %"
+"(model)s"
 
 #. module: mail
 #. odoo-python
@@ -5882,8 +5999,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Geçersiz şablon veya görünüm kaynak referansı %(svalue)s, bunun yerine "
-"%(model)s"
+"Geçersiz şablon veya görünüm kaynak referansı %(svalue)s, bunun yerine %"
+"(model)s"
 
 #. module: mail
 #. odoo-python
@@ -5912,13 +6029,25 @@ msgstr "Davet URL'si"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Invitation already sent to this address"
-msgstr ""
+msgstr "Davetiye zaten bu adrese gönderildi"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invitation link copied!"
+msgstr "Davetiye bağlantısı kopyalandı!"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invitation link copy failed (Permission denied?)!"
+msgstr "Davet bağlantısı kopyalama başarısız oldu (İzin reddedildi?)!"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Invitation to follow %(document_model)s."
-msgstr ""
+msgstr "%(document_model)s adresini takip etmeye davet ediyoruz."
 
 #. module: mail
 #. odoo-python
@@ -5936,7 +6065,7 @@ msgstr "Davet Et"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite \"%s\""
-msgstr ""
+msgstr "Davetiye \"%s\""
 
 #. module: mail
 #. odoo-javascript
@@ -5959,15 +6088,21 @@ msgstr "İnsanları davet et"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invite people or email"
+msgstr "Kişileri davet edin veya e-posta gönderin"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates"
-msgstr ""
+msgstr "Takım arkadaşlarınızı davet edin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates via email"
-msgstr ""
+msgstr "Ekip arkadaşlarınızı e-posta yoluyla davet edin"
 
 #. module: mail
 #. odoo-javascript
@@ -5978,13 +6113,13 @@ msgstr "Grup Konuşmasına Davet Et"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invited_member_ids
 msgid "Invited Member"
-msgstr ""
+msgstr "Davetli Üye"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Inviting by email is not allowed for this channel type (%s)."
-msgstr ""
+msgstr "Bu kanal türü için e-posta ile davet etmeye izin verilmez (%s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
@@ -6031,7 +6166,7 @@ msgstr "Gizli"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_in_call
 msgid "Is In Call"
-msgstr ""
+msgstr "Aramada"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -6066,7 +6201,7 @@ msgstr "Bir not"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notified_bcc_contains_share
 msgid "Is an external partner follower of the document?"
-msgstr ""
+msgstr "Harici bir ortak belgenin takipçisi mi?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -6081,7 +6216,7 @@ msgstr "Tartışma kenar çubuğu kategorisi sohbeti açık mı?"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_in_call
 msgid "Is in call"
-msgstr ""
+msgstr "Aramada"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_muted
@@ -6163,7 +6298,7 @@ msgstr "Kanala Katıl"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Join Video Call"
-msgstr ""
+msgstr "Video Görüşmesine Katıl"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.discuss_channel_action_view
@@ -6174,19 +6309,19 @@ msgstr "Bir Gruba Katılın"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Join call"
-msgstr ""
+msgstr "Çağrıya katılın"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call"
-msgstr ""
+msgstr "Çağrıya Katılın"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call with Camera"
-msgstr ""
+msgstr "Kamera ile Görüşmeye Katılın"
 
 #. module: mail
 #. odoo-javascript
@@ -6204,7 +6339,7 @@ msgstr "Bugüne Git"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__attach
@@ -6232,7 +6367,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
-msgstr ""
+msgstr "Arama geçmişini saklayın"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6265,17 +6400,17 @@ msgstr "Dil"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Last Error"
-msgstr ""
+msgstr "Son Hata"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__error_date
 msgid "Last Error Date"
-msgstr ""
+msgstr "Son Hata Tarihi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__error_message
 msgid "Last Error Message"
-msgstr ""
+msgstr "Son Hata Mesajı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
@@ -6296,12 +6431,12 @@ msgstr "Son İlgi Alanı"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "Son Anket"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_presence
 msgid "Last Presence"
-msgstr ""
+msgstr "Son Durum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__seen_message_id
@@ -6463,18 +6598,18 @@ msgstr "Bu kanaldan ayrı"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
 msgid "Line Description"
-msgstr ""
+msgstr "Hat Tanımı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "Bağlantı Alanı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_link_preview__link_preview_id
 msgid "Link Preview"
-msgstr ""
+msgstr "Bağlantı Önizleme"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -6487,29 +6622,23 @@ msgstr "Bağlantı Önizlemeleri"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_link_preview
 msgid "Link between link previews and messages"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-msgid "Link copied!"
-msgstr "Bağlantı kopyalandı!"
+msgstr "Bağlantı önizlemeleri ve mesajlar arasında bağlantı"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Link to"
-msgstr ""
+msgstr "Bağlantı oluştur"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__linked_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__linked_message_ids
 msgid "Linked Message"
-msgstr ""
+msgstr "Bağlantılı Mesaj"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Linked to"
-msgstr ""
+msgstr "Bağlantılı"
 
 #. module: mail
 #. odoo-javascript
@@ -6565,8 +6694,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
-"Yanıtları yakalamak için Yanıtla-Adresi’nde kullanılan e-posta yerel kısmı ("
-"ör. 'catchall@example.com' adresinde 'catchall')"
+"Yanıtları yakalamak için Yanıtla-Adresi’nde kullanılan e-posta yerel kısmı "
+"(ör. 'catchall@example.com' adresinde 'catchall')"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -6665,7 +6794,7 @@ msgstr "Posta Aktivitesi"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule_line
 msgid "Mail Activity Schedule Line"
-msgstr ""
+msgstr "Posta Faaliyet Çizelgesi Hattı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_activity_type_id
@@ -6698,7 +6827,7 @@ msgstr "Posta Oluşturucu Karışımı"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_email_address
 msgid "Mail Email Address"
-msgstr ""
+msgstr "Posta E-posta Adresi"
 
 #. module: mail
 #. odoo-javascript
@@ -6789,7 +6918,7 @@ msgstr "Varolan bir mail.message halkı bilgilendirmek için posta oluşturuldu"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Mail template model of $(action_name)s does not match action model."
-msgstr ""
+msgstr "Mail template model of $(action_name)s does not match action model."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__mail_template_ids
@@ -6846,19 +6975,19 @@ msgstr "Ana Ek"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Main partner's language"
-msgstr ""
+msgstr "Ana ortağın dili"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Make Chat"
-msgstr ""
+msgstr "Sohbet Edin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Manage Templates"
-msgstr ""
+msgstr "Şablonları Yönet"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
@@ -6872,7 +7001,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: mail
 #. odoo-javascript
@@ -6894,7 +7023,7 @@ msgstr "Biten İşaretle"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Mark Read"
-msgstr ""
+msgstr "Mark Read"
 
 #. module: mail
 #. odoo-javascript
@@ -6942,7 +7071,7 @@ msgstr "Üye Sayısı"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
-#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Members"
@@ -6952,7 +7081,7 @@ msgstr "Üyeler"
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_name_member_ids
 msgid ""
 "Members from which the channel name is computed when the name field is empty."
-msgstr ""
+msgstr "Ad alanı boş olduğunda kanal adının hesaplandığı üyeler."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -7030,13 +7159,13 @@ msgstr "Mesaj %(thread name)s…"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Copied!"
-msgstr ""
+msgstr "Mesaj kopyalandı!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Copy Failed (Permission denied?)!"
-msgstr ""
+msgstr "Mesaj Kopyalama Başarısız (İzin reddedildi?)!"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
@@ -7075,7 +7204,7 @@ msgstr "Mesaj bağlantısı kopyalanamadı (İzin reddedildi mi?)!"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_link_preview_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_link_preview_ids
 msgid "Message Link Preview"
-msgstr ""
+msgstr "Mesaj Bağlantı Önizlemesi"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -7146,7 +7275,7 @@ msgstr "Mesaj, geçerli bir 'E-postaMesajı' örneği olmalıdır"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Message sound"
-msgstr ""
+msgstr "Mesaj sesi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
@@ -7229,7 +7358,7 @@ msgstr "Mesaj Ara"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
 msgid "Messages can only be linked to one call history"
-msgstr ""
+msgstr "Mesajlar yalnızca bir arama geçmişine bağlanabilir"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -7265,15 +7394,15 @@ msgstr "Ses ekleri için meta veriler"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Microphone"
-msgstr ""
+msgstr "Mikrofon"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Microphone access blocked. Enable in browser settings."
-msgstr ""
+msgstr "Mikrofon erişimi engellendi. Tarayıcı ayarlarında etkinleştirin."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
@@ -7321,7 +7450,7 @@ msgstr "Model"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 msgid "Model configuration does not support the rotting feature"
-msgstr ""
+msgstr "Model yapılandırması çürüme özelliğini desteklemiyor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_change
@@ -7337,7 +7466,7 @@ msgstr "İzlenen kaynağın modeli"
 #: model:ir.model.fields,help:mail.field_ir_actions_server__model_id
 #: model:ir.model.fields,help:mail.field_ir_cron__model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Sunucunun çalıştığı model."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__res_model
@@ -7351,15 +7480,6 @@ msgstr ""
 #: model:ir.model,name:mail.model_ir_model
 msgid "Models"
 msgstr "Modeller"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid ""
-"Modifying the model can have an impact on existing activities using this "
-"activity type, be careful."
-msgstr ""
-"Modeli değiştirmek, bu etkinlik türünü kullanarak mevcut aktiviteler "
-"üzerinde etkili olabilir, dikkatli olun."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
@@ -7381,11 +7501,12 @@ msgstr "Daha"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "More Actions"
-msgstr ""
+msgstr "Daha Fazla Eylem"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Mute"
 msgstr "Sessiz"
 
@@ -7419,7 +7540,7 @@ msgstr "Aktivite Son Tarihim"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 msgid "My Roles"
-msgstr ""
+msgstr "Rollerim"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -7447,13 +7568,13 @@ msgstr "Adı"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Near %(city)s, %(region)s, %(country)s"
-msgstr ""
+msgstr "%(city)s, %(region)s, %(country)s yakınlarında"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Near %(region)s, %(country)s"
-msgstr ""
+msgstr "%(region)s, %(country)s yakınlarında"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__needaction
@@ -7478,7 +7599,7 @@ msgstr "Yeni Kanal"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.js:0
 msgid "New Meeting"
-msgstr ""
+msgstr "Yeni Toplantı"
 
 #. module: mail
 #. odoo-javascript
@@ -7586,7 +7707,7 @@ msgstr "Gelecek Pazartesi Sabahı"
 #: code:addons/mail/static/src/views/web/list/mail_activity_list_reschedule.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Week"
-msgstr ""
+msgstr "Sonraki Hafta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
@@ -7595,6 +7716,7 @@ msgstr "Sıradaki Mevcut Aktiviteler"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "No"
 msgstr "Hayır"
@@ -7614,7 +7736,7 @@ msgstr "Takipçi Yok"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
 msgid "No ICE servers found. Let's create one!"
-msgstr ""
+msgstr "Hiç ICE sunucusu bulunamadı. Hadi bir tane oluşturalım!"
 
 #. module: mail
 #. odoo-javascript
@@ -7635,19 +7757,19 @@ msgstr "Aktivite yok."
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid "No canned response found. Let's create one!"
-msgstr ""
+msgstr "Hazır yanıt bulunamadı. Hadi bir tane yaratalım!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/action_list.xml:0
 msgid "No content."
-msgstr ""
+msgstr "İçerik yok."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "No conversation found"
-msgstr ""
+msgstr "Konuşma bulunamadı"
 
 #. module: mail
 #. odoo-javascript
@@ -7665,7 +7787,7 @@ msgstr "Henüz konuşma yok ..."
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "No documents found for the selected records."
-msgstr ""
+msgstr "Seçilen kayıtlar için herhangi bir belge bulunamadı."
 
 #. module: mail
 #. odoo-javascript
@@ -7677,13 +7799,13 @@ msgstr "Geçmiş mesajı yok"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.xml:0
 msgid "No linked record"
-msgstr ""
+msgstr "Bağlantılı kayıt yok"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "No mail server configured"
-msgstr ""
+msgstr "Yapılandırılmış posta sunucusu yok"
 
 #. module: mail
 #. odoo-javascript
@@ -7695,7 +7817,7 @@ msgstr "Mesaj bulunamadı"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "No one else is here."
-msgstr ""
+msgstr "Burada başka kimse yok."
 
 #. module: mail
 #. odoo-python
@@ -7724,7 +7846,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "No roles found. Let's create one!"
-msgstr ""
+msgstr "Rol bulunamadı. Hadi bir tane oluşturalım!"
 
 #. module: mail
 #. odoo-javascript
@@ -7766,7 +7888,7 @@ msgstr "Bu kanala üye olmayan kullanıcı bulunamadı."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "No user found."
-msgstr ""
+msgstr "Kullanıcı bulunamadı."
 
 #. module: mail
 #. odoo-javascript
@@ -7793,7 +7915,7 @@ msgstr "Hiçbiri"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "None planned"
-msgstr ""
+msgstr "Planlanan bir şey yok"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__email_normalized
@@ -7886,8 +8008,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Bildirim, ekleri liste listesi veya demetler şeklinde almalıdır (alınan: "
-"%(aids)s)"
+"Bildirim, ekleri liste listesi veya demetler şeklinde almalıdır (alınan: %"
+"(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7896,8 +8018,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"Bildirim, ek kayıtlarını kimliklerin listesi şeklinde almalıdır (alıan: "
-"%(aids)s)"
+"Bildirim, ek kayıtlarını kimliklerin listesi şeklinde almalıdır (alıan: %"
+"(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7911,7 +8033,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 msgid "Notification: Delete Notifications older than 6 Months"
-msgstr ""
+msgstr "Bildirim: Altı Aydan Eski Bildirimleri Sil"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
@@ -7947,12 +8069,12 @@ msgstr "Bildirimler engellendi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_author
 msgid "Notify Author"
-msgstr ""
+msgstr "Yazara Bildir"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_author_mention
 msgid "Notify Author Mention"
-msgstr ""
+msgstr "Yazara Bahsedildiğinde Bildir"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__notify
@@ -7962,7 +8084,7 @@ msgstr "Alıcılara Bildir"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_skip_followers
 msgid "Notify Skip Followers"
-msgstr ""
+msgstr "Takipçileri Atla Bildir"
 
 #. module: mail
 #. odoo-javascript
@@ -7974,18 +8096,21 @@ msgstr "Herkese bildir"
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
 msgstr ""
+"Sohbetlerde roller kullanarak @-ileti yoluyla birden fazla kişiyi aynı anda "
+"bilgilendirin."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role"
-msgstr ""
+msgstr "Bu role sahip kullanıcıları bilgilendirin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role who have permission to view this channel"
 msgstr ""
+"Bu kanalı görüntüleme izni olan bu role sahip kullanıcıları bilgilendirin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
@@ -8068,7 +8193,7 @@ msgstr "Teslimat hatası olan mesaj adedi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "OS"
-msgstr ""
+msgstr "İşletim Sistemi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -8109,7 +8234,7 @@ msgstr "Çevrim dışı - %(offline_count)s"
 #: model:ir.model.fields,field_description:mail.field_res_partner__offline_since
 #: model:ir.model.fields,field_description:mail.field_res_users__offline_since
 msgid "Offline since"
-msgstr ""
+msgstr "O zamandan beri çevrimdışı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -8145,7 +8270,7 @@ msgstr "Eski değerler"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "On"
-msgstr ""
+msgstr "Açık"
 
 #. module: mail
 #. odoo-javascript
@@ -8164,6 +8289,7 @@ msgid ""
 "One or more attachments do not exist, or you do not have the rights to "
 "access them."
 msgstr ""
+"Bir veya daha fazla ek mevcut değil veya bunlara erişim haklarınız yok."
 
 #. module: mail
 #. odoo-javascript
@@ -8190,7 +8316,7 @@ msgstr "Çevrim içi - %(online_count)s"
 #. odoo-python
 #: code:addons/mail/controllers/attachment.py:0
 msgid "Only PDF files can have thumbnail."
-msgstr ""
+msgstr "Yalnızca PDF dosyalarının küçük resmi olabilir."
 
 #. module: mail
 #. odoo-python
@@ -8220,12 +8346,14 @@ msgstr "Odoo'da yalnızca dahili kullanıcı bildirim alabilir"
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure a personal mail server."
 msgstr ""
+"Yalnızca dahili kullanıcılar kişisel bir posta sunucusu yapılandırabilir."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure personal mail servers."
 msgstr ""
+"Yalnızca dahili kullanıcılar kişisel posta sunucularını yapılandırabilir."
 
 #. module: mail
 #. odoo-python
@@ -8260,6 +8388,8 @@ msgid ""
 "Oops! We couldn't save your template due to an issue with this value: %"
 "(template_txt)s. Correct it and try again."
 msgstr ""
+"Oops! Bu değerle ilgili bir sorun nedeniyle şablonunuzu kaydedemedik: %"
+"(template_txt)s. Düzeltin ve tekrar deneyin."
 
 #. module: mail
 #. odoo-javascript
@@ -8283,7 +8413,7 @@ msgstr "Kanalı Aç"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "Open Chat"
-msgstr ""
+msgstr "Açık Sohbet"
 
 #. module: mail
 #. odoo-javascript
@@ -8301,7 +8431,7 @@ msgstr "Belge Aç"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Open Full Composer"
-msgstr ""
+msgstr "Tam Besteciyi Aç"
 
 #. module: mail
 #. odoo-javascript
@@ -8335,7 +8465,7 @@ msgstr "Ön izlemeyi ayrı bir pencerede aç."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__operation
 msgid "Operation"
-msgstr ""
+msgstr "Operasyon"
 
 #. module: mail
 #. odoo-javascript
@@ -8383,6 +8513,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bir e-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
+"Ayarlanmazsa, ana ortağın dili kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yer tutucu ifade olmalıdır, örneğin "
+"{{ object.partner_id.lang }}."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8424,39 +8558,39 @@ msgstr "Diğer etkinlikler"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "Aksi halde, bu e-postayı güvenle göz ardı edebilirsiniz."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_from
 msgid "Out Of Office From"
-msgstr ""
+msgstr "Ofis Dışından"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_to
 msgid "Out Of Office To"
-msgstr ""
+msgstr "Ofis Dışında"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_out_of_office
 msgid "Out of Office"
-msgstr ""
+msgstr "Ofis Dışında"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Out-of-office"
-msgstr ""
+msgstr "Ofis dışında"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__out_of_office
 msgid "Out-of-office Message"
-msgstr ""
+msgstr "Ofis Dışı Mesaj"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Out-of-office message"
-msgstr ""
+msgstr "Ofis dışı mesaj"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -8486,7 +8620,7 @@ msgstr "Giden Mail Server"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__outgoing_mail_server_type
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "Giden Posta Sunucusu Türü"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
@@ -8499,12 +8633,6 @@ msgstr "Giden Postalar"
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_server_id
 msgid "Outgoing mail server"
 msgstr "Giden mail sunucusu"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Output"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8577,12 +8705,12 @@ msgstr "Sahibi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_count
 msgid "Owner Limit Count"
-msgstr ""
+msgstr "Sahip Limit Sayısı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_time
 msgid "Owner Limit Time"
-msgstr ""
+msgstr "Sahip Limit Süresi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -8675,7 +8803,7 @@ msgstr "Katılımcı avatarı"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Participant options"
-msgstr ""
+msgstr "Katılımcı seçenekleri"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__partner_id
@@ -8690,7 +8818,7 @@ msgstr "Partner"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids_all_have_email
 msgid "Partner Ids All Have Email"
-msgstr ""
+msgstr "Ortak Kimliklerinin Hepsinin E-postası Var"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_partner_ids
@@ -8717,7 +8845,7 @@ msgstr "API anahtarınızı yapıştırın"
 #: model:ir.model.fields,help:mail.field_ir_actions_server__update_path
 #: model:ir.model.fields,help:mail.field_ir_cron__update_path
 msgid "Path to the field to update, e.g. 'partner_id.name'"
-msgstr ""
+msgstr "Güncellenecek alanın yolu, örn. 'partner_id.name'"
 
 #. module: mail
 #. odoo-javascript
@@ -8734,6 +8862,18 @@ msgstr "Yük"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Performance Warning:"
+msgstr "Performans Uyarısı:"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
+msgid "Permanently delete this thread?"
+msgstr "Bu başlığı kalıcı olarak silelim mi?"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
+msgid "Permission Needed"
 msgstr ""
 
 #. module: mail
@@ -8757,7 +8897,7 @@ msgstr "Belirli bir zaman seçin"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Picture in Picture"
-msgstr ""
+msgstr "Resim İçinde Resim"
 
 #. module: mail
 #. odoo-javascript
@@ -8816,7 +8956,7 @@ msgstr "Plan Özeti"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Plan-based scheduling are available only on documents."
-msgstr ""
+msgstr "Plana dayalı zamanlama yalnızca belgelerde mevcuttur."
 
 #. module: mail
 #. odoo-javascript
@@ -8911,13 +9051,13 @@ msgstr "Bunun yerine lütfen bize ulaşın"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Please provide a valid email"
-msgstr ""
+msgstr "Lütfen geçerli bir e-posta gönderin"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Please set your email before connecting your mail server."
-msgstr ""
+msgstr "Lütfen posta sunucunuzu bağlamadan önce e-postanızı ayarlayın."
 
 #. module: mail
 #. odoo-javascript
@@ -8932,6 +9072,9 @@ msgid ""
 "- By Emails: notifications are sent to your email address\n"
 "- In Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Chatter bildirimlerinin nasıl ele alınacağına ilişkin politika:\n"
+"- E-postalar ile: bildirimler e-posta adresinize gönderilir\n"
+"- Odoo'da: bildirimler Odoo Gelen Kutunuzda görünür"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -9048,7 +9191,7 @@ msgstr "Yanıt için tercih edilen adres"
 #: model:ir.model.fields,field_description:mail.field_mail_guest__presence_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__presence_ids
 msgid "Presence"
-msgstr ""
+msgstr "Hazır Bulunma"
 
 #. module: mail
 #. odoo-javascript
@@ -9062,6 +9205,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Kara listedeki kişilere mesaj göndermeyi önleyin. Yalnızca kesinlikle "
+"gerekli olduğunda devre dışı bırakın."
 
 #. module: mail
 #. odoo-javascript
@@ -9074,12 +9219,6 @@ msgid "Preview"
 msgstr "Önizle"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-msgid "Preview my camera"
-msgstr "Kameramı ön izle"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
 msgid "Previous Activity Type"
 msgstr "Önceki Aktivite Türü"
@@ -9087,7 +9226,7 @@ msgstr "Önceki Aktivite Türü"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__priority
 msgid "Priority"
-msgstr ""
+msgstr "Öncelik"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
@@ -9097,7 +9236,7 @@ msgstr "Özel"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Private"
-msgstr ""
+msgstr "Özel"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__object_id
@@ -9168,6 +9307,12 @@ msgstr "Bas-Konuş kısayolu"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
+msgid "Push-to-Talk"
+msgstr "Bas-Konuş"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Push-to-talk key"
 msgstr "Bas-konuş tuşu"
@@ -9176,7 +9321,7 @@ msgstr "Bas-konuş tuşu"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 msgid "Queued"
-msgstr ""
+msgstr "Kuyruğa Alındı"
 
 #. module: mail
 #. odoo-javascript
@@ -9273,7 +9418,7 @@ msgstr "Gönderime Hazır"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Ready to join?"
-msgstr ""
+msgstr "Katılmaya hazır mısınız?"
 
 #. module: mail
 #. odoo-javascript
@@ -9312,7 +9457,7 @@ msgstr "Alıcı"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_email_address
 msgid "Recipient email address"
-msgstr ""
+msgstr "Alıcı e-posta adresi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -9347,7 +9492,7 @@ msgstr "Kayıt Başlık ID"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__crud_model_id
 msgid "Record to Create"
-msgstr ""
+msgstr "Oluşturulacak Kayıt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -9449,12 +9594,6 @@ msgid "Remove Blur"
 msgstr "Bulanıklığı Kaldır"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
-msgid "Remove Blur Background"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove Context Action"
 msgstr "Bağlam Eylemini Kaldır"
@@ -9468,7 +9607,7 @@ msgstr "Takipçileri Kaldır"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Remove Star"
-msgstr ""
+msgstr "Yıldızı Kaldır"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -9533,7 +9672,7 @@ msgstr "Tekrarla"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_cron__interval_number
 msgid "Repeat every x."
-msgstr ""
+msgstr "Her x tekrarla."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -9551,7 +9690,7 @@ msgstr "Cevapla"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Reply All"
-msgstr ""
+msgstr "Hepsini yanıtla"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
@@ -9574,7 +9713,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_comment_option__reply_all
 #: model:ir.model.fields.selection,name:mail.selection__mail_scheduled_message__composition_comment_option__reply_all
 msgid "Reply-All"
-msgstr ""
+msgstr "Hepsini Yanıtla"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to
@@ -9602,12 +9741,16 @@ msgid ""
 "unique name and can be associated with multiple users. Roles can be "
 "mentioned in messages to notify all associated users."
 msgstr ""
+"Kullanıcıları kategorize etmek için kullanılan sistemdeki bir rolü temsil "
+"eder. Her rolün benzersiz bir adı vardır ve birden fazla kullanıcıyla "
+"ilişkilendirilebilir. İlişkili tüm kullanıcıları bilgilendirmek için "
+"mesajlarda rollerden bahsedilebilir."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/list/mail_activity_list_reschedule.xml:0
 msgid "Reschedule"
-msgstr ""
+msgstr "Yeniden planla"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -9622,7 +9765,7 @@ msgstr "Posta Şablonunu Sıfırla"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Reset Password"
-msgstr ""
+msgstr "Parolayı Sıfırla"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9634,7 +9777,7 @@ msgstr "Şablonu Sıfırla"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Reset initial position"
-msgstr ""
+msgstr "İlk konumu sıfırla"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -9666,7 +9809,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "Restrict usage to a user"
-msgstr ""
+msgstr "Kullanımı bir kullanıcıyla kısıtlama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__restricted_attachment_count
@@ -9682,7 +9825,7 @@ msgstr "İçeriğine göre dil algılama sonucu."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Resume stream"
-msgstr ""
+msgstr "Özgeçmiş akışı"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -9721,23 +9864,23 @@ msgstr "Oturumu zil sesi"
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_tree
 msgid "Role"
-msgstr ""
+msgstr "Rol"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.res_role_action
 #: model:ir.ui.menu,name:mail.menu_roles
 msgid "Roles"
-msgstr ""
+msgstr "Görevler"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 msgid "Roles Search"
-msgstr ""
+msgstr "Rol Arama"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__is_rotting
 msgid "Rotting"
-msgstr ""
+msgstr "Çürüme"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__rtc_session_ids
@@ -9774,7 +9917,7 @@ msgstr "SSL / TLS"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "STUN"
-msgstr ""
+msgstr "STUN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__user_id
@@ -9794,7 +9937,7 @@ msgstr "Kaydet"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 msgid "Save Template"
-msgstr ""
+msgstr "Şablonu Kaydet"
 
 #. module: mail
 #. odoo-javascript
@@ -9838,7 +9981,7 @@ msgstr "Seçilen kayıtlarda Aktivite Planla"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_schedule_line_ids
 msgid "Schedule Lines"
-msgstr ""
+msgstr "Program Hatları"
 
 #. module: mail
 #. odoo-javascript
@@ -9910,25 +10053,26 @@ msgstr "Planlanmış Gönderi Tarihi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__user_id
 msgid "Scheduler User"
-msgstr ""
+msgstr "Kullanıcı Planlayıcısı"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Scheduling personal activities requires an assigned user."
-msgstr ""
+msgstr "Kişisel faaliyetlerin planlanması için atanmış bir kullanıcı gerekir."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Screen sharing access blocked. Enable in browser settings."
 msgstr ""
+"Ekran paylaşımı erişimi engellendi. Tarayıcı ayarlarında etkinleştirin."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Screen sharing is unavailable outside the call tab."
-msgstr ""
+msgstr "Ekran paylaşımı çağrı sekmesi dışında kullanılamaz."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__script
@@ -9954,7 +10098,7 @@ msgstr "Grupları Ara"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "Search ICE Servers"
-msgstr ""
+msgstr "ICE Sunucularını Ara"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -9997,7 +10141,7 @@ msgstr "Alt Kanalları Ara"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "Search a conversation"
-msgstr ""
+msgstr "Görüşme arama"
 
 #. module: mail
 #. odoo-javascript
@@ -10016,7 +10160,7 @@ msgstr "Ada göre ara"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
-msgstr ""
+msgstr "Arama konuşmaları"
 
 #. module: mail
 #. odoo-javascript
@@ -10047,7 +10191,7 @@ msgstr "Arama devam ediyor"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Search people to invite"
-msgstr ""
+msgstr "Davet edilecek kişileri arama"
 
 #. module: mail
 #. odoo-javascript
@@ -10133,14 +10277,14 @@ msgstr "Tarafından görüldü:"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.js:0
 msgid "Select a Record To Link"
-msgstr ""
+msgstr "Bağlanacak Bir Kayıt Seçin"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Select a Template"
-msgstr ""
+msgstr "Bir Şablon Seçin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -10154,9 +10298,15 @@ msgid "Select a user..."
 msgstr "Bir kullanıcı seçin..."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
 msgid "Self Member"
-msgstr ""
+msgstr "Kendi Kendine Üye"
 
 #. module: mail
 #. odoo-javascript
@@ -10170,18 +10320,18 @@ msgstr "Gönder"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Send %(template_name)s"
-msgstr ""
+msgstr "Gönder %(template_name)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Send & Close"
-msgstr ""
+msgstr "Gönder ve Kapat"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send & New Invitation"
-msgstr ""
+msgstr "Gönder & Yeni Davetiye"
 
 #. module: mail
 #. odoo-javascript
@@ -10199,18 +10349,18 @@ msgstr "E-posta Gönderici Adı"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 msgid "Send From"
-msgstr ""
+msgstr "Gönderen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Send Instantly"
-msgstr ""
+msgstr "Anında Gönder"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send Invitation"
-msgstr ""
+msgstr "Davetiyeleri Gönder"
 
 #. module: mail
 #. odoo-javascript
@@ -10242,7 +10392,7 @@ msgstr "Takipçilere mesaj gönderin…"
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_mail_mail
 msgid "Send an E-mail"
-msgstr ""
+msgstr "E-posta Gönderin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10275,12 +10425,12 @@ msgstr "E-Posta Gönder"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_confirm_dialog.js:0
 msgid "Send this message to the great trash can in the sky?"
-msgstr ""
+msgstr "Bu mesajı gökyüzündeki büyük çöp kutusuna mı göndereyim?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender & Recipients"
-msgstr ""
+msgstr "Gönderen ve Alıcılar"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
@@ -10300,18 +10450,18 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender's email"
-msgstr ""
+msgstr "Gönderenin e-postası"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_field.xml:0
 msgid "Sending"
-msgstr ""
+msgstr "Gönderiyor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__send_context
 msgid "Sending Context"
-msgstr ""
+msgstr "İçerik Gönderme"
 
 #. module: mail
 #. odoo-javascript
@@ -10398,13 +10548,13 @@ msgstr "Sunucu türü POP."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Set Email"
-msgstr ""
+msgstr "E-posta Ayarla"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Set Scheduled Date"
-msgstr ""
+msgstr "Planlanan Tarihi Ayarla"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__active
@@ -10417,12 +10567,16 @@ msgstr ""
 msgid ""
 "Set up your own server for large group calls by routing connections centrally"
 msgstr ""
+"Bağlantıları merkezi olarak yönlendirerek büyük grup aramaları için kendi "
+"sunucunuzu kurun"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Set up your own server for small group calls using peer-to-peer connections"
 msgstr ""
+"Eşler arası bağlantıları kullanarak küçük grup aramaları için kendi "
+"sunucunuzu kurun"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -10449,12 +10603,12 @@ msgstr "Ekranı Paylaş"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared"
-msgstr ""
+msgstr "Paylaşılan"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Shared with all users"
-msgstr ""
+msgstr "Tüm kullanıcılarla paylaşılır"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
@@ -10470,7 +10624,7 @@ msgstr "Çeviri isteğinde hedef olarak kullanılan kısaltılmış dil kodu."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
-msgstr ""
+msgstr "Tüm Etkinlikleri Göster"
 
 #. module: mail
 #. odoo-javascript
@@ -10482,7 +10636,7 @@ msgstr "Takipçileri Göster"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show My Activities"
-msgstr ""
+msgstr "Faaliyetlerimi Göster"
 
 #. module: mail
 #. odoo-javascript
@@ -10499,18 +10653,24 @@ msgstr "Aktiviteleri göster"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is this week"
-msgstr ""
+msgstr "Bir sonraki eylem tarihi bu hafta olan tüm kayıtları göster"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is tomorrow"
-msgstr ""
+msgstr "Bir sonraki eylem tarihi yarın olan tüm kayıtları göster"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "Show camera preview"
+msgstr "Kamera önizlemesini göster"
 
 #. module: mail
 #. odoo-javascript
@@ -10522,7 +10682,7 @@ msgstr "Kenar çubuğunu göster"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/html_composer_message_field/content_expandable_plugin.xml:0
 msgid "Show trimmed content"
-msgstr ""
+msgstr "Kırpılmış içeriği göster"
 
 #. module: mail
 #. odoo-javascript
@@ -10537,6 +10697,8 @@ msgid ""
 "Showing %(result_count)s results out of %(total_count)s. Narrow your search "
 "to see more choices."
 msgstr ""
+"%(total_count)s üzerinden %(result_count)s sonuçları gösteriliyor. Daha "
+"fazla seçenek görmek için aramanızı daraltın."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -10575,7 +10737,7 @@ msgstr "Kaynak Dil"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__followers_type__specific
 msgid "Specific Followers"
-msgstr ""
+msgstr "Belirli Takipçiler"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
@@ -10589,6 +10751,8 @@ msgid ""
 "Specify a field used to link the newly created record on the record used by "
 "the server action."
 msgstr ""
+"Sunucu eylemi tarafından kullanılan kayıtta, yeni oluşturulan kayıtla "
+"bağlantı kurulmasını sağlayacak bir alan belirtin."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan__res_model
@@ -10608,6 +10772,8 @@ msgid ""
 "Specify which kind of record should be created. Set this field only to "
 "specify a different model than the base model."
 msgstr ""
+"Hangi tür kaydın oluşturulması gerektiğini belirtin. Bu alanı yalnızca temel "
+"modelden farklı bir model belirtmek istiyorsanız doldurun."
 
 #. module: mail
 #. odoo-javascript
@@ -10621,35 +10787,35 @@ msgstr "Yıldızlı"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Starred message"
-msgstr ""
+msgstr "Yıldızlı mesaj"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "Starred messages"
-msgstr ""
+msgstr "Yıldızlı mesajlar"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start Call"
-msgstr ""
+msgstr "Çağrı Başlat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
-msgstr ""
+msgstr "Çağrı Mesajını Başlat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_dt
 msgid "Start Dt"
-msgstr ""
+msgstr "Başlangıç Dt"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start Video Call"
-msgstr ""
+msgstr "Görüntülü Arama Başlat"
 
 #. module: mail
 #. odoo-javascript
@@ -10667,7 +10833,7 @@ msgstr "Bir konuşma başlatın"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "Tarafından başlatıldı %(authorName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -10730,7 +10896,7 @@ msgstr "Adım Sayısı"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Stop"
-msgstr ""
+msgstr "Durdur"
 
 #. module: mail
 #. odoo-javascript
@@ -10747,6 +10913,7 @@ msgstr "Ekran Paylaşımını Durdur"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Stop camera"
 msgstr "Kamerayı durdur"
 
@@ -10760,7 +10927,7 @@ msgstr "Yanıtlamayı durdur"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_infinite_mirroring_warning.xml:0
 msgid "Stop sharing"
-msgstr ""
+msgstr "Paylaşımı durdurun"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
@@ -10776,7 +10943,7 @@ msgstr "Bağlantı önizleme verilerini depolama"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Stream paused"
-msgstr ""
+msgstr "Akış duraklatıldı"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__push_to_talk_key
@@ -10866,7 +11033,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Suggested Next"
-msgstr ""
+msgstr "Önerilen Sonraki"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
@@ -10896,13 +11063,13 @@ msgstr "Outlook Kimlik Doğrulamasını Destekleyin"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Switch Camera"
-msgstr ""
+msgstr "Kamera Değiştir"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Switching back to the default server."
-msgstr ""
+msgstr "Varsayılan sunucuya geri dönülüyor."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -10920,7 +11087,7 @@ msgstr "Sistem bildirimi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "TURN"
-msgstr ""
+msgstr "DÖNÜŞ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -10942,7 +11109,7 @@ msgstr "VKN/TCKN"
 #: model:ir.ui.menu,name:mail.discuss_technical
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Technical"
-msgstr ""
+msgstr "Teknik"
 
 #. module: mail
 #. odoo-javascript
@@ -11000,7 +11167,7 @@ msgstr "Şablon Önizleme Dili"
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Template Preview: \"%(template_name)s\""
-msgstr ""
+msgstr "Şablon Önizlemesi: \"%(template_name)s\""
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -11030,8 +11197,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"Şablon oluşturma yalnızca 'inline_template', 'qweb' veya 'qweb_view' ("
-"görünüm ya da ham) destekler; bunun yerine %(engine)s alındı."
+"Şablon oluşturma yalnızca 'inline_template', 'qweb' veya 'qweb_view' "
+"(görünüm ya da ham) destekler; bunun yerine %(engine)s alındı."
 
 #. module: mail
 #. odoo-javascript
@@ -11057,7 +11224,7 @@ msgstr "Tenor GIF API anahtarı"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -11068,12 +11235,12 @@ msgstr "Test ve Onaylama"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Test Connection"
-msgstr ""
+msgstr "Bağlantıyı Sına"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Test Record"
-msgstr ""
+msgstr "Test kaydı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
@@ -11111,8 +11278,8 @@ msgid ""
 "%(anchor_start)sextension%(anchor_end)s."
 msgstr ""
 "Bas-Konuş özelliği yalnızca sekme odaktayken kullanılabilir. Bu sekme "
-"dışında Bas-Konuş işlevini etkinleştirmek için "
-"%(anchor_start)suzantımızı%(anchor_end)s indirmenizi öneririz."
+"dışında Bas-Konuş işlevini etkinleştirmek için %(anchor_start)suzantımızı%"
+"(anchor_end)s indirmenizi öneririz."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -11129,7 +11296,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The activity can be launched, with these additional effects:"
-msgstr ""
+msgstr "Faaliyet, bu ek etkilerle birlikte başlatılabilir:"
 
 #. module: mail
 #. odoo-python
@@ -11158,11 +11325,6 @@ msgstr "Avatar güncellendi!"
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "UUID kanalı benzersiz olmalıdır"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Kanal türü boş olamaz"
 
 #. module: mail
 #. odoo-javascript
@@ -11201,13 +11363,13 @@ msgstr "Uç nokta benzersiz olmalıdır!"
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "The field '%(field_chain_str)s' is not a partner field."
-msgstr ""
+msgstr "'%(field_chain_str)s' alanı bir ortak alanı değildir."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "The field '%(field_chain_str)s' is not a user field."
-msgstr ""
+msgstr "'%(field_chain_str)s' alanı bir kullanıcı alanı değildir."
 
 #. module: mail
 #. odoo-python
@@ -11308,7 +11470,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid ""
 "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
-msgstr ""
+msgstr "\"%(plan_name)s\" planı, bu ek etkilerle birlikte başlatılabilir:"
 
 #. module: mail
 #. odoo-python
@@ -11328,6 +11490,8 @@ msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
 msgstr ""
+"Sayı olarak işin önceliği,: 0, daha yüksek öncelik anlamına gelir, 10, daha "
+"düşük öncelik anlamına gelir."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -11365,19 +11529,20 @@ msgstr ""
 msgid ""
 "The server \"%s\" cannot be forced as it belongs to a user and is archived."
 msgstr ""
+"\"%s\" sunucusu bir kullanıcıya ait olduğu ve arşivlendiği için zorlanamaz."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "The server \"%s\" cannot be forced as it belongs to a user."
-msgstr ""
+msgstr "\"%s\" sunucusu bir kullanıcıya ait olduğu için zorlanamaz."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid ""
 "The server \"%s\" cannot be forced as the owner does not use it anymore."
-msgstr ""
+msgstr "\"%s\" sunucusu, sahibi artık kullanmadığı için zorlanamaz."
 
 #. module: mail
 #. odoo-python
@@ -11406,7 +11571,7 @@ msgstr "Kanal üyesi başına yalnızca bir rtc oturumu olabilir"
 #. odoo-python
 #: code:addons/mail/controllers/mail.py:0
 msgid "There is no candidate company that has read access to the record."
-msgstr ""
+msgstr "Kayda okuma erişimi olan hiçbir aday şirket yoktur."
 
 #. module: mail
 #. odoo-python
@@ -11415,6 +11580,8 @@ msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration."
 msgstr ""
+"E-postanızı teslim etmeye çalışırken bir hata oluştu, lütfen "
+"yapılandırmanızı kontrol edin."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -11425,7 +11592,7 @@ msgstr "Bu"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "This action can only be done in the call tab."
-msgstr ""
+msgstr "Bu işlem yalnızca çağrı sekmesinde yapılabilir."
 
 #. module: mail
 #. odoo-python
@@ -11450,6 +11617,7 @@ msgstr "Bu işlem bir e-posta gönderecek."
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This applicant has been stuck in this stage for %(numberOfDays)s days."
 msgstr ""
+"Bu başvuru sahibi %(numberOfDays)s gün boyunca bu aşamada takılı kalmıştır."
 
 #. module: mail
 #. odoo-javascript
@@ -11485,7 +11653,7 @@ msgstr "Bu konuşmada sabitlenmiş mesaj yok."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "This conversation isn’t available."
-msgstr ""
+msgstr "Bu konuşma mevcut değil."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -11518,19 +11686,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of %(conversationName)s group"
-msgstr ""
+msgstr "Bu %(conversationName)s grubunun başlangıcıdır"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of the #%(channelName)s channel"
-msgstr ""
+msgstr "Bu #%(channelName)s kanalının başlangıcıdır"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of your direct chat with %(userName)s"
-msgstr ""
+msgstr "Bu, aşağıdakilerle doğrudan sohbetinizin başlangıcıdır %(userName)s"
 
 #. module: mail
 #. odoo-python
@@ -11542,7 +11710,7 @@ msgstr "Bu düzen artık mevcut değil gibi görünüyor."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This lead has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "Bu müşteri adayı %(numberOfDays)s gün boyunca bu aşamada takılı kaldı."
 
 #. module: mail
 #. odoo-javascript
@@ -11556,7 +11724,7 @@ msgstr "Bu mesaj zaten gönderildi."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "This message has been removed"
-msgstr ""
+msgstr "Bu mesaj kaldırılmıştır"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -11581,7 +11749,7 @@ msgstr "Bu kaydın bir istisna aktivitei var."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This record has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "Bu kayıt %(numberOfDays)s gün boyunca bu aşamada takılı kaldı."
 
 #. module: mail
 #. odoo-javascript
@@ -11606,18 +11774,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This task has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "Bu görev %(numberOfDays)s gün boyunca bu aşamada takılı kaldı."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "This thread is no longer available."
-msgstr ""
+msgstr "Bu konu artık mevcut değildir."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "This week"
-msgstr ""
+msgstr "Bu Hafta"
 
 #. module: mail
 #. odoo-python
@@ -11632,13 +11800,25 @@ msgstr "Bu değerler işlenirken seçenek olarak desteklenmiyor: %(param_names)s
 msgid ""
 "Those values are not supported when posting or notifying: %(param_names)s"
 msgstr ""
-"Bu değerler, mesaj gönderme veya bildirim sırasında desteklenmez: "
-"%(param_names)s"
+"Bu değerler, mesaj gönderme veya bildirim sırasında desteklenmez: %"
+"(param_names)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Konu"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
+msgid "Thread \"%(thread_name)s\" has been deleted"
+msgstr "Konu \"%(thread_name)s\" silindi"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Thread Actions"
+msgstr "Konu Eylemleri"
 
 #. module: mail
 #. odoo-javascript
@@ -11675,15 +11855,9 @@ msgid "Threads"
 msgstr "Akışlar"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Threads Actions"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Küçük Resim"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
@@ -11694,7 +11868,7 @@ msgstr "Saat Dilimi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Tip: Write /field to insert dynamic content!"
-msgstr ""
+msgstr "İpucu: Dinamik içerik eklemek için /field yazın!"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -11728,6 +11902,8 @@ msgid ""
 "To avoid the infinite mirror effect, please share a specific window or tab "
 "or another monitor."
 msgstr ""
+"Sonsuz ayna efektinden kaçınmak için lütfen belirli bir pencere veya sekmeyi "
+"ya da başka bir monitörü paylaşın."
 
 #. module: mail
 #. odoo-javascript
@@ -11829,13 +12005,13 @@ msgstr "Bugün:"
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Todo"
-msgstr ""
+msgstr "Yapın"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/quick_reaction_menu.xml:0
 msgid "Toggle Emoji Picker"
-msgstr ""
+msgstr "Emoji Seçiciyi Değiştir"
 
 #. module: mail
 #. odoo-javascript
@@ -11878,7 +12054,7 @@ msgstr "Alıcıları İzleme"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Tracked Changes"
-msgstr ""
+msgstr "Takip Edilen Değişiklikler"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__tracking_value_ids
@@ -11944,11 +12120,12 @@ msgstr "Sonraki Aktiviteyi Tetikle"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Triggered Next"
-msgstr ""
+msgstr "Tetiklenen Sonraki"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Turn camera on"
 msgstr "Kamerayı aç"
 
@@ -11992,6 +12169,19 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
+"Sunucu eyleminin türü. Aşağıdaki değerler kullanılabilir:\n"
+"- 'Kaydı Güncelle': bir kaydın değerlerini güncelleyin\n"
+"- 'Etkinlik Oluştur': bir etkinlik oluşturun (Tartışın)\n"
+"- 'E-posta Gönder': bir mesaj, bir not gönderin veya bir e-posta gönderin "
+"(Tartışın)\n"
+"- 'SMS Gönder': SMS gönderin, belgelere kaydedin (SMS)- 'Takipçi Ekle/"
+"Kaldır': bir kayda takipçi ekleyin veya kaldırın (Tartışın)\n"
+"- 'Kayıt Oluştur': yeni değerlerle yeni bir kayıt oluşturun\n"
+"- 'Execute Code': yürütülecek bir Python kodu bloğu\n"
+"- 'Webhook Bildirimi Gönder': Webhook olarak da bilinen harici bir sisteme "
+"POST isteği gönderme\n"
+"- 'Çoklu Eylemler': diğer birkaç sunucu eylemini tetikleyen bir eylem "
+"tanımlayın\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_exception_decoration
@@ -12017,7 +12207,7 @@ msgstr "URL"
 #: model:ir.model.fields,help:mail.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,help:mail.field_ir_cron__webhook_url
 msgid "URL to send the POST request to."
-msgstr ""
+msgstr "POST isteğinin gönderileceği URL."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__uuid
@@ -12051,18 +12241,18 @@ msgstr "Atamayı benden çıkar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Unassigned"
-msgstr ""
+msgstr "Atanmamış"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Unassigned Activities"
-msgstr ""
+msgstr "Tahsis Edilmemiş Faaliyetler"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "Unauthorized server for some of the sending mails."
-msgstr ""
+msgstr "Gönderilen postaların bazıları için yetkisiz sunucu."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -12085,7 +12275,7 @@ msgstr "Sağır Olmayan"
 #. odoo-python
 #: code:addons/mail/controllers/im_status.py:0
 msgid "Unexpected IM status %(status)s"
-msgstr ""
+msgstr "Beklenmeyen IM durumu %(status)s"
 
 #. module: mail
 #. odoo-javascript
@@ -12119,7 +12309,7 @@ msgstr "Bilinmeyen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status_dropdown.js:0
 msgid "Unknown Status"
-msgstr ""
+msgstr "Bilinmeyen Durum"
 
 #. module: mail
 #. odoo-python
@@ -12138,6 +12328,7 @@ msgstr "Bilinmeyen hata: %(error)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Unmute"
 msgstr "Sesi aç"
 
@@ -12149,10 +12340,18 @@ msgstr "Konuşmanın Sesini Aç"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Unnamed"
+msgstr "Adsız"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr ""
 
 #. module: mail
@@ -12233,7 +12432,7 @@ msgstr "Başlıksız"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Update Followers"
-msgstr ""
+msgstr "Takipçileri Güncelle"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -12296,7 +12495,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Camera"
-msgstr ""
+msgstr "Kamera Kullanın"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -12312,18 +12511,18 @@ msgstr "Varsayılanı Kullan"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "Hariç Tutma Listesini Kullanın"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
-msgstr ""
+msgstr "Mikrofon Kullanın"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
-msgstr ""
+msgstr "SFU sunucusunu kullanın"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -12354,6 +12553,8 @@ msgid ""
 "Use canned responses to quickly insert prewritten messages with "
 "<i>::shortcut</i>. You can edit the text before sending."
 msgstr ""
+"Önceden yazılmış mesajları <i>::kısayol</i> ile hızlı bir şekilde eklemek "
+"için hazır yanıtları kullanın. Göndermeden önce metni düzenleyebilirsiniz."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
@@ -12384,7 +12585,7 @@ msgstr "Bir kullanıcıya bildirim göndermek için message_notify kullanın."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
 msgid "Use microphone and camera"
-msgstr ""
+msgstr "Mikrofon ve kamera kullanın"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -12402,6 +12603,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
 msgstr ""
+"Yoğun trafiği yönetmek ve Twilio'nun kullanılamadığı durumlarda "
+"güvenilirliği sağlamak için aramalar için kendi sunucularınızı kullanın"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
@@ -12409,6 +12612,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
 msgstr ""
+"Yoğun trafiği yönetmek ve Twilio'nun kullanılamadığı durumlarda "
+"güvenilirliği sağlamak için aramalar için kendi sunucularınızı kullanın."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12469,7 +12674,7 @@ msgstr "Kullanıcı Alanı"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__role_ids
 msgid "User Roles"
-msgstr ""
+msgstr "Kullanıcı Rolleri"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__user_setting_id
@@ -12504,7 +12709,7 @@ msgstr "Kullanıcı Türü"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "User email"
-msgstr ""
+msgstr "Kullanıcı e-postası"
 
 #. module: mail
 #. odoo-javascript
@@ -12516,7 +12721,7 @@ msgstr "Kullanıcı bir bottur"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 msgid "User is busy"
-msgstr ""
+msgstr "Kullanıcı meşgul"
 
 #. module: mail
 #. odoo-javascript
@@ -12544,7 +12749,7 @@ msgstr "Kullanıcının mükerrer favori GIF’i olmamalı"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_presence
 msgid "User/Guest Presence"
-msgstr ""
+msgstr "Kullanıcı/Misafir Varlığı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__user
@@ -12557,7 +12762,7 @@ msgstr "Kullanıcı Adı"
 #: model:ir.model.fields,field_description:mail.field_res_role__user_ids
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__role_ids
@@ -12565,6 +12770,8 @@ msgid ""
 "Users are notified whenever one of their roles is @-mentioned in a "
 "conversation."
 msgstr ""
+"Kullanıcılar, rollerinden biri bir konuşmada @bahsedildiğinde "
+"bilgilendirilir."
 
 #. module: mail
 #. odoo-python
@@ -12589,6 +12796,7 @@ msgstr ""
 msgid ""
 "Using picture-in-picture lets you stay in the call while you do other things."
 msgstr ""
+"Resim içinde resim kullanmak, başka şeyler yaparken aramada kalmanızı sağlar."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -12605,7 +12813,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
 msgid "Vacation Responder"
-msgstr ""
+msgstr "Tatil Yanıtlayıcısı"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -12616,7 +12824,7 @@ msgstr "Geçerli"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__value
 #: model:ir.model.fields,field_description:mail.field_ir_cron__value
 msgid "Value"
-msgstr ""
+msgstr "Değer"
 
 #. module: mail
 #. odoo-python
@@ -12635,13 +12843,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__evaluation_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__evaluation_type
 msgid "Value Type"
-msgstr ""
+msgstr "Değer Türü"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Video"
 msgstr "Video"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
+msgid "Video Settings"
+msgstr "Video Ayarları"
 
 #. module: mail
 #. odoo-javascript
@@ -12653,7 +12868,7 @@ msgstr "Video oynatıcı:"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 msgid "Video visible in the call tab"
-msgstr ""
+msgstr "Video çağrı sekmesinde görünür"
 
 #. module: mail
 #. odoo-javascript
@@ -12703,15 +12918,27 @@ msgstr "Tüm etkinlikleri görüntüle"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View chat with %(channel_name)s"
+msgstr "İle sohbeti görüntüle %(channel_name)s"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "View or join channels"
 msgstr "Kanalları görüntüleme veya kanallara katılma"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
+msgid "View the %(channel_name)s channel"
+msgstr "%(channel_name)s kanalını görüntüleyin"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Herkes tarafından görülebilir"
 
 #. module: mail
 #. odoo-javascript
@@ -12727,6 +12954,9 @@ msgid "Voice & Video"
 msgstr "Ses ve Video"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/web/quick_video_settings_patch.js:0
+#: code:addons/mail/static/src/discuss/call/web/quick_voice_settings_patch.js:0
 #: model:ir.actions.client,name:mail.discuss_call_settings_action
 msgid "Voice & Video Settings"
 msgstr "Ses ve Video Ayarları"
@@ -12749,9 +12979,16 @@ msgstr "Sesli Mesaj"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
+msgid "Voice Settings"
+msgstr "Ses Ayarları"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Voice detection sensitivity"
-msgstr ""
+msgstr "Ses algılama hassasiyeti"
 
 #. module: mail
 #. odoo-javascript
@@ -12832,7 +13069,7 @@ msgstr "'%(field)s' alanının değeri alınamadı"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,field_description:mail.field_ir_cron__webhook_url
 msgid "Webhook URL"
-msgstr ""
+msgstr "Webhook URL'si"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
@@ -12843,7 +13080,7 @@ msgstr "Hafta"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
+msgstr "%(channelName)s adresine hoş geldiniz!"
 
 #. module: mail
 #. odoo-javascript
@@ -12858,7 +13095,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "What's the email address of"
-msgstr ""
+msgstr "E-posta adresi nedir?"
 
 #. module: mail
 #. odoo-javascript
@@ -12931,7 +13168,7 @@ msgstr "Mesajını buraya yaz..."
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Wrong email address %s."
-msgstr ""
+msgstr "Yanlış e-posta adresi %s."
 
 #. module: mail
 #. odoo-python
@@ -12952,6 +13189,7 @@ msgstr "Evet, sabitle!"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Yes"
 msgstr "Evet"
@@ -13031,7 +13269,7 @@ msgstr "Zamanlanmış bir mesajın hedef kaydını değiştirme izniniz yok."
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to create a personal mail server."
-msgstr ""
+msgstr "Kişisel bir posta sunucusu oluşturmanıza izin verilmez."
 
 #. module: mail
 #. odoo-python
@@ -13043,7 +13281,7 @@ msgstr "Bu zamanlanmış mesajı gönderme izniniz yok"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to test personal mail servers."
-msgstr ""
+msgstr "Kişisel posta sunucularını test etmenize izin verilmez."
 
 #. module: mail
 #. odoo-python
@@ -13089,7 +13327,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "You can still turn off your %s anytime."
-msgstr ""
+msgstr "%s adresinizi istediğiniz zaman kapatabilirsiniz."
 
 #. module: mail
 #. odoo-python
@@ -13156,7 +13394,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You don't have access to invite users to this channel."
-msgstr ""
+msgstr "Kullanıcıları bu kanala davet etme erişiminiz yok."
 
 #. module: mail
 #. odoo-python
@@ -13180,6 +13418,7 @@ msgstr "#%s'a davet edildiniz"
 #: code:addons/mail/models/mail_mail.py:0
 msgid "You may not create a message using another user's mail server."
 msgstr ""
+"Başka bir kullanıcının posta sunucusunu kullanarak mesaj oluşturamazsınız."
 
 #. module: mail
 #. odoo-python
@@ -13199,7 +13438,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
 msgid "You will not receive any notifications"
-msgstr ""
+msgstr "Herhangi bir bildirim almayacaksınız"
 
 #. module: mail
 #. odoo-javascript
@@ -13247,12 +13486,6 @@ msgstr "Hesap şifreniz güncellendi"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Your browser does not support videoconference"
-msgstr "Tarayıcınız video konferansı desteklemiyor"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Your browser does not support voice activation"
 msgstr "Tarayıcınız sesle etkinleştirmeyi desteklemiyor"
@@ -13267,7 +13500,7 @@ msgstr "Tarayıcınız webRTC'yi desteklemiyor."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Your call is in another window."
-msgstr ""
+msgstr "Aramanız başka bir pencerede."
 
 #. module: mail
 #. odoo-python
@@ -13276,6 +13509,8 @@ msgid ""
 "Your email address is used by an alias domain, and so you can not create a "
 "mail server for it."
 msgstr ""
+"E-posta adresiniz bir takma alan adı tarafından kullanılır ve bu nedenle "
+"bunun için bir posta sunucusu oluşturamazsınız."
 
 #. module: mail
 #. odoo-javascript
@@ -13287,7 +13522,7 @@ msgstr "Adınız"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Your out-of-office message..."
-msgstr ""
+msgstr "Ofis dışı mesajınız..."
 
 #. module: mail
 #. odoo-python
@@ -13298,7 +13533,7 @@ msgstr "kayıtlı ortaklarla bağlantılı adresler"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after previous activity completion date"
-msgstr ""
+msgstr "önceki faaliyet tamamlanma tarihinden sonra"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
@@ -13386,7 +13621,7 @@ msgstr "kodek:"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "conversations"
-msgstr ""
+msgstr "konuşmalar"
 
 #. module: mail
 #. odoo-python
@@ -13397,7 +13632,7 @@ msgstr "bu kanalı oluşturdu."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
-msgstr ""
+msgstr "gün, ay gg, yyyy - ss:dd:ss (GMT)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__days
@@ -13535,7 +13770,7 @@ msgstr "örn. Teklifi tartışın"
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. Hello, how may I help you?"
-msgstr ""
+msgstr "örn. Merhaba, size nasıl yardımcı olabilirim?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
@@ -13555,25 +13790,25 @@ msgstr "örn. Toplantı planlama"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. Welcome to MyCompany!"
-msgstr ""
+msgstr "ör. MyCompany'e Hoş Geldiniz!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/shortcut_char_field/shortcut_char_field.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. hello"
-msgstr ""
+msgstr "örneğin merhaba"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. info@company.com"
-msgstr ""
+msgstr "örneğin info@company.com"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "e.g. mail@example.com"
-msgstr ""
+msgstr "örneğin mail@example.com"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
@@ -13600,7 +13835,7 @@ msgstr "örn: Sipariş onayı gönderin"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__outgoing_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__outgoing_email_to
 msgid "emails To"
-msgstr ""
+msgstr "e-postalar"
 
 #. module: mail
 #. odoo-javascript
@@ -13627,7 +13862,7 @@ msgstr "size aşağıdaki etkinliği atamıştır:"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "id"
-msgstr ""
+msgstr "kimlik"
 
 #. module: mail
 #. odoo-javascript
@@ -13680,7 +13915,7 @@ msgstr "liste öğesi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_multi_invite
 msgid "listed below:"
-msgstr ""
+msgstr "aşağıda listelenmiştir:"
 
 #. module: mail
 #. odoo-javascript
@@ -13702,7 +13937,7 @@ msgstr "medya oynatıcı hatası"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_link_preview_list
 msgid "messages"
-msgstr ""
+msgstr "mesajlar"
 
 #. module: mail
 #. odoo-javascript
@@ -13792,7 +14027,7 @@ msgstr "diğer üyeler."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_ir_mail_server_unique_owner_user_id
 msgid "owner_user_id must be unique"
-msgstr ""
+msgstr "owner_user_id benzersiz olmalıdır"
 
 #. module: mail
 #. odoo-javascript
@@ -13851,7 +14086,7 @@ msgstr "stun:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "stun:stun.google.com:19302 or turn:turn.example.com:3478"
-msgstr ""
+msgstr "stun:stun.google.com:19302 veya turn:turn.example.com:3478"
 
 #. module: mail
 #. odoo-python
@@ -13920,7 +14155,7 @@ msgstr "haftalar"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "wrote"
-msgstr ""
+msgstr "yazdı"
 
 #. module: mail
 #. odoo-python
@@ -13939,6 +14174,53 @@ msgstr "takma adınız"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s”, “%(channel_name)s” içinde"
+
+#~ msgid "%(user)s connected. This is their first connection. Wish them luck."
+#~ msgstr "%(user)s bağlandı. Bu onların ilk bağlantısı. Onlara şans dileyin."
+
+#~ msgid "Browser default"
+#~ msgstr "Tarayıcı varsayılanı"
+
+#~ msgid "Disconnected from the RTC call by the server"
+#~ msgstr "Sunucu tarafından RTC çağrısıyla bağlantısı kesildi"
+
+#~ msgid "Link copied!"
+#~ msgstr "Bağlantı kopyalandı!"
+
+#~ msgid ""
+#~ "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%"
+#~ "(close_button)s"
+#~ msgstr ""
+#~ "%(open_button)s%(icon)s%(open_em)sDüzenlemeyi göz ardı edin%(close_em)s%"
+#~ "(close_button)s"
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "Kanal türü boş olamaz"
+
+#~ msgid "Add Reaction"
+#~ msgstr "Tepki Ekle"
+
+#~ msgid "Camera is off"
+#~ msgstr "Kamera kapalı"
+
+#~ msgid "Incoming Call..."
+#~ msgstr "Gelen Çağrı..."
+
+#~ msgid "Incoming Video Call..."
+#~ msgstr "Gelen Görüntülü Arama..."
+
+#~ msgid ""
+#~ "Modifying the model can have an impact on existing activities using this "
+#~ "activity type, be careful."
+#~ msgstr ""
+#~ "Modeli değiştirmek, bu etkinlik türünü kullanarak mevcut aktiviteler "
+#~ "üzerinde etkili olabilir, dikkatli olun."
+
+#~ msgid "Preview my camera"
+#~ msgstr "Kameramı ön izle"
+
+#~ msgid "Your browser does not support videoconference"
+#~ msgstr "Tarayıcınız video konferansı desteklemiyor"
 
 #~ msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 #~ msgstr ""
@@ -15339,9 +15621,6 @@ msgstr "“%(member_name)s”, “%(channel_name)s” içinde"
 #~ msgid "VS button"
 #~ msgstr "VS butonu"
 
-#~ msgid "Video Settings"
-#~ msgstr "Video Ayarları"
-
 #~ msgid "View image"
 #~ msgstr "Resmi görüntüle"
 
@@ -15350,9 +15629,6 @@ msgstr "“%(member_name)s”, “%(channel_name)s” içinde"
 
 #~ msgid "Virgo"
 #~ msgstr "Başak burcu"
-
-#~ msgid "Voice Settings"
-#~ msgstr "Ses Ayarları"
 
 #~ msgid "Voice detection threshold"
 #~ msgstr "Ses algılama eşiği"

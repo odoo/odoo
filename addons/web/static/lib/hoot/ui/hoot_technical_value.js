@@ -9,13 +9,14 @@ import {
     useState,
 } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
-import { isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { isInstanceOf, isIterable, isPromise } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { logger } from "../core/logger";
 import {
     getTypeOf,
     isSafe,
     Markup,
     S_ANY,
+    S_CIRCULAR,
     S_NONE,
     stringify,
     toExplicitString,
@@ -96,7 +97,7 @@ export class HootTechnicalValue extends Component {
                 <t>/&gt;</t>
             </button>
         </t>
-        <t t-elif="value === S_ANY or value === S_NONE">
+        <t t-elif="SPECIAL_SYMBOLS.includes(value)">
             <span class="italic">
                 &lt;<t t-esc="symbolValue(value)" />&gt;
             </span>
@@ -175,8 +176,7 @@ export class HootTechnicalValue extends Component {
     stringify = stringify;
     toSelector = toSelector;
 
-    S_ANY = S_ANY;
-    S_NONE = S_NONE;
+    SPECIAL_SYMBOLS = [S_ANY, S_CIRCULAR, S_NONE];
 
     get explicitValue() {
         return toExplicitString(this.value);
@@ -249,7 +249,7 @@ export class HootTechnicalValue extends Component {
     }
 
     wrapPromiseValue(promise) {
-        if (!isInstanceOf(promise, Promise)) {
+        if (!isPromise(promise)) {
             return;
         }
         this.state.promiseState = ["pending", null];

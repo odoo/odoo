@@ -115,9 +115,6 @@
         <!-- remove default document title -->
         <xpath expr="//t[@t-set='layout_document_title']" position="replace"/>
 
-        <!-- remove detail of taxes when currency != from company's currency -->
-        <t t-call="account.document_tax_totals_company_currency_template" position="replace"/>
-
         <!-- NCM column for fiscal bond -->
         <th name="th_description" position="after">
             <th t-if="fiscal_bond" name="th_ncm_code" class="text-start"><span>NCM</span></th>
@@ -139,6 +136,13 @@
         <t t-set="section_subtotal" t-value="line.get_section_subtotal()" position="attributes">
             <attribute name="t-value">line.get_section_subtotal() + l10n_ar_values['price_subtotal']</attribute>
         </t>
+        <xpath expr="//t/tr/t[@t-set='line_colspan']" position="attributes">
+            <attribute name="t-value">3 + (1 if display_discount else 0) + (1 if not line.tax_ids and not o._l10n_ar_include_vat() else 0)</attribute>
+        </xpath>
+
+        <xpath expr="//t/t/t[@t-else='']/t[@t-set='line_colspan']" position="attributes">
+            <attribute name="t-value">3 + (1 if display_discount else 0) + (1 if display_taxes and not grouped_line.get('taxes') and o._l10n_ar_include_vat() else 0)</attribute>
+        </xpath>
         <!-- label amount for subtotal column on b2b and b2c -->
         <xpath expr="//th[@name='th_subtotal']/span" position="replace">
             <span>Amount</span>
@@ -164,7 +168,7 @@
         </xpath>
 
         <xpath expr="//span[@id='line_tax_ids']/.." position="attributes">
-            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
+            <attribute name="t-if">not hide_prices and not o._l10n_ar_include_vat()</attribute>
         </xpath>
         <xpath expr="//span[@id='grouped_line_tax_ids']/.." position="attributes">
             <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
@@ -261,7 +265,7 @@
          http://biblioteca.afip.gob.ar/dcp/LEY_C_027440_2018_05_09 article 5.f -->
         <xpath expr="//div[@id='total']/div/table" position="after">
             <t t-if="o.l10n_latam_document_type_id.code in ['201', '202', '203', '206', '207', '208', '211', '212', '213']">
-                <strong>Son: </strong><span t-out="o.currency_id.with_context(lang='es_AR').amount_to_text(o.amount_total)"/>
+                <strong>Son: </strong><span t-out="o.currency_id.amount_to_text(o.amount_total)"/>
             </t>
         </xpath>
 

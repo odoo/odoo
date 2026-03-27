@@ -339,6 +339,35 @@ class TestRecruitment(TransactionCase):
             app_2
         )
 
+    def test_applicant_refuse_mail_from_template(self):
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test template',
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'email_from': 'test@test.test',
+        })
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create({
+            'name': 'Not good',
+        })
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Laurie Poiret',
+            'email_from': 'laurie.poiret@aol.ru',
+        })
+        applicant_get_refuse_reason = self.env['applicant.get.refuse.reason'].create([{
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': applicant.ids,
+            'duplicates': True,
+        }])
+        mail_values = applicant_get_refuse_reason._prepare_mail_values(applicant)
+        self.assertEqual(mail_values['email_from'], self.env.user.email_formatted)
+
+        refuse_reason_template = self.env['hr.applicant.refuse.reason'].create({
+            'name': 'Fired',
+            'template_id': mail_template.id,
+        })
+        applicant_get_refuse_reason.refuse_reason_id = refuse_reason_template
+        mail_values = applicant_get_refuse_reason._prepare_mail_values(applicant)
+        self.assertEqual(mail_values['email_from'], 'test@test.test')
+
     def test_copy_attachments_while_creating_employee(self):
         """
         Test that attachments are copied when creating an employee from an applicant
@@ -423,3 +452,43 @@ class TestRecruitment(TransactionCase):
 
         res = A1.action_open_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
+
+    def test_applicant_modify_email_number(self):
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Mary Applicant',
+            'email_from': 'applicant@example.com',
+            'partner_phone': '123456789',
+        })
+        self.assertEqual(applicant.partner_id.email, 'applicant@example.com', "Email should have been set on the partner.")
+        self.assertEqual(applicant.partner_id.phone, '123456789', "Phone should have been set on the partner.")
+
+        applicant.email_from = 'applicant_diff@example.com'
+        self.assertEqual(applicant.partner_id.email, 'applicant_diff@example.com', "Email should have been updated on the partner.")
+        applicant.partner_phone = '987654321'
+        self.assertEqual(applicant.partner_id.phone, '987654321', "Phone should have been updated on the partner.")
+
+    def test_send_mail_when_refuse_applicant(self):
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test template',
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'subject': 'Application refused: {{ object.partner_name }}',
+        })
+
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create([{
+            'name': 'Not good',
+            'template_id': mail_template.id,
+        }])
+
+        app_1 = self.env['hr.applicant'].create({
+            'partner_name': 'Mario',
+            'email_from': 'super@mario.bros',
+        })
+
+        applicant_get_refuse_reason = self.env['applicant.get.refuse.reason'].create({
+            'refuse_reason_id': refuse_reason.id,
+            'send_mail': True,
+            'applicant_ids': [(6, 0, [app_1.id])],
+        })
+        applicant_get_refuse_reason._prepare_send_refusal_mails()
+        mail = self.env['mail.mail'].search([('subject', '=', 'Application refused: Mario')], limit=1)
+        self.assertEqual(mail.partner_ids, app_1.partner_id)

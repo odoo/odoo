@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="MojEracun E-Invoicing" id="mojeracun" invisible="country_code != 'HR'">
+                    <setting string="Service credentials" company_dependent="1">
+                        <span class="text-muted">Requires registration on <a href="https://portal.moj-eracun.hr/">MojEracun portal</a></span>
+                        <div class="mt-4">
+                            <div class="row">
+                                <label string="Username" for="l10n_hr_mer_username" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_hr_mer_username"/>
+                            </div>
+                            <div class="row">
+                                <label string="Password" for="l10n_hr_mer_password" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_hr_mer_password" password="True"/>
+                            </div>
+                            <div class="row">
+                                <label string="Company ID (OIB or GIN)" for="l10n_hr_mer_company_ident" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_hr_mer_company_ident"/>
+                            </div>
+                            <div class="row" title="If you have not used Company BU/PJ for registering on MojEracun, leave this field blank.">
+                                <label string="Company Business Unit (PJ)" for="l10n_hr_mer_company_bu" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_hr_mer_company_bu"/>
+                            </div>
+                            <div class="row">
+                                <label string="Business Software (ERP) ID" for="l10n_hr_mer_software_ident" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_hr_mer_software_ident"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Current status" company_dependent="1">
+                        <div class="mt-4">
+                            <field name="l10n_hr_mer_connection_state"/>
+                        </div>
+                        <div class="mt-4">
+                            <label string="Incoming E-Invoices Journal"
+                                for="l10n_hr_mer_purchase_journal_id"
+                                class="col-lg-6"/>
+                            <field name="l10n_hr_mer_purchase_journal_id"
+                                required="l10n_hr_mer_connection_state == 'active'"/>
+                        </div>
+                        <div class="mt-4">
+                            <label string="MojEracun Operating Mode"
+                                for="l10n_hr_mer_connection_mode"
+                                class="col-lg-6"/>
+                            <field name="l10n_hr_mer_connection_mode"/>
+                        </div>
+                        <div invisible="l10n_hr_mer_connection_state == 'active'" class="mt-4">
+                            <button name="button_l10n_hr_activate_mojeracun"
+                                    type="object"
+                                    string="Activate"
+                                    class="btn btn-secondary me-1"/>
+                        </div>
+                        <div invisible="l10n_hr_mer_connection_state != 'active'" class="mt-4">
+                            <button name="button_l10n_hr_deactivate_mojeracun"
+                                    type="object"
+                                    string="Deactivate"
+                                    class="btn btn-secondary me-1"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

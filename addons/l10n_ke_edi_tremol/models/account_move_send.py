@@ -38,6 +38,8 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS account
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
         if invoice.country_code == 'KE' and not invoice._l10n_ke_fiscal_device_details_filled():
-            invoice_data['error'] = _(
-                "This document does not have details related to the fiscal device, a proforma invoice will be used."
-            )
+            invoice_data['error'] = {
+                'error_title': _(
+                    "This document does not have details related to the fiscal device, a proforma invoice will be used."
+                )
+            }

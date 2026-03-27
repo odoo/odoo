@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -221,6 +222,19 @@ class TestUsers(UsersCommonCase):
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
 
+    def test_delete_public_user(self):
+        """Test that the public user cannot be deleted."""
+        public_user = self.env.ref('base.public_user')
+        public_partner = public_user.partner_id
+
+        # Attempt to delete the public user
+        with self.assertRaises(UserError, msg="Public user should not be deletable"):
+            public_user.unlink()
+
+        # Ensure the public user still exists and is inactive
+        self.assertTrue(public_user.exists() and not public_user.active, "Public user should still exist and be inactive")
+        self.assertTrue(public_partner.exists() and not public_partner.active, "Public partner should still exist and be inactive")
+
     def test_user_home_action_restriction(self):
         test_user = new_test_user(self.env, 'hello world')
 
@@ -428,6 +442,28 @@ class TestUsers2(UsersCommonCase):
             with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['Membre', 'Portal', 'Foo / Small user group']"):
                 user_form.save()
 
+    def test_view_group_hierarchy(self):
+        """Test that the group hierarchy shows up in the correct language of the user."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        group_system = self.env.ref('base.group_system')
+        group_system.with_context(lang='fr_FR').name = 'Administrateur'
+
+        view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
+        view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
+        self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')
+        self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
+
+        # Should work the other way around too
+        self.env.registry.clear_cache('groups')
+        view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
+        view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
+        self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')
+        self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
+
+        with patch('odoo.addons.base.models.res_groups.ResGroups._get_view_group_hierarchy') as mock:
+            self.user_portal_1.copy_data()
+            self.assertFalse(mock.called)
+
     @users('portal_1')
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_self_writeable_fields(self):
@@ -495,6 +531,94 @@ class TestUsers2(UsersCommonCase):
                 "group_ids": [Command.link(contact_creation_group.id)],
             })
 
+    def test_portal_user_manager_access(self):
+        # groups
+        group_portal = self.env.ref('base.group_portal')
+        group_user = self.env.ref('base.group_user')
+        group_partner_manager = self.env.ref('base.group_partner_manager')
+        group_portal_user_manager = self.env['res.groups'].create({
+            'name': 'Portal User Manager',
+            'user_ids': [],
+        })
+
+        # ACL
+        self.env['ir.model.access'].create({
+            'name': 'Allow user profile update',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'group_id': group_portal_user_manager.id,
+            'perm_write': True,
+        })
+
+        # Rules
+        self.env['ir.rule'].create({
+            'name': 'Allow updates by Portal Managers on PORTAL users (only)',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'groups': [group_portal_user_manager.id],
+            'domain_force': [('share', '=', True)],
+            'perm_write': True,
+        })
+
+        # Users
+        portal_user_manager = self.env['res.users'].create({
+            'name': 'Portal User Manager',
+            'login': 'maintainer',
+            'password': 'password',
+            'group_ids': [group_user.id, group_partner_manager.id, group_portal_user_manager.id],
+        })
+        user = self.env['res.users'].create({
+            'name': 'User',
+            'login': 'user_',
+            'password': 'password',
+            'group_ids': [group_user.id, group_partner_manager.id],
+        })
+        portal = self.env['res.users'].create({
+            'name': 'Portal',
+            'login': 'portal_',
+            'password': 'password',
+            'group_ids': [group_portal.id],
+        })
+
+        # A UPM cannot update the user profile of another USER
+        with self.assertRaises(AccessError):
+            user.with_user(portal_user_manager).write({
+                'name': 'New name for you'
+            })
+        # A UPM can update the user profile of a PORTAL user
+        portal.with_user(portal_user_manager).write({
+            'name': 'New name for you'
+        })
+
+        # A UPM cannot update the partner profile of another USER
+        with self.assertRaises(AccessError):
+            user.partner_id.with_user(portal_user_manager).write({
+                'name': 'New name for you'
+            })
+        # A UPM can update the partner profile of a PORTAL user
+        portal.partner_id.with_user(portal_user_manager).write({
+            'name': 'New name for you'
+        })
+
+        # A USER cannot update the user profile of another USER
+        with self.assertRaises(AccessError):
+            self.user_internal.with_user(user).write({
+                'name': 'New name for you'
+            })
+        # A USER cannot update the user profile of a PORTAL user
+        with self.assertRaises(AccessError):
+            portal.with_user(user).write({
+                'name': 'New name for you'
+            })
+
+        # A USER cannot update the partner profile of another USER
+        with self.assertRaises(AccessError):
+            self.user_internal.partner_id.with_user(user).write({
+                'name': 'New name for you'
+            })
+        # A USER can update the partner profile of a PORTAL user
+        portal.partner_id.with_user(user).write({
+            'name': 'New name for you'
+        })
+
 
 class TestUsersTweaks(TransactionCase):
     def test_superuser(self):
@@ -517,10 +641,10 @@ class TestUsersIdentitycheck(HttpCase):
         self.env.user.password = "admin@odoo"
 
         # Create a first session that will be used to revoke other sessions
-        session = self.authenticate('admin', 'admin@odoo')
+        session = self.authenticate('admin', 'admin@odoo', session_extra={'_trace_disable': False})
 
         # Create a second session that will be used to check it has been revoked
-        self.authenticate('admin', 'admin@odoo')
+        self.authenticate('admin', 'admin@odoo', session_extra={'_trace_disable': False})
         # Test the session is valid
         # Valid session -> not redirected from /web to /web/login
         self.assertTrue(self.url_open('/web').url.endswith('/web'))
@@ -545,3 +669,77 @@ class TestUsersIdentitycheck(HttpCase):
 
         # In addition, the password must have been emptied from the wizard
         self.assertFalse(user_identity_check.password)
+
+
+@tagged('post_install', '-at_install')
+class TestApiKeys(UsersCommonCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.env['ir.config_parameter'].set_param('base.enable_programmatic_api_keys', 1)
+        UsersApiKeys = cls.env['res.users.apikeys'].with_user(cls.user_internal)
+        cls.tomorrow = datetime.now() + timedelta(days=1)
+        cls.unscoped_key = UsersApiKeys._generate(None, 'Key without a scope', cls.tomorrow)
+        cls.scoped_key = UsersApiKeys._generate('scope', 'Key with a scope', cls.tomorrow)
+
+    def test_programmatic_apikey_management_is_deactivated_by_default(self):
+        self.env['ir.config_parameter'].set_param('base.enable_programmatic_api_keys', None)
+
+        # Attempting to create a key raises an error
+        with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+
+        # Attempting to revoke a key raises an error
+        with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).revoke(self.unscoped_key)
+
+    def test_generate_apikey_is_limited(self):
+        # create 8 new keys, which makes 10 keys in total for user_internal
+        for i in range(8):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+
+        with self.assertRaisesRegex(UserError, 'Limit of 10 API keys is reached'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+
+        # This ICP can change the limit
+        self.env['ir.config_parameter'].set_param('base.programmatic_api_keys_limit', 11)
+        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+            self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+
+    def test_generate_apikey_raises_when_creating_unscoped_key_from_scoped_key(self):
+        # Creating an unscoped key from a scoped key raises an error
+        with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.scoped_key, None, 'Another key without a scope', self.tomorrow)
+
+    def test_generate_apikey_raises_when_creating_key_from_differently_scoped_key(self):
+        # Creating a key with a different scope raises an error
+        with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.scoped_key, 'other', 'Another key with another scope', self.tomorrow)
+
+    def test_generate_apikey_accepts_creating_key_from_identically_scoped_key(self):
+        # Creating a key with the same scope doesn't raise
+        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+            self.scoped_key, 'scope', 'Another key with a scope', self.tomorrow)
+
+    def test_generate_apikey_accepts_creating_scoped_key_from_unscoped_key(self):
+        # Creating a key with a scope from an unscoped key doesn't raise
+        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+            self.unscoped_key, 'scope', 'Another key with a scope', self.tomorrow)
+
+    def test_generate_apikey_accepts_creating_unscoped_key_from_unscoped_key(self):
+        # Creating an unscoped key from another unscoped key doesn't raise
+        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+            self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+
+    def test_generate_apikey_checks_ownership(self):
+        # Check that an API key cannot be generated from another user's API key
+        with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
+            self.env['res.users.apikeys'].with_user(SUPERUSER_ID).generate(
+                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)

@@ -52,6 +52,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'partner_id': cls.company_data['company'].partner_id.id,
             'bank_id': cls.caixabank.id,
             'acc_type': 'iban',
+            'allow_out_payment': True,
         })
 
         # ==== Business ====
@@ -208,41 +209,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         with self.assertRaises(UserError):
             wizard.action_send_and_print()
 
-    def test_tax_withheld(self):
-        with freeze_time(self.frozen_today), \
-                patch(f"{self.certificate_module}.fields.Datetime.now", lambda x=None: self.frozen_today), \
-                self._mock_sha1():
-            witholding_taxes = self.env["account.tax"].create([{
-                'name': "IVA 21%",
-                'company_id': self.company_data['company'].id,
-                'amount': 21.0,
-                'price_include_override': 'tax_excluded',
-                'l10n_es_edi_facturae_tax_type': '01'
-            }, {
-                'name': "IVA 21% withholding",
-                'company_id': self.company_data['company'].id,
-                'amount': -21.0,
-                'price_include_override': 'tax_excluded',
-                'l10n_es_edi_facturae_tax_type': '01'
-            }])
-
-            invoice = self.create_invoice(
-                partner_id=self.partner_a.id,
-                move_type='out_invoice',
-                invoice_line_ids=[
-                    {'price_unit': 100.0, 'tax_ids': witholding_taxes.ids},
-                    {'price_unit': 100.0, 'tax_ids': witholding_taxes.ids},
-                    {'price_unit': 200.0, 'tax_ids': witholding_taxes.ids},
-                ],
-            )
-            invoice.action_post()
-            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
-            self.assertFalse(errors)
-            self.assertTrue(generated_file)
-            with file_open("l10n_es_edi_facturae/tests/data/expected_tax_withholding.xml", "rt") as f:
-                expected_xml = lxml.etree.fromstring(f.read().encode())
-            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
-
     def test_in_invoice(self):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
@@ -267,6 +233,88 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
             with file_open("l10n_es_edi_facturae/tests/data/expected_in_invoice_document.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_out_invoice_decimals(self):
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        decimal_precision.digits = 4
+        with freeze_time(self.frozen_today):
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 2.0592, 'quantity': 22.0, 'tax_ids': [self.tax.id]},
+                ],
+            )
+            invoice.action_post()
+
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_4_decimals.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_out_invoice_withhold(self):
+        """
+        The Tax Withhold must be positive in the generated xml
+        """
+        with freeze_time(self.frozen_today):
+            withhold_tax = self.env['account.tax'].create({
+                'name': "15% WHI (Test)",
+                'company_id': self.company_data['company'].id,
+                'amount': -15.0,
+                'price_include_override': 'tax_excluded',
+                'l10n_es_edi_facturae_tax_type': '04',
+            })
+
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 100, 'quantity': 1.0, 'tax_ids': [withhold_tax.id]},
+                ],
+            )
+            invoice.action_post()
+
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_withhold.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_out_invoice_negative(self):
+        with freeze_time(self.frozen_today):
+            withhold_tax = self.env['account.tax'].create({
+                'name': "15% WHI (Test)",
+                'company_id': self.company_data['company'].id,
+                'amount': -15.0,
+                'price_include_override': 'tax_excluded',
+                'l10n_es_edi_facturae_tax_type': '04',
+            })
+
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 1000, 'quantity': 1.0, 'tax_ids': [self.tax.id, withhold_tax.id]},
+                    {'price_unit': -100, 'quantity': 1.0, 'tax_ids': [self.tax.id, withhold_tax.id]},
+                ],
+            )
+            invoice.action_post()
+
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_negative.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
     def test_refund_invoice(self):
@@ -632,3 +680,48 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'target': 'download',
             }
             self.assertEqual(invoices.action_invoice_download_facturae(), expected_action)
+
+    def test_out_invoice_rounding(self):
+        company = self.company_data['company']
+        company.tax_calculation_rounding_method = 'round_globally'
+        with freeze_time(self.frozen_today):
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 2.02, 'quantity': 25.0, 'tax_ids': [self.tax.id]},
+                    {'price_unit': 7.29, 'quantity': 2.0, 'tax_ids': [self.tax.id]},
+                    {'price_unit': 7.32, 'quantity': 5.0, 'tax_ids': [self.tax.id]},
+                    {'price_unit': 9.50, 'quantity': 25.0, 'tax_ids': [self.tax.id]},
+                ],
+            )
+            invoice.action_post()
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_glob.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_out_invoice_rounding_2(self):
+        company = self.company_data['company']
+        company.tax_calculation_rounding_method = 'round_globally'
+        with freeze_time(self.frozen_today):
+            invoice = self._create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=2478.1355, quantity=1.0, tax_ids=self.tax),
+                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=1062.50, quantity=1.0, tax_ids=self.tax),
+                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=1488.125, quantity=1.0, tax_ids=self.tax),
+                ],
+                post=True,
+            )
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_2.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)

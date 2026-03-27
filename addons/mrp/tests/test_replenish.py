@@ -353,3 +353,46 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertEqual(orderpoint.bom_id_placeholder, 'Ref 1234: Product A')
         # The actual BoM remains empty
         self.assertFalse(orderpoint.bom_id)
+
+    def test_lead_time_with_no_bom(self):
+        """Test that lead time is incremented by 365 days (1 year) when there
+        is no BoM defined.
+        """
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': route_manufacture.ids,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'test',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        self.assertEqual(orderpoint.lead_days, 365)
+
+    def test_orderpoint_with_kit_bom_in_another_company(self):
+        """Test that an orderpoint can be created for a product
+        having a kit-type BoM defined in another company.
+        """
+        self.assertEqual(self.bom_2.type, 'phantom')
+        self.assertEqual(self.bom_2.company_id, self.env.company)
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_company(company_2).create({
+            'product_id': self.bom_2.product_id.id,
+        })
+        self.assertEqual(orderpoint.company_id, company_2)
+
+    def test_product_replenish_wizard_multiple_manufacture_routes(self):
+        self.route_manufacture.copy()
+        wizard_form = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.product_4.product_tmpl_id.id
+        ))
+        manufacture_routes = self.env['stock.rule'].search([
+            ('action', '=', 'manufacture'),
+            ('company_id', '=', self.company.id),
+            ('location_dest_id.usage', '=', 'internal'),
+        ]).route_id
+        self.assertIn(wizard_form.route_id.id, manufacture_routes.ids)

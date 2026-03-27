@@ -6,6 +6,7 @@ import {
     onWillStart,
     onWillUpdateProps,
     reactive,
+    status,
     toRaw,
     useComponent,
     useEffect,
@@ -17,27 +18,40 @@ import {
 import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
+import { BuilderAction } from "./builder_action";
+
+/**
+ * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
+ */
 
 function isConnectedElement(el) {
     return el && el.isConnected && !!el.ownerDocument.defaultView;
 }
 
 export function useDomState(getState, { checkEditingElement = true } = {}) {
+    const component = useComponent();
     const env = useEnv();
     const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
     const handler = async (ev) => {
         const editingElement = env.getEditingElement();
         if (isValid(editingElement)) {
-            const newStatePromise = getState(editingElement);
-            if (ev) {
-                ev.detail.getStatePromises.push(newStatePromise);
-                const newState = await newStatePromise;
-                const shouldApply = await ev.detail.updatePromise;
-                if (shouldApply) {
-                    Object.assign(state, newState);
+            try {
+                const newStatePromise = getState(editingElement);
+                if (ev) {
+                    ev.detail.getStatePromises.push(newStatePromise);
+                    const newState = await newStatePromise;
+                    const shouldApply = await ev.detail.updatePromise;
+                    if (shouldApply) {
+                        Object.assign(state, newState);
+                    }
+                } else {
+                    Object.assign(state, await newStatePromise);
                 }
-            } else {
-                Object.assign(state, await newStatePromise);
+            } catch (e) {
+                if (!isValid(editingElement) || status(component) === "destroyed") {
+                    return;
+                }
+                throw e;
             }
         }
     };
@@ -239,6 +253,9 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 
     function refreshCurrentItem() {
+        if (env.editor.isDestroyed || env.editor.shared.history.getIsPreviewing()) {
+            return;
+        }
         let currentItem;
         let itemPriority = 0;
         for (const selectableItem of selectableItems) {
@@ -452,6 +469,31 @@ function useWithLoadingEffect(getAllActions) {
     return withLoadingEffect;
 }
 
+function useCanTimeout(getAllActions) {
+    const env = useEnv();
+    const getAction = env.editor.shared.builderActions.getAction;
+    let canTimeout = true;
+    for (const descr of getAllActions()) {
+        if (descr.actionId) {
+            const action = getAction(descr.actionId);
+            if (action.canTimeout === false) {
+                canTimeout = false;
+            }
+        }
+    }
+
+    return canTimeout;
+}
+
+export function revertPreview(editor) {
+    if (editor.isDestroyed) {
+        return;
+    }
+    // The `next` will cancel the previous operation, which will revert
+    // the operation in case of a preview.
+    return editor.shared.operation.next();
+}
+
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
@@ -469,17 +511,24 @@ export function useClickableBuilderComponent() {
     const operationWithReload = useOperationWithReload(callApply, reload);
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
+    const canTimeout = useCanTimeout(getAllActions);
 
     let preventNextPreview = false;
     const operation = {
         commit: () => {
             preventNextPreview = false;
             if (reload) {
-                callOperation(operationWithReload);
+                callOperation(operationWithReload, {
+                    operationParams: {
+                        withLoadingEffect: withLoadingEffect,
+                        canTimeout: canTimeout,
+                    },
+                });
             } else {
                 callOperation(applyOperation.commit, {
                     operationParams: {
                         withLoadingEffect: withLoadingEffect,
+                        canTimeout: canTimeout,
                     },
                 });
             }
@@ -495,14 +544,13 @@ export function useClickableBuilderComponent() {
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
+                    canTimeout: canTimeout,
                 },
             });
         },
         revert: () => {
             preventNextPreview = false;
-            // The `next` will cancel the previous operation, which will revert
-            // the operation in case of a preview.
-            comp.env.editor.shared.operation.next();
+            revertPreview(comp.env.editor);
         },
     };
 
@@ -581,7 +629,7 @@ export function useClickableBuilderComponent() {
                 );
             }
         }
-        await Promise.all(cleanOrApplyProms);
+        return await Promise.all(cleanOrApplyProms);
     }
     function getPriority() {
         return (
@@ -610,12 +658,19 @@ function useOperationWithReload(callApply, reload) {
     const env = useEnv();
     return async (...args) => {
         const { editingElement } = args[0][0];
-        await callApply(...args);
-        env.editor.shared.history.addStep();
-        await env.editor.shared.savePlugin.save();
-        const target = env.editor.shared["builderOptions"].getReloadSelector(editingElement);
-        const url = reload.getReloadUrl?.();
-        await env.editor.config.reloadEditor({ target, url });
+        env.services.ui.block();
+        try {
+            const applyResults = await callApply(...args);
+            if (!applyResults.includes(BuilderAction.cancelReload)) {
+                env.editor.shared.history.addStep();
+                await env.editor.shared.savePlugin.save();
+                const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
+                const url = reload.getReloadUrl?.();
+                await env.editor.config.reloadEditor({ target, url });
+            }
+        } finally {
+            env.services.ui.unblock();
+        }
     };
 }
 
@@ -626,6 +681,28 @@ function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
         }
     }
     return userInputValue;
+}
+
+/**
+ * Handles errors during builder actions.
+ * Currently it only checks if the error was triggered on an outdated snippet,
+ * and in that case it suppresses the error and shows a notification instead.
+ * This function can potentially be extended in the future to handle additional
+ * errors and recovery strategies.
+ *
+ * @param {Error} error - The caught error
+ * @param {Element} editingElement - The element being edited
+ * @param {Component} comp -  The component
+ * @throws {Error} If editingElement is not an outdated snippet
+ */
+function handleBuilderActionError(error, editingElement, comp) {
+    // Check if editingElement belongs to an outdated snippet, and displays a
+    // warning notification if yes.
+    const isOutdated =
+        comp.env.editor.shared.versionError.checkNotifyOutdatedSnippet(editingElement);
+    if (!isOutdated) {
+        throw error;
+    }
 }
 
 export function useInputBuilderComponent({
@@ -643,6 +720,13 @@ export function useInputBuilderComponent({
     const { reload } = useReloadAction(getAllActions);
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
+    const canTimeout = useCanTimeout(getAllActions);
+
+    onWillUpdateProps((nextProps) => {
+        if ("default" in nextProps) {
+            defaultValue = nextProps.default;
+        }
+    });
 
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
@@ -658,7 +742,7 @@ export function useInputBuilderComponent({
                 })
             );
         }
-        await Promise.all(proms);
+        return await Promise.all(proms);
     }
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
@@ -672,22 +756,36 @@ export function useInputBuilderComponent({
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
-        const actionValue =
-            getAction(actionId).getValue({ editingElement, params: actionParam }) || defaultValue;
-        return {
-            value: actionValue,
-        };
+        try {
+            const actionValue =
+                getAction(actionId).getValue({ editingElement, params: actionParam }) ||
+                defaultValue;
+            return {
+                value: actionValue,
+            };
+        } catch (error) {
+            handleBuilderActionError(error, editingElement, comp);
+        }
     }
 
     function commit(userInputValue) {
         userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
         const rawValue = parseDisplayValue(userInputValue);
         if (reload) {
-            callOperation(operationWithReload, { userInputValue: rawValue });
+            callOperation(operationWithReload, {
+                userInputValue: rawValue,
+                operationParams: {
+                    withLoadingEffect: withLoadingEffect,
+                    canTimeout: canTimeout,
+                },
+            });
         } else {
             callOperation(applyOperation.commit, {
                 userInputValue: rawValue,
-                withLoadingEffect: withLoadingEffect,
+                operationParams: {
+                    withLoadingEffect: withLoadingEffect,
+                    canTimeout: canTimeout,
+                },
             });
         }
         if (rawValue === null || (rawValue === defaultValue && rawValue === state.value)) {
@@ -709,6 +807,7 @@ export function useInputBuilderComponent({
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
+                    canTimeout: canTimeout,
                 },
             });
         }
@@ -909,28 +1008,45 @@ export function getAllActionsAndOperations(comp) {
         const isPreviewing = !!params.preview;
         const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
 
-        comp.env.editor.shared.operation.next(() => fn(actionsSpecs, isPreviewing), {
-            load: async () =>
-                Promise.all(
-                    actionsSpecs.map(async (applySpec) => {
-                        if (!applySpec.action.has("load")) {
-                            return;
-                        }
-                        const hasClean = !!applySpec.action.has("clean");
-                        if (!applySpec.loadOnClean && _shouldClean(comp, hasClean, isApplied())) {
-                            // The element will be cleaned, do not load
-                            return;
-                        }
-                        const result = await applySpec.action.load({
-                            editingElement: applySpec.editingElement,
-                            params: applySpec.actionParam,
-                            value: applySpec.actionValue,
-                        });
-                        applySpec.loadResult = result;
-                    })
-                ),
-            ...params.operationParams,
-        });
+        comp.env.editor.shared.operation.next(
+            async () => {
+                try {
+                    await fn(actionsSpecs, isPreviewing);
+                } catch (error) {
+                    handleBuilderActionError(error, comp.env.getEditingElement(), comp);
+                }
+            },
+            {
+                load: async () => {
+                    try {
+                        return await Promise.all(
+                            actionsSpecs.map(async (applySpec) => {
+                                if (!applySpec.action.has("load")) {
+                                    return;
+                                }
+                                const hasClean = !!applySpec.action.has("clean");
+                                if (
+                                    !applySpec.loadOnClean &&
+                                    _shouldClean(comp, hasClean, isApplied())
+                                ) {
+                                    // The element will be cleaned, do not load
+                                    return;
+                                }
+                                const result = await applySpec.action.load({
+                                    editingElement: applySpec.editingElement,
+                                    params: applySpec.actionParam,
+                                    value: applySpec.actionValue,
+                                });
+                                applySpec.loadResult = result;
+                            })
+                        );
+                    } catch (error) {
+                        handleBuilderActionError(error, comp.env.getEditingElement(), comp);
+                    }
+                },
+                ...params.operationParams,
+            }
+        );
     }
     function isApplied() {
         const getAction = comp.env.editor.shared.builderActions.getAction;
@@ -945,12 +1061,16 @@ export function getAllActionsAndOperations(comp) {
             if (!isConnectedElement(editingElement)) {
                 return false;
             }
-            const isApplied = getAction(actionId).isApplied?.({
-                editingElement,
-                params: actionParam,
-                value: actionValue,
-            });
-            return comp.props.inverseAction ? !isApplied : isApplied;
+            try {
+                const isApplied = getAction(actionId).isApplied?.({
+                    editingElement,
+                    params: actionParam,
+                    value: actionValue,
+                });
+                return comp.props.inverseAction ? !isApplied : isApplied;
+            } catch (error) {
+                handleBuilderActionError(error, editingElement, comp);
+            }
         });
         // If there is no `isApplied` method for the widget return false
         if (areActionsActiveTabs.every((el) => el === undefined)) {
@@ -987,15 +1107,39 @@ export function convertParamToObject(param) {
     }
     return param;
 }
+
 export class BaseOptionComponent extends Component {
     static components = {};
     static props = {};
     static template = "";
 
     setup() {
+        /** @type {EditorContext} */
+        const context = this.env.editor.shared.builderOptions.getBuilderOptionContext(
+            this.constructor
+        );
+        /** @type { EditorContext['document'] } **/
+        this.document = context.document;
+        this.window = context.document.defaultView;
+        /** @type { EditorContext['editable'] } **/
+        this.editable = context.editable;
+        /** @type { EditorContext['config'] } **/
+        this.config = context.config;
+        /** @type { EditorContext['services'] } **/
+        this.services = context.services;
+        /** @type { EditorContext['dependencies'] } **/
+        this.dependencies = context.dependencies;
+        /** @type { EditorContext['getResource'] } **/
+        this.getResource = context.getResource;
+        /** @type { EditorContext['dispatchTo'] } **/
+        this.dispatchTo = context.dispatchTo;
+        /** @type { EditorContext['delegateTo'] } **/
+        this.delegateTo = context.delegateTo;
+
         this.isActiveItem = useIsActiveItem();
         const comp = useComponent();
         const editor = comp.env.editor;
+
         if (!comp.constructor.components) {
             comp.constructor.components = {};
         }

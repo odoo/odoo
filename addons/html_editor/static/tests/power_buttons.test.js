@@ -1,15 +1,15 @@
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { describe, expect, test } from "@odoo/hoot";
-import { click, press, tick, waitFor } from "@odoo/hoot-dom";
+import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
+import { click, pointerDown, press, tick, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
+import { insertText, redo, simulateArrowKeyPress, splitBlock, undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { insertText } from "./_helpers/user_actions";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -19,6 +19,26 @@ describe("visibility", () => {
         insertText(editor, "a");
         await animationFrame();
         expect(".o_we_power_buttons").not.toBeVisible();
+    });
+
+    test("should show power buttons on P tag containing strong (bold)", async () => {
+        await setupEditor(`<p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`);
+        expect(".o_we_power_buttons").toBeVisible();
+    });
+
+    test("should show power buttons on P tag containing em (italic)", async () => {
+        await setupEditor(`<p><em data-oe-zws-empty-inline="">[]\u200B</em></p>`);
+        expect(".o_we_power_buttons").toBeVisible();
+    });
+
+    test("should show power buttons on P tag containing u (underline)", async () => {
+        await setupEditor(`<p><u data-oe-zws-empty-inline="">[]\u200B</u></p>`);
+        expect(".o_we_power_buttons").toBeVisible();
+    });
+
+    test("should show power buttons on P tag containing s (strikethrough)", async () => {
+        await setupEditor(`<p><s data-oe-zws-empty-inline="">[]\u200B</s></p>`);
+        expect(".o_we_power_buttons").toBeVisible();
     });
 
     test("should not show power buttons on heading tags", async () => {
@@ -56,6 +76,13 @@ describe("visibility", () => {
         expect(".o_we_power_buttons").not.toBeVisible();
     });
 
+    test("should not show power buttons on block p tag with tab", async () => {
+        await setupEditor(
+            `<p><span class="oe-tabs" contenteditable="false" style="width: 40px;">\t</span>\u200b[]</p>`
+        );
+        expect(".o_we_power_buttons").not.toBeVisible();
+    });
+
     test("should not show power buttons on non empty block P tag", async () => {
         await setupEditor("<p>[]<br><br></p>");
         expect(".o_we_power_buttons").not.toBeVisible();
@@ -84,10 +111,41 @@ describe("visibility", () => {
         el.appendChild(tempP);
         const placeholderWidth = tempP.getBoundingClientRect().width;
         el.removeChild(tempP);
-        const powerButtons = document.querySelector(
-            'div[data-oe-local-overlay-id="oe-power-buttons-overlay"]'
+        const powerButtons = document.querySelector(".o_we_power_buttons");
+        expect(Math.floor(powerButtons.getBoundingClientRect().left)).toEqual(
+            Math.floor(placeholderWidth + 30)
         );
-        expect(powerButtons.getBoundingClientRect().left).toEqual(placeholderWidth + 20);
+    });
+    test("should debounce powerButtons on selection change", async () => {
+        const { el, editor } = await setupEditor(
+            "<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>",
+            {
+                config: { debouncePowerbuttons: true },
+            }
+        );
+        expect(getContent(el)).toBe(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
+        );
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        await animationFrame();
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        expect(".o_we_power_buttons").toBeVisible();
+    });
+});
+
+describe.tags("desktop");
+describe("cleanup", () => {
+    test("power buttons overlay is removed when editor is destroyed", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        expect("[data-oe-local-overlay-id='oe-power-buttons-overlay']").toHaveCount(1);
+        editor.destroy();
+        expect("[data-oe-local-overlay-id='oe-power-buttons-overlay']").toHaveCount(0);
     });
 });
 
@@ -141,11 +199,136 @@ describe("buttons", () => {
         await expectElementCount(".o-we-linkpopover", 1);
     });
 
-    test("should open powerbox using power buttons", async () => {
-        await setupEditor("<p>[]<br></p>");
+    test("should open the powerbox using the power buttons without losing editor focus", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
-        await animationFrame();
         await expectElementCount(".o-we-powerbox", 1);
+        expect(editor.document.activeElement).toBe(el);
+    });
+
+    test("should filter the powerbox contents based on the search term", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        // Type a search term
+        await insertText(editor, "head");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "Heading 1",
+            "Heading 2",
+            "Heading 3",
+        ]);
+        // Remove the search term
+        for (let i = 0; i < 4; i++) {
+            press("backspace");
+        }
+        await animationFrame();
+        // All commands should be available again
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+    });
+
+    test("should close the powerbox on pointerdown outside and not reopen it on subsequent keydown", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        // Click outside the powerbox
+        await pointerDown("p");
+        await expectElementCount(".o-we-powerbox", 0);
+        // Typing should not reopen the powerbox
+        await insertText(editor, "a");
+        await animationFrame();
+        expect(".o-we-powerbox").toHaveCount(0);
+    });
+
+    test("should close the powerbox on undo", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        splitBlock(editor);
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        undo(editor);
+        await expectElementCount(".o-we-powerbox", 0);
+    });
+
+    test("should close the powerbox on redo", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        splitBlock(editor);
+        undo(editor);
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        redo(editor);
+        await expectElementCount(".o-we-powerbox", 0);
+    });
+
+    test("should close the powerbox on backspace", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        splitBlock(editor);
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        press("backspace");
+        await expectElementCount(".o-we-powerbox", 0);
+    });
+
+    test("should filter powerbox commands and keep it open on undo when only the search term changes", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        // Type a search term
+        await insertText(editor, "head");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "Heading 1",
+            "Heading 2",
+            "Heading 3",
+        ]);
+        undo(editor);
+        await expectElementCount(".o-we-powerbox", 1);
+    });
+
+    test("should filter powerbox commands and keep it open on redo when only the search term changes", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        // Type a search term
+        await insertText(editor, "head");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "Heading 1",
+            "Heading 2",
+            "Heading 3",
+        ]);
+        undo(editor);
+        await expectElementCount(".o-we-powerbox", 1);
+    });
+
+    test("should filter and apply a powerbox command when opened via the power buttons", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
+        // Open powerbox via the More options button
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
+        await expectElementCount(".o-we-powerbox", 1);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
+        // Type a search term
+        await insertText(editor, "head");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toEqual([
+            "Heading 1",
+            "Heading 2",
+            "Heading 3",
+        ]);
+        undo(editor);
+        await expectElementCount(".o-we-powerbox", 1);
+        await press("enter");
+        await expectElementCount(".o-we-powerbox", 0);
+        expect(getContent(el)).toBe('<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1>');
     });
 });
 

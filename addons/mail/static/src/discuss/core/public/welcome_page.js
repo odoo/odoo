@@ -1,7 +1,6 @@
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
-import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, useSubEnv } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 export class WelcomePage extends Component {
     static props = ["proceed?"];
     static template = "mail.WelcomePage";
-    static components = { CallPreview, DeviceSelect };
+    static components = { CallPreview };
 
     setup() {
         super.setup();
@@ -18,6 +17,7 @@ export class WelcomePage extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
+        useSubEnv({ inWelcomePage: true });
         this.state = useState({
             userName: this.store.self.name || _t("Guest"),
             hasMicrophone: undefined,
@@ -31,9 +31,9 @@ export class WelcomePage extends Component {
         }
     }
 
-    joinChannel() {
+    async joinChannel() {
         if (!this.store.self_partner) {
-            this.store.self_guest?.updateGuestName(this.state.userName.trim());
+            await this.store.self_guest?.updateGuestName(this.state.userName.trim());
         }
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
         browser.localStorage.setItem(

@@ -210,7 +210,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
                 })
                 self.assertEqual(
                     vendor_bill.fiscal_position_id,
-                    template.ref('fiscal_position_in_export_sez_in')
+                    template.ref('fiscal_position_in_sez')
                 )
 
             # Sub-test: Manual Partner Fiscal Check

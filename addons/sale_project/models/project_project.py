@@ -42,7 +42,7 @@ class ProjectProject(models.Model):
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
     sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False)
-    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]",
+    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]", index='btree_not_null',
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
 
@@ -449,7 +449,7 @@ class ProjectProject(models.Model):
     def get_panel_data(self):
         panel_data = super().get_panel_data()
         foldable_sections = self._get_foldable_section()
-        if self._show_profitability() and 'revenues' in panel_data['profitability_items']:
+        if panel_data and self._show_profitability() and 'revenues' in panel_data['profitability_items']:
             for section in panel_data['profitability_items']['revenues']['data']:
                 if section['id'] in foldable_sections:
                     section['isSectionFoldable'] = True
@@ -869,8 +869,8 @@ class ProjectProject(models.Model):
         if self.env.context.get("from_sale_order_action"):
             context = dict(action.get("context", {}))
             context.pop("search_default_open_tasks", None)
-            if self.sale_order_id:
-                context["search_default_sale_order_id"] = self.sale_order_id.id
+            if sale_order_id := self.env.context.get('default_reinvoiced_sale_order_id') or self.reinvoiced_sale_order_id.id:
+                context["search_default_sale_order_id"] = sale_order_id
             if not self.sale_order_id:
                 sale_order = self.env["sale.order"].browse(self.env.context.get("active_id"))
                 context["default_sale_order_id"] = sale_order.id

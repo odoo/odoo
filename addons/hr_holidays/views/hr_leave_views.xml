@@ -343,7 +343,7 @@
             </header>
             <sheet>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
-                <field name="leave_type_increases_duration" class="alert alert-info d-flex" role="alert" style="white-space: pre-wrap;" invisible="not leave_type_increases_duration"/>
+                <field name="leave_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not leave_type_increases_duration"/>
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
@@ -406,7 +406,7 @@
                             <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
                         </group>
                         <group>
-                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state != 'confirm'" />
+                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state != 'confirm'" colspan="2"/>
                         </group>
                     </div>
                     <div class="o_hr_leave_column col_right col-md-6 col-12">
@@ -554,7 +554,7 @@
         <field name="name">hr.leave.view.calendar</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar js_class="time_off_calendar"
+            <calendar js_class="time_off_calendar_hr_leave"
                     string="Time Off Request"
                     form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_manager_new_time_off)d"
                     event_open_popup="true"

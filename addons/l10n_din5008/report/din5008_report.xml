@@ -208,6 +208,13 @@
                                 <td>Delivery Date</td>
                                 <td><t t-out="o.delivery_date" t-options="{'widget': 'date'}"/></td>
                             </tr>
+                            <tr t-if="o.invoice_incoterm_id">
+                                <td>Incoterm</td>
+                                <td t-if="o.incoterm_location">
+                                    <span t-out="o.invoice_incoterm_id.code"/> - <span t-out="o.incoterm_location"/>
+                                </td>
+                                <td t-else="" t-out="o.invoice_incoterm_id.code"/>
+                            </tr>
                             <tr t-if="o.invoice_origin">
                                 <td>Source</td>
                                 <td><t t-out="o.invoice_origin"/></td>
@@ -272,6 +279,12 @@
             <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="before">
                 <t t-if="o.company_id.has_position_column">
                     <th name="th_position" class="text-start">Position</th>
+                </t>
+            </xpath>
+            <!-- Insert Empty Column for Position Numbers to Handle Section Misalignment -->
+            <xpath expr="//td[@name='line_name_td']" position="after">
+                <t t-if="o.company_id.has_position_column">
+                    <td/>
                 </t>
             </xpath>
 

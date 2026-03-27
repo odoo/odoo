@@ -68,6 +68,33 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
 
+        cls.test_event_registration_not_mandatory = cls.env['event.event'].create({
+            'name': 'Event regitration not mandatory',
+            'user_id': cls.pos_admin.id,
+            'date_begin': datetime.datetime.now() + datetime.timedelta(days=1),
+            'date_end': datetime.datetime.now() + datetime.timedelta(days=2),
+            'seats_limited': True,
+            'seats_max': 10,
+            'event_ticket_ids': [(0, 0, {
+                'name': 'Ticket Basic',
+                'product_id': cls.product_event.id,
+                'seats_max': 10,
+                'price': 100,
+            })],
+            'question_ids': [
+                (0, 0, {
+                    'title': 'Name',
+                    'question_type': 'name',
+                    'once_per_order': False,
+                }),
+                (0, 0, {
+                    'title': 'Email',
+                    'question_type': 'email',
+                    'once_per_order': False,
+                }),
+            ]
+        })
+
     def test_selling_event_in_pos(self):
         self.pos_user.write({
             'group_ids': [
@@ -78,6 +105,20 @@ class TestUi(TestPointOfSaleHttpCommon):
             "limit_categories": True,
             "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
         })
+        self.test_event.write({
+            'seats_max': 4,
+            'event_ticket_ids': [(1, self.test_event.event_ticket_ids[1].id, {'seats_max': 3})],
+            'question_ids': [
+                Command.create({'title': 'Text Box 1', 'question_type': 'text_box', 'once_per_order': True}),
+                Command.create({'title': 'Text Box 2', 'question_type': 'text_box'})
+            ]
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SellingEventInPosWithTextAnswers')
+        order = self.main_pos_config.session_ids.order_ids[:1]
+        event_registration = order.lines[0].event_registration_ids
+        self.assertEqual(len(event_registration.registration_answer_ids), 4)
+        self.assertEqual(event_registration.registration_answer_ids.mapped("value_text_box"), ['TB1-Answer', 'T2-TB2-Answer', 'TB1-Answer', 'T1-TB2-Answer'])
         self.test_event.write({
             'question_ids': [Command.create({
                 'title': 'Question3',
@@ -91,13 +132,44 @@ class TestUi(TestPointOfSaleHttpCommon):
             })]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingEventInPos', login="pos_user")
+        self.start_pos_tour('SellingEventInPosWithChoiceAnswers')
 
         order = self.env['pos.order'].search([], order='id desc', limit=1)
         event_registration = order.lines[0].event_registration_ids
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
+
+    def test_event_pricelist_pos(self):
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
+        })
+        self.event_ticket_product = self.test_event.event_ticket_ids[0].product_id
+        self.special_pricelist = self.env['product.pricelist'].create({
+            'name': 'Special Pricelist',
+            'item_ids': [Command.create({
+                'compute_price': 'fixed',
+                'applied_on': '1_product',
+                'fixed_price': 120,
+                'product_id': self.event_ticket_product.id,
+            })],
+        })
+        self.event_ticket_product.product_tmpl_id.write({
+            'list_price': 50,
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': self.pricelist,
+            'available_pricelist_ids': [(6, 0, [self.pricelist.id, self.special_pricelist.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CheckEventTicketPrice', login="pos_user")
 
     def test_selling_multislot_event_in_pos(self):
         self.pos_user.write({
@@ -181,10 +253,53 @@ class TestUi(TestPointOfSaleHttpCommon):
             'iface_available_categ_ids': [(6, 0, [self.event_category.id])],
         })
         self.env['res.partner'].search([('name', '=', 'Partner Test 1')]).write({
-            'property_product_pricelist': self.main_pos_config.available_pricelist_ids.filtered(lambda pl: pl.item_ids)[0],
+            'property_product_pricelist': self.main_pos_config.available_pricelist_ids.filtered(lambda pl: pl.item_ids)[1],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_orderline_price_remain_same_as_ticket_price')
         order = self.main_pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.amount_total, 200)
         self.assertEqual(order.lines[0].event_ticket_id.event_id.id, self.test_event.id)
+
+    def test_pos_event_registration_not_mandatory(self):
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+
+        event_partner = self.env['res.partner'].create([{
+            'name': 'Event Parter',
+            'email': "event@partner.com",
+            'is_company': False,
+        }])
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_pos_event_registration_not_mandatory', login="pos_user")
+
+        registrations = self.env['event.registration'].search([('event_id', "=", self.test_event_registration_not_mandatory.id)])
+        self.assertEqual(len(registrations), 4)
+
+        # No customer during order, filled registration information
+        no_partner_registration = registrations.filtered(lambda r: not r.partner_id)
+        self.assertEqual(len(no_partner_registration), 1)
+        self.assertEqual(no_partner_registration.name, "Name 1")
+        self.assertEqual(no_partner_registration.email, "1@test.com")
+
+        partner_registrations = registrations.filtered(lambda r: r.partner_id == event_partner)
+        self.assertEqual(len(partner_registrations), 3)
+
+        # Customer during order, filled registration information
+        r2 = partner_registrations.filtered(lambda r: r.name == "Name 2")
+        self.assertEqual(len(r2), 1)
+        self.assertEqual(r2.email, "2@test.com")
+
+        # Customer during order, partial registration information
+        r3 = partner_registrations.filtered(lambda r: r.name == "Name 3")
+        self.assertEqual(len(r3), 1)
+        self.assertEqual(r3.email, "event@partner.com")
+
+        # Customer during order, no registration information
+        r_empty = partner_registrations.filtered(lambda r: r.name == "Event Parter")
+        self.assertEqual(len(r_empty), 1)
+        self.assertEqual(r_empty.email, "event@partner.com")

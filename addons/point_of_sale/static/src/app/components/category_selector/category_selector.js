@@ -25,7 +25,12 @@ export class CategorySelector extends Component {
     }
 
     getCategoriesAndSub() {
-        const rootCategories = this.pos.models["pos.category"]
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        let rootCategories = this.pos.models["pos.category"].getAll();
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            rootCategories = iface_available_categ_ids;
+        }
+        rootCategories = rootCategories
             .filter((category) => !category.parent_id)
             .sort((a, b) => a.sequence - b.sequence);
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
@@ -59,5 +64,24 @@ export class CategorySelector extends Component {
         return selectedCategory
             ? [...selectedCategory.child_ids]
             : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    }
+
+    getAllSelected() {
+        return this.getAncestorsAndCurrent().filter(Boolean).length === 0;
+    }
+    hasParent() {
+        const selectedCategory = this.pos.selectedCategory;
+        return !!(selectedCategory && selectedCategory.parent_id);
+    }
+    isAncestorOrSelected(category) {
+        const selected = this.pos.selectedCategory;
+        if (!selected) {
+            return false;
+        }
+        return category.id === selected.id || selected.allParents.some((p) => p.id === category.id);
+    }
+
+    showCategoryImg(category) {
+        return this.pos.config.show_category_images && category.imgSrc && !this.ui.isSmall;
     }
 }

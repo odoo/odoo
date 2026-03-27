@@ -28,26 +28,28 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-16 15:24+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-03-06 17:44+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/hr/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid " Records"
-msgstr ""
+msgstr " Tietueet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -74,6 +76,14 @@ msgid ""
 "- Create a new employee if this employee should have multiple active "
 "contracts."
 msgstr ""
+"%s omaa jo voimassa olevan sopimuksen valitulle ajanjaksolle.\n"
+"\n"
+"Valitse seuraavista vaihtoehdoista:\n"
+"\n"
+"- Muuta alkamispäivää niin, ettei se ole päällekkäin olemassa olevan "
+"sopimuksen kanssa\n"
+"- Luo uusi työntekijä, jos tällä työntekijällä pitäisi olla useita "
+"aktiivisia sopimuksia."
 
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
@@ -145,8 +155,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\""
-"><small><b>LUE</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>LUE</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -155,8 +165,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Onnittelut!</b> Suosittelemme, että laadit <a href=\"%s\""
-">perehdytyssuunnitelman</a>"
+"<b>Onnittelut!</b> Suosittelemme, että laadit <a "
+"href=\"%s\">perehdytyssuunnitelman</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -168,14 +178,35 @@ msgstr ""
 "title=\"Yritys\"/>"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\" "
+"invisible=\"login == work_email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Työsähköposti\" "
+"invisible=\"login == work_email\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
 msgstr ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
+"invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"Login\" invisible=\"login == work_email\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Kirjautuminen / "
+"sähköposti\" invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"Kirjautuminen\" invisible=\"login == work_email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -228,7 +259,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
-msgstr "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
+msgstr ""
+"<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -328,13 +360,6 @@ msgstr "<small>Verkko-oppiminen</small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
-"<span class=\"col-8 text-uppercase fw-bolder small\"> Contract Overview </"
-"span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
 "invisible=\"is_trusted_bank_account\" class=\"text-muted\">Untrusted</span>\n"
@@ -342,6 +367,13 @@ msgid ""
 "is_trusted_bank_account\" class=\"text-success\">Trusted</span>\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"d-flex w-50\">\n"
+"                                                    <span "
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Epäluotettava</"
+"span>\n"
+"                                                    <span invisible=\"not "
+"is_trusted_bank_account\" class=\"text-success\">Luotettava</span>\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -420,7 +452,12 @@ msgstr "<span class=\"text-muted small\">Aikaa vastaamiseen</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
-msgstr ""
+msgstr "<span invisible=\"not contract_date_start\">-</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -429,6 +466,15 @@ msgid ""
 "                                                (User is Inactive)\n"
 "                                            </span>"
 msgstr ""
+"<span invisible=\"not user_id or is_user_active\">\n"
+"                                                (Käyttäjä ei ole "
+"aktiivinen)\n"
+"                                            </span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Contract Overview</span>"
+msgstr "<span>Sopimuksen yleiskatsaus</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -448,125 +494,126 @@ msgstr "<span>Katso</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>new employees</span>"
-msgstr ""
+msgstr "<span>uudet työntekijät</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Adaptability</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Sopeutuvuus</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Hallinnollinen työ</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Autonomia</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Be enthusiastic</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Ole innostunut</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Client Interaction</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Asiakasvuorovaikutus</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Collaboration</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Yhteistyö</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Compliance and Regulations</strong>"
 msgstr ""
+"<strong class=\"s_rating_title\">Vaatimustenmukaisuus ja säädökset</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Conflict Resolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Konfliktien ratkaiseminen</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Asiakassuhteet</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Cybersecurity</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Kyberturvallisuus</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Diversity and Inclusion</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Moninaisuus ja osallisuus</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "<strong class=\"s_rating_title\">Innovation</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Innovaatio</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Leadership</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Johtajuus</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Learning</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Oppiminen</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Management</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Johtaminen</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Henkilökohtainen kehitys</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Problem-Solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Ongelmanratkaisu</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Problem-solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Ongelmanratkaisu</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Skill Development</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Taitojen kehittäminen</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Talent Acquisition</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Osaajarekrytointi</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Tekninen asiantuntemus</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Technology Strategy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">Teknologiastrategia</strong>"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -647,7 +694,7 @@ msgstr "Poissa"
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__acc_number
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Account Number"
-msgstr ""
+msgstr "Tilinumero"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -790,7 +837,7 @@ msgstr "Hallinto"
 #. module: hr
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Administrator"
-msgstr "Järjestelmävalvoja"
+msgstr "Ylläpitäjä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
@@ -818,35 +865,36 @@ msgstr "Kaikki toiminnot"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__allocation_ids
 msgid "Allocations"
-msgstr ""
+msgstr "Varaukset"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
 msgid "Allowed Country State"
-msgstr ""
+msgstr "Sallittu maa/osavaltio"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
 msgid "Allowed User"
-msgstr ""
+msgstr "Sallittu käyttäjä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Amount"
-msgstr ""
+msgstr "Määrä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount_type
 msgid "Amount Type"
-msgstr ""
+msgstr "Määrän tyyppi"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An element name parent of the radio to observe updates"
 msgstr ""
+"Valintapainikkeen ylätason elementin nimi, jonka avulla muutoksia seurataan"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_unique_date_version
@@ -862,6 +910,8 @@ msgstr ""
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An object to link select options and element id to move"
 msgstr ""
+"Objekti, joka yhdistää valintavaihtoehdot ja siirrettävän elementin "
+"tunnisteen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -984,8 +1034,8 @@ msgstr ""
 "joukkoon organisaatiossa, joka tarjoaa kilpailukykyisiä luontoisetuja\n"
 "                       ja etenemismahdollisuuksia, sekä mahdollisuuden "
 "työskennellä ja oppia alan asiantuntijoiden rinnalla. Etsimme \n"
-"                       kokenutta konsulttia, jolla on vahva tausta tulosten "
-"\n"
+"                       kokenutta konsulttia, jolla on vahva tausta "
+"tulosten \n"
 "                       aikaansaamisessa. \n"
 "                       <br>\n"
 "                       Tämä rooli vaatii sekä <b>luovaa ongelmanratkaisua "
@@ -1171,8 +1221,8 @@ msgstr ""
 "                         <br>\n"
 "                         Menestyäksesi tässä tehtävässä sinulla tulee olla "
 "<b>vankka tietopohja ohjelmistoarkkitehtuurista,\n"
-"                        pilvipalveluista ja tietoturvasta</b> sekä kokemusta "
-"\n"
+"                        pilvipalveluista ja tietoturvasta</b> sekä "
+"kokemusta \n"
 "                        tiimin johtamisesta ja ketterästä "
 "projektinhallinnasta. Erinomaiset viestintätaidot ovat \n"
 "                        keskeisessä osassa, jotta pystyt selittämään "
@@ -1206,7 +1256,7 @@ msgstr "Liitteiden määrä"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Attendance PIN"
-msgstr ""
+msgstr "Läsnäolo-PIN"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1297,22 +1347,22 @@ msgstr "Tilinumero"
 #: code:addons/hr/models/hr_employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 msgid "Bank Account Allocation"
-msgstr ""
+msgstr "Pankkitilin allokointi"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard_line
 msgid "Bank Account Allocation Line (Wizard)"
-msgstr ""
+msgstr "Pankkitilin allokointirivi (ohjattu toiminto)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard
 msgid "Bank Account Allocation Wizard"
-msgstr ""
+msgstr "Ohjattu pankkitilin allokointitoiminto"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_bank_account_allocation_wizard
 msgid "Bank Account Allocations"
-msgstr ""
+msgstr "Pankkitilin allokoinnit"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
@@ -1341,7 +1391,7 @@ msgstr "Pankin nimi"
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
 msgid ""
 "Bank account %s not found within the salary distribution of the employee"
-msgstr ""
+msgstr "Pankkitiliä %s ei löytynyt työntekijän palkkajakaumasta"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -1397,6 +1447,8 @@ msgstr "Syntymäpäivä"
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Boolean display as radio field with translatable labels"
 msgstr ""
+"Totuusarvo (boolean) näytetään valintapainikkeena, jossa on käännettävät "
+"nimikkeet"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
@@ -1407,22 +1459,23 @@ msgstr "Peruuta"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
-msgstr ""
+msgid "Cannot archive all the active versions of an employee."
+msgstr "Kaikkia aktiivisia työntekijän versioita ei voi arkistoida."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid ""
-"Cannot modify multiple records contract dates with different contracts at "
+"Cannot modify multiple versions contract dates with different contracts at "
 "once."
-msgstr ""
+msgstr "Et voi muokata useiden eri sopimusversioiden päivämääriä kerralla."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
+msgid "Cannot unassign all the active versions of an employee."
 msgstr ""
+"Määristystä ei voi poistaa työntekijän kaikista aktiivisista versioista."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1616,9 +1669,11 @@ msgstr "Kontaktin puhelin"
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Contacts"
-msgstr ""
+msgstr "Yhteystiedot"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1865,7 +1920,7 @@ msgstr "Valuutta"
 #: model:ir.model.fields,help:hr.field_account_setup_bank_manual_config__currency_symbol
 #: model:ir.model.fields,help:hr.field_res_partner_bank__currency_symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "Valuttamerkki, käytetään määrien tulostuksessa."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
@@ -1927,7 +1982,7 @@ msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
 msgstr ""
-"Määritä sallittu IP-osoite, joka näytetään Läsnä olevana. Jos osoitteita on "
+"Määritä sallittu IP-osoite, joka näytetään tämänhetkisenä. Jos osoitteita on "
 "useita, erota ne toisistaan pilkulla."
 
 #. module: hr
@@ -2104,6 +2159,7 @@ msgstr "Keskustelukanava"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__display_name
@@ -2148,6 +2204,11 @@ msgid "Document"
 msgstr "Dokumentti"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Documents"
+msgstr "Asiakirjat"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
 msgstr "Ajokortti"
@@ -2156,7 +2217,7 @@ msgstr "Ajokortti"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Each amount percentage must be a number between 0 and 100."
-msgstr ""
+msgstr "Jokaisen prosenttiosuuden on oltava 0 ja 100 välillä."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2205,19 +2266,19 @@ msgstr "Koulutus"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Effective Date"
-msgstr ""
+msgstr "Toimeenpanopäivä"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element association"
-msgstr ""
+msgstr "Elementin yhdistäminen"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element to observe"
-msgstr ""
+msgstr "Seurattava elementti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
@@ -2320,13 +2381,13 @@ msgstr "Työntekijän ominaisuudet"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
 msgid "Employee Records"
-msgstr ""
+msgstr "Työntekijätiedot"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
 msgid "Employee Salary Amount Is Percentage"
-msgstr ""
+msgstr "Työntekijän palkan määrä on prosenttiosuus"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -2358,7 +2419,7 @@ msgstr "Työntekijän versiot"
 #: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "Työntekijöiden pankkitilit palkanmaksua varten"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2366,9 +2427,15 @@ msgid "Employee development is a core focus"
 msgstr "Työntekijän kehitys on ytimessämme"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee will be excluded from Pay Runs"
+msgstr "Työntekijä suljetaan pois palkkakierroksista"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
 msgid "Employee's Bank Accounts"
-msgstr ""
+msgstr "Työntekijän pankkitilit"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2430,6 +2497,12 @@ msgid "Employees Tags"
 msgstr "Työntekijöiden tunnisteet"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr "Työntekijäprofiili"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
@@ -2487,6 +2560,8 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"Syötä työntekijän henkilötunnus (esim. Aadhaar, SIN, NIN). Tätä käytetään "
+"virallisissa asiakirjoissa sekä lakisääteisten vaatimusten noudattamisessa."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2563,7 +2638,7 @@ msgstr "Vanhentuneet sopimukset"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Expires on"
-msgstr ""
+msgstr "Vanhenee"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2584,7 +2659,7 @@ msgstr "Workshoppien ja osakastapaamisten järjestäminen"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "False association"
-msgstr ""
+msgstr "Virheellinen yhdistäminen"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2705,6 +2780,7 @@ msgid "Full-Time"
 msgstr "Kokoaikainen"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr "Tulevat toimenpiteet"
@@ -2735,7 +2811,7 @@ msgstr "Kerro tarkemmin työntekijän arkistoinnin syy."
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Go to contact"
-msgstr ""
+msgstr "Siirry yhteystietoon"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2802,7 +2878,7 @@ msgstr "Sisältää viestin"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
-msgstr ""
+msgstr "Omaa useita pankkitilejä"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2819,12 +2895,12 @@ msgstr "Rekrytointi"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Hiring Process"
-msgstr ""
+msgstr "Rekrytointiprosessi"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "History"
-msgstr ""
+msgstr "Historia"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
@@ -2892,6 +2968,7 @@ msgstr "Henkilöstöjohtaja"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_version__id
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__id
@@ -2972,7 +3049,7 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
 msgid "If checked, the related user will be removed from the system."
-msgstr ""
+msgstr "Jos merkittynä, käyttäjä poistetaan järjestelmästä."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -3038,6 +3115,8 @@ msgid "In-depth knowledge of labor laws"
 msgstr "Syvällinen tietämys työlainsäädännöstä"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Indefinite"
 msgstr "Toistaiseksi voimassa oleva"
@@ -3120,12 +3199,12 @@ msgstr "Järjestelmä"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_trusted_bank_account
 msgid "Is Trusted Bank Account"
-msgstr ""
+msgstr "On luotettava pankkitili"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_user
 msgid "Is User"
-msgstr ""
+msgstr "On käyttäjä"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3167,7 +3246,7 @@ msgstr "Työtehtävät"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Työpaikkailmoitus"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -3175,6 +3254,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__job_title
 #: model:ir.model.fields,field_description:hr.field_res_users__job_title
 #: model:ir.model.fields,field_description:hr.field_resource_resource__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Job Title"
 msgstr "Tehtävänimike"
 
@@ -3255,6 +3335,7 @@ msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
 msgstr "Myöhässä olevat toimenpiteet"
@@ -3306,13 +3387,13 @@ msgstr "Luodaan sellainen"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean False value."
-msgstr ""
+msgstr "Liitä elementti totuusarvolla Epätosi."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean True value."
-msgstr ""
+msgstr "Liitä elementti totuusarvolla Tosi."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_wizard_view_form
@@ -3346,6 +3427,11 @@ msgid "Location Number"
 msgstr "Sijainnin numero"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Login"
+msgstr "Kirjaudu"
+
+#. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
 msgstr "Pitkäaikaiset projektit"
@@ -3359,7 +3445,7 @@ msgstr "Pääliitetiedosto"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Main Work Location"
-msgstr ""
+msgstr "Pääasiallinen työn sijainti"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3479,6 +3565,12 @@ msgid "Mobile Phone"
 msgstr "Matkapuhelin"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
+msgid "More..."
+msgstr "Lisää…"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3516,7 +3608,7 @@ msgstr "Tiimini"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.xml:0
 msgid "NO"
-msgstr ""
+msgstr "EI"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
@@ -3546,7 +3638,7 @@ msgstr "Uusi sopimus"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
 msgid "New Employee Record"
-msgstr ""
+msgstr "Uudet työntekijätiedot"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
@@ -3611,6 +3703,12 @@ msgid "No Template found"
 msgstr "Mallia ei löydy"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
+msgid "No contract"
+msgstr "Ei sopimusta"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3619,6 +3717,11 @@ msgstr "Mallia ei löydy"
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr ""
 "Ei typeriä esimiehiä, ei typeriä työvälineitä, ei joustamattomia työaikoja"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "No user linked"
+msgstr "Ei linkitettyä käyttäjää"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3635,11 +3738,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
 msgstr "Ei työsuhteessa"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not linked to an user"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -3720,7 +3818,7 @@ msgstr "Odotettu palkattavien työntekijöiden määrä."
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Off-Hours"
-msgstr ""
+msgstr "Työajan ulkopuolella"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
@@ -3859,7 +3957,7 @@ msgstr "Intohimo ohjelmistotuotteita kohtaan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_expiration_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__passport_expiration_date
 msgid "Passport Expiration Date"
-msgstr ""
+msgstr "Passin viimeinen voimassaolopäivä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -3871,7 +3969,7 @@ msgstr "Passin numero"
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Pay Category"
-msgstr ""
+msgstr "Palkkaluokka"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -3915,7 +4013,7 @@ msgstr "Henkilökohtainen"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Personal Information"
-msgstr ""
+msgstr "Henkilötiedot"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -4005,8 +4103,8 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Käytäntö, jolla asiakirjaan voidaan julkaista viesti sähköpostiportin avulla."
-"\n"
+"Käytäntö, jolla asiakirjaan voidaan julkaista viesti sähköpostiportin "
+"avulla.\n"
 "- kaikki: kaikki voivat lähettää viestin\n"
 "- kumppanit: vain todennetut kumppanit\n"
 "- seuraajat: vain asiaan liittyvän asiakirjan seuraajat tai seuraavien "
@@ -4015,12 +4113,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
 msgid "Preferences"
-msgstr ""
+msgstr "Asetukset"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Presence"
-msgstr ""
+msgstr "Läsnäolo"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -4059,7 +4157,7 @@ msgstr "Aiempi harjoittelu- tai projektikokemus"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__primary_bank_account_id
 msgid "Primary Bank Account"
-msgstr ""
+msgstr "Ensisijainen pankkitili"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -4070,7 +4168,7 @@ msgstr "Tulosta tunnuskortti"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private"
-msgstr ""
+msgstr "Yksityinen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -4178,7 +4276,7 @@ msgstr "Todistetut innovaatiosaavutukset"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Provide additional information about this version..."
-msgstr ""
+msgstr "Anna lisätietoja tästä versiosta..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4211,7 +4309,7 @@ msgstr "T&K USA"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Radio followed by element"
-msgstr ""
+msgstr "Valintapainiketta seuraava elementti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -4249,12 +4347,12 @@ msgstr "Syy"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Records"
-msgstr ""
+msgstr "Tietueet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__user_id
 msgid "Recruiter"
-msgstr ""
+msgstr "Rekrytoija"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -4415,12 +4513,12 @@ msgstr "Sosiaaliturvatunnus"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Salary Allocation"
-msgstr ""
+msgstr "Palkan allokointi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__salary_distribution
 msgid "Salary Distribution"
-msgstr ""
+msgstr "Palkkajakauma"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -4531,6 +4629,13 @@ msgid "Show Hr Icon Display"
 msgstr "Näytä HR-kuvakkeen näyttö"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+msgid "Show all records whose next activity date is past"
+msgstr ""
+"Näytä kaikki teitueet, joiden seuraavan toimenpiteen päivämäärä on "
+"menneisyydessä"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
 msgid "Show to all employees"
 msgstr "Näytä kaikille työntekijöille"
@@ -4596,8 +4701,8 @@ msgstr "Alkupäivä"
 msgid ""
 "Start date (%(start)s) must be earlier than contract end date (%(end)s)."
 msgstr ""
-"Aloituspäivän (%(start)s) on oltava ennen sopimuksen päättymispäivää "
-"(%(end)s)."
+"Aloituspäivän (%(start)s) on oltava ennen sopimuksen päättymispäivää (%"
+"(end)s)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -4650,7 +4755,7 @@ msgstr "Katu..."
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street2
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street2
 msgid "Street2"
-msgstr "Katuosoite2"
+msgstr "Katu2"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -4688,7 +4793,7 @@ msgstr "Yhteenveto"
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__symbol
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__currency_symbol
 msgid "Symbol"
-msgstr ""
+msgstr "Valuuttamerkki"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -4798,6 +4903,8 @@ msgid ""
 "job             position. The Recruiter is automatically added to all "
 "meetings with the Applicant."
 msgstr ""
+"Rekrytoija on oletusarvo kaikille tämän työpaikan hakijoille. Rekrytoija "
+"lisätään automaattisesti kaikkiin tapaamisiin hakijan kanssa."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_contract_start_date_defined
@@ -4829,6 +4936,8 @@ msgid ""
 "The employee is already in contract on %s. Please select a date outside "
 "existing contracts"
 msgstr ""
+"Työntekijä on jo sopimussuhteessa %s. Valitse olemassa olevien sopimusten "
+"ulkopuolinen päivämäärä"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -4847,6 +4956,12 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid "The following fields were modified by %s"
 msgstr "Seuraavia kenttiä on muuttanut %s"
@@ -4855,7 +4970,7 @@ msgstr "Seuraavia kenttiä on muuttanut %s"
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "The following users have been archived: %s"
-msgstr ""
+msgstr "Seuraavat käyttäjät on arkistoitu: %s"
 
 #. module: hr
 #. odoo-python
@@ -4864,6 +4979,8 @@ msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
 msgstr ""
+"Seuraavia työntekijöitä ei arkistoitu, koska he ovat edelleen linkitettyinä "
+"muihin aktiivisiin työntekijöihin: %s"
 
 #. module: hr
 #. odoo-python
@@ -4912,6 +5029,13 @@ msgstr "Opinnäytetyö"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "Tällä työntekijällä on jo käyttäjä."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr ""
+"Tämä kenttä %(field_name)s ei ole olemassa tässä mallissa (hr.version)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -4970,6 +5094,7 @@ msgstr ""
 "uuteen yritykseen."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "Tämän päivän toimenpiteet"
@@ -4983,13 +5108,13 @@ msgstr "Ennuste työntekijöistä yhteensä"
 #. odoo-python
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
 msgid "Total percentage allocation must equal 100%."
-msgstr ""
+msgstr "Prosenttiosuuksien on oltava yhteensä 100%."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Total salary distribution on bank accounts must be exactly 100%."
-msgstr ""
+msgstr "Pankkitilien palkkajakauman on oltava tasan 100%."
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -5010,23 +5135,23 @@ msgstr "Koulutuksemme"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "True association"
-msgstr ""
+msgstr "Oikea yhdistäminen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Trust Bank Account"
-msgstr ""
+msgstr "Luota pankkitiliin"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__trusted
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Trusted"
-msgstr ""
+msgstr "Luotettu"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_exception_decoration
@@ -5065,7 +5190,7 @@ msgstr "Lukemattomat viestit"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Untrust Bank Account"
-msgstr ""
+msgstr "Muuta pankkitili ei-luotetuksi"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -5090,7 +5215,7 @@ msgstr "Käyttäjä"
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "User Archive Notification"
-msgstr ""
+msgstr "Käyttäjäarkistoinnin ilmoitus"
 
 #. module: hr
 #. odoo-python
@@ -5101,7 +5226,7 @@ msgstr "Ilmoitus käyttäjän luomisesta"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
 msgid "User Employee"
-msgstr ""
+msgstr "Työntekijä-käyttäjä"
 
 #. module: hr
 #. odoo-python
@@ -5119,7 +5244,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
 msgid "User's active"
-msgstr ""
+msgstr "Käyttäjä on aktiivinen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -5167,7 +5292,7 @@ msgstr "Versioiden määrä"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Visa & Work Permit"
-msgstr ""
+msgstr "Viisumi & työlupa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -5284,7 +5409,7 @@ msgstr "Leski"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Ohjattu toiminto"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -5442,7 +5567,17 @@ msgstr "Työaika"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.xml:0
 msgid "YES"
+msgstr "KYLLÄ"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
 msgstr ""
+"Sinulla ei ole käyttöoikeutta \"Työntekijä\" (hr.employee) -tietueisiin.\n"
+"Voimme ohjata sinut julkiseen työntekijäluetteloon."
 
 #. module: hr
 #. odoo-python
@@ -5458,7 +5593,7 @@ msgstr "Et voi luoda työntekijää, koska käyttäjällä ei ole käyttöoikeuk
 msgid ""
 "You are receiving this message because you are the HR Responsible of this "
 "employee."
-msgstr ""
+msgstr "Saat tämän viestin, koska olet tämän työntekijän henkilöesimies."
 
 #. module: hr
 #. odoo-javascript
@@ -5480,7 +5615,7 @@ msgstr "Et voi luoda rekursiivisia osastoja."
 msgid ""
 "You cannot delete contact that are linked to an employee, please archive "
 "them instead."
-msgstr ""
+msgstr "Et voi poistaa työntekijään liitettyä yhteystietoa, arkistoi se."
 
 #. module: hr
 #. odoo-python
@@ -5491,6 +5626,10 @@ msgid ""
 "\n"
 "Affected contact(s): %(names)s"
 msgstr ""
+"Et voi poistaa työntekijöihin liitettyjä yhteystietoja.\n"
+"Arkistoi ne sen sijaan.\n"
+"\n"
+"Vaikuttaa näihin yhteystietoihin: %(names)s"
 
 #. module: hr
 #. odoo-python
@@ -5614,7 +5753,7 @@ msgstr "rekisteröityihin työntekijöihin liitetyt osoitteet"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "bachelor"
-msgstr ""
+msgstr "kandidaatti"
 
 #. module: hr
 #. odoo-python
@@ -5637,7 +5776,7 @@ msgstr "eronnut"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "doctor"
-msgstr ""
+msgstr "tohtori"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5678,6 +5817,11 @@ msgid "e.g. myprivateemail@example.com"
 msgstr "esim. myprivateemail@example.com"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_mixin
+msgid "hr.mixin"
+msgstr "hr.mixin"
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "id"
@@ -5698,7 +5842,7 @@ msgstr "naimisissa"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "master"
-msgstr ""
+msgstr "maisteri"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__miles
@@ -5709,7 +5853,7 @@ msgstr "mailia"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "other"
-msgstr ""
+msgstr "muu"
 
 #. module: hr
 #. odoo-python

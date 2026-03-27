@@ -29,8 +29,14 @@ select > option {
 
 .btn-secondary {
     --btn-bg: #F4F4F4;
-    --btn-border-color: #F4F4F4;
+    --btn-border-color: #cccccc;
     --btn-color: #{$o-gray-900};
+    --btn-disabled-bg: var(--btn-bg);
+    --btn-disabled-color: #{$o-gray-700};
+    --btn-disabled-border-color: var(--btn-border-color);
+    &:disabled, &.disabled {
+        filter: saturate(0);
+    }
 }
 
 .bg-secondary {
@@ -186,6 +192,17 @@ select > option {
     }
 
     .o_colorlist_item_color_#{$size - 1} {
+        $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
+        $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
+        @include o-print-color($-bg, background-color, bg-opacity);
+        @include o-print-color($-color, color, text-opacity);
+        border-color: #{darken(nth($o-colors, $size), 20%)};
+        &:hover {
+            border-color: #{darken(nth($o-colors, $size), 20%)};
+        }
+    }
+
+    .o_colorlist_item_wo_border_color_#{$size - 1} {
         $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
         $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
         @include o-print-color($-bg, background-color, bg-opacity);

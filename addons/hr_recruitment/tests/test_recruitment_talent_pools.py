@@ -56,6 +56,20 @@ class TestRecruitmentTalentPool(TransactionCase):
             "The talent should be linked to the talent pool",
         )
 
+    def test_create_talent_in_pool(self):
+        talent = self.env["hr.applicant"].with_context(default_talent_pool_ids=self.t_talent_pool_1.ids).create({
+            'partner_name': 'Talent in a pool',
+        })
+
+        self.assertEqual(talent.talent_pool_ids, self.t_talent_pool_1)
+        self.assertEqual(talent.pool_applicant_id, talent)
+
+        job_wizard = Form(self.env["job.add.applicants"].with_context({"default_applicant_ids": talent.ids}))
+        job_wizard.job_ids = self.t_job_1
+        job_1_applicant = job_wizard.save()._add_applicants_to_job()
+
+        self.assertEqual(job_1_applicant.pool_applicant_id, talent)
+
     def test_add_applicant_to_multiple_talent_pools(self):
         """
         Test that a applicant is only duplicated once and linked to multiple pools when creating a talent.

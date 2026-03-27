@@ -12,15 +12,30 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 
         cls.env.user.group_ids += cls.env.ref('hr.group_hr_user')
 
+        # Admin employee
+        cls.pos_admin.employee_id.name = "Mitchell Admin"
+        cls.admin = cls.pos_admin.employee_id
+
         cls.main_pos_config.write({"module_pos_hr": True})
 
-        # Admin employee
-        cls.admin = cls.env.ref("hr.employee_admin").sudo().copy({
-            "date_version": '2000-01-01',
+        # Managers
+        cls.manager_user = new_test_user(
+            cls.env,
+            login="manager_user",
+            groups="point_of_sale.group_pos_manager",
+            name="Pos Manager",
+            email="manager_user@pos.com",
+        )
+        cls.manager1 = cls.env['hr.employee'].create({
+            'name': 'Test Manager 1',
             "company_id": cls.env.company.id,
-            "user_id": cls.pos_admin.id,
-            "name": "Mitchell Admin",
-            "pin": False,
+            "user_id": cls.manager_user.id,
+            "pin": "5651"
+        })
+        cls.manager2 = cls.env['hr.employee'].create({
+            'name': 'Test Manager 2',
+            "company_id": cls.env.company.id,
+            "pin": "5652"
         })
 
         # User employee
@@ -31,7 +46,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         emp1_user = new_test_user(
             cls.env,
             login="emp1_user",
-            groups="base.group_user",
+            groups="base.group_user, point_of_sale.group_pos_user, account.group_account_invoice",
             name="Pos Employee1",
             email="emp1_user@pos.com",
         )
@@ -59,6 +74,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         cls.main_pos_config.write({
             'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)],
             'minimal_employee_ids': [Command.link(cls.emp4.id)],
+            'advanced_employee_ids': [Command.link(cls.manager1.id), Command.link(cls.manager2.id)]
         })
 
 
@@ -218,3 +234,46 @@ class TestUi(TestPosHrHttpCommon):
             'module_pos_hr': True,
             'advanced_employee_ids': [(6, 0, self.emp2.ids)]
         })
+
+    def test_go_backend(self):
+        self.main_pos_config.with_user(self.manager_user).open_ui()
+
+        self.start_pos_tour("pos_hr_go_backend_closed_registered", login="manager_user")
+        self.start_pos_tour("pos_hr_go_backend_opened_registered", login="manager_user")
+        self.start_pos_tour("pos_hr_go_backend_opened_registered_different_user_logged", login="emp1_user")
+
+    def test_maximum_closing_difference(self):
+        self.main_pos_config.set_maximum_difference = True
+        self.main_pos_config.amount_authorized_diff = 0
+
+        # Admin users should still be able to override max difference
+        # regardless if they are the connected user or not
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_maximum_closing_difference",
+            login="pos_user"
+        )
+
+        # Advanced rights employees should not override max difference
+        # when the connected user has admin rights (they never should)
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_maximum_closing_difference",
+            login="pos_admin"
+        )
+
+    def test_scan_employee_barcode_with_pos_hr_disabled(self):
+        """
+        Ensure that scanning an employee barcode when module_pos_hr is disabled does not
+        trigger any traceback.
+        """
+        self.main_pos_config.module_pos_hr = False
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_scan_employee_barcode_with_pos_hr_disabled",
+            login="pos_admin"
+        )

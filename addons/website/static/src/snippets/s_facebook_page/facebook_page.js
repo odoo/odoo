@@ -10,7 +10,15 @@ export class FacebookPage extends Interaction {
 
     setup() {
         this.previousWidth = 0;
-        const params = pick(this.el.dataset, "href", "id", "height", "tabs", "small_header", "hide_cover");
+        const params = pick(
+            this.el.dataset,
+            "href",
+            "id",
+            "height",
+            "tabs",
+            "small_header",
+            "hide_cover"
+        );
         if (!params.href) {
             return;
         }
@@ -21,16 +29,20 @@ export class FacebookPage extends Interaction {
 
         this.renderIframe(params);
 
-        this.resizeObserver = new ResizeObserver(this.debounced(this.renderIframe.bind(this, params), 100));
+        this.resizeObserver = new ResizeObserver(
+            this.debounced(this.renderIframe.bind(this, params), 100)
+        );
         this.resizeObserver.observe(this.el.parentElement);
-        this.registerCleanup(() => { this.resizeObserver.disconnect() });
+        this.registerCleanup(() => {
+            this.resizeObserver.disconnect();
+        });
     }
 
     /**
      * Prepare iframe element & replace it with existing iframe.
      *
      * @param {Object} params
-    */
+     */
     renderIframe(params) {
         params.width = clamp(Math.floor(this.el.getBoundingClientRect().width), 180, 500);
         if (this.previousWidth !== params.width) {
@@ -44,7 +56,9 @@ export class FacebookPage extends Interaction {
             iframeEl.width = params.width;
 
             this.el.replaceChildren(iframeEl);
-            this.registerCleanup(() => { iframeEl.remove(); });
+            this.registerCleanup(() => {
+                iframeEl.remove();
+            });
 
             const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
             this.services.website_cookies.manageIframeSrc(iframeEl, src);
@@ -52,7 +66,4 @@ export class FacebookPage extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.facebook_page", FacebookPage);
-
+registry.category("public.interactions").add("website.facebook_page", FacebookPage);

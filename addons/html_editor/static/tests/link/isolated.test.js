@@ -102,7 +102,7 @@ describe("should position the cursor outside the link", () => {
         expect(getContent(el)).toBe(
             // The editable selection is in the link (first leaf of the editable
             // upon initialization).
-            '<p><strong>\ufeff<a href="#/" class="o_link_in_selection">\ufefftest\ufeff</a>\ufeff</strong></p>'
+            '<p><strong>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</strong></p>'
         );
 
         const aElement = queryOne("p a");
@@ -110,7 +110,7 @@ describe("should position the cursor outside the link", () => {
         // Simulate the selection with mousedown
         setSelection({ anchorNode: aElement.childNodes[0], anchorOffset: 0 });
         expect(getContent(el)).toBe(
-            '<p><strong>\ufeff<a href="#/" class="o_link_in_selection">[]\ufefftest\ufeff</a>\ufeff</strong></p>'
+            '<p><strong>\ufeff<a href="#/">[]\ufefftest\ufeff</a>\ufeff</strong></p>'
         );
         await animationFrame(); // selection change
         await pointerUp(el);
@@ -348,7 +348,7 @@ test("should remove zwnbsp from middle of the link", async () => {
         contentBeforeEdit:
             // The editable selection is in the link (first leaf of the editable
             // upon initialization).
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffcontent\ufeff</a>\ufeff</p>',
+            '<p>\ufeff<a href="#/">\ufeffcontent\ufeff</a>\ufeff</p>',
         stepFunction: async (editor) => {
             // Cursor before the FEFF text node
             setSelection({ anchorNode: editor.editable.querySelector("a"), anchorOffset: 0 });
@@ -366,7 +366,7 @@ test("should remove zwnbsp from middle of the link (2)", async () => {
         contentBeforeEdit:
             // The editable selection is in the link (first leaf of the editable
             // upon initialization).
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffcontent\ufeff</a>\ufeff</p>',
+            '<p>\ufeff<a href="#/">\ufeffcontent\ufeff</a>\ufeff</p>',
         stepFunction: async (editor) => {
             // Cursor inside the FEFF text node
             setSelection({
@@ -381,17 +381,57 @@ test("should remove zwnbsp from middle of the link (2)", async () => {
     });
 });
 
-test("should zwnbps-pad links with .btn class", async () => {
-    await testEditor({
-        contentBefore: '<p><a href="#" class="btn">content</a></p>',
-        contentBeforeEdit: '<p>\ufeff<a href="#" class="btn">\ufeffcontent\ufeff</a>\ufeff</p>',
+describe("button", () => {
+    test("should zwnbps-pad links with .btn class", async () => {
+        await testEditor({
+            contentBefore: '<p><a href="#" class="btn">content</a></p>',
+            contentBeforeEdit: '<p>\ufeff<a href="#" class="btn">\ufeffcontent\ufeff</a>\ufeff</p>',
+        });
+    });
+
+    test("should not add visual indication to a button", async () => {
+        await testEditor({
+            contentBefore: '<p><a href="http://test.test/" class="btn">[]content</a></p>',
+            contentBeforeEdit:
+                '<p>\ufeff<a href="http://test.test/" class="btn">\ufeff[]content\ufeff</a>\ufeff</p>',
+        });
+    });
+
+    test("should type inside button after backspacing into it", async () => {
+        const { editor, el } = await setupEditor(
+            '<p>before<a class="btn" href="#/">in</a>x[]after</p>'
+        );
+        expect(getContent(el)).toBe(
+            '<p>before\ufeff<a class="btn" href="#/">\ufeffin\ufeff</a>\ufeffx[]after</p>'
+        );
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            '<p>before\ufeff<a class="btn" href="#/">\ufeffin\ufeff</a>\ufeff[]after</p>'
+        );
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            '<p>before\ufeff<a class="btn" href="#/">\ufeffin[]\ufeff</a>\ufeffafter</p>'
+        );
+        await insertText(editor, "side");
+        expect(getContent(el)).toBe(
+            '<p>before\ufeff<a class="btn" href="#/">\ufeffinside[]\ufeff</a>\ufeffafter</p>'
+        );
     });
 });
 
-test("should not add visual indication to a button", async () => {
-    await testEditor({
-        contentBefore: '<p><a href="http://test.test/" class="btn">[]content</a></p>',
-        contentBeforeEdit:
-            '<p>\ufeff<a href="http://test.test/" class="btn">\ufeff[]content\ufeff</a>\ufeff</p>',
-    });
+test("Should not highlight link if editable not focused", async () => {
+    const { el } = await setupEditor('<p><a href="http://test.test/">abc</a></p>');
+    expect(getContent(el)).toBe(
+        '<p>\ufeff<a href="http://test.test/">\ufeffabc\ufeff</a>\ufeff</p>'
+    );
+});
+
+test("Should highlight link if editable focused", async () => {
+    const { el } = await setupEditor('<p><a href="http://test.test/">abc</a></p>');
+    el.focus();
+    setSelection({ anchorNode: el.querySelector("a"), anchorOffset: 0 });
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        '<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">[]\ufeffabc\ufeff</a>\ufeff</p>'
+    );
 });

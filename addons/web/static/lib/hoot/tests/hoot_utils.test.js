@@ -4,6 +4,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
+    deepCopy,
     deepEqual,
     formatHumanReadable,
     formatTechnical,
@@ -12,16 +13,30 @@ import {
     lookup,
     match,
     parseQuery,
+    S_CIRCULAR,
     title,
     toExplicitString,
 } from "../hoot_utils";
 import { mountForTest, parseUrl } from "./local_helpers";
 
-describe(parseUrl(import.meta.url), () => {
-    test("deepEqual", () => {
-        const recursive = {};
-        recursive.self = recursive;
+const recursive = {};
+recursive.self = recursive;
 
+describe(parseUrl(import.meta.url), () => {
+    test("deepCopy", () => {
+        expect(deepCopy(true)).toEqual(true);
+        expect(deepCopy(false)).toEqual(false);
+        expect(deepCopy(null)).toEqual(null);
+        expect(deepCopy(recursive)).toEqual({ self: S_CIRCULAR });
+        expect(deepCopy(new Date(0))).toEqual(new Date(0));
+        expect(deepCopy({ a: 1, b: 2 })).toEqual({ a: 1, b: 2 });
+        expect(deepCopy({ o: { a: [{ b: 1 }] } })).toEqual({ o: { a: [{ b: 1 }] } });
+        expect(deepCopy(Symbol.for("a"))).toEqual(Symbol.for("a"));
+        expect(deepCopy(document.createElement("div"))).toEqual(document.createElement("div"));
+        expect(deepCopy([1, 2, 3])).toEqual([1, 2, 3]);
+    });
+
+    test("deepEqual", () => {
         const TRUTHY_CASES = [
             [true, true],
             [false, false],

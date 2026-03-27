@@ -3,13 +3,15 @@
 # * spreadsheet_dashboard
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
-"PO-Revision-Date: 2025-09-16 15:34+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
+"PO-Revision-Date: 2026-03-14 09:43+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet_dashboard/fi/>\n"
 "Language: fi\n"
@@ -17,13 +19,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: spreadsheet_dashboard
 #. odoo-python
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
 msgid "%s (copy)"
 msgstr "%s (kopio)"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "(no result)"
+msgstr "(ei hakutuloksia)"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__access_token
@@ -54,9 +62,9 @@ msgid "Choose a dashboard...."
 msgstr "Valitse koontinäyttö...."
 
 #. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__company_id
-msgid "Company"
-msgstr "Yritys"
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__company_ids
+msgid "Companies"
+msgstr "Yritykset"
 
 #. module: spreadsheet_dashboard
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration
@@ -85,6 +93,7 @@ msgstr "Luotu"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
+#: model:res.groups.privilege,name:spreadsheet_dashboard.res_groups_privilege_dashboard
 msgid "Dashboard"
 msgstr "Koontinäyttö"
 
@@ -94,6 +103,9 @@ msgid "Dashboard Group"
 msgstr "Koontinäyttöryhmä"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/assets/dashboard_action_loader.js:0
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.js:0
 #: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_action_configuration_dashboards
 #: model:ir.actions.client,name:spreadsheet_dashboard.ir_actions_dashboard_action
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration_dashboards
@@ -121,6 +133,23 @@ msgid "Excel Export"
 msgstr "Excel-vienti"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_loader_service.js:0
+msgid "FAVORITES"
+msgstr "SUOSIKIT"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
+msgid "Favorite Users"
+msgstr "Suosikkikäyttäjät"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/clickable_cell.js:0
+msgid "Filter on this value"
+msgstr "Suodata tämän arvon perusteella"
+
+#. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_finance
 msgid "Finance"
 msgstr "Taloushallinto"
@@ -133,7 +162,7 @@ msgstr "Ryhmä"
 #. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard_group
 msgid "Group of dashboards"
-msgstr "Koontinäyttöryhmä"
+msgstr "Ryhmä koontinäyttöjä"
 
 #. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_hr
@@ -146,6 +175,16 @@ msgstr "Henkilöstöhallinto"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__id
 msgid "ID"
 msgstr "Tunnus"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
+msgid "Indicates whether the dashboard is favorited by the current user"
+msgstr "Ilmaisee, onko nykyinen asiakas merkinnyt koontinäytön suosikikseen"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
+msgid "Is Favorite"
+msgstr "On suosikki"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
@@ -165,6 +204,12 @@ msgstr "Viimeksi päivittänyt"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "Load more"
+msgstr "Näytä lisää"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -196,6 +241,12 @@ msgstr "Nimi"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "No"
+msgstr "Ei"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 msgid "No available dashboard"
 msgstr "Ei käytettävissä olevaa koontinäyttöä"
@@ -204,9 +255,17 @@ msgstr "Ei käytettävissä olevaa koontinäyttöä"
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
 msgid ""
-"Only chart figures are displayed in small screens but this dashboard doesn't"
-" contain any"
+"Only chart figures are displayed in small screens but this dashboard doesn't "
+"contain any"
 msgstr ""
+"Vain kaavioluvut näytetään pienillä näytöillä, mutta tämä koontinäyttö ei "
+"sisällä yhtäkään"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/list/clickable_cell.js:0
+msgid "Open record"
+msgstr "Avaa tietue"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__published_dashboard_ids
@@ -214,9 +273,27 @@ msgid "Published Dashboard"
 msgstr "Julkaistu koontinäyttö"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_facet/dashboard_facet.xml:0
+msgid "Remove"
+msgstr "Poista"
+
+#. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
 msgid "Sales"
 msgstr "Myynti"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.xml:0
+msgid "Search..."
+msgstr "Hae..."
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/clickable_cell.js:0
+msgid "See records"
+msgstr "Katso tietueet"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__sequence
@@ -264,14 +341,37 @@ msgid "Thumbnail"
 msgstr "Pikkukuva"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
+msgid "Toggle favorite"
+msgstr "Kytke suosikki päälle ja pois päältä"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__full_url
 msgid "URL"
 msgstr "URL"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
+msgid "Users who have favorited this dashboard"
+msgstr "Käyttäjät, jotka ovat merkinneet tämän koontinäytön suosikikseen"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_list
+msgid "Visible to all"
+msgstr "Kaikkien nähtävissä"
+
+#. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website
 msgid "Website"
 msgstr "Verkkosivu"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "Yes"
+msgstr "Kyllä"
 
 #. module: spreadsheet_dashboard
 #. odoo-python
@@ -284,3 +384,20 @@ msgstr "Et voi poistaa kohdetta %s, koska sitä käytetään toisessa moduulissa
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_share.py:0
 msgid "You don't have access to this dashboard. "
 msgstr "Sinulla ei ole pääsyä tälle koontinäytölle. "
+
+#. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/controllers/share.py:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr ""
+"Sinulla ei ole käyttöoikeuksia datan viemiseksi. Ota yhteyttä ylläpitäjään."
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "for"
+msgstr "hintaan"
+
+#~ msgid "Company"
+#~ msgstr "Yritys"

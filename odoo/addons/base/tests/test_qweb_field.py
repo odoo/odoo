@@ -58,6 +58,43 @@ class TestQwebFieldInteger(common.TransactionCase):
             "125.125k"
         )
 
+
+class TestQwebFieldFloatConverter(common.TransactionCase):
+    def value_to_html(self, value, options=None):
+        options = options or {}
+        return self.env['ir.qweb.field.float'].value_to_html(value, options)
+
+    def test_float_value_to_html_no_precision(self):
+        self.assertEqual(self.value_to_html(3), '3.0')
+        self.assertEqual(self.value_to_html(3.1), '3.1')
+        self.assertEqual(self.value_to_html(3.1231239), '3.123124')
+
+    def test_float_value_to_html_with_precision(self):
+        options = {'precision': 3}
+        self.assertEqual(self.value_to_html(3, options), '3.000')
+        self.assertEqual(self.value_to_html(3.1, options), '3.100')
+        self.assertEqual(self.value_to_html(3.123, options), '3.123')
+        self.assertEqual(self.value_to_html(3.1239, options), '3.124')
+
+    def test_float_value_to_html_with_min_precision(self):
+        options = {'min_precision': 3}
+        self.assertEqual(self.value_to_html(0, options), '0.000')
+        self.assertEqual(self.value_to_html(3, options), '3.000')
+        self.assertEqual(self.value_to_html(3.1, options), '3.100')
+        self.assertEqual(self.value_to_html(3.123, options), '3.123')
+        self.assertEqual(self.value_to_html(3.1239, options), '3.1239')
+        self.assertEqual(self.value_to_html(3.1231239, options), '3.123124')
+        self.assertEqual(self.value_to_html(1234567890.1234567890, options), '1,234,567,890.12346')
+
+    def test_float_value_to_html_with_precision_and_min_precision(self):
+        options = {'min_precision': 3, 'precision': 4}
+        self.assertEqual(self.value_to_html(3, options), '3.000')
+        self.assertEqual(self.value_to_html(3.1, options), '3.100')
+        self.assertEqual(self.value_to_html(3.123, options), '3.123')
+        self.assertEqual(self.value_to_html(3.1239, options), '3.1239')
+        self.assertEqual(self.value_to_html(3.12349, options), '3.1235')
+
+
 class TestQwebFieldContact(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -86,3 +123,53 @@ class TestQwebFieldContact(common.TransactionCase):
         self.assertIn(self.partner.website, result)
         self.assertNotIn(self.partner.phone, result)
         self.assertIn('itemprop="telephone"', result, "Empty telephone itemprop should be added to prevent issue with iOS Safari")
+
+
+class TestQwebFieldOne2Many(common.TransactionCase):
+    def value_to_html(self, value, options=None):
+        options = options or {}
+        return self.env['ir.qweb.field.one2many'].value_to_html(value, options)
+
+    def test_one2many_empty(self):
+        partner = self.env['res.partner'].create({'name': 'Test Parent'})
+        self.assertFalse(self.value_to_html(partner.child_ids))
+
+    def test_one2many_with_values(self):
+        parent = self.env['res.partner'].create({'name': 'Parent'})
+        self.env['res.partner'].create({'name': 'Child', 'parent_id': parent.id})
+        self.assertEqual(self.value_to_html(parent.child_ids), "Parent, Child")
+
+
+class TestQwebFieldMany2Many(common.TransactionCase):
+    def value_to_html(self, value, options=None):
+        options = options or {}
+        return self.env['ir.qweb.field.many2many'].value_to_html(value, options)
+
+    def test_many2many_empty(self):
+        user = self.env['res.users'].create({'name': 'UserTest', 'login': 'usertest@example.com', 'group_ids': None})
+        self.assertFalse(self.value_to_html(user.group_ids))
+
+    def test_many2many_with_values(self):
+        user = self.env['res.users'].create({
+            'name': 'User2',
+            'login': 'user2@example.com',
+        })
+        self.assertEqual(
+            self.value_to_html(user.all_group_ids[:2].sorted()),
+            'Role / User, Technical Features',
+        )
+
+
+class TestQwebFieldMany2One(common.TransactionCase):
+    def value_to_html(self, value, options=None):
+        options = options or {}
+        return self.env['ir.qweb.field.many2one'].value_to_html(value, options)
+
+    def test_many2one_empty(self):
+        partner = self.env['res.partner'].create({'name': 'Lonely'})
+        self.assertFalse(self.value_to_html(partner.parent_id))
+
+    def test_many2one_with_value(self):
+        parent = self.env['res.partner'].create({'name': 'BigBoss'})
+        child = self.env['res.partner'].create({'name': 'Minion', 'parent_id': parent.id})
+        self.assertEqual(self.value_to_html(child.parent_id), 'BigBoss')

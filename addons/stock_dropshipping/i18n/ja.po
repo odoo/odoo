@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2025-09-14 21:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-01-23 07:34+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "stock_dropshipping/ja/>\n"
 "Language: ja\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_res_company
@@ -30,11 +31,11 @@ msgstr "会社"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__display_name
-#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__display_name
@@ -66,11 +67,11 @@ msgstr "直送"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__id
-#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__id
@@ -109,6 +110,11 @@ msgid "Purchase Order"
 msgstr "購買オーダ"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "購買オーダ明細"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
 msgid "Sales Order"
 msgstr "販売オーダ"
@@ -119,14 +125,9 @@ msgid "Sales Order Line"
 msgstr "販売オーダ明細"
 
 #. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_stock_move
-msgid "Stock Move"
-msgstr "在庫移動"
-
-#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
 msgid "Stock Rule"
-msgstr "在庫規則"
+msgstr "在庫ルール"
 
 #. module: stock_dropshipping
 #: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
@@ -143,8 +144,8 @@ msgstr "転送"
 msgid "Type of Operation"
 msgstr "オペレーションタイプ"
 
+#~ msgid "Stock Move"
+#~ msgstr "在庫移動"
+
 #~ msgid "Procurement Group"
 #~ msgstr "調達グループ"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "購買オーダ明細"

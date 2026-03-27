@@ -1,0 +1,3704 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2025-10-08 18:39+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, fuzzy
+msgid "\"Events App Name\" field is required."
+msgstr "\"Tadbirlar ilovasi nomi\" maydoni to‘ldirilishi shart."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+#, fuzzy
+msgid "# Wishlisted"
+msgstr "# Saqlab qo‘yildi"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, fuzzy
+msgid "%(name)s from %(company)s"
+msgstr "%(company)s kompaniyasidan %(name)s"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, fuzzy
+msgid "%(name)s, %(function)s at %(company)s"
+msgstr "%(company)s kompaniyasida %(function)s lavozimidagi %(name)s"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, fuzzy
+msgid "%s Events"
+msgstr "%s ta tadbir"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, fuzzy
+msgid "%s Online Events Application"
+msgstr "%s Onlayn tadbirlar ilovasi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+#, fuzzy
+msgid "(timezone:"
+msgstr "(vaqt mintaqasi:"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_17
+#, fuzzy
+msgid "10 DIY Furniture Ideas For Absolute Beginners"
+msgstr ""
+"Mutlaqo yangi boshlovchilar uchun o‘z qo‘li bilan mebel yasashning 10 ta "
+"g‘oyasi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_18
+#, fuzzy
+msgid "6 Woodworking tips and tricks for beginners"
+msgstr "Boshlovchilar uchun yog‘ochga ishlov berishning 6 ta maslahat va usuli"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Mail</b>:"
+msgstr "<b>Pochta</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Phone</b>:"
+msgstr "<b>Telefon</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Proposed By</b>:"
+msgstr "<b>Taklif qilgan</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Speaker Biography</b>:"
+msgstr "<b>Ma'ruzachi haqida</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<b>Talk Introduction</b>:"
+msgstr "<b>Ma'ruza haqida</b>:"
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+#, fuzzy
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
+"    <br/>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: "
+"14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
+"    </t>\n"
+"</div>"
+msgstr ""
+"<div>     Hurmatli <t t-out=\"object.partner_id.name or object.partner_name "
+"or ''\">Brandon Freeman</t><br/>     Sizning <t t-out=\"object.name or "
+"''\">Bu tadbir nima haqida</t> taklifingiz <t t-out=\"object.event_id.name "
+"or ''\">OpenWood Collection Online Reveal</t> tadbiri uchun qabul qilingani "
+"va tasdiqlangani haqida xabar berishdan mamnunmiz.     <br/>     Batafsil "
+"ma'lumotni quyidagi havolada topishingiz mumkin:     <div style=\"margin: "
+"16px 0px 16px 0px;\">         <a t-attf-href=\"/event/"
+"{{ object.event_id.id }}/track/{{ object.id }}\" t-attf-style=\"padding: 8px "
+"16px 8px 16px; font-size: 14px; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: "
+"none !important; background-color: {{object.company_id.email_secondary_color "
+"or '#875A7B'}}; border-radius:3px\">             Ma'ruzani ko‘rish         </"
+"a>     </div>     <br/><br/>     Tashakkur,     <t t-if=\"user.signature\" "
+"data-o-mail-quote-container=\"1\">         <br/>         <div data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" "
+"data-o-mail-quote=\"1\">Mitchell Admin</t></div>     </t> </div>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+#, fuzzy
+msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
+msgstr "<i class=\"fa fa-ban me-2\"/>Chop etilmagan"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+#, fuzzy
+msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
+msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Sevimli ma'ruzalar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
+#, fuzzy
+msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+#, fuzzy
+msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
+msgstr "<span class=\"fa fa-plus me-1\"/> Ma'ruzalarni jadvallash"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\"> <i "
+"class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Xato\" title=\"Xato\"/> "
+"<span class=\"o_wetrack_proposal_error_message\"/> </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
+"                                        <span>*</span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Suhbat kirishi</span> "
+"<span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
+"                                        <span>*</span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Suhbat sarlavhasi</span> "
+"<span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#, fuzzy
+msgid "<span class=\"text-muted\"> tracks</span>"
+msgstr "<span class=\"text-muted\"> yo‘nalishlar</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+#, fuzzy
+msgid ""
+"<span for=\"contact_name\">Name</span>\n"
+"                    <span>*</span>"
+msgstr "<span for=\"contact_name\">Ism</span> <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+#, fuzzy
+msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span>ta natija"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#, fuzzy
+msgid "<span> - </span>"
+msgstr "<span> - </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
+#, fuzzy
+msgid "<span> at </span>"
+msgstr "<span> soat </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+#, fuzzy
+msgid "<span>New track proposal</span>"
+msgstr "<span>Yangi yo‘nalish taklifi</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#, fuzzy
+msgid "<strong>Location:</strong>"
+msgstr "<strong>Manzil:</strong>"
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_reminder
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"            <t t-set=\"event_organizer\" t-"
+"value=\"object.event_id.organizer_id\"/>\n"
+"            <t t-set=\"event_address\" t-"
+"value=\"object.event_id.address_id\"/>\n"
+"            <t t-set=\"is_online\" t-value=\"'is_published' in "
+"object.event_id and object.event_id.is_published\"/>\n"
+"            <t t-set=\"agenda_urls\" t-"
+"value=\"object._get_track_calendar_urls()\"/>\n"
+"            <t t-set=\"google_url\" t-value=\"agenda_urls.get('google_url')"
+"\"/>\n"
+"            <t t-set=\"iCal_url\" t-value=\"agenda_urls.get('iCal_url')\"/>\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
+"            <tbody>\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"middle\">\n"
+"                                <span style=\"font-size: 10px;\">Your Event "
+"Track</span><br/>\n"
+"                                <span style=\"font-size: 20px; font-weight: "
+"bold;\" t-out=\"object.name\"/>\n"
+"                            </td><td valign=\"middle\" align=\"right\">\n"
+"                                <t t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                                    <img t-att-src=\"'/logo.png?company=%s' "
+"% object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"                            <tr><td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- TALK DESCRIPTION -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <div>\n"
+"                                    Hello<t t-if=\"not user_id.is_public\" t-"
+"out=\"' ' + user_id.name\"/>,\n"
+"                                    <br/><br/>\n"
+"                                    You recently show interest for the talk\n"
+"                                    <a t-if=\"object.description or "
+"object.partner_biography\" t-attf-href=\"{{ object.get_base_url() }}"
+"{{ object.website_url }}\" style=\"font-weight:bold;color:#875A7B;text-"
+"decoration:none;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</a>\n"
+"                                    <span t-else=\"\" style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</span>.\n"
+"                                </div>\n"
+"                                <div t-if=\"agenda_urls\">\n"
+"                                    <br/>\n"
+"                                    <table style=\"width: auto;\">\n"
+"                                        <tr>\n"
+"                                            <td>\n"
+"                                                <strong>Add this talk to "
+"your calendar</strong>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: "
+"20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" "
+"style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"google_url\" t-att-"
+"href=\"google_url\" target=\"new\" style=\"padding-top: 10px; padding-"
+"right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" "
+"style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                    <br/><br/>\n"
+"                                </div>\n"
+"                                <div>\n"
+"                                    See you soon,<br/>\n"
+"                                    <span style=\"color: #454748;\">\n"
+"                                    -- <br/>\n"
+"                                    <t t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</t>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- DETAILS -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <table style=\"width:100%;\">\n"
+"                                    <tr>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <img src=\"/mail/font_to_img/"
+"61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\"/>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                            <div t-"
+"if=\"object.is_one_day\">\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">May 4, 2021</t>\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}"
+"\">7:00 AM</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div t-else=\"\">\n"
+"                                                <strong>From</strong>\n"
+"                                                <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 4, "
+"2021</t>\n"
+"                                                 - <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">7:00 AM</t>\n"
+"                                                <strong>To</strong>\n"
+"                                                <t t-out=\"object.date_end "
+"or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 6, "
+"2021</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end or object.event_id.date_end\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}"
+"\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or "
+"''\">Europe/Brussels</t></i></div>\n"
+"                                        </td>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address or "
+"object.location_id\">\n"
+"                                                <img src=\"/mail/font_to_img/"
+"61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address\">\n"
+"                                                <t t-set=\"location\" t-"
+"value=\"''\"/>\n"
+"                                                <t t-"
+"if=\"event_address.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.name or ''\">Teksa SpA</div>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street\">\n"
+"                                                    <div t-"
+"out=\"event_address.street or ''\">Puerto Madero 9710</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"event_address.street\"/>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street2\">\n"
+"                                                    <div t-"
+"out=\"event_address.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.street2)\"/>\n"
+"                                                </t>\n"
+"                                                <div>\n"
+"                                                    <t t-"
+"if=\"event_address.city\">\n"
+"                                                        <t t-"
+"out=\"event_address.city or ''\">Pudahuel</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.city)\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.state_id.name\">\n"
+"                                                        <t t-"
+"out=\"event_address.state_id.name or ''\">C1</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.state_id.name)"
+"\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.zip\">\n"
+"                                                        <t t-"
+"out=\"event_address.zip or ''\">98450</t>\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.zip)\"/>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <t t-"
+"if=\"event_address.country_id.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.country_id.name or ''\">Argentina</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.country_id.name)\"/>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <div t-if=\"object.location_id\" "
+"t-out=\"'Talk location:' + object.location_id.name\"/>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </td></tr>\n"
+"                            <tr t-if=\"not object.date\">\n"
+"                                <td>\n"
+"                                    <strong><u>Note</u></strong>: The start "
+"and end times of the talk were not specified when the email was sent. The "
+"times indicated in this message correspond to those of the event.\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <t t-if=\"event_organizer\">\n"
+"                                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- CONTACT ORGANIZER -->\n"
+"                                <t t-if=\"object.event_id.organizer_id.name "
+"or object.event_id.company_id.name\">\n"
+"                                    <div>\n"
+"                                        <span style=\"font-"
+"weight:300;margin:10px 0px\">Questions about this talk?</span>\n"
+"                                        <div>Please contact the organizer:</"
+"div>\n"
+"                                        <ul>\n"
+"                                            <li t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</li>\n"
+"                                            <t t-"
+"if=\"event_organizer.email\">\n"
+"                                                <li>Mail: <a t-attf-"
+"href=\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></"
+"li>\n"
+"                                            </t>\n"
+"                                            <t t-"
+"if=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\">\n"
+"                                                <li>Phone: <t t-"
+"out=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\"/></li>\n"
+"                                            </t>\n"
+"                                        </ul>\n"
+"                                    </div>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                                <hr t-if=\"is_online or event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- PWA MARKGETING -->\n"
+"                                <div t-if=\"is_online\">\n"
+"                                    <strong>Get the best mobile experience.</"
+"strong>\n"
+"                                    <a href=\"/event\">Install our mobile "
+"app</a>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- PWA MARKGETING SEPARATION-->\n"
+"                                <hr t-if=\"is_online and event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- GOOGLE MAPS LINK -->\n"
+"                                <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                                    <div>\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                                        <a t-attf-href=\"https://"
+"maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                            <img t-"
+"if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-"
+"src=\"{{ event_address.static_map_url }}\" style=\"vertical-align:bottom; "
+"width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                            <span t-else=\"\">See event "
+"location on Google Maps</span>\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td></tr></table>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"            </table>\n"
+"            </td></tr>\n"
+"            <!-- FOOTER BY -->\n"
+"            <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                  <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"                    Sent by <a target=\"_blank\" t-attf-"
+"href=\"{{ object.get_base_url() }}\" style=\"color: #875A7B;\" t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</a>\n"
+"                    <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"                        <br/>\n"
+"                        Discover <a href=\"/event\" style=\"color:#875A7B;"
+"\">all our events</a>.\n"
+"                    </t>\n"
+"                  </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            </table>\n"
+"        "
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track7
+#, fuzzy
+msgid "A technical explanation of how to use computer design apps"
+msgstr ""
+"Kompyuter dizayn dasturlaridan foydalanish bo‘yicha texnik tushuntirish"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
+#, fuzzy
+msgid ""
+"A track's kanban state indicates special situations affecting it:\n"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this track\n"
+" * Green indicates the track is ready to be pulled to the next stage"
+msgstr ""
+"Trek kanban holati unga ta'sir qiluvchi maxsus vaziyatlarni ko‘rsatadi: * "
+"Kulrang - bu odatiy holat * Qizil - trekning rivojlanishiga to‘siqlik "
+"borligini bildiradi * Yashil - trek keyingi bosqichga o‘tishga tayyor "
+"ekanligini anglatadi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
+#, fuzzy
+msgid "Action Needed"
+msgstr "Harakat talab etiladi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__active
+#, fuzzy
+msgid "Active"
+msgstr "Faol"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
+#, fuzzy
+msgid "Activities"
+msgstr "Faoliyatlar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+#, fuzzy
+msgid "Activity Exception Decoration"
+msgstr "Faoliyat istisno bezagi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
+#, fuzzy
+msgid "Activity State"
+msgstr "Faoliyat holati"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+#, fuzzy
+msgid "Activity Type Icon"
+msgstr "Faoliyat turi belgisi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#, fuzzy
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
+msgstr ""
+"Hamkasblaringizga bosqichning ma'nosi va maqsadini tushunishga yordam berish "
+"uchun tavsif qo‘shing."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#, fuzzy
+msgid "Add a description..."
+msgstr "Tavsif qo‘shish..."
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+#, fuzzy
+msgid "Add a new stage in the task pipeline"
+msgstr "Vazifalar zanjirida yangi bosqich qo‘shish"
+
+#. module: website_event_track
+#: model:mail.template,name:website_event_track.mail_template_data_track_reminder
+#, fuzzy
+msgid "Add reminder via email"
+msgstr "Elektron pochta orqali eslatma qo‘shish"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+#, fuzzy
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
+msgstr ""
+"Tinglovchilaringizga tadbir veb-sahifalarini ko‘rib chiqishda yordam berish "
+"uchun treklaringizga teglar qo‘shing."
+
+#. module: website_event_track
+#: model:mail.template,description:website_event_track.mail_template_data_track_reminder
+#, fuzzy
+msgid "Add talk reminder"
+msgstr "Suhbat eslatmasini qo‘shish"
+
+#. module: website_event_track
+#: model:mail.template,subject:website_event_track.mail_template_data_track_reminder
+#, fuzzy
+msgid "Add talk reminder: {{ object.name }}"
+msgstr "Suhbat eslatmasini qo‘shish: {{ object.name }}"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#, fuzzy
+msgid "Add this talk to your agenda ?"
+msgstr "Bu suhbatni kun tartibingizga qo‘shmoqchimisiz?"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track19
+#, fuzzy
+msgid "Advanced lead management: tips and tricks from the fields"
+msgstr ""
+"Ilg‘or mijozlarni boshqarish: soha mutaxassislaridan maslahatlar va foydali "
+"yo‘l-yo‘riqlar"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track13
+#, fuzzy
+msgid "Advanced reporting"
+msgstr "Kengaytirilgan hisobotlar"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+#, fuzzy
+msgid "Agenda"
+msgstr "Kun tartibi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#, fuzzy
+msgid "Agenda Color"
+msgstr "Kun tartibi rangi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "All Events"
+msgstr "Barcha tadbirlar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+#, fuzzy
+msgid "All Talks"
+msgstr "Barcha suhbatlar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+#, fuzzy
+msgid "Allow Track Proposals"
+msgstr "Trek takliflariga ruxsat berish"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Allow push notifications?"
+msgstr "Push-bildirishnomalar qabul qilinsinmi?"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"Allow video and audio recording of their\n"
+"                            presentation, for publishing on our website."
+msgstr ""
+"Ularning taqdimotini veb-saytimizda e'lon qilish uchun video va audio yozib "
+"olishga ruxsat berish."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Always Wishlisted"
+msgstr "Doimo istaklarda"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage2
+#, fuzzy
+msgid "Announced"
+msgstr "E'lon qilingan"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, fuzzy
+msgid "Application"
+msgstr "Ariza"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Archived"
+msgstr "Arxivlangan"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+#, fuzzy
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
+msgstr ""
+"Asosiy trekni sevimlilarda olib tashlab bo‘lmagani uchun, bu maydon "
+"hamkorning asosiy treklar eslatmalarini o‘chirish tanlovini saqlaydi."
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
+"    wood crates."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
+#, fuzzy
+msgid "Attachment Count"
+msgstr "Ilova soni"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
+#, fuzzy
+msgid "Audience"
+msgstr "Auditoriya"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
+#, fuzzy
+msgid "Available Track Tags"
+msgstr "Mavjud trek teglari"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#, fuzzy
+msgid "Available on all event Agenda pages"
+msgstr "Barcha tadbir kun tartibi sahifalarida mavjud"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
+#, fuzzy
+msgid "Back to All Talks"
+msgstr "Barcha suhbatlarga qaytish"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+#, fuzzy
+msgid "Bandy clamp hack"
+msgstr "Qisqich moslamasi hiylasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "Biography"
+msgstr "Tarjimai hol"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage5
+#, fuzzy
+msgid "Blocked"
+msgstr "To‘xtatilgan"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+#, fuzzy
+msgid "Book your seats to the best talks"
+msgstr "Eng yaxshi suhbatlarga joy band qiling"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+#, fuzzy
+msgid "Book your talks"
+msgstr "Suhbatlaringizni band qiling"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_14
+#, fuzzy
+msgid "Building a DIY cabin from the ground up"
+msgstr "Noldan o‘z qo‘li bilan kabina qurish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+#, fuzzy
+msgid "Button Target URL"
+msgstr "Tugma manzil URL-i"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+#, fuzzy
+msgid "Button Title"
+msgstr "Tugma sarlavhasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+#, fuzzy
+msgid "CTA button is available"
+msgstr "CTA tugmasi mavjud"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Call for Proposals"
+msgstr "Takliflar uchun murojaat"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+#, fuzzy
+msgid "Can Publish"
+msgstr "Nashr qilish mumkin"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage5
+#, fuzzy
+msgid "Cancelled"
+msgstr "Bekor qilingan"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+#, fuzzy
+msgid "Cancelled Stage"
+msgstr "Bekor qilingan bosqich"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Categories"
+msgstr "Toifalar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+#, fuzzy
+msgid "Category"
+msgstr "Toifa"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Check your email to add the track to your agenda."
+msgstr ""
+"Trekni kun tartibingizga qo‘shish uchun elektron pochtangizni tekshiring."
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_12
+#, fuzzy
+msgid "Climate positive"
+msgstr "Iqlimga ijobiy ta'sir"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+#, fuzzy
+msgid "Close"
+msgstr "Yopish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+#, fuzzy
+msgid "Color"
+msgstr "Rang"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
+#, fuzzy
+msgid "Color Index"
+msgstr "Rang indeksi"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, fuzzy
+msgid "Coming soon"
+msgstr "Tez orada"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+#, fuzzy
+msgid "Coming soon ..."
+msgstr "Tez orada..."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+#, fuzzy
+msgid "Company"
+msgstr "Kompaniya"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+#, fuzzy
+msgid "Company Name"
+msgstr "Kompaniya nomi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Konfiguratsiya sozlamalari"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#, fuzzy
+msgid "Confirm"
+msgstr "Tasdiqlash"
+
+#. module: website_event_track
+#: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
+#, fuzzy
+msgid "Confirmation of {{ object.name }}"
+msgstr "{{ object.name }} tasdiqlandi"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage1
+#, fuzzy
+msgid "Confirmed"
+msgstr "Tasdiqlangan"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_13
+#: model_terms:event.track,description:website_event_track.event_7_track_3
+#, fuzzy
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
+msgstr ""
+"Yog‘och uy qurishni o‘ylayapsizmi? Qurilish jarayoni va yakuniy natija "
+"haqida ko‘proq ma'lumot olish uchun ushbu videoni ko‘ring. Bosqichma-bosqich "
+"oddiy tushuntirish! Qiziqyapsizmi?"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+#, fuzzy
+msgid "Contact"
+msgstr "Aloqa"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "Contact Details"
+msgstr "Aloqa ma'lumotlari"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
+#, fuzzy
+msgid "Contact Email"
+msgstr "Aloqa elektron pochtasi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+#, fuzzy
+msgid "Contact Information"
+msgstr "Aloqa ma'lumotlari"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
+#, fuzzy
+msgid "Contact Phone"
+msgstr "Aloqa telefoni"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+#, fuzzy
+msgid "Contact me through a different email/phone"
+msgstr "Menga boshqa elektron pochta/telefon orqali bog‘laning"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+#, fuzzy
+msgid "Create a Track"
+msgstr "Trek yaratish"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+#, fuzzy
+msgid "Create a Track Location"
+msgstr "Trek joylashuvini yaratish"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+#, fuzzy
+msgid "Create a Track Tag"
+msgstr "Trek tegini yaratish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#, fuzzy
+msgid "Customer"
+msgstr "Mijoz"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_19
+#, fuzzy
+msgid "DIY Timber Cladding Project"
+msgstr "Mustaqil yog‘och qoplama loyihasi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
+"OF ALL EVENTS"
+msgstr ""
+"BARCHA TADBIRLARNING BARCHA TAKLIF SAHIFALARIDA MAVJUD BO‘LISHI UCHUN "
+"QURILISH BLOKLARINI SHU YERGA TASHLANG"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Date"
+msgstr "Sana"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_11
+#, fuzzy
+msgid "Day 2 Wrapup"
+msgstr "2-kun yakunlanishi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_8
+#, fuzzy
+msgid "Dealing with OpenWood Furniture"
+msgstr "OpenWood mebellar bilan ishlash"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#, fuzzy
+msgid "Define labels explaining kanban state management."
+msgstr "Kanban holatini boshqarishni tushuntiruvchi yorliqlarga ta'rif bering"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
+#, fuzzy
+msgid "Define the order in which the location will appear on \"Agenda\" page"
+msgstr "\"Kun tartibi\" sahifasida joylashuvlar ko‘rinish tartibini aniqlang"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+#, fuzzy
+msgid ""
+"Define the steps that will be used in the event from the\n"
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
+msgstr ""
+"Trekni yaratishdan to yopilishigacha tadbirda qo‘llaniladigan bosqichlarni "
+"belgilang. Ushbu bosqichlardan voqea trekini hal qilish jarayonini kuzatish "
+"uchun foydalanasiz."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+#, fuzzy
+msgid "Delete"
+msgstr "O‘chirish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "Description"
+msgstr "Tavsif"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
+#, fuzzy
+msgid "Description of the partner (name, function and company name)"
+msgstr "Hamkor tavsifi (ismi, lavozimi va kompaniya nomi)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track25
+#, fuzzy
+msgid "Design contest (entire afternoon)"
+msgstr "Dizayn tanlovi (butun tushdan keyin)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track24
+#, fuzzy
+msgid "Design contest (entire day)"
+msgstr "Dizayn tanlovi (butun kun)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track6
+#, fuzzy
+msgid "Detailed roadmap of our new products"
+msgstr "Yangi mahsulotlarimizning batafsil yo‘l xaritasi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track11
+#, fuzzy
+msgid "Discover our new design team"
+msgstr "Yangi dizayn jamoamiz bilan tanishing"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
+#, fuzzy
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
+msgstr ""
+"Ishtirokchilaringiz trekingizni tomosha qilayotganda Harakatga undash "
+"tugmasini ko‘rsating"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#, fuzzy
+msgid "Done"
+msgstr "Bajarildi"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+#, fuzzy
+msgid "Dowel Hack"
+msgstr "Dowel hiylasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
+#, fuzzy
+msgid "Duration"
+msgstr "Davomiyligi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_3
+#, fuzzy
+msgid "Easy Way To Build a Wooden House"
+msgstr "Yog‘och uy qurishning oson usuli"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+#, fuzzy
+msgid "Edit Track"
+msgstr "Trekni tahrirlash"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+#, fuzzy
+msgid "Email"
+msgstr "Elektron pochta"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Email Error"
+msgstr "Elektron pochta xatosi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
+#, fuzzy
+msgid "Email Template"
+msgstr "Elektron pochta andozasi"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#, fuzzy
+msgid "Email*"
+msgstr "Elektron pochta*"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_event
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Event"
+msgstr "Tadbir"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
+#, fuzzy
+msgid "Event Location"
+msgstr "Tadbir joyi"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
+#, fuzzy
+msgid "Event Locations"
+msgstr "Tadbir joylari"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/website_builder/event_track_page_option_plugin.js:0
+#, fuzzy
+msgid "Event Page"
+msgstr "Tadbir sahifasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
+#, fuzzy
+msgid "Event Proposals Menus"
+msgstr "Tadbir takliflari menyusi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_type
+#, fuzzy
+msgid "Event Template"
+msgstr "Tadbir andozasi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+#, fuzzy
+msgid "Event Track"
+msgstr "Tadbir yo‘nalishi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_location
+#, fuzzy
+msgid "Event Track Location"
+msgstr "Tadbir yo‘nalishi joyi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_stage
+#, fuzzy
+msgid "Event Track Stage"
+msgstr "Tadbir yo‘nalishi bosqichi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
+#, fuzzy
+msgid "Event Track Tag"
+msgstr "Tadbir yo‘nalishi tegi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+#, fuzzy
+msgid "Event Track Tag Category"
+msgstr "Tadbir yo‘nalishi tegi turkumi"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Event Tracks"
+msgstr "Tadbir yo‘nalishlari"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
+#, fuzzy
+msgid "Event Tracks Menus"
+msgstr "Tadbir yo‘nalishlari menyusi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_21
+#, fuzzy
+msgid "Event Wrapup"
+msgstr "Tadbir yakunlanishi"
+
+#. module: website_event_track
+#: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
+#, fuzzy
+msgid "Event: Track Confirmation"
+msgstr "Tadbir: Yo‘nalish tasdiqlovi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+#, fuzzy
+msgid "Events App Name"
+msgstr "Tadbirlar ilovasi nomi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+#, fuzzy
+msgid "Events PWA"
+msgstr "Tadbirlar PWA"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Favorite On"
+msgstr "Sevimlilar yoqilgan"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+#, fuzzy
+msgid "Favorites"
+msgstr "Sevimlilar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+#, fuzzy
+msgid "Filter Tracks"
+msgstr "Yo‘nalishlarni saralash"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/website_builder/event_track_page_option.xml:0
+#, fuzzy
+msgid "Filter by Tags"
+msgstr "Teglar bo‘yicha saralash"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+#, fuzzy
+msgid "Filters"
+msgstr "Saralash"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
+#, fuzzy
+msgid "Finished"
+msgstr "Yakunlandi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_2
+#, fuzzy
+msgid "First Day Wrapup"
+msgstr "Birinchi kun xulosasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
+#, fuzzy
+msgid "Folded in Kanban"
+msgstr "Kanbanda yig‘ilgan"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
+#, fuzzy
+msgid "Followers"
+msgstr "Kuzatuvchilar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
+#, fuzzy
+msgid "Followers (Partners)"
+msgstr "Kuzatuvchilar (hamkorlar)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+#, fuzzy
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome belgisi, masalan fa-tasks"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__footer_visible
+#, fuzzy
+msgid "Footer Visible"
+msgstr "Pastki sarlavha ko‘rinadi"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
+#, fuzzy
+msgid "Format"
+msgstr "Format"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
+#, fuzzy
+msgid "Fully accessible"
+msgstr "To‘liq foydalanish mumkin"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Future Activities"
+msgstr "Kelajakdagi faoliyatlar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+#, fuzzy
+msgid "Glue tip"
+msgstr "Yelim uchi"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
+#, fuzzy
+msgid "Green"
+msgstr "Yashil"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_done
+#, fuzzy
+msgid "Green Kanban Label"
+msgstr "Yashil kanban yorlig‘i"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
+#, fuzzy
+msgid "Grey"
+msgstr "Kulrang"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_normal
+#, fuzzy
+msgid "Grey Kanban Label"
+msgstr "Kulrang kanban yorlig‘i"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_11
+#, fuzzy
+msgid "Happy with OpenWood"
+msgstr "OpenWood bilan mamnun"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
+#, fuzzy
+msgid "Has Message"
+msgstr "Xabar mavjud"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__header_visible
+#, fuzzy
+msgid "Header Visible"
+msgstr "Yuqori sarlavha ko‘rinadi"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
+#, fuzzy
+msgid "High"
+msgstr "Yuqori"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
+#, fuzzy
+msgid "Highest"
+msgstr "Eng yuqori"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track21
+#, fuzzy
+msgid "House of World Cultures"
+msgstr "Jahon madaniyatlari uyi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+#, fuzzy
+msgid "How can our team get in touch with you?"
+msgstr "Jamoamiz siz bilan qanday bog‘lana oladi?"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track18
+#, fuzzy
+msgid "How to build your marketing strategy within a competitive environment"
+msgstr "Raqobatbardosh muhitda marketing strategiyasini qanday yaratish mumkin"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track15
+#, fuzzy
+msgid "How to communicate with your community"
+msgstr "Hamjamiyatingiz bilan qanday muloqot qilish kerak"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track1
+#, fuzzy
+msgid "How to design a new piece of furniture"
+msgstr "Yangi mebel qanday loyihalanadi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track4
+#, fuzzy
+msgid "How to develop automated processes"
+msgstr "Avtomatlashtirilgan jarayonlar qanday ishlab chiqiladi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track16
+#, fuzzy
+msgid "How to follow us on the social media"
+msgstr "Ijtimoiy tarmoqlarda bizni qanday kuzatib borish mumkin"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track9
+#, fuzzy
+msgid "How to improve your quality processes"
+msgstr "Sifat jarayonlarini qanday takomillashtirish mumkin"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track2
+#, fuzzy
+msgid "How to integrate hardware materials in your pieces of furniture"
+msgstr "Mebel qismlariga furnitura materiallarini qanday qo‘shish mumkin"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track8
+#, fuzzy
+msgid "How to optimize your sales, from leads to sales orders"
+msgstr "Mijozlardan sotuvgacha bo‘lgan savdoni qanday optimallashtirish mumkin"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_event_track.field_website__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+#, fuzzy
+msgid "Icon"
+msgstr "Belgi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+#, fuzzy
+msgid "Icon to indicate an exception activity."
+msgstr "Istisno faoliyatini ko‘rsatuvchi belgi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
+#, fuzzy
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
+msgstr ""
+"Agar belgilansa, mijozlarga kirish havolalari taqdim etilishi uchun treklar "
+"avtomatik ravishda e'lon qilinadi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+#, fuzzy
+msgid "If checked, new messages require your attention."
+msgstr "Agar belgilansa, yangi xabarlar e'tiboringizni talab qiladi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
+#, fuzzy
+msgid "If checked, some messages have a delivery error."
+msgstr "Agar belgilansa, ba'zi xabarlarda yetkazib berish xatosi mavjud"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
+#, fuzzy
+msgid "If checked, the related tracks will be visible in the frontend."
+msgstr "Agar belgilansa, tegishli treklar frontendda ko‘rinadi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
+#, fuzzy
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr ""
+"Agar o‘rnatilsa, trek bu bosqichga yetganda mijozga elektron xat yuboriladi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+#, fuzzy
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
+msgstr ""
+"Agar o‘rnatilsa, suhbat tadbirga ro‘yxatdan o‘tgan har bir ishtirokchi uchun "
+"sevimli sifatida belgilanadi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+#, fuzzy
+msgid "Image URL"
+msgstr "Rasm URL manzili"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+#, fuzzy
+msgid "In"
+msgstr "Ichida"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage5
+#, fuzzy
+msgid "In Progress"
+msgstr "Jarayonda"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_15
+#, fuzzy
+msgid "In this video we will see how lumber is made in a sawmill factory."
+msgstr ""
+"Ushbu videoda biz taxta zavodida yog‘och qanday tayyorlanishini ko‘rib "
+"chiqamiz"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+#, fuzzy
+msgid "In this video, I covered 6 tips and tricks to help out beginners:"
+msgstr ""
+"Ushbu videoda men yangi boshlovchilarga yordam beruvchi 6 ta maslahat va "
+"yo‘l-yo‘riqlarni ko‘rib chiqdim:"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, fuzzy
+msgid "Install"
+msgstr "O‘rnatish"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, fuzzy
+msgid "Install Application"
+msgstr "Ilovani o‘rnatish"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "Interactivity"
+msgstr "Interaktivlik"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Introduction"
+msgstr "Kirish"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Invalid data"
+msgstr "Noto‘g‘ri ma'lumotlar"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, fuzzy
+msgid "Invalid data."
+msgstr "Noto‘g‘ri ma'lumotlar"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Invalid email"
+msgstr "Noto‘g‘ri elektron pochta"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, fuzzy
+msgid "Invalid email."
+msgstr "Noto‘g‘ri elektron pochta manzili"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+#, fuzzy
+msgid "Is CTA Live"
+msgstr "CTA faolmi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
+#, fuzzy
+msgid "Is Follower"
+msgstr "Kuzatuvchimi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_one_day
+#, fuzzy
+msgid "Is One Day"
+msgstr "Bir kunlikmi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+#, fuzzy
+msgid "Is Published"
+msgstr "Nashr etilganmi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+#, fuzzy
+msgid "Is Reminder On"
+msgstr "Eslatma yoqilganmi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+#, fuzzy
+msgid "Is Track Done"
+msgstr "Trek tugallandimi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+#, fuzzy
+msgid "Is Track Live"
+msgstr "Trek jonlimi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+#, fuzzy
+msgid "Is Track Soon"
+msgstr "Trek tez orada bo‘ladimi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+#, fuzzy
+msgid "Is Track Today"
+msgstr "Trek bugunmi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+#, fuzzy
+msgid "Is Track Upcoming"
+msgstr "Trek yaqinlashyaptimi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+#, fuzzy
+msgid "Is Wishlisted"
+msgstr "Istaklar ro‘yxatidami"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+#, fuzzy
+msgid "Is reminder off"
+msgstr "Eslatma o‘chirilganmi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+#, fuzzy
+msgid "Job Position"
+msgstr "Lavozim"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Job Title"
+msgstr "Lavozim nomi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
+#, fuzzy
+msgid "Kanban Blocked Explanation"
+msgstr "Kanban to‘xtatilgan holat tushuntirmasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_normal
+#, fuzzy
+msgid "Kanban Ongoing Explanation"
+msgstr "Kanban joriy holat tushuntirmasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
+#, fuzzy
+msgid "Kanban State"
+msgstr "Kanban holati"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state_label
+#, fuzzy
+msgid "Kanban State Label"
+msgstr "Kanban holati yorlig‘i"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_done
+#, fuzzy
+msgid "Kanban Valid Explanation"
+msgstr "Kanban to‘g‘ri holat tushuntirmasi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track23
+#, fuzzy
+msgid "Key Success factors selling our furniture"
+msgstr "Mebellarimizni sotishdagi asosiy muvaffaqiyat omillari"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_9
+#, fuzzy
+msgid "Kitchens for the Future"
+msgstr "Kelajak uchun oshxonalar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilagan"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Late Activities"
+msgstr "So‘nggi faoliyatlar"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track12
+#, fuzzy
+msgid "Latest trends"
+msgstr "Eng so‘nggi tendensiyalar"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_26
+#, fuzzy
+msgid "Less Furniture is More Furniture"
+msgstr "Kamroq mebel - ko‘proq imkoniyat"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_4
+msgid "Life at Home Around the World: William’s Story"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Lightning Talks"
+msgstr "Qisqa ma'ruzalar"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_19
+#, fuzzy
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
+msgstr ""
+"Savol-javobga havola shu yerda! Eski g‘isht devorlarni yashirish vaqti "
+"keldi. Bunday oddiy va o‘zgaruvchan loyihalarni yaxshi ko‘raman! :)-"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
+#, fuzzy
+msgid "Live"
+msgstr "Jonli efir"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+#, fuzzy
+msgid "Live Now"
+msgstr "Hozir jonli efirda"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_10
+#, fuzzy
+msgid "Live Testimonial"
+msgstr "Jonli guvohlik"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_25
+#, fuzzy
+msgid "Live Testimonials"
+msgstr "Jonli guvohliklar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Location"
+msgstr "Joylashuv"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_13
+#, fuzzy
+msgid "Log House Building"
+msgstr "Yog‘och uy qurish"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_15
+#, fuzzy
+msgid "Logs to lumber"
+msgstr "Yog‘ochni taxtaga aylantirish"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
+#, fuzzy
+msgid "Low"
+msgstr "Past"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track31
+#, fuzzy
+msgid "Lunch"
+msgstr "Tushlik"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+#, fuzzy
+msgid "Magic Button"
+msgstr "Sehrli tugma"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+#, fuzzy
+msgid "Making a center marking gauge"
+msgstr "Markaziy belgilash asbobini yasash"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+#, fuzzy
+msgid ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
+msgstr ""
+"Bu yerdan treklaringizni tashkil qiladigan joylarni boshqaring (masalan, "
+"xonalar, kanallar va boshqalar)."
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
+#, fuzzy
+msgid "Medium"
+msgstr "O‘rtacha"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
+#, fuzzy
+msgid "Menu Type"
+msgstr "Menyu turi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
+#, fuzzy
+msgid "Message Delivery error"
+msgstr "Xabar yetkazib berilmadi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
+#, fuzzy
+msgid "Messages"
+msgstr "Xabarlar"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track22
+#, fuzzy
+msgid "Minimal but efficient design"
+msgstr "Minimal, lekin samarali dizayn"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+#, fuzzy
+msgid "Minutes before CTA starts"
+msgstr "CTA boshlanishidan oldingi daqiqalar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+#, fuzzy
+msgid "Minutes before track starts"
+msgstr "Trek boshlanishidan oldingi daqiqalar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+#, fuzzy
+msgid "Minutes compare to track start"
+msgstr "Trek boshlanishiga nisbatan daqiqalar"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+#, fuzzy
+msgid "Miter saw tip"
+msgstr "Qiya arra maslahat"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track30
+#, fuzzy
+msgid "Morning break"
+msgstr "Ertalabki tanaffus"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "My Activities"
+msgstr "Mening faoliyatlarim"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
+#, fuzzy
+msgid "My Activity Deadline"
+msgstr "Mening faoliyatim muddati"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track27
+#, fuzzy
+msgid "My Company global presentation"
+msgstr "Kompaniyamning umumiy taqdimoti"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "My Tracks"
+msgstr "Mening treklarim"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+#, fuzzy
+msgid "Name"
+msgstr "Nomi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+#, fuzzy
+msgid "Name of your website's Events Progressive Web Application"
+msgstr "Veb-saytingizning Tadbirlar progressiv veb-ilovasi nomi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track20
+#, fuzzy
+msgid "New Certification Program"
+msgstr "Yangi sertifikatlash dasturi"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_event_track
+#, fuzzy
+msgid "New Track"
+msgstr "Yangi trek"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
+#, fuzzy
+msgid "Next Activity Calendar Event"
+msgstr "Keyingi tadbir taqvimi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
+#, fuzzy
+msgid "Next Activity Deadline"
+msgstr "Keyingi faoliyat muddati"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
+#, fuzzy
+msgid "Next Activity Summary"
+msgstr "Keyingi faoliyat xulosasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
+#, fuzzy
+msgid "Next Activity Type"
+msgstr "Keyingi faoliyat turi"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+#, fuzzy
+msgid "No Track Visitors yet!"
+msgstr "Hali trek tashrif buyuruvchilari yo‘q!"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#, fuzzy
+msgid "No thanks"
+msgstr "Yo‘q, rahmat"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#, fuzzy
+msgid "No thanks & don't ask again"
+msgstr "Yo‘q, rahmat va boshqa so‘ramang"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+#, fuzzy
+msgid "No track favorited by this visitor"
+msgstr "Bu tashrif buyuruvchi yoqtirgan trek yo‘q"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+#, fuzzy
+msgid "No track found."
+msgstr "Hech qanday trek topilmadi."
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, fuzzy
+msgid "Note"
+msgstr "Eslatma"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+#, fuzzy
+msgid "Note that colorless tags won't be available on the website."
+msgstr "E'tibor bering, rangsiz teglar veb-saytda ko‘rinmaydi."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
+#, fuzzy
+msgid "Number of Actions"
+msgstr "Harakatlar soni"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
+#, fuzzy
+msgid "Number of errors"
+msgstr "Xatolar soni"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
+#, fuzzy
+msgid "Number of messages requiring action"
+msgstr "Amal talab qilinadigan xabarlar soni"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
+#, fuzzy
+msgid "Number of messages with delivery error"
+msgstr "Yetkazib berishda xato bo‘lgan xabarlar soni"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_24
+#, fuzzy
+msgid "Old is New"
+msgstr "Eski yangidir"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_20
+#, fuzzy
+msgid "Our Last Day Together!"
+msgstr "Birgalikdagi so‘nggi kunimiz!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
+#, fuzzy
+msgid "Partner"
+msgstr "Hamkor"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track14
+#, fuzzy
+msgid "Partnership programs"
+msgstr "Hamkorlik dasturlari"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+#, fuzzy
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Picture"
+msgstr "Rasm"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+#, fuzzy
+msgid "Plan your experience by adding your favorites talks to your wishlist"
+msgstr ""
+"Sevimli ma'ruzalaringizni istaklar ro‘yxatiga qo‘shib, tajribangizni "
+"rejalashtiring"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form.js:0
+#, fuzzy
+msgid "Please enter either a contact email address or a contact phone number."
+msgstr ""
+"Iltimos, aloqa elektron pochta manzilini yoki aloqa telefon raqamini "
+"kiriting."
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form.js:0
+#, fuzzy
+msgid "Please fill out the form correctly."
+msgstr "Iltimos, shaklni to‘g‘ri to‘ldiring."
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track3
+#, fuzzy
+msgid "Portfolio presentation"
+msgstr "Portfolio taqdimoti"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_16
+#, fuzzy
+msgid "Pretty. Ugly. Lovely."
+msgstr "Chiroyli. Xunuk. Ajoyib."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+#, fuzzy
+msgid "Previous page"
+msgstr "Oldingi sahifa"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
+#, fuzzy
+msgid "Priority"
+msgstr "Ustuvorlik"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_7
+#, fuzzy
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
+msgstr ""
+"Ehtimol, menga eng ko‘p berilgan savollardan biri yog‘ochga ishlov berishni "
+"qanday boshlaganimdir! Ushbu videoda men sizga mebel yasashni qanday va nima "
+"uchun boshlaganimni aytib beraman!"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage0
+#, fuzzy
+msgid "Proposal"
+msgstr "Taklif"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Proposals are closed."
+msgstr "Takliflar qabul qilinishi to‘xtatildi."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
+#, fuzzy
+msgid "Proposals on Website"
+msgstr "Veb-saytdagi takliflar"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#, fuzzy
+msgid "Propose a talk"
+msgstr "Ma'ruza taklif qilish"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage3
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Published"
+msgstr "Nashr etilgan"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track10
+#, fuzzy
+msgid "Raising qualitive insights from your customers"
+msgstr "Mijozlaringizdan sifatli ma'lumotlar olish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__rating_ids
+#, fuzzy
+msgid "Ratings"
+msgstr "Reytinglar"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage5
+#, fuzzy
+msgid "Ready for Next Stage"
+msgstr "Keyingi bosqichga tayyor"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
+#, fuzzy
+msgid "Red"
+msgstr "Qizil"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_blocked
+#, fuzzy
+msgid "Red Kanban Label"
+msgstr "Qizil kanban yorlig‘i"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage4
+#, fuzzy
+msgid "Refused"
+msgstr "Rad etilgan"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Regular Talks"
+msgstr "Odatiy ma'ruzalar"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+#, fuzzy
+msgid "Relative time compared to track start (seconds)"
+msgstr "Yo‘nalish boshlanishiga nisbatan vaqt (soniyalarda)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+#, fuzzy
+msgid "Remaining time before CTA starts (seconds)"
+msgstr "Chaqiruvga qolgan vaqt (soniyalarda)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+#, fuzzy
+msgid "Remaining time before track starts (seconds)"
+msgstr "Yo‘nalish boshlanishiga qolgan vaqt (soniyalarda)"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Responsible"
+msgstr "Mas'ul"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_user_id
+#, fuzzy
+msgid "Responsible User"
+msgstr "Mas'ul foydalanuvchi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_23
+#, fuzzy
+msgid "Restoring Old Woodworking Tools"
+msgstr "Eski yog‘ochga ishlov berish asboblarini tiklash"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_23
+#, fuzzy
+msgid "Restoring old woodworking tools"
+msgstr "Eski yog‘ochga ishlov berish asboblarini tiklash"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+#, fuzzy
+msgid "Right angle clamp jig"
+msgstr "To‘g‘ri burchakli qisqich moslamasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
+#, fuzzy
+msgid "SEO optimized"
+msgstr "SEO optimallashtirish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+#, fuzzy
+msgid "SMS Delivery error"
+msgstr "SMS yetkazib berishda xatolik"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+#, fuzzy
+msgid "Search a talk ..."
+msgstr "Ma'ruza qidirish..."
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_6
+#, fuzzy
+msgid "Securing your Lumber during transport"
+msgstr "Tashish vaqtida yog‘ochni mahkamlash"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form_tags.js:0
+#, fuzzy
+msgid "Select Categories"
+msgstr "Toifalarni tanlash"
+
+#. module: website_event_track
+#: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
+#, fuzzy
+msgid ""
+"Sent to speakers whose track proposal is accepted (set the template on the "
+"right stage)"
+msgstr ""
+"Yo‘nalish taklifi qabul qilingan ma'ruzachilarga yuborildi (shablonni "
+"to‘g‘ri bosqichga o‘rnating)"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+#, fuzzy
+msgid "Seo name"
+msgstr "SEO nomi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Set Favorite"
+msgstr "Sevimli qilib belgilash"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+#, fuzzy
+msgid "Show Button"
+msgstr "Tugmani ko‘rsatish"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Show all records whose next activity date is past"
+msgstr "Keyingi faoliyat sanasi o‘tgan barcha yozuvlarni ko‘rsatish"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+#, fuzzy
+msgid "Showcase Tracks"
+msgstr "Namoyish yo‘nalishlari"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Speaker"
+msgstr "Ma'ruzachi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "Speaker Bio"
+msgstr "Ma'ruzachi haqida"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+#, fuzzy
+msgid "Speaker Name"
+msgstr "Notiq nomi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+#, fuzzy
+msgid "Speaker Photo"
+msgstr "Notiq surati"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Speaker Profile"
+msgstr "Notiq profili"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, fuzzy
+msgid "Speakers"
+msgstr "Notiqlar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Stage"
+msgstr "Sahna"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#, fuzzy
+msgid "Stage Description and Tooltips"
+msgstr "Bosqich tavsifi va maslahatlar"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
+#, fuzzy
+msgid "Stage Name"
+msgstr "Bosqich nomi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+#, fuzzy
+msgid "Starting now!"
+msgstr "Hoziroq boshlanmoqda!"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track28
+#, fuzzy
+msgid "Status & Strategy"
+msgstr "Holat va strategiya"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
+#, fuzzy
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Faoliyatlarga asoslangan holat Muddati o‘tgan: Belgilangan sana allaqachon "
+"o‘tib ketgan Bugun: Faoliyat sanasi bugun Rejalashtirilgan: Kelajakdagi "
+"faoliyatlar."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Submission Agreement"
+msgstr "Taqdim etish kelishuvi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Submit Proposal"
+msgstr "Taklifni yuborish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
+#, fuzzy
+msgid "Tag Line"
+msgstr "Teg satri"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
+#, fuzzy
+msgid "Tag Name"
+msgstr "Teg nomi"
+
+#. module: website_event_track
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
+#, fuzzy
+msgid "Tag name already exists!"
+msgstr "Teg nomi allaqachon mavjud!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+#, fuzzy
+msgid "Tags"
+msgstr "Teglar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Talk Intro"
+msgstr "Ma'ruza kirish qismi"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid ""
+"Talk already in your Favorites. The page does not seem to be up-to-date and "
+"needs a refresh."
+msgstr ""
+"Ma'ruza allaqachon sevimlilaringiz ro‘yxatida. Sahifa yangilanmaganga "
+"o‘xshaydi va yangilanishi kerak."
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Talk removed from your Favorites"
+msgstr "Ma'ruza sevimlilaringiz ro‘yxatidan olib tashlandi"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+#, fuzzy
+msgid "Talks"
+msgstr "Ma'ruzalar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "Talks Types"
+msgstr "Ma'ruza turlari"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#, fuzzy
+msgid "Task in progress. Click to block or set as done."
+msgstr ""
+"Vazifa bajarilmoqda. Bloklash yoki bajarildi deb belgilash uchun bosing."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#, fuzzy
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr ""
+"Vazifa bloklangan. Blokdan chiqarish yoki bajarildi deb belgilash uchun "
+"bosing."
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, fuzzy
+msgid "Thank you for your proposal."
+msgstr "Taklifingiz uchun rahmat."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
+#, fuzzy
+msgid "The full absolute URL to access the document through the website."
+msgstr "Veb-sayt orqali hujjatga kirish uchun to‘liq mutlaq URL manzili."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_url
+#, fuzzy
+msgid "The full relative URL to access the document through the website."
+msgstr "Veb-sayt orqali hujjatga kirish uchun to‘liq nisbiy URL manzili."
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track17
+#: model:event.track,name:website_event_track.event_track29
+#, fuzzy
+msgid "The new marketing strategy"
+msgstr "Yangi marketing strategiyasi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track5
+#, fuzzy
+msgid "The new way to promote your creations"
+msgstr "Ijodiy ishlaringizni targ‘ib qilishning yangi usuli"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, fuzzy
+msgid ""
+"The start and end times of the talk were not specified when you asked to add "
+"them to your calendar, therefore the times indicated in this reminder "
+"correspond to those of the event."
+msgstr ""
+"Ma'ruzani taqvimingizga qo‘shishni so‘raganingizda boshlanish va tugash "
+"vaqtlari ko‘rsatilmagani sababli, ushbu eslatmada ko‘rsatilgan vaqtlar "
+"tadbir vaqtiga mos keladi."
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, fuzzy
+msgid "The talk has already begun."
+msgstr "Ma'ruza allaqachon boshlangan."
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, fuzzy
+msgid "The talk is already finished."
+msgstr "Ma'ruza allaqachon tugagan."
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+#, fuzzy
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
+msgstr ""
+"O‘rganishga arzigulik ko‘plab g‘oyalar mavjud, shuning uchun mutlaqo yangi "
+"boshlovchilar uchun o‘z qo‘li bilan yasaladigan 10 ta mebel g‘oyasidan "
+"boshlang."
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+#, fuzzy
+msgid ""
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
+msgstr ""
+"Dunyoda yog‘ochning ko‘plab turlari mavjud, ammo biz dunyodagi eng qimmat "
+"yog‘ochlar haqida gapiryapmiz va eng qimmat o‘nta yog‘ochni tartib bilan "
+"joylashtirdik."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"These are 30 minutes talks on many different topics. Most topics are "
+"accepted in lightning talks."
+msgstr ""
+"Bular turli xil mavzulardagi 30 daqiqalik ma'ruzalardir. Ko‘pchilik mavzular "
+"qisqa ma'ruzalarda qabul qilinadi."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "These are standard talks with slides, alocated in slots of 60 minutes."
+msgstr ""
+"Bular 60 daqiqalik slaydlar bilan taqdim etiladigan standart ma'ruzalardir."
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+#, fuzzy
+msgid ""
+"They will be created automatically once attendees start browsing your events."
+msgstr ""
+"Ishtirokchilar tadbirlaringizni ko‘zdan kechira boshlagach, ular avtomatik "
+"tarzda yaratiladi."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+#, fuzzy
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr ""
+"Bu maydon veb-saytda mobil ilova belgisi sifatida ishlatiladigan rasmni (PNG "
+"formatida) saqlaydi."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+#, fuzzy
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr "Bu maydonlar Tadbirning Progressive veb-ilovasi nomini saqlaydi."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+#, fuzzy
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr ""
+"Bu sahifa hali oflayn rejimda o‘qish uchun saqlanmagan.<br/>Iltimos, tarmoq "
+"aloqangizni tekshiring."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
+#, fuzzy
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Ushbu bosqichda ko‘rsatish uchun yozuvlar bo‘lmaganda, bu bosqich kanban "
+"ko‘rinishida yig‘ilgan holda bo‘ladi."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#, fuzzy
+msgid "This step is done. Click to block or set in progress."
+msgstr ""
+"Bu qadam bajarildi. Bloklash yoki jarayonda deb belgilash uchun bosing."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#, fuzzy
+msgid "This track does not have a description."
+msgstr "Bu trek tavsifga ega emas."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"Timely release of presentation material (slides),\n"
+"                            for publishing on our website."
+msgstr ""
+"Veb-saytimizda e'lon qilish uchun taqdimot materiallarini (slaydlarni) o‘z "
+"vaqtida chiqarish."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__name
+#, fuzzy
+msgid "Title"
+msgstr "Sarlavha"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Today Activities"
+msgstr "Bugungi faoliyatlar"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_22
+#, fuzzy
+msgid "Tools for the Woodworking Beginner"
+msgstr "Yog‘ochga ishlov berishni boshlovchilar uchun asboblar"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_5
+#, fuzzy
+msgid "Top 10 Most Expensive Wood in the World"
+msgstr "Dunyodagi eng qimmat 10 ta yog‘och"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+#, fuzzy
+msgid ""
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
+msgstr ""
+"Dunyodagi eng qimmat yog‘och juda qiziqarli mavzu bo‘lib, ko‘pchilik odamlar "
+"dunyoda turli xususiyatlarga ega va turli maqsadlarda ishlatiladigan yuzlab "
+"yog‘och turlari mavjudligidan hayratda qolishi mumkin."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "Track"
+msgstr "Trek"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+#, fuzzy
+msgid "Track / Visitor Link"
+msgstr "Trek / Tashrif buyuruvchi havolasi"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_blocked
+#, fuzzy
+msgid "Track Blocked"
+msgstr "Trek to‘xtatildi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
+#, fuzzy
+msgid "Track Count"
+msgstr "Treklar soni"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date
+#, fuzzy
+msgid "Track Date"
+msgstr "Trek sanasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+#, fuzzy
+msgid "Track End Date"
+msgstr "Trek tugash sanasi"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+#, fuzzy
+msgid "Track Locations"
+msgstr "Trek joylashuvlari"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+#, fuzzy
+msgid "Track Proposals Menu Item"
+msgstr "Trek takliflari menyu bandi"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_ready
+#, fuzzy
+msgid "Track Ready"
+msgstr "Trek tayyor"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_ready
+#, fuzzy
+msgid "Track Ready for Next Stage"
+msgstr "Trek keyingi bosqich uchun tayyor"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
+#, fuzzy
+msgid "Track Stage"
+msgstr "Trek bosqichi"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
+#: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+#, fuzzy
+msgid "Track Stages"
+msgstr "Trek bosqichlari"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+#, fuzzy
+msgid "Track Tag Categories"
+msgstr "Trek teg turkumlari"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+#, fuzzy
+msgid "Track Tag Category"
+msgstr "Trek teg turkumi"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
+#, fuzzy
+msgid "Track Tags"
+msgstr "Trek teglari"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+#, fuzzy
+msgid "Track Tags Category"
+msgstr "Trek teglari turkumi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+#, fuzzy
+msgid "Track Visitor"
+msgstr "Trek tashrif buyuruvchisi"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#, fuzzy
+msgid "Track Visitors"
+msgstr "Trek tashrif buyuruvchilari"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+#, fuzzy
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
+msgstr ""
+"Trek tashrif buyuruvchilari tadbirlaringiz haqida statistik ma'lumotlarni, "
+"jumladan treklarning necha marta istaklar ro‘yxatiga qo‘shilganini saqlaydi."
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_blocked
+#, fuzzy
+msgid "Track blocked"
+msgstr "Trek to‘xtatildi"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid "Track successfully added to your favorites."
+msgstr "Trek muvaffaqiyatli ravishda saralanganlarga qo‘shildi."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
+#, fuzzy
+msgid "Tracks"
+msgstr "Treklar"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+#, fuzzy
+msgid "Tracks Menu Item"
+msgstr "Treklar menyu bandi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
+#, fuzzy
+msgid "Tracks Proposals on Website"
+msgstr "Veb-saytdagi trek takliflari"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+#, fuzzy
+msgid ""
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
+msgstr ""
+"Treklar tadbirlar jadvalingizni belgilaydi. Ular suhbatlar, seminarlar yoki "
+"shunga o‘xshash har qanday faoliyat bo‘lishi mumkin."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
+#, fuzzy
+msgid "Tracks on Website"
+msgstr "Veb-saytdagi treklar"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+#, fuzzy
+msgid "Type of the exception activity on record."
+msgstr "Yozuvdagi istisno faoliyat turi."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#, fuzzy
+msgid "Unknown"
+msgstr "Noma'lum"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
+#, fuzzy
+msgid "Unpublished"
+msgstr "Nashr etilmagan"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+#, fuzzy
+msgid "Unread Messages"
+msgstr "O‘qilmagan xabarlar"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: code:addons/website_event_track/models/website_visitor.py:0
+#, fuzzy
+msgid "Unsupported 'Not In' operation on track wishlist visitors"
+msgstr ""
+"Trek istaklar ro‘yxati tashrif buyuruvchilariga nisbatan \"Ichida emas\" "
+"operatsiyasi qo‘llab-quvvatlanmaydi"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+#, fuzzy
+msgid ""
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
+msgstr ""
+"Qisqa yuk mashinasida UZUN yog‘ochlarni oson tashish uchun ushbu oddiy "
+"qadamlardan foydalaning.  Uzun taxtalarni yog‘och do‘konidan keyingi bosqich "
+"duradgorlik ustaxonasiga yoki ish joyiga osongina tashish uchun duradgorlik "
+"mahorati, bir juft taxta, mustahkam tasma va bir nechta burama mixdan "
+"foydalanaman, xolos."
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+#, fuzzy
+msgid ""
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
+msgstr ""
+"Bog‘lash tasmasi uchun noyob o‘rash usulidan foydalanish (elastik arqonlar "
+"EMAS!!!) yog‘ochni qiyin yoki murakkab tugunlarni bog‘lash va yechish "
+"zaruratisiz mahkam bog‘lash imkonini beradi."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+#, fuzzy
+msgid "View Track"
+msgstr "Trekni ko‘rish"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
+#, fuzzy
+msgid "Visible in agenda"
+msgstr "Kun tartibida ko‘rinadi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
+#, fuzzy
+msgid "Visible on current website"
+msgstr "Joriy veb-saytda ko‘rinadi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#, fuzzy
+msgid "Visitor"
+msgstr "Tashrif buyuruvchi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+#, fuzzy
+msgid "Visitor Wishlist"
+msgstr "Tashrif buyuruvchi istaklari ro‘yxati"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+#, fuzzy
+msgid "Visitors Wishlist"
+msgstr "Tashrif buyuruvchilar istaklari ro‘yxati"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_1
+#, fuzzy
+msgid "Voice from Customer"
+msgstr "Mijoz fikri"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+#, fuzzy
+msgid "Wait for visitors to add this track to their list of favorites"
+msgstr ""
+"Tashrif buyuruvchilar bu trekni o‘z saralangan ro‘yxatlariga qo‘shishini "
+"kuting"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+#, fuzzy
+msgid "We could not find any track at this moment."
+msgstr "Hozircha hech qanday trek topa olmadik."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+#, fuzzy
+msgid "We could not find any track matching your search for:"
+msgstr "Qidiruvingizga mos keladigan hech qanday trek topilmadi:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "We require speakers to accept an agreement in which they commit to:"
+msgstr ""
+"Biz ma'ruzachilardan quyidagi majburiyatlarni o‘z ichiga olgan kelishuvni "
+"qabul qilishlarini talab qilamiz:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"We will accept a broad range of\n"
+"                                presentations, from reports on academic and\n"
+"                                commercial projects to tutorials and case\n"
+"                                studies. As long as the presentation is\n"
+"                                interesting and potentially useful to the\n"
+"                                audience, it will be considered for\n"
+"                                inclusion in the programme."
+msgstr ""
+"Biz akademik va tijorat loyihalarining hisobotlaridan tortib, o‘quv "
+"qo‘llanmalari va amaliy misollargacha bo‘lgan keng ko‘lamli taqdimotlarni "
+"qabul qilamiz. Taqdimot tinglovchilar uchun qiziqarli va foydali bo‘lsa, u "
+"dasturga kiritish uchun ko‘rib chiqiladi."
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, fuzzy
+msgid "We will evaluate your proposition and get back to you shortly."
+msgstr "Taklifingizni baholab, tez orada sizga javob beramiz."
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#, fuzzy
+msgid "We will send you a link to add this talk to your agenda."
+msgstr "Bu ma'ruzani kun tartibingizga qo‘shish uchun sizga havola yuboramiz."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "We're sorry, this event does not accept proposals anymore"
+msgstr "Uzr, bu tadbir endi takliflarni qabul qilmaydi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+#, fuzzy
+msgid "Website"
+msgstr "Veb-sayt"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_absolute_url
+#, fuzzy
+msgid "Website Absolute URL"
+msgstr "Veb-saytning to‘liq URL manzili"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+#, fuzzy
+msgid "Website App Icon"
+msgstr "Veb-sayt ilovasi ikonkasi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_event_menu
+#, fuzzy
+msgid "Website Event Menu"
+msgstr "Veb-sayt tadbiri menyusi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+#, fuzzy
+msgid "Website Image"
+msgstr "Veb-sayt rasmi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+#, fuzzy
+msgid "Website Menu"
+msgstr "Veb-sayt menyusi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
+#, fuzzy
+msgid "Website Messages"
+msgstr "Veb-sayt xabarlari"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
+#, fuzzy
+msgid "Website URL"
+msgstr "Veb-sayt URL manzili"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+#, fuzzy
+msgid "Website Visitor"
+msgstr "Veb-sayt tashrif buyuruvchisi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
+#, fuzzy
+msgid "Website communication history"
+msgstr "Veb-sayt aloqa tarixi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
+#, fuzzy
+msgid "Website meta description"
+msgstr "Veb-sayt meta-tavsifi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
+#, fuzzy
+msgid "Website meta keywords"
+msgstr "Veb-sayt meta kalit so‘zlari"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
+#, fuzzy
+msgid "Website meta title"
+msgstr "Veb-sayt meta sarlavhasi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+#, fuzzy
+msgid "Website opengraph image"
+msgstr "Veb-saytning ochilish rasmi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_10
+#, fuzzy
+msgid "Welcome to Day 2"
+msgstr "2-kunga xush kelibsiz"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_1
+#, fuzzy
+msgid "What This Event Is All About"
+msgstr "Bu tadbir nimaga bag‘ishlangan"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid "What is your talk about?"
+msgstr "Ma'ruzangiz nima haqida?"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#, fuzzy
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
+msgstr ""
+"Bu ma'ruzani kim o‘tadi? Sizning nutqingizni targ‘ib qilish uchun buni "
+"ishtirokchilarga ko‘rsatamiz."
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_2
+#, fuzzy
+msgid "Who's OpenWood anyway?"
+msgstr "OpenWood aslida kim?"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "Wishlisted By"
+msgstr "Istaklar ro‘yxatiga qo‘shgan"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+#, fuzzy
+msgid "Wishlisted Tracks"
+msgstr "Istaklar ro‘yxatidagi yo‘nalishlar"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/website_builder/event_track_page_option.xml:0
+#, fuzzy
+msgid "Wishlists"
+msgstr "Istaklar ro‘yxati"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_7
+#, fuzzy
+msgid "Woodworking: How I got started!"
+msgstr "Duradgorlik: Qanday boshlaganman!"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form.js:0
+#, fuzzy
+msgid "You cannot access this page."
+msgstr "Bu sahifaga kira olmaysiz."
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+#, fuzzy
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
+msgstr ""
+"Sevimli yo‘nalishlaringiz haqida eslatmalar olish uchun push-"
+"bildirishnomalarni yoqishingiz kerak."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+#, fuzzy
+msgid "You're offline!"
+msgstr "Siz tarmoqqa ulanmagansiz!"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#, fuzzy
+msgid "a few seconds"
+msgstr "bir necha soniya"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+#, fuzzy
+msgid "ago"
+msgstr "oldin"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "e.g. \"John Doe was born in...\""
+msgstr "masalan, \"Jon Dou ... yilda tug‘ilgan\""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
+#, fuzzy
+msgid "e.g. \"Main Conference Room\""
+msgstr "masalan, \"Asosiy konferensiya zali\""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "e.g. \"This talk will be about...\""
+msgstr "masalan, \"Bu ma'ruza ... haqida bo‘ladi\""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "e.g. Get Yours Now!"
+msgstr "masalan, Hoziroq o‘zingiznikini oling!"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "e.g. Inspiring Business Talk"
+msgstr "masalan, Ilhomlanarli biznes suhbati"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "e.g. http://www.example.com"
+msgstr "masalan, http://www.example.com"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+#, fuzzy
+msgid "hours"
+msgstr "soat"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, fuzzy
+msgid "id"
+msgstr "id"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_timer.js:0
+#, fuzzy
+msgid "in %s"
+msgstr "%s da"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, fuzzy
+msgid "minutes after Track start"
+msgstr "Yo‘nalish boshlanganidan keyin ... daqiqa"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#, fuzzy
+msgid "starts in"
+msgstr "da boshlanadi"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#, fuzzy
+msgid "starts on"
+msgstr "da boshlanadi"
+
+#, fuzzy
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Bosh sahifa</a>"
+
+#, fuzzy
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "Tayyorlaning va <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
+#~ "track' % (slug(event))\">sevimli ma'ruzalaringizga hoziroq ro‘yxatdan "
+#~ "o‘ting.</a>"

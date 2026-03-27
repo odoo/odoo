@@ -4,23 +4,24 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2025-09-16 04:38+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-20 21:55+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "base_import/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural="
+"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 "
+": n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base_import
 #. odoo-javascript
@@ -163,8 +164,8 @@ msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: %"
 "(error)s"
 msgstr ""
-"Столбец %(column)s содержит неверные значения. Ошибка в строке %(line)d: "
-"%(error)s"
+"Столбец %(column)s содержит неверные значения. Ошибка в строке %(line)d: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -189,8 +190,8 @@ msgstr "Комментарии"
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"Не удалось получить URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Не удалось получить URL: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -315,8 +316,8 @@ msgid ""
 "(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Ошибка при импорте записей: все строки должны быть одинакового размера, но в "
-"заглавной строке содержится %(title_row_entries)d записей, а в первой - "
-"%(first_row_entries)d. Возможно, необходимо изменить символ-разделитель."
+"заглавной строке содержится %(title_row_entries)d записей, а в первой - %"
+"(first_row_entries)d. Возможно, необходимо изменить символ-разделитель."
 
 #. module: base_import
 #. odoo-javascript
@@ -348,7 +349,7 @@ msgstr "Внешний ID"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Field '%(field)s' does not accept date/time values."
-msgstr ""
+msgstr "Поле «%(field)s» не принимает значения даты/времени."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -521,7 +522,7 @@ msgstr "Импорт записей"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Imported records"
-msgstr ""
+msgstr "Импортированные записи"
 
 #. module: base_import
 #. odoo-javascript
@@ -536,9 +537,9 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"Недопустимый формат ячейки в строке %(row)s, столбце %(col)s: %(cell_value)"
-"s, с форматом: %(cell_format)s, так как формат (%(format_type)s) не "
-"поддерживается."
+"Недопустимый формат ячейки в строке %(row)s, столбце %(col)s: %"
+"(cell_value)s, с форматом: %(cell_format)s, так как формат (%(format_type)s) "
+"не поддерживается."
 
 #. module: base_import
 #. odoo-python
@@ -641,7 +642,8 @@ msgstr "Пожалуйста, загрузите один файл."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
-msgstr "Пожалуйста, загрузите файл Excel (.xls или .xlsx) или .csv для импорта."
+msgstr ""
+"Пожалуйста, загрузите файл Excel (.xls или .xlsx) или .csv для импорта."
 
 #. module: base_import
 #. odoo-javascript
@@ -817,6 +819,26 @@ msgid "The file will be imported by batches"
 msgstr "Файл будет импортироваться партиями"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+"Возникла проблема при декодировании файла с кодировкой «%s».\n"
+"Эта кодировка была определена автоматически."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+"Возникла проблема при декодировании файла с кодировкой «%s».\n"
+"Эта кодировка была выбрана вручную."
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -943,6 +965,8 @@ msgid ""
 "You can not import file via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Вы не можете импортировать файл по URL-адресу. Обратитесь к администратору "
+"или в службу поддержки, чтобы узнать причину."
 
 #. module: base_import
 #. odoo-javascript

@@ -1445,7 +1445,6 @@ test(`create event with timezone in week mode European locale`, async () => {
             </calendar>
         `,
     });
-
     await selectTimeRange("2016-12-13 08:00:00", "2016-12-13 10:00:00");
     expect(`.fc-event-main .fc-event-time`).toHaveText("08:00 - 10:00");
 
@@ -1458,6 +1457,23 @@ test(`create event with timezone in week mode European locale`, async () => {
     await contains(`.o_cw_popover_delete`).click();
     await contains(`.modal button.btn-primary`).click();
     expect(`.fc-event-main`).toHaveCount(0);
+});
+
+test(`create multi day event in week mode`, async () => {
+    mockTimeZone(2);
+
+    patchWithCleanup(CalendarCommonRenderer.prototype, {
+        get options() {
+            return { ...super.options, selectAllow: () => true };
+        },
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+    });
+    await selectTimeRange("2016-12-13 11:00:00", "2016-12-14 16:00:00");
+    expect(`.fc-event-main .fc-event-time`).toHaveText("11:00 - 16:00");
 });
 
 test(`default week start (US)`, async () => {
@@ -2144,15 +2160,15 @@ test(`set filter with many2many field on desktop`, async () => {
     });
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 });
 
 test.tags("mobile");
@@ -2176,15 +2192,60 @@ test(`set filter with many2many field on mobile`, async () => {
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     await contains(`.o_filter`).click();
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
+});
+
+test.tags("desktop");
+test("many2many filter handles archived records without crashing on desktop", async () => {
+    CalendarPartner._fields.active = fields.Boolean({ default: true });
+    CalendarPartner._records.push({
+        id: 99,
+        name: "Joni",
+        active: false,
+    });
+    Event._records[0].attendee_ids = [99];
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_calendar_filter_item`).toHaveCount(4);
+});
+
+test.tags("mobile");
+test("many2many filter handles archived records without crashing on mobile", async () => {
+    CalendarPartner._fields.active = fields.Boolean({ default: true });
+    CalendarPartner._records.push({
+        id: 99,
+        name: "Joni",
+        active: false,
+    });
+    Event._records[0].attendee_ids = [99];
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    await contains(`.o_filter`).click();
+    expect(`.o_calendar_filter_item`).toHaveCount(4);
 });
 
 test.tags("desktop");
@@ -2206,15 +2267,15 @@ test(`set filter with one2many field on desktop`, async () => {
     });
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 });
 
 test.tags("mobile");
@@ -2238,15 +2299,15 @@ test(`set filter with one2many field on mobile`, async () => {
     expect(`.o_calendar_filter_item`).toHaveCount(5);
     await contains(`.o_filter`).click();
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(1);
 
     await toggleSectionFilter("attendee_ids");
     expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 
     await toggleFilter("attendee_ids", "1");
-    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
-    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="5"] .fc-event-main`).toHaveCount(0);
 });
 
 test(`open form view`, async () => {

@@ -75,4 +75,11 @@ export class ChatBubble extends Component {
     get thread() {
         return this.props.chatWindow.thread;
     }
+
+    get showImStatus() {
+        return (
+            this.thread?.correspondent?.im_status &&
+            this.thread.correspondent.im_status !== "offline"
+        );
+    }
 }

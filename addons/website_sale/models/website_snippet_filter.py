@@ -128,6 +128,10 @@ class WebsiteSnippetFilter(models.Model):
                     # factorize and avoid computing the rest
                     if product.is_product_variant:
                         res_product.update(product._get_combination_info_variant())
+                    elif hide_variants:
+                        res_product.update(product._get_combination_info(only_template=True))
+                        # Re-add product_id since it is set to false and required by some tests
+                        res_product['product_id'] = product.product_variant_id.id
                     else:
                         res_product.update(product._get_combination_info())
 
@@ -157,7 +161,7 @@ class WebsiteSnippetFilter(models.Model):
         else:  # Only top-level categories
             categories = CategorySudo.search(domain & Domain('parent_id', '=', False))
 
-        base_url = request.website.get_base_url()
+        base_url = CategorySudo.get_base_url()
         default_img_path = request.env['product.template']._get_product_placeholder_filename()
         default_img_url = f'{base_url}/{default_img_path}'
         return [{
@@ -173,7 +177,7 @@ class WebsiteSnippetFilter(models.Model):
     @api.model
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get('dynamic_filter')
-        handler = getattr(self, '_get_products_%s' % mode, self._get_products_latest_sold)
+        handler = getattr(self.sudo(False), '_get_products_%s' % mode, self.sudo(False)._get_products_latest_sold)
         website = self.env['website'].get_current_website()
         search_domain = self.env.context.get('search_domain')
         limit = self.env.context.get('limit')

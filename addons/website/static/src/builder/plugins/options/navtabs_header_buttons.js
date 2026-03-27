@@ -14,7 +14,7 @@ export class NavTabsHeaderMiddleButtons extends Component {
             const navEl = editingElement.querySelector(".nav");
             return {
                 tabEls: navEl.querySelectorAll(".nav-item"),
-            }
+            };
         });
 
         this.callOperation = useOperation();

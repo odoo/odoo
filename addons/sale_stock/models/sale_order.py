@@ -255,7 +255,7 @@ class SaleOrder(models.Model):
             if sale_order.state == 'sale' and sale_order.order_line:
                 sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
                 documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
-        self.picking_ids.filtered(lambda p: p.state != 'done').action_cancel()
+        self.picking_ids.filtered(lambda p: p.state != 'done').with_context(skip_cancel_activity=True).action_cancel()
         if documents:
             filtered_documents = {}
             for (parent, responsible), rendering_context in documents.items():
@@ -289,13 +289,16 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_reference_ids=self.stock_reference_ids[:-1].id)
+        action['context'] = dict(
+            default_partner_id=self.partner_id.id,
+            default_picking_type_id=picking_id.picking_type_id.id,
+        )
         return action
 
     def _prepare_invoice(self):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
         invoice_vals['invoice_incoterm_id'] = self.incoterm.id
-        invoice_vals['delivery_date'] = self.effective_date
+        invoice_vals['delivery_date'] = self.effective_date and fields.Datetime.context_timestamp(self, self.effective_date)
         return invoice_vals
 
     def _log_decrease_ordered_quantity(self, documents, cancel=False):
@@ -320,12 +323,14 @@ class SaleOrder(models.Model):
     def _is_display_stock_in_catalog(self):
         return True
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _add_reference(self, reference):
-        """ link the given reference to the list of references. """
+        """ link the given references to the list of references. """
         self.ensure_one()
-        self.stock_reference_ids = [Command.link(reference.id)]
+        self.stock_reference_ids = [Command.link(stock_reference.id) for stock_reference in reference]
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _remove_reference(self, reference):
-        """ remove the given reference to the list of references. """
+        """ remove the given references from the list of references. """
         self.ensure_one()
-        self.stock_reference_ids = [Command.unlink(reference.id)]
+        self.stock_reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]

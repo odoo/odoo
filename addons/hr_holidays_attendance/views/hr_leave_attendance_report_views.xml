@@ -5,7 +5,7 @@
         <field name="name">hr.leave.attendance.report.list</field>
         <field name="model">hr.leave.attendance.report</field>
         <field name="arch" type="xml">
-            <list sample="1">
+            <list sample="1" default_order="date desc">
                 <field name="employee_id"/>
                 <field name="date"/>
                 <field name="schedule_id" optional="hide"/>

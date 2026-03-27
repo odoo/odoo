@@ -80,6 +80,29 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SplitBillScreenTourPay", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Split pay by selecting products
+            FloorScreen.clickTable("4"),
+            ProductScreen.addOrderline("Water"),
+            ProductScreen.addOrderline("Minute Maid"),
+            ProductScreen.clickControlButton("Split"),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickContinueOrder(),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickOrderline("Minute Maid"),
+            SplitBillScreen.clickButton("Pay"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("SplitBillScreenTour2", {
     steps: () =>
         [
@@ -267,5 +290,55 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SplitBillScreenTourTransfer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("2"),
+            ProductScreen.addOrderline("Water", "5", "2", "10.0"),
+            ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
+            ProductScreen.addOrderline("Coca-Cola", "1", "2", "2.0"),
+            ProductScreen.clickControlButton("Discount"),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("discount", 1, "-1.80"),
+            ProductScreen.clickControlButton("Split"),
+
+            // Check if the screen contains all the orderlines
+            SplitBillScreen.orderlineHas("Water", "5", "0"),
+            SplitBillScreen.orderlineHas("Minute Maid", "3", "0"),
+            SplitBillScreen.orderlineHas("Coca-Cola", "1", "0"),
+            Order.doesNotHaveLine({ productName: "Discount" }),
+
+            // split 3 water and 1 coca-cola
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.orderlineHas("Water", "5", "1"),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.clickOrderline("Water"),
+            SplitBillScreen.orderlineHas("Water", "5", "3"),
+            SplitBillScreen.subtotalIs("6.0"),
+            SplitBillScreen.clickOrderline("Coca-Cola"),
+            SplitBillScreen.orderlineHas("Coca-Cola", "1", "1"),
+            SplitBillScreen.subtotalIs("8.0"),
+
+            // click pay to split, go back to check the lines
+            SplitBillScreen.clickButton("Transfer"),
+            FloorScreen.clickTable("5"),
+
+            Order.doesNotHaveLine({ productName: "Discount" }),
+            ProductScreen.totalAmountIs("8.0"),
+            ProductScreen.clickOrderline("Water", "3"),
+            ProductScreen.clickOrderline("Coca-Cola", "1"),
+
+            // go back to the original order and see if the order is changed
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.isShown(),
+            ProductScreen.clickOrderline("Water", "2"),
+            ProductScreen.clickOrderline("Minute Maid", "3"),
         ].flat(),
 });

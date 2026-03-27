@@ -3,13 +3,15 @@
 # * event_product
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-17 17:30+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-17 17:22+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "event_product/fr/>\n"
 "Language: fr\n"
@@ -46,11 +48,22 @@ msgid "Description"
 msgstr "Description"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_product__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_template__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: event_product
 #: model:ir.model,name:event_product.model_event_event
 msgid "Event"
 msgstr "Événement"
 
 #. module: event_product
+#: model:ir.model,name:event_product.model_event_registration
 #: model:ir.model.fields.selection,name:event_product.selection__product_template__service_tracking__event
 msgid "Event Registration"
 msgstr "Inscription à l'événement"
@@ -79,6 +92,27 @@ msgstr "Ticket d'événement"
 #: model:ir.model.fields,field_description:event_product.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Tickets d'événement"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__free
+msgid "Free"
+msgstr "Gratuit"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__id
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_event_registration__id
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_product_product__id
+#: model:ir.model.fields,field_description:event_product.field_product_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr "Non vendu"
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
@@ -115,6 +149,21 @@ msgid "Product Variant"
 msgstr "Variante de produit"
 
 #. module: event_product
+#. odoo-python
+#: code:addons/event_product/models/product_product.py:0
+msgid ""
+"Products linked to an event ticket must have \"%(tracking)s\" set to \"%"
+"(event)s\"."
+msgstr ""
+"Les produits associés à un ticket d’événement doivent avoir \"%(tracking)s\" "
+"défini sur \"%(event)s\"."
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "Statut de la vente"
+
+#. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales End"
 msgstr "Fin des ventes"
@@ -123,3 +172,14 @@ msgstr "Fin des ventes"
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales Start"
 msgstr "Début des ventes"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Sold"
+msgstr "Vendu"
+
+#. module: event_product
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Transaction"
+msgstr "Transaction"

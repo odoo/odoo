@@ -186,6 +186,24 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
+    def test_dynamic_svg_theme_colors(self):
+        svg = (
+            '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10">'
+            '<rect width="10" height="4" fill="#3AADAA"/>'
+            '<rect y="4" width="10" height="4" fill="#7C6576"/>'
+            '<rect y="8" width="10" height="2" fill="#000000"/>'
+            '</svg>'
+        )
+        self.env['ir.attachment'].create({
+            'name': 'dynamic svg test',
+            'type': 'binary',
+            'mimetype': 'image/svg+xml',
+            'datas': base64.b64encode(svg.encode()),
+            'public': True,
+            'url': '/html_editor/shape/illustration/dynamic-svg-test',
+        })
+        self.start_tour("/", 'website_dynamic_svg_theme_colors', login='admin')
+
     def test_code_editor_usable(self):
         # TODO: enable debug mode when failing tests have been fixed (props validation)
         url = '/odoo/action-website.website_preview'
@@ -283,7 +301,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'language_ids': [(6, 0, [self.env.ref('base.lang_en').id, parseltongue.id])],
             'default_lang_id': parseltongue.id,
         })
-        self.env['website'].create({
+        website_3 = self.env['website'].create({
             'name': 'website fu_GB',
             'language_ids': [Command.set([fake_user_lang.id])],
             'default_lang_id': fake_user_lang.id,
@@ -291,7 +309,9 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
         self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
         self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
-        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_switching_website', login='admin')
+        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_switching_website', login='admin', cookies={
+            'websiteIdMapping': json.dumps({website_3.name: website_3.id})
+        })
         self.start_tour(f"/website/force/{website.id}", 'snippet_dialog_rtl', login='admin')
 
 
@@ -441,12 +461,16 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
-                <section class="s_text_block" data-snippet="s_text_block">
-                    <div class="custom_snippet_website_1">Custom Snippet Website 1</div>
+                <section class="s_carousel carousel slide" data-snippet="s_carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="custom_snippet_website_1">Custom Snippet Website 1</div>
+                        </div>
+                    </div>
                 </section>
             """,
             thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
-            snippet_key='s_text_block',
+            snippet_key='s_carousel',
             template_key='website.snippets')
         self.start_tour('/@/', 'snippet_cache_across_websites', login='admin', cookies={
             'websiteIdMapping': json.dumps({'Test Website': website.id})
@@ -687,3 +711,43 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_create_missing_page(self):
         self.start_tour("/", "create_missing_page", login="admin")
+
+    def test_hiding_sidebar_header(self):
+        self.start_tour("/", "hide_sidebar_header", login="admin")
+
+    def test_website_edit_megamenu_visibility(self):
+        self.start_tour("/", 'edit_megamenu_visibility', login='admin')
+
+    def test_alt_a_edit(self):
+        lang_en = self.env.ref('base.lang_en')
+        self.env.ref('website.default_website').write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [Command.link(lang_en.id)],
+        })
+        self.start_tour('/', 'alt_a_edit', login='admin')
+
+    def add_fr_language_to_website(self):
+        lang_en = self.env.ref('base.lang_en')
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env['res.lang']._activate_lang(lang_fr.code)
+        self.env.ref('website.default_website').write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [Command.link(lang_en.id), Command.link(lang_fr.id)],
+        })
+
+    def test_alt_a_with_foreign_language(self):
+        self.add_fr_language_to_website()
+        self.start_tour('/', 'alt_a_translation', login='admin')
+
+    def test_alt_a_not_on_foreign_language_page(self):
+        self.add_fr_language_to_website()
+        # It should go in edit mode if we are not on the FR page even if FR is
+        # available
+        self.start_tour('/', 'alt_a_edit', login='admin')
+
+    def test_mega_footer(self):
+        self.start_tour('/', 'mega_footer', login='admin')
+
+    def test_anchor_on_accordion_item(self):
+        self.start_tour("/", "anchor_behaviour_on_accordion_same_tab", login="admin")
+        self.start_tour("/#What-services-does-your-company-offer-%3F", "anchor_behaviour_on_accordion_new_tab", login="admin")

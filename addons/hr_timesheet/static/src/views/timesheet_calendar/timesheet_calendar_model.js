@@ -16,19 +16,6 @@ export class TimesheetCalendarModel extends TimesheetCalendarMyTimesheetsModel {
             });
             return;
         }
-        const records = await super.multiCreateRecords(multiCreateData, dates);
-        if (records.length) {
-            this.notification.add(_t("Timesheets successfully created"), {
-                type: "success",
-            });
-        } else {
-            this.notification.add(
-                _t("Timesheets could not be created for any of the selected days"),
-                {
-                    type: "danger",
-                }
-            );
-        }
-        return records;
+        return await super.multiCreateRecords(multiCreateData, dates);
     }
 }

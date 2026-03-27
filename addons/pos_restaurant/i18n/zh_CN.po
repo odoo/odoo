@@ -9,13 +9,15 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2025-09-16 15:28+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-01-05 04:32+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/pos_restaurant/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -23,7 +25,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid " and $1"
+msgstr " 和 $1"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "% discount"
+msgstr "% 折扣"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "%s, sent to the kitchen"
+msgstr "%s，已送至厨房"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -32,18 +52,13 @@ msgid "/ Guest"
 msgstr "/ 访客"
 
 #. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 约翰 4位"
-
-#. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
 msgid ""
 "200G Irish Black Angus beef, 9-month matured cheddar cheese, shredded "
 "iceberg lettuce, caramelised onions, crushed tomatoes and Chef’s sauce."
-msgstr "200 克爱尔兰黑安格斯牛肉、9 "
-"个月熟成的车打芝士、切丝卷心生菜、焦糖洋葱、番茄碎和厨师酱汁。"
+msgstr ""
+"200 克爱尔兰黑安格斯牛肉、9 个月熟成的车打芝士、切丝卷心生菜、焦糖洋葱、番茄"
+"碎和厨师酱汁。"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_bacon_product_template
@@ -51,9 +66,9 @@ msgid ""
 "200G Irish Black Angus beef, caramelized onions with paprika, chopped "
 "iceberg salad, red onions, grilled bacon, tomato sauce, pickles, barbecue "
 "sauce"
-msgstr "200 "
-"克爱尔兰黑安格斯牛肉、焦糖红辣椒洋葱、切碎冰山沙拉、红洋葱、烤培根、番茄酱、"
-"泡菜、烤肉酱"
+msgstr ""
+"200 克爱尔兰黑安格斯牛肉、焦糖红辣椒洋葱、切碎冰山沙拉、红洋葱、烤培根、番茄"
+"酱、泡菜、烤肉酱"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -184,6 +199,7 @@ msgstr "分配"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "回退"
@@ -423,7 +439,7 @@ msgstr "直接销售"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Discard"
 msgstr "丢弃"
 
@@ -673,7 +689,7 @@ msgstr "如果失败，表单将会在POS失效"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid ""
 "It seems that the order has not been sent. Would you like to send it to "
 "preparation?"
@@ -868,9 +884,7 @@ msgstr "选项"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Order"
 msgstr "订单"
 
@@ -1156,6 +1170,13 @@ msgstr "选择点菜单要转移至的餐桌"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Select the table first or after registering the order"
 msgstr "先选择餐桌，或在注册订单后选择"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Send"
+msgstr "发送"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1483,7 +1504,7 @@ msgstr "伏特加 42 以下、青柠、糖、姜汁啤酒"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Warning !"
 msgstr "警告！"
 
@@ -1516,6 +1537,12 @@ msgstr "白朗姆酒、糖、酸橙汁、苏打水和薄荷。"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
 msgid "Width"
 msgstr "宽度"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "With"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1591,6 +1618,12 @@ msgstr "______________________________________________"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "e.g. John"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
 msgstr "项目"
@@ -1600,6 +1633,9 @@ msgstr "项目"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
 msgstr "产品已选择"
+
+#~ msgid "18:45 John 4P"
+#~ msgstr "18:45 约翰 4位"
 
 #~ msgid "Add"
 #~ msgstr "添加"

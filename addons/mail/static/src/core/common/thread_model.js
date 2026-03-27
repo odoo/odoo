@@ -189,6 +189,8 @@ export class Thread extends Record {
             }
         },
     });
+    /** @type {Boolean|undefined} */
+    has_mail_thread;
     message_main_attachment_id = fields.One("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
@@ -246,6 +248,8 @@ export class Thread extends Record {
     /** @type {String|undefined} */
     primary_email_field;
     hasLoadingFailed = false;
+    /** @type {Error} */
+    hasLoadingFailedError;
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;
@@ -313,6 +317,10 @@ export class Thread extends Record {
         );
     }
 
+    get canPostMessage() {
+        return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
+    }
+
     /**
      * Return the name of the given persona to display in the context of this
      * thread.
@@ -321,7 +329,7 @@ export class Thread extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return persona.displayName || persona.name;
+        return persona?.displayName || persona?.name;
     }
 
     get hasAttachmentPanel() {
@@ -350,6 +358,13 @@ export class Thread extends Record {
 
     get allowDescription() {
         return ["channel", "group"].includes(this.channel_type);
+    }
+
+    get fullNameWithParent() {
+        const text = this.parent_channel_id
+            ? `${this.parent_channel_id.displayName} > ${this.displayName}`
+            : this.displayName;
+        return text;
     }
 
     get isTransient() {
@@ -454,9 +469,11 @@ export class Thread extends Record {
         let res;
         try {
             res = await this.fetchMessagesData({ after, around, before });
+            this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
         } catch (e) {
             this.hasLoadingFailed = true;
+            this.hasLoadingFailedError = e;
             this.isLoaded = true;
             this.status = "ready";
             throw e;

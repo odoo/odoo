@@ -51,6 +51,7 @@ class AccountJournal(models.Model):
                       SELECT id, company_id
                         FROM account_bank_statement
                        WHERE journal_id = journal.id
+                         AND first_line_index IS NOT NULL
                     ORDER BY first_line_index DESC
                        LIMIT 1
                    ) statement ON TRUE
@@ -203,6 +204,10 @@ class AccountJournal(models.Model):
                 journal.has_unhashed_entries = False
 
     def _compute_has_entries(self):
+        if not self.ids:
+            self.has_posted_entries = False
+            self.has_entries = False
+            return
         sql_query = SQL(
             """
                        SELECT j.id,
@@ -403,7 +408,7 @@ class AccountJournal(models.Model):
             dashboard_data[journal.id] = {
                 'currency_id': journal.currency_id.id or journal.company_id.sudo().currency_id.id,
                 'show_company': len(self.env.companies) > 1 or journal.company_id.id != self.env.company.id,
-                'company_name': journal.company_id.name,
+                'company_name': journal.company_id.sudo().name,
             }
         self._fill_bank_cash_dashboard_data(dashboard_data)
         self._fill_sale_purchase_dashboard_data(dashboard_data)
@@ -522,6 +527,11 @@ class AccountJournal(models.Model):
                 'image': '/account/static/src/img/bank.svg' if journal.type in ('bank', 'credit') else '/web/static/img/rfq.svg',
                 'text': _('Drop to import transactions'),
             }
+            last_statement_visible = (
+                not journal.company_id.fiscalyear_lock_date
+                or journal.last_statement_id.date
+                and journal.company_id.fiscalyear_lock_date < journal.last_statement_id.date
+            )
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -534,6 +544,8 @@ class AccountJournal(models.Model):
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(journal.last_statement_id.balance_end_real),
                 'last_statement_id': journal.last_statement_id.id,
+                'last_statement_visible': last_statement_visible,
+                'has_invalid_statements': journal.has_invalid_statements,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
                 'nb_misc_operations': number_misc,
@@ -742,7 +754,7 @@ class AccountJournal(models.Model):
             ('journal_id', 'in', self.ids),
             ('checked', '=', False),
             ('state', '=', 'posted'),
-        ])
+        ], bypass_access=True)
         selects = [
             SQL("journal_id"),
             SQL("company_id"),
@@ -798,6 +810,7 @@ class AccountJournal(models.Model):
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
                               AND company_id = ANY(%s)
+                              AND first_line_index IS NOT NULL
                          ORDER BY date DESC, id DESC
                             LIMIT 1
                    ) statement ON TRUE
@@ -912,23 +925,26 @@ class AccountJournal(models.Model):
                 journal_types=', '.join(journal_types),
             )
 
+    @api.model
+    def is_sample_action_available(self):
+        """Used to hide 'try our sample' when demo data is not installed."""
+        return bool(self.env.ref('base.res_partner_2', raise_if_not_found=False))
+
     def action_create_vendor_bill(self):
         """ This function is called by the "try our sample" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
         """
         context = dict(self.env.context)
         purchase_journal = self.browse(context.get('default_journal_id')) or self.search([('type', '=', 'purchase')], limit=1)
+        partner = self.env.ref('base.res_partner_2', raise_if_not_found=False)
         if not purchase_journal:
             raise UserError(self._build_no_journal_error_msg(self.env.company.display_name, ['purchase']))
+        if not partner:
+            raise UserError(_('You may only use samples in demo mode, try uploading one of your invoices instead.'))
         context['default_move_type'] = 'in_invoice'
         invoice_date = fields.Date.today() - timedelta(days=12)
-        partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
+        partner = self.env.ref('base.res_partner_2', raise_if_not_found=False)
         company = purchase_journal.company_id
-        if not partner:
-            partner = self.env['res.partner'].create({
-                'name': 'Deco Addict',
-                'is_company': True,
-            })
         default_expense_account = company.expense_account_id
         ref = 'DE%s' % invoice_date.strftime('%Y%m')
         bill = self.env['account.move'].with_context(default_extract_state='done').create({
@@ -1114,6 +1130,10 @@ class AccountJournal(models.Model):
                 'search_default_date_between': True
             }
         return action
+
+    def open_invalid_statements_action(self):
+        self.ensure_one()
+        return self.env["ir.actions.act_window"]._for_xml_id('account.action_bank_statement_tree')
 
     def _show_sequence_holes(self, domain):
         return {

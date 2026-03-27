@@ -1,14 +1,22 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
-import { DynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_option";
 
 export class DynamicSnippetEventsOption extends BaseOptionComponent {
     static template = "website_event.DynamicSnippetEventsOption";
-    static props = {
-        ...DynamicSnippetOption.props,
-    };
+    static dependencies = ["dynamicSnippetEventsOption"];
+    static selector = ".s_event_upcoming_snippet";
     setup() {
         super.setup();
-        this.dynamicOptionParams = useDynamicSnippetOption(this.props.modelNameFilter);
+        const { getModelNameFilter } = this.dependencies.dynamicSnippetEventsOption;
+        this.dynamicOptionParams = useDynamicSnippetOption(getModelNameFilter());
+        this.templateKeyState = useDomState((el) => ({
+            templateKey: el.dataset.templateKey,
+        }));
+    }
+    showCoverImage() {
+        return (
+            this.templateKeyState.templateKey ===
+            "website_event.dynamic_filter_template_event_event_single_aside"
+        );
     }
 }

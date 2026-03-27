@@ -1,6 +1,19 @@
-import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
-import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    animationFrame,
+    click,
+    edit,
+    expect,
+    mockDate,
+    mockTimeZone,
+    press,
+    queryAllTexts,
+    queryFirst,
+    queryOne,
+    scroll,
+    test,
+    waitFor,
+} from "@odoo/hoot";
 import {
     assertDateTimePicker,
     getPickerCell,
@@ -59,6 +72,45 @@ test("toggle datepicker", async () => {
 
     await fieldInput("char_field").click();
     expect(".o_datetime_picker").toHaveCount(0);
+});
+
+test("datepicker is automatically closed after selecting a value", async () => {
+    Partner._onChanges.date = () => {};
+    const def = new Deferred();
+    onRpc("onchange", () => def);
+
+    await mountView({ type: "form", resModel: "res.partner", resId: 1 });
+
+    expect(".o_datetime_picker").toHaveCount(0);
+    await contains(".o_field_date button").click();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    await contains(getPickerCell(22)).click();
+    await animationFrame();
+    // The picker shouldn't be reopened, even if the onChange RPC is slow.
+    expect(".o_datetime_picker").toHaveCount(0);
+    def.resolve();
+});
+
+test("Ensure only one datepicker is open", async () => {
+    Partner._fields.date_start = fields.Date();
+
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `
+            <form>
+                <field name="date_start"/>
+                <field name="date"/>
+            </form>`,
+        resId: 1,
+    });
+
+    await queryFirst("[data-field='date_start']").click();
+    await queryFirst("[data-field='date']").click();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -340,7 +392,7 @@ test("multi edition of date field in list view: clear date in input", async () =
     await contains(".o_field_date button").click();
     await fieldInput("date").clear();
 
-    expect(".modal").toHaveCount(1);
+    expect(await waitFor(".modal")).toHaveCount(1);
     await contains(".modal .modal-footer .btn-primary").click();
 
     expect(".o_data_row:first-child .o_data_cell").toHaveText("");

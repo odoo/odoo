@@ -3,6 +3,7 @@
 import base64
 import io
 import re
+import textwrap
 import time
 import uuid
 import zipfile
@@ -13,6 +14,7 @@ from requests import RequestException
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import float_round, float_repr
 
 SINVOICE_API_URL = 'https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/'
 SINVOICE_TIMEOUT = 60  # They recommend between 60 and 90 seconds, but 60s is already quite long.
@@ -252,8 +254,6 @@ class AccountMove(models.Model):
                 'supplierTaxCode': self.company_id.vat,
                 'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_id.name,
                 'invoiceNo': self.l10n_vn_edi_invoice_number,
-                'strIssueDate': self._l10n_vn_edi_format_date(self.l10n_vn_edi_issue_date),
-                'transactionUuid': self.l10n_vn_edi_invoice_transaction_id,
                 'fileType': file_format,
             },
             cookies={'access_token': access_token},
@@ -590,12 +590,14 @@ class AccountMove(models.Model):
 
         # When invoicing in a foreign currency, we need to provide the rate, or it will default to 1.
         if self.currency_id.name != 'VND':
-            invoice_data['exchangeRate'] = self.env['res.currency']._get_conversion_rate(
+            # Sinvoice only allow upto 2 decimal place for exchange rate
+            exchange_rate = self.env['res.currency']._get_conversion_rate(
                 from_currency=self.currency_id,
                 to_currency=self.env.ref('base.VND'),
                 company=self.company_id,
                 date=self.invoice_date or self.date,
             )
+            invoice_data['exchangeRate'] = float_repr(float_round(exchange_rate, 2), 2)
 
         adjustment_origin_invoice = None
         if self.move_type == 'out_refund':  # Credit note are used to adjust an existing invoice
@@ -621,11 +623,13 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         commercial_partner_phone = self.commercial_partner_id.phone and self._l10n_vn_edi_format_phone_number(self.commercial_partner_id.phone)
+        buyer_address = self.partner_id._display_address(without_company=True)
+        formatted_address = ', '.join(part.strip() for part in buyer_address.splitlines() if part.strip())
         buyer_information = {
             'buyerName': self.partner_id.name,
             'buyerLegalName': self.commercial_partner_id.name,
             'buyerTaxCode': self.commercial_partner_id.vat or '',
-            'buyerAddressLine': self.partner_id.street,
+            'buyerAddressLine': formatted_address,
             'buyerPhoneNumber': commercial_partner_phone or '',
             'buyerEmail': self.commercial_partner_id.email or '',
             'buyerCityName': self.partner_id.city or self.partner_id.state_id.name,
@@ -645,10 +649,12 @@ class AccountMove(models.Model):
         """ Create and return the seller information for the current invoice. """
         self.ensure_one()
         company_phone = self.company_id.phone and self._l10n_vn_edi_format_phone_number(self.company_id.phone)
+        seller_address = self.company_id.partner_id._display_address(without_company=True)
+        formatted_address = ', '.join(part.strip() for part in seller_address.splitlines() if part.strip())
         seller_information = {
             'sellerLegalName': self.company_id.name,
             'sellerTaxCode': self.company_id.vat,
-            'sellerAddressLine': self.company_id.street,
+            'sellerAddressLine': formatted_address,
             'sellerPhoneNumber': company_phone or '',
             'sellerEmail': self.company_id.email,
             'sellerDistrictName': self.company_id.state_id.name,
@@ -690,13 +696,16 @@ class AccountMove(models.Model):
             'line_note': 2,
             'discount': 3,
         }
-        for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type == 'product'):
+        discount_lines = self.invoice_line_ids._get_discount_lines()
+        downpayment_lines = self.invoice_line_ids._get_downpayment_lines()
+        for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type in code_map):
             # For credit notes amount, we send negative values (reduces the amount of the original invoice)
             sign = 1 if self.move_type == 'out_invoice' else -1
+            item_name = line.name.replace('\n', ' ')
             item_information = {
-                'itemCode': line.product_id.code,
-                'itemName': line.product_id.name,
-                'unitName': line.product_uom_id.name,
+                'itemCode': line.product_id.code or '',
+                'itemName': textwrap.shorten(item_name, width=500, placeholder='...'),
+                'unitName': line.product_uom_id.name or 'Units',
                 'unitPrice': line.price_unit * sign,
                 'quantity': line.quantity,
                 # This amount should be without discount applied.
@@ -705,20 +714,32 @@ class AccountMove(models.Model):
                 # Values are either: -2 (no tax), -1 (not declaring/paying taxes), 0,5,8,10 (the tax %)
                 # Most use cases will be -2 or a tax percentage, so we limit the support to these.
                 'taxPercentage': line.tax_ids and line.tax_ids[0].amount or -2,
-                'taxAmount': (line.price_total - line.price_subtotal),
+                'taxAmount': line.currency_id.round(line.price_total - line.price_subtotal),
                 'discount': line.discount,
                 'itemTotalAmountAfterDiscount': line.price_subtotal,
                 'itemTotalAmountWithTax': line.price_total,
+                'selection': code_map[line.display_type],
             }
-            if line.display_type in code_map:
-                item_information['selection'] = code_map[line.display_type]
-            if line.display_type == 'discount':
-                item_information['isIncreaseItem'] = False
+            if (
+                line in discount_lines
+                or line in downpayment_lines  # Downpayment lines are considered the same as discount lines
+            ):
+                item_information.update({
+                    'selection': code_map['discount'],
+                    'isIncreaseItem': False,
+                    'unitPrice': abs(item_information['unitPrice']),
+                    'quantity': abs(item_information['quantity']),
+                    'itemTotalAmountWithoutTax': abs(item_information['itemTotalAmountWithoutTax']),
+                    'itemTotalAmountAfterDiscount': abs(item_information['itemTotalAmountAfterDiscount']),
+                    'itemTotalAmountWithTax': abs(item_information['itemTotalAmountWithTax']),
+                })
             if self.move_type == 'out_refund':
                 item_information.update({
                     'adjustmentTaxAmount': item_information['taxAmount'],
                     'isIncreaseItem': False,
                 })
+            if line.display_type == 'line_note':
+                item_information = {'selection': item_information['selection'], 'itemName': item_information['itemName']}
             items_information.append(item_information)
 
         json_values['itemInfo'] = items_information

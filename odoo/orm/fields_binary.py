@@ -158,7 +158,7 @@ class Binary(Field):
         bin_size = records.env.context.get('bin_size')
         data = {
             att.res_id: _encode(human_size(att.file_size)) if bin_size else att.datas
-            for att in records.env['ir.attachment'].sudo().search(domain)
+            for att in records.env['ir.attachment'].sudo().search_fetch(domain)
         }
         self._insert_cache(records, map(data.get, records._ids))
 
@@ -310,7 +310,14 @@ class Image(Binary):
             self._update_cache(record, value, dirty=True)
 
     def _image_process(self, value, env):
-        if self.readonly and not self.max_width and not self.max_height:
+        if self.readonly and (
+            (not self.max_width and not self.max_height)
+            or (
+                isinstance(self.related_field, Image)
+                and self.max_width == self.related_field.max_width
+                and self.max_height == self.related_field.max_height
+            )
+        ):
             # no need to process images for computed fields, or related fields
             return value
         try:

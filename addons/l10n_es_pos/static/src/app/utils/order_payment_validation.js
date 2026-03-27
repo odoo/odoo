@@ -12,7 +12,7 @@ patch(OrderPaymentValidation.prototype, {
     async beforePostPushOrderResolve(order, order_server_ids) {
         if (this.pos.config.is_spanish) {
             const invoiceName = await this.pos.data.call("pos.order", "get_invoice_name", [
-                order_server_ids,
+                order.id,
             ]);
             order.invoice_name = invoiceName;
         }
@@ -43,9 +43,17 @@ patch(OrderPaymentValidation.prototype, {
                         this.pos.config.pricelist_id?.id != this.order.pricelist_id?.id
                             ? this.order.pricelist_id
                             : false;
+                    const setFiscalPosition =
+                        this.pos.config.default_fiscal_position_id?.id !=
+                        this.order.fiscal_position_id?.id
+                            ? this.order.fiscal_position_id?.id
+                            : false;
                     this.order.setPartner(this.pos.config.simplified_partner_id);
                     if (setPricelist) {
                         this.order.setPricelist(setPricelist);
+                    }
+                    if (setFiscalPosition !== false) {
+                        this.order.update({ fiscal_position_id: setFiscalPosition });
                     }
                 }
             }

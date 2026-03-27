@@ -53,7 +53,7 @@
                                     messages="[invalidModel]"
                                     msgType="'error'"/>
             </span>
-            <i t-if="props.showClear and getters.isGlobalFilterActive(filter.id)"
+            <i t-if="isValid and props.showClear and getters.isGlobalFilterActive(filter.id)"
                 class="fa fa-times btn btn-link text-muted ms-1 mt-1"
                 title="Clear"
                 t-on-click="() => this.clear(filter.id)"/>

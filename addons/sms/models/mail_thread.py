@@ -162,7 +162,7 @@ class MailThread(models.AbstractModel):
           If not given, `msg_vals`'s `body` is used and converted from html to plaintext;
         :param sms_numbers: additional numbers to notify in addition to partners
           and classic recipients;
-        :param pid_to_number: force a number to notify for a given partner ID
+        :param sms_pid_to_number: force a number to notify for a given partner ID
           instead of taking its mobile / phone number;
         :param put_in_queue: use cron to send queued SMS instead of sending them
           directly;

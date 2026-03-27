@@ -75,7 +75,7 @@ export function isRewardButtonHighlighted(isHighlighted, closeModal = true) {
         {
             trigger: isHighlighted
                 ? '.control-buttons button.highlight:contains("Reward")'
-                : '.control-buttons button:contains("Reward"):not(:has(.highlight))',
+                : '.control-buttons button.disabled:contains("Reward")',
         },
     ];
     if (closeModal) {
@@ -91,7 +91,7 @@ export function eWalletButtonState({ highlighted, text = "eWallet", click = fals
     const step = {
         trigger: highlighted
             ? `.control-buttons button.highlight:contains("${text}")`
-            : `.control-buttons button:contains("${text}"):not(:has(.highlight))`,
+            : `.control-buttons button.disabled:contains("${text}")`,
     };
     if (click) {
         step.run = "click";
@@ -127,6 +127,14 @@ export function pointsAwardedAre(points_str) {
         {
             content: "loyalty points awarded " + points_str,
             trigger: '.loyalty-points-won:contains("' + points_str + '")',
+        },
+    ];
+}
+export function pointsTotalIs(points_str) {
+    return [
+        {
+            content: "loyalty points awarded " + points_str,
+            trigger: '.loyalty-points-totaltext-end:contains("' + points_str + '")',
         },
     ];
 }
@@ -241,4 +249,19 @@ export function checkPartnerPoints(name, points) {
             trigger: `.partner-list .partner-line:contains(${name}) .partner-line-balance:contains(${points} Loyalty Point(s))`,
         },
     ];
+}
+
+export function isMoreControlButtonActive(active) {
+    return {
+        content: "More control button is " + (active ? "active" : "not active"),
+        trigger: active
+            ? ".control-buttons .more-btn.active"
+            : ".control-buttons:not(:has(.more-btn.active))",
+    };
+}
+export function isLoyaltyPointsAvailable() {
+    return {
+        content: "Loyalty Points are visible on the receipt",
+        trigger: ".pos-receipt .loyalty",
+    };
 }

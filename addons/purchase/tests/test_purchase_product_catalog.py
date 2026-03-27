@@ -101,3 +101,87 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['result'], company_product_price)
+
+    # === TOUR TESTS ===#
+    def test_catalog_vendor_uom(self):
+        """Check the product's UoM matches the one set on the vendor line."""
+        # Enable units of measure and create two partners using different UoM.
+        self._enable_uom()
+        uom_liter = self.env.ref('uom.product_uom_litre')
+        vendor_by_liter, vendor_by_unit = self.env['res.partner'].create([
+            {'name': 'Vendor A (l)'},
+            {'name': 'Vendor B (unit)'},
+        ])
+        # Create a product and configure some vendor's prices.
+        self.env['product.template'].create({
+            'name': "Crab Juice",
+            'seller_ids': [
+                Command.create({
+                    'partner_id': vendor_by_liter.id,
+                    'product_uom_id': uom_liter.id,
+                    'price': 2,
+                    'discount': 22.5
+                }),
+                Command.create({
+                    'partner_id': vendor_by_unit.id,
+                    'product_uom_id': self.uom_unit.id,
+                    'price': 2.5,
+                }),
+                Command.create({
+                    'partner_id': vendor_by_unit.id,
+                    'product_uom_id': self.uom_unit.id,
+                    'min_qty': 6,
+                    'price': 2.45,
+                }),
+                Command.create({
+                    'partner_id': vendor_by_unit.id,
+                    'product_uom_id': self.uom_unit.id,
+                    'min_qty': 12,
+                    'price': 2.45,
+                    'discount': 10.2,
+                }),
+            ],
+        })
+        # Create two PO and rename them to find them easily in the tour.
+        purchase_orders = self.env['purchase.order'].create([{
+            'partner_id': vendor.id
+        } for vendor in (vendor_by_liter, vendor_by_unit)])
+        purchase_orders[0].name = "PO/TEST/00001"
+        purchase_orders[1].name = "PO/TEST/00002"
+        self.start_tour('/odoo/purchase', 'test_catalog_vendor_uom', login='accountman')
+
+    def test_seller_price_discounted_with_template(self):
+        ProductAttribute = self.env['product.attribute']
+        ProductAttributeValue = self.env['product.attribute.value']
+
+        # Product Attribute
+        att_color = ProductAttribute.create({'name': 'Color', 'sequence': 1})
+
+        # Product Attribute color Value
+        att_color_red = ProductAttributeValue.create({'name': 'red', 'attribute_id': att_color.id, 'sequence': 1})
+        att_color_blue = ProductAttributeValue.create({'name': 'blue', 'attribute_id': att_color.id, 'sequence': 2})
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product Template',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'standard_price': 200.0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': att_color.id,
+                    'value_ids': [Command.link(att_color_red.id), Command.link(att_color_blue.id)]
+                }),
+            ]
+        })
+
+        supplier_info = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': self.env.ref('uom.product_uom_pack_6').id,
+            'price': 100.0,
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        catalog_info = purchase_order._get_product_price_and_data(supplier_info.product_tmpl_id.product_variant_ids[0])
+        self.assertEqual(catalog_info['price'], 100.0)

@@ -1,9 +1,33 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, Deferred, queryOne, waitFor } from "@odoo/hoot-dom";
+import { onWillStart, xml } from "@odoo/owl";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    Deferred,
+    press,
+    queryOne,
+    waitFor,
+} from "@odoo/hoot-dom";
+import { Builder } from "@html_builder/builder";
 import { Plugin } from "@html_editor/plugin";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    waitForEndOfOperation,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 
@@ -103,4 +127,127 @@ test("elements within iframe can't be clicked while the builder is being set up"
     await contains(":iframe .test-section button").click();
     await animationFrame();
     expect.verifySteps(["button clicked"]);
+});
+
+describe.tags("desktop");
+describe("BuilderMany2One: exit editor when previewing", () => {
+    beforeEach(async () => {
+        class Test extends models.Model {
+            _name = "test";
+            _records = [
+                { id: 1, name: "First" },
+                { id: 2, name: "Second" },
+                { id: 3, name: "Third" },
+            ];
+            name = fields.Char();
+        }
+        onRpc("test", "name_search", () => [
+            [1, "First"],
+            [2, "Second"],
+            [3, "Third"],
+        ]);
+
+        defineModels([Test]);
+
+        addBuilderAction({
+            testAction: class extends BuilderAction {
+                static id = "testAction";
+                apply({ editingElement, value }) {
+                    editingElement.textContent = JSON.parse(value).name;
+                    editingElement.dataset.test = value;
+                }
+                getValue({ editingElement }) {
+                    return editingElement.dataset.test;
+                }
+            },
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10" preview="true"/>`;
+            }
+        );
+
+        await setupWebsiteBuilder(`<div class="test-options-target">Homepage</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains(".btn.o-dropdown").click();
+        await waitFor(".o-dropdown-item:contains(First)");
+        await animationFrame();
+        expect(":iframe .test-options-target").toHaveText("First", {
+            message: "It should preview the first element",
+        });
+    });
+
+    test("save", async () => {
+        await press(["alt", "s"]);
+        await waitForEndOfOperation();
+        expect(":iframe .test-options-target").toHaveText("Homepage", {
+            message: "The preview should have been reverted",
+        });
+    });
+
+    test("discard", async () => {
+        await press(["alt", "j"]);
+        await waitForEndOfOperation();
+        expect(".o_dialog").toHaveCount(0, {
+            message: "There should be no confirmation dialog since we didn't modify anything",
+        });
+        expect(":iframe .test-options-target").toHaveText("Homepage", {
+            message: "The preview should have been reverted",
+        });
+    });
+});
+
+test("Builder is disabled when reloading", async () => {
+    onRpc("ir.ui.view", "save", () => true);
+    addBuilderAction({
+        TestReloadAction: class extends BuilderAction {
+            static id = "testReload";
+            setup() {
+                this.reload = {};
+            }
+            isApplied({ editingElement }) {
+                return editingElement.dataset.applied === "true";
+            }
+            async apply({ editingElement }) {
+                editingElement.dataset.applied = "true";
+            }
+            clean({ editingElement }) {
+                editingElement.dataset.applied = "false";
+            }
+        },
+    });
+
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".target";
+            static template = xml`<BuilderButton action="'testReload'">Reload editor</BuilderButton>`;
+        }
+    );
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<section class="target">Section</section>`
+    );
+    const def = new Deferred();
+    patchWithCleanup(Builder.prototype, {
+        setup() {
+            super.setup();
+            onWillStart(async () => {
+                await def;
+            });
+        },
+    });
+    await contains(":iframe .target").click();
+    await waitSidebarUpdated();
+    await contains(".options-container [data-action-id='testReload']").click();
+    expect(".o-website-builder_sidebar .o_builder_disabled").toHaveCount(1);
+    // when builder is disabled we can't go to another tab, or do anything else
+    // in the builder
+    await contains(".o-snippets-tabs [data-name='blocks']").click();
+    expect(".o-snippets-tabs [data-name='customize']").toHaveClass("active");
+    // new instance of the builder shouldn't be disabled
+    def.resolve();
+    await waitSidebarUpdated();
+    expect(".o-website-builder_sidebar .o_builder_disabled").toHaveCount(0);
+    await contains(".o-snippets-tabs [data-name='blocks']").click();
+    expect(".o-snippets-tabs [data-name='blocks']").toHaveClass("active");
 });

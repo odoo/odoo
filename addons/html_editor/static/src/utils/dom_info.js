@@ -15,7 +15,25 @@ export function isEmpty(el) {
 }
 
 export function isEmptyTextNode(node) {
-    return node.nodeType === Node.TEXT_NODE && node.textContent.trim().length === 0;
+    if (node.nodeType !== Node.TEXT_NODE) {
+        return false;
+    }
+    if (!node.textContent) {
+        return true;
+    }
+    const trimmedContent = node.textContent.trim();
+    if (!trimmedContent) {
+        // Only `\n` is considered as empty
+        if (node.textContent.includes("\n")) {
+            return true;
+        }
+        // Only spaces is not considered as empty
+        // we technically can apply styles on spaces
+        if (node.textContent) {
+            return false;
+        }
+    }
+    return !trimmedContent;
 }
 
 /**
@@ -28,7 +46,11 @@ export function isEmptyTextNode(node) {
  */
 export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
-    return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
+    const referenceElement = closestElement(
+        node,
+        (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
+    );
+    return fontWeight > 500 || fontWeight > +getComputedStyle(referenceElement).fontWeight;
 }
 
 /**
@@ -736,6 +758,11 @@ export function areSimilarElements(node, node2) {
     }
     const nodeStyle = getComputedStyle(node);
     const node2Style = getComputedStyle(node2);
+    if (node.matches("code.o_inline_code")) {
+        if (nodeStyle.padding === node2Style.padding && nodeStyle.margin === node2Style.margin) {
+            return true;
+        }
+    }
     return (
         !+nodeStyle.padding.replace(NOT_A_NUMBER, "") &&
         !+node2Style.padding.replace(NOT_A_NUMBER, "") &&
@@ -791,14 +818,36 @@ export function isContentEditableAncestor(node) {
 }
 
 /**
+ * Checks if all classes in node are present in node2 (subset check)
+ */
+function hasClassesSubset(node, node2) {
+    const getNodeClasses = (n) => (n || "").trim().split(/\s+/).filter(Boolean);
+    const [nodeClasses, node2Classes] = [node, node2].map(getNodeClasses);
+    return nodeClasses.every((cls) => node2Classes.includes(cls));
+}
+
+/**
+ * Checks if all styles in node are present in node2 (subset check)
+ */
+function hasStylesSubset(node, node2) {
+    const getNodeStyles = (n) =>
+        (n || "")
+            .split(";")
+            .map((s) => s.trim())
+            .filter(Boolean);
+    const [nodeStyles, node2Styles] = [node, node2].map(getNodeStyles);
+    return nodeStyles.every((style) => node2Styles.includes(style));
+}
+
+/**
  * Checks if a node is redundant based on its closest element with same tag.
  *
  * A node is considered redundant if:
  * - It is an Element node with a parent.
  * - There is a closest element with the same tag name.
  * - All of the node's attributes are present in that closest element:
- *   - All classes exist in the closest element's class list.
- *   - All inline styles are present in the closest element's style attribute.
+ *   - All classes exist in the closest element's class list (subset check).
+ *   - All inline styles are present in the closest element's style attribute (subset check).
  *   - All other attributes must have identical values.
  *
  * @param {Node} node - The DOM node to evaluate.
@@ -826,12 +875,12 @@ export function isRedundantElement(node) {
 
         if (attrName === "class") {
             // All classes on the node must exist in closest element.
-            if (!hasSameClasses(node, closestEl)) {
+            if (!hasClassesSubset(nodeAttrVal, closestElAttrVal)) {
                 return false;
             }
         } else if (attrName === "style") {
             // All inline styles on the node must exist in closest element.
-            if (!hasSameStyleAttributes(node, closestEl)) {
+            if (!hasStylesSubset(nodeAttrVal, closestElAttrVal)) {
                 return false;
             }
         } else {

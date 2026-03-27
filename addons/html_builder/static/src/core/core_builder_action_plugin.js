@@ -9,6 +9,16 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getValueFromVar } from "@html_builder/utils/utils";
 
+/** @typedef {import("@html_builder/core/builder_action").ActionParams} ActionParams */
+/** @typedef {import("@html_builder/core/builder_action").ActionValue} ActionValue */
+/**
+ * @typedef {((
+ *      editingElement: HTMLElement,
+ *      params: ActionParams,
+ *      value: ActionValue,
+ * ) => boolean)[]} apply_custom_css_style
+ */
+
 export function withoutTransition(editingElement, callback) {
     if (editingElement.classList.contains("o_we_force_no_transition")) {
         return callback();
@@ -23,6 +33,7 @@ export function withoutTransition(editingElement, callback) {
 
 export class CoreBuilderActionPlugin extends Plugin {
     static id = "coreBuilderAction";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             ClassAction,
@@ -169,7 +180,7 @@ class AttributeAction extends BuilderAction {
     }
 }
 
-class DataAttributeAction extends BuilderAction {
+export class DataAttributeAction extends BuilderAction {
     static id = "dataAttributeAction";
     getValue({ editingElement, params: { mainParam: attributeName } = {} }) {
         if (!/(^color|Color)($|(?=[A-Z]))/.test(attributeName)) {
@@ -227,10 +238,12 @@ export class StyleAction extends BuilderAction {
     static id = "styleAction";
     static dependencies = ["color"];
     getValue({ editingElement: el, params: { mainParam: styleName } }) {
-        if (styleName === "--box-border-width"
-                || CSS_SHORTHANDS["--box-border-width"].includes(styleName)
-                || styleName === "--box-border-radius"
-                || CSS_SHORTHANDS["--box-border-radius"].includes(styleName)) {
+        if (
+            styleName === "--box-border-width" ||
+            CSS_SHORTHANDS["--box-border-width"].includes(styleName) ||
+            styleName === "--box-border-radius" ||
+            CSS_SHORTHANDS["--box-border-radius"].includes(styleName)
+        ) {
             // When reading a CSS variable, we need to get the computed value
             // of the actual property it controls, ideally. Not only because the
             // panel should reflect what the user actually sees but also because

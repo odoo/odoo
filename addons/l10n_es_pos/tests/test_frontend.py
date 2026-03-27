@@ -13,6 +13,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         cls.company_data["company"].country_id = cls.env.ref("base.es").id
         cls.company_data["company"].currency_id = cls.env.ref("base.EUR").id
         cls.company_data["company"].vat = "ESA12345674"
+        cls.company_data["company"].state_id = cls.env.ref("base.state_es_ba").id
         return cls.company_data["company"]
 
     def test_spanish_pos(self):
@@ -39,7 +40,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         num_of_simp_invoices = self.env['account.move'].search_count([('journal_id', '=', simp.id), ('l10n_es_is_simplified', '=', True)])
         num_of_regular_invoices = get_number_of_regular_invoices() - initial_number_of_regular_invoices
         self.assertEqual(num_of_simp_invoices, 3)
-        self.assertEqual(num_of_regular_invoices, 1)
+        self.assertEqual(num_of_regular_invoices, 2)
 
     def test_l10n_es_pos_reconcile(self):
         if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
@@ -104,7 +105,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'email': "email@gmail.com",
         })
         self._get_main_company().partner_id.write({
-            'bank_ids': [Command.create({'acc_number': 'FOO42'})]
+            'bank_ids': [Command.create({'acc_number': 'FOO42', 'allow_out_payment': True})]
         })
         self.main_pos_config.open_ui()
         self.pos_order_pos0 = self.env['pos.order'].create({
@@ -149,7 +150,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         during the order"""
         self.assertTrue(len(self.main_pos_config.available_pricelist_ids.ids) > 1)
         self.main_pos_config.l10n_es_simplified_invoice_journal_id = self.main_pos_config.journal_id
+        self.main_pos_config.default_fiscal_position_id = self.fiscal_pos_a.id
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_simplified_invoice_not_override_set_pricelist', login="pos_user")
         order = self.env['pos.order'].search([('partner_id', '=', self.main_pos_config.simplified_partner_id.id)])
         self.assertNotEqual(order.pricelist_id, self.main_pos_config.simplified_partner_id.property_product_pricelist)
+        self.assertNotEqual(order.fiscal_position_id, self.fiscal_pos_a)

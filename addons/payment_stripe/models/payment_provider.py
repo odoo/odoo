@@ -156,7 +156,7 @@ class PaymentProvider(models.Model):
         if self.code != 'stripe':
             return super().action_start_onboarding(menu_id=menu_id)
 
-        if self.env.company.country_id.code not in const.SUPPORTED_COUNTRIES:
+        if self._stripe_get_country(self.env.company.country_id.code) not in const.SUPPORTED_COUNTRIES:
             raise RedirectWarning(
                 _(
                     "Stripe Connect is not available in your country, please use another payment"
@@ -313,7 +313,11 @@ class PaymentProvider(models.Model):
         inline_form_values = {
             'publishable_key': self._stripe_get_publishable_key(),
             'currency_name': currency_name,
-            'minor_amount': amount and payment_utils.to_minor_currency_units(amount, currency),
+            'minor_amount': amount and payment_utils.to_minor_currency_units(
+                amount,
+                currency,
+                arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
+            ),
             'capture_method': 'manual' if self.capture_manually else 'automatic',
             'billing_details': {
                 'name': partner.name or '',

@@ -6,13 +6,15 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2025-09-14 08:05+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-23 06:06+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "base_import_module/nl/>\n"
 "Language: nl\n"
@@ -20,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -34,8 +36,8 @@ msgid ""
 msgstr ""
 "\n"
 "Mogelijk heb je de Enterprise-versie nodig om de gegevensmodule te "
-"installeren. Ga naar https://www.odoo.com/pricing-plan voor meer informatie."
-"\n"
+"installeren. Ga naar https://www.odoo.com/pricing-plan voor meer "
+"informatie.\n"
 "Als je website-thema's nodig hebt, kan je deze downloaden van https://"
 "github.com/odoo/design-themes.\n"
 
@@ -60,7 +62,7 @@ msgstr "Annuleren"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: base_import_module
 #. odoo-python
@@ -76,7 +78,7 @@ msgstr ""
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
 msgstr ""
-"Verbinding met %s mislukt. De lijst met branchemodules kan niet worden "
+"Verbinding met %s mislukt. De lijst met bedrijfstak-modules kan niet worden "
 "opgehaald"
 
 #. module: base_import_module
@@ -102,7 +104,7 @@ msgstr "Aangemaakt op"
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: base_import_module
 #. odoo-python
@@ -139,7 +141,7 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP routing"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
@@ -165,7 +167,7 @@ msgstr "Importeer module"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
-msgstr "Importeer demogegevens van de module"
+msgstr "Importeer demodata van de module"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -175,7 +177,7 @@ msgstr "Geïmporteerde module"
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__industries
 msgid "Industries"
-msgstr "Sectoren"
+msgstr "Bedrijfstakken"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -186,7 +188,7 @@ msgstr "Installeren"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Install an Industry"
-msgstr "Installeer een branche"
+msgstr "Installeer een bedrijfstak"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -206,7 +208,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Load demo data"
-msgstr "Laad demo data"
+msgstr "Demodata laden"
 
 #. module: base_import_module
 #. odoo-python
@@ -215,7 +217,7 @@ msgid ""
 "Load demo data to test the industry's features with sample records. Do not "
 "load them if this is your production database."
 msgstr ""
-"Laad demogegevens om de functies van de branche te testen met "
+"Laad demodata om de functies van de bedrijfstak te testen met "
 "voorbeeldrecords. Laad ze niet als dit je productiedatabase is."
 
 #. module: base_import_module
@@ -267,6 +269,8 @@ msgid ""
 "Note: you can only import data modules (.xml files, i18n files and static "
 "assets)"
 msgstr ""
+"Opmerking: je kan alleen gegevensmodules importeren (.xml-bestanden, i18n-"
+"bestanden en statische activa)"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
@@ -309,6 +313,8 @@ msgid ""
 "The assets path in the manifest of imported module '%(module_name)s' cannot "
 "contain glob wildcards (e.g., *, **)."
 msgstr ""
+"Het assets path in het manifest van geïmporteerde module '%(module_name)s' "
+"mag geen glob wildcards bevatten (e.g., *, **)."
 
 #. module: base_import_module
 #. odoo-python
@@ -326,8 +332,8 @@ msgstr ""
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
-"De lijst met branchetoepassingen kan niet worden opgehaald. Probeer het "
-"later opnieuw"
+"De lijst met bedrijfstakken kan niet worden opgehaald. Probeer het later "
+"opnieuw"
 
 #. module: base_import_module
 #. odoo-python

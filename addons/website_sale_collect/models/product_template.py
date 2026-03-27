@@ -15,10 +15,12 @@ class ProductTemplate(models.Model):
         res = super()._get_additionnal_combination_info(
             product_or_template, quantity, uom, date, website
         )
+        in_store_dm = website.sudo().in_store_dm_id
         if (
-            bool(website.sudo().in_store_dm_id)  # Click & Collect is enabled.
+            bool(in_store_dm)  # Click & Collect is enabled.
             and product_or_template.is_product_variant
             and product_or_template.is_storable
+            and not (in_store_dm.excluded_tag_ids & product_or_template.all_product_tag_ids)
         ):
             # Enable the Click & Collect Availability widget.
             res['show_click_and_collect_availability'] = True
@@ -31,9 +33,7 @@ class ProductTemplate(models.Model):
             ])
             if available_delivery_methods_sudo:
                 res['delivery_stock_data'] = utils.format_product_stock_values(
-                    product_or_template.sudo(),
-                    wh_id=website.warehouse_id.id,
-                    include_out_of_stock=True,  # Allow out-of-stock orders for delivery.
+                    product_or_template.sudo(), wh_id=website.warehouse_id.id
                 )
             else:
                 res['delivery_stock_data'] = {}

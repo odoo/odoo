@@ -14,9 +14,18 @@
                     groups="sale_management.group_sale_order_template"/>
             </field>
 
-            <field name="collapse_prices" position="after">
+            <xpath expr="//form//div[@name='invoice_lines']" position="before">
+                <group>
+                    <field
+                        name="is_optional"
+                        invisible="display_type not in ['line_section', 'line_subsection']"
+                        readonly="1"
+                    />
+                </group>
+            </xpath>
+            <xpath expr="//list/field[@name='linked_virtual_id']" position="after">
                 <field name="is_optional" column_invisible="True"/>
-            </field>
+            </xpath>
         </field>
     </record>
 

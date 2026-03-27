@@ -36,16 +36,11 @@ export {
     HEADER_END,
 };
 
-export const basicHeaderOptionSettings = {
-    editableOnly: false,
-    selector: "#wrapwrap > header",
-    groups: ["website.group_website_designer"],
-}
-
-class HeaderOptionPlugin extends Plugin {
+export class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite", "menuDataPlugin"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_header_middle_buttons: [
             {
@@ -58,24 +53,17 @@ class HeaderOptionPlugin extends Plugin {
             },
         ],
         builder_options: [
-            withSequence(HEADER_TEMPLATE, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderTemplateOption,
-            }),
-            withSequence(HEADER_FONT, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderFontOption,
-            }),
-            withSequence(HEADER_ELEMENTS, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderElementsOption,
-            }),
-            withSequence(HEADER_ICON_BACKGROUND, {
-                ...basicHeaderOptionSettings,
-                OptionComponent: HeaderIconBackgroundOption,
-            }),
+            withSequence(HEADER_TEMPLATE, HeaderTemplateOption),
+            withSequence(HEADER_FONT, HeaderFontOption),
+            withSequence(HEADER_ELEMENTS, HeaderElementsOption),
+            withSequence(HEADER_ICON_BACKGROUND, HeaderIconBackgroundOption),
         ],
+        // we consider the container of Contact Us allows inline element at root
+        // to avoid wrapping the button in a <p> or <div>, which would remove
+        // this button if it's empty
+        are_inlines_allowed_at_root_predicates: (node) =>
+            node.matches("#o_main_nav .oe_structure_solo .oe_unremovable [contenteditable='true']"),
     };
-};
+}
 
 registry.category("website-plugins").add(HeaderOptionPlugin.id, HeaderOptionPlugin);

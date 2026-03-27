@@ -3,13 +3,14 @@
 # * project_mrp
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
-"PO-Revision-Date: 2025-09-16 04:48+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:37+0000\n"
+"PO-Revision-Date: 2025-10-23 07:35+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "project_mrp/id/>\n"
 "Language: id\n"
@@ -20,6 +21,11 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: project_mrp
+#: model_terms:ir.ui.view,arch_db:project_mrp.mrp_production_form_view_inherit_project_mrp
+msgid "<span class=\"o_stat_text\">Project</span>"
+msgstr ""
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_mrp_bom
 msgid "Bill of Material"
 msgstr "Daftar Kebutuhan Material (BOM)"
@@ -28,6 +34,7 @@ msgstr "Daftar Kebutuhan Material (BOM)"
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials_dashboard
 msgid "Bills of Materials"
 msgstr "Daftar Kebutuhan Material (BOM)"
 
@@ -43,6 +50,24 @@ msgstr ""
 "untuk membuat produk jadi; melalui manufacturing order atau paket produk."
 
 #. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_mrp_production
 msgid "Manufacturing Order"
 msgstr "Manufacturing Order"
@@ -51,6 +76,7 @@ msgstr "Manufacturing Order"
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders_dashboard
 msgid "Manufacturing Orders"
 msgstr "Manufacturing Orders"
 
@@ -75,4 +101,4 @@ msgstr "Pergerakkan Stok"
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr "Peraturan Sto"
+msgstr "Peraturan Stok"

@@ -1,0 +1,269 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_dpopay
+#
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-05 08:03+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"pos_dpopay/ko/>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+msgid ""
+"Bearer token used for authenticating requests. Automatically refreshed when "
+"expired."
+msgstr "요청 시 인증에 사용되는 베어러 토큰입니다. 만료 시 자동으로 갱신됩니다."
+
+#. module: pos_dpopay
+#: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
+msgid "Card"
+msgstr "카드"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+msgid "Check this to use DPO Pay's sandbox environment for testing purposes."
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+msgid ""
+"Choose allowed payment mode:\n"
+"Card - regular card payments\n"
+"Mobile Money - M-Pesa / Airtel Mobile Money"
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+msgid "Customer's phone number used to complete the Mobile Money payment."
+msgstr ""
+
+#. module: pos_dpopay
+#: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
+msgid "DPO Pay"
+msgstr "DPO 페이"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+msgid "DPO Pay Chain-ID"
+msgstr "DPO 페이 체인 ID"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
+msgid "DPO Pay Client ID"
+msgstr "DPO 페이 클라이언트 ID"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+msgid "DPO Pay Client Secret"
+msgstr "DPO 페이 클라이언트 비밀번호"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_mid
+msgid "DPO Pay Merchant ID"
+msgstr "DPO 페이 판매자 ID"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_tid
+msgid "DPO Pay Terminal ID"
+msgstr "DPO 페이 단말기 ID"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "DPO Pay terminal is currently offline."
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Dpo Pay Error"
+msgstr "Dpo 페이 오류"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+msgid "Dpopay Bearer Token"
+msgstr "Dpopay 베어러 토큰"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+msgid "Dpopay Payment Mode"
+msgstr "Dpopay 결제 모드"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+msgid "Enable Test Mode"
+msgstr "테스트 모드 활성화"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+msgid "Enter the Chain-ID header value(e.g., DPO-DTM-Testing)"
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
+msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
+msgid ""
+"Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
+"XXXXXXXX)."
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to cancel payment."
+msgstr "결제 취소에 실패했습니다."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to fetch last transaction result."
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to retrieve payment status."
+msgstr "결제 상태 확인에 실패했습니다."
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Failed to retrieve transaction result."
+msgstr "작업 결과 가져오기에 실패했습니다."
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid "Invalid Chain ID. Please verify the configuration. %s"
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid "Invalid endpoint"
+msgstr "잘못된 엔드포인트"
+
+#. module: pos_dpopay
+#: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
+msgid "Mobile Money"
+msgstr "모바일 머니"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+msgid "Mobile Money Phone Number(Last 4 Digit)"
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Payment is declined by DPO Pay."
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Payment is unsuccessful."
+msgstr "결제에 실패했습니다."
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"Please ensure the device is online and confirm that the Merchant ID (MID) "
+"and Terminal ID (TID) are correct. %s"
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model,name:pos_dpopay.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "POS 결제 수단"
+
+#. module: pos_dpopay
+#: model:ir.model,name:pos_dpopay.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "POS 결제"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_rrn
+msgid "RRN"
+msgstr "RRN"
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+msgid "Reference number required for Mobile Money refund transactions."
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
+msgid "Retrieval Reference Number generated for the DPO Pay transaction."
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_id
+msgid "The Client ID provided by DPO Pay for authenticating requests."
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+msgid ""
+"The Client Secret provided by DPO Pay for secure access. Keep it "
+"confidential."
+msgstr ""
+
+#. module: pos_dpopay
+#: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+msgid "Transaction Reference"
+msgstr "거래 참조"
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Transaction amount must be greater than zero."
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Unable to initiate DPO payment. Please try again."
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-javascript
+#: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+msgid "Unable to reach DPO Pay terminal."
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
+msgstr ""

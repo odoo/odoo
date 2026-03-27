@@ -37,6 +37,9 @@ class SaleOrder(models.Model):
                 return Domain.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
         return res
 
+    def _get_program_timezone(self):
+        return self.website_id.salesperson_id.tz or super()._get_program_timezone()
+
     def _try_pending_coupon(self):
         if not request:
             return False
@@ -176,7 +179,7 @@ class SaleOrder(models.Model):
             and order_line.reward_id.reward_type == 'discount'
         ):
             # When a reward line is deleted we remove it from the auto claimable rewards
-            self = self.with_context(website_sale_loyalty_delete=True)  # noqa: PLW0642
+            order_line = order_line.with_context(website_sale_loyalty_delete=True)
 
         return super()._cart_update_order_line(order_line, quantity, **kwargs)
 

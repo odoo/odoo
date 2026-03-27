@@ -9,6 +9,7 @@ class X2ManyButtons extends Component {
     static props = {
         ...standardFieldProps,
         treeLabel: { type: String },
+        nbRecordsShown: { type: Number, optional: true },
     };
 
     setup() {
@@ -19,6 +20,9 @@ class X2ManyButtons extends Component {
     async openTreeAndDiscard() {
         const ids = this.currentField.currentIds;
         await this.props.record.discard();
+        const context = this.currentField.resModel === "account.move"
+            ? { list_view_ref: "account.view_duplicated_moves_tree_js" }
+            : {};
         this.action.doAction({
             name: this.props.treeLabel,
             type: "ir.actions.act_window",
@@ -28,9 +32,7 @@ class X2ManyButtons extends Component {
                 [false, "form"],
             ],
             domain: [["id", "in", ids]],
-            context: {
-                form_view_ref: "account.view_duplicated_moves_tree_js",
-            },
+            context: context,
         });
     }
 
@@ -49,5 +51,8 @@ X2ManyButtons.template = "account.X2ManyButtons";
 registry.category("fields").add("x2many_buttons", {
     component: X2ManyButtons,
     relatedFields: [{ name: "display_name", type: "char" }],
-    extractProps: ({ string }) => ({ treeLabel: string || _t("Records") }),
+    extractProps: ({ attrs, string }) => ({
+        treeLabel: string || _t("Records"),
+        nbRecordsShown: attrs.nb_records_shown ? parseInt(attrs.nb_records_shown) : 3,
+    }),
 });

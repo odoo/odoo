@@ -1,5 +1,4 @@
 import { reactive } from "@odoo/owl";
-import { serializeDate } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { formatFloat, humanNumber } from "@web/core/utils/numbers";
@@ -27,7 +26,6 @@ export async function getCurrencyRates() {
     const context = {
         ...user.context,
         to_currency: user.activeCompany.currency_id,
-        date: serializeDate(luxon.DateTime.now()),
     };
     const params = {
         model,
@@ -70,11 +68,14 @@ export async function getCurrencyRates() {
  * @param {[number, number]} [options.digits] the number of digits that should
  *   be used, instead of the default digits precision in the field.  The first
  *   number is always ignored (legacy constraint)
+ * @param {number} [options.minDigits] the minimum number of decimal digits to display.
+ *   Displays maximum 6 decimal places if no precision is provided.
  * @returns {string}
  */
 export function formatCurrency(amount, currencyId, options = {}) {
     const currency = getCurrency(currencyId);
-    const digits = options.digits || (currency && currency.digits);
+
+    const digits = (options.digits !== undefined)? options.digits : (currency && currency.digits)
 
     let formattedAmount;
     if (options.humanReadable) {
@@ -83,7 +84,7 @@ export function formatCurrency(amount, currencyId, options = {}) {
             minDigits: options.minDigits,
         });
     } else {
-        formattedAmount = formatFloat(amount, { digits, trailingZeros: options.trailingZeros });
+        formattedAmount = formatFloat(amount, { digits, minDigits: options.minDigits, trailingZeros: options.trailingZeros });
     }
 
     if (!currency || options.noSymbol) {

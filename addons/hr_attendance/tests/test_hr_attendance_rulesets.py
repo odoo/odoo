@@ -3,7 +3,7 @@ from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import new_test_user
+from odoo.tests import new_test_user, Form
 from odoo.tests.common import tagged, TransactionCase
 
 
@@ -112,16 +112,16 @@ class TestHrAttendanceOvertime(TransactionCase):
     def test_weekly_overtime(self):
         """ Test weekly overtime for the 40-hour rule """
         with freeze_time("2021-01-04"):
-            # Week: Mon-Fri, 10 hours/day = 50 hours total (40 expected + 10 overtime at 200%)
-            [
-                self.env['hr.attendance'].create({
+            # Week: Mon-Fri, 10 hours/day = 50 hours total (10h daily OT + 8h weekly OT = 18h total)
+            attendance_vals = [
+                {
                     'employee_id': self.employee.id,
                     'check_in': datetime(2021, 1, day, 8, 0),
                     'check_out': datetime(2021, 1, day, 18, 0)
-                }) for day in range(4, 9)  # Monday to Friday
+                } for day in range(4, 9)  # Monday to Friday
             ]
-            # todo : Fixme weekly overtime is being double counted
-            self.assertAlmostEqual(self.employee.total_overtime, 18, 2, msg="10 hours weekly overtime at 200% should yield 18 hours total overtime")
+            self.env['hr.attendance'].create(attendance_vals)
+            self.assertAlmostEqual(self.employee.total_overtime, 18, 2, msg="He should work from 8-16h so each day he did 2 hours of overtime")
 
     def test_multiple_attendances_same_day(self):
         """ Test multiple attendances in one day """
@@ -155,3 +155,31 @@ class TestHrAttendanceOvertime(TransactionCase):
             ]
 
             self.assertAlmostEqual(self.employee.total_overtime, 12.0, 2, msg="3 days of 2 hours overtime at 200% should yield 12 hours total overtime")
+
+    def test_access_ruleset_on_employee(self):
+        """
+        Test the access rights of the ruleset on the employee
+        Only the employee admin should be able to see and change the ruleset on the employee
+        """
+        user = new_test_user(self.env, login='usr', groups='hr.group_hr_user', company_id=self.company.id).with_company(self.company)
+        employee = self.env['hr.employee'].with_company(self.company).create({'name': "Employee Test"})
+        with Form(employee.with_user(user)) as employee_form:
+            self.assertFalse("ruleset_id" in employee_form._view['fields'])
+
+        # HR Mangers should be able to see the ruleset on the employee
+        user.group_ids |= self.env.ref('hr.group_hr_manager')
+        # fix le truc chelou de pas pouvoir ecrire la surrement les access rule
+        with Form(employee.with_user(user)) as employee_form:
+            self.assertTrue("ruleset_id" in employee_form._view['fields'])
+            employee_form.record.ruleset_id = self.ruleset.id
+
+    def test_is_manager_with_overtime(self):
+        """ Test the computation of is_manager with overtime """
+        user = new_test_user(self.env, login='usr', groups='hr_attendance.group_hr_attendance_officer', company_id=self.company.id).with_company(self.company)
+        self.employee.attendance_manager_id = user.id
+        attendance = self.env['hr.attendance'].with_company(self.company).create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 20, 0)
+        })
+        self.assertTrue(attendance.with_user(user).linked_overtime_ids.is_manager)

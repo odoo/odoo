@@ -1,6 +1,6 @@
 import { test, expect } from "@odoo/hoot";
-import { press, click, animationFrame, queryOne } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { press, click, animationFrame, queryOne, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { Component, xml, useState } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
@@ -157,7 +157,7 @@ test("colorpicker inside the builder are linked to the builder theme colors", as
             applyColorPreview() {},
             applyColorResetPreview() {},
             colorPrefix: "",
-            themeColorPrefix: "xyz-",
+            cssVarColorPrefix: "xyz-",
         },
     });
     const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
@@ -195,7 +195,7 @@ test("colorpicker outside the builder are not linked to the builder theme colors
             applyColorPreview() {},
             applyColorResetPreview() {},
             colorPrefix: "",
-            themeColorPrefix: "",
+            cssVarColorPrefix: "",
         },
     });
     const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
@@ -228,6 +228,42 @@ test("custom color picker sets default color as selected", async () => {
         },
     });
     expect("input.o_hex_input").toHaveValue("#FF0000");
+});
+
+test("should preserve color slider when picking max lightness color", async () => {
+    class TestColorPicker extends Component {
+        static template = xml`
+            <div style="width: 222px">
+                <CustomColorPicker selectedColor="state.color" onColorPreview.bind="onColorChange" onColorSelect.bind="onColorChange"/>
+            </div>`;
+        static components = { CustomColorPicker };
+        static props = ["*"];
+        setup() {
+            this.state = useState({
+                color: "#FFFF00",
+            });
+        }
+        onColorChange({ cssColor }) {
+            this.state.color = cssColor;
+        }
+    }
+    await mountWithCleanup(TestColorPicker);
+    const colorPickerArea = queryOne(".o_color_pick_area");
+    const colorPickerRect = colorPickerArea.getBoundingClientRect();
+
+    const clientX = colorPickerRect.left + colorPickerRect.width / 2;
+    const clientY = colorPickerRect.top; // Lightness 100%
+    manuallyDispatchProgrammaticEvent(colorPickerArea, "pointerdown", {
+        clientX,
+        clientY,
+    });
+    manuallyDispatchProgrammaticEvent(colorPickerArea, "pointerup", {
+        clientX,
+        clientY,
+    });
+
+    await animationFrame();
+    expect(colorPickerArea).toHaveStyle({ backgroundColor: "rgb(255, 255, 0)" });
 });
 
 test("custom color picker change color on click in hue slider", async () => {
@@ -268,4 +304,26 @@ test("can register an extra tab", async () => {
     expect("button.extra-tab").toHaveClass("active");
     expect(".o_font_color_selector>p:last-child").toHaveText("Color picker extra tab");
     registry.category("color_picker_tabs").remove("web.extra");
+});
+
+test("should mark default color as selected when it is selected", async () => {
+    defineStyle(`
+        :root {
+            --900: #212527;
+        }
+    `);
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#212527",
+                defaultTab: "custom",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {},
+            applyColorResetPreview() {},
+            colorPrefix: "",
+        },
+    });
+    expect(".o_color_button[data-color='900']").toHaveClass("selected");
 });

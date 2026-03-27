@@ -22,7 +22,7 @@ function cleanupExpirableStorage() {
 const storageBus = new EventBus();
 const storageFnToWrapper = new Map();
 browser.addEventListener("storage", ({ key, newValue }) => {
-    if (key.startsWith(BASE_STORAGE_KEY)) {
+    if (key?.startsWith(BASE_STORAGE_KEY)) {
         const actualKey = key.slice(BASE_STORAGE_KEY.length);
         storageBus.trigger(actualKey, newValue ? JSON.parse(newValue).value : null);
     }

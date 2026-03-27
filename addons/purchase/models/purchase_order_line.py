@@ -1,11 +1,13 @@
+from collections import defaultdict
 from datetime import datetime, time
+
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 from odoo.tools.float_utils import float_compare, float_round
-from odoo.exceptions import UserError
 
 
 class PurchaseOrderLine(models.Model):
@@ -16,6 +18,7 @@ class PurchaseOrderLine(models.Model):
 
     name = fields.Text(
         string='Description', required=True, compute='_compute_price_unit_and_date_planned_and_name', store=True, readonly=False)
+    translated_product_name = fields.Text(compute='_compute_translated_product_name')
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits='Product Unit', required=True)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
@@ -30,12 +33,15 @@ class PurchaseOrderLine(models.Model):
         store=True, readonly=False)
     tax_ids = fields.Many2many('account.tax', string='Taxes', context={'active_test': False, 'hide_original_tax_ids': True})
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]")
+    product_uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]", ondelete='restrict')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null', ondelete='restrict')
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(
-        string='Unit Price', required=True, digits='Product Price', aggregator='avg',
+        string='Unit Price', required=True, min_display_digits='Product Price', aggregator='avg',
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
+    price_unit_product_uom = fields.Float(
+        string='Unit Price Product UoM', min_display_digits='Product Price', compute="_compute_price_unit_product_uom",
+        help="The Price of one unit of the product's Unit of Measure")
     price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
@@ -61,6 +67,20 @@ class PurchaseOrderLine(models.Model):
     qty_to_invoice = fields.Float(compute='_compute_qty_invoiced', string='To Invoice Quantity', store=True, readonly=True,
                                   digits='Product Unit')
 
+    # Same than `qty_received` and `qty_to_invoice` but non-stored and depending of the context.
+    qty_received_at_date = fields.Float(
+        string="Received",
+        compute='_compute_qty_received_at_date',
+        digits='Product Unit'
+    )
+    qty_invoiced_at_date = fields.Float(
+        string="Billed",
+        compute='_compute_qty_invoiced_at_date',
+        digits='Product Unit'
+    )
+
+    amount_to_invoice_at_date = fields.Float(string='Amount', compute='_compute_amount_to_invoice_at_date')
+
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True, index='btree_not_null')
     currency_id = fields.Many2one(related='order_id.currency_id', string='Currency')
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
@@ -85,7 +105,7 @@ class PurchaseOrderLine(models.Model):
     )
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
-    purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
+    purchase_line_warn_msg = fields.Text(compute='_compute_purchase_line_warn_msg')
     parent_id = fields.Many2one(
         'purchase.order.line',
         string="Parent Section Line",
@@ -120,6 +140,7 @@ class PurchaseOrderLine(models.Model):
             partner_id=self.order_id.partner_id,
             currency_id=self.order_id.currency_id or company.currency_id,
             rate=self.order_id.currency_rate,
+            name=self.name,
         )
 
     def _compute_tax_id(self):
@@ -135,18 +156,16 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             line.price_unit_discounted = line.price_unit * (1 - line.discount / 100)
 
+    @api.depends('product_uom_id', 'price_unit')
+    def _compute_price_unit_product_uom(self):
+        for line in self:
+            line.price_unit_product_uom = not line.display_type and not line.is_downpayment and line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_id)
+
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
+        invoiced_quantities = self._prepare_qty_invoiced()
         for line in self:
-            # compute qty_invoiced
-            qty = 0.0
-            for inv_line in line._get_invoice_lines():
-                if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
-                    if inv_line.move_id.move_type == 'in_invoice':
-                        qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
-                    elif inv_line.move_id.move_type == 'in_refund':
-                        qty -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
-            line.qty_invoiced = qty
+            line.qty_invoiced = invoiced_quantities[line]
 
             # compute qty_to_invoice
             if line.order_id.state == 'purchase':
@@ -157,14 +176,44 @@ class PurchaseOrderLine(models.Model):
             else:
                 line.qty_to_invoice = 0
 
+    @api.depends('qty_invoiced')
+    @api.depends_context('accrual_entry_date')
+    def _compute_qty_invoiced_at_date(self):
+        if not self._date_in_the_past():
+            for line in self:
+                line.qty_invoiced_at_date = line.qty_invoiced
+            return
+        invoiced_quantities = self._prepare_qty_invoiced()
+        for line in self:
+            line.qty_invoiced_at_date = invoiced_quantities[line]
+
+    def _prepare_qty_invoiced(self):
+        # Compute qty_invoiced
+        invoiced_qties = defaultdict(float)
+        for line in self:
+            for inv_line in line._get_invoice_lines():
+                if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
+                    if inv_line.move_id.move_type == 'in_invoice':
+                        invoiced_qties[line] += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
+                    elif inv_line.move_id.move_type == 'in_refund':
+                        invoiced_qties[line] -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
+        return invoiced_qties
+
     def _get_invoice_lines(self):
         self.ensure_one()
         if self.env.context.get('accrual_entry_date'):
+            accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
             return self.invoice_lines.filtered(
-                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self.env.context['accrual_entry_date']
+                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= accrual_date
             )
         else:
             return self.invoice_lines
+
+    @api.depends('product_id.purchase_line_warn_msg')
+    def _compute_purchase_line_warn_msg(self):
+        has_warning_group = self.env.user.has_group('purchase.group_warning_purchase')
+        for line in self:
+            line.purchase_line_warn_msg = line.product_id.purchase_line_warn_msg if has_warning_group else ""
 
     @api.depends('product_id', 'product_id.type')
     def _compute_qty_received_method(self):
@@ -176,11 +225,30 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('qty_received_method', 'qty_received_manual')
     def _compute_qty_received(self):
+        received_qties = self._prepare_qty_received()
+        for line in self:
+            if not line.qty_received or line in received_qties:
+                line.qty_received = received_qties[line]
+
+    @api.depends('qty_received')
+    @api.depends_context('accrual_entry_date')
+    def _compute_qty_received_at_date(self):
+        if not self._date_in_the_past():
+            for line in self:
+                line.qty_received_at_date = line.qty_received
+            return
+        received_quantities = self._prepare_qty_received()
+        for line in self:
+            line.qty_received_at_date = received_quantities[line]
+
+    def _prepare_qty_received(self):
+        received_qties = defaultdict(float)
         for line in self:
             if line.qty_received_method == 'manual':
-                line.qty_received = line.qty_received_manual or 0.0
+                received_qties[line] = line.qty_received_manual or 0.0
             else:
-                line.qty_received = 0.0
+                received_qties[line] = 0.0
+        return received_qties
 
     @api.onchange('qty_received')
     def _inverse_qty_received(self):
@@ -208,6 +276,12 @@ class PurchaseOrderLine(models.Model):
                 line.selected_seller_id = seller.id if seller else False
             else:
                 line.selected_seller_id = False
+
+    @api.depends('price_unit', 'qty_invoiced_at_date', 'qty_received_at_date')
+    @api.depends_context('accrual_entry_date')
+    def _compute_amount_to_invoice_at_date(self):
+        for line in self:
+            line.amount_to_invoice_at_date = (line.qty_received_at_date - line.qty_invoiced_at_date) * line._get_gross_price_unit()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -373,6 +447,13 @@ class PurchaseOrderLine(models.Model):
             if not line.name or line.name in default_names:
                 product_ctx = {'seller_id': line.selected_seller_id.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
+
+    @api.depends('product_id')
+    def _compute_translated_product_name(self):
+        for line in self:
+            line.translated_product_name = line.product_id.with_context(
+                lang=line.partner_id.lang,
+            ).display_name
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
@@ -549,7 +630,8 @@ class PurchaseOrderLine(models.Model):
         if seller and (seller.product_uom_id or seller.product_tmpl_id.uom_id) != product_uom:
             uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
-        product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
+        tax_domain = self.env['account.tax']._check_company_domain(company_id)
+        product_taxes = product_id.supplier_taxes_id.filtered_domain(tax_domain)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
         if seller:
@@ -590,6 +672,13 @@ class PurchaseOrderLine(models.Model):
         to order user's time zone, convert to UTC time.
         """
         return self.order_id.get_order_timezone().localize(datetime.combine(date, time(12))).astimezone(UTC).replace(tzinfo=None)
+
+    @api.model
+    def _date_in_the_past(self):
+        if not 'accrual_entry_date' in self.env.context:
+            return False
+        accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
+        return accrual_date < fields.Date.today()
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date

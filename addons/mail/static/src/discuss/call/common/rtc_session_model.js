@@ -1,6 +1,16 @@
 import { fields, Record } from "@mail/core/common/record";
 import { Deferred } from "@web/core/utils/concurrency";
 
+/**
+ * @typedef {object} SessionInfo
+ * @property {boolean} [isSelfMuted]
+ * @property {boolean} [isDeaf]
+ * @property {boolean} [isTalking]
+ * @property {boolean} [isRaisingHand]
+ * @property {boolean} [isCameraOn]
+ * @property {boolean} [isScreenSharingOn]
+ */
+
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
     static id = "id";
@@ -54,7 +64,17 @@ export class RtcSession extends Record {
     /** @type {boolean} */
     is_camera_on;
     /** @type {boolean} */
-    is_screen_sharing_on;
+    is_screen_sharing_on = fields.Attr(undefined, {
+        onUpdate() {
+            if (
+                this.eq(this.channel?.activeRtcSession) &&
+                this.mainVideoStreamType === "screen" &&
+                !this.is_screen_sharing_on
+            ) {
+                this.channel.activeRtcSession = undefined;
+            }
+        },
+    });
     /** @type {number} */
     id;
     /** @type {boolean} */
@@ -89,6 +109,16 @@ export class RtcSession extends Record {
         /** @this {import("models").RtcSession} */
         compute() {
             return this.is_screen_sharing_on || this.is_camera_on;
+        },
+        /** @this {import("models").RtcSession} */
+        onUpdate() {
+            if (
+                this.isVideoStreaming &&
+                this.channel?.channel_type === "chat" &&
+                this.store.rtc.selfSession?.in(this.channel.rtc_session_ids)
+            ) {
+                this.channel.focusAvailableVideo();
+            }
         },
     });
     shortStatus = fields.Attr(undefined, {

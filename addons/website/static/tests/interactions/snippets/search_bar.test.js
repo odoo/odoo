@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { click, press, queryAll, queryOne } from "@odoo/hoot-dom";
@@ -40,34 +37,34 @@ function supportAutocomplete() {
         expect(json.params.term).toBe("xyz");
         expect(json.params.order).toBe("test desc");
         expect(json.params.limit).toBe(3);
-        expect(json.params.options.displayImage).toBe("false");
-        expect(json.params.options.displayDescription).toBe("false");
-        expect(json.params.options.displayExtraLink).toBe("true");
-        expect(json.params.options.displayDetail).toBe("false");
+        expect(json.params.options.displayImage).toBe(false);
+        expect(json.params.options.displayDescription).toBe(false);
+        expect(json.params.options.displayExtraLink).toBe(true);
+        expect(json.params.options.displayDetail).toBe(false);
         return {
-            "results": [
+            results: [
                 {
-                    "_fa": "fa-file-o",
-                    "name": "Xyz 1",
-                    "website_url": "/website/test/xyz-1",
+                    _fa: "fa-file-o",
+                    name: "Xyz 1",
+                    website_url: "/website/test/xyz-1",
                 },
                 {
-                    "_fa": "fa-file-o",
-                    "name": "Xyz 2",
-                    "website_url": "/website/test/xyz-2",
+                    _fa: "fa-file-o",
+                    name: "Xyz 2",
+                    website_url: "/website/test/xyz-2",
                 },
                 {
-                    "_fa": "fa-file-o",
-                    "name": "Xyz 3",
-                    "website_url": "/website/test/xyz-3",
-                }
+                    _fa: "fa-file-o",
+                    name: "Xyz 3",
+                    website_url: "/website/test/xyz-3",
+                },
             ],
-            "results_count": 3,
-            "parts": {
-                "name": true,
-                "website_url": true,
+            results_count: 3,
+            parts: {
+                name: true,
+                website_url: true,
             },
-            "fuzzy_search": false
+            fuzzy_search: false,
         };
     });
 }

@@ -3,6 +3,12 @@ import { registry } from "@web/core/registry";
 
 const errorHandlerRegistry = registry.category("error_handlers");
 
+const fetchErrorMessages = [
+    "Failed to fetch", // Chromium
+    "Load failed", // WebKit
+    "NetworkError when attempting to fetch resource.", // Firefox
+];
+
 /**
  * @param {OdooEnv} env
  * @param {UncaughError} error
@@ -10,7 +16,7 @@ const errorHandlerRegistry = registry.category("error_handlers");
  * @returns {boolean}
  */
 export function offlineFailToFetchErrorHandler(env, error, originalError) {
-    if (["Failed to fetch", "Load failed"].includes(originalError.message)) {
+    if (originalError instanceof TypeError && fetchErrorMessages.includes(originalError.message)) {
         Promise.resolve().then(() => {
             throw new ConnectionLostError();
         });

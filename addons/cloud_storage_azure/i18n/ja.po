@@ -3,13 +3,14 @@
 # * cloud_storage_azure
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-14 21:15+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-04 05:21+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "cloud_storage_azure/ja/>\n"
 "Language: ja\n"
@@ -18,6 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/ir_attachment.py:0
+msgid "%s is not a valid Azure Blob Storage URL."
+msgstr "%sは無効なAzure Blob Storage URLです。"
 
 #. module: cloud_storage_azure
 #: model:ir.model,name:cloud_storage_azure.model_ir_attachment
@@ -62,7 +69,19 @@ msgstr "新しい添付ファイルのためのクラウドストレージプロ
 #. module: cloud_storage_azure
 #: model:ir.model,name:cloud_storage_azure.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_invalidate_user_delegation_key
@@ -75,7 +94,8 @@ msgstr "キャッシュされた Azure ユーザ委任キーの無効化"
 msgid ""
 "Some Azure attachments are in use, please migrate their cloud storages "
 "before disable this module"
-msgstr "使用中のAzure添付があります。このモジュールを無効にする前に、クラウドストレー"
+msgstr ""
+"使用中のAzure添付があります。このモジュールを無効にする前に、クラウドストレー"
 "ジを移行して下さい。"
 
 #. module: cloud_storage_azure
@@ -85,8 +105,8 @@ msgid ""
 "The connection string is not allowed to download blobs from the container.\n"
 "%s"
 msgstr ""
-"接続文字列は、コンテナから blob をダウンロードすることを許可されていません。"
-"\n"
+"接続文字列は、コンテナから blob をダウンロードすることを許可されていませ"
+"ん。\n"
 "%s"
 
 #. module: cloud_storage_azure

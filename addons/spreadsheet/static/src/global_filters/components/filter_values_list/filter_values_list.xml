@@ -7,6 +7,7 @@
                     t-as="item"
                     t-key="item_index"
                     class="d-flex o-filter-item align-items-center"
+                    t-att-class="env.isSmall ? 'dropdown-item' : ''"
                     t-att-data-id="item.globalFilter.id">
                 <div class="me-1 w-25">
                     <t t-esc="getTranslatedFilterLabel(item.globalFilter)"/>

@@ -96,6 +96,7 @@ class PosController(PortalAccount):
         session_info['user_companies'] = {'current_company': company.id, 'allowed_companies': {company.id: session_info['user_companies']['allowed_companies'][company.id]}}
         session_info['nomenclature_id'] = pos_session.company_id.nomenclature_id.id
         session_info['fallback_nomenclature_id'] = pos_session.config_id.fallback_nomenclature_id.id
+        use_lna = bool(pos_session.env["ir.config_parameter"].get_param("point_of_sale.use_lna"))
         context = {
             'from_backend': 1 if from_backend else 0,
             'use_pos_fake_tours': True if k.get('tours', False) else False,
@@ -104,7 +105,8 @@ class PosController(PortalAccount):
             'pos_config_id': pos_session.config_id.id,
             'access_token': pos_session.config_id.access_token,
             'last_data_change': pos_session.config_id.last_data_change.strftime("%Y-%m-%d %H:%M:%S"),
-            'urls_to_cache': json.dumps(pos_config._get_url_to_cache(request.session.debug))
+            'urls_to_cache': json.dumps(pos_config._get_url_to_cache(request.session.debug)),
+            'use_lna': use_lna,
         }
         response = request.render('point_of_sale.index', context)
         response.headers['Cache-Control'] = 'no-store'
@@ -152,10 +154,8 @@ class PosController(PortalAccount):
         elif request.httprequest.method == 'GET':
             if kwargs.get('order_uuid'):
                 order = self.env['pos.order'].sudo().search([('uuid', '=', kwargs['order_uuid'])], limit=1)
-                form_values.update({
-                    'pos_reference': order.pos_reference if order.exists() else '',
-                    'date_order': order.date_order.strftime("%Y-%m-%d") if order.exists() else '',
-                })
+                if order:
+                    return request.redirect('/pos/ticket/validate?access_token=%s' % (order.access_token))
 
         return request.render("point_of_sale.ticket_request_with_code", {
             'errors': errors,
@@ -194,6 +194,9 @@ class PosController(PortalAccount):
         # If the order was already invoiced, return the invoice directly by forcing the access token so that the non-connected user can see it.
         if pos_order.account_move and pos_order.account_move.is_sale_document():
             return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
+
+        if not request.env['res.company']._with_locked_records(pos_order, allow_raising=False):
+            return
 
         # Get the optional extra fields that could be required for a localisation.
         pos_order_country = pos_order.company_id.account_fiscal_country_id

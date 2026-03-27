@@ -1,9 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { _t } from "@web/core/l10n/translation";
 
-export class AddProductOption extends BaseOptionComponent {
+export class BaseAddProductOption extends BaseOptionComponent {
     static template = "html_builder.AddProductOption";
-    static props = {
-        applyTo: { type: String, optional: true },
-        productSelector: String,
-    };
+    buttonLabel = _t("Add Product");
 }

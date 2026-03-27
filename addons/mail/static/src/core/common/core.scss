@@ -37,14 +37,14 @@ $o-discuss-talkingColor: lighten($success, 10%);
         align-items: center;
         justify-content: center;
         padding: 3px 4px;
-    
+
         &.o-muted {
             --o-discuss-badge-bg: #{$gray-400};
         }
     }
 
     & .o-innerBadge {
-        min-width: 2.7ch; // same as .badge, without using .badge to keep semantics of a single .badge
+        min-width: $o-badge-min-width; // same as .badge, without using .badge to keep semantics of a single .badge
     }
 }
 
@@ -58,6 +58,28 @@ $o-discuss-talkingColor: lighten($success, 10%);
     &.o-simulateDarkTheme {
         background-color: $gray-800;
         border-color: $gray-700 !important;
+
+        * {
+            color: white;
+        }
+
+        select, .form-check-input {
+            border-color: $gray-600;
+        }
+
+        .form-select {
+            --#{$prefix}form-select-bg-img: #{escape-svg($form-select-indicator-dark)};
+        }
+
+        .form-switch .form-check-input {
+            &:not(:checked):not(:focus) {
+                --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image-dark)};
+            }
+        }
+
+        select option {
+            background-color: $gray-700;
+        }
     }
 
     .o_bottom_sheet_sheet:has(&) {
@@ -72,6 +94,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-discuss-separator {
     opacity: $hr-opacity / 2;
+}
+
+.o-discuss-text-body {
+    color: $gray-700;
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
@@ -264,6 +290,10 @@ $o-mail-utilities: map-merge(
     font-size: 0.5rem;
 }
 
+.o-xxxs {
+    font-size: 0.35rem;
+}
+
 .o-yellow {
     color: $yellow;
 }
@@ -288,45 +318,48 @@ $o-mail-utilities: map-merge(
 // see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
 @mixin o-mention-variant(
     $background,
-    $border,
+    $outline,
     $color: color-contrast($background),
     $hover-background: if($color == $color-contrast-light, shade-color($background, $btn-hover-bg-shade-amount), tint-color($background, $btn-hover-bg-tint-amount)),
-    $hover-border: if($color == $color-contrast-light, shade-color($border, $btn-hover-border-shade-amount), tint-color($border, $btn-hover-border-tint-amount)),
+    $hover-outline: if($color == $color-contrast-light, shade-color($outline, $btn-hover-border-shade-amount), tint-color($outline, $btn-hover-border-tint-amount)),
     $hover-color: color-contrast($hover-background),
     $active-background: if($color == $color-contrast-light, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount)),
-    $active-border: if($color == $color-contrast-light, shade-color($border, $btn-active-border-shade-amount), tint-color($border, $btn-active-border-tint-amount)),
+    $active-outline: if($color == $color-contrast-light, shade-color($outline, $btn-active-border-shade-amount), tint-color($outline, $btn-active-border-tint-amount)),
     $active-color: color-contrast($active-background),
     $disabled-background: $background,
-    $disabled-border: $border,
+    $disabled-outline: $outline,
     $disabled-color: color-contrast($disabled-background)
 ) {
     color: #{$color} !important;
     background-color: #{$background};
-    border-color: #{$border};
+    outline-color: #{$outline};
     &:hover {
         color: #{$hover-color};
         background-color: #{$hover-background};
-        border-color: #{$hover-border};
+        outline-color: #{$hover-outline};
     }
     &:focus {
-        box-shadow: #{to-rgb(mix($color, $border, 15%))};
+        box-shadow: #{to-rgb(mix($color, $outline, 15%))};
     }
     &:active {
         color: #{$active-color};
         background-color: #{$active-background};
-        border-color: #{$active-border};
+        outline-color: #{$active-outline};
     }
     &:disabled {
         color: #{$disabled-color};
         background-color: #{$disabled-background};
-        border-color: #{$disabled-border};
+        outline-color: #{$disabled-outline};
     }
 }
 
 a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed {
+    user-select: none;
     border-radius: $btn-border-radius-sm;
-    padding: 0rem 0.1875rem;
-    border: 1px solid;
+    padding: 0rem 0.15rem;
+    margin: 0rem 0.025rem;
+    outline: 1px solid;
+    outline-offset: -1px;
     font-weight: $font-weight-bold;
     display: inline-block;
 }
@@ -384,7 +417,7 @@ a.o-discuss-mention {
     }
 }
 
-.o-mail-Discuss-threadActionPopover {
-    width: Min(95vw, 400px);
-    max-height: Min(50vh, 530px);
+.o-mail-starred {
+    color: $o-main-favorite-color;
+    filter: drop-shadow(1px 1px 0px #000000b0);
 }

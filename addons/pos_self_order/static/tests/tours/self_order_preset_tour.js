@@ -14,7 +14,6 @@ registry.category("web_tour.tours").add("self_order_preset_dine_in_tour", {
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
-        ...CartPage.selectTable("1"),
         Utils.clickBtn("Ok"),
     ],
 });
@@ -44,7 +43,7 @@ registry.category("web_tour.tours").add("self_order_preset_delivery_tour", {
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
         CartPage.fillInput("Email", "dre@dr.com"),
-        CartPage.fillInput("Phone", "0490 90 43 90"),
+        CartPage.fillInput("Phone", "+32490904390"),
         CartPage.fillInput("Street and Number", "Rue du Bronx 90"),
         CartPage.fillInput("Zip", "9999"),
         CartPage.fillInput("City", "New York"),
@@ -77,6 +76,51 @@ registry.category("web_tour.tours").add("self_order_preset_slot_tour", {
         CartPage.selectRandomValueInInput(".slot-select"),
         CartPage.fillInput("Name", "Dr Dre"),
         Utils.clickBtn("Continue"),
+        Utils.clickBtn("Ok"),
+    ],
+});
+
+registry.category("web_tour.tours").add("test_slot_limit_orders", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Free"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        CartPage.selectSpecificValueInInput(".slot-select", "18:00"),
+        CartPage.fillInput("Name", "Dr Dre"),
+        Utils.clickBtn("Continue"),
+        Utils.clickBtn("Ok"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Free"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        CartPage.checkSlotUnavailable("18:00"),
+    ],
+});
+
+registry.category("web_tour.tours").add("test_preset_takeaway_email_tour", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Takeaway"),
+        ProductPage.clickProduct("Free"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Free", "0", "1"),
+        Utils.clickBtn("Order"),
+        CartPage.fillInput("Name", "Public user"),
+        CartPage.fillInput("Email", "public.user@test.com"),
+        CartPage.fillInput("Phone", "+32000111222"),
+        Utils.clickBtn("Continue"),
+        // Waiting for mail to be sent
+        {
+            trigger: "body",
+            run: function () {
+                return new Promise((resolve) => setTimeout(resolve, 500));
+            },
+        },
         Utils.clickBtn("Ok"),
     ],
 });

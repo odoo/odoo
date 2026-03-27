@@ -295,7 +295,13 @@ class RepairOrder(models.Model):
         # Force to prefetch more than 1000 by 1000
         all_moves._fields['forecast_availability'].compute_value(all_moves)
         for repair in repairs:
-            if any(move.product_id.uom_id.compare(move.forecast_availability, move.product_qty) < 0 for move in repair.move_ids):
+            if any(
+                move.product_id
+                and move.product_id.uom_id.compare(
+                    move.forecast_availability, move.product_qty
+                ) < 0
+                for move in repair.move_ids
+            ):
                 repair.parts_availability = _('Not Available')
                 repair.parts_availability_state = 'late'
                 continue
@@ -417,7 +423,7 @@ class RepairOrder(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
-        repairs_to_cancel = self.filtered(lambda ro: ro.state not in ('draft', 'cancel'))
+        repairs_to_cancel = self.filtered(lambda ro: ro.state != 'cancel')
         repairs_to_cancel.action_repair_cancel()
 
     def action_generate_serial(self):
@@ -438,36 +444,7 @@ class RepairOrder(models.Model):
         return self.move_ids._action_assign()
 
     def action_create_sale_order(self):
-        if any(repair.sale_order_id for repair in self):
-            concerned_ro = self.filtered('sale_order_id')
-            ref_str = "\n".join(ro.name for ro in concerned_ro)
-            raise UserError(
-                _(
-                    "You cannot create a quotation for a repair order that is already linked to an existing sale order.\nConcerned repair order(s):\n%(ref_str)s",
-                    ref_str=ref_str,
-                ),
-            )
-        if any(not repair.partner_id for repair in self):
-            concerned_ro = self.filtered(lambda ro: not ro.partner_id)
-            ref_str = "\n".join(ro.name for ro in concerned_ro)
-            raise UserError(
-                _(
-                    "You need to define a customer for a repair order in order to create an associated quotation.\nConcerned repair order(s):\n%(ref_str)s",
-                    ref_str=ref_str,
-                ),
-            )
-        sale_order_values_list = []
-        for repair in self:
-            sale_order_values_list.append({
-                "company_id": self.company_id.id,
-                "partner_id": self.partner_id.id,
-                "warehouse_id": self.picking_type_id.warehouse_id.id,
-                "repair_order_ids": [Command.link(repair.id)],
-                "origin": repair.name,
-            })
-        self.env['sale.order'].create(sale_order_values_list)
-        # Add Sale Order Lines for 'add' move_ids
-        self.move_ids._create_repair_sale_order_line()
+        self._create_sale_order()
         return self.action_view_sale_order()
 
     def action_repair_cancel(self):
@@ -561,10 +538,6 @@ class RepairOrder(models.Model):
                 repair.move_id = move_id
         all_moves = self.move_ids + product_moves
         all_moves._action_done(cancel_backorder=True)
-
-        for sale_line in self.move_ids.sale_line_id:
-            price_unit = sale_line.price_unit
-            sale_line.write({'product_uom_qty': sale_line.qty_delivered, 'price_unit': price_unit})
 
         self.state = 'done'
         return True
@@ -700,6 +673,41 @@ class RepairOrder(models.Model):
                 add_moves.sale_line_id.write({'price_unit': 0.0, 'technical_price_unit': 0.0})
             else:
                 add_moves.sale_line_id._compute_price_unit()
+
+    def _get_sale_order_values(self):
+        self.ensure_one()
+        return {
+            "company_id": self.company_id.id,
+            "partner_id": self.partner_id.id,
+            "warehouse_id": self.picking_type_id.warehouse_id.id,
+            "repair_order_ids": [Command.link(self.id)],
+            "origin": self.name,
+        }
+
+    def _create_sale_order(self):
+        if any(repair.sale_order_id for repair in self):
+            concerned_ro = self.filtered('sale_order_id')
+            ref_str = "\n".join(ro.name for ro in concerned_ro)
+            raise UserError(
+                _(
+                    "You cannot create a quotation for a repair order that is already linked to an existing sale order.\nConcerned repair order(s):\n%(ref_str)s",
+                    ref_str=ref_str,
+                ),
+            )
+        if any(not repair.partner_id for repair in self):
+            concerned_ro = self.filtered(lambda ro: not ro.partner_id)
+            ref_str = "\n".join(ro.name for ro in concerned_ro)
+            raise UserError(
+                _(
+                    "You need to define a customer for a repair order in order to create an associated quotation.\nConcerned repair order(s):\n%(ref_str)s",
+                    ref_str=ref_str,
+                ),
+            )
+        sale_order_values_list = [repair._get_sale_order_values() for repair in self]
+        sale_orders = self.env['sale.order'].create(sale_order_values_list)
+        # Add Sale Order Lines for 'add' move_ids
+        self.move_ids._create_repair_sale_order_line()
+        return sale_orders
 
     # -------------------------------------------------------------------------
     # CATALOG

@@ -237,6 +237,23 @@ class TestMenu(common.TransactionCase):
         submenu.url = '/sub/slug-3'
         test_full_case(submenu)
 
+        #  Do the same test with a menu that is linked to a page
+        result = website_1.new_page(
+            name='/sub/page-3',
+            add_menu=True,
+        )
+        menu = Menu.browse(result['menu_id'])
+        page = self.env['website.page'].browse(result['page_id'])
+        self.assertEqual(menu.url, page.url, "Menu url should be the same than the page url")
+
+        test_full_case(menu.copy())
+
+        with MockRequest(self.env, website=website_1), \
+             patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
+
+            self.request_url_mock = 'http://localhost:8069/sub/slug-3'
+            self.assertFalse(menu._is_active(), "Page linked, same unslug, should not match")
+
     def test_menu_group_ids(self):
         Menu = self.env['website.menu']
         menu = Menu.create({
@@ -366,6 +383,23 @@ class TestMenuHttp(common.HttpCase):
         self.assertFalse(self.menu.page_id, "M2o should have been unset as this is an anchor URL.")
         self.assertEqual(self.menu.url, self.page_url + '#anchor', "Page URL should have been properly prefixed with the referer url")
         self.assertEqual(self.page.url, self.page_url, "Page URL should not have changed")
+
+    def test_menu_special_anchors(self):
+        data = {
+            'id': self.menu.id,
+            'parent_id': self.menu.parent_id.id,
+            'name': self.menu.name,
+        }
+
+        data['url'] = '#top'
+        self.simulate_rpc_save_menu(data)
+        self.assertEqual(self.menu.url, '#top', "Menu #top anchor without a page prefix")
+        self.assertEqual(self.menu._clean_url(), '#top', "Clean URL should not have a prefix for #top anchor")
+
+        data['url'] = '#bottom'
+        self.simulate_rpc_save_menu(data)
+        self.assertEqual(self.menu.url, '#bottom', "Menu #bottom anchor without a page prefix")
+        self.assertEqual(self.menu._clean_url(), '#bottom', "Clean URL should not have a prefix for #bottom anchor")
 
     def test_03_mega_menu_translate(self):
         # Setup

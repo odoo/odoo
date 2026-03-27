@@ -4,7 +4,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action, UseActions } from "@mail/core/common/action";
+import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
@@ -38,7 +38,7 @@ export function pickerOnClick(component, action, ev) {
         if (action.sequenceQuick) {
             anchorEl = component.quickActionsRef.el;
         } else {
-            anchorEl = component.moreActionsRef.el ?? action.ref.el;
+            anchorEl = component.moreActionsRef.el ?? component.extraActionsRef.el;
         }
     }
     const previousPicker = component.getActivePicker();
@@ -56,6 +56,7 @@ export function pickerSetup(action, func) {
     component.pickerTargetRef = useRef("picker-target");
     component.quickActionsRef = useRef("quick-actions");
     component.moreActionsRef = useRef("more-actions");
+    component.extraActionsRef = useRef("extra-actions");
     action.ref = useRef(action.id);
     action.picker = func();
 }
@@ -63,7 +64,7 @@ export function pickerSetup(action, func) {
 registerComposerAction("send-message", {
     btnClass: ({ action }) => (action.isActive ? "o-sendMessageActive o-text-white shadow-sm" : ""),
     condition: ({ composer, owner, store }) =>
-        !owner.env.inChatter && (!composer.message || store.env.isSmall),
+        (store.env.isSmall && composer.message) || (!owner.env.inChatter && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     icon: "fa fa-paper-plane-o",
     isActive: ({ owner }) => owner.sendMessageState.active,
@@ -125,15 +126,24 @@ registerComposerAction("upload-files", {
 });
 registerComposerAction("open-full-composer", {
     condition: ({ composer, owner }) =>
+        !composer.message &&
         owner.props.showFullComposer &&
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
         !owner.env.inFrontendPortalChatter,
+    hasBtnBg: ({ composer, owner }) =>
+        (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     hotkey: "shift+c",
     icon: "fa fa-expand",
+    isActive: ({ composer, owner }) =>
+        (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     name: _t("Open Full Composer"),
     onSelected: ({ owner }) => owner.onClickFullComposer(),
     sequence: 30,
+    tags: ({ composer, owner }) =>
+        composer.restoredFromFullComposer && !owner.state.isFullComposerOpen
+            ? [ACTION_TAGS.PRIMARY]
+            : undefined,
 });
 registerComposerAction("add-canned-response", {
     condition: ({ composer, store }) =>
@@ -159,6 +169,17 @@ export class ComposerAction extends Action {
     constructor({ composer }) {
         super(...arguments);
         this.composerFn = typeof composer === "function" ? composer : () => composer;
+    }
+
+    /**
+     * @param {Object} param0
+     * @param {Composer|() => Composer} composer
+     */
+    _disabledCondition({ composer }) {
+        if (composer.restoredFromFullComposer && this.id !== "open-full-composer") {
+            return true;
+        }
+        return super._disabledCondition(...arguments);
     }
 
     get params() {

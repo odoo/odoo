@@ -176,7 +176,7 @@
         <div role="form" class="input-group w-50">
             <t t-set="placeholderRemove">Remove a keyword first</t>
             <t t-set="placeholderAdd">Add your keyword</t>
-            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? placeholderRemove : placeholderAdd" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
+            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? placeholderRemove : placeholderAdd" t-att-readonly="isFull" t-on-keyup="onKeyup"/>
             <select t-if="languages.length > 1" title="The language of the keyword and related keywords."
                     t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
                 <t t-foreach="languages" t-as="lang" t-key="lang[0]">

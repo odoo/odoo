@@ -6,8 +6,8 @@ export class FaqHorizontal extends Interaction {
     dynamicContent = {
         ".s_faq_horizontal_entry_title": {
             "t-att-style": () => ({
-                "top": `${this.offset}px`,
-                "maxHeight": `calc(100vh - ${this.offset + 40}px)`,
+                top: `${this.offset}px`,
+                maxHeight: `calc(100vh - ${this.offset + 40}px)`,
             }),
         },
     };
@@ -18,7 +18,9 @@ export class FaqHorizontal extends Interaction {
 
     start() {
         this.updateTitlesPosition();
-        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTitlesPosition.bind(this)));
+        this.registerCleanup(
+            this.services.website_menus.registerCallback(this.updateTitlesPosition.bind(this))
+        );
     }
 
     updateTitlesPosition() {
@@ -31,12 +33,8 @@ export class FaqHorizontal extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.faq_horizontal", FaqHorizontal);
+registry.category("public.interactions").add("website.faq_horizontal", FaqHorizontal);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.faq_horizontal", {
-        Interaction: FaqHorizontal,
-    });
+registry.category("public.interactions.edit").add("website.faq_horizontal", {
+    Interaction: FaqHorizontal,
+});

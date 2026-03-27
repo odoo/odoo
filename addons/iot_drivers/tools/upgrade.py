@@ -1,6 +1,7 @@
 """Module to manage odoo code upgrades using git"""
 
 import logging
+import platform
 import requests
 import subprocess
 from odoo.addons.iot_drivers.tools.helpers import (
@@ -66,6 +67,34 @@ def get_db_branch(server_url):
         return None
 
 
+@rpi_only
+def check_version_upgrades(local_branch, db_branch):
+    """
+    Check if the iot is < 19.1 and upgrading to >= saas-19.1
+    If so and current python version is less than 3.12, run the scripts
+    located in upgrade_scripts/ to upgrade the python version
+    :param local_branch: The local git branch (Ex: "19.0" / "17.0-hw-drivers-compatibility-with-trixie-yaso")
+    :param db_branch: The git branch of the connected Odoo database (Ex: "saas-19.1" / "master" etc.)
+    """
+    try:
+        # 1. Check if the upgrade script needs to be ran
+        # Needed if local branch is < 19.1 and db branch is >= 19.1 + python version < 3.12
+        _logger.info("Checking for version upgrades for local branch %s / db_branch %s", local_branch, db_branch)
+        version_db = db_branch[-4:] if db_branch != 'master' else db_branch  # master is currently always >= 19.1
+        version_local = local_branch[-4:] if local_branch != 'master' else local_branch
+        local_python_version = tuple(int(x) for x in platform.python_version_tuple()[:2])
+        if version_local >= '19.1' or version_db < '19.1' or local_python_version >= (3, 12):
+            _logger.info("Ignoring unnecessary upgrade for local branch %s / db_branch %s with python version %s", local_branch, db_branch, local_python_version)
+            return
+
+        _logger.warning("Updating to Debian Trixie for >= 19.1")
+        subprocess.run(
+            ['/home/pi/odoo/addons/iot_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie.sh'], check=True,
+        )
+    except subprocess.CalledProcessError:
+        _logger.exception("Failed to upgrade to debian Trixie. Check /home/pi/upgrade.log file for more details")
+
+
 @toggleable
 @require_db
 def check_git_branch(server_url=None):
@@ -91,6 +120,7 @@ def check_git_branch(server_url=None):
         if db_branch != local_branch:
             # Repository updates
             unlink_file("odoo/.git/shallow.lock")  # In case of previous crash/power-off, clean old lockfile
+            check_version_upgrades(local_branch, db_branch)
             checkout(db_branch)
             update_requirements()
 
@@ -105,37 +135,35 @@ def check_git_branch(server_url=None):
         _logger.exception('An error occurred while trying to update the code with git')
 
 
-def _ensure_production_remote(local_remote):
+def _ensure_production_remote():
     """Ensure that the remote repository is the production one
     (https://github.com/odoo/odoo.git).
-
-    :param local_remote: The name of the remote repository.
     """
     production_remote = "https://github.com/odoo/odoo.git"
-    if git('remote', 'get-url', local_remote) != production_remote:
+    if git("remote", "get-url", "origin") != production_remote:
         _logger.info("Setting remote repository to production: %s", production_remote)
-        git('remote', 'set-url', local_remote, production_remote)
+        git("remote", "set-url", "origin", production_remote)
 
 
-def checkout(branch, remote=None):
+def checkout(branch):
     """Checkout to the given branch of the given git remote.
 
     :param branch: The name of the branch to check out.
-    :param remote: The name of the local git remote to use (usually ``origin`` but computed if not provided).
     """
     _logger.info("Preparing local repository for checkout")
+    _ensure_production_remote()
+
+    _logger.warning("Checking out origin/%s", branch)
+    if git("fetch", "origin", branch, "--depth=1", "--prune") is None:
+        _logger.error("Failed to fetch origin/%", branch)
+        return
+    if git("reset", "FETCH_HEAD", "--hard") is None:
+        _logger.error("Failed to reset on FETCH_HEAD")
+        return
     git('branch', '-m', branch)  # Rename the current branch to the target branch name
 
-    remote = remote or git('config', f'branch.{branch}.remote') or 'origin'
-    _ensure_production_remote(remote)
-
-    _logger.warning("Checking out %s/%s", remote, branch)
-    git('remote', 'set-branches', remote, branch)
-    git('fetch', remote, branch, '--depth=1', '--prune')  # refs/remotes to avoid 'unknown revision'
-    git('reset', 'FETCH_HEAD', '--hard')
-
     _logger.info("Cleaning the working directory")
-    git('clean', '-dfx')
+    git("clean", "-dfx")
 
 
 def update_requirements():
@@ -191,11 +219,6 @@ def misc_migration_updates():
         subprocess.run(
             ['sudo', 'sed', '-i', 's|iot_box_image|point_of_sale/tools/posbox|g', ramdisks_service], check=False
         )
-
-        # TODO: Remove this code when v16 is deprecated
-        with open('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
-            if "server_wide_modules" not in f.read():
-                f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
 
     if path_file('odoo', 'addons', 'hw_drivers').exists():
         # TODO: remove this when v18.4 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)

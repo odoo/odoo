@@ -631,6 +631,25 @@ class TestStockQuant(TestStockCommon):
         self.assertEqual(quant.lot_id.id, lot1.id)
         self.assertEqual(quant.in_date, in_date2)
 
+    def test_quant_rounding(self):
+        """ In the case where the product group has the Reserve Only Full Packagings selected,
+        then another check occurs calling _check_qty. This method rounds the available quantity
+        which will cause issues if the package uom is the same as the product uom. Test to see the
+        quantity is correct if the uoms are the same.
+        """
+        QUANTITY = 22.43
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_goods').id,
+        })
+        product.product_tmpl_id.categ_id.packaging_reserve_method = 'full'
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, QUANTITY)
+
+        quants = self.env['stock.quant'].with_context(packaging_uom_id=product.uom_id)._get_reserve_quantity(product, self.stock_location, QUANTITY)
+
+        self.assertEqual(quants[0][1], QUANTITY, 'Reserved Quantity should be rounded to UOM precision.')
+
     def test_closest_removal_strategy_tracked(self):
         """ Check that the Closest location strategy correctly applies when you have multiple lot received
         at different locations for a tracked product.
@@ -1381,6 +1400,28 @@ class TestStockQuant(TestStockCommon):
             'quantity': 10.0,
             'lot_id': False,
         }])
+
+    def test_set_inventory_no_property_stock_inventory(self):
+        """
+        Test that quant inventory can be applied on products with no property_stock_inventory set.
+        """
+        quant = self.env['stock.quant'].create([{
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'inventory_quantity': 10,
+        }])
+
+        self.productA.property_stock_inventory = False
+
+        quant.with_context(inventory_report_mode=True).action_set_inventory_quantity_zero()
+        move_line = self.env['stock.move.line'].search([('product_id', '=', self.productA.id)])
+        loss_location_id = self.env['ir.default']._get_model_defaults('product.template').get('property_stock_inventory')
+
+        self.assertEqual(
+            move_line.location_dest_id.id, loss_location_id,
+            "The destination location should be the default loss location"
+        )
+        self.assertEqual(quant.inventory_quantity, 0)
 
 
 class TestStockQuantRemovalStrategy(TestStockCommon):

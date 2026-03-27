@@ -3,13 +3,15 @@
 # * html_editor
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
-"PO-Revision-Date: 2025-09-16 21:36+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:37+0000\n"
+"PO-Revision-Date: 2026-03-20 13:06+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "html_editor/sv/>\n"
 "Language: sv\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -26,8 +28,8 @@ msgid ""
 "'Alt tag' specifies an alternate text for an image, if the image cannot be "
 "displayed (slow connection, missing image, screen reader ...)."
 msgstr ""
-"'Alt tag' anger en alternativ text för en bild, om bilden inte kan visas ("
-"långsam anslutning, saknad bild, skärmläsare ...)."
+"'Alt tag' anger en alternativ text för en bild, om bilden inte kan visas "
+"(långsam anslutning, saknad bild, skärmläsare ...)."
 
 #. module: html_editor
 #. odoo-javascript
@@ -41,6 +43,12 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "(URL or Embed)"
 msgstr "(URL eller inbäddad)"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid ", submited by"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -74,24 +82,6 @@ msgstr "5 stjärnor"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "AI"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "AI Copywriter"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "AI Tools"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Accepts"
 msgstr "Acceptera"
@@ -106,8 +96,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 
 #. module: html_editor
@@ -179,6 +169,18 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/caption_plugin/caption_plugin.js:0
+msgid "Add/remove a caption"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Advanced mode"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.js:0
 msgid "Alert"
 msgstr "Varning"
@@ -215,6 +217,12 @@ msgstr "Ett fel uppstod när den angivna URL:en hämtades."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Angle"
+msgstr "Vinkel"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/collaboration/collaboration_selection_avatar_plugin.js:0
 #: code:addons/html_editor/static/src/others/collaboration/collaboration_selection_plugin.js:0
 msgid "Anonymous"
@@ -224,18 +232,19 @@ msgstr "Anonym"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
+#: code:addons/html_editor/static/src/main/media/image_description.xml:0
 msgid "Apply"
 msgstr "Verkställ"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/font/color_ui_plugin.js:0
 msgid "Apply Background Color"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/font/color_ui_plugin.js:0
 msgid "Apply Font Color"
 msgstr ""
 
@@ -260,6 +269,12 @@ msgstr "Bilaga"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "Bilage-URL"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr "Autokonvertera till relativ länk"
 
 #. module: html_editor
 #. odoo-javascript
@@ -308,16 +323,27 @@ msgid "Banner Warning"
 msgstr "Varning för banner"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/signature_plugin.js:0
-msgid "Basic Bloc"
-msgstr ""
+#: model:ir.model,name:html_editor.model_base
+msgid "Base"
+msgstr "Bas"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Big section heading"
 msgstr "Stor sektionsrubrik"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Border"
+msgstr "Ram"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Border Size"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -345,17 +371,9 @@ msgstr "Sekundär knapp"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
 msgid "Cancel"
 msgstr "Avbryt"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "ChatGPT"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -365,7 +383,7 @@ msgstr "Checklista"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
 msgid "Clear"
 msgstr "Rensa"
 
@@ -391,8 +409,15 @@ msgstr "Stäng"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/syntax_highlighting.xml:0
 msgid "Code"
 msgstr "Kod"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
+msgid "Code copied to the clipboard."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -405,18 +430,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/column_plugin.js:0
 msgid "Columnize"
 msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
-msgid "Comparison"
-msgstr "Jämförelse"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
-msgid "Content"
-msgstr "Innehåll"
 
 #. module: html_editor
 #. odoo-javascript
@@ -450,21 +463,21 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Copy Link"
-msgstr "Kopiera länk"
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
+msgid "Convert to paragraph"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
+msgid "Copy"
+msgstr "Kopiera"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Copy-paste your URL or embed code here"
 msgstr "Kopiera och klistra in din URL/infoga kod här"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Correct"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -491,6 +504,16 @@ msgid "Create an URL."
 msgstr "Skapa en URL."
 
 #. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__create_date
+msgid "Created on"
+msgstr "Skapad på"
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_crop_plugin.js:0
 msgid "Crop image"
@@ -498,6 +521,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Custom"
 msgstr "Anpassad"
@@ -507,6 +531,12 @@ msgstr "Anpassad"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Dailymotion"
 msgstr "Dailymotion"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.xml:0
+msgid "Define a custom gradient"
+msgstr "Anpassa gradient"
 
 #. module: html_editor
 #. odoo-javascript
@@ -522,7 +552,14 @@ msgstr "Beskrivning"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Direct download"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.xml:0
@@ -530,17 +567,28 @@ msgid "Discard"
 msgstr "Avbryt"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
-msgid ""
-"Discover a world of awesomeness in our copyright-free image haven. No legal "
-"drama, just nice images!"
-msgstr ""
-"Upptäck en värld av fantastiska bilder i vårt upphovsrättsfria bildparadis. "
-"Inget juridiskt drama, bara fina bilder!"
-
-#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__display_name
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__display_name
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_contact__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_date__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_datetime__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_duration__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_float__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_html__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_integer__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_many2one__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_monetary__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_qweb__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_relative__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_selection__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_text__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_websocket__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
@@ -564,7 +612,8 @@ msgstr "ERROR: kan inte ladda ned url från mediabiblioteket."
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/fields/x2many_field/x2many_image_field.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit"
 msgstr "Redigera"
 
@@ -594,12 +643,6 @@ msgstr "Bädda in Youtube-video"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
-msgid "Embed a video"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Embed the image in the document."
 msgstr "Bädda in bilden i dokumentet."
@@ -624,15 +667,38 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.js:0
-msgid "Error"
-msgstr "Fel"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/toolbar/toolbar_plugin.js:0
 msgid "Expand toolbar"
 msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the closest corner"
+msgstr "Förläng till närmsta hörn"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the closest side"
+msgstr "Förläng till närmsta sida"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the farthest corner"
+msgstr "Förläng till bortersta hörnet"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Extend to the farthest side"
+msgstr "Förläng till bortersta sidan"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_html_field_history_mixin
+msgid "Field html History"
+msgstr "Fält html Historia"
 
 #. module: html_editor
 #. odoo-javascript
@@ -648,15 +714,9 @@ msgstr "Filen är uppdaterad"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Fill"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Fill + Rounded"
-msgstr ""
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Fill Color"
+msgstr "Fyllningsfärg"
 
 #. module: html_editor
 #. odoo-javascript
@@ -684,33 +744,14 @@ msgstr "Format"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Friendly"
-msgstr ""
+#: code:addons/html_editor/static/src/main/font/color_picker_gradient_tab.js:0
+msgid "Gradient"
+msgstr "Gradient"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Generate Text with AI"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
-msgid "Generate or transform content with AI"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "Generating"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "Generating an alternative..."
-msgstr ""
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-routing"
 
 #. module: html_editor
 #. odoo-javascript
@@ -792,12 +833,6 @@ msgstr "Rubrik 6"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
-msgid "Hide Dailymotion logo"
-msgstr "Göm Dailymotion logo"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin.js:0
 msgid "Hide Text under foldable toggles"
 msgstr ""
@@ -816,12 +851,6 @@ msgstr "Göm spelarknappar"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
-msgid "Hide sharing button"
-msgstr "Göm dela knapp"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
 msgid "Highlight the structure (headings)"
 msgstr ""
@@ -833,21 +862,56 @@ msgid "History"
 msgstr "Historik"
 
 #. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__html_field_history
+msgid "History data"
+msgstr "Historiska data"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__html_field_history_metadata
+msgid "History metadata"
+msgstr "Historiska metadata"
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Html"
 msgstr "Html"
 
 #. module: html_editor
-#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
-msgid "ID"
-msgstr "ID"
+#: model:ir.model,name:html_editor.model_html_editor_converter_test_sub
+msgid "Html Editor Converter Subtest"
+msgstr ""
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Icon"
-msgstr "Ikon"
+#: model:ir.model,name:html_editor.model_html_editor_converter_test
+msgid "Html Editor Converter Test"
+msgstr ""
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__id
+#: model:ir.model.fields,field_description:html_editor.field_html_field_history_mixin__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_contact__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_date__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_datetime__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_duration__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_float__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_html__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_integer__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_many2one__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_monetary__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_qweb__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_relative__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_selection__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_qweb_field_text__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_websocket__id
+msgid "ID"
+msgstr "ID"
 
 #. module: html_editor
 #. odoo-javascript
@@ -860,12 +924,6 @@ msgstr "Ikoner"
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Illustrations"
 msgstr "Illustrationer"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Image"
-msgstr "Bild"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__image_height
@@ -884,35 +942,21 @@ msgstr "Bild brädd"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "Image description"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
 msgid "Images"
 msgstr "Bilder"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Indicates the link is sponsored or paid content"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 msgid "Insert"
 msgstr "Infoga"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
-msgid "Insert Video"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
-msgid "Insert a Video"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -931,6 +975,12 @@ msgstr "Infoga ett fält"
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "Insert a horizontal rule separator"
 msgstr "Infoga en horisontell regelavgränsare"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a monospace banner"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -994,6 +1044,12 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Insert image, icon or video"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Insert left"
 msgstr "Infoga vänster"
@@ -1006,9 +1062,15 @@ msgstr "Infoga höger"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/signature_plugin.js:0
-msgid "Insert your signature"
-msgstr "Infoga din signatur"
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "Instagram"
+msgstr "Instagram"
+
+#. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/models/ir_ui_view.py:0
+msgid "Invalid field value for %(field_name)s: %(value)s"
+msgstr "Ogiltigt fältvärde för %(field_name)s: %(value)s"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1023,10 +1085,20 @@ msgid "Large"
 msgstr "Stor"
 
 #. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Lengthen"
-msgstr ""
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Linear"
+msgstr "Linjär"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1034,6 +1106,12 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Link"
 msgstr "Link"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Link Popover"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1045,8 +1123,7 @@ msgstr "Länken kopierad till urklipp."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 
 #. module: html_editor
@@ -1064,8 +1141,6 @@ msgstr "Ladda mer..."
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Loading..."
@@ -1073,9 +1148,21 @@ msgstr "Laddar..."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Logout"
+msgstr "Logga ut"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Loop"
 msgstr "Loop"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
+msgid "MM:SS"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1110,6 +1197,25 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
+msgid "Modules"
+msgstr "Moduler"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace Banner"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/powerbox/search_powerbox_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "More options"
 msgstr "Fler alternativ"
 
@@ -1142,6 +1248,11 @@ msgstr "Flytta upp"
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "My Images"
 msgstr "Mina bilder"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_html_editor_converter_test_sub__name
+msgid "Name"
+msgstr "Namn"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1194,9 +1305,9 @@ msgstr "Numrerad lista"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.js:0
-msgid "OdooBot"
-msgstr ""
+#: code:addons/html_editor/static/src/main/media/media_dialog/attachment_error.xml:0
+msgid "Ok"
+msgstr "Ok"
 
 #. module: html_editor
 #. odoo-python
@@ -1220,6 +1331,12 @@ msgstr "Öppna i en ny flik"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Open in new tab"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
 msgid "Optimized"
 msgstr "Optimerad"
@@ -1228,18 +1345,6 @@ msgstr "Optimerad"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__original_id
 msgid "Original (unoptimized, unresized) attachment"
 msgstr "Originalbilaga (ej optimerad, ej storleksanpassad)"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Outline"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Outline + Rounded"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1261,22 +1366,27 @@ msgstr "Klistra in som URL"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Paste or type your URL"
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Position X"
+msgstr "Position X"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Position Y"
+msgstr "Position Y"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Prevents the new page from accessing the original window (security)"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Persuasive"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Preview"
-msgstr "Förhandsgranskning"
+msgstr "Förhandsvisning"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1286,15 +1396,24 @@ msgstr "Förhandsgranska bild"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Professional"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
 msgid "Progress bar"
 msgstr "Progress bar"
+
+#. module: html_editor
+#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__c
+msgid "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
+msgstr "Qu’est-ce qu’il fout ce maudit pancake, tabernacle ?"
+
+#. module: html_editor
+#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__a
+msgid "Qu'il n'est pas arrivé à Toronto"
+msgstr "Qu’il n’est pas arrivé à Toronto"
+
+#. module: html_editor
+#: model:ir.model.fields.selection,name:html_editor.selection__html_editor_converter_test__selection_str__b
+msgid "Qu'il était supposé arriver à Toronto"
+msgstr "Qu'il était supposé arriver à Toronto"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1303,10 +1422,102 @@ msgid "Quote"
 msgstr "Citat"
 
 #. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb
+msgid "Qweb"
+msgstr "Qweb"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr "Qweb-fält"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
+msgstr "Qweb fältkontakt"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_date
+msgid "Qweb Field Date"
+msgstr "Qweb fält Datum"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_datetime
+msgid "Qweb Field Datetime"
+msgstr "Qweb-fältet Datetime"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_duration
+msgid "Qweb Field Duration"
+msgstr "Qweb Field Varaktighet"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_float
+msgid "Qweb Field Float"
+msgstr "Qweb Field Float"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "Qweb Field HTML"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_image
+msgid "Qweb Field Image"
+msgstr "Qweb fältbild"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_integer
+msgid "Qweb Field Integer"
+msgstr "Qweb-fältet heltal"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_many2one
+msgid "Qweb Field Many to One"
+msgstr "Qweb Field Många till en"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_monetary
+msgid "Qweb Field Monetary"
+msgstr "Qweb Field Monetär"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_relative
+msgid "Qweb Field Relative"
+msgstr "Qweb Field Relativ"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_selection
+msgid "Qweb Field Selection"
+msgstr "Val av Qweb-fält"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_text
+msgid "Qweb Field Text"
+msgstr "Qweb fälttext"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_qweb_field_qweb
+msgid "Qweb Field qweb"
+msgstr "Qweb Field qweb"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Radial"
+msgstr "Radiell"
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/history_plugin.js:0
 msgid "Redo"
 msgstr "Gör om"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
+msgid "Remove"
+msgstr "Ta bort"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1335,9 +1546,22 @@ msgstr "Ta bort kolumner"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Removes referrer information sent to the target site"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/video/video.xml:0
 msgid "Replace"
 msgstr "Byt ut"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Replace URL with its title"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1366,7 +1590,19 @@ msgstr "Återställ bild"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
-msgid "Reset Size"
+msgid "Reset column size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Reset row size"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Reset table size"
 msgstr ""
 
 #. module: html_editor
@@ -1425,9 +1661,9 @@ msgstr "Rotera höger"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "Save"
-msgstr "Spara"
+#: code:addons/html_editor/static/src/main/media/media_dialog/search_media.xml:0
+msgid "Search"
+msgstr "Sök"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1449,13 +1685,19 @@ msgstr "Sök efter en bild"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
+msgid "Search the web for royalty-free images"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/icon_color_plugin.js:0
 msgid "Select Background Color"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_color_plugin.js:0
 msgid "Select Font Color"
 msgstr ""
 
@@ -1464,6 +1706,18 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
 msgid "Select a media"
 msgstr "Välj ett media"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button shape"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Select button size"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1487,12 +1741,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Selection has no format"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Send a message"
 msgstr ""
 
 #. module: html_editor
@@ -1533,21 +1781,29 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
-msgid "Shorten"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "Show optimized images"
 msgstr "Visa optimerade bilder"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/signature_plugin.js:0
-msgid "Signature"
-msgstr "Signatur"
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid ""
+"Showing all differences between the current version and the selected one "
+"updated by"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Showing the document as it was on"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Size"
+msgstr "Storlek"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1575,8 +1831,20 @@ msgstr "Tyvärr, din fråga är för lång. Försök att säga det med färre or
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Split view"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/star_plugin.js:0
 msgid "Stars"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
+msgid "Start at"
 msgstr ""
 
 #. module: html_editor
@@ -1618,9 +1886,21 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.js:0
+msgid "Tells search engines not to follow this link"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Text"
 msgstr "Text"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Text Color"
+msgstr "Textfärg"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1633,6 +1913,30 @@ msgstr "URL:en verkar inte fungera."
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "The URL seems valid."
 msgstr "URL:en verkar vara giltig."
+
+#. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/models/ir_qweb_fields.py:0
+msgid "The datetime %(value)s does not match the format %(format)s"
+msgstr "Datatiden %(value)s stämmer inte överens med formatet %(format)s"
+
+#. module: html_editor
+#. odoo-python
+#: code:addons/html_editor/tools.py:0
+msgid ""
+"The document was already saved from someone with a different history for "
+"model \"%(model)s\", field \"%(field)s\" with id \"%(id)d\"."
+msgstr ""
+"Dokumentet har redan sparats från någon med en annan historik för modell \"%"
+"(model)s\", fält \"%(field)s\" med id \"%(id)d\"."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/attachment_error.xml:0
+msgid ""
+"The image could not be deleted because it is used in the\n"
+"                following pages or views:"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1651,12 +1955,6 @@ msgstr "Den angivna webbadressen är ogiltig"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "The provided url is not valid"
 msgstr "Den angivna webbadressen är inte giltig"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
-msgid "Thinking..."
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1681,6 +1979,12 @@ msgstr "Denna fil bifogas det aktuella posten."
 #: code:addons/html_editor/static/src/main/media/image_crop.js:0
 msgid "This image is an external image"
 msgstr "Denna bild är en extern bild"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "This is the current version, nothing to compare."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1760,8 +2064,8 @@ msgstr "Förvandla bilden (klicka två gånger för att återställa förvandlin
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
+#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_plugin.js:0
 msgid "Translate with AI"
 msgstr "Översätt med AI"
 
@@ -1776,6 +2080,24 @@ msgstr "Översättning..."
 #: code:addons/html_editor/static/src/main/media/media_dialog/icon_selector.xml:0
 msgid "Try searching with other keywords."
 msgstr "Försök att söka med andra nyckelord."
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Turn into header"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Turn into row"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "Type"
+msgstr "Typ"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1809,8 +2131,8 @@ msgstr "Ångra"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Upload File"
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Unified view"
 msgstr ""
 
 #. module: html_editor
@@ -1839,9 +2161,15 @@ msgstr "Den uppladdade bildens format stöds inte. Försök med: %s"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
-msgid "Video Link"
-msgstr "Videolänk"
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Version date"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_align_plugin.js:0
+msgid "Vertical align table cells content"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1851,13 +2179,14 @@ msgstr "Videokod"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/video/video.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/core/video/readonly_video.xml:0
 msgid "Video player"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
+#: code:addons/html_editor/static/src/fields/x2many_field/custom_media_dialog.js:0
+#: code:addons/html_editor/static/src/main/media/video_plugin.js:0
 msgid "Videos"
 msgstr "Videor"
 
@@ -1866,6 +2195,29 @@ msgstr "Videor"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Videos are muted when autoplay is enabled"
 msgstr "Videoklipp är ljudlösa när autouppspelning är aktiverad"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_ui_view
+msgid "View"
+msgstr "Visa"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "View Content"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "View comparison"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "View content"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1891,14 +2243,28 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/caption_plugin/caption_plugin.js:0
+msgid "Write a caption..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Yes"
 msgstr "Ja"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.js:0
-msgid "You"
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.js:0
+msgid ""
+"You can not replace a field by this image. If you want to use this image, "
+"first save it on your computer and then upload it here."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
+msgid "You can not use this image in a field"
 msgstr ""
 
 #. module: html_editor
@@ -1937,13 +2303,7 @@ msgstr "Du måste ange antingen data eller url för att skapa en bilaga."
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
-msgid "Youku"
-msgstr "Youku"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/video/video.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/core/video/readonly_video.xml:0
 msgid "Your browser does not support iframe."
 msgstr "Din webbläsare stöder inte iframe."
 
@@ -1973,26 +2333,20 @@ msgstr "Zooma ut"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "all"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
-msgid "alternatives..."
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "and"
 msgstr "och"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "database"
+#: code:addons/html_editor/static/src/main/font/gradient_picker/gradient_picker.xml:0
+msgid "deg"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/separator_plugin.js:0
+msgid "divider"
 msgstr ""
 
 #. module: html_editor
@@ -2003,15 +2357,33 @@ msgstr "dokument"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "e.g. https://www.odoo.com"
+msgstr "t.ex. https://www.odoo.com"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "file"
 msgstr "fil"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
-msgid "media-library"
+#: code:addons/html_editor/static/src/main/separator_plugin.js:0
+msgid "line"
 msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "noopener"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "on"
+msgstr "på"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2021,24 +2393,72 @@ msgstr "eller"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "px"
+msgstr "px"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
+msgid "title"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
-msgstr "videos"
+msgstr "videor"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.urlDescription}}"
-msgstr ""
+#: model:ir.model,name:html_editor.model_ir_websocket
+msgid "websocket message handling"
+msgstr "websocket meddelandehantering"
 
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.urlTitle}}"
-msgstr ""
+#~ msgid "Copy Link"
+#~ msgstr "Kopiera länk"
 
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "{{state.url}}"
-msgstr ""
+#~ msgid "Shape"
+#~ msgstr "Form"
+
+#~ msgid "Hide Dailymotion logo"
+#~ msgstr "Göm Dailymotion logo"
+
+#~ msgid "Hide sharing button"
+#~ msgstr "Göm dela knapp"
+
+#~ msgid "Youku"
+#~ msgstr "Youku"
+
+#~ msgid "Comparison"
+#~ msgstr "Jämförelse"
+
+#~ msgid "Content"
+#~ msgstr "Innehåll"
+
+#~ msgid ""
+#~ "Discover a world of awesomeness in our copyright-free image haven. No "
+#~ "legal drama, just nice images!"
+#~ msgstr ""
+#~ "Upptäck en värld av fantastiska bilder i vårt upphovsrättsfria "
+#~ "bildparadis. Inget juridiskt drama, bara fina bilder!"
+
+#~ msgid "Error"
+#~ msgstr "Fel"
+
+#~ msgid "Icon"
+#~ msgstr "Ikon"
+
+#~ msgid "Image"
+#~ msgstr "Bild"
+
+#~ msgid "Insert your signature"
+#~ msgstr "Infoga din signatur"
+
+#~ msgid "Save"
+#~ msgstr "Spara"
+
+#~ msgid "Signature"
+#~ msgstr "Signatur"
+
+#~ msgid "Video Link"
+#~ msgstr "Videolänk"

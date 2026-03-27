@@ -142,7 +142,7 @@
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="print_quotation" string="Print" type="object" groups="base.group_user" data-hotkey="k" invisible="state == 'purchase'"/>
                     <button name="%(purchase.action_report_purchase_order)d" string="Print" type="action" groups="base.group_user" data-hotkey="k" invisible="state != 'purchase'"/>
-                    <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase')" string="Cancel" type="object" data-hotkey="x" />
+                    <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase') or locked" string="Cancel" type="object" data-hotkey="x"/>
                     <button name="button_lock" type="object" string="Lock" invisible="locked or state != 'purchase' or not lock_confirmed_po == 'lock'" data-hotkey="l"/>
                     <button name="button_unlock" type="object" string="Unlock" invisible="not locked" groups="purchase.group_purchase_manager" data-hotkey="l"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
@@ -435,8 +435,8 @@
                     <filter name="approved" string="Purchase Orders" domain="[('state', '=', 'purchase')]"/>
                     <separator/>
                     <filter name="late" string="Late" domain="[('state', 'in', ['draft', 'sent', 'to approve']),('date_order', '&lt;', 'now')]"/>
-                    <filter name="not_acknowledged" string="Not Acknowledged" domain="[('state', '=', 'purchase'), ('acknowledged', '=', False)]"/>
-                    <filter name="late_receipt" string="Late Receipts" domain="[('is_late', '=', True)]"/>
+                    <filter name="not_acknowledged" string="Not Acknowledged" domain="[('state', 'in', ['purchase', 'done']), ('acknowledged', '=', False)]"/>
+                    <filter name="late_receipt" string="Late Receipts" domain="[('state', 'in', ['purchase', 'done']), ('is_late', '=', True)]"/>
                     <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
                     <filter invisible="1" string="My Activities" name="filter_activities_my"
@@ -829,7 +829,7 @@
                 <field name="partner_id" string="Vendor"/>
                 <field name="company_id" optional="show" groups="base.group_multi_company"/>
                 <field name="product_uom_qty" string="Quantity"/>
-                <field name="price_unit" widget="monetary"/>
+                <field name="price_unit_product_uom" widget="monetary" string="Unit Price"/>
                 <field name="price_subtotal" widget="monetary" string="Total Untaxed"/>
                 <field name="state" optional="hide"/>
             </list>

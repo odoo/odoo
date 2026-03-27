@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
+from odoo.fields import Domain
+
 import ast
 import json
 
@@ -18,7 +20,20 @@ class LoyaltyReward(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data, config):
-        return [('program_id', 'in', config._get_program_ids().ids)]
+        reward_product_tag_domain = [
+            ('reward_product_tag_id', '!=', False),
+            '|',
+            ('reward_product_tag_id.product_template_ids.active', '=', True),
+            ('reward_product_tag_id.product_product_ids.active', '=', True),
+        ]
+        return Domain.AND([
+            [('program_id', 'in', config._get_program_ids().ids)],
+            Domain.OR([
+                [('reward_type', '!=', 'product')],
+                [('reward_product_id.active', '=', True)],
+                reward_product_tag_domain,
+            ]),
+        ])
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -57,7 +72,7 @@ class LoyaltyReward(models.Model):
 
             if field and field.type == 'many2one' and operator in ('ilike', 'not ilike'):
                 comodel = self.env[field.comodel_name]
-                matching_ids = list(comodel._search([('display_name', operator, value)]))
+                matching_ids = list(comodel._search([('display_name', 'ilike', value)]))
 
                 new_operator = 'in' if operator == 'ilike' else 'not in'
                 domain[index] = [field_name, new_operator, matching_ids]

@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models, api
 from odoo.fields import Domain
 
@@ -12,4 +14,4 @@ class PosPaymentMethod(models.Model):
             domain = Domain.OR([[('is_online_payment', '=', True), ('id', 'in', config.payment_method_ids.ids)], domain])
             return domain
         else:
-            return [('is_online_payment', '=', True)]
+            return [('is_online_payment', '=', True), ('id', '=', config.self_order_online_payment_method_id.id)]

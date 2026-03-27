@@ -1,0 +1,1675 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry.field_hr_version__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__work_entry_source
+#, fuzzy
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working "
+"hours below.\n"
+"        Attendances: Work entries will be generated from the employee's "
+"attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's "
+"planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"Ish yozuvlarini yaratish manbasini belgilaydi          Ish jadvali: Ish "
+"yozuvlari quyidagi ish soatlaridan yaratiladi.         Davomatlar: Ish "
+"yozuvlari xodimning davomatlaridan shakllantiriladi. (Davomat ilovasi talab "
+"etiladi)         Rejalashtirish: Ish yozuvlari xodimning rejasidan hosil "
+"qilinadi. (Rejalashtirish ilovasi talab etiladi)"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_employee.py:0
+#, fuzzy
+msgid "%s work entries"
+msgstr "%s ta ish yozuvi"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
+"red will be skipped because they have at least one validated work entry."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Ogohlantirish\"/>Qizil "
+"rangdagi xodimlar o‘tkazib yuboriladi, chunki ularda kamida bitta "
+"tasdiqlangan ish yozuvi mavjud."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+#, fuzzy
+msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Maslahat\"/>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+#, fuzzy
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Work Entries\n"
+"                            </span>"
+msgstr ""
+"<span class=\"o_stat_text\">                             Ish "
+"yozuvlari                             </span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+#, fuzzy
+msgid ""
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
+msgstr ""
+"<span class=\"text-muted\">Ogohlantirish: Ish yozuvlarini qayta tiklash "
+"tanlangan davrdagi barcha qo‘lda kiritilgan o‘zgarishlarni o‘chirib "
+"tashlaydi.</span>"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+#, fuzzy
+msgid "<span>Hours</span>"
+msgstr "<span>Soatlar</span>"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Active"
+msgstr "Faol"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+#, fuzzy
+msgid "Add"
+msgstr "Qo‘shish"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_extra_hours
+#, fuzzy
+msgid "Added to Monthly Pay"
+msgstr "Oylik to‘lovga qo‘shildi"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+#, fuzzy
+msgid "Additional Description..."
+msgstr "Qo‘shimcha tavsif..."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_additional_paid
+#, fuzzy
+msgid "Additional Time (Paid)"
+msgstr "Qo‘shimcha vaqt (to‘lanadigan)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_leave
+#, fuzzy
+msgid "Allow the work entry type to be linked with time off types."
+msgstr ""
+"Ish yozuvi turining dam olish turlari bilan bog‘lanishiga ruxsat berish."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
+#, fuzzy
+msgid "Ancillary and Defence Leave"
+msgstr "Yordamchi va mudofaa ta'tili"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Archived"
+msgstr "Arxivlangan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
+#, fuzzy
+msgid "Attendance"
+msgstr "Davomat"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
+#, fuzzy
+msgid "Bereavement Leave"
+msgstr "Aza tutish ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
+#, fuzzy
+msgid "Breastfeeding Break"
+msgstr "Emizish tanaffusi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
+#, fuzzy
+msgid "Brief Holiday (Birth)"
+msgstr "Qisqa bayram (tug‘ilish)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
+#, fuzzy
+msgid "CTO"
+msgstr "Kompensatsiya vaqti"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+#, fuzzy
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
+#, fuzzy
+msgid "Cancelled"
+msgstr "Bekor qilingan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
+#, fuzzy
+msgid ""
+"Careful, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr ""
+"Ehtiyot bo‘ling, Kod ko‘plab havolalarda qo‘llaniladi, uni o‘zgartirish "
+"kutilmagan o‘zgarishlarga olib kelishi mumkin."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_cash_out
+#, fuzzy
+msgid "Cash Out of Leave in Service"
+msgstr "Xizmat davridagi ta'tilni naqd pulga almashtirish"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_extra_hours
+#, fuzzy
+msgid ""
+"Check this setting if you want the hours to be considered as extra time and "
+"added as a bonus to the basic salary."
+msgstr ""
+"Agar soatlar qo‘shimcha vaqt sifatida hisoblanishi va asosiy ish haqiga "
+"bonus sifatida qo‘shilishini istasangiz, bu sozlamani belgilang."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
+#, fuzzy
+msgid "Color"
+msgstr "Rang"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
+#, fuzzy
+msgid "Company"
+msgstr "Kompaniya"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
+#, fuzzy
+msgid "Compassionate Leave"
+msgstr "Hamdardlik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_compensatory
+#, fuzzy
+msgid "Compensatory Time Off"
+msgstr "Kompensatsiya vaqti"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Conflicting"
+msgstr "Ziddiyatli"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
+#, fuzzy
+msgid "Conflicts"
+msgstr "Ziddiyatlar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_corona
+#, fuzzy
+msgid "Corona Unemployment"
+msgstr "Korona ishsizligi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
+#, fuzzy
+msgid "Country"
+msgstr "Mamlakat"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
+#, fuzzy
+msgid "Country Code"
+msgstr "Mamlakat kodi"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+#, fuzzy
+msgid "Create a new work entry type"
+msgstr "Yangi ish yozuvi turini yaratish"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
+#, fuzzy
+msgid "Credit Time"
+msgstr "Kredit vaqti"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Current Month"
+msgstr "Joriy oy"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Date"
+msgstr "Sana"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+#, fuzzy
+msgid "Delete"
+msgstr "O‘chirish"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Department"
+msgstr "Bo‘lim"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+#, fuzzy
+msgid "Description"
+msgstr "Tavsif"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_disability_due_to_illness_imss
+#, fuzzy
+msgid "Disability due to illness (IMSS)"
+msgstr "Kasallik tufayli nogironlik (IMSS)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
+#, fuzzy
+msgid "Display Code"
+msgstr "Ko‘rsatish kodi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
+#, fuzzy
+msgid "Double Time Hours"
+msgstr "Ikki barobar vaqt soatlari"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Draft"
+msgstr "Qoralama"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
+#, fuzzy
+msgid "Duration"
+msgstr "Davomiyligi"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Duration must be positive and cannot exceed 24 hours."
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+#, fuzzy
+msgid "Earliest Available Date Message"
+msgstr "Eng erta mavjud sana haqidagi xabar"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date
+#, fuzzy
+msgid "Earliest date"
+msgstr "Eng oldingi sana"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
+#, fuzzy
+msgid "Economic Unemployment"
+msgstr "Iqtisodiy ishsizlik"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_time_off
+#, fuzzy
+msgid "Educational Time Off"
+msgstr "Ta'lim uchun berilgan ta'til"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
+#, fuzzy
+msgid "Emergency Leave"
+msgstr "Favqulodda ta'til"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Employee"
+msgstr "Xodim"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_version
+#, fuzzy
+msgid "Employee Contract"
+msgstr "Xodim shartnomasi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
+#, fuzzy
+msgid "Employee Record"
+msgstr "Xodim ma'lumotlari"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
+#, fuzzy
+msgid "Employees"
+msgstr "Xodimlar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european
+#, fuzzy
+msgid "European Time Off"
+msgstr "Yevropa ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_examination_leave
+#, fuzzy
+msgid "Examination Leave"
+msgstr "Imtihon ta'tili"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
+#, fuzzy
+msgid "External Code"
+msgstr "Tashqi kod"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_extra_hours
+#, fuzzy
+msgid "Extra Hours"
+msgstr "Qo‘shimcha soatlar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal
+#, fuzzy
+msgid "Extra Legal Time Off"
+msgstr "Qonunda belgilanmagan qo‘shimcha ta'til"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off
+#, fuzzy
+msgid "Flemish Educational Time Off"
+msgstr "Flamand ta'lim ta'tili"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_from
+#, fuzzy
+msgid "From"
+msgstr "...dan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
+#, fuzzy
+msgid "GTO"
+msgstr "GTO"
+
+#. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
+#, fuzzy
+msgid "Generate Missing Work Entries"
+msgstr "Yetishmayotgan ish yozuvlarini yaratish"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_from
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_from
+#, fuzzy
+msgid "Generated From"
+msgstr "Yaratilgan sanasi:"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_to
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_to
+#, fuzzy
+msgid "Generated To"
+msgstr "Yaratilgan sanasigacha:"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_leave
+#, fuzzy
+msgid "Generic Time Off"
+msgstr "Umumiy ta'til"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry
+#, fuzzy
+msgid "HR Work Entry"
+msgstr "Kadrlar bo‘limi ish yozuvi"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
+#, fuzzy
+msgid "HR Work Entry Type"
+msgstr "Kadrlar bo‘limi ish yozuvi turi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
+#, fuzzy
+msgid "HW"
+msgstr "HW"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
+#, fuzzy
+msgid "Has Work Entries"
+msgstr "Ish yozuvlari mavjud"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_home_working
+#, fuzzy
+msgid "Home Working"
+msgstr "Uydan ishlash"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_hourly_wt
+#, fuzzy
+msgid "Hourly Salary"
+msgstr "Soatbay ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt_hourly
+#, fuzzy
+msgid "Hourly Salary in case of Accident"
+msgstr "Baxtsiz hodisa yuz berganda soatbay ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt_hourly
+#, fuzzy
+msgid "Hourly Salary in case of Illness"
+msgstr "Kasallik holatida soatbay ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt_hourly
+#, fuzzy
+msgid "Hourly Salary in case of Maternity / Paternity Leave"
+msgstr "Homiladorlik va tug‘ish ta'tilidagi soatbay ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt_hourly
+#, fuzzy
+msgid "Hourly Salary in case of Military Leave"
+msgstr "Harbiy xizmat ta'tilidagi soatbay ish haqi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_work
+#, fuzzy
+msgid ""
+"If checked, the work entry is counted as work time in the working schedule"
+msgstr ""
+"Agar belgilansa, ish yozuvi ish jadvalida ish vaqti sifatida hisobga olinadi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
+#, fuzzy
+msgid ""
+"If the active field is set to false, it will allow you to hide the work "
+"entry type without removing it."
+msgstr ""
+"Agar faol maydon noto‘g‘ri qiymatga o‘rnatilgan bo‘lsa, u ish yozuvi turini "
+"olib tashlamasdan yashirish imkonini beradi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
+#, fuzzy
+msgid "If you want the hours should be paid double, the rate should be 200%."
+msgstr ""
+"Agar soatlar ikki barobar to‘lanishini xohlasangiz, stavka 200% bo‘lishi "
+"kerak"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
+#, fuzzy
+msgid "In Conflict"
+msgstr "Ziddiyatli"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
+#, fuzzy
+msgid "In Payslip"
+msgstr "Ish haqi hisob-kitobida"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+#, fuzzy
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with "
+"an employee_id, a date_from and a date_to."
+msgstr ""
+"Ish yozuvlarini qayta yaratish uchun ustunga xodim_id, boshlanish sanasi va "
+"tugash sanasini taqdim etishingiz kerak"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
+#, fuzzy
+msgid "Interruption of Work"
+msgstr "Ishning to‘xtatilishi"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/components/work_entry_source_field/work_entry_source_field.js:0
+#, fuzzy
+msgid ""
+"Invalid option: For fully flexible calendars, the work entry source cannot "
+"be 'Working Hours'."
+msgstr ""
+"Noto‘g‘ri variant: To‘liq moslashuvchan taqvimlar uchun ish kiritish manbasi "
+"\"Ish vaqti\" bo‘lishi mumkin emas"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
+#, fuzzy
+msgid "Is Checked"
+msgstr "Tekshirilgan"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__last_generation_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__last_generation_date
+#, fuzzy
+msgid "Last Generation Date"
+msgstr "Oxirgi yaratilgan sana"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilagan:"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana:"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+#, fuzzy
+msgid "Latest Available Date Message"
+msgstr "Eng so‘nggi mavjud sana haqidagi xabar"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date
+#, fuzzy
+msgid "Latest date"
+msgstr "Eng so‘nggi sana"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
+#, fuzzy
+msgid "Lesson Salary"
+msgstr "Dars uchun to‘lov"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_long_service_leave
+#, fuzzy
+msgid "Long Service Leave"
+msgstr "Uzoq muddatli xizmat ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_long_sick
+#, fuzzy
+msgid "Long Term Sick"
+msgstr "Uzoq muddatli kasallik"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_long_leave
+#, fuzzy
+msgid "Long Term Time Off"
+msgstr "Uzoq muddatli ta'til"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_marriage_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_marriage_leave
+#, fuzzy
+msgid "Marriage Leave"
+msgstr "Nikoh ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_maternity_imss
+#, fuzzy
+msgid "Maternity (IMSS)"
+msgstr "Onalik (IMSS)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_maternity
+#, fuzzy
+msgid "Maternity Leave"
+msgstr "Homiladorlik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave_80
+#, fuzzy
+msgid "Maternity Leave 80%"
+msgstr "Homiladorlik ta'tili 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity
+#, fuzzy
+msgid "Maternity Time Off"
+msgstr "Onalik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_maternity
+#, fuzzy
+msgid "Maternity Time Off (Paid at 75%)"
+msgstr "Onalik ta'tili (75% to‘lov bilan)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
+#, fuzzy
+msgid "Me"
+msgstr "Men"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_medical_assistance
+#, fuzzy
+msgid "Medical Assistance"
+msgstr "Tibbiy yordam"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_care_children_with_cancer_imss
+#, fuzzy
+msgid "Medical Leave for Care of Children Diagnosed with Cancer (IMSS)"
+msgstr ""
+"Saraton tashxisi qo‘yilgan bolalarni parvarish qilish uchun tibbiy ta'til "
+"(IMSS)"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_version.py:0
+#, fuzzy
+msgid "Missing date or duration on work entry"
+msgstr "Ish yozuvida sana yoki davomiylik ko‘rsatilmagan"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_version.py:0
+#, fuzzy
+msgid "Missing timezone for work entries generation."
+msgstr "Ish yozuvlarini yaratish uchun vaqt mintaqasi ko‘rsatilmagan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
+#, fuzzy
+msgid "Monthly Salary"
+msgstr "Oylik maosh"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
+#, fuzzy
+msgid "Name"
+msgstr "Ism"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
+#, fuzzy
+msgid "New"
+msgstr "Yangi"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+#, fuzzy
+msgid "No data to display"
+msgstr "Ko‘rsatish uchun ma'lumot yo‘q"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+#, fuzzy
+msgid ""
+"No work entry can be regenerated in this range of dates and these employees."
+msgstr ""
+"Ushbu sana oralig‘ida va bu xodimlar uchun hech qanday ish yozuvini qayta "
+"yaratib bo‘lmaydi"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+#, fuzzy
+msgid "Note: Validated work entries cannot be modified."
+msgstr "Eslatma: Tasdiqlangan ish yozuvlarini o‘zgartirish mumkin emas"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_notice
+#, fuzzy
+msgid "Notice (Unprovided)"
+msgstr "Bildirish (taqdim etilmagan)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
+#, fuzzy
+msgid "OT"
+msgstr "Qo‘shimcha ish"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
+#, fuzzy
+msgid "OoC"
+msgstr "Shartnomadan tashqari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_other
+#, fuzzy
+msgid "Other Paid Leave"
+msgstr "Boshqa haq to‘lanadigan ta'til"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_out_of_contract
+#, fuzzy
+msgid "Out of Contract"
+msgstr "Shartnomadan tashqari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
+#, fuzzy
+msgid "Overtime 100%"
+msgstr "Qo‘shimcha ish vaqti 100%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_125_wt
+#, fuzzy
+msgid "Overtime 125%"
+msgstr "Qo‘shimcha ish vaqti 125%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_overtime
+#, fuzzy
+msgid "Overtime Hours"
+msgstr "Qo‘shimcha ish soatlari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
+#, fuzzy
+msgid "Overtime Hours (Paid at 150%)"
+msgstr "Qo‘shimcha ish soatlari (150% to‘lov bilan)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
+#, fuzzy
+msgid "Overtime: Public Time Off"
+msgstr "Qo‘shimcha ish vaqti: Dam olish kuni"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_regular
+#, fuzzy
+msgid "Overtime: Regular"
+msgstr "Qo‘shimcha ish vaqti: Oddiy"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday
+#, fuzzy
+msgid "Overtime: Saturday"
+msgstr "Qo‘shimcha ish vaqti: Shanba"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday_pto
+#, fuzzy
+msgid "Overtime: Saturday & Public Time Off"
+msgstr "Qo‘shimcha ish vaqti: Shanba va dam olish kuni"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday
+#, fuzzy
+msgid "Overtime: Sunday"
+msgstr "Qo‘shimcha ish vaqti: Yakshanba"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday_pto
+#, fuzzy
+msgid "Overtime: Sunday & Public Time Off"
+msgstr "Qo‘shimcha ish vaqti: Yakshanba va dam olish kuni"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
+#, fuzzy
+msgid "PTO"
+msgstr "Haq to‘lanadigan ta'til"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
+#, fuzzy
+msgid "Paid Parental Leave"
+msgstr "Haq to‘lanadigan ota-onalik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_paid_sick_leave
+#, fuzzy
+msgid "Paid Sick Time off"
+msgstr "Haq to‘lanadigan kasallik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_paid_time_off
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_legal_leave
+#, fuzzy
+msgid "Paid Time Off"
+msgstr "Haq to‘lanadigan ta'til"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_parental_time_off
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_parental_time_off
+#, fuzzy
+msgid "Parental Time Off"
+msgstr "Ota-onalik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_partial_incapacity
+#, fuzzy
+msgid "Partial Incapacity (due to illness)"
+msgstr "Qisman mehnatga layoqatsizlik (kasallik tufayli)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_paternity_leave
+#, fuzzy
+msgid "Paternity Leave"
+msgstr "Otalik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave_80
+#, fuzzy
+msgid "Paternity Leave 80%"
+msgstr "Otalik ta'tili 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
+#, fuzzy
+msgid "Paternity Time Off (Legal)"
+msgstr "Otalik ta'tili (qonuniy)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_company
+#, fuzzy
+msgid "Paternity Time Off (Paid by Company)"
+msgstr "Otalik ta'tili (kompaniya tomonidan to‘lanadigan)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
+#, fuzzy
+msgid "Pay rate"
+msgstr "Ish haqi stavkasi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
+#, fuzzy
+msgid "Payroll Code"
+msgstr "Ish haqi kodi"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+#, fuzzy
+msgid "Period"
+msgstr "Davr"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
+#, fuzzy
+msgid "Personal Leave"
+msgstr "Shaxsiy ta'til"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_bank_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_work_entry_type_bank_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.uae_public_holiday_entry_type
+#, fuzzy
+msgid "Public Holiday"
+msgstr "Bayram kuni"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_phc
+#, fuzzy
+msgid "Public Holiday Compensation"
+msgstr "Bayram kunlari uchun kompensatsiya"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__amount_rate
+#, fuzzy
+msgid "Rate"
+msgstr "Stavka"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery_additional
+#, fuzzy
+msgid "Recovery Additional Time"
+msgstr "Qo‘shimcha tiklanish vaqti"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery
+#, fuzzy
+msgid "Recovery Bank Holiday"
+msgstr "Tiklanish bank ta'tili"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+#, fuzzy
+msgid "Regenerate Employee Work Entries"
+msgstr "Xodimlarning ish yozuvlarini qayta tiklash"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
+#, fuzzy
+msgid "Regenerate Work Entries"
+msgstr "Ish yozuvlarini qayta tiklash"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_create_popover.xml:0
+#, fuzzy
+msgid "Replace"
+msgstr "Almashtirish"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
+#, fuzzy
+msgid "Reset"
+msgstr "Qayta o‘rnatish"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+#, fuzzy
+msgid "Reset Selected Work Entries"
+msgstr "Tanlangan ish yozuvlarini qayta o‘rnatish"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
+#, fuzzy
+msgid "Resource Time Off Detail"
+msgstr "Resurs ta'til tafsilotlari"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar
+#, fuzzy
+msgid "Resource Working Time"
+msgstr "Resurs ish vaqti"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_overtime
+#, fuzzy
+msgid "Retro Overtime Hours"
+msgstr "Orqa sana bilan hisoblangan qo‘shimcha ish soatlari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_regular
+#, fuzzy
+msgid "Retro Regular Pay Hours"
+msgstr "Orqa sana bilan hisoblangan oddiy ish soatlari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
+#, fuzzy
+msgid "STO"
+msgstr "STO"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
+#, fuzzy
+msgid "Salary in case of Accident"
+msgstr "Baxtsiz hodisa yuz bergandagi ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt
+#, fuzzy
+msgid "Salary in case of Illness"
+msgstr "Kasallik paytidagi ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt
+#, fuzzy
+msgid "Salary in case of Maternity / Paternity Leave"
+msgstr "Homiladorlik va tug‘ish ta'tilidagi ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt
+#, fuzzy
+msgid "Salary in case of Military Leave"
+msgstr "Harbiy xizmat ta'tilidagi ish haqi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+#, fuzzy
+msgid "Search Criteria Completed"
+msgstr "Qidiruv mezonlari bajarildi"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Search Work Entry"
+msgstr "Ish yozuvini qidirish"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
+#, fuzzy
+msgid "Search Work Entry Type"
+msgstr "Ish yozuvi turini qidirish"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
+#, fuzzy
+msgid "Set"
+msgstr "O‘rnatish"
+
+#. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
+msgid "Set to Draft"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
+#, fuzzy
+msgid "Sick Leave (100% Paid)"
+msgstr "Kasallik ta'tili (100% to‘lov)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
+#, fuzzy
+msgid "Sick Leave (75% Paid)"
+msgstr "Kasallik ta'tili (75% to‘lov)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
+#, fuzzy
+msgid "Sick Leave (Unpaid)"
+msgstr "Kasallik ta'tili (to‘lovsiz)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_0_entry_type
+#, fuzzy
+msgid "Sick Leave 0"
+msgstr "Kasallik ta'tili 0"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_50_entry_type
+#, fuzzy
+msgid "Sick Leave 50"
+msgstr "Kasallik ta'tili 50"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_sick_leave_80
+#, fuzzy
+msgid "Sick Leave 80%"
+msgstr "Kasallik ta'tili 80%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_sick_leave
+#, fuzzy
+msgid "Sick Time Off"
+msgstr "Kasallik ta'tili"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
+#, fuzzy
+msgid "Sick Time Off (Paid at 80%)"
+msgstr "Kasallik ta'tili (80% to‘lov)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
+#, fuzzy
+msgid "Sick Time Off (Without Guaranteed Salary)"
+msgstr "Kasallik ta'tili (kafolatlangan maoshsiz)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
+#, fuzzy
+msgid "Sick Time Off Day 1-3 (Paid at 25%)"
+msgstr "Kasallik ta'tili 1-3 kun (25% to‘lov)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_55
+#, fuzzy
+msgid "Sick Time Off Day 4-10 (Paid at 55%)"
+msgstr "Kasallik ta'tili 4-10 kun (55% to‘lov)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_0
+#, fuzzy
+msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
+msgstr ""
+"Kasallik ta'tili 52 haftagacha (ijtimoiy ta'minot tomonidan 55% to‘lov)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
+#, fuzzy
+msgid "Sick Time off (75% Paid)"
+msgstr "Kasallik ta'tili (75% to‘lov)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_unpaid
+#, fuzzy
+msgid "Sick Time off (Unpaid)"
+msgstr "Kasallik ta'tili (to‘lovsiz)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
+#, fuzzy
+msgid "Simple Holiday Pay - Variable Salary"
+msgstr "Oddiy bayram to‘lovi - O‘zgaruvchan ish haqi"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_situational_unemployment
+#, fuzzy
+msgid "Situational Unemployment"
+msgstr "Vaziyatli ishsizlik"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment
+#, fuzzy
+msgid "Small Unemployment (Brief Holiday)"
+msgstr "Qisqa muddatli ishsizlik (qisqa ta'til)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
+#, fuzzy
+msgid "Solicitation Time Off"
+msgstr "So‘rov ta'tili"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
+#, fuzzy
+msgid "Solve conflicts first"
+msgstr "Avval nizolarni hal qiling"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
+#, fuzzy
+msgid "Split"
+msgstr "Bo‘lish"
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar_controller.js:0
+#, fuzzy
+msgid "Split Work Entry"
+msgstr "Ish yozuvini bo‘lish"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+#, fuzzy
+msgid ""
+"Split work entry duration has to be less than the existing work entry "
+"duration."
+msgstr ""
+"Bo‘lingan ish yozuvi davomiyligi mavjud ish yozuvi davomiyligidan qisqa "
+"bo‘lishi kerak."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
+#, fuzzy
+msgid "State"
+msgstr "Holat"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_statutory_holiday
+#, fuzzy
+msgid "Statutory Holiday"
+msgstr "Qonuniy bayram"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_strike
+#, fuzzy
+msgid "Strike"
+msgstr "Ish tashlash"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
+#, fuzzy
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Ikki harfli ISO mamlakat kodi.  Bu maydondan tezkor qidiruv uchun "
+"foydalanishingiz mumkin."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "The amount of work on the day should not exceed 24 hours."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
+#, fuzzy
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+"Boshlang‘ich sana '%(earliest_available_date)s' dan kichik bo‘lmasligi va "
+"yakuniy sana '%(latest_available_date)s' dan katta bo‘lmasligi kerak, bu "
+"yaratilgan ish yozuvlari vaqt oralig‘iga mos keladi."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+#, fuzzy
+msgid "The same code cannot be associated to multiple work entry types (%s)"
+msgstr "Bir xil kodni bir nechta ish yozuvi turlariga bog‘lab bo‘lmaydi (%s)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__display_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
+#, fuzzy
+msgid ""
+"This code can be changed, it is only for a display purpose (3 letters max)"
+msgstr ""
+"Bu kodni o‘zgartirish mumkin, u faqat ko‘rsatish uchun (maksimum 3 ta harf)"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+#, fuzzy
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr "Bu ish yozuvini tasdiqlab bo‘lmaydi. Ish yozuvi turi aniqlanmagan."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+#, fuzzy
+msgid "This work entry is validated. You can't delete it."
+msgstr "Bu ish yozuvi tasdiqlangan. Uni o‘chira olmaysiz."
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_leave
+#, fuzzy
+msgid "Time Off"
+msgstr "Ta'til"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#, fuzzy
+msgid "Time Off Options"
+msgstr "Ta'til tanlovlari"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_to
+#, fuzzy
+msgid "To"
+msgstr "Gacha"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
+#, fuzzy
+msgid "Training"
+msgstr "Trening"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+#, fuzzy
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Yozuvlar qo‘shishga harakat qiling yoki qidiruv panelida faol filtr "
+"yo‘qligiga ishonch hosil qiling."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Type"
+msgstr "Tur"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
+#, fuzzy
+msgid "UN"
+msgstr "BMT"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+#, fuzzy
+msgid "Undefined"
+msgstr "Aniqlanmagan"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+#, fuzzy
+msgid "Undefined Type"
+msgstr "Aniqlanmagan tur"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
+#, fuzzy
+msgid "Unjustified Reason"
+msgstr "Asossiz sabab"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
+#, fuzzy
+msgid "Unpaid"
+msgstr "To‘lanmagan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
+#, fuzzy
+msgid "Unpaid Salary"
+msgstr "To‘lanmagan maosh"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
+#, fuzzy
+msgid "Unpredictable Reason"
+msgstr "Kutilmagan sabab"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_termination
+#, fuzzy
+msgid "Unused Leave on Termination"
+msgstr "Ishdan bo‘shaganda foydalanilmagan ta'til"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
+#, fuzzy
+msgid "Use this code to export your data to a third party"
+msgstr ""
+"Ma'lumotlaringizni uchinchi tomonga eksport qilish uchun ushbu kodni "
+"ishlatishingiz mumkin"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__valid
+#, fuzzy
+msgid "Valid"
+msgstr "Yaroqli"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+#, fuzzy
+msgid "Validated"
+msgstr "Tasdiqlangan"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
+#, fuzzy
+msgid "Weekend"
+msgstr "Dam olish kunlari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident
+#, fuzzy
+msgid "Work Accident"
+msgstr "Ish jarayonidagi baxtsiz hodisa"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
+#, fuzzy
+msgid "Work Detail"
+msgstr "Ish tafsiloti"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_pivot
+#, fuzzy
+msgid "Work Entries"
+msgstr "Ish yozuvlari"
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
+#, fuzzy
+msgid "Work Entries Employees"
+msgstr "Ish yozuvlari xodimlari"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action_conflict
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+#, fuzzy
+msgid "Work Entry"
+msgstr "Ish yozuvi"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_regeneration_wizard_action
+#, fuzzy
+msgid "Work Entry Regeneration"
+msgstr "Ish yozuvini qayta tiklash"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_source
+#, fuzzy
+msgid "Work Entry Source"
+msgstr "Ish yozuvi manbasi"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source_calendar_invalid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source_calendar_invalid
+#, fuzzy
+msgid "Work Entry Source Calendar Invalid"
+msgstr "Ish yozuvi manbasi taqvimi yaroqsiz"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__work_entry_type_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
+#, fuzzy
+msgid "Work Entry Type"
+msgstr "Ish yozuvi turi"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#, fuzzy
+msgid "Work Entry Type Name"
+msgstr "Ish yozuvi turi nomi"
+
+#. module: hr_work_entry
+#: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
+#, fuzzy
+msgid "Work Entry Types"
+msgstr "Ish yozuvi turlari"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_work_risk_imss
+#, fuzzy
+msgid "Work risk (IMSS)"
+msgstr "Ish xavfi (IMSS)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
+#, fuzzy
+msgid "Workers Compensation"
+msgstr "Ishchilar uchun kompensatsiya"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_version__work_entry_source__calendar
+#, fuzzy
+msgid "Working Schedule"
+msgstr "Ish jadvali"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_work
+#, fuzzy
+msgid "Working Time"
+msgstr "Ish vaqti"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+#, fuzzy
+msgid ""
+"You can't change the Country of this work entry type cause it's currently "
+"used by the system. You need to delete related working entries first."
+msgstr ""
+"Bu ish yozuvi turining mamlakatini o‘zgartira olmaysiz, chunki u hozirda "
+"tizim tomonidan ishlatilmoqda. Avval tegishli ish yozuvlarini o‘chirishingiz "
+"kerak."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
+#, fuzzy
+msgid "You can't change the country of this specific work entry type."
+msgstr "Bu maxsus ish yozuvi turining mamlakatini o‘zgartira olmaysiz."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+#, fuzzy
+msgid "You can't split a work entry with less than 1 hour."
+msgstr "1 soatdan kam bo‘lgan ish yozuvini bo‘la olmaysiz."
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
+#, fuzzy
+msgid "You cannot edit a validated work entry"
+msgstr "Tasdiqlangan ish yozuvini tahrirlay olmaysiz"
+
+#. module: hr_work_entry
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
+#, fuzzy
+msgid "You cannot have the same employee twice."
+msgstr "Bir xil xodimni ikki marta kirita olmaysiz."
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_youth_time_off
+#, fuzzy
+msgid "Youth Time Off"
+msgstr "Yoshlar ta'tili"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
+#, fuzzy
+msgid "hours"
+msgstr "soat"
+
+#, fuzzy
+#~ msgid "%(employee)s does not have a contract on %(date)s."
+#~ msgstr "%(employee)s %(date)s sanasida shartnomaga ega emas."

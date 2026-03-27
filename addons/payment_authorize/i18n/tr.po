@@ -10,13 +10,16 @@
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-16 02:36+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:39+0000\n"
+"PO-Revision-Date: 2025-11-20 13:21+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "payment_authorize/tr/>\n"
 "Language: tr\n"
@@ -38,13 +41,13 @@ msgid ""
 "Checking</option>\n"
 "                    </select>"
 msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">"
-"\n"
-"                        <option value=\"checking\">Bireysel Vadesiz</option>"
-"\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Bireysel Vadesiz</"
+"option>\n"
 "                        <option value=\"savings\">Bireysel Vadeli</option>\n"
-"                        <option value=\"businessChecking\">Ticari "
-"Vadesiz</option>\n"
+"                        <option value=\"businessChecking\">Ticari Vadesiz</"
+"option>\n"
 "                    </select>"
 
 #. module: payment_authorize
@@ -129,15 +132,15 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
-"İşlem ayrıntıları alınamadı. (hata kodu: %(error_code)s; hata_ayrıntıları: "
-"%(error_message)s)"
+"İşlem ayrıntıları alınamadı. (hata kodu: %(error_code)s; hata_ayrıntıları: %"
+"(error_message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -169,7 +172,7 @@ msgstr "Authorize.Net ile nasıl ödeme yapılır"
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -214,6 +217,7 @@ msgstr "Ödeme işleme başarısız oldu"
 msgid ""
 "Received data with status code \"%(status)s\" and error code \"%(error)s\"."
 msgstr ""
+"Durum kodu \"%(status)s\" ve hata kodu \"%(error)s\" olan veriler alındı."
 
 #. module: payment_authorize
 #. odoo-python
@@ -252,8 +256,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"İşlem, iade edilebilir bir durumda değil. (durum: %(status)s, detay: "
-"%(message)s)"
+"İşlem, iade edilebilir bir durumda değil. (durum: %(status)s, detay: %"
+"(message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -269,6 +273,12 @@ msgstr ""
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "This action cannot be performed while the provider is disabled."
 msgstr "Bu işlem, sağlayıcı devre dışıyken gerçekleştirilemez."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+msgid "Transaction not found."
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form

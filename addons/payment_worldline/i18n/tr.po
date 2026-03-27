@@ -3,13 +3,17 @@
 # * payment_worldline
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-17 17:28+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-28 12:51+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "payment_worldline/tr/>\n"
 "Language: tr\n"
@@ -17,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
@@ -27,7 +31,7 @@ msgstr "API Anahtarı"
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
 msgid "API Secret"
-msgstr ""
+msgstr "API Gizli"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__code
@@ -35,16 +39,16 @@ msgid "Code"
 msgstr "Kod"
 
 #. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "API bağlantısı kurulamadı."
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
 
 #. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Referans %s eşleşen bir işlem bulunamadı."
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
@@ -70,22 +74,10 @@ msgstr "Ödeme durumu eksik olan veriler alındı."
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "Received data with missing reference %(ref)s."
-msgstr ""
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid ""
-"Received invalid transaction status %(status)s with error code "
-"%(error_code)s."
-msgstr ""
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_provider.py:0
-msgid "The communication with the API failed. Details: %s"
-msgstr ""
+"Received invalid transaction status %(status)s with error code %"
+"(error_code)s."
+msgstr "%(error_code)s hata koduyla %(status)s geçersiz işlem durumu alındı."
 
 #. module: payment_worldline
 #: model:ir.model.fields,help:payment_worldline.field_payment_provider__code
@@ -95,30 +87,24 @@ msgstr "Bu ödeme sağlayıcısının teknik kodu."
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "İşlem bir belirteçle bağlantılı değildir."
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid "Transaction cancelled with error code %(error_code)s."
-msgstr ""
+msgstr "İşlem %(error_code)s hata koduyla iptal edildi."
 
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid "Transaction declined with error code %(error_code)s."
-msgstr ""
+msgstr "İşlem %(error_code)s hata koduyla reddedildi."
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
 msgid "Webhook Key"
-msgstr ""
+msgstr "Webhook Anahtarı"
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Webhook Sırrı"
 
 #. module: payment_worldline
 #: model:ir.model.fields.selection,name:payment_worldline.selection__payment_provider__code__worldline
@@ -128,24 +114,33 @@ msgstr "Worldline"
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_api_key
 msgid "Worldline API Key"
-msgstr ""
+msgstr "Worldline API Anahtarı"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_api_secret
 msgid "Worldline API Secret"
-msgstr ""
+msgstr "Worldline API Sırrı"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_pspid
 msgid "Worldline PSPID"
-msgstr ""
+msgstr "Worldline PSPID"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_webhook_key
 msgid "Worldline Webhook Key"
-msgstr ""
+msgstr "Worldline Webhook Anahtarı"
 
 #. module: payment_worldline
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_webhook_secret
 msgid "Worldline Webhook Secret"
-msgstr ""
+msgstr "Worldline Webhook Sırrı"
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "API bağlantısı kurulamadı."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Referans %s eşleşen bir işlem bulunamadı."
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "İşlem bir belirteçle bağlantılı değildir."

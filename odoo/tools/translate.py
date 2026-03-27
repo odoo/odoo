@@ -74,7 +74,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = {
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label',
+    'value_label', 'data-tooltip', 'label', 'confirm-label', 'confirm-title', 'cancel-label',
 }
 
 TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
@@ -86,8 +86,12 @@ FIELD_TRANSLATE = {
 }
 
 
-def is_translatable_attrib(key):
-    return key in TRANSLATED_ATTRS or key.endswith('.translate')
+def is_translatable_attrib(key, node):
+    if not key:
+        return False
+    if 't-call' not in node.attrib and key in TRANSLATED_ATTRS:
+        return True
+    return key.endswith('.translate')
 
 def is_translatable_attrib_value(node):
     # check if the value attribute of a node must be translated
@@ -146,44 +150,54 @@ def translate_xml_node(node, callback, parse, serialize):
         """ Return whether ``text`` is a string with non-space characters. """
         return bool(text) and not space_pattern.fullmatch(text)
 
-    def translatable(node):
+    def is_force_inline(node):
+        """ Return whether ``node`` is marked as it should be translated as
+            one term.
+        """
+        return "o_translate_inline" in node.attrib.get("class", "").split()
+
+    def translatable(node, force_inline=False):
         """ Return whether the given node can be translated as a whole. """
+        # Some specific nodes (e.g., text highlights) have an auto-updated DOM
+        # structure that makes them impossible to translate.
+        # The introduction of a translation `<span>` in the middle of their
+        # hierarchy breaks their functionalities. We need to force them to be
+        # translated as a whole using the `o_translate_inline` class.
+        force_inline = force_inline or is_force_inline(node)
         return (
-            # Some specific nodes (e.g., text highlights) have an auto-updated
-            # DOM structure that makes them impossible to translate.
-            # The introduction of a translation `<span>` in the middle of their
-            # hierarchy breaks their functionalities. We need to force them to
-            # be translated as a whole using the `o_translate_inline` class.
-            "o_translate_inline" in node.attrib.get("class", "").split()
-            or node.tag in TRANSLATED_ELEMENTS
-            and not any(key.startswith("t-") or key.endswith(".translate") for key in node.attrib)
-            and all(translatable(child) for child in node)
+            (force_inline or node.tag in TRANSLATED_ELEMENTS)
+            # Nodes with directives are not translatable. Directives usually
+            # start with `t-`, but this prefix is optional for `groups` (see
+            # `_compile_directive_groups` which reads `t-groups` and `groups`)
+            and not any(key.startswith("t-") or key == 'groups' or key.endswith(".translate") for key in node.attrib)
+            and all(translatable(child, force_inline) for child in node)
         )
 
-    def hastext(node, pos=0):
+    def hastext(node, pos=0, force_inline=False):
         """ Return whether the given node contains some text to translate at the
             given child node position.  The text may be before the child node,
             inside it, or after it.
         """
+        force_inline = force_inline or is_force_inline(node)
         return (
             # there is some text before node[pos]
             nonspace(node[pos-1].tail if pos else node.text)
             or (
                 pos < len(node)
-                and translatable(node[pos])
+                and translatable(node[pos], force_inline)
                 and (
                     any(  # attribute to translate
                         val and (
-                            is_translatable_attrib(key) or
+                            is_translatable_attrib(key, node) or
                             (key == 'value' and is_translatable_attrib_value(node[pos])) or
                             (key == 'text' and is_translatable_attrib_text(node[pos]))
                         )
                         for key, val in node[pos].attrib.items()
                     )
                     # node[pos] contains some text to translate
-                    or hastext(node[pos])
+                    or hastext(node[pos], 0, force_inline)
                     # node[pos] has no text, but there is some text after it
-                    or hastext(node, pos + 1)
+                    or hastext(node, pos + 1, force_inline)
                 )
             )
         )
@@ -194,7 +208,7 @@ def translate_xml_node(node, callback, parse, serialize):
             isinstance(node, SKIPPED_ELEMENT_TYPES)
             or node.tag in SKIPPED_ELEMENTS
             or node.get('t-translation', "").strip() == "off"
-            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'))
+            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'), node)
             or node.getparent() is None and avoid_pattern.match(node.text or "")
         ):
             return
@@ -207,7 +221,7 @@ def translate_xml_node(node, callback, parse, serialize):
                 # into a <div> element
                 div = etree.Element('div')
                 div.text = (node[pos-1].tail if pos else node.text) or ''
-                while pos < len(node) and translatable(node[pos]):
+                while pos < len(node) and translatable(node[pos], is_force_inline(node)):
                     div.append(node[pos])
 
                 # translate the content of the <div> element as a whole
@@ -244,7 +258,7 @@ def translate_xml_node(node, callback, parse, serialize):
         for key, val in node.attrib.items():
             if nonspace(val):
                 if (
-                    is_translatable_attrib(key) or
+                    is_translatable_attrib(key, node) or
                     (key == 'value' and is_translatable_attrib_value(node)) or
                     (key == 'text' and is_translatable_attrib_text(node))
                 ):
@@ -419,10 +433,10 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
             args = {k: v._translate(lang) if isinstance(v, LazyGettext) else v for k, v in args.items()}
         else:
             args = tuple(v._translate(lang) if isinstance(v, LazyGettext) else v for v in args)
-    if any(isinstance(a, Iterable) and not isinstance(a, str) for a in (args.values() if args_is_dict else args)):
+    if any(isinstance(a, Iterable) and not isinstance(a, (str, bytes)) for a in (args.values() if args_is_dict else args)):
         # automatically format list-like arguments in a localized way
         def process_translation_arg(v):
-            return format_list(env=None, lst=v, lang_code=lang) if isinstance(v, Iterable) and not isinstance(v, str) else v
+            return format_list(env=None, lst=v, lang_code=lang) if isinstance(v, Iterable) and not isinstance(v, (str, bytes)) else v
         if args_is_dict:
             args = {k: process_translation_arg(v) for k, v in args.items()}
         else:
@@ -1067,7 +1081,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name')))
+                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name'), el))
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
@@ -1457,7 +1471,7 @@ class TranslationModuleReader(TranslationReader):
         """
 
         # Also scan these non-addon paths
-        for bin_path in ['osv', 'report', 'modules', 'service', 'tools']:
+        for bin_path in ['orm', 'osv', 'report', 'modules', 'service', 'tools']:
             self._path_list.append((os.path.join(config.root_path, bin_path), True))
         # non-recursive scan for individual files in root directory but without
         # scanning subdirectories that may contain addons
@@ -1654,15 +1668,20 @@ class TranslationImporter:
                                 translations.update({k: v for k, v in translation_dictionary[term_en].items() if v != term_en})
                                 translation_dictionary[term_en] = translations
 
+                        changed_values = {}
                         for lang in langs:
                             # translate and confirm model_terms translations
-                            values[lang] = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
-                            values.pop(f'_{lang}', None)
-                        params.extend((id_, Json(values)))
+                            new_val = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
+                            if values.get(lang, None) != new_val:
+                                changed_values[lang] = new_val
+                            if f'_{lang}' in values:
+                                changed_values[f'_{lang}'] = None
+                        if changed_values:
+                            params.extend((id_, Json(changed_values)))
                     if params:
                         env.cr.execute(f"""
                             UPDATE "{model_table}" AS m
-                            SET "{field_name}" =  t.value
+                            SET "{field_name}" = jsonb_strip_nulls("{field_name}" || t.value)
                             FROM (
                                 VALUES {', '.join(['(%s, %s::jsonb)'] * (len(params) // 2))}
                             ) AS t(id, value)

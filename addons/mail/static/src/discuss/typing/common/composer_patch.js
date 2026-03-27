@@ -52,6 +52,9 @@ patch(Composer.prototype, {
         this.detectTyping(ev);
     },
     detectTyping() {
+        if (this.props.composer.message) {
+            return;
+        }
         const value = this.props.composer.composerText;
         if (this.thread?.model === "discuss.channel" && value.startsWith("/")) {
             const [firstWord] = value.substring(1).split(/\s/);
@@ -60,6 +63,8 @@ patch(Composer.prototype, {
                 value === "/" || // suggestions not yet started
                 this.hasSuggestions ||
                 (command &&
+                    (!command.condition ||
+                        command.condition({ store: this.store, thread: this.thread })) &&
                     (!command.channel_types ||
                         command.channel_types.includes(this.thread.channel_type)))
             ) {

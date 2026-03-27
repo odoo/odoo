@@ -458,6 +458,7 @@ class TestBatchPicking(TransactionCase):
         self.assertTrue(picking_out_3.batch_id)
         self.assertEqual(picking_out_1.batch_id.id, picking_out_3.batch_id.id)
         self.assertTrue(picking_out_2.batch_id)
+        self.assertTrue(picking_out_2.user_id == picking_out_2.batch_id.user_id == self.env.user)
         self.assertNotEqual(picking_out_2.batch_id.id, picking_out_1.batch_id.id)
         # If Picking 1 is validated without Picking 3, Picking 1 should be removed from the batch
         picking_out_1.move_ids.write({'quantity': 10, 'picked': True})
@@ -589,6 +590,38 @@ class TestBatchPicking(TransactionCase):
             ('state', 'in', ['done', 'assigned']),
         ]).picking_id.batch_id
         self.assertEqual(pAbatch, pBbatch)
+
+    def test_auto_batch_3(self):
+        """ Test a simple auto-batch scenario with a manually assigned picking.
+        """
+        # Create picking type to avoid conflicts with existing pickings with auto-batch enabled grouping by partner.
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse.out_type_id.write({
+            'auto_batch': True,
+            'batch_group_by_partner': True,
+        })
+        partner = self.env['res.partner'].create({'name': 'Lovely product'})
+        delivery = self.env['stock.picking'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'partner_id': partner.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+
+        self.assertRecordValues(delivery, [
+            {'state': 'confirmed', 'batch_id': False},
+        ])
+        delivery.move_ids.quantity = 1
+        self.assertEqual(delivery.state, 'assigned')
+        self.assertTrue(delivery.batch_id)
 
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
@@ -1160,6 +1193,20 @@ class TestBatchPicking02(TransactionCase):
         self.assertEqual(batch.state, 'done')
         self.assertFalse(pickings[1].batch_id)
 
+    def test_batch_name_with_complex_prefix(self):
+        """Check that batch name is correctly generated with a complex prefix."""
+        # Fetch an existing sequence and update its prefix
+        sequence = self.env['ir.sequence'].search([('code', '=', 'picking.batch')], limit=1)
+        self.assertTrue(sequence, "Sequence with code 'picking.batch' should exist.")
+        sequence.prefix = 'BATCH/test/2026/'
+        # Create an empty batch with a picking type
+        batch = self.env['stock.picking.batch'].create({
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        # Assert the generated name starts with the complex prefix and contains the picking_type code
+        self.assertTrue(batch.name.startswith('BATCH/test/2026/'))
+        self.assertIn(self.picking_type_internal.sequence_code, batch.name)
 
 
 @tagged('post_install', '-at_install')

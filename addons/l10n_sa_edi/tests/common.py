@@ -257,7 +257,8 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         invoice_date='2025-01-01',
         invoice_date_due='2025-01-01',
         currency_id=None,
-        invoice_line_ids=[]):
+        invoice_line_ids=[],
+        **kwargs):
         """
         Create a draft invoice with the given parameters.
         """
@@ -283,6 +284,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'invoice_line_ids': [
                 _create_invoice_line(line) for line in invoice_line_ids
             ],
+            **kwargs,
         }
         return self.env['account.move'].create(vals)
 

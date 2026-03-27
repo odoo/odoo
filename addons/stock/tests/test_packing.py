@@ -27,6 +27,10 @@ class TestPackingCommon(TransactionCase):
             'usage': 'internal',
             'location_id': cls.stock_location.id,
         })
+        cls.pack_type_box, cls.pack_type_pallet = cls.env['stock.package.type'].create([
+            {'name': 'Test Box', 'sequence_code': 'TBOX'},
+            {'name': 'Test Pallet', 'sequence_code': 'TPAL'},
+        ])
 
 
 class TestPacking(TestPackingCommon):
@@ -41,29 +45,22 @@ class TestPacking(TestPackingCommon):
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 20.0)
-        pick_move_a = self.env['stock.move'].create({
-            'product_id': self.productA.id,
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+        })
+        move_values = {
             'product_uom_qty': 5.0,
-            'product_uom': self.productA.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'warehouse_id': self.warehouse.id,
-            'picking_type_id': self.warehouse.out_type_id.id,
-            'state': 'draft',
-        })
-        pick_move_b = self.env['stock.move'].create({
-            'product_id': self.productB.id,
-            'product_uom_qty': 5.0,
-            'product_uom': self.productB.uom_id.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.pack_location.id,
-            'warehouse_id': self.warehouse.id,
-            'picking_type_id': self.warehouse.out_type_id.id,
-            'state': 'draft',
-        })
-        pick_move_a._assign_picking()
-        pick_move_b._assign_picking()
-        picking = pick_move_a.picking_id
+            'picking_id': picking.id,
+        }
+        pick_move_a = self.env['stock.move'].create([
+            {**move_values, 'product_id': self.productA.id, 'product_uom': self.productA.uom_id.id},
+            {**move_values, 'product_id': self.productB.id, 'product_uom': self.productB.uom_id.id},
+        ])[0]
         picking.action_confirm()
         picking.action_assign()
         picking.button_validate()
@@ -589,6 +586,74 @@ class TestPacking(TestPackingCommon):
             "The move line destination location must be the one from the picking.")
         internal_transfer.button_validate()
 
+    def test_pack_in_pack_putaway(self):
+        """ Ensure that if different putaway rules are set for different package type, then the putaway
+            related to the outermost package of each move line should apply.
+        """
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        shelf2 = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+
+        # Creates a new putaway rule for Boxes -> Shelf 1 and Pallets -> Shelf 2.
+        self.env['stock.putaway.rule'].create([
+            {
+                'package_type_ids': [Command.link(self.pack_type_box.id)],
+                'location_in_id': self.stock_location.id,
+                'location_out_id': self.shelf1.id,
+                },
+            {
+                'package_type_ids': [Command.link(self.pack_type_pallet.id)],
+                'location_in_id': self.stock_location.id,
+                'location_out_id': shelf2.id,
+            },
+        ])
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'location_id': supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                    'product_uom_qty': 3,
+                }),
+                Command.create({
+                    'product_id': self.productB.id,
+                    'location_id': supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                    'product_uom_qty': 5,
+                }),
+            ]
+        })
+        receipt.action_confirm()
+        move_A = receipt.move_ids.filtered(lambda m: m.product_id == self.productA)
+        move_B = receipt.move_ids - move_A
+
+        # Put each line in a different Box, each should now go to Shelf 1
+        pack_A = move_A.move_line_ids.action_put_in_pack(package_type_id=self.pack_type_box.id)
+        pack_B = move_B.move_line_ids.action_put_in_pack(package_type_id=self.pack_type_box.id)
+        self.assertEqual(receipt.move_line_ids.location_dest_id, self.shelf1)
+
+        # Put the Box of Product A on a Pallet, this move should now go to Shelf 2
+        move_A.move_line_ids.action_put_in_pack(package_type_id=self.pack_type_pallet.id)
+        self.assertEqual(move_A.move_line_ids.location_dest_id, shelf2)
+        self.assertEqual(move_B.move_line_ids.location_dest_id, self.shelf1)
+
+        # Remove the Pallet as destination for the Box of Product A, should now go back to Shelf 1
+        move_A.move_line_ids.result_package_id.package_dest_id.with_context(picking_id=receipt.id).action_remove_package()
+        self.assertEqual(move_A.move_line_ids.location_dest_id, self.shelf1)
+
+        # Put both Boxes on a new Pallet, and validate. Both goods should be in Shelf 2
+        receipt.move_line_ids.action_put_in_pack(package_type_id=self.pack_type_pallet.id)
+        receipt.button_validate()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, shelf2, package_id=pack_A), 3)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productB, shelf2, package_id=pack_B), 5)
+
     def test_partial_put_in_pack(self):
         """ Create a simple move in a delivery. Reserve the quantity but set as quantity done only a part.
         Call Put In Pack button. """
@@ -888,22 +953,20 @@ class TestPacking(TestPackingCommon):
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
 
-        package_type = self.env['stock.package.type'].create({
-            'name': "Super Pallet",
-        })
         package_01, package_02 = self.env['stock.package'].create([{
             'name': 'Pallet %s' % i,
-            'package_type_id': package_type.id,
+            'package_type_id': self.pack_type_pallet.id,
         } for i in [1, 2]])
 
         # max 100kg (so 100 x P) and max 1 pallet -> we will work with pallets,
         # so the pallet capacity constraint should be the effective one
         stor_category = self.env['stock.storage.category'].create({
             'name': 'Super Storage Category',
-            'max_weight': 100,
+            'max_weight': 60,
             'package_capacity_ids': [(0, 0, {
-                'package_type_id': package_type.id,
+                'package_type_id': self.pack_type_pallet.id,
                 'quantity': 1,
             })]
         })
@@ -920,7 +983,7 @@ class TestPacking(TestPackingCommon):
         self.env['stock.putaway.rule'].create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
-            'package_type_ids': [(4, package_type.id)],
+            'package_type_ids': [Command.link(self.pack_type_pallet.id)],
             'storage_category_id': stor_category.id,
             'sublocation': 'closest_location',
         })
@@ -934,8 +997,8 @@ class TestPacking(TestPackingCommon):
         })
         self.env['stock.move'].create({
             'product_id': self.productA.id,
-            'product_uom': self.productA.uom_id.id,
-            'product_uom_qty': 100.0,
+            'product_uom': pack_of_6.id,
+            'product_uom_qty': 10.0,
             'picking_id': receipt_picking.id,
             'location_id': receipt_picking.location_id.id,
             'location_dest_id': receipt_picking.location_dest_id.id,
@@ -946,10 +1009,10 @@ class TestPacking(TestPackingCommon):
         # one with 51 x P (to easy the debugging in case of trouble)
         move_form = Form(receipt_picking.move_ids, view="stock.view_stock_move_operations")
         with move_form.move_line_ids.edit(0) as line:
-            line.quantity = 49
+            line.quantity = 4
             line.result_package_id = package_01
         with move_form.move_line_ids.new() as line:
-            line.quantity = 51
+            line.quantity = 6
             line.result_package_id = package_02
         move_form.save()
         receipt_picking.move_ids.picked = True
@@ -958,20 +1021,20 @@ class TestPacking(TestPackingCommon):
         # We are in two-steps receipt -> check the internal picking
         internal_picking = self.env['stock.picking'].search([], order='id desc', limit=1)
         self.assertRecordValues(internal_picking.move_line_ids, [
-            {'quantity': 51, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_01.id},
-            {'quantity': 49, 'result_package_id': package_01.id, 'location_dest_id': sub_loc_02.id},
+            {'quantity': 6, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_01.id},
+            {'quantity': 4, 'result_package_id': package_01.id, 'location_dest_id': sub_loc_02.id},
         ])
 
         # Change the constraints of the storage category:
         # max 75kg (so 75 x P) and max 2 pallet -> this time, the weight
         # constraint should be the effective one
-        stor_category.max_weight = 75
+        stor_category.max_weight = 45
         stor_category.package_capacity_ids.quantity = 2
         internal_picking.do_unreserve()
         internal_picking.action_assign()
         self.assertRecordValues(internal_picking.move_line_ids, [
-            {'quantity': 51, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_01.id},
-            {'quantity': 49, 'result_package_id': package_01.id, 'location_dest_id': sub_loc_02.id},
+            {'quantity': 6, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_01.id},
+            {'quantity': 4, 'result_package_id': package_01.id, 'location_dest_id': sub_loc_02.id},
         ])
 
     def test_pack_in_receipt_two_step_multi_putaway_03(self):
@@ -991,12 +1054,9 @@ class TestPacking(TestPackingCommon):
         # Required for `result_package_id` to be visible in the view
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
 
-        package_type = self.env['stock.package.type'].create({
-            'name': "Super Pallet",
-        })
         package_01, package_02 = self.env['stock.package'].create([{
             'name': 'Pallet %s' % i,
-            'package_type_id': package_type.id,
+            'package_type_id': self.pack_type_pallet.id,
         } for i in [1, 2]])
 
         # max 100kg and max 2 pallets
@@ -1004,7 +1064,7 @@ class TestPacking(TestPackingCommon):
             'name': 'Super Storage Category',
             'max_weight': 100,
             'package_capacity_ids': [(0, 0, {
-                'package_type_id': package_type.id,
+                'package_type_id': self.pack_type_pallet.id,
                 'quantity': 2,
             })]
         })
@@ -1023,7 +1083,7 @@ class TestPacking(TestPackingCommon):
         self.env['stock.putaway.rule'].create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
-            'package_type_ids': [(4, package_type.id)],
+            'package_type_ids': [Command.link(self.pack_type_pallet.id)],
             'storage_category_id': stor_category.id,
             'sublocation': 'closest_location',
         })
@@ -1095,16 +1155,12 @@ class TestPacking(TestPackingCommon):
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         input_location = self.warehouse.wh_input_stock_loc_id
 
-        package_type = self.env['stock.package.type'].create({
-            'name': "package type",
-        })
-
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category",
             'allow_new_product': "same",
             'max_weight': 1000,
             'package_capacity_ids': [(0, 0, {
-                'package_type_id': package_type.id,
+                'package_type_id': self.pack_type_pallet.id,
                 'quantity': 2,
             })],
         })
@@ -1121,7 +1177,7 @@ class TestPacking(TestPackingCommon):
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
             'sublocation': 'closest_location',
-            'package_type_ids': [(4, package_type.id, 0)],
+            'package_type_ids': [Command.link(self.pack_type_pallet.id)],
         })
 
         receipt = self.env['stock.picking'].create({
@@ -1141,7 +1197,7 @@ class TestPacking(TestPackingCommon):
 
         moves = receipt.move_ids
         moves.move_line_ids.quantity = 1
-        moves.move_line_ids.result_package_id = self.env['stock.package'].create({'package_type_id': package_type.id})
+        moves.move_line_ids.result_package_id = self.env['stock.package'].create({'package_type_id': self.pack_type_pallet.id})
         moves.picked = True
         receipt.button_validate()
         internal_picking = moves.move_dest_ids.picking_id
@@ -1151,7 +1207,7 @@ class TestPacking(TestPackingCommon):
         internal_picking.action_cancel()
 
         # Second test part
-        package = self.env['stock.package'].create({'package_type_id': package_type.id})
+        package = self.env['stock.package'].create({'package_type_id': self.pack_type_pallet.id})
         self.env['stock.quant']._update_available_quantity(self.productA, loc01, 1.0, package_id=package)
 
         receipt = self.env['stock.picking'].create({
@@ -1176,7 +1232,7 @@ class TestPacking(TestPackingCommon):
             'product_uom_id': self.productA.uom_id.id,
             'location_id': supplier_location.id,
             'location_dest_id': input_location.id,
-            'result_package_id': self.env['stock.package'].create({'package_type_id': package_type.id}).id,
+            'result_package_id': self.env['stock.package'].create({'package_type_id': self.pack_type_pallet.id}).id,
             'picking_id': receipt.id,
         } for _ in range(2)])
         receipt.move_ids.picked = True
@@ -1214,7 +1270,7 @@ class TestPacking(TestPackingCommon):
             'product_uom_id': product.uom_id.id,
             'location_id': supplier_location.id,
             'location_dest_id': input_location.id,
-            'result_package_id': self.env['stock.package'].create({'package_type_id': package_type.id}).id,
+            'result_package_id': self.env['stock.package'].create({'package_type_id': self.pack_type_pallet.id}).id,
             'picking_id': receipt.id,
         } for product, move in [
             (self.productA, moves[0]),
@@ -1336,7 +1392,7 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
 
     def test_expected_to_pack(self):
-        """ Test direct calling of `_to_pack` since it doesn't handle all multi-record cases
+        """ Test direct calling of `_get_lines_and_packages_to_pack` since it doesn't handle all multi-record cases
         It's unlikely this situations will occur, but in case it is for customizations/future features,
         ensure that we don't have unexpected behavior """
 
@@ -1390,9 +1446,9 @@ class TestPacking(TestPackingCommon):
 
         # can't mix operation types
         with self.assertRaises(UserError):
-            move_lines_to_pack = (internal_picking_1 | in_picking_1).move_line_ids._to_pack()
+            move_lines_to_pack, __ = (internal_picking_1 | in_picking_1).move_line_ids._get_lines_and_packages_to_pack()
 
-        move_lines_to_pack = (internal_picking_1 | internal_picking_2).move_line_ids._to_pack()
+        move_lines_to_pack, __ = (internal_picking_1 | internal_picking_2).move_line_ids._get_lines_and_packages_to_pack()
         self.assertEqual(len(move_lines_to_pack), 2, "all move lines in pickings should have been selected to pack")
 
     def test_package_selection(self):
@@ -1726,21 +1782,16 @@ class TestPackagePropagation(TestPackingCommon):
     def test_reusable_package_propagation(self):
         """ Test a reusable package should not be propagated to the next picking
         of a mto chain """
-        reusable_type = self.env['stock.package.type'].create({
-            'name': 'Reusable',
-            'package_use': 'reusable',
-        })
+        # Make the Pallet type resuable while the Box type stays disposable.
+        self.pack_type_pallet.package_use = 'reusable'
+        self.pack_type_box.package_use = 'disposable'
         reusable_package = self.env['stock.package'].create({
             'name': 'Reusable Package',
-            'package_type_id': reusable_type.id,
-        })
-        disposable_type = self.env['stock.package.type'].create({
-            'name': 'Disposable',
-            'package_use': 'disposable',
+            'package_type_id': self.pack_type_pallet.id,
         })
         disposable_package = self.env['stock.package'].create({
             'name': 'disposable Package',
-            'package_type_id': disposable_type.id,
+            'package_type_id': self.pack_type_box.id,
         })
         self.productA = self.env['product.product'].create({
             'name': 'productA',
@@ -1975,3 +2026,204 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(boxes.package_dest_id.picking_ids, receipt)
         self.assertFalse((pallet | container).package_dest_id)
         self.assertFalse((pallet | container).picking_ids)
+
+    def test_package_shipping_weight(self):
+        """
+        Create a 10 kg package containing:
+         - five products weighing 2 kg each
+         - a 5 kg box containing three product weighing 2 kg each.
+        Create a 10 kg package containing:
+         - a 5 kg box containing one product weighing 2 kg.
+        Check that the packages total shipping weight is 31 kg and 17kg respectively.
+        """
+        self.productA.weight = 2
+        self.pack_type_box.base_weight = 5
+        self.pack_type_pallet.base_weight = 10
+        box, box2, pallet, pallet2 = self.env['stock.package'].create([{
+            'package_type_id': pack_type.id,
+        } for pack_type in [self.pack_type_box, self.pack_type_box, self.pack_type_pallet, self.pack_type_pallet]])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=pallet)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 3, package_id=box)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=box2)
+        box.parent_package_id = pallet
+        box2.parent_package_id = pallet2
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        delivery2 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        delivery.action_add_entire_packs(pallet.id)
+        delivery.action_confirm()
+        delivery2.action_add_entire_packs(pallet2.id)
+        delivery2.action_confirm()
+
+        self.assertEqual(delivery.move_line_ids.result_package_id, pallet | box)
+        self.assertEqual(delivery2.move_line_ids.result_package_id, box2)
+        self.assertEqual(delivery.move_line_ids.outermost_result_package_id, pallet)
+        self.assertEqual(delivery2.move_line_ids.outermost_result_package_id, pallet2)
+        self.assertEqual(delivery.shipping_weight, 31)
+        self.assertEqual(delivery2.shipping_weight, 17)
+
+        # Changing the package type should update the weight
+        delivery2.move_line_ids.result_package_id.package_type_id = self.pack_type_pallet
+        self.assertEqual(delivery2.shipping_weight, 22)
+        # Weight should also update when doing pack-ception shenanigans
+        delivery2.action_put_in_pack()
+        delivery2.move_line_ids.result_package_id.outermost_package_id.package_type_id = self.pack_type_pallet
+        self.assertEqual(delivery2.shipping_weight, 32)
+        delivery2.move_line_ids.result_package_id.outermost_package_id.package_type_id = self.pack_type_box
+        self.assertEqual(delivery2.shipping_weight, 27)
+
+    def test_package_removal(self):
+        """ Checks that the button 'Remove' in the package view in pickings behaves as expected:
+            - Only removes related move/move lines from the picking if it was only added through an entire pack
+            - Otherwise, just removes the package as destination
+            - When removing a destination container, don't remove its children, just reset their destination
+        """
+        pack1, pack2, pack3 = self.env['stock.package'].create([{} for _ in range(3)])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse.lot_stock_id, 2, package_id=pack1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.warehouse.lot_stock_id, 3, package_id=pack2)
+        (pack1 | pack2).parent_package_id = pack3
+
+        pick = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.pick_type_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.pack_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 2,
+                    'location_id': self.warehouse.lot_stock_id.id,
+                    'location_dest_id': self.pack_location.id,
+                }),
+            ],
+        })
+        pick.action_confirm()
+        self.assertRecordValues(pick.move_line_ids, [
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': False, 'is_entire_pack': False},
+        ])
+
+        pick.action_add_entire_packs(pack3.id)
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_ids': pack3.ids, 'product_uom_qty': 0},
+            {'product_id': self.productB.id, 'package_ids': pack3.ids, 'product_uom_qty': 2},
+        ])
+        self.assertRecordValues(pick.move_line_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_id': pack1.id, 'result_package_id': pack1.id, 'is_entire_pack': True},
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': pack2.id, 'is_entire_pack': True},
+        ])
+        self.assertEqual(pack1.package_dest_id, pack3)
+        self.assertEqual(pack2.package_dest_id, pack3)
+
+        # Remove pack3 from picking, this should only remove it as destination container
+        pack3.with_context(picking_ids=pick.ids).action_remove_package()
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_ids': pack1.ids, 'product_uom_qty': 0},
+            {'product_id': self.productB.id, 'package_ids': pack2.ids, 'product_uom_qty': 2},
+        ])
+        self.assertRecordValues(pick.move_line_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_id': pack1.id, 'result_package_id': pack1.id, 'is_entire_pack': True},
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': pack2.id, 'is_entire_pack': True},
+        ])
+        self.assertFalse((pack1 | pack2).package_dest_id)
+
+        # Remove pack1 from picking, this should also remove its related move & move line
+        pack1.with_context(picking_ids=pick.ids).action_remove_package()
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productB.id, 'package_ids': pack2.ids, 'product_uom_qty': 2},
+        ])
+        self.assertRecordValues(pick.move_line_ids.sorted('product_id'), [
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': pack2.id, 'is_entire_pack': True},
+        ])
+
+        # Remove pack2 from picking, this shouldn't remove its related move
+        pack2.with_context(picking_ids=pick.ids).action_remove_package()
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productB.id, 'package_ids': [], 'product_uom_qty': 2},
+        ])
+        self.assertFalse(pick.move_line_ids)
+
+    def test_mid_level_package_removal(self):
+        """ Checks that if a package is removed from a picking and implicitly disconnects the top-level packages from the bottom level ones,
+            Then those upper level packages reset their package_dest_id.
+        """
+        packages = self.env['stock.package'].create([{
+            'name': f"p{i}",
+        } for i in range(4)])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse.lot_stock_id, 2, package_id=packages[3])
+
+        # From top to bottom, packages should be organized as p0 (highest level) > p1 > p2 > p3 (lowest level, contains products)
+        for ind in range(3, 0, -1):
+            packages[ind].parent_package_id = packages[ind - 1]
+        self.assertEqual(packages[3].complete_name, 'p0 > p1 > p2 > p3')
+
+        pick = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.pick_type_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.pack_location.id,
+        })
+        pick.action_add_entire_packs(packages[0].id)
+        self.assertEqual(packages[3].dest_complete_name, 'p0 > p1 > p2 > p3')
+
+        # Remove p3, this should break the link with p2 and p1, so we need to make sure their package_dest_id is reset
+        self.assertEqual(packages[0].move_line_ids, pick.move_line_ids)
+        packages[2].with_context(picking_ids=pick.ids).action_remove_package()
+
+        self.assertEqual(packages[3].complete_name, 'p0 > p1 > p2 > p3')
+        self.assertEqual(packages[3].dest_complete_name, 'p3')
+
+        self.assertRecordValues(packages, [
+            {'name': 'p0', 'parent_package_id': False, 'package_dest_id': False},
+            {'name': 'p1', 'parent_package_id': packages[0].id, 'package_dest_id': False},
+            {'name': 'p2', 'parent_package_id': packages[1].id, 'package_dest_id': False},
+            {'name': 'p3', 'parent_package_id': packages[2].id, 'package_dest_id': False},
+        ])
+
+    def test_package_propagation_different_uom(self):
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.warehouse.in_type_id.set_package_type = False
+        self.warehouse.reception_steps = "two_steps"
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        self.productA.uom_ids = [Command.link(pack_of_6.id)]
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.wh_input_stock_loc_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 2.0,
+                'product_uom': self.productA.uom_ids.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.warehouse.wh_input_stock_loc_id.id,
+            })]
+        })
+        receipt.action_confirm()
+        receipt.action_put_in_pack()
+        receipt.button_validate()
+        in_stock_move = receipt.move_ids.move_dest_ids
+        self.assertEqual(in_stock_move.package_ids, receipt.move_ids.package_ids)
+
+    def test_package_info(self):
+        """ Checks that package's location & company are correctly computed, be it in single or multiple layers
+        """
+        pack1, pack2 = self.env['stock.package'].create([
+            {'name': 'Pack1'},
+            {'name': 'Pack2'},
+        ])
+        self.assertFalse((pack1 | pack2).location_id)
+        self.assertFalse((pack1 | pack2).company_id)
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack1)
+        self.assertEqual(pack1.location_id, self.stock_location)
+        self.assertEqual(pack1.company_id, self.stock_location.company_id)
+
+        pack1.parent_package_id = pack2
+        self.assertFalse(pack2.quant_ids)
+        self.assertEqual(pack2.location_id, self.stock_location)
+        self.assertEqual(pack2.company_id, self.stock_location.company_id)

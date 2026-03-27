@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2025-09-14 21:20+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2025-11-06 07:13+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "pos_discount/ja/>\n"
 "Language: ja\n"
@@ -28,8 +29,9 @@ msgstr ""
 msgid ""
 "A discount product is needed to use the Global Discount feature. Go to Point "
 "of Sale > Configuration > Settings to set it."
-msgstr "全体割引機能を使用するには、割引プロダクトが必要です。POS > 設定 > "
-"管理設定で設定して下さい。"
+msgstr ""
+"全体割引機能を使用するには、割引プロダクトが必要です。POS > 設定 > 管理設定で"
+"設定して下さい。"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
@@ -39,7 +41,7 @@ msgstr "キャッシャーが注文全体に割引を適用できるようにし
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: pos_discount
 #. odoo-javascript
@@ -68,6 +70,7 @@ msgid "Discount Product"
 msgstr "割引プロダクト"
 
 #. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
@@ -78,9 +81,10 @@ msgstr "表示名"
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
 #. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__id
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
@@ -88,8 +92,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: pos_discount
+#: model:ir.model,name:pos_discount.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "No discount product found"
 msgstr "割引プロダクトが見つかりません"
 
@@ -121,12 +130,13 @@ msgstr "割引ボタンをクリックしたときのデフォルトの割引率
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be "
 "Sold' and 'Available in Point of Sale'."
-msgstr "割引プロダクトの設定が間違っているようです。'販売可能' と 'POSで利用可能' "
-"のフラグが立っていることを確認して下さい。"
+msgstr ""
+"割引プロダクトの設定が間違っているようです。'販売可能' と 'POSで利用可能' の"
+"フラグが立っていることを確認して下さい。"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
@@ -137,7 +147,7 @@ msgstr "チケットに割引を適用するために使用されるプロダク
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "You cannot edit a discount line."
-msgstr ""
+msgstr "割引明細行を編集することはできません。"
 
 #~ msgid "Point of Sale Session"
 #~ msgstr "POSセッション"

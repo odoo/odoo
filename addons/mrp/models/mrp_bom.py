@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.tools import float_compare
 from odoo.tools.misc import clean_context, OrderedSet
 
 from collections import defaultdict
@@ -49,6 +50,9 @@ class MrpBom(models.Model):
     sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     operation_count = fields.Integer('Operations Count', compute='_compute_operation_count')
+    show_copy_operations_button = fields.Boolean(
+        compute="_compute_show_copy_operations_button",
+        help="Technical field used to control the visibility of the 'Copy Existing Operations' button.")
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
@@ -200,8 +204,10 @@ class MrpBom(models.Model):
                     raise ValidationError(_("By-product %s should not be the same as BoM product.", bom.display_name))
                 if byproduct.cost_share < 0:
                     raise ValidationError(_("By-products cost shares must be positive."))
-            if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
-                raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
+            for product in bom.product_tmpl_id.product_variant_ids:
+                total_variant_cost_share = sum(bom.byproduct_ids.filtered(lambda bp: not bp._skip_byproduct_line(product) and not bp.product_uom_id.is_zero(bp.product_qty)).mapped('cost_share'))
+                if float_compare(total_variant_cost_share, 100, precision_digits=2) > 0:
+                    raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
 
     @api.onchange('bom_line_ids', 'product_qty', 'product_id', 'product_tmpl_id')
     def onchange_bom_structure(self):
@@ -323,6 +329,10 @@ class MrpBom(models.Model):
         for bom in self:
             bom.operation_count = len(bom.operation_ids)
 
+    def _compute_show_copy_operations_button(self):
+        exist_operation = bool(self.env['mrp.routing.workcenter'].search_count([], limit=1))
+        self.show_copy_operations_button = exist_operation
+
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
@@ -409,6 +419,7 @@ class MrpBom(models.Model):
             Quantity describes the number of times you need the BoM: so the quantity divided by the number created by the BoM
             and converted into its UoM
         """
+        self = self.with_context(bom_cost_share_cache=self.env.context.get('bom_cost_share_cache') or {})  # noqa: PLW0642
         product_ids = set()
         product_boms = {}
         def update_product_boms():
@@ -419,7 +430,7 @@ class MrpBom(models.Model):
             for product in products:
                 product_boms.setdefault(product, self.env['mrp.bom'])
 
-        boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
+        boms_done = [(self, self.env['mrp.bom.line']._prepare_bom_done_values(quantity, product, quantity, []))]
         lines_done = []
 
         bom_lines = []
@@ -449,14 +460,19 @@ class MrpBom(models.Model):
                 for bom_line in bom.bom_line_ids:
                     if bom_line.product_id not in product_boms:
                         product_ids.add(bom_line.product_id.id)
-                boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
+                boms_done.append((bom, current_line._prepare_bom_done_values(converted_line_quantity, current_product, quantity, boms_done)))
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
                 # should be consumed.
                 line_quantity = current_line.product_uom_id.round(line_quantity, rounding_method='UP')
-                lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
+                lines_done.append((current_line, current_line._prepare_line_done_values(line_quantity, current_product, quantity, parent_line, boms_done)))
 
+        lines_done = self._round_last_line_done(lines_done)
         return boms_done, lines_done
+
+    @api.model
+    def _round_last_line_done(self, lines_done):
+        return lines_done
 
     @api.model
     def get_import_templates(self):
@@ -644,6 +660,10 @@ class MrpBom(models.Model):
             },
         }
 
+    def action_copy_existing_operations(self):
+        self.ensure_one()
+        return self.env['mrp.routing.workcenter'].with_context(bom_id=self.id).copy_existing_operations()
+
 
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
@@ -809,6 +829,12 @@ class MrpBomLine(models.Model):
         return {
             'quantity': 0,
         }
+
+    def _prepare_bom_done_values(self, quantity, product, original_quantity, boms_done):
+        return {'qty': quantity, 'product': product, 'original_qty': original_quantity, 'parent_line': self}
+
+    def _prepare_line_done_values(self, quantity, product, original_quantity, parent_line, boms_done):
+        return {'qty': quantity, 'product': product, 'original_qty': original_quantity, 'parent_line': parent_line}
 
 
 class MrpBomByproduct(models.Model):

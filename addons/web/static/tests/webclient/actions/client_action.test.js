@@ -116,7 +116,7 @@ test("can display client actions in Dialog and close the dialog", async () => {
 
     expect(".modal .test_client_action").toHaveCount(1);
     expect(".modal-title").toHaveText("Dialog Test");
-    await contains(".modal footer .btn.btn-primary").click();
+    await contains(".modal .btn-close").click();
     expect(".modal .test_client_action").toHaveCount(0);
 });
 
@@ -497,4 +497,28 @@ test("test home client action", async () => {
     await runAllTimers();
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info", "assign /"]);
+});
+
+test("test display_exception client action", async () => {
+    expect.errors(1);
+    await mountWithCleanup(WebClient);
+    getService("action").doAction({
+        type: "ir.actions.client",
+        tag: "display_exception",
+        params: {
+            code: 0,
+            message: "Odoo Server Error",
+            data: {
+                name: `odoo.exceptions.UserError`,
+                debug: "traceback",
+                arguments: [],
+                context: {},
+                message: "This is an error",
+            },
+        },
+    });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Invalid Operation");
+    expect.verifyErrors([/RPC_ERROR/]);
 });

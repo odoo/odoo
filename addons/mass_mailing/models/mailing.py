@@ -671,12 +671,20 @@ class MailingMailing(models.Model):
         self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
 
     def action_retry_failed(self):
-        failed_mails = self.env['mail.mail'].sudo().search([
+        """ Remove all failed emails and their traces, and try sending them again."""
+        # Use batching to prevent cache overfill in unlink()
+        batch_size = 1000
+        failed_emails = self.env['mail.mail'].sudo().with_context(prefetch_fields=False).search([
             ('mailing_id', 'in', self.ids),
             ('state', '=', 'exception')
-        ])
-        failed_mails.mapped('mailing_trace_ids').unlink()
-        failed_mails.unlink()
+        ], limit=batch_size)
+        while failed_emails:
+            failed_emails.mapped('mailing_trace_ids').unlink()
+            failed_emails.unlink()
+            failed_emails = failed_emails.search([
+                ('mailing_id', 'in', self.ids),
+                ('state', '=', 'exception')
+            ], limit=batch_size)
         self.action_put_in_queue()
 
     def action_view_link_trackers(self):
@@ -855,10 +863,12 @@ class MailingMailing(models.Model):
     def action_send_winner_mailing(self):
         """Send the winner mailing based on the winner selection field.
         This action is used in 2 cases:
-            - When the user clicks on a button to send the winner mailing. There is only one mailing in self
-            - When the cron is executed to send winner mailing based on the A/B testing schedule datetime. In this
-            case 'self' contains all the mailing for the campaigns so we just need to take the first to determine the
-            winner.
+
+        - When the user clicks on a button to send the winner mailing. There is only one mailing in self
+        - When the cron is executed to send winner mailing based on the A/B testing schedule datetime. In this
+          case 'self' contains all the mailing for the campaigns so we just need to take the first to determine the
+          winner.
+
         If the winner mailing is computed automatically, we sudo the mailings of the campaign in order to sort correctly
         the mailings based on the selection that can be used with sub-modules like CRM and Sales
         """

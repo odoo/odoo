@@ -1,7 +1,13 @@
-import { isTextNode, isParagraphRelatedElement, isEmptyBlock } from "../utils/dom_info";
+import {
+    isTextNode,
+    isParagraphRelatedElement,
+    isEmptyBlock,
+    isContentEditable,
+} from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { unwrapContents, wrapInlinesInBlocks, splitTextNode, fillEmpty } from "../utils/dom";
+import { fillHtmlTransferData } from "../utils/clipboard";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -13,6 +19,8 @@ import { isHtmlContentSupported } from "./selection_plugin";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
+ *
+ * @typedef {(() => boolean)[]} bypass_paste_image_files
  */
 
 const CLIPBOARD_BLACKLISTS = {
@@ -69,6 +77,8 @@ export const CLIPBOARD_WHITELISTS = {
         "img-thumbnail",
         "rounded",
         "rounded-circle",
+        // Odoo tables
+        "o_table",
         "table",
         "table-bordered",
         /^padding-/,
@@ -95,6 +105,20 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  * @property {ClipboardPlugin['pasteText']} pasteText
  */
 
+/**
+ * @typedef {((img: HTMLImageElement) => void)[]} added_image_handlers
+ * @typedef {(() => void)[]} after_paste_handlers
+ * @typedef {(() => void)[]} before_paste_handlers
+ *
+ * @typedef {((selection: EditorSelection, text: string) => boolean)[]} paste_text_overrides
+ *
+ * @typedef {((
+ *     clonedContents: DocumentFragment,
+ *     selection: EditorSelection
+ *   ) => void | clonedContents)[]} clipboard_content_processors
+ * @typedef {((textContent: string) => string)[]} clipboard_text_processors
+ */
+
 export class ClipboardPlugin extends Plugin {
     static id = "clipboard";
     static dependencies = [
@@ -118,6 +142,8 @@ export class ClipboardPlugin extends Plugin {
     }
 
     onCut(ev) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        this.dispatchTo("before_cut_handlers", selection);
         this.onCopy(ev);
         this.dependencies.history.stageSelection();
         this.dependencies.delete.deleteSelection();
@@ -129,30 +155,35 @@ export class ClipboardPlugin extends Plugin {
      */
     onCopy(ev) {
         ev.preventDefault();
+        this.setSelectionTransferData(ev, "clipboardData");
+    }
+
+    /**
+     * Prepare HTML and plain text from the current selection.
+     */
+    setSelectionTransferData(ev, transferObjectProperty) {
         const selection = this.dependencies.selection.getEditableSelection();
         let clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
             return;
         }
-
         // Prepare text content for clipboard.
         let textContent = selection.textContent();
         for (const processor of this.getResource("clipboard_text_processors")) {
             textContent = processor(textContent);
         }
-        ev.clipboardData.setData("text/plain", textContent);
 
         // Prepare html content for clipboard.
         for (const processor of this.getResource("clipboard_content_processors")) {
             clonedContents = processor(clonedContents, selection) || clonedContents;
         }
         this.dependencies.dom.removeSystemProperties(clonedContents);
-        const dataHtmlElement = this.document.createElement("data");
-        dataHtmlElement.append(clonedContents);
-        prependOriginToImages(dataHtmlElement, window.location.origin);
-        const htmlContent = dataHtmlElement.innerHTML;
-        ev.clipboardData.setData("text/html", htmlContent);
-        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", htmlContent);
+        fillHtmlTransferData(ev, transferObjectProperty, clonedContents, {
+            setEditorTransferData:
+                isContentEditable(selection.commonAncestorContainer) ||
+                this.dependencies.selection.isNodeEditable(selection.commonAncestorContainer),
+            textContent,
+        });
     }
 
     /**
@@ -160,7 +191,10 @@ export class ClipboardPlugin extends Plugin {
      */
     onPaste(ev) {
         let selection = this.dependencies.selection.getEditableSelection();
-        if (!selection.anchorNode.isConnected) {
+        if (
+            !selection.anchorNode.isConnected ||
+            !closestElement(selection.anchorNode).isContentEditable
+        ) {
             return;
         }
         ev.preventDefault();
@@ -202,6 +236,9 @@ export class ClipboardPlugin extends Plugin {
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
+            if (this.delegateTo("handle_paste_html_override", fragment)) {
+                return true;
+            }
             if (fragment.hasChildNodes()) {
                 this.dependencies.dom.insert(fragment);
             }
@@ -220,6 +257,11 @@ export class ClipboardPlugin extends Plugin {
         const textContent = clipboardData.getData("text/plain");
         if (ONLY_LINK_REGEX.test(textContent)) {
             return false;
+        }
+        const fragment = parseHTML(this.document, clipboardHtml);
+        this.dependencies.sanitize.sanitize(fragment);
+        if (this.delegateTo("handle_paste_html_override", fragment)) {
+            return true;
         }
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
@@ -449,7 +491,19 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
-            if (node.nodeName === "TD") {
+            if (node.nodeName === "THEAD") {
+                const tbody = node.nextElementSibling;
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...node.children);
+                    node.remove();
+                    node = tbody;
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    node = this.dependencies.dom.setTagName(node, "TBODY");
+                }
+            } else if (["TD", "TH"].includes(node.nodeName)) {
                 // Insert base container into empty TD.
                 if (isEmptyBlock(node)) {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
@@ -563,13 +617,9 @@ export class ClipboardPlugin extends Plugin {
      * @param {DragEvent} ev
      */
     onDragStart(ev) {
-        if (ev.target.nodeName === "IMG") {
-            this.dragImage = ev.target instanceof HTMLElement && ev.target;
-            ev.dataTransfer.setData(
-                "application/vnd.odoo.odoo-editor-node",
-                this.dragImage.outerHTML
-            );
-        }
+        const selection = this.dependencies.selection.getEditableSelection();
+        this.dispatchTo("before_drag_handlers", selection);
+        this.setSelectionTransferData(ev, "dataTransfer");
     }
     /**
      * Handle safe dropping of html into the editor.
@@ -597,37 +647,47 @@ export class ClipboardPlugin extends Plugin {
         }
 
         const dataTransfer = (ev.originalEvent || ev).dataTransfer;
-        const imageNodeHTML = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor-node");
-        const image =
-            imageNodeHTML &&
-            this.dragImage &&
-            imageNodeHTML === this.dragImage.outerHTML &&
-            this.dragImage;
-
-        const fileTransferItems = getImageFiles(dataTransfer);
+        const odooEditorHtml = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor");
+        const fileTransferItems = !odooEditorHtml && getImageFiles(dataTransfer);
         const htmlTransferItem = [...dataTransfer.items].find((item) => item.type === "text/html");
-        if (image || fileTransferItems.length || htmlTransferItem) {
+        if (fileTransferItems.length || htmlTransferItem || odooEditorHtml) {
+            const deleteAndSetSelection = (offsetNode, offset) => {
+                if (offsetNode.nodeType === Node.ELEMENT_NODE && offset > 1) {
+                    // Store number of children before deleting selection
+                    // Deleting the selection may remove one or more child nodes,
+                    // which shifts the indices of remaining children. To keep the
+                    // caret at the intended position, we subtract the number of
+                    // removed children from the original offset.
+                    const initialLength = offsetNode.childNodes.length;
+                    this.dependencies.delete.deleteSelection();
+                    const removedCount = initialLength - offsetNode.childNodes.length;
+                    offset -= removedCount;
+                } else {
+                    // For TEXT_NODEs, offset remains valid; just delete selection
+                    this.dependencies.delete.deleteSelection();
+                }
+
+                this.dependencies.selection.setSelection({
+                    anchorNode: offsetNode,
+                    anchorOffset: offset,
+                });
+            };
+
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
-                this.dependencies.delete.deleteSelection();
-                this.dependencies.selection.setSelection({
-                    anchorNode: range.offsetNode,
-                    anchorOffset: range.offset,
-                });
+                deleteAndSetSelection(range.offsetNode, range.offset);
             } else if (this.document.caretRangeFromPoint) {
                 const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
-                this.dependencies.delete.deleteSelection();
-                this.dependencies.selection.setSelection({
-                    anchorNode: range.startContainer,
-                    anchorOffset: range.startOffset,
-                });
+                deleteAndSetSelection(range.startContainer, range.startOffset);
             }
         }
-        if (image) {
-            const fragment = this.document.createDocumentFragment();
-            fragment.append(image);
-            this.dependencies.dom.insert(fragment);
-            this.dependencies.history.addStep();
+        if (odooEditorHtml) {
+            const fragment = parseHTML(this.document, odooEditorHtml);
+            this.dependencies.sanitize.sanitize(fragment);
+            if (fragment.hasChildNodes()) {
+                this.dependencies.dom.insert(fragment);
+                this.dependencies.history.addStep();
+            }
         } else if (fileTransferItems.length) {
             const html = await this.addImagesFiles(fileTransferItems);
             this.dependencies.dom.insert(html);
@@ -688,18 +748,5 @@ function getImageUrl(file) {
             }
             resolve(e.target.result);
         };
-    });
-}
-
-/**
- * Add origin to relative img src.
- * @param {string} origin
- */
-function prependOriginToImages(doc, origin) {
-    doc.querySelectorAll("img").forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && !/^(http|\/\/|data:)/.test(src)) {
-            img.src = origin + (src.startsWith("/") ? src : "/" + src);
-        }
     });
 }

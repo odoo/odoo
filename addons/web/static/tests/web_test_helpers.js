@@ -1,5 +1,4 @@
-import { before } from "@odoo/hoot";
-import { mockFetch } from "@odoo/hoot-mock";
+import { before, withFetch } from "@odoo/hoot";
 import { loadBundle } from "@web/core/assets";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
@@ -44,6 +43,7 @@ export {
     findComponent,
     getDropdownMenu,
     mountWithCleanup,
+    waitUntilIdle,
 } from "./_framework/component_test_helpers";
 export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
 export {
@@ -173,9 +173,7 @@ export function preloadBundle(bundleName, options) {
         if (once) {
             odoo.loader.preventGlobalDefine = true;
         }
-        mockFetch(globalCachedFetch);
-        await loadBundle(bundleName);
-        mockFetch(null);
+        await withFetch(globalCachedFetch, () => loadBundle(bundleName));
         if (once) {
             odoo.loader.preventGlobalDefine = false;
         }

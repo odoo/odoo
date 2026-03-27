@@ -21,13 +21,16 @@
 # İlknur Gözütok, 2023
 # Murat Durmuş <muratd@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-16 04:39+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:44+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "event_sale/tr/>\n"
 "Language: tr\n"
@@ -49,12 +52,12 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Configure Events &amp; Tickets"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Etkinlikleri Oluşturma &amp; Biletler"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Satış Siparişi</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -76,7 +79,7 @@ msgstr "Ekle"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
 msgid "All Events"
-msgstr ""
+msgstr "Tüm Olaylar"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
@@ -91,6 +94,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Birden fazla zaman dilimine izin verebilirsiniz. İletişim, maksimum "
+"katılımcı sayısı ve maksimum bilet kaydı sayısı tüm etkinlik yerlerine her "
+"bir zaman aralığı için tanımlanır."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -148,6 +154,8 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Bir etkinlik aralığı seçin ve bu etkinlik aralığı için otomatik olarak bir "
+"kayıt oluşturulacaktır."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -185,7 +193,7 @@ msgstr "Doğrulanmış"
 #. odoo-python
 #: code:addons/event_sale/models/product_template.py:0
 msgid "Create an Attendee for the selected Event."
-msgstr ""
+msgstr "Seçilen Etkinlik için bir Katılımcı oluşturun."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -298,7 +306,7 @@ msgstr "Etkinlik Satış Raporu"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Etkinlik Zamanı"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -338,7 +346,7 @@ msgstr "Ücretsiz"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__has_available_tickets
 msgid "Has Available Tickets"
-msgstr ""
+msgstr "Mevcut Biletleri Var"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__id
@@ -359,6 +367,7 @@ msgstr "ID"
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
 msgstr ""
+"\"%(event_name)s\" etlinlik için geçersiz zaman seçimi \"%(slot_name)s\"."
 
 #. module: event_sale
 #. odoo-python
@@ -376,7 +385,7 @@ msgstr "Fatura Adresi"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Çoklu Zamanlama mı"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -420,7 +429,7 @@ msgstr "Ücretsiz olmayan biletler"
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
 msgid "Not Sold"
-msgstr ""
+msgstr "Satılmadı"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
@@ -464,6 +473,8 @@ msgid ""
 "Please make sure all your event related lines are configured before "
 "confirming this order:%s"
 msgstr ""
+"Lütfen bu siparişi onaylamadan önce etkinlikle ilgili tüm detaylarınızın "
+"yapılandırıldığından emin olun:%s"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
@@ -552,7 +563,7 @@ msgstr "Satış"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
 msgid "Sales (Tax Included)"
-msgstr ""
+msgstr "Satış (Vergi Dahil)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -577,7 +588,7 @@ msgstr "Satış Temsilcisi"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_configurator_action
 msgid "Select an Event"
-msgstr ""
+msgstr "Bir Etkinlik Seçin"
 
 #. module: event_sale
 #. odoo-python
@@ -586,7 +597,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_slot_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Slot"
-msgstr ""
+msgstr "Slot"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
@@ -611,6 +622,9 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"%(product_name)s ürününün satış siparişi satırı, bir etkinliğe, bir bilete "
+"ve eğer etkinliğin birden fazla zaman aralığı var ise, en az bir zaman "
+"aralığına ihtiyacı vardır."
 
 #. module: event_sale
 #. odoo-python
@@ -649,6 +663,11 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Onaylanmamış: eylem bekleyen, bekleme durumundaki kayıtlar (özellikle satış "
+"gibi belirli durumlar)\n"
+"Kayıtlı: müşteri tarafından kabul edildiği düşünülen kayıtlar\n"
+"Katılımcı: katılımcının etkinliğe katıldığı kayıtlar\n"
+"İptal edilen: manuel olarak iptal edilen kayıtlar"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
@@ -668,17 +687,17 @@ msgstr "Yaklaşan/Aktif"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
 msgid "We could not find a matching event ticket for this product. <br/>"
-msgstr ""
+msgstr "Bu ürün için eşleşen bir etkinlik bileti bulamadık. <br/>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "'den değiştirildi"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please provide attendee details."
-msgstr ""
+msgstr "lütfen katılımcı bilgilerini paylaşın."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception

@@ -15,4 +15,10 @@
         </xpath>
     </t>
 
+    <t t-name="hr_holidays.CalendarView.Buttons">
+        <button t-if="canCreateGroupTimeOff" class="btn btn-secondary" t-on-click="onNewGroupTimeOff">
+            New Group Time Off
+        </button>
+    </t>
+
 </templates>

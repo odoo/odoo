@@ -50,5 +50,14 @@ export class ProductPricelistItem extends models.ServerModel {
             categ_id: false,
             min_quantity: 0.0,
         },
+        {
+            id: 2,
+            base: "list_price",
+            company_id: 250,
+            compute_price: "percentage",
+            currency_id: 1,
+            pricelist_id: 3,
+            percent_price: 90.0,
+        },
     ];
 }

@@ -6,9 +6,10 @@ const monetarySel = "[data-oe-field][data-oe-type=monetary]";
 export class MonetaryFieldPlugin extends Plugin {
     static id = "monetaryField";
     static dependencies = ["selection"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
-        force_editable_selector: `${monetarySel} .oe_currency_value`,
-        force_not_editable_selector: monetarySel,
+        content_editable_selectors: `${monetarySel} .oe_currency_value`,
+        content_not_editable_selectors: monetarySel,
     };
 
     setup() {

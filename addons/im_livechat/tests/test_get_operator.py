@@ -463,3 +463,22 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
         chat.livechat_end_dt = fields.Datetime.now()
         chat.flush_recordset(["livechat_end_dt"])
         self.assertEqual(first_operator, livechat_channel._get_operator())
+
+    def test_agent_availability_not_affected_by_custom_im_status(self):
+        agent = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [agent.id],
+            }
+        )
+        self.assertEqual(agent.presence_ids.status, "online")
+        self.assertEqual(agent, livechat_channel._get_operator())
+        agent.manual_im_status = "busy"
+        self.assertEqual(agent, livechat_channel._get_operator())
+        agent.manual_im_status = "away"
+        self.assertEqual(agent, livechat_channel._get_operator())
+        agent.manual_im_status = "offline"
+        self.assertEqual(agent, livechat_channel._get_operator())
+        agent.presence_ids.status = "away"
+        self.assertEqual(self.env["res.users"], livechat_channel._get_operator())

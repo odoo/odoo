@@ -9,13 +9,14 @@
 # Mads Søndergaard, 2022
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-14 21:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2025-11-15 11:28+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/hr/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -126,8 +127,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\""
-"><small><b>LÆS</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>LÆS</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -135,7 +136,8 @@ msgstr ""
 msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
-msgstr "<b>Tillykke!</b> Hvad med at lave en <a href=\"%s\">onboardingplan?</a>"
+msgstr ""
+"<b>Tillykke!</b> Hvad med at lave en <a href=\"%s\">onboardingplan?</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -143,12 +145,18 @@ msgid ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
 "title=\"Company\"/>"
 msgstr ""
-"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title="
-"\"Virksomhed\"/>"
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
+"title=\"Virksomhed\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\" "
+"invisible=\"login == work_email\"/>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
@@ -157,13 +165,22 @@ msgstr ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Arbejdsmail\"/>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
+"invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"Login\" invisible=\"login == work_email\"/>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
 msgstr ""
-"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Fødselsdag\""
-"/>"
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" "
+"title=\"Fødselsdag\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -308,13 +325,6 @@ msgstr "<small>e-Læring</small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
-"<span class=\"col-8 text-uppercase fw-bolder small\"> Contract Overview </"
-"span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
 "invisible=\"is_trusted_bank_account\" class=\"text-muted\">Untrusted</span>\n"
@@ -339,8 +349,8 @@ msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
 "Activities</span>"
 msgstr ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">Luk "
-"aktiviteter</span>"
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Luk aktiviteter</"
+"span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -402,11 +412,21 @@ msgid "<span invisible=\"not contract_date_start\">to</span>"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "<span invisible=\"not user_id or is_user_active\">\n"
 "                                                (User is Inactive)\n"
 "                                            </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Contract Overview</span>"
 msgstr ""
 
 #. module: hr
@@ -627,7 +647,7 @@ msgstr "Fraværende"
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__acc_number
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Account Number"
-msgstr ""
+msgstr "Kontonummer"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -797,7 +817,7 @@ msgstr "Alle aktiviteter"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__allocation_ids
 msgid "Allocations"
-msgstr ""
+msgstr "Tildelinger"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
@@ -814,18 +834,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Amount"
-msgstr ""
+msgstr "Beløb"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount_type
 msgid "Amount Type"
-msgstr ""
+msgstr "Beløbstype"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An element name parent of the radio to observe updates"
 msgstr ""
+"Navnet på det overordnede element til radiofeltet, som overvåger opdateringer"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_unique_date_version
@@ -839,7 +860,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An object to link select options and element id to move"
-msgstr ""
+msgstr "Et objekt til at forbinde valgmuligheder og element-ID for at flytte"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -971,8 +992,8 @@ msgstr ""
 "og strategisk analyse</b>,\n"
 "                                og du skal kunne tænke kritisk i forhold til "
 "kundernes udfordringer. Vi forventer, at du er\n"
-"                                motiveret og har en udpræget "
-"\"kan-klare-det\"-mentalitet. For at trives i stillingen skal du\n"
+"                                motiveret og har en udpræget \"kan-klare-"
+"det\"-mentalitet. For at trives i stillingen skal du\n"
 "                                have stærke analytiske evner, kunne omsætte "
 "indsigter til\n"
 "                                handlingsorienterede anbefalinger og formå "
@@ -1142,8 +1163,8 @@ msgstr ""
 "                                dygtigste eksperter.\n"
 "                                <br>\n"
 "                                I denne stilling får du <b>ansvaret for at "
-"definere og implementere vores overordnede teknologistrategi og køreplan,</b>"
-"\n"
+"definere og implementere vores overordnede teknologistrategi og køreplan,</"
+"b>\n"
 "                                så den understøtter virksomhedens "
 "forretningsmål. Stillingen kræver både <b>kreativ og\n"
 "                                analytisk</b> tænkning samt evnen til at "
@@ -1382,7 +1403,7 @@ msgstr "Fødselsdag"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Boolean display as radio field with translatable labels"
-msgstr ""
+msgstr "Boolesk visning som radiofelt med oversættelige etiketter"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
@@ -1393,21 +1414,21 @@ msgstr "Annullér"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
+msgid "Cannot archive all the active versions of an employee."
 msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid ""
-"Cannot modify multiple records contract dates with different contracts at "
+"Cannot modify multiple versions contract dates with different contracts at "
 "once."
 msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
+msgid "Cannot unassign all the active versions of an employee."
 msgstr ""
 
 #. module: hr
@@ -1596,15 +1617,17 @@ msgstr "Kontaktnavn"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Contact Phone"
-msgstr ""
+msgstr "Kontakttelefon"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Contacts"
-msgstr ""
+msgstr "Adressebog"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1851,7 +1874,7 @@ msgstr "Valuta"
 #: model:ir.model.fields,help:hr.field_account_setup_bank_manual_config__currency_symbol
 #: model:ir.model.fields,help:hr.field_res_partner_bank__currency_symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "Valutategn til brug ved udskrift af beløb."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
@@ -1928,6 +1951,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Angiv ressourcens arbejdstider. Hvis du ikke angiver dette, har ressourcen "
+"fuldstændig fleksible arbejdstider."
 
 #. module: hr
 #. odoo-javascript
@@ -2089,6 +2114,7 @@ msgstr "Diskussionskanal"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__display_name
@@ -2131,6 +2157,11 @@ msgstr "Doktor"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Document"
 msgstr "Dokument"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Documents"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
@@ -2190,19 +2221,19 @@ msgstr "Uddannelse"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Effective Date"
-msgstr ""
+msgstr "Effektiv dato"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element association"
-msgstr ""
+msgstr "Elementtilknytning"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element to observe"
-msgstr ""
+msgstr "Element, der skal overvåges"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
@@ -2351,6 +2382,12 @@ msgid "Employee development is a core focus"
 msgstr "Medarbejderens udvikling er et centralt fokusområde"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee will be excluded from Pay Runs"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
 msgid "Employee's Bank Accounts"
 msgstr ""
@@ -2413,6 +2450,12 @@ msgstr "Antal medarbejdere"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
 msgstr "Medarbejder-tags"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
@@ -2548,7 +2591,7 @@ msgstr "Udløbne kontrakter"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Expires on"
-msgstr ""
+msgstr "Udløber om"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2569,7 +2612,7 @@ msgstr "Facilitere workshops og møder med stakeholdere"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "False association"
-msgstr ""
+msgstr "Forkert tilknytning"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2690,6 +2733,7 @@ msgid "Full-Time"
 msgstr "Fuldtid"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr "Fremtidige aktiviteter"
@@ -2809,7 +2853,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "History"
-msgstr ""
+msgstr "Historik"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
@@ -2877,6 +2921,7 @@ msgstr "Personalechef (HR)"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_version__id
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__id
@@ -3024,6 +3069,8 @@ msgid "In-depth knowledge of labor laws"
 msgstr "Indgående kendskab til arbejdsret"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Indefinite"
 msgstr "Ubestemt"
@@ -3153,7 +3200,7 @@ msgstr "Stillinger"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Posting"
-msgstr ""
+msgstr "Stilling"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -3161,6 +3208,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__job_title
 #: model:ir.model.fields,field_description:hr.field_res_users__job_title
 #: model:ir.model.fields,field_description:hr.field_resource_resource__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Job Title"
 msgstr "Jobtitel"
 
@@ -3241,6 +3289,7 @@ msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
 msgstr "Forsinkede aktiviteter"
@@ -3292,13 +3341,13 @@ msgstr "Lad os lave en"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean False value."
-msgstr ""
+msgstr "Knyt et element til den booleske Falsk-værdi."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean True value."
-msgstr ""
+msgstr "Knyt et element til den booleske Sandt-værdi."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_wizard_view_form
@@ -3330,6 +3379,11 @@ msgstr "Adresse"
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
 msgid "Location Number"
 msgstr "Lokationsnummer"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Login"
+msgstr "Log ind"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
@@ -3465,6 +3519,12 @@ msgid "Mobile Phone"
 msgstr "Mobiltelefon"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
+msgid "More..."
+msgstr "Mere ..."
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3502,7 +3562,7 @@ msgstr "Mit team"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.xml:0
 msgid "NO"
-msgstr ""
+msgstr "NEJ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
@@ -3597,6 +3657,12 @@ msgid "No Template found"
 msgstr "Ingen skabeloner endnu"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
+msgid "No contract"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3605,6 +3671,11 @@ msgstr "Ingen skabeloner endnu"
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr ""
 "Ingen dumme ledere, ingen besværlige værktøjer, ingen faste arbejdstider"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "No user linked"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3622,11 +3693,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
 msgstr "Ikke ansat"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not linked to an user"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -3725,7 +3791,8 @@ msgstr "Onboarding / Offboarding"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Only HR users can access first version date on an employee."
-msgstr "Det er kun HR-brugere, der har adgang til en medarbejders versionsdato."
+msgstr ""
+"Det er kun HR-brugere, der har adgang til en medarbejders versionsdato."
 
 #. module: hr
 #. odoo-python
@@ -3897,7 +3964,7 @@ msgstr "Privat"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Personal Information"
-msgstr ""
+msgstr "Personlige oplysninger"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3994,12 +4061,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
 msgid "Preferences"
-msgstr ""
+msgstr "Præferencer"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Presence"
-msgstr ""
+msgstr "Fremmøde"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -4050,7 +4117,7 @@ msgstr "Udskriv navneskilt"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private"
-msgstr ""
+msgstr "Privat"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -4191,7 +4258,7 @@ msgstr "FoU USA"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Radio followed by element"
-msgstr ""
+msgstr "Radio efterfulgt af element"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -4231,12 +4298,12 @@ msgstr "Årsag"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Records"
-msgstr ""
+msgstr "Datasæt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__user_id
 msgid "Recruiter"
-msgstr ""
+msgstr "Ansætter"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -4512,6 +4579,11 @@ msgid "Show Hr Icon Display"
 msgstr "Vis HR-ikon"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+msgid "Show all records whose next activity date is past"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
 msgid "Show to all employees"
 msgstr "Vis til alle medarbejdere"
@@ -4667,7 +4739,7 @@ msgstr "Opsummering"
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__symbol
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__currency_symbol
 msgid "Symbol"
-msgstr ""
+msgstr "Symbol"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -4832,6 +4904,12 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid "The following fields were modified by %s"
 msgstr "Følgende felter er redigeret af %s"
@@ -4877,7 +4955,8 @@ msgstr "Brugeren vil være i stand til at oprette og redigere medarbejdere."
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
-msgstr "Brugeren får adgang til både HR-konfiguration og statistiske rapporter."
+msgstr ""
+"Brugeren får adgang til både HR-konfiguration og statistiske rapporter."
 
 #. module: hr
 #. odoo-python
@@ -4895,6 +4974,12 @@ msgstr "Afhandling"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "Denne medarbejder har allerede en bruger."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -4952,6 +5037,7 @@ msgstr ""
 "i den nye virksomhed."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "Dagens aktiviteter"
@@ -4992,7 +5078,7 @@ msgstr "Oplæring"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "True association"
-msgstr ""
+msgstr "Sand tilknytning"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5003,12 +5089,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__trusted
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Trusted"
-msgstr ""
+msgstr "Pålidelig"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_exception_decoration
@@ -5268,7 +5354,7 @@ msgstr "Enkemand"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Guide"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -5420,12 +5506,20 @@ msgstr "Arbejdsplaner"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_resource_resource__calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "Arbejdstid"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.xml:0
 msgid "YES"
+msgstr "JA"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
 msgstr ""
 
 #. module: hr
@@ -5445,6 +5539,8 @@ msgid ""
 "You are receiving this message because you are the HR Responsible of this "
 "employee."
 msgstr ""
+"Du modtager denne besked, fordi du er den personaleansvarlige for denne "
+"medarbejder."
 
 #. module: hr
 #. odoo-javascript
@@ -5526,13 +5622,13 @@ msgstr ""
 "eksisterende materialer (bøger, kursusbilag, Odoo-præsentationer og "
 "kommercielle værktøjer).\n"
 "Du vil sikre, at disse materialer tilpasses den nye version og\n"
-"foreslå forbedringer, der også dækker nye funktioner og områder i softwaren."
-"\n"
+"foreslå forbedringer, der også dækker nye funktioner og områder i "
+"softwaren.\n"
 "Du bliver en del af teamet for implementeringshjælp. Teamet består af 3 "
 "medarbejdere, der støtter under softwareimplementeringen. Din rolle vil "
 "blandt andet bestå i at\n"
-"afholde webinarer, der demonstrerer softwarens forskellige funktionaliteter,"
-"\n"
+"afholde webinarer, der demonstrerer softwarens forskellige "
+"funktionaliteter,\n"
 "samt yde support besvare kundernes spørgsmål.\n"
 "Derudover vil du støtte supportchefen i udviklingen af vores supportydelser. "
 "Det indebærer\n"
@@ -5627,7 +5723,7 @@ msgstr "skilt"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "doctor"
-msgstr ""
+msgstr "læge"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5666,6 +5762,11 @@ msgstr "f.eks. johndoe@example.com"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
 msgstr "f.eks. myprivateemail@example.com"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_mixin
+msgid "hr.mixin"
+msgstr ""
 
 #. module: hr
 #. odoo-python

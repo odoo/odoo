@@ -7,11 +7,11 @@ export class PlausiblePush extends Interaction {
     setup() {
         const { eventName, eventParams } = this.el.dataset;
 
-        window.plausible ||= function () { (window.plausible.q = window.plausible.q || []).push(arguments) };
+        window.plausible ||= function () {
+            (window.plausible.q = window.plausible.q || []).push(arguments);
+        };
         window.plausible(eventName, { props: JSON.parse(eventParams) || {} });
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.plausible_push", PlausiblePush);
+registry.category("public.interactions").add("website.plausible_push", PlausiblePush);

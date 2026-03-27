@@ -78,7 +78,6 @@ class PosOrder(models.Model):
         return res
 
     def _send_notification_online_payment_status(self, status):
-        self.config_id.notify_synchronisation(self.config_id.current_session_id.id, 0)
         self.config_id._notify("ONLINE_PAYMENT_STATUS", {
             'status': status,  # progress, success, fail
             'data': {
@@ -86,3 +85,13 @@ class PosOrder(models.Model):
                 'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id), load=False),
             }
         })
+
+    def _load_pos_self_data_fields(self, config):
+        result = super()._load_pos_self_data_fields(config)
+        return result + ['online_payment_method_id', 'next_online_payment_amount']
+
+    @api.model
+    def _check_pos_order(self, pos_config, order, device_type, table=None):
+        data = super()._check_pos_order(pos_config, order, device_type, table)
+        data['use_self_order_online_payment'] = order.get('use_self_order_online_payment')
+        return data

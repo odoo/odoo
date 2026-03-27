@@ -313,3 +313,22 @@ class TestReportStockQuantity(tests.TransactionCase):
         ):
             qty = get_inv_qty_at_date(product.id, date)
             self.assertEqual(qty, expected_qties)
+
+    def test_transfer_where_qty_done_differs_from_demand(self):
+        """
+        Verify that available quantities are correctly computed at different past dates
+        when the qty_done of a transfer differs from the demand.
+        """
+        today = self.move1.date
+        self.move2._action_cancel()
+        product = self.product1
+        with freeze_time(today):
+            self.move1.write({'quantity': 40.0, 'picked': True})
+            self.move1._action_done()
+            self.assertRecordValues(product, [{'qty_available': 40.0}])
+        report = self.env['report.stock.quantity']._read_group(
+            [('date', '>=', today - timedelta(days=1)), ('date', '<=', today), ('product_id', '=', product.id), ('state', '=', 'forecast')],
+            ['date:day', 'product_id'],
+            ['product_qty:sum'])
+        forecast_report = [qty for __, __, qty in report]
+        self.assertEqual(forecast_report, [0, 40])

@@ -87,6 +87,20 @@ class TestSelfAccessPreferences(TestHrCommon):
         internal_user = new_test_user(self.env, login='mireille', groups='base.group_user', name='Mireille', email='mireille@example.com')
         self.env['hr.employee'].with_user(internal_user).search([]).read([])
 
+    def test_open_preferences_with_group_without_external_id(self):
+        """Test opening preferences when the user belongs to a group without an external ID."""
+        self.env['hr.employee'].create({
+            'name': 'John',
+            'user_id': self.env.user.id,
+        })
+        group = self.env['res.groups'].create({
+            'name': "Test Group",
+        })
+        self.env.user.group_ids = [Command.link(group.id)]
+        action = self.env.user.action_get()
+        self.assertEqual(action['type'], 'ir.actions.act_window')
+        self.assertEqual(action['display_name'], 'Change my Preferences')
+
 class TestSelfAccessRights(TestHrCommon):
 
     @classmethod
@@ -121,6 +135,14 @@ class TestSelfAccessRights(TestHrCommon):
     def testReadOtherEmployee(self):
         with self.assertRaises(AccessError):
             self.hubert_emp.with_user(self.richard).read(self.protected_fields_emp.keys())
+        # Check simple user can read all public fields of private employee
+        public_fields = [
+            field_name
+            for field_name in self.env['hr.employee.public']._fields
+            if field_name in self.env['hr.employee']._fields
+        ]
+        res = self.hubert_emp.with_user(self.richard).read(public_fields)
+        self.assertEqual(len(public_fields), len(res[0]))
 
     # Write hr.employee #
     def testWriteSelfEmployee(self):
@@ -158,6 +180,14 @@ class TestSelfAccessRights(TestHrCommon):
     def testSearchUserEMployee(self):
         # Searching user based on employee_id field should not raise bad query error
         self.env['res.users'].with_user(self.richard).search([('employee_id', 'ilike', 'Hubert')])
+
+    # Write hr.department
+    def testWriteDepartmentEmployee(self):
+        with self.assertRaises(AccessError):
+            self.env['hr.department'].with_user(self.richard).create({'name': 'New Dept'})
+        dept = self.env['hr.department'].create({'name': 'New Dept'})
+        with self.assertRaises(AccessError):
+            dept.with_user(self.richard).write({'name': 'Renamed Dept'})
 
     def test_onchange_readable_fields_with_no_access(self):
         """

@@ -126,6 +126,26 @@ class TestCarrierPropagation(TransactionCase):
             ship = pack.move_ids.move_dest_ids.picking_id
             self.assertEqual(self.normal_delivery, ship.carrier_id)
 
+    def test_carrier_propagation_with_all_pull_rules(self):
+        """Ensure that the carrier is propagated in pickings through all pull rules
+        where 'propagate_carrier' is enabled."""
+        delivery_route_rules = self.warehouse.delivery_route_id.rule_ids
+        delivery_route_rules[0].location_dest_id = self.rule_pack.location_src_id
+        delivery_route_rules.action = 'pull'
+        delivery_route_rules[2].propagate_carrier = False
+        so = self.SaleOrder.create({
+            'partner_id': self.partner_propagation.id,
+            'order_line': [Command.create({'product_id': self.super_product.id})],
+        })
+        so.action_confirm()
+        pickings = so.picking_ids
+        self.assertTrue(all(not p.carrier_id for p in pickings), "No carrier is set on the sale order, so all pickings should have no carrier.")
+        pickings[0].write({'carrier_id': self.normal_delivery.id, 'carrier_tracking_ref': 'NORMALDELIVERYTRACK0001'})
+        pickings[0].button_validate()
+        self.assertRecordValues(pickings[1], [{'carrier_id': self.normal_delivery.id, 'carrier_tracking_ref': 'NORMALDELIVERYTRACK0001'}])
+        pickings[1].button_validate()
+        self.assertRecordValues(pickings[2], [{'carrier_id': False, 'carrier_tracking_ref': False}])
+
     def test_route_based_on_carrier_delivery(self):
         """
             Check that the route on the sale order line is selected as per the first priority even if route on shipping mehod is present

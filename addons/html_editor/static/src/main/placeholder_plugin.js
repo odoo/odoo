@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class PlaceholderPlugin extends Plugin {
     static id = "placeholder";
+    /** @type {import("plugins").EditorResources} */
     resources = {
         ...(this.config.placeholder && {
             hints: [

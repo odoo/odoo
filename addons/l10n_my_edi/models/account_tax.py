@@ -40,7 +40,7 @@ class AccountTax(models.Model):
             if tax.country_id.code != 'MY':
                 tax.l10n_my_tax_type = False
             else:
-                if tax.amount == 0:
+                if tax.amount == 0 and tax.tax_scope:
                     tax.l10n_my_tax_type = 'E'
                 elif tax.tax_scope == 'consu':
                     tax.l10n_my_tax_type = '01'

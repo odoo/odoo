@@ -113,7 +113,7 @@ class PortalMailGroup(http.Controller):
             domain &= Domain('group_message_parent_id', '=', False)
 
         if date_begin and date_end:
-            domain &= Domain('create_date', '>', date_begin) & ('create_date', '<=', date_end)
+            domain &= Domain('create_date', '>', date_begin) & Domain('create_date', '<=', date_end)
 
         # SUDO after the search to apply access rules but be able to read attachments
         messages_sudo = GroupMessage.search(

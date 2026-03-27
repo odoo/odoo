@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.tests.common import new_test_user
 
 
@@ -11,7 +11,7 @@ class TestWarehouse(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner = cls.env['res.partner'].create({'name': 'Deco Addict'})
+        cls.partner = cls.env['res.partner'].create({'name': 'Acme Corporation'})
 
     def test_inventory_product(self):
         self.product_1.is_storable = True
@@ -882,3 +882,106 @@ class TestWarehouse(TestStockCommon):
         sequence.prefix += end_of_prefix
         self.warehouse_1.delivery_steps = 'pick_ship'
         self.assertTrue(sequence.prefix.endswith(end_of_prefix))
+
+    def test_modified_global_route(self):
+        """ Ensure that _find_or_create_global_route, if called multiple time, only creates the route once
+
+        If a global route was renamed, and has a company setup,
+          then the system would create multiple duplicates with the new name when creating a new warehouse;
+          one duplicate for each call _find_or_create_global_route.
+        """
+        company_2 = self.env["res.company"].create({"name": "Company 2"})
+
+        mto_route = self.warehouse_1.mto_pull_id.route_id
+        mto_route.rule_ids.unlink()  # Quick patch to be able to set a company on the route
+        mto_route.write({"name": "New Name (MTO)", "company_id": self.warehouse_1.company_id.id})
+
+        self.env["stock.warehouse"].with_company(company_2).create({"name": "Warehouse 2", "code": "2"})
+
+        route_sudo = self.env["stock.route"].sudo().with_context(active_test=False)
+        renamed_route_count = route_sudo.search_count([("name", "=", "New Name (MTO)")])
+        self.assertEqual(renamed_route_count, 1)
+
+        new_mto_route = route_sudo.search([("name", "=", "Replenish on Order (MTO)")])
+        self.assertEqual(len(new_mto_route), 1)
+        self.assertEqual(new_mto_route.company_id.id, company_2.id)
+
+    def test_search_qty_to_order_of_0(self):
+        """
+        Test that searching for orderpoints on `qty_to_order` with value = 0 for different operators
+        works correctly.
+
+        The test first creates two orderpoints with `qty_to_order_manual = 0`,
+        then updates `qty_to_order` to a non-zero value to ensure the search
+        properly filters records based on the field value.
+        """
+        self.env['stock.warehouse.orderpoint'].search([]).write({'active': False})
+        orderpoints = self.env['stock.warehouse.orderpoint'].create([
+            {
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'product_id': self.product_1.id,
+                'product_min_qty': 0.0,
+                'product_max_qty': 0.0,
+                'trigger': 'manual',
+            },
+            {
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'product_id': self.product_2.id,
+                'product_min_qty': 3.0,
+                'product_max_qty': 5.0,
+                'trigger': 'manual',
+            },
+        ])
+
+        for op, expected in [
+            ('=', orderpoints[0]),
+            ('>', orderpoints[1]),
+            ('>=', orderpoints),
+            ('<', self.env['stock.warehouse.orderpoint']),
+        ]:
+            res = self.env['stock.warehouse.orderpoint'].search([('qty_to_order', op, 0)])
+            self.assertEqual(res, expected, "Error with operator %s" % op)
+
+        orderpoints[0].qty_to_order = 3
+
+        for op, expected in [
+            ('!=', orderpoints),
+            ('=', self.env['stock.warehouse.orderpoint']),
+        ]:
+            res = self.env['stock.warehouse.orderpoint'].search([('qty_to_order', op, 0)])
+            self.assertEqual(res, expected, "Error with operator %s" % op)
+
+
+@tagged('-at_install', 'post_install')
+class TestWarehousePostInstall(TestStockCommon):
+    def test_manual_resupply_from_wh_partner_propagation(self):
+        """
+        Check that the warehouse destination is set as delivery address
+        when a product is manually resupplied from an other warehouse.
+        """
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'company_id': self.env.company.id,
+            'code': 'WHC2',
+            'resupply_wh_ids': [Command.set(self.warehouse_1.ids)],
+            'partner_id': self.partner.id,
+        })
+        self.product.route_ids = warehouse_2.resupply_route_ids
+        product_replenish = Form(self.env['product.replenish'].with_context(default_product_id=self.product.id))
+        product_replenish.warehouse_id = warehouse_2
+        product_replenish.save().launch_replenishment()
+        replenishment_pickings = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment'), ('product_id', '=', self.product.ids)]).sorted('id')
+        self.assertRecordValues(replenishment_pickings, [
+            {
+                'picking_type_id': self.warehouse_1.out_type_id.id,
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'location_dest_id': self.env.company.internal_transit_location_id.id,
+                'partner_id': warehouse_2.partner_id.id,
+            },
+            {
+                'picking_type_id': warehouse_2.in_type_id.id,
+                'location_id': self.env.company.internal_transit_location_id.id,
+                'location_dest_id': warehouse_2.lot_stock_id.id,
+                'partner_id': self.warehouse_1.partner_id.id,
+            },
+        ])

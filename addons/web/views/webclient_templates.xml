@@ -154,7 +154,9 @@
                 </div>
 
                 <div class="o_caps_lock_warning">
-                    <label for="password" class="form-label d-flex justify-content-between">Password</label>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <label for="password" class="form-label">Password</label>
+                    </div>
                     <div class="input-group mb-1">
                         <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                         <button type="button" class="btn btn-sm border border-start-0 o_show_password">

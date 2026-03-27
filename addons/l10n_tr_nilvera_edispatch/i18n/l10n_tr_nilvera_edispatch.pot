@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-17 14:00+0000\n"
-"PO-Revision-Date: 2025-08-17 14:00+0000\n"
+"POT-Creation-Date: 2025-12-30 19:09+0000\n"
+"PO-Revision-Date: 2025-12-30 19:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,33 +18,29 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "%(name)s's %(errors)s."
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "%s TCKN is required."
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "%s is required"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "%s's"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
-#: model:ir.model.constraint,message:l10n_tr_nilvera_edispatch.constraint_l10n_tr_nilvera_trailer_plate_name_unique
+#: model:ir.model.constraint,message:l10n_tr_nilvera_edispatch.constraint_l10n_tr_nilvera_trailer_plate_name_uniq
 msgid "A Plate Number with that type already exists."
 msgstr ""
 
@@ -56,7 +52,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "At least one Driver is required."
 msgstr ""
 
@@ -83,7 +78,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid ""
 "Carrier is required (optional when both the Driver and Vehicle Plate are "
 "filled)."
@@ -92,7 +86,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "City"
 msgstr ""
 
@@ -104,8 +97,12 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "Country"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#: model:ir.model,website_form_label:l10n_tr_nilvera_edispatch.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
@@ -128,7 +125,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "Customs ZIP of 5 characters must be present"
 msgstr ""
 
@@ -144,6 +140,9 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_l10n_tr_nilvera_trailer_plate__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking_type__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -155,19 +154,19 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_driver_ids
-#, python-format
 msgid "Drivers"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-javascript
+#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
+msgid "Error occured in reading following XML file(s): %s"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid ""
 "Error occurred in generating XML for following records:\n"
 "- %s"
@@ -214,7 +213,16 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_l10n_tr_nilvera_trailer_plate__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking_type__id
 msgid "ID"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
+msgid "Imported E-Receipts"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
@@ -250,17 +258,21 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking_type.py:0
-#, python-format
 msgid "Only 3 characters are allowed in the Sequence Prefix by GİB"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid ""
 "Only Drivers from Türkiye are valid. Please update the Country and enter a "
 "valid TCKN in the Tax ID."
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-javascript
+#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
+msgid "Only XML files can be uploaded"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
@@ -282,7 +294,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "Please validate the transfer first to generate the XML"
 msgstr ""
 
@@ -299,7 +310,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "Printed Delivery Note Date is required."
 msgstr ""
 
@@ -311,7 +321,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "Printed Delivery Note Number of 16 characters is required."
 msgstr ""
 
@@ -326,24 +335,38 @@ msgid "Sent"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
-#. odoo-python
-#: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
-msgid "State"
+#. odoo-javascript
+#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
+msgid "Something went wrong. Please try again."
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
+msgid "State"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#: model:ir.model,name:l10n_tr_nilvera_edispatch.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
 msgid "Street"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "TCKN/VKN"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-javascript
+#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
+msgid "The file(s): %s must be of type XML."
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
@@ -365,8 +388,9 @@ msgid "Trailer Plates"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
-#: model:ir.model,name:l10n_tr_nilvera_edispatch.model_stock_picking
-msgid "Transfer"
+#. odoo-javascript
+#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.xml:0
+msgid "Upload e-Receipt (XML)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
@@ -434,7 +458,6 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "Vehicle Plate is required."
 msgstr ""
 
@@ -442,22 +465,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "View %s"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "View Partner"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-#, python-format
 msgid "ZIP"
 msgstr ""
 
@@ -474,21 +493,31 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "e-Dispatch XML file generated successfully."
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
-#, python-format
 msgid "e-Dispatch will not be generated as the Delivery Address is not set."
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
-#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.l10n_tr_edispatch_format
-msgid "false"
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
+msgid "e-Receipt uploaded successfully."
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-javascript
+#: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
+msgid "e-Receipt(s) Imported Successfully"
+msgstr ""
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
+msgid "id"
 msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch

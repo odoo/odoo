@@ -1,4 +1,4 @@
-import { useEnv, useState } from "@odoo/owl";
+import { useEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { AccountProductCatalogSearchPanel } from "@account/components/product_catalog/search/search_panel";
 import { TimePeriodSelectionField } from "./time_period_selection_fields";
@@ -9,23 +9,25 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
     static template = "purchase_stock.ProductCatalogSearchPanel";
     static components = { TimePeriodSelectionField };
     static basedOnOptions = [
-        ["actual_demand", "Forecasted"],
-        ["one_week", "Last 7 days"],
-        ["30_days", "Last 30 days"],
-        ["three_months", "Last 3 months"],
-        ["one_year", "Last 12 months"],
-        ["last_year", "Same month last year"],
-        ["last_year_m_plus_1", "Next month last year"],
-        ["last_year_m_plus_2", "After next month last year"],
-        ["last_year_quarter", "Last year quarter"],
+        ["actual_demand", _t("Forecasted")],
+        ["one_week", _t("Last 7 days")],
+        ["30_days", _t("Last 30 days")],
+        ["three_months", _t("Last 3 months")],
+        ["one_year", _t("Last 12 months")],
+        ["last_year", _t("Same month last year")],
+        ["last_year_m_plus_1", _t("Next month last year")],
+        ["last_year_m_plus_2", _t("After next month last year")],
+        ["last_year_quarter", _t("Last year quarter")],
     ];
 
     setup() {
         super.setup();
-        this.suggest = useState(useEnv().suggest);
+        this.suggest = useEnv().suggest;
+        this.toggleSuggest = useEnv().toggleSuggest;
+        this.debouncedReloadKanban = useEnv().debouncedReloadKanban;
+        this.reloadKanban = useEnv().reloadKanban;
         this.addAllProducts = useEnv().addAllProducts;
-        this.debouncedKanbanRecompute = useEnv().debouncedKanbanRecompute;
-        this.displaySuggest = useEnv().suggest.poState === "draft";
+        this.displaySuggest = this.suggest.poState === "draft";
         this.tooltipTitle = _t(
             "Get recommendations of products to purchase at %(vendorName)s based on stock on hand, incoming quantities, " +
                 "and expected sales volumes.\n\n Set a reference period to estimate sales, and use the percentage " +
@@ -38,22 +40,14 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
         const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
         this.suggest.numberOfDays = boundedVal;
         ev.target.value = boundedVal;
-        this.debouncedKanbanRecompute();
+        this.debouncedReloadKanban();
     }
     onPercentFactorInput(ev) {
         const value = parseInt(ev.target.value, 10) || 0;
         const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
         this.suggest.percentFactor = boundedVal;
         ev.target.value = boundedVal;
-        this.debouncedKanbanRecompute();
-    }
-    async onSuggestToggle() {
-        this.suggest.suggestToggle.isOn = !this.suggest.suggestToggle.isOn;
-        localStorage.setItem(
-            "purchase_stock.suggest_toggle_state",
-            JSON.stringify({ isOn: this.suggest.suggestToggle.isOn })
-        );
-        this.debouncedKanbanRecompute();
+        this.debouncedReloadKanban();
     }
     get estimatedSuggestPrice() {
         const { currencyId, digits } = this.suggest;
@@ -69,8 +63,19 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
             },
             onChange: (val) => {
                 this.suggest.basedOn = val;
-                this.debouncedKanbanRecompute();
+                this.reloadKanban();
             },
         };
+    }
+
+    /* Emulate the behavior of input click from standard forms, list ... on custom inputs */
+    selectAllOnClick(ev) {
+        const el = ev.currentTarget;
+        if (el.disabled || el.readOnly) {
+            return;
+        }
+        ev.preventDefault();
+        el.focus();
+        el.select();
     }
 }

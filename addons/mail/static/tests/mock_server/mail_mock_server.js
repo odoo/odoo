@@ -117,7 +117,7 @@ async function mail_attachment_upload(request) {
     /** @type {import("mock_models").IrAttachment} */
     const IrAttachment = this.env["ir.attachment"];
 
-    const body = await request.text();
+    const body = await request.formData();
     const ufile = body.get("ufile");
     const is_pending = body.get("is_pending") === "true";
     const model = is_pending ? "mail.compose.message" : body.get("thread_model");
@@ -564,7 +564,7 @@ async function discuss_inbox_messages(request) {
     };
 }
 
-registerRoute("/mail/link_preview$", mail_link_preview);
+registerRoute("/mail/link_preview", mail_link_preview);
 /** @type {RouteCallback} */
 async function mail_link_preview(request) {
     /** @type {import("mock_models").BusBus} */
@@ -603,7 +603,7 @@ async function mail_link_preview(request) {
     }
 }
 
-registerRoute("/mail/link_preview/hide$", mail_link_preview_hide);
+registerRoute("/mail/link_preview/hide", mail_link_preview_hide);
 /** @type {RouteCallback} */
 async function mail_link_preview_hide(request) {
     /** @type {import("mock_models").BusBus} */
@@ -941,7 +941,7 @@ export async function mail_data(request) {
 registerRoute("/discuss/search", search);
 /** @type {RouteCallback} */
 async function search(request) {
-    const { term, limit = 8 } = await parseRequestParams(request);
+    const { term, limit = 10 } = await parseRequestParams(request);
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
@@ -1120,7 +1120,11 @@ function _process_request_for_all(store, name, params, context = {}) {
         });
     }
     if (name === "/discuss/create_group") {
-        const channelId = DiscussChannel._create_group(params.partners_to, params.name);
+        const channelId = DiscussChannel._create_group(
+            params.partners_to,
+            params.default_display_mode,
+            params.name
+        );
         store.add(channelId).resolve_data_request({
             channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
         });
@@ -1337,9 +1341,6 @@ export class StoreMany extends StoreRelation {
         target[key] = (previous_value || []).concat(rel_val);
     }
     _get_id() {
-        if (!this.records || !this.records.length) {
-            return [];
-        }
         const res = [];
 
         if (this.records._name === "mail.message.reaction") {

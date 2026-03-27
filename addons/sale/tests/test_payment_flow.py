@@ -474,8 +474,12 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             tx_done._post_process()
 
             self.assertEqual(notification_mail_mock.call_count, 2)
-            notification_mail_mock.assert_called_with(
-                self.env.ref('sale.mail_template_sale_confirmation'))
+            order_confirmation_mail_template_id = int(
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("sale.default_confirmation_template", self.env.ref("sale.mail_template_sale_confirmation").id)
+            )
+            notification_mail_mock.assert_called_with(self.env["mail.template"].browse(order_confirmation_mail_template_id))
             self.assertEqual(self.sale_order.state, 'sale')
 
     def test_automatic_invoice_mail_author(self):
@@ -515,3 +519,22 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertTrue(invoice.is_move_sent, "Invoice should be marked as sent")
         invoice_sent_mail = invoice.message_ids[0]
         self.assertTrue(invoice_sent_mail.author_id.id not in invoice_sent_mail.notified_partner_ids.ids)
+
+    def test_refund_message_author_is_logged_in_user_for_sale_order(self):
+        """Ensure that the chatter message author is the user processing the refund."""
+        self.provider.support_refund = 'full_only'
+
+        tx = self._create_transaction(
+            'redirect',
+            sale_order_ids=[self.sale_order.id],
+            state='done',
+        )
+        tx._post_process()
+
+        with patch.object(
+            self.env.registry['mail.thread'], 'message_post', autospec=True
+        ) as message_post_mock:
+            tx.action_refund()
+            author_id = message_post_mock.call_args[1].get("author_id")
+
+        self.assertEqual(author_id, self.user.partner_id.id)

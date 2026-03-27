@@ -4,6 +4,104 @@ import { isRemovable } from "./remove_plugin";
 import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
+import { OptionsContainer } from "@html_builder/sidebar/option_container";
+
+/** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
+/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/** @typedef {import("plugins").TranslatedString} TranslatedString */
+/**
+ * @typedef {{
+ *        class: string;
+ *        title: TranslatedString;
+ *        handler: () => Promise<void>;
+ *        disabledReason?: string;
+ * }} BuilderButtonDescriptor
+ *
+ * @typedef {{
+ *     id: string;
+ *     element: HTMLElement;
+ *     options: BaseOptionComponent[];
+ *     optionTitleComponents: BaseOptionComponent[] | [];
+ *     headerMiddleButtons: Component[] | [];
+ *     containerTitle: Component | {};
+ *     hasOverlayOptions: boolean;
+ *     isRemovable: boolean;
+ *     removeDisabledReason: string;
+ *     isClonable: boolean;
+ *     cloneDisabledReason: string;
+ *     optionsContainerTopButtons: BuilderButtonDescriptor[] | [];
+ * }} BuilderOptionContainer
+ */
+
+/**
+ * @typedef { Object } BuilderOptionsShared
+ * @property { BuilderOptionsPlugin['computeContainers'] } computeContainers
+ * @property { BuilderOptionsPlugin['findOption'] } findOption
+ * @property { BuilderOptionsPlugin['getContainers'] } getContainers
+ * @property { BuilderOptionsPlugin['updateContainers'] } updateContainers
+ * @property { BuilderOptionsPlugin['deactivateContainers'] } deactivateContainers
+ * @property { BuilderOptionsPlugin['getTarget'] } getTarget
+ * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
+ * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
+ * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
+ * @property { BuilderOptionsPlugin['getReloadSelector'] } getReloadSelector
+ * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
+ * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
+ */
+
+/**
+ * @typedef {((containers: BuilderOptionContainer[]) => void)[]} change_current_options_containers_listeners
+ * @typedef {((newTargetEl: HTMLElement) => void)[]} on_restore_containers_handlers
+ *
+ * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} get_options_container_top_buttons
+ *
+ * @typedef {{
+ *     Component: Component;
+ *     selector: CSSSelector;
+ *     exclude: CSSSelector;
+ *     applyTo: CSSSelector;
+ *     props: object;
+ *     editableOnly?: boolean;
+ * }[]} builder_header_middle_buttons
+ * @typedef {BaseOptionComponent[]} builder_options
+ * @typedef {{
+ *     selector: CSSSelector;
+ *     getTitleExtraInfo: (editingElement: HTMLElement) => string;
+ * }[]} container_title
+ * @typedef {{
+ *      Component: BaseOptionComponent;
+ *      selector: CSSSelector;
+ * }[]} elements_to_options_title_components
+ * @typedef {{
+ *      hasOption: (el: HTMLElement) => boolean;
+ *      editableOnly?: boolean;
+ * }[]} has_overlay_options
+ * @typedef {CSSSelector[]} no_parent_containers
+ * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
+ */
+/**
+ * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_providers
+ *
+ * Appends new reasons to the `reasons` array given as a parameter.
+ *
+ * Example:
+ *
+ *     ({ el, reasons }) => {
+ *         reasons.push(`I hate ${el.dataset.name}`);
+ *     }
+ */
+/**
+ * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} remove_disabled_reason_providers
+ *
+ * Appends new reasons to the `reasons` array given as a parameter.
+ *
+ * Example:
+ *
+ *     ({ el, reasons }) => {
+ *         reasons.push(`I hate ${el.dataset.name}`);
+ *     }
+ */
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
@@ -27,24 +125,15 @@ export class BuilderOptionsPlugin extends Plugin {
         "getCloneDisabledReason",
         "getReloadSelector",
         "setNextTarget",
+        "getBuilderOptionContext",
     ];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         before_add_step_handlers: this.onWillAddStep.bind(this),
         step_added_handlers: this.onStepAdded.bind(this),
         post_undo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
         post_redo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        // Resources definitions:
-        remove_disabled_reason_providers: [
-            // ({ el, reasons }) => {
-            //     reasons.push(`I hate ${el.dataset.name}`);
-            // }
-        ],
-        clone_disabled_reason_providers: [
-            // ({ el, reasons }) => {
-            //     reasons.push(`I hate ${el.dataset.name}`);
-            // }
-        ],
         start_edition_handlers: () => {
             if (this.config.initialTarget) {
                 const el = this.editable.querySelector(this.config.initialTarget);
@@ -54,10 +143,23 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
-        this.builderOptions = withIds(this.getResource("builder_options"));
+        this.builderOptions = this.getResource("builder_options");
+        this.builderOptionsContext = new Map();
+        this.builderOptionsDependencies = new Map();
+        const options = this.builderOptions.concat([OptionsContainer]);
+        for (const Option of options) {
+            if (isLegacyOption(Option)) {
+                // Support legacy option definition.
+                continue;
+            }
+            this.getBuilderDependencies(Option);
+            this.getBuilderOptionContext(Option);
+        }
+
         this.elementsToOptionsTitleComponents = withIds(
             this.getResource("elements_to_options_title_components")
         );
+        // todo: remove that resource as we should be able to patch the class the normal way
         this.getResource("patch_builder_options").forEach((option) => {
             this.patchBuilderOptions(option);
         });
@@ -139,6 +241,9 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const newContainers = this.computeContainers(this.target);
+        if (newContainers.length === 0 && this.lastContainers.length === 0) {
+            return;
+        }
         // Do not update the containers if they did not change and are not
         // forced to update.
         if (
@@ -188,10 +293,10 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     computeContainers(target) {
-        const mapElementsToOptions = (options) => {
+        const mapElementsToOptions = (Options) => {
             const map = new Map();
-            for (const option of options) {
-                const { selector, exclude, editableOnly } = option;
+            for (const Option of Options) {
+                const { selector, exclude, editableOnly } = Option;
                 let elements = getClosestElements(target, selector);
                 if (!elements.length) {
                     continue;
@@ -200,9 +305,9 @@ export class BuilderOptionsPlugin extends Plugin {
 
                 for (const element of elements) {
                     if (map.has(element)) {
-                        map.get(element).push(option);
+                        map.get(element).push(Option);
                     } else {
-                        map.set(element, [option]);
+                        map.set(element, [Option]);
                     }
                 }
             }
@@ -298,13 +403,16 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     cleanForSave({ root }) {
-        for (const option of this.builderOptions) {
-            const { selector, exclude, cleanForSave } = option;
+        for (const Option of this.builderOptions) {
+            const { selector, exclude, cleanForSave } = Option;
             if (!cleanForSave) {
                 continue;
             }
             for (const el of getElementsWithOption(root, selector, exclude)) {
-                cleanForSave(el);
+                const context = isLegacyOption(Option)
+                    ? undefined
+                    : this.getBuilderOptionContext(Option);
+                cleanForSave(el, context);
             }
         }
     }
@@ -362,7 +470,8 @@ export class BuilderOptionsPlugin extends Plugin {
                 this.updateContainers(targetEl, { forceUpdate: true });
                 // Scroll to the target if not visible.
                 if (!isElementInViewport(targetEl)) {
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                    // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
             } else {
                 this.deactivateContainers();
@@ -453,6 +562,35 @@ export class BuilderOptionsPlugin extends Plugin {
 
         return { option: requestedOption, targetEl };
     }
+    /**
+     * Get all dependencies of an OptionComponent and all its descendants.
+     */
+    getBuilderDependencies(OptionComponent) {
+        const cachedDeps = this.builderOptionsDependencies.get(OptionComponent);
+        if (cachedDeps) {
+            return cachedDeps;
+        }
+        const deps = OptionComponent.dependencies || [];
+        this.builderOptionsDependencies.set(OptionComponent, deps);
+        const childDeps = Object.values(OptionComponent.components || {}).flatMap(
+            this.getBuilderDependencies.bind(this)
+        );
+        deps.push(...childDeps);
+        return deps;
+    }
+    /**
+     * Get all the methods (window, document, getResources, ...) that are available in plugins. Provide the OptionComponent to set the right dependencies.
+     */
+    getBuilderOptionContext(OptionComponent) {
+        const context = this.builderOptionsContext.get(OptionComponent);
+        if (!context) {
+            const deps = this.getBuilderDependencies(OptionComponent);
+            const context = this.__editor.getEditorContext(deps);
+            this.builderOptionsContext.set(OptionComponent, context);
+            return context;
+        }
+        return context;
+    }
 }
 
 function getClosestElements(element, selector) {
@@ -497,4 +635,8 @@ export function checkElement(el, { editableOnly = true, exclude = "" }) {
 
 function withIds(arr) {
     return arr.map((el) => ({ ...el, id: uniqueId() }));
+}
+
+export function isLegacyOption(option) {
+    return typeof option === "object";
 }

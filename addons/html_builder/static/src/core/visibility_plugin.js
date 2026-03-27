@@ -2,6 +2,19 @@ import { Plugin } from "@html_editor/plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef { Object } VisibilityShared
+ * @property { VisibilityPlugin['getVisibleSibling'] } getVisibleSibling
+ * @property { VisibilityPlugin['toggleTargetVisibility'] } toggleTargetVisibility
+ * @property { VisibilityPlugin['onOptionVisibilityUpdate'] } onOptionVisibilityUpdate
+ * @property { VisibilityPlugin['hideElement'] } hideElement
+ */
+
+/**
+ * @typedef {((targetEl: HTMLElement) => void)[]} target_hide
+ * @typedef {((targetEl: HTMLElement) => void)[]} target_show
+ */
+
 const invisibleElementsSelector =
     ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
 const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
@@ -15,6 +28,7 @@ export class VisibilityPlugin extends Plugin {
         "onOptionVisibilityUpdate",
         "hideElement",
     ];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
         system_attributes: ["data-invisible"],
@@ -42,9 +56,13 @@ export class VisibilityPlugin extends Plugin {
     }
 
     getVisibleSibling(target, direction) {
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
         const siblingEls = [...target.parentNode.children];
         const visibleSiblingEls = siblingEls.filter(
-            (el) => window.getComputedStyle(el).display !== "none"
+            (el) =>
+                !el.classList.contains("o_we_no_overlay") &&
+                window.getComputedStyle(el).display !== "none" &&
+                !el.closest(systemNodeSelectors)
         );
         const targetMobileOrder = target.style.order;
         // On mobile, if the target has a mobile order (which is independent
@@ -107,7 +125,7 @@ export class VisibilityPlugin extends Plugin {
             const show = !isTargetVisible(deviceInvisibleEl);
             const isShown = this.toggleVisibilityStatus(deviceInvisibleEl, show, true);
             if (!isShown && deviceInvisibleEl.contains(currentContainerTargetEl)) {
-                this.dependencies["builderOptions"].deactivateContainers();
+                this.dependencies.builderOptions.deactivateContainers();
             }
         }
     }

@@ -3,7 +3,7 @@ import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { pick } from "@web/core/utils/objects";
+import { deepCopy, deepMerge, pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { getDefaultColors } from "./background_shape_option";
@@ -12,9 +12,25 @@ import { getBgImageURLFromURL } from "@html_editor/utils/image";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 
+/**
+ * @typedef {Object.<string, {
+ *   label?: string,
+ *   subgroups: Object.<string, {
+ *     label?: string,
+ *     shapes: Object.<string, {
+ *       selectLabel?: string,
+ *       animated?: boolean,
+ *     }>,
+ *   }>,
+ * }>} BackgroundShapeGroups
+ * @typedef {((shapeGroups: BackgroundShapeGroups) => BackgroundShapeGroups | void)[]} background_shape_groups_providers
+ * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_shape_target_providers
+ */
+
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
     static dependencies = ["customizeTab"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             SetBackgroundShapeAction,
@@ -24,10 +40,14 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             SetBgAnimationSpeedAction,
             BackgroundShapeColorAction,
         },
+        background_shape_groups_providers: withSequence(0, () =>
+            deepCopy(backgroundShapesDefinition)
+        ),
         background_shape_target_providers: withSequence(5, (editingElement) =>
             editingElement.querySelector(":scope > .o_we_bg_filter")
         ),
-        force_not_editable_selector: ".o_we_shape",
+        content_not_editable_selectors: ".o_we_shape",
+        system_node_selectors: ".o_we_shape",
     };
     static shared = [
         "getShapeStyleUrl",
@@ -202,7 +222,12 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             shapeAnimationSpeed: "0",
         };
         const json = editingElement.dataset.oeShapeData;
-        return json ? Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"'))) : defaultData;
+        if (json) {
+            Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"')));
+            // Compatibility with old shapes.
+            defaultData.shape = defaultData.shape.replace("web_editor", "html_builder");
+        }
+        return defaultData;
     }
     /**
      * Returns the src of the shape corresponding to the current parameters.
@@ -304,17 +329,30 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         });
     }
     getBackgroundShapeGroups() {
-        return backgroundShapesDefinition;
+        if (!this.backgroundShapeGroups) {
+            const shapeGroups = {};
+            for (const provider of this.getResource("background_shape_groups_providers")) {
+                const providedGroups = provider(shapeGroups);
+                if (providedGroups) {
+                    Object.assign(shapeGroups, deepMerge(shapeGroups, providedGroups));
+                }
+            }
+            this.backgroundShapeGroups = shapeGroups;
+        }
+        return this.backgroundShapeGroups;
     }
     getBackgroundShapes() {
-        const entries = Object.values(this.getBackgroundShapeGroups())
-            .map((x) =>
-                Object.values(x.subgroups)
-                    .map((x) => Object.entries(x.shapes))
-                    .flat()
-            )
-            .flat();
-        return Object.fromEntries(entries);
+        if (!this.backgroundShapesById) {
+            const entries = Object.values(this.getBackgroundShapeGroups())
+                .map((x) =>
+                    Object.values(x.subgroups)
+                        .map((x) => Object.entries(x.shapes))
+                        .flat()
+                )
+                .flat();
+            this.backgroundShapesById = Object.fromEntries(entries);
+        }
+        return this.backgroundShapesById;
     }
 }
 

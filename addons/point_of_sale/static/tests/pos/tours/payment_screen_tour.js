@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
@@ -7,12 +9,14 @@ import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_ut
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { inLeftSide } from "./utils/common";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.clickPayButton(),
@@ -145,50 +149,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test 1.20", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.20"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.00" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            ProductScreen.addOrderline("Product Test 1.25", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.25"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            ProductScreen.addOrderline("Product Test 1.4", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.4"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            ProductScreen.addOrderline("Product Test 1.20", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.20"),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickNumpad("2"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "2"),
-
-            PaymentScreen.changeIs("1.0"),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", {
     steps: () =>
         [
@@ -199,7 +159,7 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             PaymentScreen.totalIs("1.98"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
-                change: "3.05",
+                change: "3",
             }),
         ].flat(),
 });
@@ -212,29 +172,12 @@ registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickShipLaterButton(),
             PaymentScreen.clickValidate(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("CashRoundingPayment", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Magnetic Board", "1"),
-            ProductScreen.clickPayButton(),
-
-            // Pay it with exact amount but with incorrect rounding so there should be an error popup.
-            PaymentScreen.totalIs("1.98"),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.enterPaymentLineAmount("Cash", "1.98"),
-            PaymentScreen.clickValidate(),
-            Dialog.is(),
         ].flat(),
 });
 
@@ -251,5 +194,79 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_large_amount_confirmation_dialog", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Overpay Test Product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "1500"),
+            PaymentScreen.clickValidate(),
+            {
+                trigger: ".modal .modal-footer .btn-primary",
+                run: "click",
+            },
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_add_money_button_with_different_decimal_separator", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickNumpad("+50"),
+            PaymentScreen.fillPaymentLineAmountMobile("Bank", "53,20"),
+            PaymentScreen.changeIs("50"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_payment_screen_tip_scenario", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Letter Tray", "1", "10"),
+            ProductScreen.clickPayButton(),
+
+            {
+                content: "Switch localization to comma",
+                trigger: "body",
+                run: () => {
+                    posmodel.numberBuffer.localization.decimalPoint = ",";
+                    posmodel.numberBuffer.localization.thousandsSep = ".";
+                    posmodel.numberBuffer._setUp();
+                },
+            },
+
+            PaymentScreen.clickTipButton(),
+            NumberPopup.enterValue("1,50"),
+            NumberPopup.isShown("1,50"),
+            Dialog.confirm(),
+            PaymentScreen.totalIs("12,50"),
+
+            {
+                content: "Switch localization back to dot",
+                trigger: "body",
+                run: () => {
+                    posmodel.numberBuffer.localization.decimalPoint = ".";
+                    posmodel.numberBuffer.localization.thousandsSep = ",";
+                    posmodel.numberBuffer._setUp();
+                },
+            },
+
+            PaymentScreen.clickTipButton(),
+            NumberPopup.enterValue("2.5"),
+            NumberPopup.isShown("2.5"),
+            Dialog.confirm(),
+            PaymentScreen.totalIs("13.50"),
         ].flat(),
 });

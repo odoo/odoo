@@ -7,7 +7,7 @@ class ProductAttribute(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['name', 'display_type', 'template_value_ids', 'attribute_line_ids', 'create_variant']
+        return ['name', 'display_type', 'create_variant']
 
 
 class ProductAttributeCustomValue(models.Model):
@@ -65,8 +65,9 @@ class ProductTemplateAttributeExclusion(models.Model):
     @api.model
     def _load_pos_data_domain(self, data, config):
         loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
-        return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
+        loaded_ptav_ids = list({ptav['id'] for ptav in data['product.template.attribute.value']})
+        return [('product_tmpl_id', 'in', loaded_product_tmpl_ids), ('product_template_attribute_value_id', 'in', loaded_ptav_ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['value_ids']
+        return ['value_ids', 'product_template_attribute_value_id']

@@ -2,20 +2,6 @@ import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { STORE_SYMBOL } from "@point_of_sale/app/models/related_models/utils";
 import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 
-export function computeProductPrice(selfOrder, productTemplate, selectedAttributes, qty) {
-    const lineValues = getOrderLineValues(selfOrder, productTemplate, qty, "", selectedAttributes);
-    const order = lineValues.order_id;
-    const line = createTransientLine(order, {
-        ...lineValues,
-        order_id: order.id,
-        product_id: lineValues.product_id.id,
-        tax_ids: lineValues.tax_ids.map((t) => t.id),
-        attribute_value_ids: lineValues.attribute_value_ids?.map((a) => a.id),
-    });
-
-    return selfOrder.isTaxesIncludedInPrice() ? line.getPriceWithTax() : line.getPriceWithoutTax();
-}
-
 export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, qty) {
     if (!comboValues || !comboValues.length) {
         return selfOrder.getProductDisplayPrice(productTemplate);
@@ -43,9 +29,43 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
             attribute_value_ids: comboLine.attribute_value_ids?.map((a) => a.id),
         });
     });
-    return selfOrder.isTaxesIncludedInPrice()
-        ? order.getTotalWithTaxOfLines(transientLines)
-        : order.getTotalWithoutTaxOfLines(transientLines);
+
+    const taxDetails = order.getPriceWithOptions({ lines: transientLines }).taxDetails;
+    return selfOrder.isTaxesIncludedInPrice() ? taxDetails.total_amount : taxDetails.base_amount;
+}
+
+export function getProductVariantByAttributes(models, productTemplate, selectedAttributes) {
+    return models["product.product"].find(
+        (prd) =>
+            prd.product_tmpl_id.id === productTemplate.id &&
+            prd.product_template_variant_value_ids.length &&
+            prd.product_template_variant_value_ids.every((ptav) =>
+                Object.values(selectedAttributes).some((value) => ptav.id == value)
+            )
+    );
+}
+
+export function getAttributeValues(selectedValues, models) {
+    return Object.entries(selectedValues).reduce((acc, [, options]) => {
+        const optionEntries = Object.entries(
+            typeof options === "object" ? options : { [options]: true }
+        ).filter(([, isSelected]) => isSelected); // Only true values
+
+        optionEntries.forEach(([optionId]) => {
+            const attrVal = models["product.template.attribute.value"].get(Number(optionId));
+            acc.push(attrVal);
+        });
+        return acc;
+    }, []);
+}
+
+export function getAttributeValuesExtraPrice(attributeValues) {
+    return attributeValues.reduce((total, attrVal) => {
+        if (attrVal.attribute_id.create_variant !== "always") {
+            total += attrVal.price_extra;
+        }
+        return total;
+    }, 0);
 }
 
 export function getOrderLineValues(
@@ -73,41 +93,27 @@ export function getOrderLineValues(
     };
 
     if (Object.entries(selectedValues).length > 0) {
-        const productVariant = models["product.product"].find(
-            (prd) =>
-                prd.product_tmpl_id.id === productTemplate.id &&
-                prd.product_template_variant_value_ids.every((ptav) =>
-                    Object.values(selectedValues).some((value) => ptav.id == value)
-                )
+        const productVariant = getProductVariantByAttributes(
+            models,
+            productTemplate,
+            selectedValues
         );
 
         if (productVariant) {
+            const productVariantPrice = selfOrder.getProductPriceInfo(
+                productTemplate,
+                productVariant
+            );
+
             Object.assign(values, {
                 product_id: productVariant,
-                price_unit: productVariant.lst_price,
+                price_unit: productVariantPrice.pricelist_price,
                 tax_ids: [...productVariant.taxes_id],
             });
         }
 
-        values.attribute_value_ids = Object.entries(selectedValues).reduce(
-            (acc, [attributeId, options]) => {
-                const optionEntries = Object.entries(
-                    typeof options === "object" ? options : { [options]: true }
-                ).filter(([, isSelected]) => isSelected); // Only true values
-
-                optionEntries.forEach(([optionId]) => {
-                    const attrVal = models["product.template.attribute.value"].get(
-                        Number(optionId)
-                    );
-                    if (attrVal.attribute_id.create_variant !== "always") {
-                        values.price_extra += attrVal.price_extra;
-                    }
-                    acc.push(attrVal);
-                });
-                return acc;
-            },
-            []
-        );
+        values.attribute_value_ids = getAttributeValues(selectedValues, models);
+        values.price_extra += getAttributeValuesExtraPrice(values.attribute_value_ids);
 
         if (Object.values(customValues).length > 0) {
             values.custom_attribute_value_ids = Object.values(customValues).map((c) => [

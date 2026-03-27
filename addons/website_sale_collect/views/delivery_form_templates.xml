@@ -30,7 +30,12 @@
                         t-value="order_line.product_id.product_template_attribute_value_ids._get_combination_name()"
                     />
                     <div class="fw-bold">
-                        <t t-out="order_line.product_id.name"/> <t t-if="attrib_names" t-out="' - ' + attrib_names"/>
+                        <t t-out="order_line.product_id.name"/>
+                        <t t-if="attrib_names" t-out="' - ' + attrib_names"/>
+                        <t
+                            t-if="order_line.product_id.product_tmpl_id._has_multiple_uoms()"
+                            t-out="' (' + order_line.product_uom_id.name + ')'"
+                        />
                     </div>
                     <div t-out="order_line._get_shop_warning()"/>
                     <div name="o_wsale_unavailable_line_button_container" class="mt-2 mt-md-1">

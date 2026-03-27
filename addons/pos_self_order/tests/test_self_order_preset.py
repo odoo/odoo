@@ -31,9 +31,19 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         })
 
     def test_preset_dine_in_tour(self):
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "background_color": 'rgb(249,250,251)',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
+        self.pos_config.write({
+            "floor_ids": [(6, 0, [floor.id])],
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
         self.start_tour(self_route, "self_order_preset_dine_in_tour")
 
     def test_preset_takeaway_tour(self):
@@ -55,7 +65,7 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         self.assertEqual(last_order.partner_id.street, 'Rue du Bronx 90')
         self.assertEqual(last_order.partner_id.zip, '9999')
         self.assertEqual(last_order.partner_id.city, 'New York')
-        self.assertEqual(last_order.partner_id.phone, '0490 90 43 90')
+        self.assertEqual(last_order.partner_id.phone, '+32490904390')
 
     def test_preset_with_slot_tour(self):
         resource_calendar = self.env['resource.calendar'].create({
@@ -79,3 +89,29 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.floating_order_name, 'Dr Dre')
         self.assertNotEqual(last_order.preset_time, False)
+
+    def test_slot_limit_orders(self):
+        """
+        Tests that when a slot reached it's limit capacity, it is not shown
+        in the selector anymore.
+        """
+        resource_calendar = self.env['resource.calendar'].create({
+            'name': 'Takeaway',
+            'attendance_ids': [(0, 0, {
+                'name': 'Takeaway',
+                'dayofweek': '0',
+                'hour_from': 0,
+                'hour_to': 24,
+                'day_period': 'morning',
+            })],
+        })
+        self.preset_takeaway.write({
+            'use_timing': True,
+            'resource_calendar_id': resource_calendar,
+            'slots_per_interval': 1,
+            'interval_time': 20,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_slot_limit_orders")

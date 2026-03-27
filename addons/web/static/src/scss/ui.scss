@@ -28,6 +28,10 @@
     max-height: $o-dropdown-max-height;
     overflow: auto;
     background-clip: border-box;
+
+    &:not(.o-hb-select-dropdown) {
+        scrollbar-width: thin;
+    }
 }
 .dropdown-toggle {
     white-space: nowrap;

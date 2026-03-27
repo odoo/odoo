@@ -31,3 +31,12 @@ class StockPackageHistory(models.Model):
 
         # Complete name without the first (outermost) package name
         return ' > '.join(self.package_name.split(' > ')[1:])
+
+    def action_show_package(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.package',
+            'res_id': self.package_id.id,
+        }

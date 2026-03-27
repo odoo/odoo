@@ -9,6 +9,7 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
+    setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
 import {
@@ -57,6 +58,7 @@ import {
     toggleActionMenu,
     toggleMenuItem,
     toggleSearchBarMenu,
+    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -76,6 +78,7 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { FormController } from "@web/views/form/form_controller";
 import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 import { WebClient } from "@web/webclient/webclient";
+import { FileUploader } from "@web/views/fields/file_handler";
 
 const fieldsRegistry = registry.category("fields");
 const widgetsRegistry = registry.category("view_widgets");
@@ -351,6 +354,16 @@ test(`button box rendering on big screen`, async () => {
     for (const btn of buttonBox.children) {
         expect(btn).toHaveRect({ top: buttonBoxRect.top });
     }
+});
+
+test(`button box rendering invisible`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><div name="button_box" invisible="1"><button id="btn1">MyButton</button></div></form>`,
+        resId: 2,
+    });
+    expect(`.o_control_panel .o_control_panel_actions`).toHaveInnerHTML("");
 });
 
 test(`form view gets size class on small and big screens`, async () => {
@@ -6245,7 +6258,7 @@ test(`onchange returns an error`, async () => {
 
     await contains(`.o_field_widget[name=int_field] input`).edit("64");
     expect.verifyErrors(["Some business message"]);
-    expect(`.modal`).toHaveCount(1);
+    await waitFor(`.modal`);
     expect(`.modal-body`).toHaveText(/Some business message/);
     expect(`.o_field_widget[name="int_field"] input`).toHaveValue("9");
 
@@ -9112,6 +9125,7 @@ test(`form view is not broken if save operation fails with redirect warning`, as
 
 test.tags("desktop");
 test("Redirect Warning full feature: additional context, action_id, leaving while dirty", async function () {
+    expect.errors(1);
     defineActions([
         {
             id: 1,
@@ -9702,6 +9716,45 @@ test(`support header button as widgets on form statusbar on mobile`, async () =>
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     expect(`button.o_attachment_button`).toHaveCount(1);
     expect(`span.o_attach_document`).toHaveText("Attach document");
+});
+
+test.tags("mobile");
+test("support header button as widgets in submenu on form statusbar on mobile", async () => {
+    class TestUploadWidget extends Component {
+        static props = ["*"];
+        static template = xml`
+            <FileUploader onUploaded="this.onUploaded">
+                <t t-set-slot="toggler">
+                    <button>Upload Test</button>
+                </t>
+            </FileUploader>`
+        static components = { FileUploader };
+
+        onUploaded(ev) {
+            expect(ev.name).toBe("fake_file.txt");
+            expect.step("File changed");
+        }
+    }
+    registry.category("view_widgets").add("test_upload_widget", { component: TestUploadWidget });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><header>
+            <button name="main" string="Main"/>
+            <widget name="test_upload_widget"/>
+        </header></form>`,
+    });
+
+    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
+    expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
+    await contains(".o-dropdown--menu button:contains(Upload Test)").click();
+    expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
+
+    const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+    await contains("input.o_input_file", { visible: false }).click();
+    await setInputFiles([file]);
+    await waitForSteps(["File changed"]);
 });
 
 test(`basic support for widgets: onchange update`, async () => {
@@ -10439,10 +10492,12 @@ test(`resequence list lines when discardable lines are present`, async () => {
     await contains(`.o_field_x2many_list_row_add a`).click();
     await animationFrame();
     // Drag and drop second line before first one (with 1 draft and invalid line)
-    await contains(`tbody.ui-sortable tr:nth-child(1) .o_handle_cell`).dragAndDrop(
-        `tbody.ui-sortable tr:nth-child(2)`
-    );
-    expect.verifySteps(["onchange"]);
+    // TODO JUM: PRHOOT the events
+    const { drop, moveTo } = await contains(
+        `tbody.ui-sortable tr:nth-child(1) .o_handle_cell`
+    ).drag();
+    await moveTo(`tbody.ui-sortable tr:nth-child(2)`);
+    await drop(document.body);
     expect(`[name="foo"] input`).toHaveValue("1");
 
     // Add a second line
@@ -12781,6 +12836,33 @@ test(`cog menu action is executed with up to date context`, async () => {
     await toggleActionMenu();
     await toggleMenuItem("Action Partner");
     expect.verifySteps(["doAction y", "doAction z"]);
+});
+
+test("CogMenu receives the model in env", async () => {
+    class CogItem extends Component {
+        static props = ["*"];
+        static template = xml`<button class="test-cog" t-on-click="onClick">Test</button>`;
+        onClick() {
+            expect.step([`cog clicked`, this.env.model.root.resModel, this.env.model.root.resId]);
+        }
+    }
+    registry.category("cogMenu").add("test-cog", {
+        Component: CogItem,
+        isDisplayed: (env) => {
+            expect.step([`cog displayed`, env.model.root.resModel, env.model.root.resId]);
+            return true;
+        },
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 5,
+        arch: `<form><field name="display_name"/></form>`,
+    });
+    expect.verifySteps([["cog displayed", "partner", 5]]);
+    await contains(".o_cp_action_menus button").click();
+    await contains("button.test-cog").click();
+    expect.verifySteps([["cog clicked", "partner", 5]]);
 });
 
 test.tags("mobile");

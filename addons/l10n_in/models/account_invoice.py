@@ -158,6 +158,8 @@ class AccountMove(models.Model):
     @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
+        foreign_state = self.env['res.country.state'].search([('code', '!=', 'IN')], limit=1)
+
         def _get_fiscal_state(move):
             """
             Maps each move to its corresponding fiscal state based on its type,
@@ -177,7 +179,7 @@ class AccountMove(models.Model):
                 return self.env.ref('l10n_in.state_in_oc')
             elif move.is_sale_document(include_receipts=True):
                 # In Sales Documents: Compare place of supply with company state
-                return move.l10n_in_state_id
+                return move.l10n_in_state_id if move.l10n_in_state_id.l10n_in_tin != '96' else foreign_state
             elif move.is_purchase_document(include_receipts=True) and move.partner_id.country_id.code == 'IN':
                 # In Purchases Documents: Compare place of supply with vendor state
                 pos_state_id = move.l10n_in_state_id
@@ -426,7 +428,7 @@ class AccountMove(models.Model):
     def _get_sections_aggregate_sum_by_pan(self, section_alert, commercial_partner_id):
         self.ensure_one()
         month_start_date, month_end_date = get_month(self.date)
-        company_fiscalyear_dates = self.company_id.compute_fiscalyear_dates(self.date)
+        company_fiscalyear_dates = self.company_id.sudo().compute_fiscalyear_dates(self.date)
         fiscalyear_start_date, fiscalyear_end_date = company_fiscalyear_dates['date_from'], company_fiscalyear_dates['date_to']
         default_domain = [
             ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
@@ -480,7 +482,7 @@ class AccountMove(models.Model):
         def _group_by_section_alert(invoice_lines):
             group_by_lines = {}
             for line in invoice_lines:
-                group_key = line.account_id.l10n_in_tds_tcs_section_id
+                group_key = line.account_id.sudo().l10n_in_tds_tcs_section_id
                 if group_key and not line.company_currency_id.is_zero(line.price_total):
                     group_by_lines.setdefault(group_key, [])
                     group_by_lines[group_key].append(line)
@@ -624,6 +626,11 @@ class AccountMove(models.Model):
         def l10n_in_grouping_key_generator(base_line, tax_data):
             invl = base_line['record']
             tax = tax_data['tax']
+            if self.l10n_in_gst_treatment in ('overseas', 'special_economic_zone') and all(
+                self.env.ref("l10n_in.tax_tag_igst") in rl.tag_ids
+                for rl in tax.invoice_repartition_line_ids if rl.repartition_type == 'tax'
+            ):
+                tax_data['is_reverse_charge'] = False
             tag_ids = tax.invoice_repartition_line_ids.tag_ids.ids
             line_code = "other"
             xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
@@ -640,12 +647,9 @@ class AccountMove(models.Model):
                         line_code = "state_cess"
                 else:
                     for gst in ["cgst", "sgst", "igst"]:
-                        if xmlid_to_res_id(f"l10n_in.tax_tag_{gst}") in tag_ids:
-                            # need to separate rc tax value so it's not passed to other values
-                            if tax.l10n_in_reverse_charge:
-                                line_code = gst + '_rc'
-                            else:
-                                line_code = gst
+                        if xmlid_to_res_id("l10n_in.tax_tag_%s" % (gst)) in tag_ids:
+                            # need to separate rc tax value so it's not pass to other values
+                            line_code = f'{gst}_rc' if tax_data['is_reverse_charge'] else gst
             return {
                 "tax": tax,
                 "base_product_id": invl.product_id,
@@ -675,9 +679,13 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_in_extract_digits(self, string):
         if not string:
-            return string
+            return ""
         matches = re.findall(r"\d+", string)
         return "".join(matches)
+
+    @api.model
+    def _l10n_in_is_service_hsn(self, hsn_code):
+        return self._l10n_in_extract_digits(hsn_code).startswith('99')
 
     @api.model
     def _l10n_in_round_value(self, amount, precision_digits=2):
@@ -713,6 +721,8 @@ class AccountMove(models.Model):
 
     def _get_sync_stack(self, container):
         stack, update_containers = super()._get_sync_stack(container)
+        if all(move.country_code != 'IN' for move in self):
+            return stack, update_containers
         _tax_container, invoice_container, misc_container = update_containers()
         moves = invoice_container['records'] + misc_container['records']
         stack.append((9, self._sync_l10n_in_gstr_section(moves)))
@@ -721,6 +731,25 @@ class AccountMove(models.Model):
     @contextmanager
     def _sync_l10n_in_gstr_section(self, moves):
         yield
-        for move in moves:
-            # we set the section on the invoice lines
-            move.line_ids._set_l10n_in_gstr_section()
+        tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
+        # we set the section on the invoice lines
+        moves.line_ids._set_l10n_in_gstr_section(tax_tags_dict)
+
+    def _get_l10n_in_invoice_label(self):
+        self.ensure_one()
+        exempt_types = {'exempt', 'nil_rated', 'non_gst'}
+        if self.country_code != 'IN' or not self.is_sale_document(include_receipts=False):
+            return
+        gst_treatment = self.l10n_in_gst_treatment
+        company = self.company_id
+        tax_types = set(self.invoice_line_ids.tax_ids.mapped('l10n_in_tax_type'))
+        if company.l10n_in_is_gst_registered and tax_types:
+            if gst_treatment in ['overseas', 'special_economic_zone']:
+                return 'Tax Invoice'
+            elif tax_types.issubset(exempt_types):
+                return 'Bill of Supply'
+            elif tax_types.isdisjoint(exempt_types):
+                return 'Tax Invoice'
+            elif gst_treatment in ['unregistered', 'consumer']:
+                return 'Invoice-cum-Bill of Supply'
+        return 'Invoice'

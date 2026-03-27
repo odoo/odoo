@@ -21,7 +21,7 @@
     </BuilderRow>
     <BuilderRow t-if="this.isActiveItem('redirect_end_action_opt')"
                 label.translate="URL">
-            <WebsiteUrlPicker placeholder.translate="e.g. /my-awesome-page" dataAttributeAction="'redirectUrl'"/>
+            <BuilderUrlPicker placeholder.translate="e.g. /my-awesome-page" dataAttributeAction="'redirectUrl'"/>
     </BuilderRow>
     <BuilderRow label.translate="Size">
         <BuilderSelect dataAttributeAction="'size'">
@@ -96,7 +96,7 @@
                     <p style="text-align: center;">As promised, we will offer 4 free tickets to our next summit.<br/>Visit our Facebook page to know if you are one of the lucky winners.</p>
                     <div class="row s_nb_column_fixed">
                         <div class="col-lg-12" style="text-align: center;">
-                            <figure class="figure">
+                            <figure class="figure w-100">
                                 <img src="/web/image/website.library_image_18" class="figure-img img-fluid rounded" alt="Countdown is over - Firework"/>
                             </figure>
                         </div>

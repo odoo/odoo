@@ -16,14 +16,14 @@
                         We are glad to inform you that your order is in transit.
                         <t t-if="len(ctx['tracking_data']) == 1">
                             <t t-set="tracking_url" t-value="list(ctx['tracking_data'].keys())[0]"/>
-                            Your tracking number is <a t-attf-href="tracking_url" t-out="ctx['tracking_data'][tracking_url]"/>.
+                            Your tracking number is <a t-att-href="tracking_url" t-out="ctx['tracking_data'][tracking_url]"/>.
                             <br/><br/>
                         </t>
                         <t t-else="">
                             Your tracking numbers are:
                             <ul>
                                 <li t-foreach="ctx['tracking_data']" t-as="tracking_url">
-                                    <a t-attf-href="{{tracking_url}}" t-out="ctx['tracking_data'][tracking_url]"/>
+                                    <a t-att-href="tracking_url" t-out="ctx['tracking_data'][tracking_url]"/>
                                 </li>
                             </ul>
                         </t>

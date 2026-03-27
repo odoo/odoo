@@ -11,13 +11,14 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-16 15:24+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 19:12+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/hr_expense/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -557,6 +558,7 @@ msgstr "使用OCR和人工智能将收据数字化"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__display_name
@@ -587,8 +589,9 @@ msgid ""
 "Do not keep your expense tickets in your pockets any longer. Just snap a "
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
-msgstr "不要再把报销发票放在口袋里啦亲。只要拍张图片，让 Odoo 系统为您数字化。OCR "
-"和人工智能将自动识别发票数据并录入数据到系统里。"
+msgstr ""
+"不要再把报销发票放在口袋里啦亲。只要拍张图片，让 Odoo 系统为您数字化。OCR 和"
+"人工智能将自动识别发票数据并录入数据到系统里。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -805,6 +808,7 @@ msgstr "待批准费用"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
+#: code:addons/hr_expense/models/account_payment.py:0
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -833,6 +837,11 @@ msgstr "费用分析"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Expenses Report"
 msgstr "费用报表"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Expenses approval"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -934,6 +943,11 @@ msgid "Guideline"
 msgstr "指引说明"
 
 #. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
+msgid "HR Expense: Send Submitted Expenses Mail"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
 msgid "Has Message"
 msgstr "有消息"
@@ -954,6 +968,7 @@ msgstr "人力资源费用别名域"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__id
@@ -1247,11 +1262,9 @@ msgstr "新开支记项"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
+"New expenses are waiting for your approval. You can Review them by following "
+"this link."
 msgstr ""
-"新的开支正等待您的批准。\n"
-"                您可以通过以下链接查看"
 
 #. module: hr_expense
 #. odoo-python
@@ -1351,6 +1364,7 @@ msgstr "根据您的个人开支，计算得出的数字。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1455,6 +1469,11 @@ msgid "Partner"
 msgstr "合作伙伴"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_payment_register
+msgid "Pay"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
 msgid "Payment Method"
 msgstr "付款方式"
@@ -1533,6 +1552,7 @@ msgstr "已过账"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "技术提供"
 
@@ -1699,7 +1719,7 @@ msgstr "相同收据开支"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr ""
+msgstr "保存该页面，返回该页面，以设置功能。"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1909,6 +1929,14 @@ msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
 msgstr ""
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_actions_report.py:0
+msgid ""
+"The attachment (%(attachment_name)s) has not been added to the report due to "
+"the following error: '%(error)s'"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid "The company's default journal used when an employee expense is created."
@@ -1933,8 +1961,18 @@ msgid ""
 "The following approved expenses have similar employee, amount and category "
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
-msgstr "以下批准的费用与本报告的一些费用有类似的员工、金额和类别。请核实该报告不包含"
+msgstr ""
+"以下批准的费用与本报告的一些费用有类似的员工、金额和类别。请核实该报告不包含"
 "重复的内容。"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"The following expenses payment method leads to several accounts payable and "
+"this isn't supported:\n"
+"%(expenses)s"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -1964,7 +2002,8 @@ msgid ""
 "There are unsubmitted expenses linked to this category. Updating the "
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
-msgstr "该类别有未提交的费用。更新类别成本将改变费用金额。请确保您想进行此操作。"
+msgstr ""
+"该类别有未提交的费用。更新类别成本将改变费用金额。请确保您想进行此操作。"
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2118,11 +2157,6 @@ msgid "Vendor"
 msgstr "供应商"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
-msgid "View Attachments"
-msgstr "查看附件"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
 msgstr "查看费用"
@@ -2168,9 +2202,9 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
-"当费用产品的成本与 0 "
-"不同时，使用该产品的用户将无法更改费用的金额，只能更改数量。对于公司以固定成"
-"本资助的费用类别，如里程、每日津贴、住宿或膳食津贴，应使用不同于 0 的成本。"
+"当费用产品的成本与 0 不同时，使用该产品的用户将无法更改费用的金额，只能更改数"
+"量。对于公司以固定成本资助的费用类别，如里程、每日津贴、住宿或膳食津贴，应使"
+"用不同于 0 的成本。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2372,6 +2406,22 @@ msgstr "使用OCR技术从发票图片中识别并自动录入数据"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "连通相同的收据，已经存在。"
+
+#~ msgid ""
+#~ "New expenses are awaiting your approval.\n"
+#~ "                You can review them by following this link"
+#~ msgstr ""
+#~ "新的开支正等待您的批准。\n"
+#~ "                您可以通过以下链接查看"
+
+#~ msgid "View Attachments"
+#~ msgstr "查看附件"
+
+#~ msgid "Accounting Settings"
+#~ msgstr "会计设置"
+
+#~ msgid "You should install a Fiscal Localization first."
+#~ msgstr "您应该首先安装财务本地化套装。"
 
 #~ msgid ""
 #~ "'Expenses - %s - %s' % (object.employee_id.name, "

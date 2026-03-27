@@ -649,16 +649,20 @@ class TestRepair(TestRepairCommon):
         repair_order._action_repair_confirm()
         move = repair_order.move_ids[0]
         self.assertEqual(repair_order.name, "PT1/00001")
+        self.assertEqual(move.reference, "PT1/00001")
         self.assertEqual(move.location_id, stock_location_1)
         self.assertEqual(move.quantity, 0.0)
         repair_order.picking_type_id = picking_type_2
         self.assertEqual(repair_order.name, "PT2/00001")
+        self.assertEqual(move.reference, "PT2/00001")
         self.assertEqual(move.location_id, stock_location_2)
         self.assertEqual(move.quantity, 1.0)
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+        self.assertEqual(move.reference, "PT1/00002")
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+        self.assertEqual(move.reference, "PT1/00002")
 
     def test_repair_components_lots_show_in_invoice(self):
         """
@@ -902,6 +906,22 @@ class TestRepair(TestRepairCommon):
                 'company_id': company.id,
             })
 
+    def test_missing_inventory_loss_location_raises_user_error(self):
+        """
+        Test that a missing inventory loss location raises a UserError when creating a warehouse.
+        """
+        inv_locations = self.env['stock.location'].search([
+            ('usage', '=', 'inventory'),
+            ('company_id', '=', self.env.company.id),
+        ])
+        if inv_locations:
+            inv_locations.write({'usage': "internal"})
+        with self.assertRaises(UserError):
+            self.env['stock.warehouse'].create({
+                'name': 'ELCT',
+                'code': 'ET',
+            })
+
     def test_add_product_from_catalog(self):
         """Check that only consumable products are available in the catalog."""
         catalog_action = self.repair0.action_add_from_catalog()
@@ -924,6 +944,33 @@ class TestRepair(TestRepairCommon):
         repair_order.action_validate()
         repairs = self.env['repair.order'].search([('search_date_category', 'in', ['yesterday', 'today'])])
         self.assertEqual(len(repairs), 1)
+
+    def test_sale_order_line_discount_on_repair_order(self):
+        """
+        Test that the discount on the sale order line created from a repair order is correctly set.
+        """
+        repair_order = self.repair0
+        repair_order.action_create_sale_order()
+        sale_line = repair_order.move_ids.sale_line_id
+        sale_line.discount = 15
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(sale_line.discount, 15)
+
+    def test_delete_repair_resets_outgoing_stock_moves(self):
+        """
+        Test that deleting draft repair order clears its outgoing stock quantities and
+        related moves are unlinked
+        """
+        repair = self._create_simple_repair_order()
+        self._create_simple_part_move(repair.id, 1.0)
+        moves = repair.move_ids
+        self.assertEqual(repair.state, 'draft')
+        self.assertEqual(moves.state, 'draft')
+        repair.unlink()
+        self.assertFalse(repair.exists())
+        self.assertFalse(moves.exists())
 
 
 @tagged('post_install', '-at_install')

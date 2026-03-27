@@ -29,7 +29,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
-from functools import reduce, wraps
+from functools import lru_cache, reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
@@ -229,7 +229,7 @@ def file_path(file_path: str, filter_ext: tuple[str, ...] = ('',), env: Environm
         addons_paths = list(map(os.path.dirname, module.__path__))
     else:
         root_path = os.path.abspath(config.root_path)
-        temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else ()
+        temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else []
         addons_paths = [*odoo.addons.__path__, root_path, *temporary_paths]
 
     for addons_dir in addons_paths:
@@ -305,13 +305,12 @@ def file_open_temporary_directory(env: Environment):
     :param env: environment for which the temporary directory is created.
     :return: the absolute path to the created temporary directory
     """
-    assert not env.transaction._Transaction__file_open_tmp_paths, 'Reentrancy is not implemented for this method'
     with tempfile.TemporaryDirectory() as module_dir:
         try:
-            env.transaction._Transaction__file_open_tmp_paths = (module_dir,)
+            env.transaction._Transaction__file_open_tmp_paths.append(module_dir)
             yield module_dir
         finally:
-            env.transaction._Transaction__file_open_tmp_paths = ()
+            env.transaction._Transaction__file_open_tmp_paths.remove(module_dir)
 
 
 #----------------------------------------------------------
@@ -814,12 +813,22 @@ class lower_logging(logging.Handler):
             record.levelname = f'_{record.levelname}'
             record.levelno = self.to_level
             self.had_error_log = True
-            record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') if isinstance(arg, str) else arg for arg in record.args)
+            if MungedTracebackLogRecord.__base__ is logging.LogRecord:
+                MungedTracebackLogRecord.__bases__ = (record.__class__,)
+            record.__class__ = MungedTracebackLogRecord
 
         if logging.getLogger(record.name).isEnabledFor(record.levelno):
             for handler in self.old_handlers:
                 if handler.level <= record.levelno:
                     handler.emit(record)
+
+
+class MungedTracebackLogRecord(logging.LogRecord):
+    def getMessage(self):
+        return super().getMessage().replace(
+            'Traceback (most recent call last):',
+            '_Traceback_ (most recent call last):',
+        )
 
 
 def stripped_sys_argv(*strip_args):
@@ -1161,6 +1170,9 @@ class Callbacks:
         self._funcs.clear()
         self.data.clear()
 
+    def __len__(self) -> int:
+        return len(self._funcs)
+
 
 class ReversedIterable(Reversible[T], typing.Generic[T]):
     """ An iterable implementing the reversal of another iterable. """
@@ -1304,6 +1316,7 @@ def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
     return env['res.lang']._get_data(code=lang)
 
 
+@lru_cache
 def babel_locale_parse(lang_code: str | None) -> babel.Locale:
     if lang_code:
         try:

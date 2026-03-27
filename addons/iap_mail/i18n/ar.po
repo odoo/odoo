@@ -3,13 +3,14 @@
 # * iap_mail
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-16 13:44+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2025-10-13 12:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/iap_mail/"
 "ar/>\n"
 "Language: ar\n"
@@ -19,6 +20,20 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-address-card text-primary mt-1\"/>\n"
+"                    <b>Address</b>"
+msgstr ""
+
+#. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-building mt-1 text-primary\"/>\n"
+"                    <b>Type</b>"
+msgstr ""
 
 #. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
@@ -48,6 +63,14 @@ msgstr ""
 "                    <b>التقنيات المستخدمة</b>"
 
 #. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-envelope text-primary\" style=\"margin-top: 3px;"
+"\"/>\n"
+"                    <b>Email</b>"
+msgstr ""
+
+#. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-envelope text-primary\"/>\n"
@@ -55,6 +78,20 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw me-2 fa-envelope text-primary\"/>\n"
 "                    <b>البريد الإلكتروني</b>"
+
+#. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-folder mt-1 text-primary\"/>\n"
+"                    <b>Tax ID</b>"
+msgstr ""
+
+#. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-globe mt-1 text-primary\"/>\n"
+"                    <b>Website</b>"
+msgstr ""
 
 #. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
@@ -66,6 +103,13 @@ msgstr ""
 "                    <b>المنطقة زمنية</b>"
 
 #. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
+"                    <b>Industries</b>"
+msgstr ""
+
+#. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
@@ -75,6 +119,13 @@ msgstr ""
 "                    <b>القطاعات</b>"
 
 #. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-money mt-1 text-primary\"/>\n"
+"                    <b>Estimated revenue</b>"
+msgstr ""
+
+#. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-money text-primary\"/>\n"
@@ -82,6 +133,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw me-2 fa-money text-primary\"/>\n"
 "                    <b>الإيرادات المقدرة</b>"
+
+#. module: iap_mail
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-phone mt-1 text-primary\"/>\n"
+"                    <b>Phone</b>"
+msgstr ""
 
 #. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
@@ -103,6 +161,7 @@ msgstr ""
 
 #. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-users text-primary\"/>\n"
 "                    <b>Employees</b>"
@@ -112,6 +171,7 @@ msgstr ""
 
 #. module: iap_mail
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
+#: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company_by_dnb
 msgid "<span> per year</span>"
 msgstr "<span> لكل سنة</span>"
 
@@ -126,15 +186,14 @@ msgid "Attachment Count"
 msgstr "عدد المرفقات"
 
 #. module: iap_mail
-#. odoo-javascript
-#: code:addons/iap_mail/static/src/js/services/iap_notification_service.js:0
-msgid "Buy more credits"
-msgstr "شراء رصيد أكثر"
-
-#. module: iap_mail
 #: model:ir.model.fields,field_description:iap_mail.field_iap_account__company_ids
 msgid "Company"
 msgstr "الشركة"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
 
 #. module: iap_mail
 #: model:ir.model.fields,field_description:iap_mail.field_iap_account__warning_user_ids
@@ -165,6 +224,11 @@ msgstr "يحتوي على رسالة"
 #: model:ir.model,name:iap_mail.model_iap_account
 msgid "IAP Account"
 msgstr "حساب IAP"
+
+#. module: iap_mail
+#: model:ir.model.fields,field_description:iap_mail.field_iap_account__id
+msgid "ID"
+msgstr "المُعرف"
 
 #. module: iap_mail
 #: model:ir.model.fields,help:iap_mail.field_iap_account__message_needaction
@@ -220,3 +284,6 @@ msgstr "المتابعين"
 #: model_terms:ir.ui.view,arch_db:iap_mail.enrich_company
 msgid "http://www.twitter.com/"
 msgstr "http://www.twitter.com/"
+
+#~ msgid "Buy more credits"
+#~ msgstr "شراء رصيد أكثر"

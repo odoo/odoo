@@ -286,6 +286,16 @@ export class AnalyticDistribution extends Component {
         // Analytic Account fields
         line.analyticAccounts.map((account) => {
             const fieldName = this.planIdToColumn[account.planId];
+            const companyId = this.props.record.data.company_id && this.props.record.data.company_id[0];
+            const domain = companyId
+                ? [
+                    "&",
+                    ["root_plan_id", "=", account.planId],
+                    "|",
+                    ["company_id", "parent_of", companyId],
+                    ["company_id", "=", false],
+                  ]
+                : [["root_plan_id", "=", account.planId]];
             recordFields[fieldName] = {
                 string: account.planName,
                 relation: "account.analytic.account",
@@ -294,10 +304,11 @@ export class AnalyticDistribution extends Component {
                     fields: analyticAccountFields,
                     activeFields: analyticAccountFields,
                 },
-                // company domain might be required here
-                domain: [["root_plan_id", "=", account.planId]],
+                domain,
             };
-            values[fieldName] =  account?.accountId || false;
+            values[fieldName] = account?.accountId
+                ? [account.accountId, account.accountDisplayName]
+                : false;
         });
         // Percentage field
         recordFields['percentage'] = {
@@ -314,10 +325,9 @@ export class AnalyticDistribution extends Component {
             values[name] = this.props.record.data[name] * values['percentage'];
             // Currency field
             if (currency_field) {
-                // TODO: check web_read network request
                 const { string, name, type, relation } = this.props.record.fields[currency_field];
                 recordFields[currency_field] = { name, string, type, relation, invisible: true };
-                values[currency_field] = this.props.record.data[currency_field].id;
+                values[currency_field] = [this.props.record.data[currency_field].id, ""];
             }
         }
         return {
@@ -654,7 +664,8 @@ export class AnalyticDistribution extends Component {
         ];
         if (this.isDropdownOpen
             && !this.widgetRef.el.contains(ev.target)
-            && !ev.target.closest(selectors.join(","))
+            && (!ev.target.closest(selectors.join(",")) ||
+                document.querySelector(".modal:not(.o_inactive_modal)").contains(this.widgetRef.el))
             && !ev.target.isSameNode(document.documentElement)
            ) {
             this.forceCloseEditor();
@@ -672,7 +683,9 @@ export class AnalyticDistribution extends Component {
 export const analyticDistribution = {
     component: AnalyticDistribution,
     supportedTypes: ["json"],
-    fieldDependencies: [{ name:"analytic_precision", type: "integer" }],
+    fieldDependencies: [
+        { name: "analytic_precision", type: "integer" },
+    ],
     supportedOptions: [
         {
             label: _t("Disable save"),

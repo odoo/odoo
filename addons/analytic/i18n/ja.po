@@ -9,13 +9,16 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2025-09-14 21:14+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-06 09:13+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "analytic/ja/>\n"
 "Language: ja\n"
@@ -23,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: analytic
 #. odoo-python
@@ -35,7 +38,7 @@ msgstr "%s (コピー)"
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 msgid "%s analytic lines created"
-msgstr "%s"
+msgstr "%s 件の分析明細が生成されました"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -54,8 +57,8 @@ msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
 msgstr ""
-"'プロジェクト'計画は存在する必要があり、そのIDはシステム変数において`analytic"
-".project_plan` として設定される必要があります。"
+"'プロジェクト'計画は存在する必要があり、そのIDはシステム変数において"
+"`analytic.project_plan` として設定される必要があります。"
 
 #. module: analytic
 #. odoo-javascript
@@ -69,6 +72,11 @@ msgid "Accounts"
 msgstr "分析勘定"
 
 #. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Acme Corporation"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
 msgid "Action Needed"
 msgstr "要アクション"
@@ -76,12 +84,12 @@ msgstr "要アクション"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_active_account
 msgid "Active account"
-msgstr "アクティブな分析勘定"
+msgstr "有効な分析勘定"
 
 #. module: analytic
 #. odoo-javascript
@@ -155,7 +163,7 @@ msgstr "分析勘定数"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "分析用配分"
+msgstr "分析分配"
 
 #. module: analytic
 #. odoo-javascript
@@ -187,12 +195,12 @@ msgstr "分析項目"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "分析行"
+msgstr "分析明細"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
-msgstr "分析行"
+msgstr "分析明細"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
@@ -369,7 +377,7 @@ msgstr "満たすべき条件"
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -434,11 +442,6 @@ msgid "Debit"
 msgstr "借方"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_agrolait
-msgid "Deco Addict"
-msgstr "Deco Addict"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
 msgstr "デフォルト適用"
@@ -478,6 +481,7 @@ msgstr "保存無効化"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__display_name
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__display_name
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "表示名"
@@ -508,7 +512,7 @@ msgstr "更新しないでください"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Dynamic Placeholder"
-msgstr ""
+msgstr "動的プレースホルダ"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
@@ -554,6 +558,7 @@ msgstr "人事"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__id
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__id
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
@@ -566,7 +571,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -702,7 +707,7 @@ msgstr "エラー数"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
@@ -853,7 +858,7 @@ msgstr "Seagate P2"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "分析行検索"
+msgstr "分析明細検索"
 
 #. module: analytic
 #. odoo-python
@@ -910,6 +915,19 @@ msgid "Subplans"
 msgstr "サブプラン"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "システムパラメータ"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr "%s の値は、サブプランではない有効な分析プランのIDでなければなりません"
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
 msgid "Time Off"
 msgstr "休止"
@@ -955,7 +973,8 @@ msgstr "全員に表示"
 msgid ""
 "Whoa there! Making this change would wipe out your current data. Let's avoid "
 "that, shall we?"
-msgstr "この処理を続行すると、現在のデータがすべて削除されます。よろしいですか？"
+msgstr ""
+"この処理を続行すると、現在のデータがすべて削除されます。よろしいですか？"
 
 #. module: analytic
 #. odoo-python
@@ -963,7 +982,8 @@ msgstr "この処理を続行すると、現在のデータがすべて削除さ
 msgid ""
 "You can't change the company of an analytic account that already has "
 "analytic items! It's a recipe for an analytical disaster!"
-msgstr "すでに分析項目が存在する分析勘定の会社は変更できません。分析上に大きな問題が"
+msgstr ""
+"すでに分析項目が存在する分析勘定の会社は変更できません。分析上に大きな問題が"
 "発生する原因となります。"
 
 #. module: analytic
@@ -986,6 +1006,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "例 プロジェクトXYZ"
+
+#~ msgid "Deco Addict"
+#~ msgstr "Deco Addict"
 
 #~ msgid "Add a line"
 #~ msgstr "明細追加"

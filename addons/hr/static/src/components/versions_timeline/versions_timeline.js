@@ -1,10 +1,9 @@
-import { onWillUpdateProps, useComponent, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { getFieldDomain, useRecordObserver } from "@web/model/relational_model/utils";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
+import { _t } from "@web/core/l10n/translation";
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
@@ -15,33 +14,12 @@ export class VersionsTimeline extends StatusBarField {
         this.actionService = useService("action");
         this.orm = useService("orm");
 
-        if (this.field.type === "many2one") {
-            this.specialData = useSpecialDataNoCache((orm, props) => {
-                const { foldField, name: fieldName, record } = props;
-                const { relation } = record.fields[fieldName];
-                const fieldNames = ["display_name"];
-                if (foldField) {
-                    fieldNames.push(foldField);
-                }
-                const value = record.data[fieldName];
-                let domain = getFieldDomain(record, fieldName, props.domain);
-                domain = Domain.and([
-                    [["employee_id", "=", props.record.evalContext.id]],
-                    domain,
-                ]).toList();
-                if (domain.length && value) {
-                    domain = Domain.or([[["id", "=", value.id]], domain]).toList(
-                        record.evalContext
-                    );
-                }
-                return orm.searchRead(relation, domain, fieldNames);
-            });
-        }
-
         this.dateTimePicker = useDateTimePicker({
             target: `datetime-picker-target-version`,
             onApply: (date) => {
-                if (date) this.createVersion(date);
+                if (date) {
+                    this.createVersion(date);
+                }
             },
             get pickerProps() {
                 return { type: "date" };
@@ -49,14 +27,41 @@ export class VersionsTimeline extends StatusBarField {
         });
     }
 
+    /** @override **/
+    getDomain() {
+        return Domain.and([super.getDomain(),
+            [["employee_id", "=", this.props.record.evalContext.id]]]
+        ).toList()
+    }
+
+    /** @override **/
+    getFieldNames() {
+        const fieldNames = super.getFieldNames();
+        fieldNames.push([
+            "contract_type_id",
+            "contract_date_start",
+            "contract_date_end",
+        ]);
+        return fieldNames.filter((fName) => fName in this.props.record.fields);
+    }
+
+    displayContractLines() {
+        return ["contract_type_id", "contract_date_start", "contract_date_end"].every(
+            (fieldName) => fieldName in this.props.record.fields
+        );
+    }
+
     async createVersion(date) {
+        await this.props.record.save();
         const version_id = await this.orm.call("hr.employee", "create_version", [
             this.props.record.evalContext.id,
             { date_version: date },
         ]);
 
-        const { record } = this.props;
-        await record.save();
+        const { specialDataCaches } = this.props.record.model;
+        // Invalidate cache after creating new version.
+        Object.keys(specialDataCaches).forEach(key => delete specialDataCaches[key]);
+
         await this.props.record.model.load({
             context: {
                 ...this.props.record.model.env.searchModel.context,
@@ -73,7 +78,6 @@ export class VersionsTimeline extends StatusBarField {
     async selectItem(item) {
         const { record } = this.props;
         await record.save();
-        // await super.selectItem(item);
         await this.props.record.model.load({
             context: {
                 ...this.props.record.model.env.searchModel.context,
@@ -81,24 +85,39 @@ export class VersionsTimeline extends StatusBarField {
             },
         });
     }
-}
 
-export function useSpecialDataNoCache(loadFn) {
-    const component = useComponent();
-    const orm = component.env.services.orm;
-
-    /** @type {{ data: Record<string, T> }} */
-    const result = useState({ data: {} });
-    useRecordObserver(async (record, props) => {
-        result.data = await loadFn(orm, { ...props, record });
-    });
-    onWillUpdateProps(async (props) => {
-        // useRecordObserver callback is not called when the record doesn't change
-        if (props.record.id === component.props.record.id) {
-            result.data = await loadFn(orm, props);
+    /** @override **/
+    getAllItems() {
+        function format(dateString) {
+            return luxon.DateTime.fromISO(dateString).toFormat("MMM dd, yyyy");
         }
-    });
-    return result;
+        const items = super.getAllItems();
+        if (!this.displayContractLines) {
+            return items;
+        }
+        const dataById = new Map(this.specialData.data.map((d) => [d.id, d]));
+
+        const selectedVersion = items.find((item) => item.isSelected)?.value;
+        const selectedContractDate = dataById.get(selectedVersion)?.contract_date_start;
+
+        return items.map((item, index) => {
+            const itemSpecialData = dataById.get(item.value) || {};
+            const contractDateStart = itemSpecialData.contract_date_start;
+            let contractDateEnd = itemSpecialData.contract_date_end;
+            contractDateEnd = contractDateEnd ? format(contractDateEnd) : _t("Indefinite");
+            const contractType = itemSpecialData.contract_type_id?.[1] ?? _t("Contract");
+            const toolTip = contractDateStart
+                ? `${contractType}: ${format(contractDateStart)} - ${contractDateEnd}`
+                : _t("No contract");
+
+            return {
+                ...item,
+                isCurrentContract: contractDateStart === selectedContractDate,
+                isInContract: Boolean(contractDateStart),
+                toolTip,
+            };
+        });
+    }
 }
 
 export const versionsTimeline = {

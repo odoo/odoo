@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.AutoCompleteBuilderUrlPicker" t-inherit="web.AutoComplete">
+        <xpath expr="//div[@t-ref='root']" position="attributes">
+            <attribute name="t-att-data-action-id">info.actionId</attribute>
+            <attribute name="t-att-data-action-param">info.actionParam</attribute>
+            <attribute name="t-att-data-action-value">info.actionValue</attribute>
+            <attribute name="t-att-data-class-action">info.classAction</attribute>
+            <attribute name="t-att-data-style-action">info.styleAction</attribute>
+            <attribute name="t-att-data-style-action-value">info.styleActionValue</attribute>
+            <attribute name="t-att-data-attribute-action">info.attributeAction</attribute>
+            <attribute name="t-att-data-attribute-action-value">info.attributeActionValue</attribute>
+        </xpath>
+        <xpath expr="//input[@t-ref='input']" position="attributes">
+            <attribute name="t-attf-class" add="{{props.inputClass}}" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-inherit="html_builder.BuilderUrlPicker" t-inherit-mode="extension">
+        <xpath expr="//BuilderTextInputBase" position="replace">
+            <AutoCompleteBuilderUrlPicker
+                t-props="props"
+                sources="sources"
+                value="state.value or ''"
+                input="urlRef"
+                dropdown="true"
+                inputClass="'o-hb-input-base o_builder_url_input'"
+                onChange.bind="onChange"
+            />
+            <button class="btn" title="Preview this URL in a new tab" t-on-click="openPreviewUrl">
+                <i class="fa fa-fw fa-external-link"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

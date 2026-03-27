@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isZWS } from "@html_editor/utils/dom_info";
+import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -13,6 +13,7 @@ import { memoize } from "@web/core/utils/functions";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
+/** @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
 /** @typedef { import("@web/core/l10n/translation.js")._t} _t */
 /** @typedef { ReturnType<_t> } TranslatedString */
@@ -62,48 +63,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /**
- * A ToolbarCommandItem must derive from a user command ( @see UserCommand )
- * specified by commandId. Properties defined in a toolbar item override those
- * from a user command.
- *
- * Example:
- *
- * resources = {
- *     user_commands: [
- *         @type {UserCommand}
- *         {
- *             id: myCommand,
- *             run: myCommandFunction,
- *             description: _t("My Command"),
- *             icon: "fa-bug",
- *         },
- *     ],
- *     toolbar_groups: [
- *         @type {ToolbarGroup}
- *         { id: "myGroup" },
- *     ],
- *     toolbar_items: [
- *         @type {ToolbarCommandItem}
- *         {
- *             id: "myButton",
- *             groupId: "myGroup",
- *             commandId: "myCommand",
- *             description: _t("My Toolbar Command Button"), // overrides the user command's `description`
- *             // `icon` is inferred from the user command
- *         },
- *         @type {ToolbarComponentItem}
- *         {
- *             id: "myComponentButton",
- *             groupId: "myGroup",
- *             description: _t("My Toolbar Component Button"),
- *             Component: MyComponent,
- *             props: { myProp: "myValue" },
- *         },
- *     ],
- * };
- */
-
-/**
  * Types after conversion to renderable toolbar buttons:
  *
  * @typedef {Object} ToolbarCommandButton
@@ -131,22 +90,79 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
-const DELAY_TOOLBAR_OPEN = 300;
+export const DELAY_TOOLBAR_OPEN = 300;
 /** Number of buttons below which toolbar will open directly in its expanded form */
 const MIN_SIZE_FOR_COMPACT = 7;
+/** Special namespace that prevents the toolbar from opening */
+export const DISABLED_NAMESPACE = "disabled";
 
 /**
  * @typedef { Object } ToolbarShared
  * @property { ToolbarPlugin['getToolbarInfo'] } getToolbarInfo
  */
 
+/**
+ * @typedef {((namespace: string) => boolean)[]} can_display_toolbar
+ * @typedef {((selectionData: SelectionData) => boolean)[]} collapsed_selection_toolbar_predicate
+ *
+ * @typedef {ToolbarGroup[]} toolbar_groups
+ * @typedef {ToolbarNamespace[]} toolbar_namespaces
+ */
+
+/**
+ * @see UserCommand
+ * @typedef {(ToolbarCommandItem | ToolbarComponentItem)[]} toolbar_items
+ *
+ * A ToolbarCommandItem must derive from a user command (see UserCommand)
+ * specified by commandId. Properties defined in a toolbar item override those
+ * from a user command.
+ *
+ * Example:
+ *
+ *     resources = {
+ *         // see UserCommand
+ *         user_commands: [
+ *             {
+ *                 id: myCommand,
+ *                 run: myCommandFunction,
+ *                 description: _t("My Command"),
+ *                 icon: "fa-bug",
+ *             },
+ *         ],
+ *         // see ToolbarGroup
+ *         toolbar_groups: [
+ *             { id: "myGroup" },
+ *         ],
+ *         toolbar_items: [
+ *             // See ToolbarCommandItem
+ *             {
+ *                 id: "myButton",
+ *                 groupId: "myGroup",
+ *                 commandId: "myCommand",
+ *                 description: _t("My Toolbar Command Button"), // overrides the user command's `description`
+ *                 // `icon` is inferred from the user command
+ *             },
+ *             // See ToolbarComponentItem
+ *             {
+ *                 id: "myComponentButton",
+ *                 groupId: "myGroup",
+ *                 description: _t("My Toolbar Component Button"),
+ *                 Component: MyComponent,
+ *                 props: { myProp: "myValue" },
+ *             },
+ *         ],
+ *     };
+ */
+
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
     static dependencies = ["overlay", "selection", "userCommand"];
     static shared = ["getToolbarInfo"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         selection_leave_handlers: () => this.closeToolbar(),
+        selection_enter_handlers: () => this.updateToolbar(),
         step_added_handlers: () => this.updateToolbar(),
         user_commands: {
             id: "expandToolbar",
@@ -166,9 +182,10 @@ export class ToolbarPlugin extends Plugin {
             description: _t("Expand toolbar"),
             icon: "oi-ellipsis-v",
         },
-        toolbar_namespaces: [
-            withSequence(99, { id: "compact", isApplied: () => !this.isToolbarExpanded }),
-            withSequence(100, { id: "expanded", isApplied: () => true }),
+        toolbar_namespace_providers: [
+            withSequence(100, (targetedNodes, editableSelection) =>
+                this.isToolbarVisible(targetedNodes, editableSelection) ? "compact" : undefined
+            ),
         ],
     };
 
@@ -181,7 +198,7 @@ export class ToolbarPlugin extends Plugin {
             groupIds.add(group.id);
         }
         this.buttonGroups = this.getButtonGroups();
-        this.buttonsByNamespace = this.getButtonsByNamespace();
+        this.buttonsByNamespace = { DISABLED_NAMESPACE: [] };
 
         this.isMobileToolbar = hasTouch() && window.visualViewport;
 
@@ -209,12 +226,9 @@ export class ToolbarPlugin extends Plugin {
             // Mouse interaction behavior:
             // Close toolbar on mousedown and prevent it from opening until mouseup.
             this.addDomListener(this.editable, "mousedown", (ev) => {
-                // Don't close if the mousedown is on an overlay.
-                if (!ev.target?.closest?.(".o-overlay-item")) {
-                    this.closeToolbar();
-                    this.debouncedUpdateToolbar.cancel();
-                    this.onSelectionChangeActive = false;
-                }
+                this.closeToolbar(this.dependencies.selection.getSelectionData());
+                this.debouncedUpdateToolbar.cancel();
+                this.onSelectionChangeActive = false;
             });
             this.addGlobalDomListener("mouseup", (ev) => {
                 if (ev.detail >= 2) {
@@ -240,7 +254,7 @@ export class ToolbarPlugin extends Plugin {
                 // On Chrome, if there is a password saved for a login page,
                 // a mouse click trigger a keydown event without any key
                 if (ev.key?.startsWith("Arrow")) {
-                    this.closeToolbar();
+                    this.closeToolbar(this.dependencies.selection.getSelectionData());
                     this.onSelectionChangeActive = false;
                 }
             });
@@ -309,17 +323,17 @@ export class ToolbarPlugin extends Plugin {
     }
 
     /**
-     * @returns {Object<string, ToolbarButton[]>}
+     * @returns ToolbarButton[]
      */
-    getButtonsByNamespace() {
-        const namespaces = this.getResource("toolbar_namespaces").map((ns) => ns.id);
-        const buttonsByNamespace = {};
-        for (const namespace of namespaces) {
-            buttonsByNamespace[namespace] = this.buttonGroups.flatMap((group) =>
-                group.buttons.filter((btn) => btn.namespaces.includes(namespace))
-            );
+    getButtonsForNamespace(namespace) {
+        if (this.buttonsByNamespace[namespace]) {
+            return this.buttonsByNamespace[namespace];
         }
-        return buttonsByNamespace;
+        const button = this.buttonGroups.flatMap((group) =>
+            group.buttons.filter((btn) => btn.namespaces.includes(namespace))
+        );
+        this.buttonsByNamespace[namespace] = button;
+        return button;
     }
 
     getToolbarInfo() {
@@ -341,23 +355,60 @@ export class ToolbarPlugin extends Plugin {
      */
     updateToolbar = debounce(this._updateToolbar, 0, { trailing: true });
     _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
-        const targetedNodes = this.getFilteredTargetedNodes();
-        this.updateNamespace(targetedNodes);
-        this.updateToolbarVisibility(selectionData, targetedNodes);
-        if (!this.overlay.isOpen) {
+        // Prevent toolbar to open if the selection is not in the editable area,
+        // or if the selection is protected or protecting.
+        if (
+            !selectionData.currentSelectionIsInEditable ||
+            selectionData.documentSelectionIsProtected ||
+            selectionData.documentSelectionIsProtecting
+        ) {
+            this.closeToolbar();
             return;
         }
-        this.updateButtonsStates(selectionData.editableSelection, targetedNodes);
+        // Prevent toolbar to open if the selection is only non-editable nodes.
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        if (targetedNodes.every((node) => !this.dependencies.selection.isNodeEditable(node))) {
+            this.closeToolbar();
+            return;
+        }
+        // Determine the namespace to use
+        let currentNamespace = null;
+        let filteredtargetedNodes = [];
+        filteredtargetedNodes = this.getFilteredTargetedNodes(targetedNodes);
+        for (const fn of this.getResource("toolbar_namespace_providers")) {
+            currentNamespace = fn(filteredtargetedNodes, selectionData.editableSelection);
+            if (currentNamespace) {
+                break;
+            }
+        }
+
+        if (currentNamespace === DISABLED_NAMESPACE) {
+            this.closeToolbar();
+            return;
+        }
+
+        if (currentNamespace === "compact" && this.isToolbarExpanded) {
+            currentNamespace = "expanded";
+        }
+
+        if (currentNamespace) {
+            this.state.namespace = currentNamespace;
+            // Do not reposition the toolbar if it's already open.
+            if (!this.overlay.isOpen) {
+                this.overlay.open({ props: this.toolbarProps });
+            }
+            this.updateButtonsStates(selectionData.editableSelection, filteredtargetedNodes);
+        } else {
+            this.closeToolbar();
+        }
     }
 
-    getFilteredTargetedNodes() {
-        return this.dependencies.selection
-            .getTargetedNodes()
+    getFilteredTargetedNodes(targetedNodes) {
+        return targetedNodes
             .filter(
                 (node) =>
                     this.dependencies.selection.isNodeEditable(node) &&
-                    (node.nodeType !== Node.TEXT_NODE ||
-                        (node.textContent.trim().length && !isZWS(node)))
+                    (node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node)))
             )
             .filter((node) => {
                 const element = closestElement(node);
@@ -366,55 +417,46 @@ export class ToolbarPlugin extends Plugin {
             });
     }
 
-    updateToolbarVisibility(selectionData, targetedNodes) {
-        if (this.shouldBeVisible(selectionData, targetedNodes)) {
-            // Do not reposition the toolbar if it's already open.
-            if (!this.overlay.isOpen) {
-                this.overlay.open({ props: this.toolbarProps });
-            }
-        } else if (this.overlay.isOpen && !this.shouldPreventClosing()) {
-            this.closeToolbar();
-        }
-    }
-
-    shouldBeVisible(selectionData, targetedNodes) {
-        const inEditable =
-            selectionData.currentSelectionIsInEditable &&
-            !selectionData.documentSelectionIsProtected &&
-            !selectionData.documentSelectionIsProtecting;
-        if (!inEditable) {
-            return false;
-        }
-        const canDisplayToolbar = this.getResource("can_display_toolbar").every((fn) =>
-            fn(this.state.namespace)
-        );
-        if (!canDisplayToolbar) {
-            return false;
-        }
+    isToolbarVisible(targetedNodes, editableSelection) {
         if (this.isMobileToolbar) {
             return true;
         }
-        const isCollapsed = selectionData.editableSelection.isCollapsed;
+
+        const isCollapsed = editableSelection.isCollapsed;
         if (isCollapsed) {
-            return this.getResource("collapsed_selection_toolbar_predicate").some((fn) =>
-                fn(selectionData)
-            );
+            return false;
         }
-        return !!targetedNodes.length;
+        // Only allow the toolbar to open if the selection contains visible selected characters.
+        const selectionText = editableSelection.textContent();
+        const textCleaned = selectionText.replace(/(\r\n|\n|\r|\u200B|\uFEFF)/gm, "");
+        if (textCleaned.length) {
+            return true;
+        }
+        // Even without textContent we display the toolbar if the selection contains a <br>
+        return targetedNodes.some(
+            (node) => node.nodeType === Node.ELEMENT_NODE && node.tagName === "BR"
+        );
     }
 
-    shouldPreventClosing() {
-        // Should check in the document with overlays.
-        const preventClosing = document
-            .getSelection()
-            ?.anchorNode?.closest?.("[data-prevent-closing-overlay]");
-        return preventClosing?.dataset?.preventClosingOverlay === "true";
-    }
-
-    updateNamespace(targetedNodes) {
-        const namespaces = this.getResource("toolbar_namespaces");
-        const activeNamespace = namespaces.find((ns) => ns.isApplied(targetedNodes));
-        this.state.namespace = activeNamespace?.id;
+    /**
+     * @param {SelectionData} selectionData
+     */
+    closeToolbar(selectionData = null) {
+        if (!this.overlay.isOpen) {
+            return;
+        }
+        // TODO: refactor candidate : Remove data-prevent-closing-overlay
+        const anchor = selectionData?.documentSelectionIsInEditable
+            ? selectionData.editableSelection?.anchorNode
+            : document.getSelection()?.anchorNode;
+        const shouldPreventClosing =
+            anchor?.closest?.("[data-prevent-closing-overlay]")?.dataset?.preventClosingOverlay ===
+            "true";
+        if (!shouldPreventClosing) {
+            this.overlay.close();
+            this.isToolbarExpanded = false;
+            this.state.namespace = null;
+        }
     }
 
     /**
@@ -423,7 +465,7 @@ export class ToolbarPlugin extends Plugin {
      */
     updateButtonsStates(selection, targetedNodes) {
         const availableButtons = this.getAvailableButtonsSet(selection);
-        const buttonGroups = this.buttonGroups
+        this.state.buttonGroups = this.buttonGroups
             .map((group) => ({
                 id: group.id,
                 buttons: group.buttons
@@ -442,8 +484,6 @@ export class ToolbarPlugin extends Plugin {
             }))
             // Filter out groups left empty
             .filter((group) => group.buttons.length > 0);
-
-        this.state.buttonGroups = buttonGroups;
     }
 
     /**
@@ -457,7 +497,7 @@ export class ToolbarPlugin extends Plugin {
             return this.getAvailableButtonsCompact(selection);
         }
         const isAvailable = (button) => button.isAvailable(selection);
-        return new Set(this.buttonsByNamespace[this.state.namespace].filter(isAvailable));
+        return new Set(this.getButtonsForNamespace(this.state.namespace).filter(isAvailable));
     }
 
     /**
@@ -470,8 +510,8 @@ export class ToolbarPlugin extends Plugin {
      */
     getAvailableButtonsCompact(selection) {
         const isAvailable = memoize((button) => button.isAvailable(selection));
-        const compact = this.buttonsByNamespace["compact"].filter(isAvailable);
-        const expanded = this.buttonsByNamespace["expanded"].filter(isAvailable);
+        const compact = this.getButtonsForNamespace("compact").filter(isAvailable);
+        const expanded = this.getButtonsForNamespace("expanded").filter(isAvailable);
         const shouldDisplayCompactToolbar =
             // Expanded version is big enough
             expanded.length >= MIN_SIZE_FOR_COMPACT &&
@@ -482,11 +522,6 @@ export class ToolbarPlugin extends Plugin {
         }
         this.state.namespace = "expanded";
         return new Set(expanded);
-    }
-
-    closeToolbar() {
-        this.overlay.close();
-        this.isToolbarExpanded = false;
     }
 }
 

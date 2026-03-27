@@ -2,33 +2,6 @@
 // Mass Mailing "Theme Default"
 // ============================
 
-// ===== Default Theme palette =====
-$o-mm-def-color-1: #f5f5f5;
-$o-mm-def-color-2: #ffffff;
-$o-mm-def-color-3: #706482;
-$o-mm-def-color-4: #464646;
-$o-mm-def-color-5: darken($o-mm-def-color-3, 5%);
-$o-mm-def-color-6: #706482;
-$o-mm-def-color-7: #87a6b5;
-
-// ===== Default Theme variables =====
-$o-mm-def-body-width    : 600px;
-$o-mm-def-body-bobile   : 480px;
-$o-mm-def-b-radius      : 2px;
-$o-mm-def-body-bg       : $o-mm-def-color-2;
-
-$o-mm-def-font          : -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-$o-mm-def-text-color    : $o-mm-def-color-4;
-
-$o-mm-def-btn-bg        : $o-mm-def-color-3;
-$o-mm-def-btn-text      : $o-mm-def-color-2;
-
-// ===== Colors =====
-@include bg-variant(".bg-o-color-2", $o-mm-def-color-6);
-@include text-emphasis-variant(".text-o-color-2", $o-mm-def-color-6);
-@include bg-variant(".bg-o-color-4", $o-mm-def-color-7);
-@include bg-variant(".bg-gray-lighter", $o-mm-def-color-1);
-
 div.col:not([align]) {
     // Default browser style but needed so that alignment works on some mail
     // clients (see convert_inline)
@@ -57,8 +30,6 @@ div.col:not([align]) {
 // ===== Layout =====
 .o_layout {
     overflow: hidden;
-    box-sizing: content-box;
-    min-height: 100%;
 
     > .o_mail_wrapper {
         width: 100%;
@@ -103,17 +74,6 @@ div.col:not([align]) {
     }
     // Background Images
     .oe_img_bg {
-        background-size: cover;
-        background-repeat: no-repeat;
-
-        &.o_bg_img_opt_repeat {
-            background-size: auto;
-            background-repeat: repeat;
-        }
-        &.o_bg_img_center {
-            background-position: center;
-        }
-
         // Compatibility <= 13.0, TODO remove?
         // -----------------------------------
         &.o_bg_img_opt_contain {
@@ -157,20 +117,9 @@ div.col:not([align]) {
 
 }
 
-.card {
-    border-color: #d2d2d2;
-    .card-header,.card-footer {
-        background-color: inherit!important;
-    }
-    .card-body {
-        background-color: white!important;
-    }
-}
-
 // ===== Misc =====
 
 .o_mail_snippet_general .container {
-    width: 100%;
     border-collapse:separate;
 }
 

@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/core/common/record";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
+import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
@@ -43,6 +44,7 @@ function subscribe(target, event, f) {
     return () => target.removeEventListener(event, f);
 }
 
+export const PTT_RELEASE_DURATION = 200;
 const SW_MESSAGE_TYPE = {
     POST_RTC_LOGS: "POST_RTC_LOGS",
 };
@@ -102,7 +104,7 @@ function hasTurn(iceServers) {
  * establish a connection with other call participants with the SFU when possible, and still handle
  * peer-to-peer for the participants who did not manage to establish a SFU connection.
  */
-class Network {
+export class Network {
     /** @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} */
     p2p;
     /** @type {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} */
@@ -251,6 +253,11 @@ export class Rtc extends Record {
                 this.localSession ||
                 this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
             );
+        },
+        onDelete() {
+            if (this.channel) {
+                this.channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.INACTIVE;
+            }
         },
     });
     channel = fields.One("Thread", {
@@ -450,6 +457,7 @@ export class Rtc extends Record {
                 session.playAudio();
             }
         });
+        browser.addEventListener("blur", () => this.onBlur());
         browser.addEventListener(
             "keydown",
             (ev) => {
@@ -506,6 +514,19 @@ export class Rtc extends Record {
         return this.state.sourceScreenStream?.getVideoTracks()[0]?.getSettings().displaySurface;
     }
 
+    isPushToTalkRelease(ev) {
+        if (
+            !this.state.channel ||
+            !this.store.settings.use_push_to_talk ||
+            (ev instanceof KeyboardEvent && !this.store.settings.isPushToTalkKey(ev)) ||
+            !this.localSession.isTalking ||
+            this.pttExtService.voiceActivated
+        ) {
+            return false;
+        }
+        return true;
+    }
+
     onKeyDown(ev) {
         if (!this.store.settings.isPushToTalkKey(ev)) {
             return;
@@ -514,12 +535,14 @@ export class Rtc extends Record {
     }
 
     onKeyUp(ev) {
-        if (
-            !this.state.channel ||
-            !this.store.settings.use_push_to_talk ||
-            !this.store.settings.isPushToTalkKey(ev) ||
-            !this.localSession.isTalking
-        ) {
+        if (!this.isPushToTalkRelease(ev)) {
+            return;
+        }
+        this.setPttReleaseTimeout();
+    }
+
+    onBlur() {
+        if (!this.isPushToTalkRelease()) {
             return;
         }
         this.setPttReleaseTimeout();
@@ -548,7 +571,7 @@ export class Rtc extends Record {
         this.state.screenTrack.addEventListener("ended", trackEndedFn, { once: true });
     }
 
-    setPttReleaseTimeout(duration = 200) {
+    setPttReleaseTimeout(duration = PTT_RELEASE_DURATION) {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
             if (!this.localSession?.isMute) {
@@ -574,6 +597,7 @@ export class Rtc extends Record {
 
     async openPip(options) {
         if (this.isHost) {
+            this.exitFullscreen();
             await this.pipService.openPip(options);
             return;
         }
@@ -1341,7 +1365,7 @@ export class Rtc extends Record {
                 const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
                     Number(id)
                 );
-                if (session?.eq(this.localSession) || !this.channel) {
+                if (!session || session.eq(this.localSession) || !this.channel) {
                     return;
                 }
                 // `isRaisingHand` is turned into the Date `raisingHand`
@@ -1762,17 +1786,13 @@ export class Rtc extends Record {
      * Applies blur effect to a video stream using BlurManager.
      *
      * @param {MediaStream} videoStream - input video stream.
-     * @returns {Promise<{stream: MediaStream, close: Function}>} - Blurred video stream and a function to close the blur manager.
+     * @returns {Promise<BlurManager>} - BlurManager instance.
      */
     async applyBlurEffect(videoStream) {
-        const blurManager = new BlurManager(videoStream, {
+        return new BlurManager(videoStream, {
             backgroundBlur: this.store.settings.backgroundBlurAmount,
             edgeBlur: this.store.settings.edgeBlurAmount,
         });
-        return {
-            stream: await blurManager.stream,
-            close: () => blurManager.close(),
-        };
     }
 
     /**
@@ -1988,13 +2008,16 @@ export class Rtc extends Record {
             this.blurManager = undefined;
             try {
                 this.blurManager = await this.applyBlurEffect(sourceStream);
-                const blurredStream = this.blurManager.stream;
+                const blurredStream = await this.blurManager.stream;
                 outputTrack = blurredStream.getVideoTracks()[0];
             } catch (_e) {
                 this.notification.add(_e.message, { type: "warning" });
-                this.store.settings.useBlur = false;
+                this.store.settings.setUseBlur(false);
                 outputTrack = sourceStream.getVideoTracks()[0];
             }
+        } else if (!this.store.settings.useBlur && type === "camera") {
+            this.blurManager?.close();
+            this.blurManager = undefined;
         }
         switch (type) {
             case "camera": {
@@ -2136,14 +2159,21 @@ export class Rtc extends Record {
         const session = this.store["discuss.channel.rtc.session"].get(id);
         if (session) {
             if (this.localSession && session.eq(this.localSession)) {
-                this.log(this.localSession, "self session deleted, ending call", {
-                    important: true,
-                });
+                this.notifyServerDisconnect();
                 this.endCall();
             }
             this.disconnect(session);
             session.delete();
         }
+    }
+
+    notifyServerDisconnect() {
+        this.log(this.localSession, "self session deleted by the server, ending call", {
+            important: true,
+        });
+        this.notification.add(_t("Disconnected from the call by the server"), {
+            type: "warning",
+        });
     }
 
     formatInfo() {
@@ -2391,10 +2421,8 @@ export const rtcService = {
         );
         services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
             if (rtc.localSession?.id === sessionId) {
+                rtc.notifyServerDisconnect();
                 rtc.endCall();
-                services.notification.add(_t("Disconnected from the RTC call by the server"), {
-                    type: "warning",
-                });
             }
         });
         services["bus_service"].subscribe("res.users.settings.volumes", (payload) => {

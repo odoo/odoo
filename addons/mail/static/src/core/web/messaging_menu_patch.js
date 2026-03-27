@@ -64,6 +64,7 @@ patch(MessagingMenu.prototype, {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
+            this.visibleStandaloneMessages.length > 0 ||
             (this.store.failures.length > 0 && this.store.discuss.activeTab === "notification") ||
             (this.shouldAskPushPermission && this.store.discuss.activeTab === "notification") ||
             (this.canPromptToInstall && this.store.discuss.activeTab === "notification")
@@ -109,7 +110,8 @@ patch(MessagingMenu.prototype, {
                     this.store.self.main_user_id?.notification_type === "inbox"
                         ? "fa fa-inbox"
                         : "fa fa-star-o",
-                activeIcon: this.store.self.main_user_id?.notification_type !== "inbox" && "fa fa-star",
+                activeIcon:
+                    this.store.self.main_user_id?.notification_type !== "inbox" && "fa fa-star",
                 id:
                     this.store.self.main_user_id?.notification_type === "inbox"
                         ? "inbox"
@@ -170,7 +172,7 @@ patch(MessagingMenu.prototype, {
     },
     get counter() {
         let value =
-            this.store.inbox.counter +
+            this.store.globalCounter +
             this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);
         if (this.canPromptToInstall) {
             value++;

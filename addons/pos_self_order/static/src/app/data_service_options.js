@@ -12,6 +12,14 @@ patch(DataServiceOptions.prototype, {
                 key: "uuid",
                 condition: (record) => false,
             },
+            "pos.payment": {
+                key: "uuid",
+                condition: (record) => false,
+            },
+            "pos.payment.method": {
+                key: "id",
+                condition: (record) => false,
+            },
         };
     },
 });

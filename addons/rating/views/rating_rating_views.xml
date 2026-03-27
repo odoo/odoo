@@ -36,7 +36,7 @@
                             <group>
                                 <field name="partner_id"/>
                                 <div colspan="2" class="text-center" name="rating_image_container">
-                                    <field name="rating_image" widget='image'/>
+                                    <field name="rating_image" widget='image' options='{"img_class": "bg-transparent"}'/>
                                     <div class="mt4">
                                         <strong><field name="rating_text"/></strong>
                                     </div>
@@ -77,7 +77,7 @@
                     <templates>
                         <t t-name="card" class="row g-0">
                             <aside class="col-4 my-auto align-self-center">
-                                <field name="rating_image" widget="image" class="bg-view ms-3" />
+                                <field name="rating_image" widget="image" options='{"img_class": "bg-transparent"}' class="bg-view ms-3" />
                             </aside>
                             <main class="col ps-2">
                                 <field name="rated_partner_name" class="fw-bolder"/>

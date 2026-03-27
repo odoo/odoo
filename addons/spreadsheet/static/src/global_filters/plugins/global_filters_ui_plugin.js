@@ -37,11 +37,9 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                         if (dataSourceId === cmd.dataSourceId) {
                             filterFieldMatching[dataSourceId] = cmd.fieldMatchings[filterId];
                         } else {
-                            filterFieldMatching[dataSourceId] = matcher.getFieldMatching(
-                                this.getters,
-                                dataSourceId,
-                                filterId
-                            );
+                            filterFieldMatching[dataSourceId] =
+                                matcher.getFieldMatching(this.getters, dataSourceId, filterId) ||
+                                {};
                         }
                     }
                     this.dispatch("EDIT_GLOBAL_FILTER", {

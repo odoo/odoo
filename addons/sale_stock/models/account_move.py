@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import models, api
+from odoo import models, api, fields
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.misc import formatLang
 
@@ -110,7 +110,7 @@ class AccountMove(models.Model):
 
         return res
 
-    @api.depends('line_ids.sale_line_ids.order_id')
+    @api.depends('line_ids.sale_line_ids.order_id.effective_date')
     def _compute_delivery_date(self):
         # EXTENDS 'account'
         super()._compute_delivery_date()
@@ -119,7 +119,7 @@ class AccountMove(models.Model):
             effective_date_res = max(sale_order_effective_date) if sale_order_effective_date else False
             # if multiple sale order we take the bigger effective_date
             if effective_date_res:
-                move.delivery_date = effective_date_res
+                move.delivery_date = fields.Datetime.context_timestamp(self, effective_date_res)
 
     @api.depends('line_ids.sale_line_ids.order_id')
     def _compute_incoterm_location(self):
@@ -138,6 +138,16 @@ class AccountMove(models.Model):
         )
         return dict(ctx, move_is_downpayment=move_is_downpayment)
 
+    def _get_protected_vals(self, vals, records):
+        res = super()._get_protected_vals(vals, records)
+        # `delivery_date` should be protected on any account.move/account.move.line write
+        perma_protected = {self._fields['delivery_date']}
+        if records._name == self._name:
+            res.append((perma_protected, records))
+        elif records._name == self.line_ids._name:
+            res.append((perma_protected, records.move_id))
+        return res
+
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
@@ -148,3 +158,20 @@ class AccountMoveLine(models.Model):
     def _sale_can_be_reinvoice(self):
         self.ensure_one()
         return self.move_type != 'entry' and self.display_type != 'cogs' and super()._sale_can_be_reinvoice()
+
+    def _get_cogs_qty(self):
+        self.ensure_one()
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        posted_cogs_qty = sum(self.sale_line_ids.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
+            lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
+        ).mapped('quantity'))
+        posted_cogs_qty_prod_uom = self.product_uom_id._compute_quantity(posted_cogs_qty, self.product_id.uom_id)
+        return posted_cogs_qty_prod_uom + super()._get_cogs_qty()
+
+    def _get_posted_cogs_value(self):
+        self.ensure_one()
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        posted_cogs_value = - sum(self.sale_line_ids.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
+            lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
+        ).mapped('balance'))
+        return posted_cogs_value + super()._get_posted_cogs_value()

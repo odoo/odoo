@@ -81,7 +81,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             return True
 
         def tax_grouping_function(base_line, tax_data):
-            tax = tax_data['tax']
+            tax = tax_data and tax_data['tax']
 
             # Ignore withholding taxes
             if tax and tax.l10n_sa_is_retention:
@@ -260,7 +260,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
         identification_number = partner.l10n_sa_edi_additional_identification_number
         vat = re.sub(r'[^a-zA-Z0-9]', '', partner.vat or "")
-        if partner.country_code != "SA":
+        if partner.country_code != "SA" and vat:
             identification_number = vat
         elif partner.l10n_sa_edi_additional_identification_scheme == 'TIN':
             # according to ZATCA, the TIN number is always the first 10 digits of the VAT number
@@ -294,7 +294,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                 'cac:TaxScheme': {
                     'cbc:ID': {'_text': 'VAT'}
                 }
-            } if role != 'customer' or partner.country_id.code == 'SA' else None,  # BR-KSA-46
+            } if (role != 'customer' or partner.country_id.code == 'SA') and commercial_partner.vat and commercial_partner.vat != '/' else None,  # BR-KSA-46
             'cac:PartyLegalEntity': {
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {'_text': commercial_partner.vat} if commercial_partner.country_code == 'SA' else None,
@@ -352,8 +352,13 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             '_text': self.format_float(vals['total_allowance_currency'], vals['currency_dp']),
             'currencyID': vals['currency_name'],
         }
+
+        # Retrieve the rounding amount
+        payable_rounding_amount = vals['cash_rounding_base_amount_currency']
+
+        payable_amount = vals['tax_inclusive_amount_currency'] - prepaid_amount + payable_rounding_amount
         monetary_total_node['cbc:PrepaidAmount']['_text'] = self.format_float(prepaid_amount, vals['currency_dp'])
-        monetary_total_node['cbc:PayableAmount']['_text'] = self.format_float(vals['tax_inclusive_amount_currency'] - prepaid_amount, vals['currency_dp'])
+        monetary_total_node['cbc:PayableAmount']['_text'] = self.format_float(payable_amount, vals['currency_dp'])
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates for document allowance charge nodes
@@ -441,7 +446,12 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             for grouping_key, values in aggregated_tax_details.items()
             if grouping_key
         )
-        total_amount = base_line['tax_details']['total_excluded_currency'] + total_tax_amount
+        total_base_amount = sum(
+            values['base_amount_currency']
+            for grouping_key, values in aggregated_tax_details.items()
+            if grouping_key
+        )
+        total_amount = total_base_amount + total_tax_amount
 
         line_node['cac:TaxTotal'] = {
             'cbc:TaxAmount': {
@@ -554,6 +564,18 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                 for grouping_key, values in aggregated_tax_details.items()
                 if grouping_key
             ],
+        }
+
+    def _add_document_line_price_nodes(self, line_node, vals):
+        """
+        Use 10 decimal places for PriceAmount to satisfy ZATCA validation BR-KSA-EN16931-11
+        """
+        currency_suffix = vals['currency_suffix']
+        line_node['cac:Price'] = {
+            'cbc:PriceAmount': {
+                '_text': round(vals[f'gross_price_unit{currency_suffix}'], 10),
+                'currencyID': vals['currency_name'],
+            },
         }
 
     # -------------------------------------------------------------------------

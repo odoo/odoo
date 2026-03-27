@@ -32,14 +32,11 @@ export class Homepage extends Component {
         this.state = useState({ data: {}, loading: true, waitRestart: false });
         this.store.advanced = localStorage.getItem("showAdvanced") === "true";
         this.store.dev = new URLSearchParams(window.location.search).has("debug");
+        this.loadDataDelay = 10000;
 
         onWillStart(async () => {
             await this.loadInitialData();
         });
-
-        setInterval(() => {
-            this.loadInitialData();
-        }, 10000);
     }
 
     get numDevices() {
@@ -83,6 +80,10 @@ export class Homepage extends Component {
         } catch {
             console.warn("Error while fetching data");
         }
+        this.loadDataDelay *= 1.25;
+        setTimeout(async () => {
+            await this.loadInitialData();
+        }, Math.min(this.loadDataDelay, 30 * 60 * 1000));
     }
 
     async restartOdooService() {
@@ -138,6 +139,7 @@ export class Homepage extends Component {
                     </small>
                 </div>
                 <SingleData name="'Identifier'" value="state.data.identifier" icon="'fa-address-card'" />
+                <SingleData t-if="store.advanced" name="'Mac Address'" value="state.data.mac_address" icon="'fa-address-book'" />
                 <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                     <t t-set-slot="button">
                         <UpdateDialog />

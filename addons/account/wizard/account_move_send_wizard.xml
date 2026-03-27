@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <form class="o_account_move_send_wizard">
                 <field name="move_id" invisible="1"/>
+                <field name="attachments_not_supported" invisible="1"/>
 
                 <!-- Warnings -->
                 <div class="m-0" id="alerts" invisible="not alerts">
@@ -50,12 +51,14 @@
                     <field name="body"
                            class="oe-bordered-editor"
                            widget="html_mail"/>
-                    <field name="mail_attachments_widget"
-                           widget="mail_attachments"
-                           string="Attach a file"
-                           nolabel="1"
-                           colspan="2"/>
                 </div>
+
+                <field name="mail_attachments_widget"
+                       widget="mail_attachments"
+                       string="Attach a file"
+                       nolabel="1"
+                       colspan="2"
+                       invisible="not display_attachments_widget"/>
 
                 <footer>
                     <button string="Send"
@@ -75,7 +78,7 @@
                             special="cancel"
                             class="btn-secondary"/>
 
-                    <field name="mail_attachments_widget" widget="mail_attachments_selector" invisible="'email' not in sending_methods"/>
+                    <field name="mail_attachments_widget" widget="mail_attachments_selector" invisible="not display_attachments_widget"/>
                     <field name="template_id" widget="mail_composer_template_selector"/>
                 </footer>
             </form>

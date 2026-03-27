@@ -20,7 +20,7 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date', 'write_date']
+        return ['partner_id', 'code', 'points', 'points_display', 'program_id', 'expiration_date', 'write_date']
 
     def _has_source_order(self):
         return super()._has_source_order() or bool(self.source_pos_order_id)
@@ -58,3 +58,10 @@ class LoyaltyCard(models.Model):
                 'loyalty.card': card.read(card_fields, load=False),
             }
         }
+
+    @api.model
+    def get_loyalty_card_partner_by_code(self, code):
+        return self.env['loyalty.card'].search([
+            ('code', '=', code),
+            ('program_type', '=', 'loyalty'),
+        ], limit=1).partner_id or False

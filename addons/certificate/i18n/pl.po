@@ -3,13 +3,15 @@
 # * certificate
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-17 17:21+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-23 12:50+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "certificate/pl/>\n"
 "Language: pl\n"
@@ -220,6 +222,14 @@ msgstr ""
 "Upewnij się, że korzystasz z prywatnego klucza do podpisywania dokumentów."
 
 #. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a public key to verify the signature of documents."
+msgstr ""
+"Upewnij się, że korzystasz z publicznego klucza do weryfikacji podpisu "
+"dokumentów."
+
+#. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
 msgstr "Zarządzaj swoimi certyfikatami"
@@ -342,22 +352,14 @@ msgid "The certificate and public key are not compatible."
 msgstr "Certyfikat i klucz publiczny nie są zgodne."
 
 #. module: certificate
-#. odoo-python
-#: code:addons/certificate/models/certificate.py:0
-msgid ""
-"The certificate subject field contains invalid characters. Make sure all "
-"characters are unicode valid."
-msgstr ""
-
-#. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
-msgid "The date on which the certificate expires (UTC)"
-msgstr ""
+msgid "The date on which the certificate expires"
+msgstr "Data, kiedy certyfikat wygaśnie"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
-msgid "The date on which the certificate starts to be valid (UTC)"
-msgstr ""
+msgid "The date on which the certificate starts to be valid"
+msgstr "Data, kiedy certyfikat zacznie być ważny"
 
 #. module: certificate
 #. odoo-python
@@ -443,8 +445,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: ED25519, EC and RSA."
+msgstr ""
+"Nieobsługiwany algorytm kryptografii asymetrycznej „%s”. Obecnie obsługiwane "
+"podpisy: ED25519, EC i RSA."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
 msgstr ""
 "Nieobsługiwany algorytm kryptografii asymetrycznej \"%s\". Obecnie "
 "obsługiwany: EC, RSA."
@@ -452,8 +464,10 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
 "Używany do konfiguracji publicznego klucza w przypadku, że klucz zawarty w "

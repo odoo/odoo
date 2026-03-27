@@ -65,5 +65,6 @@ export class BuilderButton extends Component {
         } else if (this.props.icon.startsWith("oi-")) {
             return `oi ${this.props.icon}`;
         }
+        return "";
     }
 }

@@ -47,6 +47,7 @@ export const popoverService = {
                     closeOnEscape: options.closeOnEscape,
                     component,
                     componentProps: markRaw(props),
+                    extendedFlipping: options.extendedFlipping,
                     ref: options.ref,
                     class: options.popoverClass,
                     animation: options.animation,
@@ -62,6 +63,7 @@ export const popoverService = {
                     env: options.env,
                     onRemove: options.onClose,
                     rootId: target.getRootNode()?.host?.id,
+                    sequence: options.sequence,
                 }
             );
 

@@ -25,7 +25,7 @@ export class TimezoneMismatchField extends SelectionField {
         if (userOffset && this.props.record.data[this.props.name]) {
             const offset = -new Date().getTimezoneOffset();
             let browserOffset = offset < 0 ? "-" : "+";
-            browserOffset += Math.abs(offset / 60)
+            browserOffset += Math.floor(Math.abs(offset / 60))
                 .toFixed(0)
                 .padStart(2, "0");
             browserOffset += Math.abs(offset % 60)

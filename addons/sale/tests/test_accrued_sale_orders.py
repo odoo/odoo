@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import freeze_time, tagged
@@ -73,16 +74,23 @@ class TestAccruedSaleOrders(TestSaleCommon):
             'active_ids': cls.sale_order.ids,
         }).create({
             'account_id': cls.account_expense.id,
+            'date': fields.Date.today(),
         })
 
     def test_accrued_order(self):
+        # self.wizard = self.wizard.with_context(accrual_entry_date=fields.Date.today())
+        self.wizard.date = fields.Date.today()
         # nothing to invoice : no entries to be created
         with self.assertRaises(UserError):
             self.wizard.create_entries()
 
         # 5 qty of each product invoiceable
         self.sale_order.order_line.qty_delivered = 5
-        self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
+        # Call accrual wizard at today date because calling in the past will
+        # re-compute delivred and invoiced quantities for this date and thus
+        # generate nothing since there was no delivered quantity at this time.
+        account_move = self.env['account.move'].search(self.wizard.create_entries()['domain'])
+        self.assertRecordValues(account_move.line_ids, [
             # reverse move lines
             {'account_id': self.account_revenue.id, 'debit': 5000, 'credit': 0},
             {'account_id': self.alt_inc_account.id, 'debit': 1000, 'credit': 0},
@@ -95,10 +103,8 @@ class TestAccruedSaleOrders(TestSaleCommon):
 
         # delivered products invoiced, nothing to invoice left
         invoices = self.sale_order._create_invoices()
-        invoices.invoice_date = self.wizard.date
         invoices.action_post()
         with self.assertRaises(UserError):
-            self.env['account.move.line']._invalidate_cache()
             self.wizard.create_entries()
         self.assertTrue(self.wizard.display_amount)
 
@@ -162,4 +168,35 @@ class TestAccruedSaleOrders(TestSaleCommon):
             {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 5000},
             {'account_id': self.alt_inc_account.id, 'debit': 0, 'credit': 1000},
             {'account_id': self.wizard.account_id.id, 'debit': 6000, 'credit': 0},
+        ])
+
+    def test_accrued_entries_with_discount(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'price_unit': 10.0,
+                    'tax_ids': False,
+                    'discount': 10,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order.order_line.qty_delivered = 10
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='sale.order',
+            active_ids=sale_order.ids,
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today(),
+        })
+        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 90.0, 'credit': 0.0},
         ])

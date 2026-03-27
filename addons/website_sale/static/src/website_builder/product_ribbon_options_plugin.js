@@ -8,6 +8,13 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ProductsRibbonOption } from "./product_ribbon_options";
 
+export class ProductHeaderShopOption2 extends ProductsRibbonOption {
+    static name = 'ProductsRibbonOption';
+    static selector = "#products_grid .oe_product";
+    static editableOnly = false;
+    static groups = ['website.group_website_designer'];
+}
+
 class ProductsRibbonOptionPlugin extends Plugin {
     static id = 'productsRibbonOptionPlugin';
     static dependencies = ['history'];
@@ -21,23 +28,15 @@ class ProductsRibbonOptionPlugin extends Plugin {
         '_setRibbon',
         'setProductTemplateID',
         'getProductTemplateID',
-        'addProductTemplatesRibbons'
+        'addProductTemplatesRibbons',
+        'loadInfo',
+        'getCount',
     ];
     count = reactive({ value: 0 });
 
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC_NEXT, {
-                OptionComponent: ProductsRibbonOption,
-                name: 'ProductsRibbonOption',
-                props: {
-                    loadInfo: this.loadInfo.bind(this),
-                    count: this.count,
-                },
-                selector: "#products_grid .oe_product",
-                editableOnly: false,
-                groups: ['website.group_website_designer'],
-            }),
+            withSequence(SNIPPET_SPECIFIC_NEXT, ProductHeaderShopOption2),
         ],
         builder_actions: {
             SetRibbonAction,
@@ -52,6 +51,25 @@ class ProductsRibbonOptionPlugin extends Plugin {
         this.styleClasses = { ribbon: "o_wsale_ribbon", tag: "o_wsale_badge" };
         this.productTemplatesRibbons = [];
         this.editMode = false;
+    }
+    getCount() {
+        return this.count;
+    }
+    /**
+     * Get the server ID for a ribbon.
+     *
+     * Resolves the ID from `originalRibbons` or `ribbonsObject`. Falls back to
+     * the provided `ribbonId` if no mapped server ID is found.
+     *
+     * @param {number} ribbonId
+     * @returns {number}
+     */
+    getServerId(ribbonId) {
+        return (
+            this.originalRibbons?.[ribbonId]?.serverId ??
+            this.ribbonsObject?.[ribbonId]?.serverId ??
+            ribbonId
+        );
     }
 
     async loadInfo() {
@@ -116,36 +134,21 @@ class ProductsRibbonOptionPlugin extends Plugin {
         });
 
         const createdRibbonProms = [];
-        let createdRibbonIds;
         if (created.length > 0) {
             createdRibbonProms.push(
                 this.services.orm.create(
                     'product.ribbon',
-                    created.map((ribbon) => {
-                        ribbon = Object.assign({}, ribbon);
-                        this.originalRibbons[ribbon.id] = ribbon;
-                        delete ribbon.id;
-                        return ribbon;
-                    })
-                ).then((ids) => (createdRibbonIds = ids))
+                    created.map(({ id, serverId, ...ribbon }) => ribbon)
+                ).then((ids) => {
+                    // Map each created ribbon's local ID to its server ID
+                    created.forEach((ribbon, index) => {
+                        ribbon.serverId = ids[index];
+                        this.originalRibbons[ribbon.id] = Object.assign({}, ribbon);
+                    });
+                })
             );
         }
         await Promise.all(createdRibbonProms);
-
-        const localToServer = Object.assign(
-            this.ribbonsObject,
-            Object.fromEntries(
-                created.map((ribbon, index) => [
-                    ribbon.id,
-                    { ...this.ribbonsObject[ribbon.id], id: createdRibbonIds[index] },
-                ])
-            ),
-            {
-                false: {
-                    id: "",
-                },
-            }
-        );
 
         const proms = [];
         for (const ribbon of modified) {
@@ -156,13 +159,14 @@ class ProductsRibbonOptionPlugin extends Plugin {
                 position: ribbon.position,
                 style: ribbon.style,
             };
-            const serverId = localToServer[ribbon.id]?.id || ribbon.id;
+            const serverId = this.getServerId(ribbon.id);
             proms.push(this.services.orm.write('product.ribbon', [serverId], ribbonData));
-            this.originalRibbons[ribbon.id] = Object.assign({}, ribbon);
+            this.originalRibbons[ribbon.id] = { ...ribbon, serverId };
         }
 
         if (deletedIds.length > 0) {
-            proms.push(this.services.orm.unlink('product.ribbon', deletedIds));
+            const serverIds = deletedIds.map((id) => this.getServerId(id));
+            proms.push(this.services.orm.unlink("product.ribbon", serverIds));
         }
 
         await Promise.all(proms);
@@ -178,18 +182,17 @@ class ProductsRibbonOptionPlugin extends Plugin {
         // reduce RPCs
         const ribbonTemplates = {};
         for (const [templateId, ribbonId] of Object.entries(finalTemplateRibbons)) {
-            const rid = ribbonTemplates[ribbonId] ||= [];
-            rid.push(parseInt(templateId));
+            const serverRibbonId = this.getServerId(ribbonId);
+            const templates = (ribbonTemplates[serverRibbonId] ||= []);
+            templates.push(parseInt(templateId));
         }
 
         const promises = [];
-        for (const ribbonId in ribbonTemplates) {
-            const templateIds = ribbonTemplates[ribbonId];
-            const parsedId = parseInt(ribbonId);
-            const validRibbonId = currentIds.includes(parsedId) ? ribbonId : false;
+        for (const [ribbonIdStr, templateIds] of Object.entries(ribbonTemplates)) {
+            const ribbonId = parseInt(ribbonIdStr) || false;
             promises.push(
                 this.services.orm.write('product.template', templateIds, {
-                    website_ribbon_id: localToServer[validRibbonId]?.id || false,
+                    website_ribbon_id: ribbonId,
                 })
             );
         }
@@ -201,7 +204,7 @@ class ProductsRibbonOptionPlugin extends Plugin {
      * Deletes a ribbon.
      *
      */
-    deleteRibbon(editingElement) {
+    async deleteRibbon(editingElement) {
         const ribbonId = parseInt(editingElement.querySelector('.o_ribbons')?.dataset.ribbonId);
         if (this.ribbonsObject[ribbonId]) {
             const ribbonIndex = this.ribbons.findIndex(ribbon => ribbon.id === ribbonId);
@@ -236,13 +239,13 @@ class ProductsRibbonOptionPlugin extends Plugin {
                 templateId = templateElement ? parseInt(templateElement.getAttribute('data-oe-id')) : null;
             }
             if (templateId && !isNaN(templateId)) {
-                this.productTemplatesRibbons.push({
+                this.addProductTemplatesRibbons({
                     templateId: templateId,
                     ribbonId: false,
                 });
             }
         });
-        this._saveRibbons();
+        await this._saveRibbons();
     }
     getProductTemplateID() {
         return this.productTemplateID;
@@ -250,8 +253,24 @@ class ProductsRibbonOptionPlugin extends Plugin {
     setProductTemplateID(id) {
         this.productTemplateID = id
     }
-    addProductTemplatesRibbons(value) {
-        this.productTemplatesRibbons.push(value);
+    /**
+     * Add or update a product template's ribbon assignment.
+     * Ensures each template has only one ribbon entry.
+     *
+     * @param {Object} params
+     * @param {number} params.templateId - Product template ID
+     * @param {number|string|false} params.ribbonId - Ribbon ID to assign
+     */
+    addProductTemplatesRibbons({ templateId, ribbonId }) {
+        // Ensure one entry per template
+        const index = this.productTemplatesRibbons.findIndex(
+            (entry) => entry.templateId === templateId
+        );
+        if (index !== -1) {
+            this.productTemplatesRibbons[index].ribbonId = ribbonId;
+        } else {
+            this.productTemplatesRibbons.push({ templateId, ribbonId });
+        }
     }
     getRibbonsObject() {
         return this.ribbonsObject;
@@ -323,18 +342,19 @@ class CreateRibbonAction extends BuilderAction {
         this.ribbonOptions = this.dependencies.productsRibbonOptionPlugin
     }
     apply({ editingElement }) {
-        const productTemplateId = editingElement
-            .querySelector('[data-oe-model="product.template"]')
-            .getAttribute('data-oe-id')
-        this.ribbonOptions.setProductTemplateID(parseInt(
-            productTemplateId
-        ));
+        const productTemplateId = parseInt(
+            editingElement
+                .querySelector('[data-oe-model="product.template"]')
+                .getAttribute('data-oe-id')
+        );
+        this.ribbonOptions.setProductTemplateID(productTemplateId);
         const ribbonId = Date.now();
         this.ribbonOptions.addProductTemplatesRibbons({
             templateId: productTemplateId,
             ribbonId: ribbonId,
         });
         const ribbon = reactive({
+            serverId: null,
             id: ribbonId,
             name: 'Ribbon Name',
             bg_color: '',
@@ -372,7 +392,7 @@ class ModifyRibbonAction extends BuilderAction {
         }
         return this.ribbonOptions.getRibbonsObject()[ribbonId][params.mainParam] === value;
     }
-    apply({ editingElement, params, value }) {
+    async apply({ editingElement, params, value }) {
         const isPreviewMode = this.dependencies.history.getIsPreviewing();
         const ribbonEl = editingElement.querySelector('.o_ribbons')
         const setting = params.mainParam;
@@ -380,7 +400,11 @@ class ModifyRibbonAction extends BuilderAction {
         const previousRibbon = this.ribbonOptions.getRibbonsObject()[ribbonId];
         this.ribbonOptions.setRibbonObject(ribbonId, {...previousRibbon, [setting]: value});
         this.ribbonOptions.setRibbon(ribbonId, {...previousRibbon, [setting]: value});
-        const res = this.ribbonOptions._setRibbon(ribbonEl, {...previousRibbon, [setting]: value}, !isPreviewMode);
+        const res = await this.ribbonOptions._setRibbon(
+            ribbonEl,
+            { ...previousRibbon, [setting]: value },
+            !isPreviewMode
+        );
         if(isPreviewMode){
             this.ribbonOptions.setRibbonObject(ribbonId, previousRibbon)
             this.ribbonOptions.setRibbon(ribbonId, previousRibbon)
@@ -391,6 +415,9 @@ class ModifyRibbonAction extends BuilderAction {
 class DeleteRibbonAction extends BuilderAction {
     static id = 'deleteRibbon';
     static dependencies = ['productsRibbonOptionPlugin'];
+    setup() {
+        this.canTimeout = false;
+    }
     async apply({ editingElement }) {
         const save = await new Promise((resolve) => {
             this.services.dialog.add(ConfirmationDialog, {

@@ -2,12 +2,14 @@
 
 import json
 
+from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
 
 from unittest.mock import patch, Mock
 from odoo import tests
 from odoo.tools.misc import mute_logger, submap
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.http_routing.tests.common import MockRequest
 
 
 @tests.tagged('post_install', '-at_install')
@@ -193,3 +195,51 @@ class TestControllers(tests.HttpCase):
         res = self.url_open('/website/action/my_test_action')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
+
+    def test_07_get_alt_images(self):
+        test_view = self.env["ir.ui.view"].create({
+            "name": "Image Template Test View",
+            "type": "qweb",
+            "arch_db": """
+                <template>
+                    <div>
+                        <img t-att-src="dynamic_source1" />
+                        <img t-att-src="dynamic_source2" alt="Dynamic img" />
+                        <img t-attf-src="/path/{{variable}}" />
+                        <img src="/static/image1.jpg" alt="Static 1" />
+                        <img src="/static/image2.jpg" alt="Static 2" role="presentation" />
+                        <img src="/static/image3.png" />
+                        <img src="/static/image4.png" role="presentation" />
+                    </div>
+                </template>
+            """,
+        })
+        models = [{"model": "ir.ui.view", "id": test_view.id, "field": "arch"}]
+
+        with MockRequest(self.env, website=self.env.ref('website.default_website')):
+            result = Website().get_alt_images(models)
+            parsed_result = json.loads(result)
+
+            expected_srcs = ["/static/image1.jpg", "/static/image3.png", "/static/image4.png"]
+            actual_srcs = [img["src"] for img in parsed_result]
+
+            self.assertEqual(
+                expected_srcs,
+                actual_srcs,
+                "XPath should filter out dynamic images, include only static",
+            )
+
+    def test_website_force_domain_redirect(self):
+        """
+        Test that /website/force/{website.id} redirects domain correctly
+        """
+        self.env.user.group_ids += self.env.ref('website.group_multi_website')
+        website = self.env['website'].search([], limit=1)
+        website.domain = self.base_url()
+        with MockRequest(self.env, website=website, url_root='http://example.com') as mock_request:
+            mock_request.httprequest.environ = EnvironBuilder(base_url='http://example.com').get_environ()
+            redirect = Website().website_force(website_id=website.id, path='/?a=b&c=d')
+            self.assertEqual(
+                redirect.headers['Location'],
+                f'{self.base_url()}/website/force/{website.id}?isredir=1&path=%2F%3Fa%3Db%26c%3Dd'
+            )

@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_signup
+# * auth_signup
 #
 # Translators:
 # Martin Trigaux, 2022
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:05+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
+"auth_signup/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,11 +23,12 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "+1 650-123-4567"
-msgstr ""
+msgstr "+1 650-123-4567"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -41,12 +43,12 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "--<br/>Mitchell Admin"
-msgstr ""
+msgstr "--<br/>Mitchell Admin"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">Ваш обліковий запис</span><br/>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -106,6 +108,60 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; "
+"width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-"
+"value=\"ctx.get('invited_users', [])\"/>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Очікування запрошення\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Шановний <t t-out=\"object.name or ''\">Mitchell "
+"Admin</t>,<br/> <br/>\n"
+"                        Ви додали наступних користувачів до своєї бази "
+"даних, але вони ще не зареєструвалися:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-"
+"as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or "
+"''\">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        Зверніться до них, щоб вони могли отримати доступ до "
+"вашої бази даних і почати з вами працювати.\n"
+"                        <br/><br/>\n"
+"                        Гарного дня!<br/>\n"
+"                        --<br/>Команда <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -472,18 +528,14 @@ msgid ""
 "                    <t t-out=\"object.company_id.phone or ''\">+1 "
 "650-123-4567</t>\n"
 "                    <t t-if=\"object.company_id.email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % "
-"{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</"
-"t></a>\n"
+"                        | <a t-attf-href=\"mailto:{{object.company_id.email}}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
-"                        | <a t-attf-href=\"'%s' % "
-"{{ object.company_id.website }}\" style=\"text-decoration:none; color: "
-"#454748;\">\n"
-"                            <t t-out=\"object.company_id.website or "
-"''\">http://www.example.com</t>\n"
-"                        </a>\n"
+"                        | <a t-att-href=\"object.company_id.website\" "
+"style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -511,13 +563,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "A reset password link was sent by email"
-msgstr ""
+msgstr "Посилання для скидання паролю було надіслане поштою"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "A signup link was sent by email"
-msgstr ""
+msgstr "Посилання реєстрації було надіслано поштою"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -545,7 +597,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Change password"
-msgstr ""
+msgstr "Пароль"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -574,6 +626,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"Не вдалося зв’язатися з поштовим сервером, перевірте конфігурацію сервера "
+"вихідної пошти"
 
 #. module: auth_signup
 #. odoo-python
@@ -600,7 +654,7 @@ msgstr "Клієнтський обліковий запис"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
-msgstr ""
+msgstr "Шановний"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -613,7 +667,7 @@ msgstr "Права доступу за замовчуванням"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Назва для відображення"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -624,7 +678,7 @@ msgstr "Не маєте облікового запису?"
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Email"
-msgstr ""
+msgstr "Ел. пошта"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -648,7 +702,7 @@ msgstr "Маршрутизація HTTP"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -656,6 +710,9 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"Якщо ви цього не очікуєте, можете сміливо ігнорувати цей електронний лист."
+"<br/><br/>\n"
+"                                Дякуємо,"
 
 #. module: auth_signup
 #. odoo-python
@@ -671,7 +728,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -681,18 +738,18 @@ msgstr "Дозвольте вашим клієнтам увійти, щоби п
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "Для цього логіна знайдено кілька облікових записів."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Name"
-msgstr ""
+msgstr "Назва"
 
 #. module: auth_signup
 #. odoo-python
@@ -709,7 +766,7 @@ msgstr "Логін не введено."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -747,7 +804,7 @@ msgstr "Паролі не збігаються; будь ласка, введі�
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Powered by"
-msgstr ""
+msgstr "Зроблено"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
@@ -808,7 +865,7 @@ msgstr "Надіслано користувачеві порталу, який �
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New Portal Sign Up"
-msgstr ""
+msgstr "Налаштування: Новий вхід на портал"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
@@ -829,7 +886,7 @@ msgstr "Налаштування: нагадування незареєстро�
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Sign Up"
-msgstr ""
+msgstr "Зареєструватися"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -852,7 +909,7 @@ msgstr "Реєстрація незапрошених користувачів �
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
 msgid "Signup token '%s' is not valid or expired"
-msgstr ""
+msgstr "Токен входу '%s' недійсний або протермінований"
 
 #. module: auth_signup
 #. odoo-python
@@ -895,6 +952,8 @@ msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
 msgstr ""
+"Під час спроби доставити вашу електронну пошту сталася помилка, перевірте "
+"конфігурацію"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -942,22 +1001,22 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "YourCompany"
-msgstr ""
+msgstr "YourCompany"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "hours:<br/>"
-msgstr ""
+msgstr "годин:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "http://www.example.com"
-msgstr ""
+msgstr "http://www.example.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "info@yourcompany.com"
-msgstr ""
+msgstr "info@yourcompany.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup

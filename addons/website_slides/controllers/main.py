@@ -1390,7 +1390,6 @@ class WebsiteSlides(WebsiteProfile):
             })
 
             if not slide.video_source_type:
-                slide.unlink()
                 return {'error': _("Could not find your video. Please check if your link is correct and if the video can be accessed.")}
 
             if slide.video_source_type == 'youtube':
@@ -1534,10 +1533,16 @@ class WebsiteSlides(WebsiteProfile):
             slide = request.env['slide.slide'].browse(slide_id)
             if not slide.exists() or not slide.sudo().active:
                 raise werkzeug.exceptions.NotFound()
+            # redirection to channel's homepage for category slides
+            if slide.sudo().is_category:
+                return request.redirect(slide.channel_id.website_url)
 
             referer_url = request.httprequest.headers.get('Referer', '')
             if is_external_embed:
                 slide.sudo()._embed_increment(referer_url)
+
+            if not slide.has_access('read'):
+                return request.render('website_slides.embed_slide_forbidden', {})
 
             values = self._get_slide_detail(slide)
             values['page'] = page

@@ -97,7 +97,7 @@ test("Hide product name if its not translated", async () => {
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
 });
 
 test("If translated product name already in the SOL name, should not hide the translated product name", async () => {
@@ -120,7 +120,7 @@ test("If translated product name already in the SOL name, should not hide the tr
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue(
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText(
         [translatedProductName, "A description"].join("\n")
     );
 });
@@ -146,11 +146,11 @@ test("Editing the description shouldn't show the translated product name", async
         resModel: "sale.order",
         resId: soId,
     });
-
+    await contains(".o_field_product_label_section_and_note_cell").click();
     await contains(".o_field_product_label_section_and_note_cell textarea").edit("A description");
     await clickSave();
 
-    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
     expect(sol.name).toBe([translatedProductName, "A description"].join("\n"));
 });
 
@@ -174,7 +174,7 @@ test("No description should be shown if there does not exist one apart from the 
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell textarea").not.toBeVisible();
+    expect(".o_field_product_label_section_and_note_cell .o_input").not.toBeVisible();
 });
 
 test("No description should be shown if there does not exist one apart from the translated product name", async () => {
@@ -197,5 +197,5 @@ test("No description should be shown if there does not exist one apart from the 
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell textarea").not.toBeVisible();
+    expect(".o_field_product_label_section_and_note_cell .o_input").not.toBeVisible();
 });

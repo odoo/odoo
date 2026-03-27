@@ -3,16 +3,72 @@ import { imageUrl } from "@web/core/utils/urls";
 import { Base } from "./related_models";
 import { getImageDataUrl } from "@point_of_sale/utils";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { PosOrderlineAccounting } from "./accounting/pos_order_line_accounting";
+import { PosOrderAccounting } from "./accounting/pos_order_accounting";
+
 const CONSOLE_COLOR = "#F5B427";
 
 export class PosConfig extends Base {
     static pythonModel = "pos.config";
+    static excludedLazyGetters = [
+        "hasCashRounding",
+        "hasGlobalRounding",
+        "displayBigTrackingNumber",
+        "displayTrackingNumber",
+        "receiptLogoUrl",
+        "receiptCompanyLogoUrl",
+    ];
 
     initState() {
         super.initState();
         this.uiState = {};
+        this.handlePricesComputation();
     }
 
+    /**
+     * Since order lines prices needs to be computed globally we need to recompute the whole
+     * order prices each time an order line is created or updated.
+     */
+    handlePricesComputation() {
+        const lineModel = this.models["pos.order.line"];
+        const orderModel = this.models["pos.order"];
+
+        const updateLinePrices = (ids, fields) => {
+            const fieldTargetted = fields?.some((field) =>
+                PosOrderlineAccounting.accountingFields.has(field)
+            );
+
+            if (fieldTargetted || !fields) {
+                // Orders needs to be read from raw in case of not fully setuped records
+                const lines = lineModel.readMany(ids);
+                const orderIds = new Set(lines.map((l) => l.raw.order_id));
+                const orders = orderModel.readMany([...orderIds]);
+                orders.forEach((order) => order.triggerRecomputeAllPrices());
+            }
+        };
+
+        const updateOrderPrices = (id, fields) => {
+            const fieldTargetted = fields?.some((field) =>
+                PosOrderAccounting.accountingFields.has(field)
+            );
+
+            if (fieldTargetted) {
+                const order = orderModel.get(id);
+                order?.triggerRecomputeAllPrices();
+            }
+        };
+
+        lineModel.addEventListener("create", (data) => updateLinePrices(data.ids));
+        lineModel.addEventListener("update", (data) => updateLinePrices([data.id], data.fields));
+        orderModel.addEventListener("update", (data) => updateOrderPrices(data.id, data.fields));
+    }
+
+    get hasCashRounding() {
+        return this.cash_rounding && this.only_round_cash_method;
+    }
+    get hasGlobalRounding() {
+        return this.cash_rounding && !this.only_round_cash_method;
+    }
     get canInvoice() {
         return Boolean(this.raw.invoice_journal_id);
     }
@@ -80,6 +136,17 @@ export class PosConfig extends Base {
             width: 256,
             height: 256,
         });
+    }
+
+    get availablePricelists() {
+        if (!this.use_pricelist) {
+            return [];
+        }
+        const available_pricelists = new Set(this.available_pricelist_ids);
+        if (this.pricelist_id) {
+            available_pricelists.add(this.pricelist_id);
+        }
+        return Array.from(available_pricelists);
     }
 }
 

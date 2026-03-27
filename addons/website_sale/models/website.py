@@ -9,7 +9,7 @@ from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import file_open, ormcache
@@ -48,8 +48,8 @@ class Website(models.Model):
         template_id = self.env['ir.config_parameter'].sudo().get_param(
             'sale.default_confirmation_template'
         )
-        default_template = template_id and self.env['mail.template'].browse(int(template_id))
-        if default_template.exists():
+        default_template = template_id and self.env['mail.template'].browse(int(template_id)).exists()
+        if default_template:
             return default_template
         return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
 
@@ -247,7 +247,12 @@ class Website(models.Model):
 
     prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
 
-    enabled_gmc_src = fields.Boolean(string="Google Merchant Center")
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center",
+        default=lambda self: self.env['res.groups']._is_feature_enabled(
+            'website_sale.group_product_feed',
+        ),
+    )
 
     currency_id = fields.Many2one(
         string="Default Currency",
@@ -271,7 +276,7 @@ class Website(models.Model):
         for website in self:
             website = website.with_company(website.company_id)
             ProductPricelist = website.env['product.pricelist']  # with correct company in env
-            website.pricelist_ids = ProductPricelist.sudo().search(
+            website.pricelist_ids = ProductPricelist.sudo().search_fetch(
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
@@ -783,12 +788,19 @@ class Website(models.Model):
         SaleOrderSudo = self.env['sale.order'].sudo()
 
         sale_order_sudo = SaleOrderSudo
-        partner_sudo = self.env.user.partner_id
         if CART_SESSION_CACHE_KEY in request.session:
             sale_order_sudo = SaleOrderSudo.browse(request.session[CART_SESSION_CACHE_KEY])
+
+            try:
+                # fetch the record field or raise a missingError
+                # avoids a query with the use of exists()
+                sale_order_sudo and sale_order_sudo.state
+            except MissingError:
+                self.sale_reset()
+                sale_order_sudo = SaleOrderSudo
+
             if sale_order_sudo and (
-                not sale_order_sudo.exists()
-                or sale_order_sudo.state != 'draft'
+                sale_order_sudo.state != 'draft'
                 or sale_order_sudo.get_portal_last_transaction().state in (
                     'pending', 'authorized', 'done'
                 )
@@ -802,20 +814,21 @@ class Website(models.Model):
             if (
                 sale_order_sudo
                 and not self.env.user._is_public()
-                and partner_sudo.id != sale_order_sudo.partner_id.id
+                and self.env.user.partner_id.id != sale_order_sudo.partner_id.id
                 and not request.env.cr.readonly
             ):
-                sale_order_sudo._update_address(partner_sudo.id, ['partner_id'])
+                sale_order_sudo._update_address(self.env.user.partner_id.id, ['partner_id'])
         elif (
             self.env.user
             and not self.env.user._is_public()
             # If the company of the partner doesn't allow them to buy from this website, updating
             # the cart customer would raise because of multi-company checks.
             # No abandoned cart should be returned in this situation.
-            and partner_sudo.filtered_domain(
+            and self.env.user.partner_id.filtered_domain(
                 self.env['res.partner']._check_company_domain(self.company_id.id)
             )
         ):  # Search for abandonned cart.
+            partner_sudo = self.env.user.partner_id
             abandonned_cart_sudo = SaleOrderSudo.search([
                 ('partner_id', '=', partner_sudo.id),
                 ('website_id', '=', self.id),
@@ -1055,10 +1068,25 @@ class Website(models.Model):
                 return '96px'
         return '64px'
 
+    def _get_basic_feed_product_domain(self):
+        return Domain.AND([
+            Domain('is_published', '=', True),
+            Domain('type', 'in', ('consu', 'combo')),
+            self.website_domain(),
+        ])
+
+    def _default_feed_is_valid(self):
+        self.ensure_one()
+        product_count = self.env['product.product'].search_count(
+            self._get_basic_feed_product_domain(), limit=const.PRODUCT_FEED_SOFT_LIMIT + 1
+        )
+        return product_count <= const.PRODUCT_FEED_SOFT_LIMIT
+
     def _populate_product_feeds(self):
         """Populate product feeds for the website with default values."""
-        for website in self:
-            website.env['product.feed'].create({
+        self.env['product.feed'].create([
+            {
                 'name': website.env._("GMC 1"),
                 'website_id': website.id,
-            })
+            } for website in self.filtered(lambda w: w._default_feed_is_valid())
+        ])

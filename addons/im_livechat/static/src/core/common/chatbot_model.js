@@ -82,11 +82,10 @@ export class Chatbot extends Record {
         });
         this.store.insert(store_data);
         this.thread.messages.add(message_id);
+        this.thread.livechat_end_dt = false;
         if (this.currentStep) {
             this.currentStep.isLast = false;
-            this.thread.livechat_end_dt = false;
         }
-        this.start();
     }
 
     /**
@@ -133,8 +132,7 @@ export class Chatbot extends Record {
 
     get completed() {
         return (
-            (this.currentStep?.isLast &&
-                (!this.currentStep.expectAnswer || this.currentStep?.completed)) ||
+            this.currentStep?.isLast ||
             this.currentStep?.operatorFound ||
             this.thread.livechat_end_dt
         );
@@ -148,7 +146,7 @@ export class Chatbot extends Record {
      * Go to the next step of the chatbot, fetch it if needed.
      */
     async _goToNextStep() {
-        if (!this.thread || this.currentStep?.isLast) {
+        if (!this.thread) {
             return;
         }
         if (this.steps.at(-1)?.eq(this.currentStep)) {
@@ -159,8 +157,7 @@ export class Chatbot extends Record {
                 data_id: dataRequest.id,
             });
             await dataRequest._resultDef;
-            if (!dataRequest.chatbot_step) {
-                this.currentStep.isLast = true;
+            if (this.currentStep.isLast) {
                 return;
             }
             this.steps.push(dataRequest.chatbot_step);

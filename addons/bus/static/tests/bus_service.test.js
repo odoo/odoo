@@ -204,18 +204,26 @@ test("pass last notification id on initialization", async () => {
 test("websocket disconnects when user logs out", async () => {
     addBusServiceListeners(
         ["BUS:CONNECT", () => asyncStep("BUS:CONNECT")],
+        ["BUS:RECONNECT", () => asyncStep("BUS:CONNECT")],
         ["BUS:DISCONNECT", () => asyncStep("BUS:DISCONNECT")]
     );
-    patchWithCleanup(session, { user_id: null });
+    patchWithCleanup(session, { user_id: null, db: "openerp" });
     patchWithCleanup(user, { userId: 1 });
     const firstTabEnv = await makeMockEnv();
-    startBusService(firstTabEnv);
+    await startBusService(firstTabEnv);
     await waitForSteps(["BUS:CONNECT"]);
-    patchWithCleanup(user, { userId: null });
+    // second tab connects to the worker, omitting the DB name. Consider same DB.
+    patchWithCleanup(session, { db: undefined });
     restoreRegistry(registry);
     const env2 = await makeMockEnv(null, { makeNew: true });
-    startBusService(env2);
-    await waitForSteps(["BUS:DISCONNECT"]);
+    await startBusService(env2);
+    await waitForSteps([]);
+    // third tab connects to the worker after disconnection: userId is now false.
+    patchWithCleanup(user, { userId: false });
+    restoreRegistry(registry);
+    const env3 = await makeMockEnv(null, { makeNew: true });
+    await startBusService(env3);
+    await waitForSteps(["BUS:DISCONNECT", "BUS:CONNECT"]);
 });
 
 test("websocket reconnects upon user log in", async () => {
@@ -462,7 +470,8 @@ test("show notification when version is outdated", async () => {
     await waitForSteps(["Worker deactivated due to an outdated version.", "BUS:DISCONNECT"]);
     await runAllTimers();
     await waitFor(".o_notification", {
-        text: "Save your work and refresh to get the latest updates and avoid potential issues.",
+        contains:
+            "Save your work and refresh to get the latest updates and avoid potential issues.",
     });
     await contains(".o_notification button:contains(Refresh)").click();
     await waitForSteps(["reload"]);

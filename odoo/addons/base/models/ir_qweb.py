@@ -363,6 +363,7 @@ from __future__ import annotations
 
 import base64
 import fnmatch
+import glob
 import io
 import logging
 import math
@@ -384,6 +385,7 @@ from copy import deepcopy
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
+from os.path import join as opj
 from pathlib import Path
 from psycopg2.extensions import TransactionRollbackError
 from psycopg2.errors import ReadOnlySqlTransaction
@@ -480,6 +482,10 @@ T_CALL_SLOT = '0'
 
 ETREE_TEMPLATE_REF = count()
 
+# Only allow a javascript scheme if it is followed by [ ][window.]history.back()
+MALICIOUS_SCHEMES = re.compile(r'javascript:(?!( ?)((window\.)?)history\.back\(\)$)', re.I).findall
+
+
 def _id_or_xmlid(ref):
     try:
         return int(ref)
@@ -530,13 +536,14 @@ class QWebError(Exception):
 
 
 class QWebErrorInfo:
-    def __init__(self, error: str, ref_name: str | int | None, ref: int | None, path: str | None, element: str | None, source: list[tuple[int | str, str, str]]):
+    def __init__(self, error: str, ref_name: str | int | None, ref: int | None, path: str | None, element: str | None, source: list[tuple[int | str, str, str]], surrounding: str):
         self.error = error
         self.template = ref_name
         self.ref = ref
         self.path = path
         self.element = element
         self.source = source
+        self.surrounding = surrounding
 
     def __str__(self):
         info = [self.error]
@@ -551,6 +558,8 @@ class QWebErrorInfo:
         if self.source:
             source = '\n          '.join(str(v) for v in self.source)
             info.append(f'From: {source}')
+        if self.surrounding:
+            info.append(f'QWeb generated code:\n{self.surrounding}')
         return '\n    '.join(info)
 
 
@@ -846,6 +855,8 @@ class IrQweb(models.AbstractModel):
             raise
 
     def _get_error_info(self, error, stack: list[QwebStackFrame], frame: QwebStackFrame) -> QWebErrorInfo:
+        no_id_ref = 'etree._Element'
+
         path = None
         html = None
         loaded_codes = self.env.context['__qweb_loaded_codes']
@@ -855,7 +866,7 @@ class IrQweb(models.AbstractModel):
                 options = self.env.context['__qweb_loaded_options'].get(frame.params.view_ref) or {}
             ref = options.get('ref') or frame.params.view_ref  # The template can have a null reference, for example for a provided etree.
             ref_name = options.get('ref_name') or None
-            code = loaded_codes.get(frame.params.view_ref) or loaded_codes.get(False)
+            code = loaded_codes.get(frame.params.view_ref) or loaded_codes.get(no_id_ref)
             if ref == self.env.context['_qweb_error_path_xml'][0]:
                 path = self.env.context['_qweb_error_path_xml'][1]
                 html = self.env.context['_qweb_error_path_xml'][2]
@@ -864,23 +875,25 @@ class IrQweb(models.AbstractModel):
             options = stack[-2].options or {}  # The compilation may have failed before the compilation options were loaded.
             ref = options.get('ref')
             ref_name = options.get('ref_name')
-            code = loaded_codes.get(ref) or loaded_codes.get(False)
+            code = loaded_codes.get(ref) or loaded_codes.get(no_id_ref)
             if frame.params.path_xml:
                 path = frame.params.path_xml[1]
                 html = frame.params.path_xml[2]
 
+        source_file_ref = None if ref == no_id_ref else ref
         line_nb = 0
         trace = traceback.format_exc()
         for error_line in reversed(trace.split('\n')):
-            if f'File "<{ref}>"' in error_line or (ref is None and 'File "<' in error_line):
+            if f'File "<{source_file_ref}>"' in error_line or (ref is None and 'File "<' in error_line):
                 line_function = error_line.split(', line ')[1]
                 line_nb = int(line_function.split(',')[0])
                 break
 
         source = [info.params.path_xml for info in stack if info.params.path_xml]
+        code_lines = (code or '').split('\n')
 
         found = False
-        for code_line in reversed((code or '').split('\n')[:line_nb]):
+        for code_line in reversed(code_lines[:line_nb]):
             if code_line.startswith('def '):
                 break
             match = re.match(r'\s*# element: (.*) , (.*)', code_line)
@@ -900,7 +913,24 @@ class IrQweb(models.AbstractModel):
         if path:
             source.append((ref, path, html))
 
-        return QWebErrorInfo(f'{error.__class__.__name__}: {error}', ref if ref_name is None else ref_name, ref, path, html, source)
+        surrounding = None
+        if self.env.context.get('dev_mode') and line_nb:
+            if html and ' t-if=' in html and ' if ' in '\n'.join(code_lines[line_nb - 2:line_nb - 1]):
+                line_nb -= 1
+            previous_lines = '\n'.join(code_lines[max(line_nb - 25, 0):line_nb - 1])
+            line = code_lines[line_nb - 1]
+            next_lines = '\n'.join(code_lines[line_nb:line_nb + 5])
+            indent = re.search(r"^(\s*)", line).group(0)
+            surrounding = textwrap.indent(
+                textwrap.dedent(
+                    f"{previous_lines}\n"
+                    f"{indent}########### Line triggering the error ############\n{line}\n"
+                    f"{indent}##################################################\n{next_lines}"
+                ),
+                ' ' * 8
+            )
+
+        return QWebErrorInfo(f'{error.__class__.__name__}: {error}', ref if ref_name is None else ref_name, ref, path, html, source, surrounding)
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
@@ -1680,7 +1710,7 @@ class IrQweb(models.AbstractModel):
         """ Compile a purely static element into a list of string. """
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
-            attrib = self._post_processing_att(el.tag, el.attrib)
+            attrib = self._post_processing_att(el.tag, {**el.attrib, '__is_static_node': True})
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
@@ -1711,7 +1741,7 @@ class IrQweb(models.AbstractModel):
                 else:
                     attrib[name] = value
 
-            attrib = self._post_processing_att(el.tag, attrib)
+            attrib = self._post_processing_att(el.tag, {**attrib, '__is_static_node': True})
 
             # Update the dict of inherited namespaces before continuing the recursion. Note:
             # since `compile_context['nsmap']` is a dict (and therefore mutable) and we do **not**
@@ -2014,7 +2044,10 @@ class IrQweb(models.AbstractModel):
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
             elif 't-valuef.translate' in el.attrib:
                 exprf = el.attrib.pop('t-valuef.translate')
-                code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
+                if self.env.context.get('edit_translations'):
+                    code.append(indent_code(f"values[{varname!r}] = Markup({self._compile_format(exprf)})", level))
+                else:
+                    code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
             elif varname[0] == '{':
                 code.append(indent_code(f"values.update({self._compile_expr(varname)})", level))
             else:
@@ -2549,10 +2582,17 @@ class IrQweb(models.AbstractModel):
 
         # args to values
         for key in list(el.attrib):
-            if key.endswith(('.f', '.translate')):
-                name = key.removesuffix(".f").removesuffix(".translate")
+            if key.endswith('.f'):
+                name = key.removesuffix(".f")
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
+            elif key.endswith('.translate'):
+                name = key.removesuffix(".f").removesuffix(".translate")
+                value = el.attrib.pop(key)
+                if self.env.context.get('edit_translations'):
+                    code.append(indent_code(f"t_call_values[{name!r}] = Markup({self._compile_format(value)})", level))
+                else:
+                    code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
             elif not key.startswith('t-'):
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"t_call_values[{key!r}] = {self._compile_expr(value)}", level))
@@ -2668,6 +2708,8 @@ class IrQweb(models.AbstractModel):
 
             @returns dict
         """
+        if not atts.pop('__is_static_node', False) and (href := atts.get('href')) and MALICIOUS_SCHEMES(str(href)):
+            atts['href'] = ""
         return atts
 
     def _get_field(self, record, field_name, expression, tagName, field_options, values):
@@ -2873,7 +2915,11 @@ class IrQweb(models.AbstractModel):
         """
         Returns the list of bundles to pregenerate.
         """
+        js_views_bundles, css_views_bundles = self._get_bundles_from_views()
+        lazy_bundles = self._get_lazy_bundles_from_js()
+        return (js_views_bundles | lazy_bundles, css_views_bundles | lazy_bundles)
 
+    def _get_bundles_from_views(self):
         views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
         js_bundles = set()
         css_bundles = set()
@@ -2887,6 +2933,22 @@ class IrQweb(models.AbstractModel):
                 if css:
                     css_bundles.add(asset)
         return (js_bundles, css_bundles)
+
+    def _get_lazy_bundles_from_js(self):
+        modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+        lazy_bundle_regex = re.compile(r'\bloadBundle\((["\'`])([\w\.-]+)\1\)', flags=re.ASCII)
+        bundles = set()
+        for module in modules:
+            manifest = Manifest.for_addon(module, display_warning=False)
+            if not (manifest and manifest.static_path):
+                continue
+            for fname in glob.iglob('**/src/**/*.js', root_dir=manifest.static_path, recursive=True):
+                with file_open(opj(manifest.static_path, fname)) as f:
+                    fcontent = f.read()
+                    if match := lazy_bundle_regex.search(fcontent):
+                        bundles.add(match[2])
+        return bundles
+
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.

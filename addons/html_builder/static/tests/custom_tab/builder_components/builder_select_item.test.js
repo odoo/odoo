@@ -17,6 +17,7 @@ import {
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 describe.current.tags("desktop");
 
@@ -29,13 +30,15 @@ test("call a specific action with some params and value (BuilderSelectItem)", as
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-                    <BuilderSelect>
-                        <BuilderSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</BuilderSelectItem>
-                    </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <BuilderSelect>
+                    <BuilderSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</BuilderSelectItem>
+                </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
@@ -48,15 +51,17 @@ test("call a specific action with some params and value (BuilderSelectItem)", as
     expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
 });
 test("set the label of the select from the active select item and be updated on undo/redo", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-                    <BuilderSelect attributeAction="'customAttribute'">
-                        <BuilderSelectItem attributeActionValue="null">None</BuilderSelectItem>
-                        <BuilderSelectItem attributeActionValue="'a'">A</BuilderSelectItem>
-                        <BuilderSelectItem attributeActionValue="'b'">B</BuilderSelectItem>
-                    </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <BuilderSelect attributeAction="'customAttribute'">
+                    <BuilderSelectItem attributeActionValue="null">None</BuilderSelectItem>
+                    <BuilderSelectItem attributeActionValue="'a'">A</BuilderSelectItem>
+                    <BuilderSelectItem attributeActionValue="'b'">B</BuilderSelectItem>
+                </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target" customAttribute="a">x</div>`);
     setSelection({
         anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
@@ -76,15 +81,17 @@ test("set the label of the select from the active select item and be updated on 
     expect(".we-bg-options-container .dropdown").toHaveText("B");
 });
 test("consider the priority of the select item", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-                    <BuilderSelect>
-                        <BuilderSelectItem classAction="''">None</BuilderSelectItem>
-                        <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
-                        <BuilderSelectItem classAction="'a b'">A B</BuilderSelectItem>
-                    </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <BuilderSelect>
+                    <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'a b'">A B</BuilderSelectItem>
+                </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target a">x</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
@@ -100,32 +107,36 @@ test("consider the priority of the select item", async () => {
     expect(".we-bg-options-container .dropdown").toHaveText("A B");
 });
 test("hide/display BuilderSelect based on applyTo", async () => {
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
-    });
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`
-                <BuilderSelect applyTo="'.my-custom-class'">
-                    <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
-                    <BuilderSelectItem classAction="'b'">B</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`
+                    <BuilderSelect applyTo="'.my-custom-class'">
+                        <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
+                        <BuilderSelectItem classAction="'b'">B</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     const { getEditableContent } = await setupHTMLBuilder(
         `<div class="parent-target"><div class="child-target b">b</div></div>`
     );
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b o-paragraph">b</div></div>`
+        `<div class="parent-target"><div class="child-target b">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container button.dropdown-toggle").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b o-paragraph my-custom-class">b</div></div>`
+        `<div class="parent-target"><div class="child-target b my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container button.dropdown-toggle").toHaveCount(1);
@@ -134,26 +145,30 @@ test("hide/display BuilderSelect based on applyTo", async () => {
 });
 
 test("hide/display BuilderSelectItem base on applyTo", async () => {
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
-    });
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`
-                <BuilderSelect>
-                    <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
-                    <BuilderSelectItem applyTo="'.my-custom-class'" classAction="'b'">B</BuilderSelectItem>
-                    <BuilderSelectItem classAction="'c'">C</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`
+                    <BuilderSelect>
+                        <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
+                        <BuilderSelectItem applyTo="'.my-custom-class'" classAction="'b'">B</BuilderSelectItem>
+                        <BuilderSelectItem classAction="'c'">C</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     const { getEditableContent } = await setupHTMLBuilder(
-        `<div class="parent-target"><div class="child-target o-paragraph">b</div></div>`
+        `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target o-paragraph">b</div></div>`
+        `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container button.dropdown-toggle").toHaveCount(1);
@@ -162,7 +177,7 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target o-paragraph my-custom-class">b</div></div>`
+        `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     await contains(".options-container button.dropdown-toggle").click();
@@ -170,17 +185,21 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
 });
 
 test("hide/display BuilderSelect base on applyTo in BuilderSelectItem", async () => {
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
-    });
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`
-                <BuilderSelect>
-                    <BuilderSelectItem applyTo="'.my-custom-class'" classAction="'a'">A</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`
+                    <BuilderSelect>
+                        <BuilderSelectItem applyTo="'.my-custom-class'" classAction="'a'">A</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="parent-target"><div class="child-target b">b</div></div>`);
     await contains(":iframe .parent-target").click();
     expect(".options-container button.dropdown-toggle").not.toBeVisible();
@@ -190,15 +209,17 @@ test("hide/display BuilderSelect base on applyTo in BuilderSelectItem", async ()
 });
 
 test("use BuilderSelect with styleAction", async () => {
-    addBuilderOption({
-        selector: ".parent-target",
-        template: xml`
-                <BuilderSelect styleAction="'border-style'">
-                    <BuilderSelectItem styleActionValue="'dotted'">dotted</BuilderSelectItem>
-                    <BuilderSelectItem styleActionValue="'inset'">inset</BuilderSelectItem>
-                    <BuilderSelectItem styleActionValue="'none'">none</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`
+                    <BuilderSelect styleAction="'border-style'">
+                        <BuilderSelectItem styleActionValue="'dotted'">dotted</BuilderSelectItem>
+                        <BuilderSelectItem styleActionValue="'inset'">inset</BuilderSelectItem>
+                        <BuilderSelectItem styleActionValue="'none'">none</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     const { getEditableContent } = await setupHTMLBuilder(`<div class="parent-target">b</div>`);
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
@@ -213,19 +234,21 @@ test("use BuilderSelect with styleAction", async () => {
 
     await contains(".o-dropdown--menu div.o-dropdown-item:contains(dotted)").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target o-paragraph" style="border-style: dotted;">b</div>`
+        `<div class="parent-target" style="border-style: dotted;">b</div>`
     );
     expect(".we-bg-options-container .dropdown").toHaveText("dotted");
 });
 test("do not put inline style on an element which already has this style through css stylesheets", async () => {
-    addBuilderOption({
-        selector: ".test",
-        template: xml`
-                <BuilderSelect applyTo="'hr'" styleAction="'border-top-style'">
-                    <BuilderSelectItem styleActionValue="'dotted'">dotted</BuilderSelectItem>
-                    <BuilderSelectItem styleActionValue="'inset'">inset</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test";
+            static template = xml`
+                    <BuilderSelect applyTo="'hr'" styleAction="'border-top-style'">
+                        <BuilderSelectItem styleActionValue="'dotted'">dotted</BuilderSelectItem>
+                        <BuilderSelectItem styleActionValue="'inset'">inset</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`
             <div class="test">
                 <hr class="w-100">
@@ -241,14 +264,16 @@ test("do not put inline style on an element which already has this style through
     expect(":iframe hr").not.toHaveStyle("border-top-style", { inline: true });
 });
 test("revert a preview when cancelling a BuilderSelect by clicking outside of it", async () => {
-    addBuilderOption({
-        selector: ".test",
-        template: xml`
-                <BuilderSelect dataAttributeAction="'choice'">
-                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test";
+            static template = xml`
+                    <BuilderSelect dataAttributeAction="'choice'">
+                        <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                        <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
@@ -259,14 +284,16 @@ test("revert a preview when cancelling a BuilderSelect by clicking outside of it
     expect(":iframe .test").not.toHaveAttribute("data-choice");
 });
 test("revert a preview when cancelling a BuilderSelect with escape", async () => {
-    addBuilderOption({
-        selector: ".test",
-        template: xml`
-                <BuilderSelect dataAttributeAction="'choice'">
-                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test";
+            static template = xml`
+                    <BuilderSelect dataAttributeAction="'choice'">
+                        <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                        <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
@@ -277,14 +304,16 @@ test("revert a preview when cancelling a BuilderSelect with escape", async () =>
     expect(":iframe .test").not.toHaveAttribute("data-choice");
 });
 test("preview when cycling through options with the keyboard", async () => {
-    addBuilderOption({
-        selector: ".test",
-        template: xml`
-                <BuilderSelect dataAttributeAction="'choice'">
-                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test";
+            static template = xml`
+                    <BuilderSelect dataAttributeAction="'choice'">
+                        <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                        <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
@@ -293,14 +322,16 @@ test("preview when cycling through options with the keyboard", async () => {
     expect(":iframe .test").toHaveAttribute("data-choice", "0");
 });
 test("revert a preview selected with the keyboard when cancelling with escape", async () => {
-    addBuilderOption({
-        selector: ".test",
-        template: xml`
-                <BuilderSelect dataAttributeAction="'choice'">
-                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test";
+            static template = xml`
+                    <BuilderSelect dataAttributeAction="'choice'">
+                        <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                        <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
@@ -321,14 +352,16 @@ test("isApplied shouldn't be called when the element is removed from the DOM", a
             }
         },
     });
-    addBuilderOption({
-        selector: ".test",
-        template: xml`
-                <BuilderSelect action="'customAction'">
-                    <BuilderSelectItem actionParam="'0'">0</BuilderSelectItem>
-                    <BuilderSelectItem actionParam="'1'">1</BuilderSelectItem>
-                </BuilderSelect>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test";
+            static template = xml`
+                    <BuilderSelect action="'customAction'">
+                        <BuilderSelectItem actionParam="'0'">0</BuilderSelectItem>
+                        <BuilderSelectItem actionParam="'1'">1</BuilderSelectItem>
+                    </BuilderSelect>`;
+        }
+    );
     await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     await contains(".fa-trash ").click();

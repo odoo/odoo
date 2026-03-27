@@ -96,7 +96,7 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <list editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
+                <list create="1" delete="1" multi_edit="1" string="Chart of accounts">
                     <field name="placeholder_code" column_invisible="1"/>
                     <field name="code" string="Code" widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}"/>
                     <field name="name"/>
@@ -144,7 +144,7 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', '=ilike', self + '%')]" string="Account"/>
+                    <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('code', '=ilike', self + '%'), ('description', 'ilike', self)]" string="Account"/>
                     <filter string="Receivable" name="receivableacc" domain="[('account_type','=','asset_receivable')]"/>
                     <filter string="Payable" name="payableacc" domain="[('account_type','=','liability_payable')]"/>
                     <filter string="Equity" name="equityacc" domain="[('internal_group','=', 'equity')]"/>

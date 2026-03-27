@@ -2,13 +2,14 @@
 # This file contains the translation of the following modules:
 # * hr
 #
-# Oakarmin Iron <oakarminiron@gmail.com>, 2025.
+# Oakarmin Iron <oakarminiron@gmail.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-09-23 02:47+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-25 14:55+0000\n"
 "Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/hr/my/>\n"
 "Language: my\n"
@@ -16,7 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid " Records"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
@@ -28,6 +35,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_job.py:0
 msgid "%s (copy)"
+msgstr "(ကူးထားသော) %s"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid ""
+"%s already has a contract running during the selected period.\n"
+"\n"
+"Please either:\n"
+"\n"
+"- Change the start date so that it doesn't overlap with the existing "
+"contract, or\n"
+"- Create a new employee if this employee should have multiple active "
+"contracts."
 msgstr ""
 
 #. module: hr
@@ -37,7 +58,6 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "/ month"
 msgstr ""
 
@@ -59,7 +79,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Phone Call"
-msgstr ""
+msgstr "ဖုန်းခေါ်ဆိုမှူ ၁ ခု"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -112,31 +132,46 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
+msgid ""
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
+"title=\"Company\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\" "
+"invisible=\"login == work_email\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
+msgid ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
+"invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"Login\" invisible=\"login == work_email\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "<i class=\"fa fa-fw me-2 fa-briefcase text-primary\" title=\"Contract\"/>"
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
-"<i class=\"fa fa-fw me-2 fa-briefcase text-primary\" title=\"Contract\"/>\n"
-"                                    <span>No Contract</span>"
+"<i class=\"fa fa-fw me-2 fa-briefcase text-primary\" title=\"Contract\"/>"
 msgstr ""
 
 #. module: hr
@@ -153,17 +188,23 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "<i class=\"fa fa-fw me-2 fa-suitcase text-primary\" title=\"Job Position\"/>"
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-suitcase text-primary\" title=\"Job Position\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "<i class=\"fa fa-mobile fa-fw me-1 text-primary\" title=\"Work Mobile\"/>"
+msgid ""
+"<i class=\"fa fa-mobile fa-fw me-1 text-primary\" title=\"Work Mobile\"/>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
 msgstr ""
@@ -264,6 +305,17 @@ msgid "<small>eLearning</small>"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<span class=\"d-flex w-50\">\n"
+"                                                    <span "
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Untrusted</span>\n"
+"                                                    <span invisible=\"not "
+"is_trusted_bank_account\" class=\"text-success\">Trusted</span>\n"
+"                                                </span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
 msgstr ""
@@ -283,21 +335,8 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed "
-"Reason</span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid ""
-"<span class=\"o_stat_text\">\n"
-"                                    Not Connected\n"
-"                                </span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "<span class=\"o_stat_text\">Connected Since</span>"
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</"
+"span>"
 msgstr ""
 
 #. module: hr
@@ -346,8 +385,26 @@ msgid "<span class=\"text-muted small\">Time to Answer</span>"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "<span> - </span>"
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span invisible=\"not contract_date_start\">to</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<span invisible=\"not user_id or is_user_active\">\n"
+"                                                (User is Inactive)\n"
+"                                            </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Contract Overview</span>"
 msgstr ""
 
 #. module: hr
@@ -367,19 +424,144 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "<span>new hires</span>"
+msgid "<span>new employees</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<strong class=\"s_rating_title\">Adaptability</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_marketing
+msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<strong class=\"s_rating_title\">Be enthusiastic</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "<strong class=\"s_rating_title\">Client Interaction</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "<strong class=\"s_rating_title\">Collaboration</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "<strong class=\"s_rating_title\">Compliance and Regulations</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "<strong class=\"s_rating_title\">Conflict Resolution</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_marketing
+msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "<strong class=\"s_rating_title\">Cybersecurity</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "<strong class=\"s_rating_title\">Diversity and Inclusion</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "<strong class=\"s_rating_title\">Innovation</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "<strong class=\"s_rating_title\">Leadership</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<strong class=\"s_rating_title\">Learning</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "<strong class=\"s_rating_title\">Management</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_marketing
+msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<strong class=\"s_rating_title\">Problem-Solving</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "<strong class=\"s_rating_title\">Problem-solving</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "<strong class=\"s_rating_title\">Skill Development</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "<strong class=\"s_rating_title\">Talent Acquisition</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "<strong class=\"s_rating_title\">Technology Strategy</strong>"
 msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
 msgid ""
-"A Human Resources (HR) Manager is responsible for overseeing an organization's workforce and ensuring\n"
-"                that all HR functions are effectively managed. This includes recruiting, hiring, onboarding, and\n"
-"                training new employees, as well as managing employee relations, performance, and compensation. The HR\n"
-"                manager also ensures compliance with labor laws and company policies, while fostering a positive work\n"
-"                environment. They may handle conflict resolution, conduct employee evaluations, and implement programs\n"
-"                to improve employee engagement and retention. Additionally, HR managers play a strategic role in\n"
-"                aligning the workforce with the organization's goals and objectives."
+"A Human Resources (HR) Manager is responsible for overseeing an "
+"organization's workforce and ensuring\n"
+"                that all HR functions are effectively managed. This includes "
+"recruiting, hiring, onboarding, and\n"
+"                training new employees, as well as managing employee "
+"relations, performance, and compensation. The HR\n"
+"                manager also ensures compliance with labor laws and company "
+"policies, while fostering a positive work\n"
+"                environment. They may handle conflict resolution, conduct "
+"employee evaluations, and implement programs\n"
+"                to improve employee engagement and retention. Additionally, "
+"HR managers play a strategic role in\n"
+"                aligning the workforce with the organization's goals and "
+"objectives."
 msgstr ""
 
 #. module: hr
@@ -421,10 +603,15 @@ msgstr ""
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
 msgid "Absent"
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__acc_number
+#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
+msgid "Account Number"
+msgstr "အကောင့် နံပါတ်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -453,7 +640,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__active
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
-msgstr ""
+msgstr "အက်တစ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active_employee
@@ -466,7 +653,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "လှုပ်ရှားမှုများ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_decoration
@@ -495,6 +682,7 @@ msgid "Activity Type Icon"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
 msgstr ""
@@ -517,11 +705,6 @@ msgid "Activity schedule plan Wizard"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Adaptability"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_description
@@ -538,6 +721,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
+#: model:ir.model.fields,field_description:hr.field_hr_version__additional_note
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
 msgstr ""
@@ -548,29 +732,22 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Additional languages"
-msgstr ""
+msgstr "ထပ်တိုး ဘာသာစကားများ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
 msgid "Address"
-msgstr ""
+msgstr "လိပ်စာ"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_administration
 msgid "Administration"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Administrative Work"
-msgstr ""
+msgstr "စီမံရေးရာ"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Administrator"
-msgstr ""
+msgstr "အုပ်ချုပ်ရေးမှူး"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
@@ -588,12 +765,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_mail_group__alias_contact
 #: model:ir.model.fields,field_description:hr.field_maintenance_team__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.hr_menu_hr_all_activities
-msgid "All Activities"
-msgstr ""
+msgstr "ဆက်သွယ်ရန် ချိတ်ဆက်ထားသော လုံခြုံရေး"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_employee_all_activities
@@ -601,13 +773,36 @@ msgid "All activities"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Allow employees to update Work Information on My Profile"
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__allocation_ids
+msgid "Allocations"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Allow employees to update Work Information on My Profile."
+#: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
+#: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
+msgid "Allowed Country State"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
+msgid "Allowed User"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
+#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
+msgid "Amount"
+msgstr "ပမာဏ"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount_type
+msgid "Amount Type"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
+msgid "An element name parent of the radio to observe updates"
 msgstr ""
 
 #. module: hr
@@ -618,9 +813,9 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid "An employee must always have at least one version."
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
+msgid "An object to link select options and element id to move"
 msgstr ""
 
 #. module: hr
@@ -631,7 +826,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Apply"
-msgstr ""
+msgstr "လုပ်ဆောင်"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
@@ -639,20 +834,18 @@ msgid "Apprenticeship"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
-msgstr ""
+msgstr "ခွင့်ပြုသူများ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "ခေါက်သိမ်း"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__archive
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_archive
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__archive
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -664,105 +857,162 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
-msgstr ""
+msgstr "သိမ်းဆည်းထားသည်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid ""
-"As a Human Resources Manager at our company, you will<b>work closely with all\n"
-"                                departments to design and implement HR initiatives that align with our business\n"
-"                                objectives</b>. Join our expanding organization, which offers competitive benefits and\n"
-"                                ample opportunities for growth while collaborating with seasoned professionals.\n"
+"As a Human Resources Manager at our company, you will<b>work closely with "
+"all\n"
+"                                departments to design and implement HR "
+"initiatives that align with our business\n"
+"                                objectives</b>. Join our expanding "
+"organization, which offers competitive benefits and\n"
+"                                ample opportunities for growth while "
+"collaborating with seasoned professionals.\n"
 "                                <br>\n"
-"                                This role is both <b>strategic and operational</b>, focusing on recruitment, employee\n"
-"                                engagement, and performance management. We seek a proactive leader who can effectively\n"
-"                                manage talent acquisition, develop training programs, and implement retention\n"
-"                                strategies. Success in this position requires strong analytical skills, in-depth\n"
-"                                knowledge of labor laws, and the ability to foster a diverse and inclusive workplace\n"
-"                                culture while enhancing employee satisfaction and productivity."
+"                                This role is both <b>strategic and "
+"operational</b>, focusing on recruitment, employee\n"
+"                                engagement, and performance management. We "
+"seek a proactive leader who can effectively\n"
+"                                manage talent acquisition, develop training "
+"programs, and implement retention\n"
+"                                strategies. Success in this position "
+"requires strong analytical skills, in-depth\n"
+"                                knowledge of labor laws, and the ability to "
+"foster a diverse and inclusive workplace\n"
+"                                culture while enhancing employee "
+"satisfaction and productivity."
 msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid ""
-"As a consultant at our company, you will <b>collaborate with diverse departments to\n"
-"                                assess business needs, design tailored strategies, and drive successful implementation\n"
-"                                of solutions</b>. Join a forward-thinking organization that offers competitive benefits\n"
-"                                and opportunities for advancement, working alongside industry experts. We are looking\n"
-"                                for an accomplished consultant with a strong background in delivering measurable\n"
+"As a consultant at our company, you will <b>collaborate with diverse "
+"departments to\n"
+"                                assess business needs, design tailored "
+"strategies, and drive successful implementation\n"
+"                                of solutions</b>. Join a forward-thinking "
+"organization that offers competitive benefits\n"
+"                                and opportunities for advancement, working "
+"alongside industry experts. We are looking\n"
+"                                for an accomplished consultant with a strong "
+"background in delivering measurable\n"
 "                                outcomes.\n"
 "                                <br>\n"
-"                                This role demands both <b>creative problem-solving and strategic analysis</b>,\n"
-"                                requiring you to think critically about client challenges. We expect candidates to be\n"
-"                                self-motivated, with a strong \"get it done\" mentality. To thrive in this position, you\n"
-"                                should possess excellent analytical skills, the ability to translate insights into\n"
-"                                actionable recommendations, and the talent for building rapport with stakeholders across\n"
+"                                This role demands both <b>creative problem-"
+"solving and strategic analysis</b>,\n"
+"                                requiring you to think critically about "
+"client challenges. We expect candidates to be\n"
+"                                self-motivated, with a strong \"get it "
+"done\" mentality. To thrive in this position, you\n"
+"                                should possess excellent analytical skills, "
+"the ability to translate insights into\n"
+"                                actionable recommendations, and the talent "
+"for building rapport with stakeholders across\n"
 "                                all levels of the organization."
 msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid ""
-"As a developer at our company, you will <b>collaborate with product managers, designers,\n"
-"                                and other engineers to design, develop, and deploy innovative software solutions</b>.\n"
-"                                Join us at a rapidly growing organization that offers competitive benefits and\n"
-"                                opportunities for career advancement while working alongside industry leaders.\n"
-"                                We’re looking for a skilled developer with a passion for technology and innovation.\n"
+"As a developer at our company, you will <b>collaborate with product "
+"managers, designers,\n"
+"                                and other engineers to design, develop, and "
+"deploy innovative software solutions</b>.\n"
+"                                Join us at a rapidly growing organization "
+"that offers competitive benefits and\n"
+"                                opportunities for career advancement while "
+"working alongside industry leaders.\n"
+"                                We’re looking for a skilled developer with a "
+"passion for technology and innovation.\n"
 "                                <br>\n"
-"                                In this role, you will be responsible for <b>writing clean, maintainable code,\n"
-"                                participating in code reviews, and troubleshooting issues</b>. Your work will involve\n"
-"                                both creative <b>problem-solving and rigorous analysis</b>, requiring you to think\n"
-"                                outside the box to deliver effective solutions. We seek a proactive candidate with a\n"
-"                                strong \"get it done\" mentality. Success in this position hinges on your ability to\n"
-"                                tackle complex challenges and deliver high-quality results in a fast-paced environment."
+"                                In this role, you will be responsible for "
+"<b>writing clean, maintainable code,\n"
+"                                participating in code reviews, and "
+"troubleshooting issues</b>. Your work will involve\n"
+"                                both creative <b>problem-solving and "
+"rigorous analysis</b>, requiring you to think\n"
+"                                outside the box to deliver effective "
+"solutions. We seek a proactive candidate with a\n"
+"                                strong \"get it done\" mentality. Success in "
+"this position hinges on your ability to\n"
+"                                tackle complex challenges and deliver high-"
+"quality results in a fast-paced environment."
 msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
-"As a trainee at our company, you will <b>work with various departments to assist in\n"
-"                                creating and launching innovative products</b>. Join our growing team, offering\n"
-"                                excellent benefits and valuable learning opportunities alongside experienced\n"
+"As a trainee at our company, you will <b>work with various departments to "
+"assist in\n"
+"                                creating and launching innovative products</"
+"b>. Join our growing team, offering\n"
+"                                excellent benefits and valuable learning "
+"opportunities alongside experienced\n"
 "                                professionals.\n"
 "                                <br>\n"
-"                                This role is both <b>creative and structured</b>, encouraging out-of-the-box thinking.\n"
-"                                We are looking for a proactive individual with a strong get it done mindset. Successful\n"
-"                                candidates will have the chance to grow within the company based on their fit and\n"
+"                                This role is both <b>creative and "
+"structured</b>, encouraging out-of-the-box thinking.\n"
+"                                We are looking for a proactive individual "
+"with a strong get it done mindset. Successful\n"
+"                                candidates will have the chance to grow "
+"within the company based on their fit and\n"
 "                                performance."
 msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid ""
-"As an employee of our company, you will <b>collaborate with each department to create and deploy\n"
-"                                disruptive products.</b> Come work at a growing company that offers great benefits with opportunities to\n"
-"                                moving forward and learn alongside accomplished leaders. We're seeking an experienced and outstanding member of staff.\n"
+"As an employee of our company, you will <b>collaborate with each department "
+"to create and deploy\n"
+"                                disruptive products.</b> Come work at a "
+"growing company that offers great benefits with opportunities to\n"
+"                                moving forward and learn alongside "
+"accomplished leaders. We're seeking an experienced and outstanding member of "
+"staff.\n"
 "                                <br><br>\n"
-"                                This position is both <b>creative and rigorous</b> by nature you need to think outside the box.\n"
-"                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
+"                                This position is both <b>creative and "
+"rigorous</b> by nature you need to think outside the box.\n"
+"                                We expect the candidate to be proactive and "
+"have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid ""
-"As our Chief Technology Officer, you will <b>work closely with product, marketing, and\n"
-"                                operations teams to create and launch innovative technology solutions that set us apart\n"
-"                                in the industry</b>. Join our fast-growing company, where you’ll enjoy competitive\n"
-"                                benefits and opportunities for professional growth while collaborating with top experts\n"
+"As our Chief Technology Officer, you will <b>work closely with product, "
+"marketing, and\n"
+"                                operations teams to create and launch "
+"innovative technology solutions that set us apart\n"
+"                                in the industry</b>. Join our fast-growing "
+"company, where you’ll enjoy competitive\n"
+"                                benefits and opportunities for professional "
+"growth while collaborating with top experts\n"
 "                                in the field.\n"
 "                                <br>\n"
-"                                In this role, you will <b>define and execute our technology strategy and roadmap</b>,\n"
-"                                ensuring it aligns with our business goals. This position is both <b>creative and\n"
-"                                analytical</b>, requiring you to think outside the box while implementing effective\n"
-"                                solutions. We are looking for a proactive leader with a strong \"get it done\" mentality\n"
-"                                who can tackle challenges head-on and drive projects to successful completion.\n"
+"                                In this role, you will <b>define and execute "
+"our technology strategy and roadmap</b>,\n"
+"                                ensuring it aligns with our business goals. "
+"This position is both <b>creative and\n"
+"                                analytical</b>, requiring you to think "
+"outside the box while implementing effective\n"
+"                                solutions. We are looking for a proactive "
+"leader with a strong \"get it done\" mentality\n"
+"                                who can tackle challenges head-on and drive "
+"projects to successful completion.\n"
 "                                <br>\n"
-"                                To excel in this position, you will need <b>extensive experience in software\n"
-"                                architecture, cloud computing, and data security</b>, along with a strong background in\n"
-"                                team leadership and agile project management. Your excellent communication skills will\n"
-"                                be vital for conveying complex technical ideas to non-technical stakeholders and\n"
-"                                fostering collaboration across all departments."
+"                                To excel in this position, you will need "
+"<b>extensive experience in software\n"
+"                                architecture, cloud computing, and data "
+"security</b>, along with a strong background in\n"
+"                                team leadership and agile project "
+"management. Your excellent communication skills will\n"
+"                                be vital for conveying complex technical "
+"ideas to non-technical stakeholders and\n"
+"                                fostering collaboration across all "
+"departments."
 msgstr ""
 
 #. module: hr
@@ -789,8 +1039,9 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Attendance"
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+msgid "Attendance PIN"
 msgstr ""
 
 #. module: hr
@@ -811,18 +1062,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_discuss_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Autonomy"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Available"
 msgstr ""
 
 #. module: hr
@@ -861,14 +1100,10 @@ msgid "Avatar 512"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Away"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__bachelor
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
 msgid "Bachelor"
-msgstr ""
+msgstr "တက္ကသိုလ်ဘွဲ့ရ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -889,20 +1124,43 @@ msgid "Badge ID"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
-#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_id
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__bank_account_id
 msgid "Bank Account"
+msgstr "ဘာဏ် အကောင့်"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
+msgid "Bank Account Allocation"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard_line
+msgid "Bank Account Allocation Line (Wizard)"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard
+msgid "Bank Account Allocation Wizard"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_bank_account_allocation_wizard
+msgid "Bank Account Allocations"
 msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
+#: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
-msgstr ""
+msgstr "ဘဏ်အကောင့်များ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Bank Address"
-msgstr ""
+msgstr "ဘာဏ် လိပ်စာ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
@@ -912,12 +1170,19 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Bank Name"
+msgstr "ဘာဏ် အမည်"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_bank_account_wizard.py:0
+msgid ""
+"Bank account %s not found within the salary distribution of the employee"
 msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
-msgstr ""
+msgstr "အခြေခံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip
@@ -944,29 +1209,10 @@ msgid "Based on user status in system"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Be enthusiastic"
-msgstr ""
-
-#. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
+#: code:addons/hr/models/hr_version.py:0
 msgid ""
-"Before creating a new contract, close the current one by setting an end "
-"date."
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"Before creating a new contract, create a version that is set after the "
-"contract end date"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Benefits"
+"Before creating a new contract, close the current one by setting an end date."
 msgstr ""
 
 #. module: hr
@@ -976,43 +1222,46 @@ msgid "Binary file"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Birth Information"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
-#: model:ir.model.fields,field_description:hr.field_res_users__birthday
 msgid "Birthday"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__can_edit
-msgid "Can Edit"
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.js:0
+msgid "Boolean display as radio field with translatable labels"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Cancel"
+msgstr "မလုပ်"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid "Cannot archive all the active versions of an employee."
 msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active version of an employee."
+msgid ""
+"Cannot modify multiple versions contract dates with different contracts at "
+"once."
 msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active version of an employee."
+msgid "Cannot unassign all the active versions of an employee."
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
-#: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "လက်မှတ်အဆင့်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -1033,7 +1282,7 @@ msgstr ""
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr ""
+msgstr "စီတီအို"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -1046,52 +1295,40 @@ msgid "Child departments"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship"
-msgstr ""
+msgstr "နိုင်ငံသား အချက်အလက်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_city
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_city
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "City"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Client Interaction"
-msgstr ""
+msgstr "မြို့"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
-#: model:ir.model.fields,field_description:hr.field_res_users__coach_id
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__coach
 msgid "Coach"
-msgstr ""
+msgstr "နည်းပြ"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Coach of employee %s is not set."
-msgstr ""
+msgstr "ဝန်ထမ်း %s အတွက် နည်းပြ မသတ်မှတ်ရသေးပါ။"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
 msgid "Code"
-msgstr ""
+msgstr "ကုဒ်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Collaborate with cross-functional departments"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "Collaboration"
 msgstr ""
 
 #. module: hr
@@ -1104,20 +1341,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Color"
-msgstr ""
+msgstr "အရောင်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
 msgid "Color Index"
-msgstr ""
+msgstr "အရောင်ညွှန်းကိန်း"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_company
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr ""
+msgstr "ကုမ္ပဏီများ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
@@ -1129,12 +1366,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr ""
+msgstr "ကုမ္ပဏီ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "ကုမ္ပဏီ ၏ နိုင်ငံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
@@ -1144,7 +1381,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Company Logo"
-msgstr ""
+msgstr "ကုမ္ပဏီ လိုဂို"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
@@ -1154,7 +1391,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_version__company_country_id
 msgid "Company country"
-msgstr ""
+msgstr "ကုမ္ပဏီ ၏ နိုင်ငံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_id
@@ -1164,12 +1401,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
 msgid "Complete Name"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Compliance and Regulations"
-msgstr ""
+msgstr "အမည် အပြည့်အစုံ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1185,41 +1417,50 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Configuration"
-msgstr ""
+msgstr "ပြင်ဆင်ရန်"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Confirm"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Conflict Resolution"
-msgstr ""
+msgstr "အတည်ပြုသည်"
 
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
-msgstr ""
+msgstr "အကြံပေး"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact"
-msgstr ""
+msgstr "ဆက်သွယ်ရန်"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Contact Information"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+msgid "Contact Name"
+msgstr "ဆက်သွယ်ရန် အမည်"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+msgid "Contact Phone"
+msgstr "ဆက်သွယ်ရန် ဖုန်း"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0
+msgid "Contacts"
+msgstr "အဆက်အသွယ်များ"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Contract"
-msgstr ""
+msgstr "စာချုပ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
@@ -1228,7 +1469,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract End Date"
-msgstr ""
+msgstr "စာချုပ်ကုန်ဆုံးသည့်နေ့"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1242,7 +1483,7 @@ msgid "Contract Expiry Notice Period"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "Contract Overview"
 msgstr ""
 
@@ -1252,7 +1493,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Contract Start Date"
-msgstr ""
+msgstr "စာချုပ် စသည့်နေ့"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_template_id
@@ -1286,7 +1527,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contract Type"
-msgstr ""
+msgstr "စာချုပ်အမျိူးအစား"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
@@ -1297,32 +1538,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_wage
 #: model:ir.model.fields,field_description:hr.field_hr_version__contract_wage
 msgid "Contract Wage"
-msgstr ""
+msgstr "စာချုပ်ပါ လုပ်အားခ"
 
 #. module: hr
 #: model:mail.message.subtype,description:hr.mt_contract_pending
 #: model:mail.message.subtype,description:hr.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "စာချုပ်သက်တမ်းကုန်တော့မည်"
 
 #. module: hr
 #: model:mail.message.subtype,description:hr.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "စာချုပ် သက်တမ်းကုန်သွားပြီ"
 
 #. module: hr
 #: model:mail.message.subtype,name:hr.mt_department_contract_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "စာချုပ် သက်တမ်းတိုးရန်"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__contractor
 msgid "Contractor"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_contract
-msgid "Contracts Management"
 msgstr ""
 
 #. module: hr
@@ -1331,11 +1567,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_id
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_country
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Country"
-msgstr ""
+msgstr "နိုင်ငံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_code
@@ -1344,28 +1580,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_version__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "နိုင်ငံ ကုဒ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
-#: model:ir.model.fields,field_description:hr.field_res_users__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "မွေးဖွားရာ နိုင်ငံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Cover Image"
-msgstr ""
+msgstr "ကာဗာ ပုံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
 msgid "Create Date"
-msgstr ""
+msgstr "ဖန်တီးသောနေ့"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Create Employee"
-msgstr ""
+msgstr "ဝန်ထမ်း ဖန်တီးပါ"
 
 #. module: hr
 #. odoo-python
@@ -1419,9 +1654,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Create employee"
-msgstr ""
+msgstr "ဝန်ထမ်း ဖန်တီးပါ"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_uid
@@ -1438,6 +1675,8 @@ msgid "Created by"
 msgstr "ဖန်တီးသူ"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_date
@@ -1450,12 +1689,18 @@ msgstr "ဖန်တီးသူ"
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
-msgstr ""
+msgstr "တည်ဆောက်သည့်အချိန်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__currency_id
 msgid "Currency"
+msgstr "ငွေကြေး"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_account_setup_bank_manual_config__currency_symbol
+#: model:ir.model.fields,help:hr.field_res_partner_bank__currency_symbol
+msgid "Currency sign, to be used when printing amounts."
 msgstr ""
 
 #. module: hr
@@ -1476,17 +1721,6 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Currently enrolled in final study years"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Customer Relationship"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "Cybersecurity"
 msgstr ""
 
 #. module: hr
@@ -1536,6 +1770,13 @@ msgid "Define the minimum number of sent emails to be displayed as Present."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_resource_resource__calendar_id
+msgid ""
+"Define the working schedule of the resource. If not set, the resource will "
+"have fully flexible working hours."
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
@@ -1546,7 +1787,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__department_id
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_id
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__department_id
-#: model:ir.model.fields,field_description:hr.field_res_users__department_id
 #: model:ir.model.fields,field_description:hr.field_resource_resource__department_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
@@ -1554,7 +1794,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
-msgstr ""
+msgstr "ဌာန"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_assignable
@@ -1564,7 +1804,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
 msgid "Department Name"
-msgstr ""
+msgstr "ဌာန အမည်"
 
 #. module: hr
 #. odoo-javascript
@@ -1578,7 +1818,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_hr_department_kanban
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr ""
+msgstr "ဌာနများ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1603,7 +1843,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr ""
+msgstr "အလုပ်နားရသည့် အကြောင်းအရင်းများ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -1618,22 +1858,15 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Dependant"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
 #: model:ir.model.fields,field_description:hr.field_hr_version__children
-#: model:ir.model.fields,field_description:hr.field_res_users__children
 msgid "Dependent Children"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Details"
-msgstr ""
+msgstr "အသေးစိတ်များ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -1671,7 +1904,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_wizard_view_form
 msgid "Discard"
-msgstr ""
+msgstr "မလုပ်တော့"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1690,6 +1923,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
@@ -1699,6 +1934,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__display_name
@@ -1717,7 +1953,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_resource_calendar_leaves__display_name
 #: model:ir.model.fields,field_description:hr.field_resource_resource__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ပြသသော အမည်"
 
 #. module: hr
 #. odoo-javascript
@@ -1726,30 +1962,36 @@ msgid "Display avatar name"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Diversity and Inclusion"
-msgstr ""
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid "Divorced"
+msgstr "ကွာရှင်း"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-#: code:addons/hr/models/hr_version.py:0
-msgid "Divorced"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
 msgid "Doctor"
-msgstr ""
+msgstr "ဒေါက်တာ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Document"
-msgstr ""
+msgstr "စာရွက်စာတမ်း"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Documents"
+msgstr "စာရွက်စာတမ်း(များ)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
+msgstr "ယာဉ်မောင်း လိုင်စင်"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Each amount percentage must be a number between 0 and 100."
 msgstr ""
 
 #. module: hr
@@ -1760,10 +2002,13 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
 "Each employee has a chance to see the impact of his work.\n"
-"                            You can make a real contribution to the success of the company.\n"
+"                            You can make a real contribution to the success "
+"of the company.\n"
 "                            <br>\n"
-"                            Several activities are often organized all over the year, such as weekly\n"
-"                            sports sessions, team building events, monthly drink, and much more."
+"                            Several activities are often organized all over "
+"the year, such as weekly\n"
+"                            sports sessions, team building events, monthly "
+"drink, and much more."
 msgstr ""
 
 #. module: hr
@@ -1781,9 +2026,25 @@ msgid "Eat &amp; Drink"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Education"
+msgstr "ပညာရေး"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+msgid "Effective Date"
+msgstr "တကယ်လုပ်ဖြစ်သော ရက်"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
+msgid "Element association"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
+msgid "Element to observe"
 msgstr ""
 
 #. module: hr
@@ -1791,10 +2052,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__email
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_email
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Email"
-msgstr ""
+msgstr "အီးမေးလ်"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
@@ -1802,16 +2062,12 @@ msgid "Email Aliases"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Emergency"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Emergency Contact"
-msgstr ""
+msgstr "အရေးပေါ်ဆက်သွယ်ရန်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
@@ -1825,6 +2081,7 @@ msgstr ""
 #: model:hr.contract.type,name:hr.contract_type_employee
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__employee_id
@@ -1843,42 +2100,38 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Employee"
+msgstr "ဝန်ထမ်း"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid "Employee %s must always have at least one active version."
 msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr ""
+msgstr "ဝန်ထမ်း အမျိုးအမည်"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_version
 msgid "Employee Contract"
-msgstr ""
+msgstr "ဝန်ထမ်း စာချုပ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
 msgid "Employee Count"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
-msgid "Employee Editing"
-msgstr ""
+msgstr "ဝန်ထမ်း အရေအတွက်"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Employee Image"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__private_lang
-msgid "Employee Lang"
-msgstr ""
+msgstr "ဝန်ထမ်း ရုပ်ပုံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
 msgid "Employee Name"
-msgstr ""
+msgstr "၀န်ထမ်းအမည်"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
@@ -1888,6 +2141,19 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_version
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
+msgid "Employee Records"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
+msgid "Employee Salary Amount Is Percentage"
 msgstr ""
 
 #. module: hr
@@ -1906,15 +2172,9 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
 #: model:ir.model.fields,field_description:hr.field_hr_version__employee_type
-#: model:ir.model.fields,field_description:hr.field_res_users__employee_type
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Employee Type"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Employee Update Rights"
-msgstr ""
+msgstr "ဝန်ထမ်း အမျိုးအစား"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_ids
@@ -1922,10 +2182,10 @@ msgid "Employee Versions"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
-#: model:ir.model.fields,help:hr.field_res_users__bank_account_id
-#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
-msgid "Employee bank account to pay salaries"
+#: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
+msgid "Employee bank accounts to pay salaries"
 msgstr ""
 
 #. module: hr
@@ -1934,28 +2194,29 @@ msgid "Employee development is a core focus"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
-msgid "Employee's Bank Account Number"
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee will be excluded from Pay Runs"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
-msgid "Employee's Country"
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
+msgid "Employee's Bank Accounts"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
-msgstr ""
+msgstr "ဝန်ထမ်း၏အမည်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
 msgid "Employee's Working Hours"
-msgstr ""
+msgstr "ဝန်ထမ်း၏ အလုပ်ချိန်များ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__wage
@@ -1974,10 +2235,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
-#: model:ir.ui.menu,name:hr.menu_hr_employee_user
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:res.groups.privilege,name:hr.res_groups_privilege_employees
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
@@ -1989,13 +2250,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Employees"
-msgstr ""
+msgstr "ဝန်ထမ်းများ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr ""
+msgstr "ဝန်ထမ်း အရည်အတွက်"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
@@ -2003,26 +2264,32 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
-msgstr ""
+msgstr "ဝန်ထမ်းခန့်ထားမှူ အမျိုးအစား"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_contract_type_action
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 msgid "Employment Types"
-msgstr ""
+msgstr "ဝန်ထမ်းခန့်ထားမှူ အမျိုးအစားများ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "End"
-msgstr ""
+msgstr "ဆုံး"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End Date"
-msgstr ""
+msgstr "ကုန်ဆုံးသော နေ့စွဲ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_date_end
@@ -2050,6 +2317,15 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "Ensure compliance with labor laws"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__identification_id
+#: model:ir.model.fields,help:hr.field_hr_version__identification_id
+msgid ""
+"Enter the employee's National Identification Number issued by the government "
+"(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
+"compliance."
 msgstr ""
 
 #. module: hr
@@ -2082,7 +2358,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Experience"
-msgstr ""
+msgstr "အတွေ့အကြုံ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2112,21 +2388,21 @@ msgstr ""
 #. module: hr
 #: model:hr.job,name:hr.job_developer
 msgid "Experienced Developer"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Expiration Date"
-msgstr ""
+msgstr "အတွေ့အကြုံရှိ Developer"
 
 #. module: hr
 #: model:mail.message.subtype,name:hr.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "သက်တမ်းကုန်ပြီး"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Expired Contracts"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Expires on"
 msgstr ""
 
 #. module: hr
@@ -2140,6 +2416,12 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Facilitate workshops and stakeholder meetings"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.js:0
+msgid "False association"
 msgstr ""
 
 #. module: hr
@@ -2186,18 +2468,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__female
 msgid "Female"
-msgstr ""
+msgstr "မ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
-#: model:ir.model.fields,field_description:hr.field_res_users__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "လေ့လာ သည့် နယ်ပယ်"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
 msgid "Fired"
-msgstr ""
+msgstr "အလုပ်ပြုတ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -2205,7 +2486,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ဖော်လိုဝါများ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
@@ -2257,9 +2538,10 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_full_time
 msgid "Full-Time"
-msgstr ""
+msgstr "အချိန်ပြည့်"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr ""
@@ -2272,10 +2554,9 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sex
 #: model:ir.model.fields,field_description:hr.field_hr_version__sex
-#: model:ir.model.fields,field_description:hr.field_res_users__sex
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Gender"
-msgstr ""
+msgstr "လိင်"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2288,14 +2569,21 @@ msgid "Give more details about the reason of archiving the employee."
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0
+msgid "Go to contact"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Google Adwords experience"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
 msgid "Graduate"
-msgstr ""
+msgstr "အခြေခံပညာရေး"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2304,13 +2592,6 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Great team of smart people, in a friendly and open culture"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Group By"
 msgstr ""
 
 #. module: hr
@@ -2341,11 +2622,6 @@ msgid "HR Responsible"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "HR Settings"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
 msgid "Has Department Manager Access"
 msgstr ""
@@ -2356,6 +2632,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_version__has_message
 msgid "Has Message"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_has_multiple_bank_accounts
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
+msgid "Has Multiple Bank Accounts"
 msgstr ""
 
 #. module: hr
@@ -2371,17 +2654,26 @@ msgid "Hiring"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__home
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Hiring Process"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "History"
+msgstr "သမိုင်း"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
-msgstr ""
+msgstr "ဟုမ်း"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__distance_home_work
-#: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "အိမ် နှင့် ရုံး အကွာအဝေး"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
@@ -2393,7 +2685,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
 #: model:ir.model.fields,field_description:hr.field_hr_version__distance_home_work_unit
-#: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work_unit
 msgid "Home-Work Distance unit"
 msgstr ""
 
@@ -2412,7 +2703,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
-#: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
 msgstr ""
 
@@ -2424,10 +2714,12 @@ msgstr ""
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr ""
+msgstr "HR မန်နေဂျာ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__id
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__id
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
@@ -2437,6 +2729,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_version__id
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__id
@@ -2455,7 +2748,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_resource_calendar_leaves__id
 #: model:ir.model.fields,field_description:hr.field_resource_resource__id
 msgid "ID"
-msgstr ""
+msgstr "နံပါတ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
@@ -2479,7 +2772,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "အိုင်ကွန်"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_exception_icon
@@ -2491,9 +2784,8 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__identification_id
-#: model:ir.model.fields,field_description:hr.field_res_users__identification_id
 msgid "Identification No"
-msgstr ""
+msgstr "မှတ်ပုံတင် နံပါတ်"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
@@ -2516,6 +2808,11 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
+msgid "If checked, the related user will be removed from the system."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
 #: model:ir.model.fields,help:hr.field_hr_employee__active_employee
 #: model:ir.model.fields,help:hr.field_hr_version__active_employee
@@ -2533,7 +2830,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
 msgid "Image"
-msgstr ""
+msgstr "ရုပ်ပုံ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
@@ -2576,29 +2873,21 @@ msgid "In-depth knowledge of labor laws"
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Indefinite"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "Indefinitely"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-msgid "Innovation"
-msgstr ""
-
-#. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
 msgid "Interim"
-msgstr ""
+msgstr "ကြားဖြတ်"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_intern
 msgid "Intern"
-msgstr ""
+msgstr "အလုပ်သင်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_current
@@ -2666,6 +2955,16 @@ msgid "Is System"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_trusted_bank_account
+msgid "Is Trusted Bank Account"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_user
+msgid "Is User"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "It prioritizes data-driven decision-making"
 msgstr ""
@@ -2674,10 +2973,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__job_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Job"
-msgstr ""
+msgstr "အလုပ်အကိုင်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__description
@@ -2689,17 +2989,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__name
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
-msgstr ""
+msgstr "ရာထူး"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
+msgstr "ရာထူးများ"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Job Posting"
 msgstr ""
 
 #. module: hr
@@ -2708,14 +3012,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__job_title
 #: model:ir.model.fields,field_description:hr.field_res_users__job_title
 #: model:ir.model.fields,field_description:hr.field_resource_resource__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Job Title"
-msgstr ""
+msgstr "ရာထူးခေါင်းစဉ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
-msgstr ""
+msgstr "အလုပ်အကိုင်များ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -2728,21 +3033,14 @@ msgid "Lang"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Language"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity
-#: model:ir.model.fields,field_description:hr.field_res_users__last_activity
 msgid "Last Activity"
-msgstr ""
+msgstr "နောက်ဆုံး လုပ်ဆောင်ခဲ့ချိန်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity_time
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
-#: model:ir.model.fields,field_description:hr.field_res_users__last_activity_time
 msgid "Last Activity Time"
 msgstr ""
 
@@ -2759,6 +3057,8 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_uid
@@ -2775,6 +3075,8 @@ msgid "Last Updated by"
 msgstr "နောက်ဆုံးပြင်ဆင်သူ"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_department__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_date
@@ -2788,9 +3090,10 @@ msgstr "နောက်ဆုံးပြင်ဆင်သူ"
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "နောက်ဆုံးပြင်ဆင်ချိန်"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
 msgstr ""
@@ -2800,7 +3103,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Launch Plan"
-msgstr ""
+msgstr "ခန့်အပ်ရေး အစီအစဉ်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2813,26 +3116,15 @@ msgid "Lead the entire sales cycle"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "Leadership"
-msgstr ""
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Learn company processes and tools"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Learning"
-msgstr ""
-
-#. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
 #: code:addons/hr/models/hr_version.py:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "အတူနေ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__legal_name
@@ -2847,6 +3139,18 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_contract_templates
 msgid "Let's create one"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.js:0
+msgid "Link an element with the boolean False value."
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.js:0
+msgid "Link an element with the boolean True value."
 msgstr ""
 
 #. module: hr
@@ -2871,10 +3175,9 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Location"
-msgstr ""
+msgstr "နေရာ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
@@ -2882,13 +3185,24 @@ msgid "Location Number"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Login"
+msgstr "လော့အင်"
+
+#. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
-msgstr ""
+msgstr "ကာလရှည် ပရောဂျက်များ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 msgid "Main Attachment"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+msgid "Main Work Location"
 msgstr ""
 
 #. module: hr
@@ -2899,7 +3213,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__male
 msgid "Male"
-msgstr ""
+msgstr "ကျား"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -2912,26 +3226,19 @@ msgid "Manage technology budget and resources"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Manage the contracts of your employees or create contract templates"
-msgstr ""
-
-#. module: hr
 #: model:hr.department,name:hr.dep_management
-#: model_terms:hr.job,website_description:hr.job_developer
 msgid "Management"
-msgstr ""
+msgstr "စီမံခန့်ခွဲမှူ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__parent_id
-#: model:ir.model.fields,field_description:hr.field_res_users__employee_parent_id
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__manager
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
-msgstr ""
+msgstr "မန်နေဂျာ"
 
 #. module: hr
 #. odoo-python
@@ -2942,27 +3249,25 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_hr_version__marital
-#: model:ir.model.fields,field_description:hr.field_res_users__marital
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Marital Status"
-msgstr ""
+msgstr "အိမ်ထောင် အခြေအနေ"
 
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr ""
+msgstr "မားကတ်တင်း မန်နေဂျာ"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
+msgid "Married"
+msgstr "လက်ထပ်ပြီး"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-#: code:addons/hr/models/hr_version.py:0
-msgid "Married"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
 msgid "Master"
-msgstr ""
+msgstr "မဟာ ဘွဲ့"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
@@ -2989,12 +3294,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
 msgid "Members"
-msgstr ""
+msgstr "အဖွဲ့ဝင်များ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "မီနူး"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
@@ -3010,11 +3315,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "မက်ဆေ့ဂျ်များ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
 msgid "Mobile Phone"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
+msgid "More..."
 msgstr ""
 
 #. module: hr
@@ -3028,7 +3339,6 @@ msgid "Must Have"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.hr_menu_hr_my_activities
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "My Activities"
 msgstr ""
@@ -3047,20 +3357,15 @@ msgid "My Department"
 msgstr ""
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/user_menu/my_profile.js:0
-msgid "My Profile"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "My Team"
-msgstr ""
+msgstr "ကျွန်ပ်၏ အဖွဲ့"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_employee_my_activities
-msgid "My activities"
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.xml:0
+msgid "NO"
 msgstr ""
 
 #. module: hr
@@ -3068,34 +3373,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
 #: model:ir.model.fields,field_description:hr.field_hr_version__name
 msgid "Name"
-msgstr ""
+msgstr "အမည်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__country_id
 msgid "Nationality (Country)"
-msgstr ""
+msgstr "နိုင်ငံသား"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Negotiate and contract"
+msgstr "ညှိနှိုင်းပြီးစာချုပ်"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/button_new_contract/button_new_contract.xml:0
+msgid "New Contract"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "New Contract"
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
+msgid "New Employee Record"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
 msgid "New Employees Over Time"
-msgstr ""
-
-#. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
-msgid "New Version"
 msgstr ""
 
 #. module: hr
@@ -3155,12 +3461,23 @@ msgid "No Template found"
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
+msgid "No contract"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "No user linked"
 msgstr ""
 
 #. module: hr
@@ -3179,14 +3496,11 @@ msgid "Not Employed"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Not available"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Note"
-msgstr ""
+msgstr "မှတ်စု"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
@@ -3199,7 +3513,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Number of Employees"
-msgstr ""
+msgstr "ဝန်ထမ်း အရေအတွက်"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -3226,7 +3540,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "အယ်ရာ အရေအတွက်"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
@@ -3250,10 +3564,19 @@ msgid "Number of new employees you expect to recruit."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__office
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
+msgid "Off-Hours"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr ""
+msgstr "ရုံး"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -3275,10 +3598,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid ""
-"Oops! It seems there is a problem with your team structure."
-"                        We found a circular reporting loop and no one in "
-"that loop is linked to a user.                        Please double-check "
-"that everyone reports to the correct manager."
+"Oops! It seems there is a problem with your team "
+"structure.                        We found a circular reporting loop and no "
+"one in that loop is linked to a user.                        Please double-"
+"check that everyone reports to the correct manager."
 msgstr ""
 
 #. module: hr
@@ -3294,12 +3617,13 @@ msgid "Operation not Supported."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_version__work_location_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__other
 msgid "Other"
-msgstr ""
+msgstr "အခြား"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3314,20 +3638,6 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Out of Contract"
-msgstr ""
-
-#. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
-msgid "Out of Working Hours"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
-msgid "Out of Working hours"
 msgstr ""
 
 #. module: hr
@@ -3350,15 +3660,15 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
 #: model:ir.model.fields,help:hr.field_res_users__pin
 msgid ""
-"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
-" enabled in Configuration) and to change the cashier in the Point of Sale "
+"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if "
+"enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
-msgstr ""
+msgstr "မိခင် ဌာန"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_path
@@ -3387,16 +3697,27 @@ msgid "Passion for software products"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__passport_expiration_date
+#: model:ir.model.fields,field_description:hr.field_hr_version__passport_expiration_date
+msgid "Passport Expiration Date"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__passport_id
-#: model:ir.model.fields,field_description:hr.field_res_users__passport_id
 msgid "Passport No"
+msgstr "နိုင်ငံကူးလက်မှတ် နံပါတ်"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Pay Category"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Payroll"
-msgstr ""
+msgstr "လစာပေး"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3419,7 +3740,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_permanent
 msgid "Permanent"
-msgstr ""
+msgstr "အမြဲတမ်း"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__hr_responsible_id
@@ -3430,13 +3751,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Personal"
-msgstr ""
+msgstr "ကိုယ်ရေးကိုယ်တာ"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Personal Evolution"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Personal Information"
+msgstr "ကိုယ်ရေးကိုယ်တာ အချက်အလက်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3454,21 +3774,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__phone
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_phone
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
-msgstr ""
+msgstr "ဖုန်း"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
-#: model:ir.model.fields,field_description:hr.field_res_users__place_of_birth
 msgid "Place of Birth"
-msgstr ""
+msgstr "မွေးဖွားရာ ဇာတိ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
 msgid "Plan"
-msgstr ""
+msgstr "အစီအစဉ်(Plan)"
 
 #. module: hr
 #. odoo-python
@@ -3519,7 +3837,23 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
+msgid "Preferences"
+msgstr "စိတ်ကြိုက် အပြင်အဆင်"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Presence"
 msgstr ""
 
 #. module: hr
@@ -3547,7 +3881,6 @@ msgstr ""
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
 msgid "Present"
 msgstr ""
@@ -3558,21 +3891,31 @@ msgid "Previous internship or project experience"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__primary_bank_account_id
+msgid "Primary Bank Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Print Badge"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+msgid "Private"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Address"
-msgstr ""
+msgstr "ကိုယ်ပိုင် လိပ်စာ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "ကိုယ်ပိုင် ကား နံပါတ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
@@ -3584,7 +3927,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Contact"
-msgstr ""
+msgstr "ကိုယ်ရေးကိုယ်တာ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_country_id
@@ -3596,19 +3939,21 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
 #: model:ir.model.fields,field_description:hr.field_res_users__private_email
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private Email"
-msgstr ""
+msgstr "ကိုယ်ပိုင် အီးမေးလ်"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private Information"
-msgstr ""
+msgstr "ကိုယ်ရေးကိုယ်တာ အချက်အလက်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__private_phone
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Private Phone"
-msgstr ""
+msgstr "ကိုယ်ပိုင် ဖုန်း"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_state_id
@@ -3639,19 +3984,9 @@ msgid "Private Zip"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "Problem-Solving"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Problem-solving"
-msgstr ""
-
-#. module: hr
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
-msgstr ""
+msgstr "ပရော်ဖက်ရှင်နယ် ဝန်ဆောင်မှူများ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3672,6 +4007,11 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "Proven track record in innovation"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Provide additional information about this version..."
 msgstr ""
 
 #. module: hr
@@ -3699,6 +4039,12 @@ msgstr ""
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
+msgid "Radio followed by element"
 msgstr ""
 
 #. module: hr
@@ -3732,12 +4078,22 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
 msgid "Reason"
+msgstr "အကြောင်းပြချက်"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+msgid "Records"
 msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__user_id
+msgid "Recruiter"
+msgstr "အလုပ်ခန့်သူ"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
 msgid "Recruitment"
-msgstr ""
+msgstr "ဝန်ထမ်းခန့်"
 
 #. module: hr
 #. odoo-python
@@ -3763,7 +4119,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 msgid "Related Employees"
-msgstr ""
+msgstr "သက်ဆိုင်သော ဝန်ထမ်းများ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
@@ -3771,9 +4127,12 @@ msgid "Related Partners Count"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__remove_related_user
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Related User"
-msgstr ""
+msgstr "သက်ဆိုင်သော အသုံးပြုသူ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
@@ -3794,7 +4153,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
 msgid "Reporting"
-msgstr ""
+msgstr "ရီပို့ တင်ပြခြင်း"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
@@ -3804,18 +4163,18 @@ msgstr ""
 #. module: hr
 #: model:hr.department,name:hr.dep_rd
 msgid "Research & Development"
-msgstr ""
+msgstr "သုသေသန နှင့် တိုးတက်မှူ"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr ""
+msgstr "ထွက်စာတင်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_id
 msgid "Resource"
-msgstr ""
+msgstr "အရင်းအမြစ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
@@ -3852,18 +4211,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "တာဝန်ရှိသူ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Resume"
-msgstr ""
+msgstr "လျှောက်လွှာ"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_retired
 msgid "Retired"
-msgstr ""
+msgstr "သက်ပြည့်နား"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
@@ -3881,8 +4240,20 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,field_description:hr.field_hr_version__ssnid
-#: model:ir.model.fields,field_description:hr.field_res_users__ssnid
 msgid "SSN No"
+msgstr "လူမှုဖူလုံရေး နံပါတ်"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "Salary Allocation"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__salary_distribution
+msgid "Salary Distribution"
 msgstr ""
 
 #. module: hr
@@ -3896,35 +4267,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__name
 #: model:ir.model.fields,field_description:hr.field_hr_version__structure_type_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Salary Structure Type"
 msgstr ""
 
 #. module: hr
 #: model:hr.department,name:hr.dep_sales
 msgid "Sales"
-msgstr ""
+msgstr "အရောင်းများ"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Save"
-msgstr ""
+msgstr "သိမ်း"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
-msgstr ""
+msgstr "စကက်ဂျူး"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
-#: model:ir.model.fields,field_description:hr.field_res_users__study_school
 msgid "School"
-msgstr ""
+msgstr "ကျောင်း"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_seasonal
 msgid "Seasonal"
-msgstr ""
+msgstr "ရာသီအလိုက်"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_template_id
@@ -3937,18 +4308,18 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
-#: model:ir.model.fields,help:hr.field_res_users__coach_id
 msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_job__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sequence"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__set_date_end
@@ -3970,7 +4341,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Settings"
-msgstr ""
+msgstr "အပြင်အဆင်များ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__share
@@ -3986,28 +4357,20 @@ msgid "Show Hr Icon Display"
 msgstr ""
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
-msgid "Show employees"
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+msgid "Show all records whose next activity date is past"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
-#: model:ir.model.fields,field_description:hr.field_res_users__birthday_public_display
 msgid "Show to all employees"
 msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
 #: code:addons/hr/models/hr_version.py:0
 msgid "Single"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_developer
-msgid "Skill Development"
-msgstr ""
+msgstr "လက်ထပ်ရသေး"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
@@ -4017,9 +4380,8 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,help:hr.field_hr_version__ssnid
-#: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
-msgstr ""
+msgstr "လူမှူဖူလုံရေး နံပါတ်"
 
 #. module: hr
 #. odoo-python
@@ -4039,27 +4401,25 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 #: model:ir.model.fields,field_description:hr.field_hr_version__spouse_birthdate
-#: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "အိမ်ထောင်ဖက်၏ မွေးရက်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__spouse_complete_name
-#: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
 msgid "Spouse Legal Name"
-msgstr ""
+msgstr "အိမ်ထောင်ဖက်၏ တရားဝင် အမည်"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Start"
-msgstr ""
+msgstr "စ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Start Date"
-msgstr ""
+msgstr "စတင်သောနေ့"
 
 #. module: hr
 #. odoo-python
@@ -4069,16 +4429,11 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "State"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Status"
-msgstr ""
+msgstr "အခြေအနေ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_state
@@ -4092,7 +4447,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:hr.contract.type,name:hr.contract_type_statutaire
+#: model:hr.contract.type,name:hr.contract_type_statutory
 msgid "Statutory"
 msgstr ""
 
@@ -4100,21 +4455,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street
 msgid "Street"
-msgstr ""
+msgstr "လမ်း"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street 2..."
-msgstr ""
+msgstr "လမ်း ၂..."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street..."
-msgstr ""
+msgstr "လမ်း..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street2
@@ -4144,7 +4499,7 @@ msgstr ""
 #: model:hr.contract.type,name:hr.contract_type_student
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__student
 msgid "Student"
-msgstr ""
+msgstr "ကျောင်းသား"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -4152,9 +4507,16 @@ msgid "Summary"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__currency_symbol
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__symbol
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__currency_symbol
+msgid "Symbol"
+msgstr "သင်္ကေတ"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
 msgid "Tag Name"
-msgstr ""
+msgstr "တက်ဂ် အမည်"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
@@ -4166,33 +4528,16 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Tags"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_hrm
-msgid "Talent Acquisition"
-msgstr ""
+msgstr "တက်(ဒ်)များ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Target"
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.hr_menu_hr_task
-msgid "Tasks"
-msgstr ""
+msgstr "တားဂက်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Team-oriented mindset"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-msgid "Technical Expertise"
 msgstr ""
 
 #. module: hr
@@ -4206,11 +4551,6 @@ msgid "Technical field, whether to create an employee"
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_cto
-msgid "Technology Strategy"
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "Template Name"
 msgstr ""
@@ -4218,7 +4558,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_temporary
 msgid "Temporary"
-msgstr ""
+msgstr "ယာယီ"
 
 #. module: hr
 #. odoo-python
@@ -4249,9 +4589,12 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
 msgid ""
-"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments\n"
-"                in the World. He develops and monitors the annual budget in collaboration with Sales. He defines the\n"
-"                products and customers portfolio according to the marketing plan. This mission requires strong\n"
+"The Marketing Manager defines the mid- to long-term marketing strategy for "
+"his covered market segments\n"
+"                in the World. He develops and monitors the annual budget in "
+"collaboration with Sales. He defines the\n"
+"                products and customers portfolio according to the marketing "
+"plan. This mission requires strong\n"
 "                collaboration with Technical Service and Sales."
 msgstr ""
 
@@ -4259,6 +4602,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The PIN must be a sequence of digits."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__user_id
+msgid ""
+"The Recruiter will be the default value for all Applicants in this "
+"job             position. The Recruiter is automatically added to all "
+"meetings with the Applicant."
 msgstr ""
 
 #. module: hr
@@ -4273,6 +4624,7 @@ msgid "The contract of %s is about to expire."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
 msgstr ""
@@ -4281,6 +4633,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The employee %s should be linked to a user."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The employee is already in contract on %s. Please select a date outside "
+"existing contracts"
 msgstr ""
 
 #. module: hr
@@ -4298,8 +4658,28 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid "The following fields were modified by %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_departure_wizard.py:0
+msgid "The following users have been archived: %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_departure_wizard.py:0
+msgid ""
+"The following users have not been archived as they are still linked to "
+"another active employees: %s"
 msgstr ""
 
 #. module: hr
@@ -4340,12 +4720,18 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "စာတမ်း"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
 msgstr ""
 
 #. module: hr
@@ -4359,7 +4745,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sex
 #: model:ir.model.fields,help:hr.field_hr_version__sex
-#: model:ir.model.fields,help:hr.field_res_users__sex
 msgid "This is the legal sex recognized by the state."
 msgstr ""
 
@@ -4379,7 +4764,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__tz
 #: model:ir.model.fields,field_description:hr.field_hr_version__tz
 msgid "Timezone"
-msgstr ""
+msgstr "အချိန်ဇုန်"
 
 #. module: hr
 #: model:digest.tip,name:hr.digest_tip_hr_0
@@ -4390,18 +4775,18 @@ msgstr ""
 #. module: hr
 #: model:mail.message.subtype,name:hr.mt_contract_pending
 msgid "To Renew"
-msgstr ""
+msgstr "အသစ်လုပ်ရန်"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid ""
-"To avoid multi company issues (losing the access to your previous contracts,"
-" leaves, ...), you should create another employee in the new company "
-"instead."
+"To avoid multi company issues (losing the access to your previous contracts, "
+"leaves, ...), you should create another employee in the new company instead."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr ""
@@ -4409,13 +4794,25 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
+msgstr "ခန့်မှန်းထားသော ဝန်ထမ်းစုစုပေါင်း"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_bank_account_wizard.py:0
+msgid "Total percentage allocation must equal 100%."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Total salary distribution on bank accounts must be exactly 100%."
 msgstr ""
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__trainee
 msgid "Trainee"
-msgstr ""
+msgstr "အလုပ်သင်"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4425,6 +4822,28 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Trainings"
 msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.js:0
+msgid "True association"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Trust Bank Account"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__trusted
+#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
+msgid "Trusted"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
+msgid "Type"
+msgstr "အမျိုးအစား"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_exception_decoration
@@ -4450,15 +4869,19 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
-msgstr ""
+msgstr "မသတ်မှတ်ရသေး"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
+msgstr "မဖတ်ရသေးသော မက်ဆေ့ဂျ်များ"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Untrust Bank Account"
 msgstr ""
 
 #. module: hr
@@ -4478,6 +4901,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "User"
+msgstr "အသုံးပြုသူ"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_departure_wizard.py:0
+msgid "User Archive Notification"
 msgstr ""
 
 #. module: hr
@@ -4487,9 +4916,25 @@ msgid "User Creation Notification"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
+msgid "User Employee"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "User already exists for Those Employees %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "User already exists with the same email for Employees %s"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
+msgid "User's active"
 msgstr ""
 
 #. module: hr
@@ -4527,17 +4972,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_id
-#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Version"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_version
-#: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
-#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
-#: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Versions"
 msgstr ""
 
 #. module: hr
@@ -4547,20 +4982,19 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Visa"
-msgstr ""
+msgid "Visa & Work Permit"
+msgstr "ဗီဇာ နှင့် အလုပ်လုပ်ခွင့်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "ဗီဇာသက်တမ်းကုန်သည့်ရက်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
-#: model:ir.model.fields,field_description:hr.field_res_users__visa_no
 msgid "Visa No"
-msgstr ""
+msgstr "ဗီဇာ နံပါတ်"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -4578,13 +5012,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Warning"
-msgstr ""
+msgstr "❗သတိပေးချက်"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_consultant
 msgid ""
-"We are looking for a Consultant to provide expert advice and strategic solutions,\n"
-"                driving business growth. Strong analytical skills and a proven track record in delivering results are\n"
+"We are looking for a Consultant to provide expert advice and strategic "
+"solutions,\n"
+"                driving business growth. Strong analytical skills and a "
+"proven track record in delivering results are\n"
 "                essential."
 msgstr ""
 
@@ -4592,7 +5028,8 @@ msgstr ""
 #: model_terms:hr.job,description:hr.job_developer
 msgid ""
 "We are looking for an experience developer to join our Web team.\n"
-"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical\n"
+"                Someone who can snap out of coding and perform analysis or "
+"meet clients to explain the technical\n"
 "                possibilities that can meet their needs."
 msgstr ""
 
@@ -4647,24 +5084,27 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
 #: code:addons/hr/models/hr_version.py:0
 msgid "Widower"
+msgstr "မုဆိုး"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__wizard_id
+msgid "Wizard"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work"
-msgstr ""
+msgstr "အလုပ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__address_id
-#: model:ir.model.fields,field_description:hr.field_res_users__address_id
 msgid "Work Address"
-msgstr ""
+msgstr "အလုပ် လိပ်စာ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_contact_id
@@ -4679,14 +5119,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_users__work_email
 #: model:ir.model.fields,field_description:hr.field_resource_resource__work_email
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Email"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-msgid "Work Information"
-msgstr ""
+msgstr "အလုပ် အီးမေးလ်"
 
 #. module: hr
 #. odoo-javascript
@@ -4701,12 +5138,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_work_location_form_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_work_location_tree_view
 msgid "Work Location"
-msgstr ""
+msgstr "အလုပ် နေရာ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
-#: model:ir.model.fields,field_description:hr.field_hr_version__work_location_name
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
 msgid "Work Location Name"
 msgstr ""
@@ -4714,7 +5150,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
-#: model:ir.model.fields,field_description:hr.field_hr_version__work_location_type
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
 msgid "Work Location Type"
 msgstr ""
@@ -4723,15 +5158,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
-msgstr ""
+msgstr "အလုပ် နေရာများ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Mobile"
-msgstr ""
+msgstr "အလုပ် မိုဘိုင်းဖုန်း"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -4740,10 +5177,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_work_permit
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
-msgstr ""
+msgstr "အလုပ်လုပ်ခွင့်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
@@ -4763,9 +5198,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
-#: model:ir.model.fields,field_description:hr.field_res_users__permit_no
 msgid "Work Permit No"
-msgstr ""
+msgstr "အလုပ်လုပ်ခွင့် နံပါတ်"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
@@ -4778,9 +5212,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_users__work_phone
 #: model:ir.model.fields,field_description:hr.field_resource_resource__work_phone
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Phone"
-msgstr ""
+msgstr "အလုပ် ဖုန်း"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__employee_type__worker
@@ -4792,7 +5228,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__default_resource_calendar_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__resource_calendar_id
 msgid "Working Hours"
-msgstr ""
+msgstr "အလုပ်ချိန်များ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
@@ -4802,6 +5238,25 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_resource_calendar_view
 msgid "Working Schedules"
+msgstr "အလုပ်ချိန်များ"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_resource_resource__calendar_id
+msgid "Working Time"
+msgstr "အလုပ်ချိန်"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/fields/boolean_radio.xml:0
+msgid "YES"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
 msgstr ""
 
 #. module: hr
@@ -4816,8 +5271,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid ""
-"You are only allowed to update your preferences. Please contact a HR officer"
-" to update other information."
+"You are receiving this message because you are the HR Responsible of this "
+"employee."
 msgstr ""
 
 #. module: hr
@@ -4834,16 +5289,32 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/res_partner.py:0
+msgid ""
+"You cannot delete contact that are linked to an employee, please archive "
+"them instead."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0
+msgid ""
+"You cannot delete contact(s) linked to employee(s).\n"
+"Please archive them instead.\n"
+"\n"
+"Affected contact(s): %(names)s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You do not have access to this document."
 msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_version.py:0
-msgid ""
-"You have some overlapping contracts for %(employee)s:\n"
-"%(overlaps)s"
+#: code:addons/hr/models/hr_employee.py:0
+msgid "You need to set a valid work email address for %s"
 msgstr ""
 
 #. module: hr
@@ -4855,26 +5326,41 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
 msgid ""
-"You participate to the update of our tutorial tools and pre-sales tools after the launch of a new version of Odoo. Indeed, any new version of the software brings significant improvements in terms of functionalities, ergonomics and configuration.\n"
-"You will have to become familiar with the existing tools (books, class supports, Odoo presentation’s slides, commercial tools),\n"
-"to participate to the update of those tools in order to make them appropriate for the new version of the software and, for sure,\n"
+"You participate to the update of our tutorial tools and pre-sales tools "
+"after the launch of a new version of Odoo. Indeed, any new version of the "
+"software brings significant improvements in terms of functionalities, "
+"ergonomics and configuration.\n"
+"You will have to become familiar with the existing tools (books, class "
+"supports, Odoo presentation’s slides, commercial tools),\n"
+"to participate to the update of those tools in order to make them "
+"appropriate for the new version of the software and, for sure,\n"
 "to suggest improvements in order to cover the new domains of the software.\n"
-"You join the Implementation Assistance department. This team of 3 people go with Odoo’s clients in the set up of the software. Your role will be\n"
-"to animate webinars in order to show the different functionalities of the software.\n"
+"You join the Implementation Assistance department. This team of 3 people go "
+"with Odoo’s clients in the set up of the software. Your role will be\n"
+"to animate webinars in order to show the different functionalities of the "
+"software.\n"
 "to be involved in the support of the customers and\n"
 "to answer to their questions.\n"
 "You help the support manager to set up new support services by\n"
 "being involved in the treatment of new cases,\n"
 "contributing to the set up of a new politic,\n"
-"being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
+"being involved into satisfaction surveys in order to have a better knowledge "
+"of how the support given is seen by the customers."
 msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_cto
 msgid ""
-"You will take part in the consulting services we provide to our partners and customers: design, analysis, development, testing, project management, support/coaching. You will work autonomously as well as coordinate and supervise small distributed development teams for some projects. Optionally, you will deliver Odoo training sessions to partners and customers (8-10 people/session). You will report to the Head of Professional Services and work closely with all developers and consultants.\n"
+"You will take part in the consulting services we provide to our partners and "
+"customers: design, analysis, development, testing, project management, "
+"support/coaching. You will work autonomously as well as coordinate and "
+"supervise small distributed development teams for some projects. Optionally, "
+"you will deliver Odoo training sessions to partners and customers (8-10 "
+"people/session). You will report to the Head of Professional Services and "
+"work closely with all developers and consultants.\n"
 "\n"
-"The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
+"The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-"
+"Neuve and Namur)."
 msgstr ""
 
 #. module: hr
@@ -4887,17 +5373,17 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "ZIP"
-msgstr ""
+msgstr "စာတိုက် သင်္ကေတ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_zip
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_zip
 msgid "Zip"
-msgstr ""
+msgstr "စာတိုက် သင်္ကေတ"
 
 #. module: hr
 #. odoo-python
@@ -4908,6 +5394,11 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+msgid "bachelor"
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "cohabitant"
 msgstr ""
@@ -4919,10 +5410,15 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
 #: code:addons/hr/models/hr_version.py:0
 msgid "divorced"
 msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "doctor"
+msgstr "ဒေါက်တာ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -4935,11 +5431,16 @@ msgid "e.g. Founder, Motorized, Building B, ..."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+msgid "e.g. John Doe"
+msgstr "ဉပမာ- ဂျွန်ဒိုး"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr ""
+msgstr "ဥပမာ အရောင်း မန်နေဂျာ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -4958,6 +5459,11 @@ msgid "e.g. myprivateemail@example.com"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_mixin
+msgid "hr.mixin"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "id"
@@ -4966,18 +5472,29 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__kilometers
 msgid "km"
-msgstr ""
+msgstr "ကီလိုမီတာ(km)"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
 #: code:addons/hr/models/hr_version.py:0
 msgid "married"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "master"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__miles
 msgid "mi"
+msgstr "မိုင်(mi)"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "other"
 msgstr ""
 
 #. module: hr
@@ -4987,13 +5504,7 @@ msgid "restricted to employees"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "to"
-msgstr ""
-
-#. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
 #: code:addons/hr/models/hr_version.py:0
 msgid "widower"
 msgstr ""

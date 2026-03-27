@@ -80,9 +80,12 @@
             'point_of_sale/static/src/scss/pos_dashboard.scss',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',
+            'point_of_sale/static/src/backend/lna_checklist/*',
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
+            'point_of_sale/static/src/backend/test_epos/*',
+            'point_of_sale/static/src/app/utils/init_lna.js',
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
@@ -232,6 +235,7 @@
             "point_of_sale/static/tests/pos/tours/utils/common.js",
             "point_of_sale/static/tests/generic_helpers/order_widget_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
+            "point_of_sale/static/tests/customer_display/customer_display_utils.js",
             "point_of_sale/static/tests/customer_display/customer_display_tour.js",
         ],
         'point_of_sale.assets_debug': [

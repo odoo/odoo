@@ -170,6 +170,20 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         })
         self.start_tour("/shop", 'google_analytics_add_to_cart')
 
+    def test_06_public_user_shop_repair(self):
+        """ Public user purchasing repair service products in website shop. """
+        if self.env['ir.module.module']._get('repair').state != 'installed':
+            self.skipTest("Repair is not installed")
+
+        self.env['product.template'].create({
+            'name': 'Test Repair Service',
+            'type': 'service',
+            'service_tracking': 'repair',
+            'sale_ok': True,
+            'is_published': True,
+        })
+        self.start_tour("/", 'shop_repair_product', login=None)
+
     def test_checkout_with_rewrite(self):
         # check that checkout page can be open with step rewritten
         self.env['website.rewrite'].create({

@@ -122,7 +122,7 @@ export class StoreInternal extends RecordInternal {
                 /** @type {import("./record").Record} */
                 const [record] = params;
                 record._[IS_DELETING_SYM] = true;
-                record._[IS_DELETED_SYM] = true;
+                record._proxy[IS_DELETED_SYM] = true;
                 delete record.Model.records[record.localId];
                 if (!this.RHD_QUEUE.has(record)) {
                     this.RHD_QUEUE.set(record, true);
@@ -194,7 +194,10 @@ export class StoreInternal extends RecordInternal {
      * @param {Object} vals
      */
     updateFields(record, vals) {
-        for (const [fieldName, value] of Object.entries(vals)) {
+        const fieldEntries = Object.entries(vals).concat(
+            Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
+        );
+        for (const [fieldName, value] of fieldEntries) {
             if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
                 this.updateAttr(record, fieldName, value);
             } else {

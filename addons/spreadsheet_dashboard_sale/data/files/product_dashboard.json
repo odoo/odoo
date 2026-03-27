@@ -263,7 +263,7 @@
                   "context": {
                     "group_by": []
                   },
-                  "domain": "[\"&\", (\"state\", \"!=\", \"cancel\"), \"&\", (\"state\", \"not in\", (\"draft\", \"cancel\", \"sent\")), (\"product_tmpl_id.recurring_invoice\", \"!=\", True)]",
+                  "domain": "[\"&\", (\"state\", \"!=\", \"cancel\"), (\"state\", \"not in\", (\"draft\", \"cancel\", \"sent\"))]",
                   "groupBy": ["categ_id"],
                   "orderBy": []
                 },

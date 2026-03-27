@@ -11,6 +11,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_crm_partner_assign.controllers.main import (
@@ -95,7 +96,8 @@ class TestPartnerAssign(TransactionCase):
             pass
 
 
-class TestPartnerLeadPortal(TestCrmCommon):
+@tagged('lead_portal')
+class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
 
     def setUp(self):
         super(TestPartnerLeadPortal, self).setUp()
@@ -133,10 +135,25 @@ class TestPartnerLeadPortal(TestCrmCommon):
 
     def test_partner_lead_decline(self):
         """ Test an integrating partner decline the lead """
+        # Add a child for the commercial partner of portal user
+        # because it will affect the message unsubscribe process.
+        self.env['res.partner'].create({
+            'name': 'Child Contact Name',
+            'parent_id': self.user_portal.partner_id.id,
+        })
         self.lead_portal.with_user(self.user_portal).partner_desinterested(comment="No thanks, I have enough leads !", contacted=True, spam=False)
 
         self.assertFalse(self.lead_portal.partner_assigned_id.id, 'The partner_assigned_id of the declined lead should be False.')
         self.assertTrue(self.user_portal.partner_id in self.lead_portal.sudo().partner_declined_ids, 'Partner who has declined the lead should be in the declined_partner_ids.')
+
+    def test_partner_lead_decline_spam(self):
+        """ Test an integrating partner decline the lead by mentioning that it is spam """
+        self.lead_portal.invalidate_recordset()
+        self.lead_portal.with_user(self.user_portal).partner_desinterested(comment="It is a spam !", contacted=True, spam=True)
+
+        self.assertFalse(self.lead_portal.partner_assigned_id.id, 'The partner_assigned_id of the declined lead should be False.')
+        self.assertTrue(self.user_portal.partner_id in self.lead_portal.sudo().partner_declined_ids, 'Partner who has declined the lead should be in the declined_partner_ids.')
+        self.assertIn(self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam'), self.lead_portal.tag_ids, 'The lead must be tagged as spam.')
 
     def test_lead_access_right(self):
         """ Test another portal user can not write on every leads """
@@ -189,6 +206,18 @@ class TestPartnerLeadPortal(TestCrmCommon):
             'partner_id': test_partner.id,
         })
 
+        update_values = {
+            'expected_revenue': 9999.0,
+            'probability': 50.0,
+            'priority': '2',
+            'date_deadline': False,
+            'activity_date_deadline': False,
+            'activity_type_id': False,
+            'activity_summary': False,
+        }
+        opportunity.with_user(self.user_portal).update_lead_portal(update_values)
+        self.assertEqual(opportunity.expected_revenue, 9999.0, "Portal user should be able to update revenue or other details via portal method")
+
         email_2 = 'test_partner_updated@test.com'
         opportunity.with_user(self.user_portal).update_contact_details_from_portal({
             'email_from': email_2,
@@ -202,10 +231,43 @@ class TestPartnerLeadPortal(TestCrmCommon):
         })
         self.assertEqual(test_partner.email, email_2, 'Adress email on the partner must be updated')
 
+        # Portal user must be able to write to the thread
+        old_message_ids = opportunity.message_ids
+        with MockRequest(self.env(user=self.user_portal)):
+            res = ThreadController().mail_message_post(
+                "crm.lead",
+                opportunity.id,
+                {"body": "Test message"},
+            )
+        new_message_ids = opportunity.message_ids - old_message_ids
+        self.assertEqual(res['message_id'], new_message_ids.id)
+
     def test_portal_mixin_url(self):
         record_action = self.lead_portal._get_access_action(access_uid=self.user_portal.id)
         self.assertEqual(record_action['url'], '/my/opportunity/%s' % self.lead_portal.id)
         self.assertEqual(record_action['type'], 'ir.actions.act_url')
+
+    def test_portal_post(self):
+        self.authenticate(self.user_portal.login, self.user_portal.login)
+        self.make_jsonrpc_request(
+            route="/mail/message/post",
+            params={
+                'thread_model': self.lead_portal._name,
+                'thread_id': self.lead_portal.id,
+                'pid': self.user_portal.partner_id.id,
+                'post_data': {
+                    'body': "Test",
+                },
+            },
+        )
+        message = self.lead_portal.message_ids[0]
+        self.assertMessageFields(
+            message, {
+                'author_id': self.user_portal.partner_id,
+                'body': '<p>Test</p>',
+                'message_type': 'comment',
+            }
+        )
 
     def test_route_portal_my_opportunities_as_portal(self):
         """Test that the portal user can access its own opportunities even if

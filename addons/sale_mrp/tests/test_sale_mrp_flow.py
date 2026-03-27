@@ -14,7 +14,6 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
-@skip('Temporary to fast merge new valuation')
 class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
 
     @classmethod
@@ -212,6 +211,7 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
 
 @common.tagged('post_install', '-at_install')
 class TestSaleMrpFlow(TestSaleMrpFlowCommon):
+    @skip('Temporary to fast merge new valuation')
     def test_00_sale_mrp_flow(self):
         """ Test sale to mrp flow with diffrent unit of measure."""
 
@@ -464,6 +464,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Check product A avaialble quantity should be 120.
         self.assertEqual(product_a.qty_available, 120, 'Wrong quantity available of product A.')
 
+    @skip('Temporary to fast merge new valuation')
     def test_01_sale_mrp_delivery_kit(self):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
@@ -545,6 +546,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
 
+    @skip('Temporary to fast merge new valuation')
     def test_02_sale_mrp_anglo_saxon(self):
         """Test the price unit of a kit"""
         # This test will check that the correct journal entries are created when a stockable product in real time valuation
@@ -1734,6 +1736,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
 
+    @skip('Temporary to fast merge new valuation')
     def test_15_anglo_saxon_variant_price_unit(self):
         """
         Test the price unit of a variant from which template has another variant with kit bom.
@@ -1759,16 +1762,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'property_valuation': 'real_time',
             'property_cost_method': 'fifo',
         })
-        account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
-        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'account_type': 'liability_current', 'reconcile': True})
-        account_income = self.env['account.account'].create({'name': 'Income', 'code': 'INC00', 'account_type': 'asset_current', 'reconcile': True})
-        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'account_type': 'asset_receivable', 'reconcile': True})
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.partner.property_account_receivable_id = account_receiv
-        self.category.property_account_income_categ_id = account_income
-        self.category.property_account_expense_categ_id = account_expense
-        self.category.property_stock_account_input_categ_id = account_receiv
-        self.category.property_stock_valuation_account_id = account_valuation
 
         # Create variant attributes
         self.prod_att_test = self.env['product.attribute'].create({'name': 'test'})
@@ -1871,13 +1865,14 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         aml_nokit_expense = amls.filtered(lambda l: l.display_type == 'cogs' and l.debit > 0 and l.product_id == self.variant_NOKIT)
         aml_nokit_output = amls.filtered(lambda l: l.display_type == 'cogs' and l.credit > 0 and l.product_id == self.variant_NOKIT)
 
-        # Check that the Cost of Goods Sold for variant KIT is equal to (2*20)+10 = 50
-        self.assertEqual(aml_kit_expense.debit, 50, "Cost of Good Sold entry missing or mismatching for variant with kit")
-        self.assertEqual(aml_kit_output.credit, 50, "Cost of Good Sold entry missing or mismatching for variant with kit")
+        # Check that the Cost of Goods Sold for variant KIT is equal to 2*(2*20)+10 = 90
+        self.assertEqual(aml_kit_expense.debit, 90, "Cost of Good Sold entry missing or mismatching for variant with kit")
+        self.assertEqual(aml_kit_output.credit, 90, "Cost of Good Sold entry missing or mismatching for variant with kit")
         # Check that the Cost of Goods Sold for variant NOKIT is equal to its standard_price = 25
         self.assertEqual(aml_nokit_expense.debit, 25, "Cost of Good Sold entry missing or mismatching for variant without kit")
         self.assertEqual(aml_nokit_output.credit, 25, "Cost of Good Sold entry missing or mismatching for variant without kit")
 
+    @skip('Temporary to fast merge new valuation')
     def test_16_anglo_saxon_variant_price_unit_multi_company(self):
         """
         Test the price unit of the BOM of the stock move is taken
@@ -2048,6 +2043,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         so.action_confirm()
         self.assertEqual(len(so.picking_ids), 1, "The product was already delivered, no need to re-create a delivery order")
 
+    @skip('Temporary to fast merge new valuation')
     def test_kit_margin_and_return_picking(self):
         """ This test ensure that, when returning the components of a sold kit, the
         sale order line cost does not change"""
@@ -2206,10 +2202,13 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
     def test_kit_return_and_decrease_sol_qty_to_zero(self):
         """
         Create and confirm a SO with a kit product.
-        Deliver & Return the components
+        Deliver in two steps & Return the components
         Set the SOL qty to 0
+
+        Check that the move chain is adapted accordingly.
         """
         stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.company_data['default_warehouse'].delivery_steps = 'pick_ship'
 
         grp_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'group_ids': [(4, grp_uom.id)]})
@@ -2227,11 +2226,15 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         so = so_form.save()
         so.action_confirm()
 
-        delivery = so.picking_ids
+        pick = so.picking_ids
+        for m in pick.move_ids:
+            m.write({'quantity': m.product_uom_qty, 'picked': True})
+        pick.button_validate()
+        self.assertEqual(pick.state, 'done')
+        delivery = so.picking_ids - pick
         for m in delivery.move_ids:
             m.write({'quantity': m.product_uom_qty, 'picked': True})
         delivery.button_validate()
-
         self.assertEqual(delivery.state, 'done')
         self.assertEqual(so.order_line.qty_delivered, 2)
 
@@ -2251,8 +2254,17 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             with so_form.order_line.edit(0) as line:
                 line.product_uom_qty = 0
 
-        self.assertEqual(so.picking_ids, delivery | return_picking)
+        self.assertEqual(so.picking_ids, pick | delivery | return_picking)
+        self.assertRecordValues(so.picking_ids.move_ids.sorted(lambda m: (m.picking_id.id, m.product_id.id)), [
+            {'picking_id': pick.id, 'product_id': self.component_f.id, 'quantity': 20.0},
+            {'picking_id': pick.id, 'product_id': self.component_g.id, 'quantity': 40.0},
+            {'picking_id': delivery.id, 'product_id': self.component_f.id, 'quantity': 20.0},
+            {'picking_id': delivery.id, 'product_id': self.component_g.id, 'quantity': 40.0},
+            {'picking_id': return_picking.id, 'product_id': self.component_f.id, 'quantity': 20.0},
+            {'picking_id': return_picking.id, 'product_id': self.component_g.id, 'quantity': 40.0},
+        ])
 
+    @skip('Temporary to fast merge new valuation')
     def test_fifo_reverse_and_create_new_invoice(self):
         """
         FIFO automated
@@ -2325,6 +2337,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(cogs_aml.debit, 10)
         self.assertEqual(cogs_aml.credit, 0)
 
+    @skip('Temporary to fast merge new valuation')
     def test_kit_avco_amls_reconciliation(self):
         self.stock_account_product_categ.property_cost_method = 'average'
 
@@ -2644,3 +2657,141 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # is linked to all moves (this is a known limitation).
         self.assertEqual(exchange_picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids[0], "All moves in the exchange picking should be linked to the first BOM line.")
         self.assertEqual(exchange_picking.move_ids.quantity, 2)
+
+    def test_delivery_after_splitting_production(self):
+        """
+        Test that processing the different MOs of a split production correctly
+        updates the picking SM's quantity.
+        """
+        # Set product up with MTO + Manufacture with (empty) BoM
+        product = self._cls_create_product('Split Product', self.uom_unit, routes=[
+            self.company_data['default_warehouse'].mto_pull_id.route_id,
+            self.company_data['default_warehouse'].manufacture_pull_id.route_id,
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'name': f"2 of {self.product.name}",
+                'product_id': product.id,
+                'product_uom_qty': 2,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_picking = sale_order.picking_ids
+        self.assertTrue(sale_picking)
+
+        mo = self.env['mrp.production'].search([('product_id', '=', product.id)], limit=1)
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.max_batch_size = 1
+        wizard.save().action_split()
+        self.assertEqual(len(mo.production_group_id.production_ids), 2)
+
+        mo.production_group_id.production_ids[0].button_mark_done()
+        self.assertEqual(sale_picking.move_ids.quantity, 1)
+        mo.production_group_id.production_ids[1].button_mark_done()
+        self.assertEqual(sale_picking.move_ids.quantity, 2)
+        sale_picking.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 2.0)
+
+    def test_separate_child_mo_for_shared_component(self):
+        """Ensure that when confirming a Sale Order with multiple MTO products
+        sharing the same component (which has its own BOM), each parent
+        manufacturing order generates its own dedicated child MO instead of
+        reusing or updating an existing one.
+
+        This verifies that child MOs are created per parent MO (based on the
+        parent production group), so that each manufactured product is tracked
+        independently.
+        """
+        route_mto = self.env.ref('stock.route_warehouse0_mto').id
+        (self.product_a | self.product_b | self.product).route_ids = [route_mto]
+        self.env["mrp.bom"].create([
+            {
+                "product_tmpl_id": self.product_a.product_tmpl_id.id,
+                "bom_line_ids": [(0, 0, {"product_id": self.product.id, "product_qty": 1.0})],
+            },
+            {
+                "product_tmpl_id": self.product_b.product_tmpl_id.id,
+                "bom_line_ids": [(0, 0, {"product_id": self.product.id, "product_qty": 1.0})],
+            },
+            {
+                "product_tmpl_id": self.product.product_tmpl_id.id,
+                "bom_line_ids": [(0, 0, {"product_id": self.component_a.id, "product_qty": 1.0})],
+            },
+        ])
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertEqual(so.mrp_production_count, 2)
+        self.assertEqual(so.mrp_production_ids[0].mrp_production_child_count, 1)
+        self.assertEqual(so.mrp_production_ids[1].mrp_production_child_count, 1)
+
+    def test_sale_mto_manufacture_quantity_update_propagation(self):
+        """
+        Check that in MTO the quantity update on an SO is propagated on the MO
+        and that an activity is scheduled on operation cancellation.
+        """
+        product = self.product
+        product.route_ids = self.env.ref('stock.route_warehouse0_mto')
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({
+                'product_id': self.component_a.id, 'product_qty': 1.0,
+            })],
+        })
+        sale_order, sale_order_to_cancel = sale_orders = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 3,
+            })],
+        } for _ in range(2)])
+        sale_orders.action_confirm()
+
+        production = sale_order.stock_reference_ids.production_ids
+        self.assertRecordValues(production, [
+            {'product_qty': 3.0, 'product_uom_id': product.uom_id.id}
+        ])
+        # Cancel the delivery which adds a warning in the chatter but does not cancel the MO
+        delivery = sale_order.picking_ids
+        delivery.action_cancel()
+        # Check that an activity was linked on the the MO
+        self.assertRecordValues(production.activity_ids, [
+            {'user_id': self.env.user.id, 'display_name': 'Exception'}
+        ])
+        self.assertRegex(production.activity_ids.note, fr"Exception\(s\) occurred on the picking.*\n.*{delivery.name.replace('/', '.')}.*\n.*Manual actions may be needed")
+        # Update the selling demand to 10 units, this should create a delivery for
+        # 10 units and MTO should adapt existing MO for an additinal 10 units
+        with Form(sale_order) as so_form:
+            with so_form.order_line.edit(0) as order_line:
+                order_line.product_uom_qty = 10.0
+        self.assertRecordValues(sale_order.stock_reference_ids.production_ids, [
+            {'product_qty': 13.0, 'product_uom_id': product.uom_id.id}
+        ])
+
+        # Check that cancelling the SO, propagates the cancellation on the delivery
+        # and scheduled a signle activity on the MO (the one of the SO, not the DO)
+        sale_order_to_cancel.action_cancel()
+        self.assertEqual(sale_order_to_cancel.picking_ids.state, 'cancel')
+        production_2 = sale_order_to_cancel.stock_reference_ids.production_ids
+        self.assertRecordValues(production_2.activity_ids, [
+            {'user_id': self.env.user.id, 'display_name': 'Exception'}
+        ])
+        self.assertRegex(production_2.activity_ids.note, fr"Exception\(s\) occurred on the sale order\(s\).*\n.*{sale_order_to_cancel.name}.*\n.*Manual actions may be needed")

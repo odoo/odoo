@@ -28,7 +28,7 @@ class TestRepairPurchaseFlow(PurchaseTestCommon):
             'name': 'Vendor',
         })
 
-        product = self.productA
+        product = self.product
         product.write({
             'route_ids': [Command.set([self.route_mto.id, self.route_buy.id])],
             'seller_ids': [
@@ -58,5 +58,8 @@ class TestRepairPurchaseFlow(PurchaseTestCommon):
         self.assertEqual(purchase.order_line.product_id, product)
         self.assertEqual(purchase.order_line.product_qty, 1.0)
         self.assertEqual(purchase.order_line.move_dest_ids.repair_id, repair)
+        self.assertEqual(repair.purchase_count, 1)
+        self.assertEqual(purchase.repair_count, 1)
+        purchase.button_confirm()
         self.assertEqual(repair.purchase_count, 1)
         self.assertEqual(purchase.repair_count, 1)

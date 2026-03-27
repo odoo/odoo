@@ -787,7 +787,11 @@ test("don't close dropdown outside the active element", async () => {
     expect(".modal-dialog").toHaveCount(1);
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    await click(".modal-dialog .btn-primary");
+    if (getMockEnv().isSmall) {
+        await click(".modal-dialog .oi-arrow-left");
+    } else {
+        await click(".modal-dialog .btn-close");
+    }
     await animationFrame();
     expect(".modal-dialog").toHaveCount(0);
     expect(DROPDOWN_MENU).toHaveCount(1);

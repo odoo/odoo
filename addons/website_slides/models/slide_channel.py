@@ -65,7 +65,8 @@ class SlideChannel(models.Model):
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],
-        string="Course type", default="training", required=True)
+        string="Course type", default="training", required=True,
+        help='Defines the course type (e.g., "Training" for interactive learning, or "Documentation" for resources and guides).')
     sequence = fields.Integer(default=10)
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
     color = fields.Integer('Color Index', default=0, help='Used to decorate kanban view')
@@ -104,7 +105,7 @@ class SlideChannel(models.Model):
     rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1), compute_sudo=True)
     # configuration
     allow_comment = fields.Boolean(
-        "Allow rating on Course", default=True,
+        "Allow rating on Course", compute="_compute_allow_comment", store=True, readonly=False, precompute=True,
         help="Allow Attendees to like and comment your content and to submit reviews on your course.")
     publish_template_id = fields.Many2one(
         'mail.template', string='New Content Notification',
@@ -352,6 +353,12 @@ class SlideChannel(models.Model):
         super()._compute_rating_stats()
         for record in self:
             record.rating_avg_stars = record.rating_avg
+
+    @api.depends('channel_type')
+    def _compute_allow_comment(self):
+        """Comment allowed by default except for documentation channels."""
+        for record in self:
+            record.allow_comment = record.channel_type != 'documentation'
 
     @api.depends('slide_partner_ids', 'slide_partner_ids.completed', 'total_slides')
     @api.depends_context('uid')
@@ -922,9 +929,10 @@ class SlideChannel(models.Model):
         return activities
 
     def _get_access_action(self, access_uid=None, force_website=False):
-        """ Instead of the classic form view, redirect to website if it is published. """
+        """ Instead of the classic form view, redirect non-internal users to website
+        if it is published. """
         self.ensure_one()
-        if force_website or self.website_published:
+        if force_website or (self.website_published and self.env.user.share):
             return {
                 "type": "ir.actions.act_url",
                 "url": self.website_url,

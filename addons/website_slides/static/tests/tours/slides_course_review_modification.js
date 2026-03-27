@@ -38,12 +38,20 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click",
         },
         {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='4']:contains(100%)",
+        },
+        {
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(First review)",
             run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Delete']",
         },
         {
             trigger: "#chatterRoot:shadow button:contains(Delete)",
             run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Thread:contains(The conversation is empty.)",
@@ -81,6 +89,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='3']:contains(100%)",
+        },
+        {
+            trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Second review) .o_website_rating_static[title='3 stars on 5']",
         },
         {
@@ -106,6 +118,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger: "a[id=review-tab]:contains(Reviews (1))",
             run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='2']:contains(100%)",
         },
         {
             trigger:
@@ -170,11 +186,134 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click",
         },
         {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
+        },
+        {
             trigger: "span:contains(Add Review)",
             run: "click",
         },
         {
             trigger: ".modal.modal_shown.show .o-mail-Composer-starCard:has(input[value='4'])",
+        },
+        {
+            trigger:
+                ".modal.modal_shown.show button.o_portal_chatter_composer_btn:contains(Post review)",
+            run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:not(:has(.o-mail-Message-body)) .o_website_rating_static[title='4 stars on 5']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
+            run: "edit Fill the message body",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
+            run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message[data-persistent] .o-mail-Message-body:contains(Fill the message body)",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:contains(Fill the message body)",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
+            run: "edit",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
+            run: "click",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:not(:has(Fill the message body)):contains( (edited))",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("course_review_modification_by_admin", {
+    url: "/slides",
+    steps: () => [
+        {
+            trigger: "a:text(Basics of Gardening - Test)",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: "a[id=review-tab]:text(Reviews (1))",
+            run: "click",
+        },
+        {
+            trigger: ".o_rating_popup_composer span:text(Add Review)",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']"
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
+            run: "hover && click #chatterRoot:shadow button[name='edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
+            run: "edit Admin edited this review.",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:text(save)",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-body:contains(Admin edited this review.)",
+        },
+        // If it fails here, it means that the default values have changed after the admin edited someone else's review.
+        {
+            trigger: ".o_rating_popup_composer span:text(Add Review)",
+            run: "click",
+        },
+        {
+            trigger: "div.o_portal_chatter_composer textarea",
+            run: "edit New comment from admin",
+        },
+        {
+            trigger:
+                ".modal.modal_shown.show button.o_portal_chatter_composer_btn:text(Post review)",
+            run: "click",
+        },
+        {
+            trigger: "a[id=review-tab]:text(Reviews (2))",
+            run: "click",
+        },
+        {
+            trigger: ".o_rating_popup_composer span:text(Edit Review)",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-body:contains(Admin edited this review.)",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message:contains(Admin edited this review.) [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-dropdown-item:has(:text(Delete))",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow button:text(Delete)",
+            run: "click",
+        },
+        {
+            trigger: "a[id=review-tab]:text(Reviews (1))",
+            run: "click",
+        },
+        // If it fails here, it means that the default values have changed after the admin deleted someone else's review.
+        {
+            trigger: ".o_rating_popup_composer span:text(Edit Review)",
         },
     ],
 });

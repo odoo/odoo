@@ -13,7 +13,6 @@ from odoo import Command
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderKiosk(SelfOrderCommonTest):
     def test_self_order_kiosk(self):
-        self_route = self.pos_config._get_self_order_route()
         self.pos_config.write({
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
@@ -21,6 +20,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
 
         tax_10_inc = self.env['account.tax'].create({
             "name": "10% incl",
@@ -53,7 +53,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
 
         # With preset location choices
-        self.start_tour(self_route, "self_kiosk_each_counter_takeaway_in")
+        self.start_tour(self.pos_config._get_self_order_route(), "self_kiosk_each_counter_takeaway_in")
         self.start_tour(self_route, "self_kiosk_each_counter_takeaway_out")
 
         self.pos_config.write({
@@ -213,6 +213,27 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, 'test_self_order_pricelist')
 
+    def test_self_order_kiosk_to_cashier_payment(self):
+        self.pos_config.write({
+            'use_presets': False,
+            'default_preset_id': False,
+            'available_preset_ids': [Command.clear()],
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'use_pricelist': True,
+        })
+        cashier_pos = self.env['pos.config'].create({
+            'name': 'Shop',
+            'module_pos_restaurant': False,
+            'cash_control': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, 'test_self_order_kiosk_unpaid')
+        self.start_tour(f"/pos/ui/{cashier_pos.id}", 'test_pay_unpaid_order_from_kiosk', login="admin")
+
     def test_self_order_kiosk_ordering_images_public(self):
         def assert_all_image_public():
             self.assertTrue(all(img.public for img in self.pos_config.self_ordering_image_home_ids))
@@ -278,3 +299,48 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.assertEqual(len(self.pos_config.self_ordering_image_home_ids), 3)
         # Background images can be fully cleared
         self.assertEqual(len(self.pos_config.self_ordering_image_background_ids), 0)
+
+    def test_self_order_parent_category(self):
+        # Create a parent POS category and two child POS categories
+        test_parent_category = self.env['pos.category'].create({
+            'name': "Test Parent Category",
+        })
+        test_child_category1 = self.env['pos.category'].create({
+            'name': "Test Child Category 1",
+            'parent_id': test_parent_category.id
+        })
+        test_child_category2 = self.env['pos.category'].create({
+            'name': "Test Child Category 2",
+            'parent_id': test_parent_category.id
+        })
+
+        # Create sample products for testing for child categories
+        self.env['product.product'].create({
+            'name': "Coca-Cola",
+            'list_price': 2.53,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.link(test_child_category1.id)],
+        })
+        self.env['product.product'].create({
+            'name': "Pepsi",
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.link(test_child_category2.id)],
+        })
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'iface_available_categ_ids': [Command.set([test_parent_category.id, test_child_category1.id, test_child_category2.id])],
+            'limit_categories': True,
+            'use_presets': False,
+            'default_preset_id': False,
+            'available_preset_ids': [Command.clear()],
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_self_order_parent_category")

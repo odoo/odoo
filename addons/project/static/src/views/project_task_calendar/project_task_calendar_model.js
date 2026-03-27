@@ -5,6 +5,15 @@ import { CalendarModel } from '@web/views/calendar/calendar_model';
 import { ProjectTaskModelMixin } from "../project_task_model_mixin";
 
 export class ProjectTaskCalendarModel extends ProjectTaskModelMixin(CalendarModel) {
+    get tasksToPlanDomain() {
+        const projectId = this.meta.context.default_project_id;
+        const domain = [['date_deadline', '=', false]];
+        if (projectId) {
+            domain.push(['project_id', '=', projectId]);
+        }
+        return domain;
+    }
+
     /**
      * @override
      */
@@ -73,7 +82,7 @@ export class ProjectTaskCalendarModel extends ProjectTaskModelMixin(CalendarMode
         );
         domain = Domain.and([
             domain,
-            [['planned_date_begin', '=', false], ['date_deadline', '=', false], ['project_id', '=', projectId]],
+            this.tasksToPlanDomain,
         ]);
         return await this.orm.webSearchRead(this.resModel, domain.toList(this.meta.context), {
             specification: this.tasksToPlanSpecification,

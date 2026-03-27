@@ -1,6 +1,9 @@
 from markupsafe import Markup
 
 from odoo import api, Command, fields, models, _
+from odoo.exceptions import UserError
+
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 
 SELF_BILLING_DOCUMENT_TYPES = {
@@ -34,6 +37,7 @@ class PeppolConfigWizard(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_contact_email = fields.Char(default=lambda self: self.env.company.account_peppol_contact_email, required=True)
     account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
+    # Deprecated
     peppol_activate_self_billing = fields.Boolean(
         string="Activate self-billing",
         help="If activated, you will be able to send and receive self-billed invoices via Peppol."
@@ -41,6 +45,7 @@ class PeppolConfigWizard(models.TransientModel):
         compute='_compute_peppol_activate_self_billing',
         inverse='_inverse_peppol_activate_self_billing',
     )
+    # Deprecated
     peppol_self_billing_reception_journal_id = fields.Many2one(related='company_id.peppol_self_billing_reception_journal_id', readonly=False)
 
     service_json = fields.Json(
@@ -66,7 +71,10 @@ class PeppolConfigWizard(models.TransientModel):
     def _compute_service_json(self):
         for wizard in self:
             if wizard.account_peppol_proxy_state == 'receiver':
-                wizard.service_json = wizard.account_peppol_edi_user._peppol_get_services().get('services')
+                try:
+                    wizard.service_json = wizard.account_peppol_edi_user._peppol_get_services().get('services')
+                except (AccountEdiProxyError, UserError):
+                    wizard.service_json = False
             else:
                 wizard.service_json = False
 
@@ -93,7 +101,7 @@ class PeppolConfigWizard(models.TransientModel):
                     )
             wizard.service_info = message
 
-    @api.depends('account_peppol_proxy_state')
+    @api.depends('account_peppol_proxy_state', 'service_json')
     def _compute_service_ids(self):
         """Get the selectable document types.
 
@@ -102,7 +110,7 @@ class PeppolConfigWizard(models.TransientModel):
         """
         supported_doctypes = self.env['res.company']._peppol_supported_document_types()
         for wizard in self:
-            if wizard.account_peppol_proxy_state == 'receiver':
+            if wizard.account_peppol_proxy_state == 'receiver' and wizard.service_json:
                 wizard.service_ids = [
                     Command.create({
                         'document_identifier': identifier,
@@ -130,7 +138,10 @@ class PeppolConfigWizard(models.TransientModel):
             self_billing_services.write({'enabled': wizard.peppol_activate_self_billing})
 
     def button_sync_form_with_peppol_proxy(self):
-        """Interpret changes to the services, and add or remove them on the IAP accordingly."""
+        """Update the peppol contact email on IAP.
+        Note: The service configuration is DEPRECATED / hidden in the view.
+        Disabling services can lead to complicance issues and is not necessary
+        since all existing services should just work."""
         self.ensure_one()
 
         # Update company details
@@ -146,32 +157,6 @@ class PeppolConfigWizard(models.TransientModel):
                 params=params,
             )
 
-        # Update services
-        if self.account_peppol_proxy_state == 'receiver':
-            services = self.service_ids.read(['document_identifier', 'enabled'])
-            service_json = self.service_json or {}
-            to_add, to_remove = [], []
-
-            for service in services:
-                if service['document_identifier'] in service_json and not service['enabled']:
-                    to_remove.append(service['document_identifier'])
-
-                if service['document_identifier'] not in service_json and service['enabled']:
-                    to_add.append(service['document_identifier'])
-
-            if to_add:
-                self.account_peppol_edi_user._call_peppol_proxy(
-                    "/api/peppol/2/add_services", {
-                        'document_identifiers': to_add,
-                    },
-                )
-            if to_remove:
-                self.account_peppol_edi_user._call_peppol_proxy(
-                    "/api/peppol/2/remove_services", {
-                        'document_identifiers': to_remove,
-                    },
-                )
-
         return True
 
     def button_peppol_unregister(self):
@@ -180,4 +165,32 @@ class PeppolConfigWizard(models.TransientModel):
 
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant()
+        else:
+            self.company_id._reset_peppol_configuration()
+        return True
+
+    def button_peppol_reset_to_sender(self):
+        """Reset the participant back to sender and unregister it from the SMP"""
+        self.ensure_one()
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_deregister_participant_to_sender()
+        return True
+
+    def button_peppol_register_sender_as_receiver(self):
+        """Reset the participant back to sender and unregister it from the SMP"""
+        self.ensure_one()
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_register_sender_as_receiver()
+            self.account_peppol_edi_user._peppol_get_participant_status()
+            if self.account_peppol_proxy_state == 'smp_registration':
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _("Registered to receive documents via Peppol."),
+                        'type': 'success',
+                        'message': _("Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings."),
+                        'next': {'type': 'ir.actions.act_window_close'},
+                    }
+                }
         return True

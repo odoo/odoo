@@ -11,6 +11,7 @@ import re
 import requests
 import threading
 import types
+import werkzeug.routing
 
 from collections import defaultdict
 from lxml import etree, html
@@ -22,7 +23,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import get_manifest
@@ -409,6 +410,20 @@ class Website(models.Model):
         homepage_url = vals.get('homepage_url')
         if homepage_url:
             vals['homepage_url'] = homepage_url.rstrip('/')
+
+    @api.constrains('domain')
+    def _check_domain(self):
+        for record in self:
+            if not record.domain:
+                continue
+
+            try:
+                parsed = urlparse(record.domain)
+            except ValueError:
+                raise ValidationError(_("The provided website domain is not a valid URL."))
+
+            if tools.urls._contains_dot_segments(parsed.path):
+                raise ValidationError(_("The domain path cannot contain relative path segments like '/./' or '/../'."))
 
     @api.constrains('homepage_url')
     def _check_homepage_url(self):
@@ -969,6 +984,7 @@ class Website(models.Model):
             # pages in the landing page category when creating a new page.
             page_view_id.copy({
                 'key': f"{index}_{page_view_id.key}_configurator_pages_landing",
+                'website_id': website.id,
             })
 
         # Configure the images
@@ -1279,10 +1295,11 @@ class Website(models.Model):
     @api.model
     def search_url_dependencies(self, res_model, res_ids):
         """ Search dependencies just for information. It will not catch 100%
-            of dependencies and False positive is more than possible
-            Each module could add dependences in this dict
-            :returns a dictionnary where key is the 'categorie' of object related to the given
-                view, and the value is the list of text and link to the resource using given page
+        of dependencies and False positive is more than possible
+        Each module could add dependences in this dict
+
+        :returns: a dictionnary where key is the 'categorie' of object related to the given
+            view, and the value is the list of text and link to the resource using given page
         """
         dependencies = {}
         current_website = self.get_current_website()
@@ -1326,14 +1343,14 @@ class Website(models.Model):
             if model_name == 'ir.ui.view':
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:
-                model_name = self.env['ir.model']._display_name_for([model_name])[0]['display_name']
+                model_display_name = self.env['ir.model']._display_name_for([model_name])[0]['display_name']
                 field_string = Model.fields_get()[field_name]['string']
-                dependencies.setdefault(model_name, [])
-                dependencies[model_name] += [{
+                dependencies.setdefault(model_display_name, [])
+                dependencies[model_display_name] += [{
                     'field_name': field_string,
                     'record_name': rec.display_name,
                     'link': 'website_url' in rec and rec.website_url or f'/odoo/{model_name}/{rec.id}',
-                    'model_name': model_name,
+                    'model_name': model_display_name,
                 } for rec in dependency_records]
 
         return dependencies
@@ -1345,6 +1362,7 @@ class Website(models.Model):
     @api.model
     def get_current_website(self, fallback=True):
         """ The current website is returned in the following order:
+
         - the website forced in session `force_website_id`
         - the website set in context
         - (if frontend or fallback) the website matching the request's "domain"
@@ -1556,7 +1574,9 @@ class Website(models.Model):
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
-            record['lastmod'] = max(page.write_date, page.view_write_date).date()
+            last_dates = [d for d in (page.write_date, page.view_write_date) if d]
+            if last_dates:
+                record['lastmod'] = max(last_dates).date()
             yield record
 
         # ==== CONTROLLERS ====
@@ -1699,6 +1719,53 @@ class Website(models.Model):
                 break
         return res
 
+    def check_existing_page(self, page):
+        """
+            Returns a boolean, whether the page is considered to exist for the
+            current website. This is a heuristic and is not perfectly reliable.
+        """
+        # The page exists if there is a 'website.page' record with this url
+        if len(self._get_website_pages(domain=[('url', '=', page), ('view_id', '!=', False)], limit=1)) > 0:
+            return True
+
+        # The page is considered to exist if there is a 'website.rewrite' record
+        # that does a redirect 301 or 302, for simplicity we do not check
+        # further whether the redirection points to an existing url.
+        redirects_domain = self.get_current_website().website_domain() & Domain(
+            [('url_from', '=', page), ('redirect_type', 'in', ('301', '302'))]
+        )
+        if len(self.env['website.rewrite'].search(redirects_domain, limit=1)) > 0:
+            return True
+
+        router = self.env['ir.http'].routing_map().bind('')
+        # If there is no rules matching this page, it does not exists
+        if not router.test(path_info=page, method='GET'):
+            return False
+
+        try:
+            rule, args = router.match(page, method='GET', return_rule=True)
+        except werkzeug.routing.RequestRedirect:
+            # The page is considered to exist if it redirects (this happens if
+            # there is a 'website.rewrite' 308), for simplicity we do not check
+            # further whether the redirection points to an existing url.
+            return True
+
+        try:
+            # The rule may have restriction for some records that appear in its
+            # url, these are checked by `rule.build`.
+            for arg in args:
+                if isinstance(args[arg], models.BaseModel):
+                    # Models from `router.match` are missing users in their env
+                    args[arg] = args[arg].with_user(self.env.uid)
+                    # For record that may be related to a website, we skip them
+                    # if they are for a different website than the current one
+                    if hasattr(args[arg], 'website_id') and args[arg].website_id and args[arg].website_id != self:
+                        return False
+            rule.build(args, append_unknown=False)
+        except MissingError:
+            return False
+        return True
+
     def get_suggested_controllers(self):
         """
             Returns a tuple (name, url, icon).
@@ -1734,7 +1801,7 @@ class Website(models.Model):
         if (self.env.user.has_group('base.group_system')
                 or self.env.user.has_group('website.group_website_designer')):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
-        return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
+        raise AccessError(_("You don't have the necessary access rights to access this dashboard."))
 
     def get_client_action_url(self, url, mode_edit=False, mode_debug=0):
         action_params = {

@@ -10,6 +10,7 @@ from odoo.tools import float_round
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
 
@@ -127,6 +128,7 @@ class PaymentTransaction(models.Model):
         return {
             'external_reference': self.reference,
             'notification_url': webhook_url,
+            'statement_descriptor': self.company_id.name,
         }
 
     def _send_payment_request(self):
@@ -144,9 +146,16 @@ class PaymentTransaction(models.Model):
         response_content = self._send_api_request(
             'POST', '/v1/card_tokens', data={'card_id': self.token_id.provider_ref}
         )
-
+        data = self._mercado_pago_prepare_base_request_payload()
         # Send the payment request to Mercado Pago.
-        data = {
+        data.update({
+            'additional_info': {
+                'items': [{
+                    'title': self.reference,
+                    'quantity': 1,
+                    'unit_price': self._mercado_pago_convert_amount(),
+                }],
+            },
             'transaction_amount': self._mercado_pago_convert_amount(),
             'token': response_content['id'],
             'installments': 1,
@@ -154,7 +163,7 @@ class PaymentTransaction(models.Model):
                 'type': 'customer',
                 'id': self.token_id.mercado_pago_customer_id,
             },
-        }
+        })
         response_content = self._send_api_request(
             'POST',
             endpoint='/v1/payments',
@@ -176,7 +185,9 @@ class PaymentTransaction(models.Model):
         :rtype: float
         """
         unit_price = self.amount
-        decimal_places = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        decimal_places = const.CURRENCY_DECIMALS.get(
+            self.currency_id.name, CURRENCY_MINOR_UNITS.get(self.currency_id.name)
+        )
         if decimal_places is not None:
             unit_price = float_round(unit_price, decimal_places, rounding_method='DOWN')
         return unit_price
@@ -266,6 +277,9 @@ class PaymentTransaction(models.Model):
         """Override of `payment` to return token data based on payment data."""
         if self.provider_code != 'mercado_pago':
             return super()._extract_token_values(payment_data)
+
+        if not payment_data.get('token'):
+            return {}
 
         # Fetch the customer id or create a new one.
         email_data = {'email': payment_data['payer']['email']}

@@ -9,13 +9,15 @@
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2025-09-16 02:32+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-01-06 10:37+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "project/id/>\n"
 "Language: id\n"
@@ -23,12 +25,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid " All internal users and invited portal users"
-msgstr ""
+msgstr " Semua user-user internal dan user-user portal yang diundang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -315,15 +317,15 @@ msgstr ""
 "\"<strong t-out=\"object.name or ''\">Renovasi</strong>\".\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style="
-"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
-"groups=\"project.group_project_stages\">Anda menerima email ini karena "
-"project Anda telah digerakkan ke tahap <b t-out="
-"\"object.stage_id.name or ''\">Selesai</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">Anda menerima "
+"email ini karena project Anda telah digerakkan ke tahap <b t-"
+"out=\"object.stage_id.name or ''\">Selesai</b></span>\n"
 "            "
 
 #. module: project
@@ -357,14 +359,15 @@ msgstr ""
 "    Tim kami saat ini meninjau pertanyaan Anda dan akan menanggapi email "
 "Anda secepat mungkin.<br/>\n"
 "    Bila Anda memiliki pertanyaan atau kekhawatiran apa pun saat ini, jangan "
-"sungkan untuk memberitahu kami. Kami hadir di sini untuk membantu Anda.<br/><"
-"br/>\n"
+"sungkan untuk memberitahu kami. Kami hadir di sini untuk membantu Anda.<br/"
+"><br/>\n"
 "    Terima kasih atas kesabaran Anda.<br/>\n"
 "    Salam hormat,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -380,14 +383,13 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible="
-"\"rating_avg < 3.66\" title=\"Senang\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible="
-"\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"Netral\"/>\n"
-"                            <i class="
-"\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible="
-"\"rating_avg >= 2.33\" title=\"Tidak Senang\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg < 3.66\" title=\"Senang\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" "
+"title=\"Netral\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg >= 2.33\" title=\"Tidak Senang\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -440,8 +442,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" title="
-"\"Alias Domain\"/>"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
+"title=\"Alias Domain\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -547,7 +549,7 @@ msgstr "<u>Milestone</u>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>Profitabilitas</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -633,7 +635,7 @@ msgstr "Peringatan akses"
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction
 msgid "Action Needed"
-msgstr "Tindakan Diperluka"
+msgstr "Tindakan Diperlukan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__active
@@ -1066,8 +1068,8 @@ msgid ""
 msgstr ""
 "Secara otomatis modifikasi status saat pelanggan menjawab ke feedback untuk "
 "tahap ini.\n"
-" * Feedback bagus dari pelanggan akan mengupdate status ke 'Disetujui' ("
-"lingkaran hijau).\n"
+" * Feedback bagus dari pelanggan akan mengupdate status ke 'Disetujui' "
+"(lingkaran hijau).\n"
 " * Feedback netral atau jelek akan mengupdate status kanban ke 'Perubahan "
 "Diminta' (lingkaran oranye).\n"
 
@@ -1310,6 +1312,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Kumpulkan feedback dari pelanggan Anda dengan mengirimkan mereka permintaan "
+"rating saat tugas mencapai tahap tertentu. Untuk melakukan ini, definisikan "
+"templat email rating di tahap.\n"
+"Rating saat mengubah tahap: email akan secara otomatis dikirim saat tugas "
+"mencapai tahap tersebut.\n"
+"Rating periodik: email akan secara otomatis dikirim pada periode reguler "
+"selama tugas tersisa di tahap."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1483,7 +1492,7 @@ msgstr "Buat Project dari Templat %s"
 #. module: project
 #: model:ir.model,website_form_label:project.model_project_task
 msgid "Create a Task"
-msgstr "Buat Task"
+msgstr "Buat Tugas"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
@@ -1631,7 +1640,7 @@ msgstr "Customer Portal URL"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Customer Rating"
-msgstr ""
+msgstr "Rating Pelanggan"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1723,12 +1732,16 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"Jumlah hari sebelum tugas di tahap ini menjadi basi. Tetapkan menjadi 0 "
+"untuk menonaktifkan         Mengubah parameter ini tidak akan berdampak ke "
+"tanggal sumber daya yang diupdate terakhir/status membusuk sebelum perubahan "
+"ini."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Jumlah hari semenjak sumber daya ini terakhir diupdate"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1741,7 +1754,7 @@ msgstr "Hari"
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Hari-Hari Membusuk"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1751,7 +1764,7 @@ msgstr "Hari menuju Deadline"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Hari-hari untuk membusuk"
 
 #. module: project
 #. odoo-python
@@ -1843,7 +1856,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Delivered"
-msgstr "Sudah Terkirim"
+msgstr "Dikirim"
 
 #. module: project
 #. odoo-python
@@ -1953,6 +1966,7 @@ msgstr "Buang"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
@@ -2169,7 +2183,7 @@ msgstr "Keuangan"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
-msgstr ""
+msgstr "Dilipat"
 
 #. module: project
 #. odoo-javascript
@@ -2273,6 +2287,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"Berikan user-user akses dengan menambahkan mereka sebagai pengikut — baik ke "
+"project atau tugas individu. User-user internal secara otomatis mendapatkan "
+"akses ke tugas mereka."
 
 #. module: project
 #. odoo-javascript
@@ -2307,7 +2324,7 @@ msgstr "Memiliki Pesan"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "Memiliki Templat Lampau"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2395,6 +2412,7 @@ msgstr "Bagaimana perkembangan project ini?"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -2454,6 +2472,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Bila diaktifkan, tahap ini akan ditampilkan sebagai dilipat di tampilan "
+"Kanban dan List dari project Anda. Project di tahap dilipat dianggap sebagai "
+"ditutup."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2463,6 +2484,10 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"Bila ditetapkan, permintaan rating akan secara otomatis dikirim melalui "
+"email ke pelanggan saat tugas mencapai tahap ini.\n"
+"Secara alternatif, ini akan dikirim pada periode reguler selama tugas tetap "
+"ada di tahap ini."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2495,7 +2520,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Import Template for Tasks"
-msgstr ""
+msgstr "Impor Templat untuk Tugas"
 
 #. module: project
 #. odoo-javascript
@@ -2547,18 +2572,18 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "Kolom-kolom invalid: "
+msgid "Invalid Display Name"
+msgstr "Nama Tampilan Tidak Valid"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "User internal dan portal yang diundang"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "User internal yang diundang"
 
 #. module: project
 #. odoo-javascript
@@ -2724,6 +2749,12 @@ msgstr "Milestone Terlambat"
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 msgid "Later"
 msgstr "Nanti"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr "Ayo buat <b>project</b> reguler."
 
 #. module: project
 #. odoo-javascript
@@ -3474,7 +3505,7 @@ msgstr "Portal Access URL"
 #. module: project
 #: model:ir.model,name:project.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Portal Sharing"
 
 #. module: project
 #. odoo-python
@@ -3649,7 +3680,7 @@ msgstr "Wizard Penghapusan Tahap Project"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "Tahap Project: Kirim rating"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3726,6 +3757,28 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Project dan Visibilitas Tugas:\n"
+"- User-user internal yang diundang: Dapat mengakses hanya project atau task "
+"yang mereka ikuti. Penerima tugas otomatis mendapatkan akses.\n"
+"- U-seruser internal dan portal yang diundang: Sama dengan di atas, "
+"diberikan juga ke user portal.\n"
+"- Semua user internal: Akses lengkap ke project dan semua tugasnya.\n"
+"- Semua user internal dan yang diundang: User-user internal mendapatkan "
+"akses lengkap. User-user portal dapat mengakses hanya project atau tugas "
+"yang mereka ikuti.\n"
+"\n"
+"Tingkat Akses Portal:\n"
+"- Read-only: User-user portal melihat tugas melalui portal mereka tapi tidak "
+"dapat mengedit mereka.\n"
+"- Edit (terbatas): User portal mengakses tampilan kanban/list dan dapat "
+"mengedit field terbatas ke tugas-tugas yang diikuti.\n"
+"- Edit: Sama seperti di atas, dengan akses ke semua tugas.\n"
+"\n"
+"Peraturan Lainnya:\n"
+"- User-user internal dapat membuka tugas dari link langsung, bahkan tanpa "
+"akses project.\n"
+"- Project admin memiliki akses ke project privat, bahkan bila bukan "
+"pengikut.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4156,7 +4209,7 @@ msgstr "Peran Ke User"
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "Membusuk"
 
 #. module: project
 #. odoo-javascript
@@ -4285,7 +4338,7 @@ msgstr "Kirim Undangan"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "Kirim permintaan rating pelanggan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4500,7 +4553,7 @@ msgstr "Pemilik Tahap"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "Status Rating Tahap"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4708,7 +4761,7 @@ msgstr "Pengulangan Task"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "Pembagian Tugas"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -4857,14 +4910,6 @@ msgid "Tasks in Recurrence"
 msgstr "Task pada Pengulangan"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr ""
-"Tugas-tugas di templat project tidak dapat dikonversi menjadi tugas-tugas "
-"reguler."
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr "Tasks.test"
@@ -4879,7 +4924,7 @@ msgstr "Template"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "Templat Memiliki Tanggal"
 
 #. module: project
 #. odoo-python
@@ -4903,7 +4948,7 @@ msgstr "Templat dibuat dari %s."
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Templates"
-msgstr ""
+msgstr "Contoh"
 
 #. module: project
 #. odoo-javascript
@@ -4931,7 +4976,8 @@ msgstr "Tahap task pribadi user saat ini."
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "The document does not exist or you do not have the rights to access it."
-msgstr "Dokumen tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
+msgstr ""
+"Dokumen tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
 
 #. module: project
 #. odoo-python
@@ -5135,10 +5181,10 @@ msgid ""
 "records to align them under the same company."
 msgstr ""
 "Project ini terkait %(project_company)s, sementara tahap yang dipilih "
-"berasal dari %(stage_company)s. Terdapat beberapa opsi untuk dipertimbangkan:"
-" baik hapus perusahaan dari project atau dari tahap. Jalan alternatif adalah "
-"Anda dapat memperbarui informasi perusahan untuk record-record ini untuk "
-"menggabungkan mereka di bawah perusahaan yang sama."
+"berasal dari %(stage_company)s. Terdapat beberapa opsi untuk "
+"dipertimbangkan: baik hapus perusahaan dari project atau dari tahap. Jalan "
+"alternatif adalah Anda dapat memperbarui informasi perusahan untuk record-"
+"record ini untuk menggabungkan mereka di bawah perusahaan yang sama."
 
 #. module: project
 #. odoo-python
@@ -5561,6 +5607,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Gunakan kata-kata kunci berikut di judul untuk menetapkan tugas baru:\n"
+"\n"
+"        30j Alokasikan 30 jam ke tugas\n"
+"        #tags Tetapkan tag di tugas\n"
+"        @user Berikan tugas ke user\n"
+"        ! Tetapkan tugas prioritas menengah\n"
+"        !! Tetapkan tugas prioritas tinggi\n"
+"        !!! Tetapkan tugas prioritas mendesak\n"
+"\n"
+"        Pastikan Anda menggunakan format dan urutan yang tepat contoh, "
+"Perbarui layar konfigurasi 5j #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -5568,6 +5625,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "Pengguna"
+
+#. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr "Pengaturan User"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
@@ -5662,6 +5724,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Saat Anda membuat project dari templat, Anda dapat memilih karyawan mana "
+"yang mengambil setiap peran. Karyawan-karyawan ini akan ditambahkan ke "
+"tugas, beserta siapa pun yang sudah ditugaskan."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -5753,9 +5818,9 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Anda tidak dapat mengubah perusahaan di tahap ini menjadi %(company_name)s "
-"karena saat ini termasuk project yang terkait dengan %(project_company_name)"
-"s. Mohon pastikan tahap ini secara eksklusif memiliki project yang terhubung "
-"ke %(company_name)s."
+"karena saat ini termasuk project yang terkait dengan %"
+"(project_company_name)s. Mohon pastikan tahap ini secara eksklusif memiliki "
+"project yang terhubung ke %(company_name)s."
 
 #. module: project
 #. odoo-javascript
@@ -6081,7 +6146,7 @@ msgstr "untuk memberikan signal apa status saat ini untuk Ide Anda."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "saat mencapai tahap ini"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -6114,6 +6179,14 @@ msgstr "👤 Belum Ditugaskan"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "Kolom-kolom invalid: "
+
+#~ msgid "Tasks in a project template cannot be converted into regular tasks."
+#~ msgstr ""
+#~ "Tugas-tugas di templat project tidak dapat dikonversi menjadi tugas-tugas "
+#~ "reguler."
 
 #~ msgid "# Tasks"
 #~ msgstr "# Kegiatans"

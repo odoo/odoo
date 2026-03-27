@@ -146,6 +146,18 @@
                 <span name="th_subtotal_en" t-if="display_in_en" t-translation="off">Amount<br/></span>
             </xpath>
             <!-- End Arabic & English table headers -->
+            <!-- Arabic & English table body -->
+            <xpath expr="//td[@name='account_invoice_line_name']/span" position="replace">
+                <t t-if="line.product_id and display_in_lang_sec">
+                    <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+                    <t t-set="arabic_name" t-value="line.with_context(lang=o.env['res.lang']._get_code('ar_001')).product_id.display_name"/>
+
+                    <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}" dir="rtl"/>
+                    <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+                </t>
+                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._get_data(code=lang).direction"/>
+            </xpath>
+            <!-- End Arabic & English table body -->
             <!-- Arabic & English payment terms -->
             <span id="payment_terms_note_id" position="before">
                 <span id="payment_terms_note_id_lang_sec"
@@ -168,6 +180,18 @@
                           t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax)" dir="ltr">30.00</span> due if paid before
                     <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="ltr">2024-01-01</span>
                 </td>
+            </xpath>
+             <xpath expr="//div[@id='total_payment_term_details_table']//div[@id='early_payment_discount']" position="before">
+                <div name="td_payment_term_ar" t-if="display_in_ar" t-translation="off">
+                    <span t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}'
+                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax)" dir="rtl">30.00</span> المبلغ المستحق إذا تم الدفع قبل
+                    <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="rtl">2024-01-01</span>
+                </div>
+                <div name="td_payment_term_en" t-if="display_in_en" t-translation="off">
+                    <span t-options='{"widget": "monetary", "display_currency": o_sec.currency_id}'
+                          t-out="o_sec.invoice_payment_term_id._get_amount_due_after_discount(o_sec.amount_total, o_sec.amount_tax)" dir="ltr">30.00</span> due if paid before
+                    <span t-out="o_sec.invoice_payment_term_id._get_last_discount_date_formatted(o_sec.invoice_date)" dir="ltr">2024-01-01</span>
+                </div>
             </xpath>
             <xpath expr="//div[@id='total_payment_term_details_table']//t[2]" position="before">
                 <t name="div_payment_term_ar" t-if="len(payment_term_details_sec) > 1 and display_in_ar" t-foreach="payment_term_details_sec" t-as="term" t-translation="off">

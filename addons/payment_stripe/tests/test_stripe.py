@@ -87,6 +87,26 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self._make_json_request(url, data=self.payment_data)
         self.assertEqual(tx.state, 'done')
 
+    def test_validate_amount_succeeds_for_special_currencies(self):
+        for currency_code in const.CURRENCY_DECIMALS:
+            currency = self._enable_currency(currency_code)
+            tx = self._create_transaction(
+                'dummy',
+                operation='online_direct',
+                amount=15,
+                currency_id=currency.id,
+                reference=f'test_{currency_code}'
+            )
+            data = self.payment_data['data']
+            with patch(
+                'odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction'
+                '._stripe_create_customer',
+                return_value={'id': 'cus_1234567890ABCDE'},
+            ):
+                data['payment_intent'] = tx._stripe_prepare_payment_intent_payload()
+            tx._validate_amount(data)
+            self.assertNotEqual(tx.state, 'error')
+
     def test_extract_token_values_maps_fields_correctly(self):
         tx = self._create_transaction('direct')
         payment_data = {
@@ -147,6 +167,20 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self.assertEqual(signature_check_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_webhook_notification_skips_signature_verification_for_missing_transactions(self):
+        """ Test that the webhook ignores signature verification for unknown transactions (e.g. POS). """
+        url = self._build_url(StripeController._webhook_url)
+        payload = dict(self.payment_data)
+        payload['data']['object']['description'] = None
+
+        with patch(
+            'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
+        ) as signature_check_mock:
+            self._make_json_request(url, data=payload)
+            self.assertEqual(signature_check_mock.call_count, 0)
+
+    @mute_logger('odoo.addons.payment_stripe.controllers.main')
     def test_return_from_tokenization_request(self):
         tx = self._create_transaction('direct', amount=0, operation='validation', tokenize=True)
         url = self._build_url(StripeController._return_url)
@@ -174,6 +208,24 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ):
             onboarding_url = self.stripe.action_start_onboarding()
         self.assertEqual(onboarding_url['url'], 'https://dummy.url')
+
+    def test_country_mapping_stripe_connect(self):
+        """ Test that La Réunion (and other french territories) is supported by Stripe Connect. """
+        mapped_country_company = self.env['res.company'].create({
+            'name': 'Mapped Company',
+        })
+        with patch.object(
+            self.env.registry['payment.provider'], '_send_api_request',
+            return_value={'url': 'https://dummy.url'},
+        ) as mock, patch.object(
+            self.env.registry['payment.provider'], '_stripe_fetch_or_create_connected_account',
+            return_value={'id': 'dummy'},
+        ):
+            for country_code in const.COUNTRY_MAPPING:
+                country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+                mapped_country_company.country_id = country
+                self.stripe.with_company(mapped_country_company).action_start_onboarding('dummy')
+            self.assertEqual(mock.call_count, len(const.COUNTRY_MAPPING))
 
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """

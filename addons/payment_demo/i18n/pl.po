@@ -3,13 +3,16 @@
 # * payment_demo
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-17 17:28+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-03-06 17:49+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "payment_demo/pl/>\n"
 "Language: pl\n"
@@ -18,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
@@ -30,7 +33,8 @@ msgid ""
 "                    <option value=\"pending\" title=\"Payment processing\">\n"
 "                        Pending\n"
 "                    </option>\n"
-"                    <option value=\"cancel\" title=\"Payment cancelled by customer\">\n"
+"                    <option value=\"cancel\" title=\"Payment cancelled by "
+"customer\">\n"
 "                        Cancelled\n"
 "                    </option>\n"
 "                    <option value=\"error\" title=\"Processing error\">\n"
@@ -38,6 +42,22 @@ msgid ""
 "                    </option>\n"
 "                </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Pomyślna płatność\">\n"
+"                        Powodzenie\n"
+"                    </option>\n"
+"                    <option value=\"pending\" title=\"Przetwarzanie "
+"płatności\">\n"
+"                        Oczekująca\n"
+"                    </option>\n"
+"                    <option value=\"cancel\" title=\"Płatność anulowana "
+"przez klienta\">\n"
+"                        Anulowana\n"
+"                    </option>\n"
+"                    <option value=\"error\" title=\"Błąd przetwarzania\">\n"
+"                        Błąd\n"
+"                    </option>\n"
+"                </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -57,12 +77,12 @@ msgstr "<small><b>Nazwa</b></small>"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Street and Number</b></small>"
-msgstr ""
+msgstr "<small><b>Ulica i numer</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Zip Code</b></small>"
-msgstr ""
+msgstr "<small><b>Kod pocztowy</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -72,22 +92,27 @@ msgstr "<small>E-mail</small>"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Details (test data)</small>"
-msgstr ""
+msgstr "<small>Szczegóły płatności (dane testowe)</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Status</small>"
-msgstr ""
+msgstr "<small>Status płatności</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Street 2</small>"
-msgstr ""
+msgstr "<small>Ulica 2</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
 msgstr "Autoryzuj"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "Belgium"
+msgstr "Belgia"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -144,13 +169,20 @@ msgstr "Demo"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Demo Express Checkout"
-msgstr ""
+msgstr "Demo kasa ekspresowa"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
 msgid "Demo providers should never be enabled."
-msgstr ""
+msgstr "Dostawcy demo nie powinni być nigdy włączani."
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -158,16 +190,17 @@ msgid "Error"
 msgstr "Błąd"
 
 #. module: payment_demo
-#. odoo-javascript
-#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
-msgid "No delivery method is available."
-msgstr ""
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_demo
-#. odoo-python
-#: code:addons/payment_demo/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Nie znaleziono transakcji pasującej do referencji %s."
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/interactions/express_checkout.js:0
+msgid "No delivery method is available."
+msgstr "Nie ma dostępnej metody dostawy."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -177,12 +210,12 @@ msgstr "Zapłać"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Pay with Demo"
-msgstr ""
+msgstr "Zapłać demo metodą"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_provider
 msgid "Payment Provider"
-msgstr "Dostawca Płatności"
+msgstr "Operator płatności"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_token
@@ -192,11 +225,11 @@ msgstr "Token płatności"
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transakcja płatności"
+msgstr "Transakcja płatnicza"
 
 #. module: payment_demo
 #. odoo-javascript
-#: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
+#: code:addons/payment_demo/static/src/interactions/payment_demo_mixin.js:0
 msgid "Payment processing failed"
 msgstr "Przetwarzanie płatności nie powiodło się"
 
@@ -204,25 +237,33 @@ msgstr "Przetwarzanie płatności nie powiodło się"
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
 msgstr ""
+"Płatności dokonywane za pomocą tej metody płatności będą <b>zakończone "
+"powodzeniem</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will be automatically "
-"<b>cancelled</b>."
+"Payments made with this payment method will be automatically <b>cancelled</"
+"b>."
 msgstr ""
+"Płatności dokonane za pomocą tej metody płatności zostaną automatycznie<b> "
+"anulowane</b> ."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
 msgstr ""
+"Płatności dokonane tą metodą płatności pozostaną w statusie <b>oczekujące</b>"
+"."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will simulate a processing "
-"<b>error</b>."
+"Payments made with this payment method will simulate a processing <b>error</"
+"b>."
 msgstr ""
+"Płatności dokonywane za pomocą tej metody płatności będą symulować <b>błąd "
+"przetwarzania</b> ."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -232,12 +273,12 @@ msgstr "Oczekujące"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Set to Error"
-msgstr ""
+msgstr "Ustaw na błąd"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
 msgid "Simulated State"
-msgstr ""
+msgstr "Stan symulowany"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -248,17 +289,12 @@ msgstr "Tryb testowy"
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
 msgstr ""
+"Stan, w którym powinny być ustawione transakcje utworzone z tego tokenu."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Kod techniczny tego dostawcy usług płatniczych."
-
-#. module: payment_demo
-#. odoo-python
-#: code:addons/payment_demo/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "Transakcja nie jest powiązana z tokenem."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -267,17 +303,23 @@ msgstr "Nieopublikowane"
 
 #. module: payment_demo
 #. odoo-javascript
-#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#: code:addons/payment_demo/static/src/interactions/express_checkout.js:0
 msgid "Validation Error"
 msgstr "Błąd walidacji"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Wybrałeś następujący status płatności demo: %s"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Nie znaleziono transakcji pasującej do referencji %s."
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "Transakcja nie jest powiązana z tokenem."

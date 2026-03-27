@@ -550,7 +550,8 @@ export function makeActionManager(env, router = _router) {
                     (!lastAction.context?.active_id ||
                         lastAction.context?.active_id === context.active_id) &&
                     (!lastAction.context?.active_ids ||
-                        shallowEqual(lastAction.context?.active_ids, context.active_ids))
+                        shallowEqual(lastAction.context?.active_ids, context.active_ids)) &&
+                    !lastAction.embedded_action_ids?.length
                 ) {
                     actionRequest = lastAction;
                 } else {
@@ -927,7 +928,7 @@ export function makeActionManager(env, router = _router) {
                         if (controller.isMounted) {
                             return;
                         }
-                        pushState(nextStack);
+                        pushState(nextStack, { sync: true });
                     },
                 });
                 if (action.target !== "new") {
@@ -1028,6 +1029,7 @@ export function makeActionManager(env, router = _router) {
                         "current_action",
                         action._originalAction || "{}"
                     );
+                    browser.sessionStorage.setItem("current_lang", user.lang);
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
@@ -1347,6 +1349,12 @@ export function makeActionManager(env, router = _router) {
         for (const handler of handlers) {
             const result = await handler(action, options, env);
             if (result) {
+                const { onClose } = options;
+                if (action.close_on_report_download) {
+                    return doAction({ type: "ir.actions.act_window_close" }, { onClose });
+                } else if (onClose) {
+                    onClose();
+                }
                 return result;
             }
         }
@@ -1449,7 +1457,7 @@ export function makeActionManager(env, router = _router) {
                         pick(options, "forceLeave")
                     );
                     if (!canProceed) {
-                        return new Promise(() => {});
+                        return;
                     }
                 }
                 return _executeActWindowAction(action, options);
@@ -1749,6 +1757,12 @@ export function makeActionManager(env, router = _router) {
      */
 
     async function loadState(state = router.current) {
+        const lang = browser.sessionStorage.getItem("current_lang");
+        if (lang && lang !== user.lang) {
+            browser.sessionStorage.removeItem("current_action");
+            browser.sessionStorage.removeItem("current_lang");
+            browser.sessionStorage.removeItem("current_state");
+        }
         const newStack = await _controllersFromState(state);
         const actionParams = _getActionParams(state);
         if (actionParams) {
@@ -1828,7 +1842,7 @@ export function makeActionManager(env, router = _router) {
         return Object.assign(newState, pick(newState.actionStack.at(-1), ...stateKeys));
     }
 
-    function pushState(cStack = controllerStack) {
+    function pushState(cStack = controllerStack, options) {
         if (!cStack.length) {
             return;
         }
@@ -1837,7 +1851,7 @@ export function makeActionManager(env, router = _router) {
         browser.sessionStorage.setItem("current_state", JSON.stringify(newState));
 
         cStack.at(-1).state = newState;
-        router.pushState(newState, { replace: true });
+        router.pushState(newState, Object.assign({ replace: true }, options));
     }
     return {
         doAction,

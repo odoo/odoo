@@ -24,6 +24,7 @@ export class AutoComplete extends Component {
             },
         },
         placeholder: { type: String, optional: true },
+        title: { type: String, optional: true },
         autocomplete: { type: String, optional: true },
         autoSelect: { type: Boolean, optional: true },
         resetOnSelect: { type: Boolean, optional: true },
@@ -42,11 +43,11 @@ export class AutoComplete extends Component {
         menuPositionOptions: { type: Object, optional: true },
         menuCssClass: { type: [String, Array, Object], optional: true },
         selectOnBlur: { type: Boolean, optional: true },
-        selectOnTab: { type: Boolean, optional: true },
     };
     static defaultProps = {
         value: "",
         placeholder: "",
+        title: "",
         autocomplete: "new-password",
         autoSelect: false,
         dropdown: true,
@@ -71,6 +72,7 @@ export class AutoComplete extends Component {
         this.sources = [];
         this.inEdition = false;
         this.mouseSelectionActive = false;
+        this.isOptionSelected = false;
 
         this.state = useState({
             navigationRev: 0,
@@ -107,7 +109,7 @@ export class AutoComplete extends Component {
 
         useExternalListener(window, "scroll", this.externalClose, true);
         useExternalListener(window, "pointerdown", this.externalClose, true);
-        useExternalListener(window, "mousemove", () => this.mouseSelectionActive = true, true);
+        useExternalListener(window, "mousemove", () => (this.mouseSelectionActive = true), true);
 
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -270,7 +272,7 @@ export class AutoComplete extends Component {
         if (this.props.resetOnSelect) {
             this.inputRef.el.value = "";
         }
-
+        this.isOptionSelected = true;
         this.forceValFromProp = true;
         option.onSelect();
         this.close();
@@ -332,18 +334,18 @@ export class AutoComplete extends Component {
         }
         // If selectOnBlur is true, we select the first element
         // of the autocomplete suggestions list, if this element exists
-        if (this.props.selectOnBlur && this.sources[0]) {
+        if (this.props.selectOnBlur && !this.isOptionSelected && this.sources[0]) {
             const firstOption = this.sources[0].options[0];
             if (firstOption) {
                 this.state.activeSourceOption = firstOption.unselectable ? null : [0, 0];
                 this.selectOption(this.activeOption);
-                return;
             }
         }
         this.props.onBlur({
             inputValue: this.inputRef.el.value,
         });
         this.inEdition = false;
+        this.isOptionSelected = false;
     }
     onInputClick() {
         if (!this.isOpened && this.props.searchOnInputClick) {
@@ -358,6 +360,7 @@ export class AutoComplete extends Component {
         }
         this.props.onChange({
             inputValue: this.inputRef.el.value,
+            isOptionSelected: this.ignoreBlur,
         });
     }
     async onInput() {
@@ -409,10 +412,6 @@ export class AutoComplete extends Component {
                     return;
                 }
                 this.selectOption(this.activeOption);
-                if (this.props.selectOnBlur) {
-                    this.ignoreBlur = true;
-                    this.inputRef.el.blur();
-                }
                 break;
             case "escape":
                 if (!this.isOpened) {
@@ -421,15 +420,6 @@ export class AutoComplete extends Component {
                 this.cancel();
                 break;
             case "tab":
-                if (this.props.selectOnTab) {
-                    if (!this.isOpened || !this.state.activeSourceOption) {
-                        return;
-                    }
-                    this.selectOption(this.activeOption);
-                    this.ignoreBlur = true;
-                    this.inputRef.el.blur();
-                    break;
-                }
             case "shift+tab":
                 if (!this.isOpened) {
                     return;
@@ -502,7 +492,10 @@ export class AutoComplete extends Component {
             return;
         }
         if (isScrollableY(this.listRef.el)) {
-            scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
+            const element = this.listRef.el.querySelector(`#${this.activeSourceOptionId}`);
+            if (element) {
+                scrollTo(element);
+            }
         }
     }
 }

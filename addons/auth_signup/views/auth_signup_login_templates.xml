@@ -4,7 +4,7 @@
             <xpath expr="//div[hasclass('oe_login_buttons')]/button" position="after">
                 <a t-if="signup_enabled" class="btn btn-link btn-sm mt-2" t-attf-href="/web/signup?{{ keep_query() }}">Don't have an account?</a>
             </xpath>
-            <xpath expr="//label[@for='password']" position="inside">
+            <xpath expr="//label[@for='password']" position="after">
                 <a t-if="reset_password_enabled" class="btn btn-link btn-sm" tabindex="1" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
             </xpath>
         </template>

@@ -409,7 +409,7 @@ class AccountBankStatementLine(models.Model):
                 )
             to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
             with self.env.protecting(self.env['account.move']._get_protected_vals(vals, st_line)):
-                st_line.move_id.write(to_write)
+                st_line.move_id.with_context(clear_sequence_mixin_cache=False).write(to_write)
         self.env['account.move.line'].create(to_create_lines_vals)
         self.env.add_to_compute(self.env['account.move']._fields['name'], st_lines.move_id)
 
@@ -475,31 +475,31 @@ class AccountBankStatementLine(models.Model):
     # HELPERS
     # -------------------------------------------------------------------------
 
+    @api.ondelete(at_uninstall=False)
+    def _check_allow_unlink(self):
+        if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
+            raise UserError(_("You can not delete a transaction from a valid statement.\n"
+                              "If you want to delete it, please remove the statement first."))
+
     def _find_or_create_bank_account(self):
         self.ensure_one()
-
-        # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
-        # Since it's not dependent of the company, we need to search on others company too to avoid the creation
-        # of an extra res.partner.bank raising an error coming from this constraint.
-        # However, at the end, we need to filter out the results to not trigger the check_company when trying to
-        # assign a res.partner.bank owned by another company.
-        bank_account = self.env['res.partner.bank'].sudo().with_context(active_test=False).search([
-            ('acc_number', '=', self.account_number),
-            ('partner_id', '=', self.partner_id.id),
-        ])
-        if not bank_account and not str2bool(
-                self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
-        ):
-            bank_account = self.env['res.partner.bank'].create({
-                'acc_number': self.account_number,
-                'partner_id': self.partner_id.id,
-                'journal_id': None,
-            })
-        return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
+        if not self.partner_id:
+            return self.env['res.partner.bank']
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")):
+            return self.env['res.partner.bank'].search([
+                ('acc_number', '=', self.account_number),
+                ('partner_id', '=', self.partner_id.id),
+                ('company_id', 'in', [False, self.company_id.id]),
+            ], limit=1)
+        return self.env['res.partner.bank']._find_or_create_bank_account(
+            account_number=self.account_number,
+            partner=self.partner_id,
+            company=self.company_id,
+        )
 
     def _get_default_amls_matching_domain(self, allow_draft=False):
         self.ensure_one()
-        all_reconcilable_account_ids = self.env['account.account'].search([
+        all_reconcilable_account_ids = self.env['account.account'].sudo().search([
             ("company_ids", "child_of", self.company_id.root_id.id),
             ('reconcile', '=', True),
         ]).ids

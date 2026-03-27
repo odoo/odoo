@@ -9,6 +9,7 @@ import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     steps: () =>
@@ -187,6 +188,15 @@ registry.category("web_tour.tours").add("test_reload_page_before_payment_with_cu
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
             ProductScreen.isShown(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Customer Account"),
+            PaymentScreen.clickValidate(),
+            Dialog.cancel(),
+            PaymentScreen.clickValidate(),
+            Dialog.confirm("Ok"),
+            PaymentScreen.clickCustomer("Partner Test 1"),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });
 
@@ -252,5 +262,69 @@ registry.category("web_tour.tours").add("SessionStatisticsDisplay", {
             {
                 trigger: `[name=paid_orders]:contains(45.00 (2 orders))`,
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_click_all_orders_keep_customer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartnerOptions("Partner Test 1"),
+            {
+                isActive: ["auto"],
+                trigger: "body .dropdown-item:contains('All Orders')",
+                content: "Check the popover opened",
+                run: "click",
+            },
+            Chrome.clickRegister(),
+            ProductScreen.isShown(),
+            {
+                content: "customer is selected",
+                trigger: ".product-screen .set-partner:contains('Partner Test 1')",
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_ctrl_number_ignored", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "6", "6.0"),
+            {
+                trigger: "body",
+                run: () => {
+                    window.dispatchEvent(new KeyboardEvent("keyup", { key: "5", ctrlKey: true }));
+                },
+            },
+            {
+                trigger: "body",
+                run: () =>
+                    new Promise((resolve) => {
+                        setTimeout(resolve, 300); // wait 300ms so NumberBuffer timeout runs
+                    }),
+            },
+            inLeftSide([
+                { ...ProductScreen.clickLine("Whiteboard Pen")[0], isActive: ["mobile"] },
+                ...ProductScreen.selectedOrderlineHasDirect("Whiteboard Pen", "1", "6.0"),
+            ]),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_set_opening_note_without_cash_method", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            {
+                content: "Add Opening Notes",
+                trigger: ".opening-notes",
+                run: "edit Opening Notes",
+            },
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "6", "6.0"),
         ].flat(),
 });

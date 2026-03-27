@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
@@ -225,7 +226,7 @@ class CrmLead(models.Model):
             message = Markup('<p>%s</p>') % _('I am not interested by this lead. I have not contacted the lead.')
         partner_ids = self.env['res.partner'].search(
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
-        self.message_unsubscribe(partner_ids=partner_ids.ids)
+        self.sudo().message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
             message += Markup('<p>%s</p>') % comment
         self.sudo().message_post(body=message)
@@ -235,7 +236,7 @@ class CrmLead(models.Model):
 
         if spam:
             tag_spam = self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam', False)
-            if tag_spam and tag_spam not in self.tag_ids:
+            if tag_spam and tag_spam not in self.sudo().tag_ids:
                 values['tag_ids'] = [(4, tag_spam.id, False)]
         if partner_ids:
             values['partner_declined_ids'] = [(4, p, 0) for p in partner_ids.ids]
@@ -271,7 +272,9 @@ class CrmLead(models.Model):
                         'summary': values['activity_summary'],
                         'date_deadline': values['activity_date_deadline'],
                     })
-            lead.write(lead_values)
+
+            # access checked with '_assert_portal_write_access' at method beginning
+            lead.sudo().write(lead_values)
 
     def update_contact_details_from_portal(self, values):
         self._assert_portal_write_access()
@@ -280,6 +283,12 @@ class CrmLead(models.Model):
         if any([key not in fields for key in values]):
             raise UserError(_("Not allowed to update the following field(s): %s.", ", ".join([key for key in values if not key in fields])))
         return self.sudo().write(values)
+
+    def update_stage_from_portal(self, stage_id):
+        """ Allow portal users to update the stage of their assigned leads """
+        self._assert_portal_write_access()
+        self.sudo().write({'stage_id': stage_id})
+        return True
 
     @api.model
     def create_opp_portal(self, values):
@@ -337,3 +346,15 @@ class CrmLead(models.Model):
                     'url': '/my/opportunity/%s' % record.id,
                 }
         return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
+
+    @api.model
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        # Allow readonly posting for assigned users, to avoid ACLs issue in frontend
+        # as they do not have write access anymore on the lead itself, just specific
+        # controllers and UI
+        assigned = self.filtered(
+            lambda lead: lead.partner_assigned_id == self.env.user.partner_id
+        ) if message_operation == "create" else self.browse()
+        result = super()._mail_get_operation_for_mail_message_operation(message_operation)
+        result.update(dict.fromkeys(assigned, 'read'))
+        return result

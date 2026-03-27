@@ -3,13 +3,14 @@
 # * pos_pine_labs
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-09-17 17:31+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-12-03 08:36+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "pos_pine_labs/ru/>\n"
 "Language: ru\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
@@ -71,7 +72,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
@@ -100,11 +101,6 @@ msgstr "ID продавца Pine Labs"
 msgid ""
 "Pine Labs POS transaction cancelled. Retry again for collecting payment."
 msgstr "Транзакция Pine Labs отменена. Повторите попытку оплаты."
-
-#. module: pos_pine_labs
-#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
-msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr "Pine Labs PlutusTransactionReferenceID"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
@@ -140,6 +136,11 @@ msgid "Pine Labs payment cancellation request failed"
 msgstr "Ошибка при отправке запроса на отмену оплаты в Pine Labs"
 
 #. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid "PineLabs Transaction ID"
+msgstr ""
+
+#. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "Методы оплаты в POS"
@@ -158,9 +159,9 @@ msgstr "Несоответствие номера ссылки"
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid ""
-"Required during the refund order process: "
-"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
-"request-for-Void-ICB-on-UPI-transaction"
+"Required during the refund order process: https://developer.pinelabs.com/in/"
+"instore/cloud-integration#Example-JSON-request-for-Void-ICB-on-UPI-"
+"transaction"
 msgstr ""
 "Необходимо для возврата: https://developer.pinelabs.com/in/instore/cloud-"
 "integration#Example-JSON-request-for-Void-ICB-on-UPI-transaction"
@@ -194,3 +195,6 @@ msgstr "Операция прервана: превышено время ожи�
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
 msgstr "UPI"
+
+#~ msgid "Pine Labs PlutusTransactionReferenceID"
+#~ msgstr "Pine Labs PlutusTransactionReferenceID"

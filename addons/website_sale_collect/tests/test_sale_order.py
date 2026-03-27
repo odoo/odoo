@@ -78,6 +78,22 @@ class TestSaleOrder(ClickAndCollectCommon):
         so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
+    def test_free_qty_calculated_from_max_in_store_wh_if_no_dm_on_order(self):
+        """Test that if no delivery method is set on the order, the free quantity is the
+        maximum available in all warehouses associated with the in-store delivery method.
+        """
+        warehouse_2 = self._create_warehouse()
+        self._add_product_qty_to_wh(self.storable_product.id, 15, warehouse_2.lot_stock_id.id)
+        self.in_store_dm.warehouse_ids = [Command.link(warehouse_2.id)]
+        # Ensure website has a warehouse and in-store DM is published
+        self.website.warehouse_id = self.warehouse
+        self.in_store_dm.is_published = True
+        # Create an order without a carrier.
+        so = self._create_so()
+        free_qty = so._get_free_qty(self.storable_product)
+        # Should be max(10 [WH1], 15 [WH2]) -> 15
+        self.assertEqual(free_qty, 15)
+
     def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
         self.warehouse_2 = self._create_warehouse()
         self.website.warehouse_id = self.warehouse_2
@@ -107,6 +123,21 @@ class TestSaleOrder(ClickAndCollectCommon):
         insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
         self.assertFalse(insufficient_stock_data)
 
+    def test_product_out_of_stock_continue_selling_is_available(self):
+        self.product_2.allow_out_of_stock_order = True
+        cart = self._create_in_store_delivery_order(
+            order_line=[
+                Command.create(
+                    {
+                        'product_id': self.product_2.id,
+                        'product_uom_qty': 5.0,
+                    }
+                )
+            ]
+        )
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
+        self.assertFalse(insufficient_stock_data)
+
     def test_product_insufficient_stock_is_unavailable(self):
         cart = self._create_in_store_delivery_order(
             order_line=[
@@ -118,6 +149,58 @@ class TestSaleOrder(ClickAndCollectCommon):
         )
         insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
         self.assertEqual(insufficient_stock_data[cart.order_line], 10)
+
+    def test_insufficient_stock_with_mixed_uom_order_lines(self):
+        """Test that the insufficient stock is correctly computed when the order lines
+        use different UoMs."""
+        pack_of_6_id = self.ref('uom.product_uom_pack_6')
+        # 1 pack of 6 + 5 units = 11 units in the cart
+        cart = self._create_in_store_delivery_order(
+            order_line=[
+                Command.create(
+                    {
+                        'product_id': self.storable_product.id,
+                        'product_uom_qty': 1.0,
+                        'product_uom_id': pack_of_6_id,
+                    }
+                ),
+                Command.create(
+                    {
+                        'product_id': self.storable_product.id,
+                        'product_uom_qty': 5.0,
+                        'product_uom_id': self.storable_product.uom_id.id,
+                    }
+                ),
+            ]
+        )
+        # 10 units available, 11 requested, so 1 unit short
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
+        ol_unit = cart.order_line.filtered(
+            lambda l: l.product_uom_id == self.storable_product.uom_id
+        )
+        # only 4 units are available for the second order line instead of 5
+        self.assertEqual(insufficient_stock_data[ol_unit], 4)
+
+    def test_product_in_stock_with_mixed_uom_order_lines_is_available(self):
+        """Test that if there is enough stock for all order lines the insufficient stock is
+        empty."""
+        pack_of_6_id = self.ref('uom.product_uom_pack_6')
+        # 1 pack of 6 + 4 units = 10 units in the cart
+        cart = self._create_in_store_delivery_order(order_line=[
+            Command.create({
+                'product_id': self.storable_product.id,
+                'product_uom_qty': 4.0,
+                'product_uom_id': self.storable_product.uom_id.id,
+            }),
+            Command.create({
+                'product_id': self.storable_product.id,
+                'product_uom_qty': 1.0,
+                'product_uom_id': pack_of_6_id,
+            }),
+        ])
+        # 10 units available, 10 requested
+        insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse.id)
+        self.assertFalse(insufficient_stock_data)
 
     def test_out_of_stock_product_is_unavailable(self):
         cart = self._create_in_store_delivery_order(

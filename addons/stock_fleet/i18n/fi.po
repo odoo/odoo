@@ -3,13 +3,14 @@
 # * stock_fleet
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
-"PO-Revision-Date: 2025-09-16 15:35+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-20 09:21+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "stock_fleet/fi/>\n"
 "Language: fi\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_fleet
 #. odoo-python
@@ -38,6 +39,17 @@ msgid "%(weight_capacity)s %(weight_uom)s"
 msgstr "%(weight_capacity)s %(weight_uom)s"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
+msgid ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">From</span>\n"
+"                        <span class=\"fw-bold\" invisible=\"code "
+"=='outgoing'\">To</span>"
+msgstr ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">Lähöpaikka</span>\n"
+"                        <span class=\"fw-bold\" invisible=\"code "
+"=='outgoing'\">kohde</span>"
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "<strong>Dock:</strong>"
 msgstr "<strong>Lastauslaituri:</strong>"
@@ -51,6 +63,11 @@ msgstr "<strong>Ajoneuvoluokka:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
 msgid "<strong>Vehicle:</strong>"
 msgstr "<strong>Ajoneuvo:</strong>"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
+msgid "Allowed Docks"
+msgstr "Sallitut telakat"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
@@ -74,20 +91,55 @@ msgid "Category of the model"
 msgstr "Mallin luokka"
 
 #. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
+msgid "Dispatch Management"
+msgstr "Lähetysten hallinta"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
+msgid "Dock"
+msgstr "Telakka"
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Dock Dispatching"
 msgstr "Lastauslaiturien lähettäminen"
 
 #. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Dock Location"
 msgstr "Lastauslaiturin sijainti"
 
 #. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
+msgid "Dock Locations"
+msgstr "Telakkasijainnit"
+
+#. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
 msgid "Driver"
 msgstr "Kuljettaja"
+
+#. module: stock_fleet
+#: model:ir.model.fields,help:stock_fleet.field_stock_picking_batch__has_dispatch_management
+#: model:ir.model.fields,help:stock_fleet.field_stock_picking_type__dispatch_management
+msgid ""
+"Enable this option to display dispatch management related details in the "
+"batch/wave form view and operations kanban overview."
+msgstr ""
+"Ota tämä asetus käyttöön näyttääksesi lähetyksenhallintaan liittyviä tietoja "
+"erä-/aaltolomakenäkymässä sekä operaatioiden kanban-yleiskatsauksessa."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
@@ -100,14 +152,13 @@ msgid "Graph View"
 msgstr "Kaavionäkymä"
 
 #. module: stock_fleet
-#: model:ir.model,name:stock_fleet.model_stock_location
-msgid "Inventory Locations"
-msgstr "Inventaariopaikat"
-
-#. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_location__is_a_dock
-msgid "Is a Dock Location"
-msgstr "On lastauslaiturin sijainti"
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__id
+msgid "ID"
+msgstr "Tunnus"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -143,6 +194,11 @@ msgstr "Toiminnon tyyppi"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Own Fleet"
 msgstr "Oma ajokalustosi"
+
+#. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Keräilytyyppi"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -248,6 +304,11 @@ msgid "Volume unit of measure label"
 msgstr "Tilavuuden mittayksikön merkintä"
 
 #. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Varasto"
+
+#. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "Weight"
 msgstr "Paino"
@@ -272,3 +333,9 @@ msgstr "Postinumero"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "semi-truck"
 msgstr "puoliperävaunu"
+
+#~ msgid "Inventory Locations"
+#~ msgstr "Inventaariopaikat"
+
+#~ msgid "Is a Dock Location"
+#~ msgstr "On lastauslaiturin sijainti"

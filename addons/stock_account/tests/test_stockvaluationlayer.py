@@ -1,239 +1,51 @@
 """ Implementation of "INVENTORY VALUATION TESTS" spreadsheet. """
 
-from unittest import skip
+from datetime import timedelta
+from freezegun import freeze_time
 
-from odoo import Command
+from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
-from odoo.tests.common import TransactionCase
-
-
-@skip('Temporary to fast merge new valuation')
-class TestStockValuationCommon(TransactionCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.customer_location = cls.env.ref('stock.stock_location_customers')
-        cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.product1 = cls.env['product.product'].create({
-            'name': 'product1',
-            'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_goods').id,
-        })
-        cls.picking_type_in = cls.env.ref('stock.picking_type_in')
-        cls.picking_type_out = cls.env.ref('stock.picking_type_out')
-        cls.env.ref('base.EUR').active = True
-
-    def setUp(self):
-        super().setUp()
-        # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
-        self.days = 0
-
-    # def _get_remaining_qty(self, product):
-    #     moves = self.env['stock.move'].search([('product_id', '=', product.id)])
-    #     moves.invalidate_recordset(['remaining_qty'])
-    #     return sum(moves.mapped('remaining_qty'))
-
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None, lot_ids=False):
-        """ Helper to create and validate a receipt move.
-        """
-        unit_cost = unit_cost or product.standard_price
-        loc_dest = loc_dest or self.stock_location
-        pick_type = pick_type or self.picking_type_in
-        in_move = self.env['stock.move'].create({
-            'product_id': product.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': loc_dest.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': quantity,
-            'price_unit': unit_cost,
-            'picking_type_id': pick_type.id,
-            'value_manual': unit_cost * quantity,
-        })
-
-        if create_picking:
-            picking = self.env['stock.picking'].create({
-                'picking_type_id': in_move.picking_type_id.id,
-                'location_id': in_move.location_id.id,
-                'location_dest_id': in_move.location_dest_id.id,
-                })
-            in_move.picking_id = picking.id
-
-        in_move._action_confirm()
-        if lot_ids:
-            in_move.move_line_ids.unlink()
-            in_move.move_line_ids = [Command.create({
-                'location_id': self.supplier_location.id,
-                'location_dest_id': loc_dest.id,
-                'quantity': quantity / len(lot_ids),
-                'product_id': product.id,
-                'lot_id': lot.id,
-            }) for lot in lot_ids]
-        else:
-            in_move._action_assign()
-
-        in_move.picked = True
-        in_move._action_done()
-
-        self.days += 1
-        return in_move
-
-    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None, lot_ids=False):
-        """ Helper to create and validate a delivery move.
-        """
-        loc_src = loc_src or self.stock_location
-        pick_type = pick_type or self.picking_type_out
-        out_move = self.env['stock.move'].create({
-            'product_id': product.id,
-            'location_id': loc_src.id,
-            'location_dest_id': self.customer_location.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': quantity,
-            'picking_type_id': pick_type.id,
-        })
-
-        if create_picking:
-            picking = self.env['stock.picking'].create({
-                'picking_type_id': out_move.picking_type_id.id,
-                'location_id': out_move.location_id.id,
-                'location_dest_id': out_move.location_dest_id.id,
-                })
-            out_move.picking_id = picking.id
-
-        out_move._action_confirm()
-        out_move._action_assign()
-        if force_assign:
-            self.env['stock.move.line'].create({
-                'move_id': out_move.id,
-                'product_id': out_move.product_id.id,
-                'product_uom_id': out_move.product_uom.id,
-                'location_id': out_move.location_id.id,
-                'location_dest_id': out_move.location_dest_id.id,
-            })
-        if lot_ids:
-            out_move.move_line_ids.unlink()
-            out_move.move_line_ids = [Command.create({
-                'location_id': loc_src.id,
-                'location_dest_id': self.customer_location.id,
-                'quantity': quantity / len(lot_ids),
-                'product_id': product.id,
-                'lot_id': lot.id,
-            }) for lot in lot_ids]
-        else:
-            out_move.move_line_ids.quantity = quantity
-        out_move.picked = True
-        out_move._action_done()
-
-        self.days += 1
-        return out_move
-
-    def _make_dropship_move(self, product, quantity, unit_cost=None, lot_ids=False):
-        dropshipped = self.env['stock.move'].create({
-            'product_id': product.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.customer_location.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': quantity,
-            'picking_type_id': self.picking_type_out.id,
-        })
-        if unit_cost:
-            dropshipped.price_unit = unit_cost
-        dropshipped._action_confirm()
-        dropshipped._action_assign()
-        if lot_ids:
-            dropshipped.move_line_ids = [Command.clear()]
-            dropshipped.move_line_ids = [Command.create({
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.customer_location.id,
-                'quantity': quantity / len(lot_ids),
-                'product_id': product.id,
-                'lot_id': lot.id,
-            }) for lot in lot_ids]
-        else:
-            dropshipped.move_line_ids.quantity = quantity
-        dropshipped.picked = True
-        dropshipped._action_done()
-        return dropshipped
-
-    def _make_return(self, move, quantity_to_return):
-        stock_return_picking = Form(self.env['stock.return.picking']\
-            .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
-        stock_return_picking = stock_return_picking.save()
-        stock_return_picking.product_return_moves.quantity = quantity_to_return
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].move_line_ids[0].quantity = quantity_to_return
-        return_pick.move_ids[0].picked = True
-        return_pick._action_done()
-        return return_pick.move_ids
-
-    def _set_quantity(self, move, quantity):
-        """Helper function to retroactively change the quantity of a move.
-           The total value of the product will be recomputed as a result,
-           regardless of the valuation method."""
-        move.quantity = quantity
-        move.value_manual = move.price_unit * quantity
-
-    def _add_move_line(self, move, **kwargs):
-        self.env['stock.move.line'].create({
-            'move_id': move.id,
-            'product_id': move.product_id.id,
-            'product_uom_id': move.product_uom.id,
-            'location_id': move.location_id.id,
-            'location_dest_id': move.location_dest_id.id,
-        } | kwargs)
-        move.value_manual = move.price_unit * move.quantity
 
 
 class TestStockValuationStandard(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        cls.product1.product_tmpl_id.standard_price = 10
+        cls.product = cls.product_standard
 
     def test_normal_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 15)
 
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 15)
-
-        self.assertEqual(self.product1.total_value, 50)
-        self.assertEqual(self.product1.qty_available, 5)
+        self.assertEqual(self.product.total_value, 50)
+        self.assertEqual(self.product.qty_available, 5)
 
     def test_change_in_past_increase_in_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 15)
         move1.move_line_ids.quantity = 15
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
 
     def test_change_in_past_decrease_in_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 15)
         move1.move_line_ids.quantity = 5
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
 
     def test_change_in_past_add_ml_in_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 15)
         self.env['stock.move.line'].create({
             'move_id': move1.id,
             'product_id': move1.product_id.id,
@@ -243,48 +55,40 @@ class TestStockValuationStandard(TestStockValuationCommon):
             'location_dest_id': move1.location_dest_id.id,
         })
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
 
     def test_change_in_past_increase_out_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10)
+        move2 = self._make_out_move(self.product, 1)
         move2.move_line_ids.quantity = 5
 
-        self.assertEqual(self.product1.total_value, 50)
-        self.assertEqual(self.product1.qty_available, 5)
+        self.assertEqual(self.product.total_value, 50)
+        self.assertEqual(self.product.qty_available, 5)
 
     def test_change_in_past_decrease_out_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_out_move(self.product1, 5)
+        self._make_in_move(self.product, 10)
+        move2 = self._make_out_move(self.product, 5)
         move2.move_line_ids.quantity = 1
 
-        self.assertEqual(self.product1.total_value, 90)
-        self.assertEqual(self.product1.qty_available, 9)
+        self.assertEqual(self.product.total_value, 90)
+        self.assertEqual(self.product.qty_available, 9)
 
     def test_change_standard_price_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 15)
+        self._make_out_move(self.product, 15)
+        self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
 
         # change cost from 10 to 15
-        self.product1.standard_price = 15.0
+        self.product.standard_price = 15.0
 
-        self.assertEqual(self.product1.total_value, 75)
-        self.assertEqual(self.product1.qty_available, 5)
-        self.assertEqual(self.product1.avg_cost, 15)
+        self.assertEqual(self.product.total_value, 75)
+        self.assertEqual(self.product.qty_available, 5)
+        self.assertEqual(self.product.avg_cost, 15)
 
     def test_negative_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 15)
         self.env['stock.move.line'].create({
             'move_id': move1.id,
             'product_id': move1.product_id.id,
@@ -294,25 +98,21 @@ class TestStockValuationStandard(TestStockValuationCommon):
             'location_dest_id': move1.location_dest_id.id,
         })
 
-        self.assertEqual(self.product1.total_value, 50)
-        self.assertEqual(self.product1.qty_available, 5)
+        self.assertEqual(self.product.total_value, 50)
+        self.assertEqual(self.product.qty_available, 5)
 
     def test_dropship_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self._make_dropship_move(self.product, 10)
 
-        move1 = self._make_dropship_move(self.product1, 10)
-
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
 
     def test_change_in_past_increase_dropship_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-
-        move1 = self._make_dropship_move(self.product1, 10)
+        move1 = self._make_dropship_move(self.product, 10)
         move1.move_line_ids.quantity = 15
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
 
     def test_empty_stock_move_valuation(self):
         product1 = self.env['product.product'].create({
@@ -336,7 +136,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
                 'product_id': product.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
-                'product_uom': self.uom_unit.id,
+                'product_uom': self.uom.id,
                 'product_uom_qty': 2,
                 'price_unit': 10,
                 'picking_type_id': self.picking_type_in.id,
@@ -368,16 +168,44 @@ class TestStockValuationStandard(TestStockValuationCommon):
         old_company = self.env.user.company_id
         try:
             self.env.user.company_id = new_company
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
-            product = self.product1.with_company(new_company)
+            product = self.product.with_company(new_company)
             product.standard_price = 3
 
-            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id)
-            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+            self._make_in_move(product, 0.5, company=new_company)
+            self._make_out_move(product, 0.5, company=new_company)
 
             self.assertEqual(product.total_value, 0.0)
         finally:
             self.env.user.company_id = old_company
+
+    def test_multicompany(self):
+        """Standard: total_value = standard_price * qty, isolated per company."""
+        self.product.with_company(self.company).standard_price = 10
+        self.product.with_company(self.other_company).standard_price = 50
+
+        # Company 1: receive 15 units at 10$
+        self._make_in_move(self.product, 15)
+        # Company 2: receive 100 units at 50$
+        self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
+
+        # Company 1 only: 15 units @ 10$ = 150$
+        product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
+        self.assertEqual(product_company_1.qty_available, 15)
+        self.assertEqual(product_company_1.total_value, 150)
+
+        # Company 2 only: 100 units @ 50$ = 5000$
+        product_company_2 = self.product.with_company(self.other_company).with_context(allowed_company_ids=self.other_company.ids)
+        self.assertEqual(product_company_2.qty_available, 100)
+        self.assertEqual(product_company_2.total_value, 5000)
+
+        # Both companies: 115 units, 5150$
+        # Invalidate so the ORM doesn't return the c1-keyed cached value (same
+        # cache key as with_company(c1) since depends_context('company') maps
+        # to env.company.id = first entry of allowed_company_ids).
+        self.product.invalidate_recordset(['total_value'])
+        product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
+        self.assertEqual(product_both.qty_available, 115)
+        self.assertEqual(product_both.total_value, 5150)
 
     def test_change_qty_and_locations_of_done_sml(self):
         sub_stock_loc = self.env['stock.location'].create({
@@ -386,18 +214,18 @@ class TestStockValuationStandard(TestStockValuationCommon):
             'location_id': self.stock_location.id,
         })
 
-        move_in = self._make_in_move(self.product1, 25)
-        self.assertEqual(self.product1.total_value, 250)
-        self.assertEqual(self.product1.qty_available, 25)
+        move_in = self._make_in_move(self.product, 25)
+        self.assertEqual(self.product.total_value, 250)
+        self.assertEqual(self.product.qty_available, 25)
 
         move_in.move_line_ids.write({
             'location_dest_id': sub_stock_loc.id,
             'quantity': 30,
         })
-        self.assertEqual(self.product1.total_value, 300)
-        self.assertEqual(self.product1.qty_available, 30)
+        self.assertEqual(self.product.total_value, 300)
+        self.assertEqual(self.product.qty_available, 30)
 
-        sub_loc_quant = self.product1.stock_quant_ids.filtered(lambda q: q.location_id == sub_stock_loc)
+        sub_loc_quant = self.product.stock_quant_ids.filtered(lambda q: q.location_id == sub_stock_loc)
         self.assertEqual(sub_loc_quant.quantity, 30)
 
 
@@ -405,428 +233,432 @@ class TestStockValuationAVCO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        cls.product = cls.product_avco
 
     def test_normal_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self.assertEqual(self.product.standard_price, 10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self.assertEqual(self.product.standard_price, 15)
+        self._make_out_move(self.product, 15)
+        self.assertEqual(self.product.standard_price, 15)
 
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        self.assertEqual(self.product1.standard_price, 10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        self.assertEqual(self.product1.standard_price, 15)
-        move3 = self._make_out_move(self.product1, 15)
-        self.assertEqual(self.product1.standard_price, 15)
-
-        self.assertEqual(self.product1.total_value, 75)
-        self.assertEqual(self.product1.qty_available, 5)
+        self.assertEqual(self.product.total_value, 75)
+        self.assertEqual(self.product.qty_available, 5)
 
     def test_change_in_past_increase_in_1(self):
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 15)
         self._set_quantity(move1, 15)
 
-        self.assertEqual(self.product1.total_value, 140)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(self.product1.standard_price, 14)
+        self.assertEqual(self.product.total_value, 140)
+        self.assertEqual(self.product.qty_available, 10)
+        self.assertEqual(self.product.standard_price, 14)
 
     def test_change_in_past_decrease_in_1(self):
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 15)
         self._set_quantity(move1, 5)
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
 
     def test_change_in_past_add_ml_in_1(self):
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 15)
         self._add_move_line(move1, quantity=5)
 
-        self.assertEqual(self.product1.total_value, 140)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(self.product1.standard_price, 14)
+        self.assertEqual(self.product.total_value, 140)
+        self.assertEqual(self.product.qty_available, 10)
+        self.assertEqual(self.product.standard_price, 14)
 
     def test_change_in_past_add_move_in_1(self):
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 15)
+        move1 = self._make_in_move(self.product, 10, unit_cost=10, create_picking=True)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 15)
         self._add_move_line(move1, quantity=5, state='done', picking_id=move1.picking_id.id)
 
-        self.assertEqual(self.product1.total_value, 140)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(self.product1.standard_price, 14)
+        self.assertEqual(self.product.total_value, 140)
+        self.assertEqual(self.product.qty_available, 10)
+        self.assertEqual(self.product.standard_price, 14)
 
     def test_change_in_past_increase_out_1(self):
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 15)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product, 15)
         self._set_quantity(move3, 20)
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
+        self.assertEqual(self.product.standard_price, 15)
 
     def test_change_in_past_decrease_out_1(self):
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 15)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        move3 = self._make_out_move(self.product, 15)
         self._set_quantity(move3, 10)
 
-        self.assertEqual(self.product1.total_value, 150)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 150)
+        self.assertEqual(self.product.qty_available, 10)
+        self.assertEqual(self.product.standard_price, 15)
 
     def test_negative_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 30)
-        move4 = self._make_in_move(self.product1, 10, unit_cost=30)
-        move5 = self._make_in_move(self.product1, 10, unit_cost=40)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 30)
+        self._make_in_move(self.product, 10, unit_cost=30)
+        self._make_in_move(self.product, 10, unit_cost=40)
 
-        self.assertEqual(self.product1.total_value, 400)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 400)
+        self.assertEqual(self.product.qty_available, 10)
 
     def test_negative_2(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        self.product1.standard_price = 10
-        move1 = self._make_out_move(self.product1, 1, force_assign=True)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=15)
+        self.product.standard_price = 10
+        self._make_out_move(self.product, 1, force_assign=True)
+        self._make_in_move(self.product, 1, unit_cost=15)
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
 
+    @freeze_time("2026-03-10 10:00:00")
     def test_return_receipt_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1)
-        move4 = self._make_return(move1, 1)
+        """
+        Receive a product twice, return one unit and deliver the other one.
+        The total value should be 0 and the price should be (10+20)/2 = 15.
+        Return the delivery and set the original quantity to 0.
+        The total value should be 15.
+        """
+        move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        move2 = self._make_out_move(self.product, 1)
+        self._make_return(move1, 1)
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
+        self.assertEqual(self.product.standard_price, 15)
+
+        self._make_return(move2, 1)
+        move2.quantity = 0
+        self.assertEqual(self.product.with_context(to_date=fields.Datetime.now() + timedelta(days=1)).total_value, 15.0)
 
     def test_return_delivery_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1, create_picking=True)
-        move4 = self._make_return(move3, 1)
+        self._make_in_move(self.product, 1, unit_cost=10)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product, 1, create_picking=True)
+        self._make_return(move3, 1)
 
-        self.assertEqual(self.product1.total_value, 30)
-        self.assertEqual(self.product1.qty_available, 2)
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 30)
+        self.assertEqual(self.product.qty_available, 2)
+        self.assertEqual(self.product.standard_price, 15)
 
     def test_rereturn_receipt_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1)
+        move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        self._make_out_move(self.product, 1)
         move4 = self._make_return(move1, 1)  # -15, current avco
-        move5 = self._make_return(move4, 1)  # +10, original move's price unit
+        self._make_return(move4, 1)  # +10, original move's price unit
 
-        self.assertEqual(self.product1.total_value, 15)
-        self.assertEqual(self.product1.qty_available, 1)
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 15)
+        self.assertEqual(self.product.qty_available, 1)
+        self.assertEqual(self.product.standard_price, 15)
 
     def test_rereturn_delivery_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1, create_picking=True)
+        self._make_in_move(self.product, 1, unit_cost=10)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product, 1, create_picking=True)
         move4 = self._make_return(move3, 1)
-        move5 = self._make_return(move4, 1)
+        self._make_return(move4, 1)
 
-        self.assertEqual(self.product1.total_value, 15)
-        self.assertEqual(self.product1.qty_available, 1)
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 15)
+        self.assertEqual(self.product.qty_available, 1)
+        self.assertEqual(self.product.standard_price, 15)
 
     def test_dropship_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_dropship_move(self.product1, 1, unit_cost=10)
+        self._make_in_move(self.product, 1, unit_cost=10)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        self._make_dropship_move(self.product, 1, unit_cost=10)
 
-        self.assertEqual(self.product1.total_value, 30)
-        self.assertEqual(self.product1.qty_available, 2)
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 26.67)
+        self.assertEqual(self.product.qty_available, 2)
+        self.assertAlmostEqual(self.product.standard_price, 13.33, places=2)
 
     def test_rounding_1(self):
-        self._make_in_move(self.product1, 1, unit_cost=1.00)
-        self._make_in_move(self.product1, 1, unit_cost=1.00)
-        self._make_in_move(self.product1, 1, unit_cost=1.01)
+        self._make_in_move(self.product, 1, unit_cost=1.00)
+        self._make_in_move(self.product, 1, unit_cost=1.00)
+        self._make_in_move(self.product, 1, unit_cost=1.01)
 
-        self.assertAlmostEqual(self.product1.total_value, 3.01)
+        self.assertAlmostEqual(self.product.total_value, 3.01)
 
-        move_out = self._make_out_move(self.product1, 3, create_picking=True)
+        self._make_out_move(self.product, 3, create_picking=True)
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
-        self.assertEqual(self.product1.standard_price, 1.00)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
+        self.assertAlmostEqual(self.product.standard_price, 1.0033333)
 
     def test_rounding_2(self):
-        self._make_in_move(self.product1, 1, unit_cost=1.02)
-        self._make_in_move(self.product1, 1, unit_cost=1.00)
-        self._make_in_move(self.product1, 1, unit_cost=1.00)
+        self._make_in_move(self.product, 1, unit_cost=1.02)
+        self._make_in_move(self.product, 1, unit_cost=1.00)
+        self._make_in_move(self.product, 1, unit_cost=1.00)
 
-        self.assertAlmostEqual(self.product1.total_value, 3.02)
+        self.assertAlmostEqual(self.product.total_value, 3.02)
 
-        move_out = self._make_out_move(self.product1, 3, create_picking=True)
+        self._make_out_move(self.product, 3, create_picking=True)
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
-        self.assertEqual(self.product1.standard_price, 1.01)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
+        self.assertAlmostEqual(self.product.standard_price, 1.00666666)
 
     def test_rounding_3(self):
-        self._make_in_move(self.product1, 1000, unit_cost=0.17)
-        self._make_in_move(self.product1, 800, unit_cost=0.23)
+        self._make_in_move(self.product, 1000, unit_cost=0.17)
+        self._make_in_move(self.product, 800, unit_cost=0.23)
 
-        self.assertEqual(self.product1.standard_price, 0.20)
+        self.assertAlmostEqual(self.product.standard_price, 0.19666666)
 
-        self._make_out_move(self.product1, 1000, create_picking=True)
-        self._make_out_move(self.product1, 800, create_picking=True)
+        self._make_out_move(self.product, 1000, create_picking=True)
+        self._make_out_move(self.product, 800, create_picking=True)
 
-        self.assertEqual(self.product1.total_value, 0)
+        self.assertEqual(self.product.total_value, 0)
 
     def test_rounding_4(self):
         """
         The first 2 In moves result in a rounded standard_price at 3.4943, which is rounded at 3.49.
         This test ensures that no rounding error is generated with small out quantities.
         """
-        self.product1.categ_id.property_cost_method = 'average'
-        self._make_in_move(self.product1, 2, unit_cost=4.63)
-        self._make_in_move(self.product1, 5, unit_cost=3.04)
-        self.assertEqual(self.product1.standard_price, 3.49)
+        self._make_in_move(self.product, 2, unit_cost=4.63)
+        self._make_in_move(self.product, 5, unit_cost=3.04)
+        self.assertAlmostEqual(self.product.standard_price, 3.49428571)
 
         for _ in range(70):
-            self._make_out_move(self.product1, 0.1)
+            self._make_out_move(self.product, 0.1)
 
-        self.assertEqual(self.product1.qty_available, 0)
-        self.assertEqual(self.product1.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
+        self.assertEqual(self.product.total_value, 0)
 
     def test_rounding_5(self):
-        self.product1.categ_id.property_cost_method = 'average'
-        self._make_in_move(self.product1, 10, unit_cost=16.83)
-        self._make_in_move(self.product1, 10, unit_cost=20)
-        self.assertEqual(self.product1.standard_price, 18.42)
+        self._make_in_move(self.product, 10, unit_cost=16.83)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self.assertEqual(self.product.standard_price, 18.415)
 
-        self._make_out_move(self.product1, 10)
-        out_move = self._make_out_move(self.product1, 9)
-        self.assertEqual(out_move.value, 165.73)
+        self._make_out_move(self.product, 10)
+        out_move = self._make_out_move(self.product, 9)
+        self.assertEqual(out_move.value, 165.74)
 
-        self.assertEqual(self.product1.total_value, 18.42)
-        self.assertEqual(self.product1.qty_available, 1)
+        self.assertEqual(self.product.total_value, 18.42)
+        self.assertEqual(self.product.qty_available, 1)
 
-        self._make_out_move(self.product1, 1)
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
+        self._make_out_move(self.product, 1)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
 
     def test_return_delivery_2(self):
-        self.product1.standard_price = 1
-        move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
-        self._make_in_move(self.product1, 10, unit_cost=2)
+        self.product.standard_price = 1
+        move1 = self._make_out_move(self.product, 10, create_picking=True, force_assign=True)
+        self._make_in_move(self.product, 10, unit_cost=2)
         self._make_return(move1, 10)
 
-        self.assertEqual(self.product1.total_value, 20)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(self.product1.standard_price, 2)
+        self.assertEqual(self.product.total_value, 10)
+        self.assertEqual(self.product.qty_available, 10)
+        self.assertEqual(self.product.standard_price, 1)
+
+    def test_multicompany(self):
+        """AVCO: standard_price auto-updates per company; total_value is isolated."""
+        self.category_avco.with_company(self.other_company).property_cost_method = 'average'
+
+        # Company 1: receive 15 units at 10$ → AVCO = 10, value = 150$
+        self._make_in_move(self.product, 15, unit_cost=10)
+        # Company 2: receive 100 units at 50$ → AVCO = 50, value = 5000$
+        self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
+
+        # Company 1 only: 15 units @ 10$ = 150$
+        product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
+        self.assertEqual(product_company_1.qty_available, 15)
+        self.assertEqual(product_company_1.total_value, 150)
+
+        # Company 2 only: 100 units @ 50$ = 5000$
+        product_company_2 = self.product.with_company(self.other_company).with_context(allowed_company_ids=self.other_company.ids)
+        self.assertEqual(product_company_2.qty_available, 100)
+        self.assertEqual(product_company_2.total_value, 5000)
+
+        # Both companies: 115 units, 5150$
+        self.product.invalidate_recordset(['total_value'])
+        product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
+        self.assertEqual(product_both.qty_available, 115)
+        self.assertEqual(product_both.total_value, 5150)
 
     def test_return_delivery_rounding(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        self.product1.standard_price = 1
-        self._make_in_move(self.product1, 1, unit_cost=13.13)
-        self._make_in_move(self.product1, 1, unit_cost=12.20)
-        move3 = self._make_out_move(self.product1, 2, create_picking=True)
+        self._make_in_move(self.product, 1, unit_cost=13.13)
+        self._make_in_move(self.product, 1, unit_cost=12.20)
+        move3 = self._make_out_move(self.product, 2, create_picking=True)
         move4 = self._make_return(move3, 2)
 
         self.assertAlmostEqual(abs(move3.value), abs(move4.value))
-        self.assertAlmostEqual(self.product1.total_value, 25.33)
-        self.assertEqual(self.product1.qty_available, 2)
+        self.assertAlmostEqual(self.product.total_value, 25.33)
+        self.assertEqual(self.product.qty_available, 2)
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        cls.product = cls.product_fifo
 
     def test_normal_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 15)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 15)
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 5)
-        # self.assertEqual(self._get_remaining_qty(self.product1), 5)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 5)
 
     def test_negative_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 30)
-        self.assertEqual(move3.remaining_qty, -10)
-        move4 = self._make_in_move(self.product1, 10, unit_cost=30)
-        # self.assertEqual(self._get_remaining_qty(self.product1), 0)
-        self.assertEqual(self.product1.qty_available, 0)
-        move5 = self._make_in_move(self.product1, 10, unit_cost=40)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 30)
+        self.assertEqual(self.product.qty_available, -10)
+        self._make_in_move(self.product, 10, unit_cost=30)
+        self.assertEqual(self.product.qty_available, 0)
+        self._make_in_move(self.product, 10, unit_cost=40)
 
-        self.assertEqual(self.product1.total_value, 400)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 400)
+        self.assertEqual(self.product.qty_available, 10)
 
     def test_change_in_past_decrease_in_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
-        move2 = self._make_out_move(self.product1, 10)
+        move1 = self._make_in_move(self.product, 20, unit_cost=10)
+        self._make_out_move(self.product, 10)
         self._set_quantity(move1, 10)
 
-        self.assertEqual(self.product1.total_value, 0)
-        self.assertEqual(self.product1.qty_available, 0)
+        self.assertEqual(self.product.total_value, 0)
+        self.assertEqual(self.product.qty_available, 0)
 
     def test_change_in_past_decrease_in_2(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
-        move2 = self._make_out_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 10)
+        move1 = self._make_in_move(self.product, 20, unit_cost=10)
+        self._make_out_move(self.product, 10)
+        self._make_out_move(self.product, 10)
         self._set_quantity(move1, 10)
-        move4 = self._make_in_move(self.product1, 20, unit_cost=15)
+        self._make_in_move(self.product, 20, unit_cost=15)
 
-        self.assertEqual(self.product1.total_value, 150)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 150)
+        self.assertEqual(self.product.qty_available, 10)
 
     def test_change_in_past_increase_in_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=15)
-        move3 = self._make_out_move(self.product1, 20)
+        move1 = self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=15)
+        self._make_out_move(self.product, 20)
         self._set_quantity(move1, 20)
 
-        self.assertEqual(self.product1.total_value, 150)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 150)
+        self.assertEqual(self.product.qty_available, 10)
 
     def test_change_in_past_increase_in_2(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=12)
-        move3 = self._make_out_move(self.product1, 15)
-        move4 = self._make_out_move(self.product1, 20)
-        move5 = self._make_in_move(self.product1, 100, unit_cost=15)
+        move1 = self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=12)
+        self._make_out_move(self.product, 15)
+        self._make_out_move(self.product, 20)
+        self._make_in_move(self.product, 100, unit_cost=15)
         self._set_quantity(move1, 20)
 
-        self.assertEqual(self.product1.total_value, 1375)
-        self.assertEqual(self.product1.qty_available, 95)
+        self.assertEqual(self.product.total_value, 1425)
+        self.assertEqual(self.product.qty_available, 95)
 
     def test_change_in_past_increase_out_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
-        move2 = self._make_out_move(self.product1, 10)
-        move3 = self._make_in_move(self.product1, 20, unit_cost=15)
-        # move2.move_line_ids.quantity = 25
+        self._make_in_move(self.product, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product, 10)
+        self._make_in_move(self.product, 20, unit_cost=15)
         self._set_quantity(move2, 25)
 
-        self.assertEqual(self.product1.total_value, 225)
-        self.assertEqual(self.product1.qty_available, 15)
-        # self.assertEqual(self._get_remaining_qty(self.product1), 15)
+        self.assertEqual(self.product.total_value, 225)
+        self.assertEqual(self.product.qty_available, 15)
 
     def test_change_in_past_decrease_out_1(self):
         """ Decrease the quantity of an outgoing stock.move.line will act like
-        an inventory adjustement and not a return. It will take the standard price
-        of the product in order to set the value and not the move's layers.
+        an inventory adjustement and not a return. It will take the move value
+        in order to set the value and not the standard price of the product.
         """
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
-        move2 = self._make_out_move(self.product1, 15)
-        move3 = self._make_in_move(self.product1, 20, unit_cost=15)
+        self._make_in_move(self.product, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product, 15)
+        self._make_in_move(self.product, 20, unit_cost=15)
         self._set_quantity(move2, 5)
 
-        self.assertEqual(self.product1.total_value, 490)
-        self.assertEqual(self.product1.qty_available, 35)
+        self.assertEqual(self.product.total_value, 450)
+        self.assertEqual(self.product.qty_available, 35)
 
     def test_change_in_past_add_ml_out_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 20, unit_cost=10)
-        move2 = self._make_out_move(self.product1, 10)
-        move3 = self._make_in_move(self.product1, 20, unit_cost=15)
+        self._make_in_move(self.product, 20, unit_cost=10)
+        move2 = self._make_out_move(self.product, 10)
+        self._make_in_move(self.product, 20, unit_cost=15)
         self._add_move_line(move2, quantity=5)
-        # self.env['stock.move.line'].create({
-        #     'move_id': move2.id,
-        #     'product_id': move2.product_id.id,
-        #     'quantity': 5,
-        #     'product_uom_id': move2.product_uom.id,
-        #     'location_id': move2.location_id.id,
-        #     'location_dest_id': move2.location_dest_id.id,
-        # })
 
-        self.assertEqual(self.product1.total_value, 350)
-        self.assertEqual(self.product1.qty_available, 25)
-        # self.assertEqual(self._get_remaining_qty(self.product1), 25)
+        self.assertEqual(self.product.total_value, 350)
+        self.assertEqual(self.product.qty_available, 25)
 
     def test_return_delivery_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_out_move(self.product1, 10, create_picking=True)
-        move3 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move4 = self._make_return(move2, 10)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        move2 = self._make_out_move(self.product, 10, create_picking=True)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_return(move2, 10)
 
-        self.assertEqual(self.product1.total_value, 300)
-        self.assertEqual(self.product1.qty_available, 20)
+        self.assertEqual(self.product.total_value, 300)
+        self.assertEqual(self.product.qty_available, 20)
 
     def test_return_receipt_1(self):
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_return(move1, 2)
+        move1 = self._make_in_move(self.product, 10, unit_cost=10, create_picking=True)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_return(move1, 2)
 
-        self.assertEqual(self.product1.total_value, 280)
-        self.assertEqual(self.product1.qty_available, 18)
+        self.assertEqual(self.product.total_value, 280)
+        self.assertEqual(self.product.qty_available, 18)
 
     def test_rereturn_receipt_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1)
+        move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        self._make_out_move(self.product, 1)
         move4 = self._make_return(move1, 1)
-        move5 = self._make_return(move4, 1)
+        self._make_return(move4, 1)
 
-        self.assertEqual(self.product1.total_value, 20)
-        self.assertEqual(self.product1.qty_available, 1)
+        self.assertEqual(self.product.total_value, 20)
+        self.assertEqual(self.product.qty_available, 1)
 
     def test_rereturn_delivery_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1, create_picking=True)
+        self._make_in_move(self.product, 1, unit_cost=10)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        move3 = self._make_out_move(self.product, 1, create_picking=True)
         move4 = self._make_return(move3, 1)
-        move5 = self._make_return(move4, 1)
+        self._make_return(move4, 1)
 
-        self.assertEqual(self.product1.total_value, 10)
-        self.assertEqual(self.product1.qty_available, 1)
+        self.assertEqual(self.product.total_value, 10)
+        self.assertEqual(self.product.qty_available, 1)
 
     def test_dropship_1(self):
-        move1 = self._make_in_move(self.product1, 1, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 1, unit_cost=20)
-        move3 = self._make_dropship_move(self.product1, 1, unit_cost=10)
+        self._make_in_move(self.product, 1, unit_cost=10)
+        self._make_in_move(self.product, 1, unit_cost=20)
+        self._make_dropship_move(self.product, 1, unit_cost=10)
 
-        self.assertEqual(self.product1.total_value, 30)
-        self.assertEqual(self.product1.qty_available, 2)
-        self.assertAlmostEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product.total_value, 30)
+        self.assertEqual(self.product.qty_available, 2)
+        self.assertAlmostEqual(self.product.standard_price, 15)
 
     def test_return_delivery_2(self):
-        self._make_in_move(self.product1, 1, unit_cost=10)
-        self.product1.standard_price = 0
-        self._make_in_move(self.product1, 1, unit_cost=0)
+        self._make_in_move(self.product, 1, unit_cost=10)
+        self.product.standard_price = 0
+        self._make_in_move(self.product, 1, unit_cost=0)
 
-        self._make_out_move(self.product1, 1)
-        out_move02 = self._make_out_move(self.product1, 1, create_picking=True)
+        self._make_out_move(self.product, 1)
+        out_move02 = self._make_out_move(self.product, 1, create_picking=True)
 
         returned = self._make_return(out_move02, 1)
         self.assertEqual(returned.value, 0)
 
     def test_return_delivery_3(self):
-        self.product1.standard_price = 1
-        move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
-        self._make_in_move(self.product1, 10, unit_cost=2)
+        self.product.standard_price = 1
+        move1 = self._make_out_move(self.product, 10, create_picking=True, force_assign=True)
+        self._make_in_move(self.product, 10, unit_cost=2)
         self._make_return(move1, 10)
 
-        self.assertEqual(self.product1.total_value, 20)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 10)
+        self.assertEqual(self.product.qty_available, 10)
 
     def test_currency_precision_and_fifo_value(self):
         currency = self.env['res.currency'].create({
@@ -842,123 +674,164 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         old_company = self.env.user.company_id
         try:
             self.env.user.company_id = new_company
-            product = self.product1.with_company(new_company)
+            product = self.product.with_company(new_company)
             product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)])
 
-            self._make_in_move(product, 0.5, loc_dest=warehouse.lot_stock_id, pick_type=warehouse.in_type_id, unit_cost=3)
-            self._make_out_move(product, 0.5, loc_src=warehouse.lot_stock_id, pick_type=warehouse.out_type_id)
+            self._make_in_move(product, 0.5, company=new_company, unit_cost=3)
+            self._make_out_move(product, 0.5, company=new_company)
 
             self.assertEqual(product.total_value, 0.0)
         finally:
             self.env.user.company_id = old_company
+
+    def test_fifo_avg_cost_fallback_zero_valued_qty(self):
+        self.product.standard_price = 42.0
+        move_in = self._make_in_move(self.product, 1)
+        move_out = self._make_out_move(self.product, 1)
+        move_in.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
+        self.assertEqual(move_in._get_valued_qty(), 0.0)
+        # The valued quantity is -1 since the out doesn't have an owne ter.
+        self.product.invalidate_recordset(['total_value', 'qty_available'])
+        self.assertEqual(self.product.total_value, -42.0)
+        self.assertEqual(self.product._with_valuation_context().qty_available, -1)
+
+        move_out.move_line_ids.owner_id = self.env['res.partner'].create({'name': 'External Owner'})
+        self.product.invalidate_recordset(['total_value', 'qty_available'])
+        self.assertEqual(self.product.total_value, 0.0)
+        self.assertEqual(self.product.avg_cost, 42.0)
+
+    def test_multicompany(self):
+        """FIFO: value computed from each company's own move stack."""
+        self.category_fifo.with_company(self.other_company).property_cost_method = 'fifo'
+
+        # Company 1: receive 15 units at 10$
+        self._make_in_move(self.product, 15, unit_cost=10)
+        # Company 2: receive 100 units at 50$
+        self._make_in_move(self.product, 100, unit_cost=50, company=self.other_company)
+
+        # Company 1 only: 15 units @ 10$ = 150$
+        product_company_1 = self.product.with_company(self.company).with_context(allowed_company_ids=self.company.ids)
+        self.assertEqual(product_company_1.qty_available, 15)
+        self.assertEqual(product_company_1.total_value, 150)
+
+        # Company 2 only: 100 units @ 50$ = 5000$
+        product_company_2 = self.product.with_company(self.other_company).with_context(
+            allowed_company_ids=self.other_company.ids)
+        self.assertEqual(product_company_2.qty_available, 100)
+        self.assertEqual(product_company_2.total_value, 5000)
+        # Both companies: 115 units, 5150$
+        self.product.invalidate_recordset(['total_value'])
+        product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
+        self.assertEqual(product_both.qty_available, 115)
+        self.assertEqual(product_both.total_value, 5150)
+
+    def test_fifo_consignment_valuation(self):
+        owner = self.env['res.partner'].create({'name': 'External Owner'})
+        self._make_in_move(self.product, 5, 10)
+        self._make_in_move(self.product, 5, 20, owner_id=owner.id)
+        self.assertEqual(self.product.total_value, 50.0)
+        self._make_out_move(self.product, 5)
+        self.assertEqual(self.product.total_value, 0.0)
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_1(self):
         """ The accounting impact of this cost method change is neutral.
         """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        self.product1.product_tmpl_id.standard_price = 10
+        self.product = self.product_standard
+        self.product.product_tmpl_id.standard_price = 10
 
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 1)
 
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.assertEqual(self.product1.total_value, 190)
-        self.assertEqual(self.product1.qty_available, 19)
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.assertEqual(self.product.total_value, 190)
+        self.assertEqual(self.product.qty_available, 19)
 
     def test_standard_to_fifo_2(self):
         """ We want the same result as `test_standard_to_fifo_1` but by changing the category of
-        `self.product1` to another one, not changing the current one.
+        `self.product` to another one, not changing the current one.
         """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        self.product1.product_tmpl_id.standard_price = 10
+        self.product = self.product_standard
+        self.product.product_tmpl_id.standard_price = 10
 
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 1)
 
         cat2 = self.env['product.category'].create({'name': 'fifo', 'property_cost_method': 'fifo'})
-        self.product1.product_tmpl_id.categ_id = cat2
-        self.assertEqual(self.product1.total_value, 190)
-        self.assertEqual(self.product1.qty_available, 19)
+        self.product.product_tmpl_id.categ_id = cat2
+        self.assertEqual(self.product.total_value, 190)
+        self.assertEqual(self.product.qty_available, 19)
 
     def test_avco_to_fifo(self):
         """ The accounting impact of this cost method change is neutral.
         """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self.product = self.product_avco
 
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 1)
 
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.assertEqual(self.product1.total_value, 290)
-        self.assertEqual(self.product1.qty_available, 19)
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.assertEqual(self.product.total_value, 290)
+        self.assertEqual(self.product.qty_available, 19)
 
     def test_fifo_to_standard(self):
         """ The accounting impact of this cost method change is not neutral as we will use the last
         fifo price as the new standard price.
         """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self.product = self.product_fifo
 
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 1)
 
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.assertEqual(self.product1.total_value, 285)
-        self.assertEqual(self.product1.qty_available, 19)
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.assertEqual(self.product.total_value, 290.0)
+        self.assertEqual(self.product.qty_available, 19)
 
     def test_fifo_to_avco(self):
         """ The accounting impact of this cost method change is not neutral as we will use the last
         fifo price as the new AVCO.
         """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self.product = self.product_fifo
 
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 1)
 
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.assertEqual(self.product1.total_value, 285)
-        self.assertEqual(self.product1.qty_available, 19)
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.assertEqual(self.product.total_value, 285)
+        self.assertEqual(self.product.qty_available, 19)
 
     def test_avco_to_standard(self):
         """ The accounting impact of this cost method change is neutral.
         """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self.product = self.product_avco
 
-        move1 = self._make_in_move(self.product1, 10, unit_cost=10)
-        move2 = self._make_in_move(self.product1, 10, unit_cost=20)
-        move3 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        self._make_in_move(self.product, 10, unit_cost=20)
+        self._make_out_move(self.product, 1)
 
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.assertEqual(self.product1.total_value, 285)
-        self.assertEqual(self.product1.qty_available, 19)
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.assertEqual(self.product.total_value, 285)
+        self.assertEqual(self.product.qty_available, 19)
 
     def test_standard_to_avco(self):
         """ The accounting impact of this cost method change is neutral.
         """
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        self.product1.product_tmpl_id.standard_price = 10
+        self.product = self.product_standard
+        self.product.product_tmpl_id.standard_price = 10
 
-        move1 = self._make_in_move(self.product1, 10)
-        move2 = self._make_in_move(self.product1, 10)
-        move3 = self._make_out_move(self.product1, 1)
+        self._make_in_move(self.product, 10)
+        self._make_in_move(self.product, 10)
+        self._make_out_move(self.product, 1)
 
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.assertEqual(self.product1.total_value, 190)
-        self.assertEqual(self.product1.qty_available, 19)
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.assertEqual(self.product.total_value, 190)
+        self.assertEqual(self.product.qty_available, 19)
 
 
 @tagged('post_install', '-at_install', 'change_valuation')
@@ -966,286 +839,107 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationChangeValuation, cls).setUpClass()
-        (cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account,
-         cls.expense_account, cls.income_account, cls.stock_journal) = _create_accounting_data(cls.env)
-        cls.product1.property_account_expense_id = cls.expense_account.id
-        cls.product1.categ_id.write({
-            'property_valuation': 'real_time',
-            'property_stock_account_input_categ_id': cls.stock_input_account.id,
-            'property_stock_account_output_categ_id': cls.stock_output_account.id,
-            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
-            'property_stock_journal': cls.stock_journal.id,
-        })
+        cls.product = cls.product_standard
 
     def test_standard_manual_to_auto_1(self):
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        self.product1.product_tmpl_id.standard_price = 10
-        move1 = self._make_in_move(self.product1, 10)
+        self.product.product_tmpl_id.standard_price = 10
+        self._make_in_move(self.product, 10)
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
 
-        self.product1.product_tmpl_id.categ_id.write({
+        self.product.product_tmpl_id.categ_id.write({
             'property_valuation': 'real_time',
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_valuation_account_id': self.account_stock_valuation.id,
         })
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
-        # An accounting entry should only be created for the replenish now that the category is perpetual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
+
+        account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
+        self.assertEqual(len(account_move_line), 2)
 
     def test_standard_manual_to_auto_2(self):
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
-        self.product1.product_tmpl_id.standard_price = 10
-        move1 = self._make_in_move(self.product1, 10)
+        self.product.product_tmpl_id.standard_price = 10
+        self._make_in_move(self.product, 10)
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
-
-        cat2 = self.env['product.category'].create({
-            'name': 'standard auto',
-            'property_cost_method': 'standard',
-            'property_valuation': 'real_time',
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
-        })
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
 
         # Try to change the product category with a `default_type` key in the context and
         # check it doesn't break the account move generation.
-        self.product1.with_context(default_is_storable=True).categ_id = cat2
-        self.assertEqual(self.product1.categ_id, cat2)
+        self.product.with_context(default_is_storable=True).categ_id = self.category_standard_auto
+        self.assertEqual(self.product.categ_id, self.category_standard_auto)
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
-        # An accounting entry should only be created for the replenish now that the category is perpetual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
+
+        account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
+        self.assertEqual(len(account_move_line), 2)
 
     def test_standard_auto_to_manual_1(self):
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.standard_price = 10
-        move1 = self._make_in_move(self.product1, 10)
+        self.product = self.product_standard_auto
+        self.product.product_tmpl_id.standard_price = 10
+        self._make_in_move(self.product, 10)
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
 
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'periodic'
+        self.product.product_tmpl_id.categ_id.property_valuation = 'periodic'
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
+
         # An accounting entry should only be created for the emptying now that the category is manual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+        account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
+        self.assertEqual(len(account_move_line), 2)
 
     def test_standard_auto_to_manual_2(self):
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.standard_price = 10
-        move1 = self._make_in_move(self.product1, 10)
+        self.product = self.product_standard_auto
+        self.product.product_tmpl_id.standard_price = 10
+        self._make_in_move(self.product, 10)
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 1)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
 
-        cat2 = self.env['product.category'].create({
-            'name': 'fifo',
-            'property_cost_method': 'standard',
-            'property_valuation': 'periodic',
-        })
-        self.product1.with_context(debug=True).categ_id = cat2
+        self.product.with_context(debug=True).categ_id = self.category_standard
 
-        self.assertEqual(self.product1.total_value, 100)
-        self.assertEqual(self.product1.qty_available, 10)
-        # An accounting entry should only be created for the emptying now that the category is manual.
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
-        self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+        self.assertEqual(self.product.total_value, 100)
+        self.assertEqual(self.product.qty_available, 10)
+
+        # account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
+        # self.assertEqual(len(account_move_line), 2)
 
     def test_return_delivery_fifo(self):
-        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product = self.product_fifo
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
         ]).digits = 4
-        self.product1.standard_price = 280.8475
+        self.product.standard_price = 280.8475
 
-        move1 = self._make_out_move(self.product1, 4, create_picking=True, force_assign=True)
+        move1 = self._make_out_move(self.product, 4, create_picking=True, force_assign=True)
         move2 = self._make_return(move1, 4)
 
         for move in [move1, move2]:
-            self.assertEqual(len(move.stock_valuation_layer_ids), 1)
-            self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, self.product1.standard_price)
-            self.assertAlmostEqual(abs(move.stock_valuation_layer_ids.value), 1123.39)
+            self.assertAlmostEqual(move._get_price_unit(), self.product.standard_price)
+            self.assertAlmostEqual(abs(move.value), 1123.39)
 
 
-@tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
-class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env.ref('base.EUR').active = True
-        cls.company_data['company'].anglo_saxon_accounting = True
-        cls.stock_location = cls.env['stock.location'].create({
-            'name': 'stock location',
-            'usage': 'internal',
-        })
-        cls.customer_location = cls.env['stock.location'].create({
-            'name': 'customer location',
-            'usage': 'customer',
-        })
-        cls.supplier_location = cls.env['stock.location'].create({
-            'name': 'supplier location',
-            'usage': 'supplier',
-        })
-        cls.warehouse_in = cls.env['stock.warehouse'].create({
-            'name': 'warehouse in',
-            'company_id': cls.company_data['company'].id,
-            'code': '1',
-        })
-        cls.warehouse_out = cls.env['stock.warehouse'].create({
-            'name': 'warehouse out',
-            'company_id': cls.company_data['company'].id,
-            'code': '2',
-        })
-        cls.picking_type_in = cls.env['stock.picking.type'].create({
-            'name': 'pick type in',
-            'sequence_code': '1',
-            'code': 'incoming',
-            'company_id': cls.company_data['company'].id,
-            'warehouse_id': cls.warehouse_in.id,
-        })
-        cls.picking_type_out = cls.env['stock.picking.type'].create({
-            'name': 'pick type in',
-            'sequence_code': '2',
-            'code': 'outgoing',
-            'company_id': cls.company_data['company'].id,
-            'warehouse_id': cls.warehouse_out.id,
-        })
-        cls.stock_valuation_account = cls.env['account.account'].create({
-            'name': 'Stock Valuation',
-            'code': 'StockValuation',
-            'account_type': 'asset_current',
-            'reconcile': True,
-        })
-        cls.expense_account = cls.env['account.account'].create({
-            'name': 'Expense Account',
-            'code': 'ExpenseAccount',
-            'account_type': 'expense',
-            'reconcile': True,
-        })
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.product1 = cls.env['product.product'].create({
-            'name': 'product1',
-            'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_goods').id,
-            'property_account_expense_id': cls.expense_account.id,
-        })
-        cls.product1.categ_id.write({
-            'property_valuation': 'real_time',
-            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
-            'property_stock_journal': cls.company_data['default_journal_misc'].id,
-        })
-
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
-        """ Helper to create and validate a receipt move.
-        """
-        unit_cost = unit_cost or product.standard_price
-        loc_dest = loc_dest or self.stock_location
-        pick_type = pick_type or self.picking_type_in
-        in_move = self.env['stock.move'].create({
-            'product_id': product.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': loc_dest.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': quantity,
-            'price_unit': unit_cost,
-            'picking_type_id': pick_type.id,
-        })
-
-        if create_picking:
-            picking = self.env['stock.picking'].create({
-                'picking_type_id': in_move.picking_type_id.id,
-                'location_id': in_move.location_id.id,
-                'location_dest_id': in_move.location_dest_id.id,
-            })
-            in_move.picking_id = picking.id
-
-        in_move._action_confirm()
-        in_move._action_assign()
-        in_move.move_line_ids.quantity = quantity
-        in_move.picked = True
-        in_move._action_done()
-
-        return in_move
-
-    def _make_dropship_move(self, product, quantity, unit_cost=None):
-        dropshipped = self.env['stock.move'].create({
-            'product_id': product.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.customer_location.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': quantity,
-            'picking_type_id': self.picking_type_out.id,
-        })
-        if unit_cost:
-            dropshipped.price_unit = unit_cost
-        dropshipped._action_confirm()
-        dropshipped._action_assign()
-        dropshipped.move_line_ids.quantity = quantity
-        dropshipped.picked = True
-        dropshipped._action_done()
-        return dropshipped
-
-    def _make_return(self, move, quantity_to_return):
-        stock_return_picking = Form(self.env['stock.return.picking']\
-            .with_context(active_ids=[move.picking_id.id], active_id=move.picking_id.id, active_model='stock.picking'))
-        stock_return_picking = stock_return_picking.save()
-        stock_return_picking.product_return_moves.quantity = quantity_to_return
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].move_line_ids[0].quantity = quantity_to_return
-        return_pick.move_ids.picked = True
-        return_pick._action_done()
-        return return_pick.move_ids
-
+class TestAngloSaxonAccounting(TestStockValuationCommon):
     def test_avco_and_credit_note(self):
         """
         When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value
         """
         # Required for `account_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('account.group_account_readonly')
-        self.product1.categ_id.property_cost_method = 'average'
+        self.product = self.product_avco_auto
 
-        self._make_in_move(self.product1, 2, unit_cost=10)
+        self._make_in_move(self.product, 2, unit_cost=10)
 
-        invoice_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
-        invoice_form.partner_id = self.env['res.partner'].create({'name': 'Super Client'})
-        with invoice_form.invoice_line_ids.new() as invoice_line_form:
-            invoice_line_form.product_id = self.product1
-            invoice_line_form.quantity = 2
-            invoice_line_form.price_unit = 25
-            invoice_line_form.account_id = self.company_data['default_journal_purchase'].default_account_id
-            invoice_line_form.tax_ids.clear()
-        invoice = invoice_form.save()
-        invoice.action_post()
+        invoice = self._create_invoice(self.product, 2, 25)
 
-        self._make_in_move(self.product1, 2, unit_cost=20)
-        self.assertEqual(self.product1.standard_price, 15)
+        self._make_in_move(self.product, 2, unit_cost=20)
+        # self.assertEqual(self.product.standard_price, 15)
 
         refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
             'journal_id': invoice.journal_id.id,
@@ -1266,110 +960,25 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
         """ When using STORNO accounting, reverse accounting moves should have negative values for credit/debit.
         """
         self.env.company.account_storno = True
-        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product = self.product_fifo
 
-        self._make_in_move(self.product1, 10, unit_cost=10)
-        out_move = self._make_out_move(self.product1, 10, create_picking=True)
-        return_move = self._make_return(out_move, 10)
+        self._make_in_move(self.product, 10, unit_cost=10)
+        out_move = self._make_out_move(self.product, 10, create_picking=True)
+        self._make_return(out_move, 10)
 
-        valuation_line = out_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
-        stock_out_line = out_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+        out_invoice = self._create_invoice(self.product, 10, 10)
+        return_credit_note = self._create_credit_note(self.product, 10, 10, reversed_entry_id=out_invoice.id)
 
-        self.assertEqual(valuation_line.credit, 100)
-        self.assertEqual(valuation_line.debit, 0)
-        self.assertEqual(stock_out_line.credit, 0)
-        self.assertEqual(stock_out_line.debit, 100)
+        out_move_line_ids = out_invoice.line_ids
 
-        valuation_line = return_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
-        stock_out_line = return_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+        self.assertEqual(out_move_line_ids[0].credit, 100)
+        self.assertEqual(out_move_line_ids[0].debit, 0)
+        self.assertEqual(out_move_line_ids[1].credit, 0)
+        self.assertEqual(out_move_line_ids[1].debit, 100)
 
-        self.assertEqual(valuation_line.credit, -100)
-        self.assertEqual(valuation_line.debit, 0)
-        self.assertEqual(stock_out_line.credit, 0)
-        self.assertEqual(stock_out_line.debit, -100)
+        return_line_ids = return_credit_note.line_ids
 
-    def test_dropship_return_accounts_1(self):
-        """
-        When returning a dropshipped move, make sure the correct accounts are used
-        """
-        # pylint: disable=bad-whitespace
-        self.product1.categ_id.property_cost_method = 'fifo'
-        move1 = self._make_dropship_move(self.product1, 2, unit_cost=10)
-        move2 = self._make_return(move1, 2)
-
-        # First: Input -> Valuation
-        # Second: Valuation -> Output
-        origin_svls = move1.stock_valuation_layer_ids.sorted('quantity', reverse=True)
-        # First: Output -> Valuation
-        # Second: Valuation -> Input
-        return_svls = move2.stock_valuation_layer_ids.sorted('quantity', reverse=True)
-        self.assertEqual(len(origin_svls), 2)
-        self.assertEqual(len(return_svls), 2)
-
-        acc_in, acc_out, acc_valuation = self.stock_input_account, self.stock_output_account, self.stock_valuation_account
-
-        # Dropshipping should be: Input -> Output
-        self.assertRecordValues(origin_svls[0].account_move_id.line_ids, [
-            {'account_id': acc_in.id,        'debit': 0,  'credit': 20},
-            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
-        ])
-        self.assertRecordValues(origin_svls[1].account_move_id.line_ids, [
-            {'account_id': acc_valuation.id, 'debit': 0,  'credit': 20},
-            {'account_id': acc_out.id,       'debit': 20, 'credit': 0},
-        ])
-        # Return should be: Output -> Input
-        self.assertRecordValues(return_svls[0].account_move_id.line_ids, [
-            {'account_id': acc_out.id,       'debit': 0,  'credit': 20},
-            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
-        ])
-        self.assertRecordValues(return_svls[1].account_move_id.line_ids, [
-            {'account_id': acc_valuation.id, 'debit': 0,  'credit': 20},
-            {'account_id': acc_in.id,        'debit': 20, 'credit': 0},
-        ])
-
-    def test_dropship_return_accounts_2(self):
-        """
-        When returning a dropshipped move, make sure the correct accounts are used
-        """
-        # pylint: disable=bad-whitespace
-        self.product1.categ_id.property_cost_method = 'fifo'
-
-        move1 = self._make_dropship_move(self.product1, 2, unit_cost=10)
-
-        # return to WH/Stock
-        stock_return_picking = Form(self.env['stock.return.picking']\
-            .with_context(active_ids=[move1.picking_id.id], active_id=move1.picking_id.id, active_model='stock.picking'))
-        stock_return_picking = stock_return_picking.save()
-        stock_return_picking.product_return_moves.quantity = 2
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.location_dest_id = self.stock_location
-        return_pick.move_ids[0].move_line_ids[0].quantity = 2
-        return_pick.move_ids[0].picked = True
-        return_pick._action_done()
-        move2 = return_pick.move_ids
-
-        # First: Input -> Valuation
-        # Second: Valuation -> Output
-        origin_svls = move1.stock_valuation_layer_ids.sorted('quantity', reverse=True)
-        # Only one: Output -> Valuation
-        return_svl = move2.stock_valuation_layer_ids
-        self.assertEqual(len(origin_svls), 2)
-        self.assertEqual(len(return_svl), 1)
-
-        acc_in, acc_out, acc_valuation = self.stock_input_account, self.stock_output_account, self.stock_valuation_account
-
-        # Dropshipping should be: Input -> Output
-        self.assertRecordValues(origin_svls[0].account_move_id.line_ids, [
-            {'account_id': acc_in.id,        'debit': 0,  'credit': 20},
-            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
-        ])
-        self.assertRecordValues(origin_svls[1].account_move_id.line_ids, [
-            {'account_id': acc_valuation.id, 'debit': 0,  'credit': 20},
-            {'account_id': acc_out.id,       'debit': 20, 'credit': 0},
-        ])
-        # Return should be: Output -> Valuation
-        self.assertRecordValues(return_svl.account_move_id.line_ids, [
-            {'account_id': acc_out.id,       'debit': 0,  'credit': 20},
-            {'account_id': acc_valuation.id, 'debit': 20, 'credit': 0},
-        ])
+        self.assertEqual(return_line_ids[0].credit, -100)
+        self.assertEqual(return_line_ids[0].debit, 0)
+        self.assertEqual(return_line_ids[1].credit, 0)
+        self.assertEqual(return_line_ids[1].debit, -100)

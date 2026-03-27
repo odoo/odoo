@@ -16,13 +16,15 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:44+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "base_import/tr/>\n"
 "Language: tr\n"
@@ -36,7 +38,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "%(number)s file(s) selected"
-msgstr ""
+msgstr "%(number)s dosya(lar) seçildi"
 
 #. module: base_import
 #. odoo-python
@@ -173,8 +175,8 @@ msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: %"
 "(error)s"
 msgstr ""
-"%(column)s sütunu yanlış değerler içeriyor. %(line)d satırında hata: "
-"%(error)s"
+"%(column)s sütunu yanlış değerler içeriyor. %(line)d satırında hata: %"
+"(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -323,8 +325,8 @@ msgid ""
 "(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Kayıtlar içe aktarılırken hata oluştu: tüm satırlar aynı boyutta olmalıdır "
-"ancak başlık satırı  %(title_row_entries)d girişe, ilk satır ise "
-"%(first_row_entries)dgirişe sahip. Ayırıcı karakteri değiştirmeniz "
+"ancak başlık satırı  %(title_row_entries)d girişe, ilk satır ise %"
+"(first_row_entries)dgirişe sahip. Ayırıcı karakteri değiştirmeniz "
 "gerekebilir."
 
 #. module: base_import
@@ -355,7 +357,7 @@ msgstr "Harici Kimlik"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Field '%(field)s' does not accept date/time values."
-msgstr ""
+msgstr "'%(field)s' alanı tarih/saat değerlerini kabul etmiyor."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -526,7 +528,7 @@ msgstr "Kayıtları İçe Aktar"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Imported records"
-msgstr ""
+msgstr "İçe aktarılan kayıtlar"
 
 #. module: base_import
 #. odoo-javascript
@@ -541,8 +543,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"(%(format_type)s) biçimleri desteklenmediğinden, %(cell_format)s biçimi ile "
-"%(row)s satırı, %(col)s:%(cell_value)s sütunundaki hücrede geçersiz hücre "
+"(%(format_type)s) biçimleri desteklenmediğinden, %(cell_format)s biçimi ile %"
+"(row)s satırı, %(col)s:%(cell_value)s sütunundaki hücrede geçersiz hücre "
 "biçimi."
 
 #. module: base_import
@@ -591,7 +593,7 @@ msgstr "Parti başına azami boyut"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Mb"
-msgstr ""
+msgstr "Mb"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -723,7 +725,7 @@ msgstr "Ayraç:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Set to: %s"
-msgstr ""
+msgstr "Ayarla: %s"
 
 #. module: base_import
 #. odoo-javascript
@@ -820,6 +822,22 @@ msgstr "Dosya engelleme hataları içeriyor (aşağıya bakın)"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "The file will be imported by batches"
 msgstr "Dosya toplu olarak içe aktarılacak"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -947,6 +965,8 @@ msgid ""
 "You can not import file via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"URL üzerinden dosya içe aktaramazsınız, nedeni için yöneticinize veya "
+"desteğe danışın."
 
 #. module: base_import
 #. odoo-javascript

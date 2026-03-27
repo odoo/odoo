@@ -203,6 +203,8 @@ class AccountMove(models.Model):
 
     def l10n_es_tbai_cancel(self):
         for invoice in self:
+            if invoice.inalterable_hash:
+                raise UserError(_('You cannot reset to draft a locked journal entry.'))
             invoice._l10n_es_tbai_lock_move()
 
             if invoice.l10n_es_tbai_cancel_document_id and invoice.l10n_es_tbai_cancel_document_id.state == 'rejected':
@@ -266,7 +268,7 @@ class AccountMove(models.Model):
             'is_sale': self.is_sale_document(),
             'partner': self.commercial_partner_id,
             'is_simplified': self.l10n_es_is_simplified,
-            'delivery_date': self.delivery_date if self.delivery_date and self.delivery_date != self.invoice_date else None,
+            'delivery_date': self.delivery_date if self.delivery_date != fields.Datetime.today() else None,
             **self._l10n_es_tbai_get_attachment_values(cancel),
         }
         if values['is_sale']:
@@ -317,6 +319,7 @@ class AccountMove(models.Model):
             'refund_reason': self.l10n_es_tbai_refund_reason,
             'refunded_doc': self.reversed_entry_id.l10n_es_tbai_post_document_id,
             'refunded_doc_invoice_date': self.reversed_entry_id.invoice_date if self.reversed_entry_id else False,
+            'refunded_name': self.reversed_entry_id.name if self.reversed_entry_id else False,
         }
 
     def _l10n_es_tbai_get_vendor_bill_values_batuz(self):

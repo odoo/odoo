@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, Query, unique
 from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.sql import table_exists
 
 
 class AnalyticMixin(models.AbstractModel):
@@ -30,11 +31,7 @@ class AnalyticMixin(models.AbstractModel):
 
     def init(self):
         # Add a gin index for json search on the keys, on the models that actually have a table
-        query = ''' SELECT table_name
-                    FROM information_schema.tables
-                    WHERE table_name=%s '''
-        self.env.cr.execute(query, [self._table])
-        if self.env.cr.dictfetchone() and self._fields['analytic_distribution'].store:
+        if table_exists(self.env.cr, self._table) and self._fields['analytic_distribution'].store:
             query = fr"""
                 CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_accounts_gin_index
                                         ON {self._table} USING gin(regexp_split_to_array(jsonb_path_query_array(analytic_distribution, '$.keyvalue()."key"')::text, '\D+'));
@@ -48,15 +45,33 @@ class AnalyticMixin(models.AbstractModel):
             self._field_to_sql(table or self._table, 'analytic_distribution'),
         )
 
+    @api.model
+    def _get_analytic_account_ids_from_distributions(self, distributions):
+        if not distributions:
+            return []
+
+        if isinstance(distributions, (list, tuple, set)):
+            return {int(_id) for distribution in distributions for key in (distribution or {}) for _id in key.split(',')}
+        else:
+            return {int(_id) for key in (distributions or {}) for _id in key.split(',')}
+
     @api.depends('analytic_distribution')
     def _compute_distribution_analytic_account_ids(self):
-        all_ids = {int(_id) for rec in self for key in (rec.analytic_distribution or {}) for _id in key.split(',')}
+        all_ids = {int(_id) for rec in self for key in (rec.analytic_distribution or {}) for _id in key.split(',') if _id.isdigit()}
         existing_accounts_ids = set(self.env['account.analytic.account'].browse(all_ids).exists().ids)
         for rec in self:
-            ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if int(_id) in existing_accounts_ids))
+            ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if _id.isdigit() and int(_id) in existing_accounts_ids))
             rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
     def _search_distribution_analytic_account_ids(self, operator, value):
+        if operator in ('any', 'not any', 'any!', 'not any!'):
+            if isinstance(value, Domain):
+                value = self.env['account.analytic.account'].search(value).ids
+            elif isinstance(value, Query):
+                value = value.get_result_ids()
+            else:
+                return NotImplemented
+            operator = 'in' if operator in ('any', 'any!') else 'not in'
         return [('analytic_distribution', operator, value)]
 
     def _compute_analytic_distribution(self):
@@ -66,7 +81,7 @@ class AnalyticMixin(models.AbstractModel):
         # Don't use this override when account_report_analytic_groupby is truly in the context
         # Indeed, when account_report_analytic_groupby is in the context it means that `analytic_distribution`
         # doesn't have the same format and the table is a temporary one, see _prepare_lines_for_analytic_groupby
-        if self.env.context.get('account_report_analytic_groupby'):
+        if self.env.context.get('account_report_analytic_groupby') or (operator in ('in', 'not in') and False in value):
             return Domain('analytic_distribution', operator, value)
 
         def search_value(value: str, exact: bool):

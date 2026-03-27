@@ -8,6 +8,8 @@
             t-att-class="this.getLevelClass()"
             t-ref="root"
             t-att-data-label="props.label"
+            t-att-data-disabled="props.disabled"
+            t-att-aria-disabled="props.disabled ? 'true' : undefined"
             >
 
             <button
@@ -36,11 +38,12 @@
                     >
 
                     <span class="text-nowrap text-truncate" t-out="props.label" t-ref="label"/>
-                    <i t-if="state.tooltip" class="fa fa-question icon-sup"/>
+                    <i t-if="props.tooltip" class="fa fa-question icon-sup" t-att-class="this.isBackendRTL ? 'fa-flip-horizontal' : ''"/>
                 </div>
                 <div
                     class="hb-row-content d-flex"
                     t-ref="content"
+                    t-on-click="onRowContentClick"
                     >
                     <t t-slot="default"/>
                 </div>

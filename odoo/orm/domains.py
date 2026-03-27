@@ -62,7 +62,7 @@ import typing
 import warnings
 from datetime import date, datetime, time, timedelta, timezone
 
-from odoo.exceptions import UserError
+from odoo.exceptions import MissingError, UserError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
 from .identifiers import NewId
@@ -1566,7 +1566,7 @@ def _value_to_datetime(value, env, iso_only=False):
             tz = None
         elif (tz := env.tz) != pytz.utc:
             # get the tzinfo (without LMT)
-            tz = tz.localize(datetime.now()).tzinfo
+            tz = tz.localize(datetime.combine(value, time.min)).tzinfo
         else:
             tz = None
         value = datetime.combine(value, time.min, tz)
@@ -1649,6 +1649,36 @@ def _optimize_type_datetime_relative(condition, model):
     ):
         return condition
     value, _ = _value_to_datetime(condition.value, model.env)
+    return DomainCondition(condition.field_expr, operator, value)
+
+
+@field_type_optimization(['properties'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_properties_date_datetime(condition, model):
+    operator = condition.operator
+    if (
+        operator not in ('in', 'not in', '>', '<', '<=', '>=')
+        or condition.field_expr.count('.') != 1
+        or not isinstance(condition.value, (str, OrderedSet))
+    ):
+        return condition
+    definition = model.get_property_definition(condition.field_expr)
+    property_type = definition.get("type")
+
+    if property_type == 'date':
+        value = _value_to_date(condition.value, model.env)
+    elif property_type == 'datetime':
+        value, _ = _value_to_datetime(condition.value, model.env)
+    else:
+        return condition
+    # we need to serialize the value as a string to be able to use with properties
+    if isinstance(value, COLLECTION_TYPES):
+        value = OrderedSet(
+            str(item) if isinstance(item, (date, datetime)) else item
+            for item in value
+        )
+    elif isinstance(value, (date, datetime)):
+        value = str(value)
+
     return DomainCondition(condition.field_expr, operator, value)
 
 
@@ -1738,16 +1768,20 @@ def _operator_hierarchy(condition, model):
     if isinstance(result, Domain):
         if field.name == 'id':
             return result
-        return DomainCondition(field.name, 'any', result)
+        return DomainCondition(field.name, 'any!', result)
     return DomainCondition(field.name, 'in', result)
 
 
 def _operator_child_of_domain(comodel: BaseModel, parent):
     """Return a set of ids or a domain to find all children of given model"""
     if comodel._parent_store and parent == comodel._parent_name:
+        try:
+            paths = comodel.mapped('parent_path')
+        except MissingError:
+            paths = comodel.exists().mapped('parent_path')
         domain = Domain.OR(
-            DomainCondition('parent_path', '=like', rec.parent_path + '%')  # type: ignore
-            for rec in comodel
+            DomainCondition('parent_path', '=like', path + '%')  # type: ignore
+            for path in paths
         )
         return domain
     else:
@@ -1766,16 +1800,24 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
     """Return a set of ids or a domain to find all parents of given model"""
     parent_ids: OrderedSet[int]
     if comodel._parent_store and parent == comodel._parent_name:
+        try:
+            paths = comodel.mapped('parent_path')
+        except MissingError:
+            paths = comodel.exists().mapped('parent_path')
         parent_ids = OrderedSet(
             int(label)
-            for rec in comodel
-            for label in rec.parent_path.split('/')[:-1]  # type: ignore
+            for path in paths
+            for label in path.split('/')[:-1]
         )
     else:
         # recursively retrieve all parent nodes with sudo() to avoid
         # access rights errors; the filtering of forbidden records is
         # done by the rest of the domain
         parent_ids = OrderedSet()
+        try:
+            comodel.mapped(parent)
+        except MissingError:
+            comodel = comodel.exists()
         while comodel:
             parent_ids.update(comodel._ids)
             comodel = comodel[parent].filtered(lambda p: p.id not in parent_ids)

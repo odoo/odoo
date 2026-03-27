@@ -1,21 +1,40 @@
-import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitForNone } from "@odoo/hoot-dom";
-import { contains, dataURItoBlob, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    dataURItoBlob,
+    defineModels,
+    fields,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
+
+class ProductProduct extends models.Model {
+    _name = "product.product";
+
+    id = fields.Integer();
+    name = fields.Char();
+    image_1920 = fields.Image();
+
+    _records = [
+        { id: 13, name: "Variant 1", image_1920: "/9j/4AAQSkL6D8wwP//Z" },
+        { id: 14, name: "Variant 2", image_1920: null },
+    ];
+}
 
 class ProductRibbon extends models.Model {
     _name = "product.ribbon";
 }
 
 defineWebsiteModels();
-defineModels([ProductRibbon]);
+defineModels([ProductProduct, ProductRibbon]);
 
 test("Product page options", async () => {
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <main>
             <div class="o_wsale_product_page">
                 <section
@@ -62,11 +81,14 @@ test("Product page options", async () => {
         expect.step("save");
         return [];
     });
+    onRpc("product.product", "write", () => {
+        expect.step("product_write");
+        return true;
+    });
 
-    const base64Image = (
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5"
-        + "AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA"
-    );
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5" +
+        "AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA";
     onRpc("ir.attachment", "search_read", () => [
         {
             mimetype: "image/png",
@@ -82,48 +104,42 @@ test("Product page options", async () => {
             original: { id: 1, image_src: "/web/image/hoot.png", mimetype: "image/png" },
         };
     });
-    onRpc(
-        "/web/image/hoot.png",
-        () => {
-            // converted image won't be used if original is not larger
-            return dataURItoBlob(base64Image + "A".repeat(1000));
-        },
-        { pure: true },
-    );
-    onRpc("/html_editor/modify_image/1", () => {
-        expect.step("modify_image");
-        return base64Image; // Simulate image compression/convertion
+    onRpc("/web/image/hoot.png", () => {
+        // converted image won't be used if original is not larger
+        return dataURItoBlob(base64Image + "A".repeat(1000));
     });
 
     await contains(":iframe .o_wsale_product_page").click();
     await contains("[data-action-id=productReplaceMainImage]").click();
     await contains(".o_select_media_dialog .o_existing_attachment_cell button").click();
+    await expect.waitForSteps(["theme_customize_data_get", "get_image_info", "product_write"]);
     await waitForNone(".o_select_media_dialog");
 
     expect(":iframe #product_detail_main img[src^='data:image/webp;base64,']").toHaveCount(1);
     expect(":iframe img").toHaveCount(2);
-    expect.verifySteps(["theme_customize_data_get", "get_image_info"]);
-
     await contains("button#o_wsale_image_width").click();
     // Avoid selecting the first option to prevent the image layout option from disappearing
     await contains("[data-action-id=productPageImageWidth][data-action-value='50_pc']").click();
-    await waitForEndOfOperation();
-    expect.verifySteps(["config"]);
+    await waitSidebarUpdated();
+    await expect.waitForSteps(["config"]);
 
     await contains("button#o_wsale_image_layout").click();
     await contains("[data-action-id=productPageImageLayout]").click();
-    await waitForEndOfOperation();
-    expect.verifySteps([
+    await waitSidebarUpdated();
+    await expect.waitForSteps([
         // Activate the carousel view and change the shop config
         "config",
-        // Shop config changes don't trigger the `savePlugin`; image edits are saved because of the
-        // theme customization.
-        "modify_image",
         // Save the pending image width class changes
         "save",
         // Save the image changes
         "save",
         // Reload the view
-        "theme_customize_data_get"
+        "theme_customize_data_get",
     ]);
+
+    // Make sure that clicking quickly on a builder button after an clicking on
+    // an action that reloads the editor does not produce a crash.
+    await contains("[data-action-id=websiteConfig].o_we_buy_now_btn").click();
+    await contains("button#o_wsale_image_layout").click();
+    await expect.waitForSteps(["theme_customize_data", "theme_customize_data_get"]);
 });

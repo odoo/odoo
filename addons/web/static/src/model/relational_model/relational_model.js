@@ -6,7 +6,7 @@ import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
-import { pick } from "@web/core/utils/objects";
+import { deepCopy, pick } from "@web/core/utils/objects";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
@@ -160,6 +160,7 @@ export class RelationalModel extends Model {
         this.specialDataCaches = markRaw(params.state?.specialDataCaches || {});
         this.useSendBeaconToSaveUrgently = params.useSendBeaconToSaveUrgently || false;
         this.withCache = this.constructor.withCache && this.env.config?.cache;
+        this.initialSampleGroups = undefined; // real groups to populate with sample records
 
         this._urgentSave = false;
     }
@@ -190,6 +191,9 @@ export class RelationalModel extends Model {
      * @type {Model["load"]}
      */
     async load(params = {}) {
+        if (this.orm.isSample && this.initialSampleGroups?.length) {
+            this.orm.setGroups(this.initialSampleGroups);
+        }
         const config = this._getNextConfig(this.config, params);
         if (!this.isReady) {
             // We want the control panel to be displayed directly, without waiting for data to be
@@ -336,9 +340,6 @@ export class RelationalModel extends Model {
                         // in case there're less groups, we don't want to keep displaying groups
                         // that are no longer there => forget previous groups
                         delete this.root.config.currentGroups;
-                        // in case that the config of the groups changed (e.g. group is now folded)
-                        // we want to update the groups.
-                        this.root.config.groups = [];
                         result = await this._postprocessReadGroup(root.config, result);
                     }
                     root._setData(result);
@@ -404,7 +405,7 @@ export class RelationalModel extends Model {
                 config.orderBy = config.orderBy.filter((order) => order.name !== "__count");
             }
         }
-        if (!config.isMonoRecord && this.root && params.domain) {
+        if (!config.isMonoRecord && params.domain) {
             // always reset the offset to 0 when reloading from above with a domain
             const resetOffset = (config) => {
                 config.offset = 0;
@@ -412,8 +413,10 @@ export class RelationalModel extends Model {
                     resetOffset(group.list);
                 }
             };
-            resetOffset(config);
-            if (!!config.groupBy.length !== !!currentGroupBy.length) {
+            if (this.root) {
+                resetOffset(config);
+            }
+            if (!!config.groupBy.length !== !!currentGroupBy?.length) {
                 // from grouped to ungrouped or the other way around -> force the limit to be reset
                 delete config.limit;
             }
@@ -520,13 +523,9 @@ export class RelationalModel extends Model {
                     currentConfig.domain
                 );
                 if (!currentConfig.groups[group.value]) {
-                    const isFolded =
-                        !Object.hasOwn(groupData, "__records") &&
-                        !Object.hasOwn(groupData, "__groups");
                     currentConfig.groups[group.value] = {
                         ...commonConfig,
                         groupByFieldName,
-                        isFolded: isFolded,
                         extraDomain: false,
                         value: group.value,
                         list: {
@@ -560,6 +559,7 @@ export class RelationalModel extends Model {
                 groupConfig.list.context = context;
                 groupConfig.context = context;
                 if (nextLevelGroupBy.length) {
+                    groupConfig.isFolded = !("__groups" in groupData);
                     if (!groupConfig.isFolded) {
                         const { groups, length } = groupData.__groups;
                         group.groups = await extractGroups(groupConfig.list, groups);
@@ -568,6 +568,7 @@ export class RelationalModel extends Model {
                         group.groups = [];
                     }
                 } else {
+                    groupConfig.isFolded = !("__records" in groupData);
                     if (!groupConfig.isFolded) {
                         group.records = groupData.__records;
                         group.length = groupData.__count;
@@ -576,7 +577,7 @@ export class RelationalModel extends Model {
                     }
                 }
                 if (Object.hasOwn(groupData, "__offset")) {
-                    groupConfig.list.offset = group.__offset;
+                    groupConfig.list.offset = groupData.__offset;
                 }
                 if (groupRecordConfig) {
                     groupConfig.record = {
@@ -854,6 +855,16 @@ export class RelationalModel extends Model {
             context: { read_group_expand: true, ...config.context },
         };
         const orm = cache ? this.orm.cache(cache) : this.orm;
-        return orm.webReadGroup(config.resModel, config.domain, config.groupBy, aggregates, params);
+        const result = await orm.webReadGroup(
+            config.resModel,
+            config.domain,
+            config.groupBy,
+            aggregates,
+            params
+        );
+        if (!this.initialSampleGroups) {
+            this.initialSampleGroups = deepCopy(result.groups);
+        }
+        return result;
     }
 }

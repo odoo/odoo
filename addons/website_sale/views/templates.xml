@@ -8,7 +8,7 @@
             <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
                 <div t-attf-class="#{_icon_wrap_class}">
                     <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
-                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', None) if website_sale_cart_quantity else None"/>
                 </div>
                 <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
             </a>
@@ -372,6 +372,7 @@
     </template>
 
     <template id="product_variant_preview">
+        <!-- If gap-1 is changed make sure to update the margin in product_variant_preview.js -->
         <div
             t-attf-class="o_wsale_attribute_previewer d-flex align-items-center gap-1 flex-nowrap overflow-hidden {{
                 'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' and layout_mode != 'list' else ''
@@ -711,8 +712,9 @@
                                         t-att-data-editor-message="editor_msg"
                                     />
                                 </t>
-                                <t t-if="opt_wsale_categories_top"
+                                <t t-if="opt_wsale_categories_top and category_entries"
                                    t-call="website_sale.filmstrip_categories"
+                                   entries="category_entries"
                                 />
                                 <div
                                     t-if="not opt_wsale_floating_bar"
@@ -722,7 +724,8 @@
                                         <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
                                         <!-- Desktop Search button -->
                                         <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}">
-                                            <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                            <t t-set="search_term">Search in</t>
+                                            <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                                             <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                         </div>
                                         <!-- Mobile Search button -->
@@ -804,6 +807,7 @@
                                                     t-value="product._get_ribbon(
                                                         price_vals=template_price_vals,
                                                         auto_assign_ribbons=auto_assign_ribbons,
+                                                        variant=product_variants[product],
                                                     )"
                                                 />
                                                 <div
@@ -910,7 +914,8 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-set="search_term">Search in</t>
+                                <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                             </t>
                         </div>
                     </div>
@@ -1136,7 +1141,7 @@
                 <input
                     type="text"
                     class="o_wsale_attribute_search_bar form-control"
-                    t-att-placeholder="'Search %s (%s)' % (a.name, len(a.value_ids))"
+                    t-attf-placeholder="Search {{a.name}} ({{len(a.value_ids)}})"
                     t-att-data-container-id="'searchable-values-%s' % a.id"
                 />
             </div>
@@ -1329,7 +1334,8 @@
                 class="offcanvas-body flex-grow-0 overflow-visible"
             >
                 <t t-call="website_sale.search">
-                    <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                    <t t-set="search_term">Search in</t>
+                    <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                     <t t-set="search" t-value="original_search or search"/>
                     <t t-set="_s_searchbar_autocomplete_classes" t-valuef="bg-primary"> </t>
                 </t>
@@ -1373,19 +1379,23 @@
                         </div>
                     </div>
                 </div>
+                <t
+                    t-set="show_attribute_filters"
+                    t-value="opt_wsale_attributes or opt_wsale_attributes_top"
+                />
                 <div t-if="opt_wsale_categories" class="accordion-item d-lg-none">
                     <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
+                        <button t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'collapsed' if show_attribute_filters else ''}}"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#o_wsale_offcanvas_categories"
-                                aria-expanded="false"
+                                t-att-aria-expanded="'false' if show_attribute_filters else 'true'"
                                 aria-controls="o_wsale_offcanvas_categories">
                                 <b>Categories</b>
                         </button>
                     </h2>
                     <div id="o_wsale_offcanvas_categories"
-                         class="accordion-collapse collapse"
+                         t-attf-class="accordion-collapse collapse {{'show' if not show_attribute_filters else ''}}"
                          aria-labelledby="o_wsale_offcanvas_categories_header">
                         <div class="accordion-body pt-0">
                             <t t-call="website_sale.products_categories_list">
@@ -1396,10 +1406,13 @@
                         </div>
                     </div>
                 </div>
-                <t t-call="website_sale.product_attribute_filters_form">
+                <t
+                    t-if="show_attribute_filters"
+                    t-call="website_sale.product_attribute_filters_form"
+                >
                     <t t-set="isMobile" t-value="True"/>
                 </t>
-                <t t-if="opt_wsale_filter_price and (opt_wsale_attributes or opt_wsale_attributes_top)"
+                <t t-if="opt_wsale_filter_price and show_attribute_filters"
                    t-call="website_sale.filter_products_price">
                     <t
                         t-set="_classes"
@@ -1423,21 +1436,7 @@
 
     <!-- Top-Nav Categories -->
     <template id="website_sale.filmstrip_categories" name="Categories Filmstrip">
-        <t t-if="category.id">
-            <t t-set="entries" t-value="not search and category.child_id or category.child_id.filtered(lambda c: category.id in search_categories_ids)"/>
-
-            <t t-if="not entries">
-                <t t-set="parent" t-value="category.parent_id"/>
-                <t t-set="entries" t-value="not search and parent.child_id or parent.child_id.filtered(lambda c: parent.id in search_categories_ids)"/>
-            </t>
-        </t>
-        <t t-else="">
-            <t t-set="entries" t-value="categories"/>
-        </t>
-        <t t-set="entries" t-value="request.env.user._is_internal() and entries or entries.filtered('has_published_products')"/>
-
         <div
-            t-if="entries"
             id="o_wsale_categories_filmstrip"
             class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch overflow-hidden"
             role="navigation"
@@ -1988,6 +1987,7 @@
                             o_wsale_product_page_opt_image_ratio_mobile_{{website.product_page_image_ratio_mobile}}
                             o_wsale_product_page_opt_image_radius_{{website.product_page_image_roundness}}
                          "
+                         t-att-data-image-ratio="website.product_page_image_ratio"
                          t-att-data-view-track="view_track and '1' or '0'"
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
@@ -2152,12 +2152,11 @@
                                     </div>
 
                                     <div
-                                        t-if="combination_info['prevent_zero_price_sale']"
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_contact mb-4"
                                     >
                                         <div
                                             id="contact_us_wrapper"
-                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes}"
+                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes} {{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}"
                                         >
                                             <section
                                                 class="s_text_block"
@@ -2259,6 +2258,7 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
+                                <t t-set="action" t-value="keep(search=0)"/>
                                 <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
                             </t>
                         </div>
@@ -2373,7 +2373,18 @@
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
             <div class="d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
-                <t t-call="website_sale.product_price"/>
+                <div>
+                    <t t-call="website_sale.product_price"/>
+                    <small 
+                        t-if="combination_info.get('base_unit_price')"
+                        class="ms-1 text-muted o_base_unit_price_wrapper d-none"
+                    >
+                        <t
+                            t-call="website_sale.base_unit_price"
+                            base_unit_price="combination_info['base_unit_price']"
+                        />
+                    </small>
+                </div>
             </div>
         </xpath>
     </template>
@@ -3045,7 +3056,7 @@
                 <t t-set="product" t-value="line.product_id"/>
                 <t
                     t-set="base_unit_price"
-                    t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"
+                    t-value="product._get_base_unit_price(product_price/line.product_qty)"
                 />
             </t>
         </small>
@@ -4340,7 +4351,7 @@
     <template id="carousel_product_indicators_left" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Left">
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="before">
             <t t-call="website_sale.carousel_product_indicators">
-                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-2'"/>
+                <t t-set="indicators_list_class" t-value="'d-flex d-lg-block pe-lg-2'"/>
             </t>
         </xpath>
         <xpath expr="//div[@id='o-carousel-product']" position="attributes">

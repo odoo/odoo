@@ -1,17 +1,28 @@
+import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { htmlField, HtmlField } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
-import { DynamicPlaceholderPlugin } from "@html_editor/others/dynamic_placeholder_plugin";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelector } from "@mass_mailing/themes/theme_selector/theme_selector";
-import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
-import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
+import {
+    onWillUpdateProps,
+    status,
+    toRaw,
+    useEffect,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
+import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { Deferred } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
+import { batched } from "@web/core/utils/timing";
+import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
+import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -28,7 +39,20 @@ export class MassMailingHtmlField extends HtmlField {
     };
 
     setup() {
+        // Keep track of the next props before other `onWillUpdateProps`
+        // callbacks in super can be executed, to be able to compute the next
+        // activeTheme and next themeSelector display status just before the
+        // Component is patched.
+        let props = this.props;
+        onWillUpdateProps((nextProps) => {
+            if (nextProps !== this.props) {
+                props = nextProps;
+            }
+        });
         super.setup();
+        this.converter = useEmailHtmlConverter({
+            bundles: ["mass_mailing.assets_iframe_style"],
+        });
         this.themeService = useService("mass_mailing.themes");
         this.ui = useService("ui");
         Object.assign(this.state, {
@@ -43,9 +67,9 @@ export class MassMailingHtmlField extends HtmlField {
             loadBundle("mass_mailing.assets_builder");
         }
 
-        this.keepLastIframe = new KeepLast();
         this.resetIframe();
         this.iframeRef = useChildRef();
+        this.iframeWrapperRef = useChildRef();
         this.codeViewButtonRef = useRef("codeViewButtonRef");
 
         onWillUpdateProps((nextProps) => {
@@ -59,18 +83,11 @@ export class MassMailingHtmlField extends HtmlField {
             if (nextProps.readonly) {
                 toRaw(this.state).showThemeSelector = false;
             }
-            if (nextProps.record.isNew) {
-                Object.assign(toRaw(this.state), {
-                    activeTheme: undefined,
-                    showCodeView: false,
-                    showThemeSelector: true,
-                });
-            }
         });
 
-        let currentKey;
+        let currentKey = this.state.key;
         effect(
-            (state) => {
+            batched((state) => {
                 if (status(this) === "destroyed") {
                     return;
                 }
@@ -78,34 +95,15 @@ export class MassMailingHtmlField extends HtmlField {
                     // html value may have been reset from the server:
                     // - await the new iframe
                     this.resetIframe();
-                    // - ensure that the activeTheme is up to date.
-                    this.updateActiveTheme();
+                    // - ensure that the activeTheme is up to date with the next
+                    //   record.
+                    this.updateActiveTheme(props.record);
+                    // - ensure that the themeSelector is displayed if necessary
+                    //   for the next props.
+                    this.updateThemeSelector(props);
                     currentKey = state.key;
                 }
-            },
-            [this.state]
-        );
-
-        // Evaluate if the themeSelector should be displayed
-        effect(
-            (state) => {
-                if (status(this) === "destroyed") {
-                    return;
-                }
-                const activeTheme = state.activeTheme;
-                const showThemeSelector = state.showThemeSelector;
-                if (!activeTheme && !showThemeSelector && !this.props.readonly) {
-                    // Show the ThemeSelector when the theme is unknown and the content can be
-                    // changed (invalid value).
-                    state.showThemeSelector = true;
-                } else if ((activeTheme && showThemeSelector) || this.props.readonly) {
-                    state.showThemeSelector = false;
-                }
-                if (showThemeSelector && toRaw(state.showCodeView)) {
-                    // Never show the CodeView with the ThemeSelector.
-                    state.showCodeView = false;
-                }
-            },
+            }),
             [this.state]
         );
 
@@ -119,37 +117,78 @@ export class MassMailingHtmlField extends HtmlField {
             },
             () => [this.codeViewRef.el]
         );
+
+        useExternalListener(window, "pointerdown", this.onPointerDown.bind(this));
     }
 
     get withBuilder() {
-        return this.state.activeTheme !== "basic";
+        return this.state.activeTheme !== "basic" && !this.props.readonly;
     }
 
+    /**
+     * @deprecated
+     */
     resetIframe() {
         this.iframeLoaded = new Deferred();
-        this.lastIframeLoaded = this.keepLastIframe.add(this.iframeLoaded);
     }
 
+    /**
+     * @deprecated
+     */
+    async ensureIframeLoaded() {
+        const iframeLoaded = this.iframeLoaded;
+        // iframeInfo is deprecated
+        const iframeInfo = await iframeLoaded;
+        return iframeLoaded === this.iframeLoaded ? iframeInfo : undefined;
+    }
+
+    /**
+     * @deprecated
+     */
     onIframeLoad(iframeLoaded) {
         this.iframeLoaded.resolve(iframeLoaded);
     }
 
-    updateActiveTheme() {
+    updateActiveTheme(record = this.props.record) {
+        // This function is called in an `effect` with a dependency on
+        // `state.key` which already guarantees that the Component will be
+        // re-rendered. All further reads on the state should not add
+        // dependencies to that effect, so it is used raw.
+        const state = toRaw(this.state);
         const getThemeName = () => {
-            const value = this.value;
-            if (!value) {
+            const value = record.data[this.props.name];
+            if (!value || !value.toString()) {
                 return;
             }
             const fragment = parseHTML(document, value);
             const layout = fragment.querySelector(".o_layout");
             if (!layout) {
-                return;
+                return "unknown";
             }
-            return this.themeService.getThemeName(layout.classList);
+            return this.themeService.getThemeName(layout.classList) || "unknown";
         };
         const activeTheme = getThemeName();
-        if (toRaw(this.state).activeTheme !== activeTheme) {
-            this.state.activeTheme = activeTheme;
+        if (state.activeTheme !== activeTheme) {
+            state.activeTheme = activeTheme;
+        }
+    }
+
+    updateThemeSelector(props = this.props) {
+        // This function is called in an `effect` with a dependency on
+        // `state.key` which already guarantees that the Component will be
+        // re-rendered. All further reads on the state should not add
+        // dependencies to that effect, so it is used raw.
+        const state = toRaw(this.state);
+        if (!state.activeTheme && !state.showThemeSelector && !props.readonly) {
+            // Show the ThemeSelector when the theme is undefined and the content can be
+            // changed.
+            state.showThemeSelector = true;
+        } else if ((state.activeTheme && state.showThemeSelector) || props.readonly) {
+            state.showThemeSelector = false;
+        }
+        if (state.showThemeSelector && state.showCodeView) {
+            // Never show the CodeView with the ThemeSelector.
+            state.showCodeView = false;
         }
     }
 
@@ -157,9 +196,11 @@ export class MassMailingHtmlField extends HtmlField {
         const props = {
             config: this.getConfig(),
             iframeRef: this.iframeRef,
-            onBlur: this.onBlur.bind(this),
+            iframeWrapperRef: this.iframeWrapperRef,
+            onFocus: this.onFocus.bind(this),
+            onBlur: this.onBlur.bind(this), // deprecated
             onEditorLoad: this.onEditorLoad.bind(this),
-            onIframeLoad: this.onIframeLoad.bind(this),
+            onIframeLoad: this.onIframeLoad.bind(this), // deprecated
             readonly: this.props.readonly,
             showThemeSelector: this.state.showThemeSelector,
             showCodeView: this.state.showCodeView,
@@ -202,7 +243,12 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     getReadonlyConfig() {
-        return super.getReadonlyConfig();
+        const config = super.getReadonlyConfig();
+        config.value =
+            config.value && config.value.toString()
+                ? config.value
+                : this.props.record.data[this.props.inlineField];
+        return config;
     }
 
     getBuilderConfig() {
@@ -211,8 +257,10 @@ export class MassMailingHtmlField extends HtmlField {
         delete config.Plugins;
         return {
             ...config,
+            allowChecklist: false,
+            record: this.props.record,
             mobileBreakpoint: "md",
-            defaultImageMimetype: "image/jpeg",
+            defaultImageMimetype: "image/png",
             onEditorReady: () => this.commitChanges(),
         };
     }
@@ -229,34 +277,115 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
-            Plugins: [...MAIN_EDITOR_PLUGINS, DynamicPlaceholderPlugin],
+            Plugins: [
+                ...MAIN_EDITOR_PLUGINS,
+                ...DYNAMIC_PLACEHOLDER_PLUGINS,
+                ...registry.category("basic-editor-plugins").getAll(),
+                PowerButtonsPlugin,
+            ].filter((P) => !["banner", "prompt"].includes(P.id)),
         };
     }
 
     getThemeSelectorConfig() {
         return {
-            setThemeHTML: (html) =>
-                this.mutex.exec(() =>
+            setThemeHTML: (html) => {
+                this.onChange();
+                const changeId = this.lastChangeId;
+                const record = this.props.record;
+                return this.mutex.exec(() => {
+                    if (this.props.record !== record) {
+                        return;
+                    }
                     // The inlineField can not be updated to its final value at
                     // this point since the editor is needed to process the
                     // theme template. (i.e. applying the default style).
                     // It will be updated onEditorReady since it has become empty.
-                    this.props.record
+                    return record
                         .update({
                             [this.props.name]: html,
                             [this.props.inlineField]: "",
                         })
-                        .catch(() => {})
-                ),
+                        .then(
+                            () => {
+                                this.state.key++;
+                                this.lastValue = normalizeHTML(
+                                    fixInvalidHTML(record.data[this.props.name]),
+                                    this.clearElementToCompare.bind(this)
+                                );
+                                record.model.bus.trigger(
+                                    "FIELD_IS_DIRTY",
+                                    this.lastChangeId !== changeId
+                                );
+                            },
+                            () => {}
+                        );
+                });
+            },
             filterTemplates: this.props.filterTemplates,
             mailingModelId: this.props.record.data.mailing_model_id.id,
             mailingModelName: this.props.record.data.mailing_model_id.display_name || "",
         };
     }
 
+    isEditorReady() {
+        return this.editor && this.editor.isReady && !this.editor.isDestroyed;
+    }
+
+    onChange() {
+        // Ensure that a change in the edited field will reset the validity
+        // of the inlineField (since it is most likely invisible and not
+        // editable directly by the user).
+        this.props.record.resetFieldValidity(this.props.inlineField);
+        super.onChange();
+    }
+
+    onFocus() {
+        this.activeElement = this.iframeWrapperRef.el;
+    }
+
+    /**
+     * Simulate a tuned down "blur", based around the edition area, comprised
+     * of the edition iframe and the builder, to avoid committing changes when
+     * the user is actively interacting inside that zone. Also avoid cases
+     * where the user clicks inside an overlay or other element inside the
+     * main component container, because the builder uses a lot of these.
+     */
+    onPointerDown(ev) {
+        const isTargetOutsideActiveElement =
+            this.activeElement && !this.activeElement.contains(ev.target);
+        const ignoredTargetContainer =
+            isTargetOutsideActiveElement &&
+            ev.target?.closest(".o-main-components-container, .o_form_status_indicator_buttons");
+        const shouldIgnoreTarget =
+            ignoredTargetContainer && !ignoredTargetContainer.contains(this.activeElement);
+        if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
+            this.activeElement = undefined;
+            this.onBlur();
+        } else if (this.iframeWrapperRef.el.contains(ev.target)) {
+            this.activeElement = this.iframeWrapperRef.el;
+        }
+    }
+
     onTextareaInput(ev) {
         this.onChange();
         ev.target.style.height = ev.target.scrollHeight + "px";
+    }
+
+    /**
+     * Ensure that the emailHtmlConverter is kept alive (in the DOM) until the
+     * change has been committed to the record (even if this component is
+     * destroyed in the meantime).
+     * @override
+     */
+    async commitChanges({ urgent } = {}) {
+        if (!urgent) {
+            await this.mutex.exec(() => {
+                if (this.withBuilder && this.isEditorReady()) {
+                    return this.editor.shared.operation.getUnlockedDef();
+                }
+            });
+        }
+        return super.commitChanges(...arguments);
     }
 
     /**
@@ -266,13 +395,19 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     async _commitChanges({ urgent }) {
+        if (!this.state.showCodeView && !this.isEditorReady()) {
+            return;
+        }
         if (
-            this.editor &&
-            !this.editor.isDestroyed &&
+            this.props.record.data[this.props.name].toString() !== "" &&
             this.props.record.data[this.props.inlineField].toString() === ""
         ) {
-            await this.lastIframeLoaded;
-            this.isDirty = true;
+            if (!this.isDirty) {
+                // Fields values are desynchronized and the inlineField
+                // has to be computed, even if the user made no change. In
+                // this specific case, onChange is forced.
+                this.onChange();
+            }
             this.lastValue = undefined;
         }
         return super._commitChanges({ urgent });
@@ -280,39 +415,72 @@ export class MassMailingHtmlField extends HtmlField {
 
     /**
      * Complete rewrite of `updateValue` to ensure that both the field and the
-     * inlineField are saved at the same time. Depends on the iframe to compute
+     * inlineField keep consistent values. Depends on the iframe to compute
      * the style of the inlineField.
      * @override
      */
-    async updateValue(value) {
-        await this.lastIframeLoaded;
-        this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
-        this.isDirty = false;
-        const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
-        // d-none must be removed for style computation.
-        this.iframeRef.el.classList.remove("d-none");
-        this.iframeRef.el.style.width = "1320px";
-        const processingEl = this.iframeRef.el.contentDocument.createElement("DIV");
-        processingEl.append(parseHTML(this.iframeRef.el.contentDocument, value));
-        const processingContainer = this.iframeRef.el.contentDocument.querySelector(
-            ".o_mass_mailing_processing_container"
-        );
-        processingContainer.append(processingEl);
-        const cssRules = getCSSRules(this.iframeRef.el.contentDocument);
-        await toInline(processingEl, cssRules);
-        const inlineValue = processingEl.innerHTML;
-        processingEl.remove();
-        this.iframeRef.el.style.width = "";
-        if (shouldRestoreDisplayNone) {
-            this.iframeRef.el.classList.add("d-none");
-        }
-        await this.props.record
+    async updateValue(value, { changeId } = { changeId: this.lastChangeId }) {
+        const record = this.props.record;
+        // Ensure the edited value is updated immediately to avoid data loss,
+        // and reset the inline field (need async computation) to avoid
+        // transient state where inline data is obsolete.
+        // If the following computation is aborted, at least it can be
+        // recovered by reloading the field.
+        const urgentUpdatePromise = record
             .update({
                 [this.props.name]: value,
-                [this.props.inlineField]: inlineValue,
+                [this.props.inlineField]: "",
             })
-            .catch(() => (this.isDirty = true));
-        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
+            .then(
+                () => {
+                    record.model.bus.trigger("FIELD_IS_DIRTY", this.lastChangeId !== changeId);
+                },
+                () => {}
+            );
+        this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
+        const valueFragment = parseHTML(document, value);
+        let inlineValue;
+        try {
+            inlineValue = await this.converter.convertToEmailHtml(valueFragment, {
+                preProcessCallbacks: [this.preprocessFilterDomains.bind(this)],
+            });
+        } catch (error) {
+            if (status(this) !== "destroyed") {
+                throw error;
+            }
+            inlineValue = null;
+        }
+        await urgentUpdatePromise;
+        if (record.resId !== this.props.record?.resId || inlineValue === null) {
+            return;
+        }
+        await record.update({ [this.props.inlineField]: inlineValue }).then(
+            () => {
+                if (this.lastChangeId === changeId) {
+                    this.isDirty = false;
+                }
+            },
+            () => {}
+        );
+        record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
+    }
+    /**
+     * Processes the data-filter-domain to be converted to a t-if that will be interpreted on send
+     * by QWeb.
+     * TODO EGGMAIL: move in a convert_inline plugin when they are implemented.
+     * @param {HTMLElement} htmlEl
+     */
+    preprocessFilterDomains(htmlEl) {
+        htmlEl.querySelectorAll("[data-filter-domain]").forEach((el) => {
+            let domain;
+            try {
+                domain = new Domain(JSON.parse(el.dataset.filterDomain));
+            } catch {
+                el.setAttribute("t-if", "false");
+                return;
+            }
+            el.setAttribute("t-if", `object.filtered_domain(${domain.toString()})`);
+        });
     }
 }
 
@@ -335,6 +503,7 @@ export const massMailingHtmlField = {
         });
         return props;
     },
+    // Deprecated (to be defined in the view)
     fieldDependencies: [{ name: "body_html", type: "html", readonly: "false" }],
 };
 

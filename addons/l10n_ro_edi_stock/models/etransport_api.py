@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 import requests
 import re
 
@@ -67,7 +68,7 @@ class ETransportAPI:
 
         try:
             response_data = response.json()
-        except requests.exceptions.JSONDecodeError as e:
+        except JSONDecodeError as e:
             return {'error': str(e)}
 
         if response_data['ExecutionStatus'] == 1:

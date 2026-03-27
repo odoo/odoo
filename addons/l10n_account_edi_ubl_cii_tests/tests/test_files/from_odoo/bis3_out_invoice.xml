@@ -8,6 +8,7 @@
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
   <cbc:Note>test narration</cbc:Note>
   <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+  <cbc:TaxCurrencyCode>EUR</cbc:TaxCurrencyCode>
   <cbc:BuyerReference>ref_partner_2</cbc:BuyerReference>
   <cac:OrderReference>
     <cbc:ID>___ignore___</cbc:ID>
@@ -22,7 +23,7 @@
     <cac:Party>
       <cbc:EndpointID schemeID="0208">0202239951</cbc:EndpointID>
       <cac:PartyIdentification>
-        <cbc:ID>ref_partner_1</cbc:ID>
+        <cbc:ID schemeID="0208">0202239951</cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>partner_1</cbc:Name>
@@ -43,7 +44,7 @@
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
         <cbc:RegistrationName>partner_1</cbc:RegistrationName>
-        <cbc:CompanyID>BE0202239951</cbc:CompanyID>
+        <cbc:CompanyID schemeID="0208">0202239951</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <cbc:Name>partner_1</cbc:Name>
@@ -54,7 +55,7 @@
     <cac:Party>
       <cbc:EndpointID schemeID="0208">0477472701</cbc:EndpointID>
       <cac:PartyIdentification>
-        <cbc:ID>ref_partner_2</cbc:ID>
+        <cbc:ID schemeID="0208">0477472701</cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>partner_2</cbc:Name>
@@ -75,7 +76,7 @@
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
         <cbc:RegistrationName>partner_2</cbc:RegistrationName>
-        <cbc:CompanyID>BE0477472701</cbc:CompanyID>
+        <cbc:CompanyID schemeID="0208">0477472701</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <cbc:Name>partner_2</cbc:Name>
@@ -94,6 +95,11 @@
         </cac:Country>
       </cac:Address>
     </cac:DeliveryLocation>
+    <cac:DeliveryParty>
+      <cac:PartyName>
+        <cbc:Name>partner_2</cbc:Name>
+      </cac:PartyName>
+    </cac:DeliveryParty>
   </cac:Delivery>
   <cac:PaymentMeans>
     <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
@@ -130,6 +136,9 @@
       </cac:TaxCategory>
     </cac:TaxSubtotal>
   </cac:TaxTotal>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">241.11</cbc:TaxAmount>
+  </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="USD">2682.00</cbc:LineExtensionAmount>
     <cbc:TaxExclusiveAmount currencyID="USD">2682.00</cbc:TaxExclusiveAmount>
@@ -144,7 +153,10 @@
     <cac:AllowanceCharge>
       <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
       <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+      <cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+      <cbc:MultiplierFactorNumeric>10.0</cbc:MultiplierFactorNumeric>
       <cbc:Amount currencyID="USD">198.00</cbc:Amount>
+      <cbc:BaseAmount currencyID="USD">1980.00</cbc:BaseAmount>
     </cac:AllowanceCharge>
     <cac:Item>
       <cbc:Description>product_a</cbc:Description>

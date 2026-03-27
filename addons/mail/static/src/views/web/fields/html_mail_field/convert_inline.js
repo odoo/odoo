@@ -1,5 +1,7 @@
 import { isBlock } from "@html_editor/utils/blocks";
 import { getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
+import { loadImage } from "@html_editor/utils/image_processing";
+import { getImageSrc } from "@html_editor/utils/image";
 import { blendColors } from "@web/core/utils/colors";
 
 function parentsGet(node, root = undefined) {
@@ -33,7 +35,9 @@ function commonParentGet(node1, node2, root = undefined) {
 //--------------------------------------------------------------------------
 
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
-const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
+const RE_COL_MD_MATCH = /(^| )col-md(-\d+)*( |$)/;
+const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)+( |$)/;
+const RE_OFFSET_MD_MATCH = /(^| )offset-md(-\d+)+( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
@@ -61,7 +65,8 @@ export const TABLE_ATTRIBUTES = {
 };
 // Cancel tables default styles.
 export const TABLE_STYLES = {
-    "border-collapse": "collapse",
+    "border-collapse": "separate",
+    "border-spacing": "0px",
     "text-align": "inherit",
     "font-size": "unset",
     "line-height": "inherit",
@@ -82,6 +87,10 @@ const GROUPED_STYLES = {
         "border-right-style",
         "border-bottom-style",
         "border-left-style",
+        "border-top-color",
+        "border-right-color",
+        "border-bottom-color",
+        "border-left-color",
     ],
     padding: ["padding-top", "padding-bottom", "padding-left", "padding-right"],
     margin: ["margin-top", "margin-bottom", "margin-left", "margin-right"],
@@ -288,9 +297,19 @@ export function bootstrapToTable(element) {
             bootstrapRow.remove();
 
             // COLUMNS
-            const bootstrapColumns = [...tr.children].filter(
-                (column) => column.className && column.className.match(RE_COL_MATCH)
-            );
+            const bootstrapColumns = [...tr.children].filter((column) => {
+                let match = column.className && column.className.match(RE_COL_MATCH);
+                const size = match ? _getColumnSize(column) : undefined;
+                while (match) {
+                    column.classList.remove(match[0].trim());
+                    match = column.className && column.className.match(RE_COL_MATCH);
+                }
+                if (size !== undefined) {
+                    // Only keep the final column size. Everything else was stripped.
+                    column.classList.add(`col${size ? `-${size}` : ``}`);
+                }
+                return size !== undefined;
+            });
 
             // 1. Replace generic "col" classes with specific "col-n", computed
             //    by sharing the available space between them.
@@ -314,9 +333,11 @@ export function bootstrapToTable(element) {
                 if (offsetSize) {
                     const newColumn = document.createElement("div");
                     newColumn.classList.add(`col-${offsetSize}`);
-                    bootstrapColumn.classList.remove(
-                        bootstrapColumn.className.match(RE_OFFSET_MATCH)[0].trim()
-                    );
+                    let match = bootstrapColumn.className.match(RE_OFFSET_MATCH);
+                    while (match) {
+                        bootstrapColumn.classList.remove(match[0].trim());
+                        match = bootstrapColumn.className.match(RE_OFFSET_MATCH);
+                    }
                     bootstrapColumn.before(newColumn);
                     bootstrapColumns.splice(columnIndex, 0, newColumn);
                     columnIndex++;
@@ -335,12 +356,6 @@ export function bootstrapToTable(element) {
                     currentCol = grid[gridIndex];
                     _applyColspan(currentCol, columnSize, containerWidth);
                     gridIndex += columnSize;
-                    if (columnIndex === bootstrapColumns.length - 1) {
-                        // We handled all the columns but there is still space
-                        // in the row. Insert the columns and fill the row.
-                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
-                        currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
-                    }
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
@@ -356,9 +371,11 @@ export function bootstrapToTable(element) {
                         gridIndex = 0;
                     }
                 } else {
-                    // Fill the row with what was in the grid before it
-                    // overflowed.
-                    _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    if (gridIndex < 12) {
+                        // Fill the row with what was in the grid before it
+                        // overflowed.
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    }
                     currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                     // Start a new row that starts with the current col.
                     const previousRow = currentRow;
@@ -368,12 +385,14 @@ export function bootstrapToTable(element) {
                     currentCol = grid[0];
                     _applyColspan(currentCol, columnSize, containerWidth);
                     gridIndex = columnSize;
-                    if (columnIndex === bootstrapColumns.length - 1 && gridIndex < 12) {
+                }
+                if (columnIndex === bootstrapColumns.length - 1) {
+                    if (gridIndex < 12) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
                         _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
-                        currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                     }
+                    currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                 }
                 if (currentCol) {
                     for (const attr of bootstrapColumn.attributes) {
@@ -448,6 +467,7 @@ export function cardToTable(element) {
                 col.append(child);
             }
             const subTable = _createTable();
+            subTable.style.height = "100%";
             const superRow = document.createElement("tr");
             const superCol = document.createElement("td");
             row.append(col);
@@ -534,6 +554,7 @@ export function classToStyle(element, cssRules) {
                 style = `${key}:${value};${style}`;
             }
         }
+        style = correctBorderAttributes(style);
         if (Object.keys(style || {}).length === 0) {
             writes.push(() => {
                 node.removeAttribute("style");
@@ -864,9 +885,17 @@ function enforceImagesResponsivity(element) {
  *                            specificity: number;}>
  */
 export async function toInline(element, cssRules) {
+    await waitUntilImagesLoaded(element);
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of element.querySelectorAll(".card-img-top")) {
         imgTop.style.setProperty("height", _getHeight(imgTop) + "px");
+    }
+
+    // Fix empty element heights to be always visible as they might have borders
+    // (used as separation) and can be rendered with height 0px.
+    // like having empty div with % height and display inline-block.
+    for (const el of element.querySelectorAll(".o_not_editable[class*='border-']:empty")) {
+        el.style.height = getComputedStyle(el).height;
     }
 
     attachmentThumbnailToLinkImg(element);
@@ -1702,7 +1731,10 @@ function _createTable(attributes = []) {
  * @returns {number}
  */
 function _getColumnSize(column) {
-    const colMatch = column.className.match(RE_COL_MATCH);
+    let colMatch = column.className.match(RE_COL_MD_MATCH);
+    if (!colMatch) {
+        colMatch = column.className.match(RE_COL_MATCH);
+    }
     const colOptions = colMatch[2] && colMatch[2].substr(1).split("-");
     const colSize =
         (colOptions && (colOptions.length === 2 ? +colOptions[1] : +colOptions[0])) || 0;
@@ -1717,7 +1749,10 @@ function _getColumnSize(column) {
  * @returns {number}
  */
 function _getColumnOffsetSize(column) {
-    const offsetMatch = column.className.match(RE_OFFSET_MATCH);
+    let offsetMatch = column.className.match(RE_OFFSET_MD_MATCH);
+    if (!offsetMatch) {
+        offsetMatch = column.className.match(RE_OFFSET_MATCH);
+    }
     const offsetOptions = offsetMatch && offsetMatch[2] && offsetMatch[2].substr(1).split("-");
     const offsetSize =
         (offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0])) ||
@@ -2052,4 +2087,74 @@ export function splitSelectorAroundCommasOutsideParentheses(selector) {
     }
     result.push(selector.slice(start));
     return result.filter(Boolean);
+}
+
+/**
+ * Corrects the `border-style` attribute in the provided inline style string.
+ * This is specifically for Outlook, which displays borders even when their widths are set to 0px.
+ * If all border widths are 0, the function updates `border-style` to `none`.
+ *
+ * @param {string} style - The inline style string to correct.
+ * @returns {string} - The corrected inline style string.
+ */
+function correctBorderAttributes(style) {
+    const stylesObject = style
+        .replace(/\s+/g, " ")
+        .split(";")
+        .reduce((styles, styleString) => {
+            const [attribute, value] = styleString.split(":").map((str) => str.trim());
+            if (attribute) {
+                styles[attribute] = value;
+            }
+            return styles;
+        }, {});
+
+    const BORDER_WIDTHS_ATTRIBUTES = [
+        "border-bottom-width",
+        "border-left-width",
+        "border-right-width",
+        "border-top-width",
+    ];
+
+    const isBorderStyleApplied = BORDER_WIDTHS_ATTRIBUTES.some(
+        (attribute) => attribute in stylesObject
+    );
+
+    if (!isBorderStyleApplied) {
+        return style;
+    }
+
+    const totalBorderWidth = BORDER_WIDTHS_ATTRIBUTES.reduce((totalWidth, attribute) => {
+        const widthValue = stylesObject[attribute] || "0px";
+        const numericWidth = parseFloat(widthValue.replace("px", "")) || 0;
+        return totalWidth + numericWidth;
+    }, 0);
+
+    if (totalBorderWidth === 0) {
+        let correctedStyle = style.trim();
+        if (correctedStyle.slice(-1) != ";") {
+            correctedStyle += ";";
+        }
+        correctedStyle = correctedStyle.replace(
+            /(;|^)\s*border-style\s*:[^;]*(;|$)|$/,
+            "$1border-style:none$2"
+        );
+        return correctedStyle;
+    }
+
+    if (/border-style\s*:/i.test(style)) {
+        return style;
+    }
+    return style.trim().replace(/;?$/, "; border-style: solid;");
+}
+
+function waitUntilImagesLoaded(root) {
+    const promises = [];
+    for (const img of root.querySelectorAll('img[src]:not([src=""])')) {
+        const src = getImageSrc(img);
+        if (src) {
+            promises.push(loadImage(src));
+        }
+    }
+    return Promise.allSettled(promises);
 }

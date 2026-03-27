@@ -4,7 +4,7 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, date_utils, SQL
+from odoo.tools import frozendict, date_utils, index_exists, SQL
 
 import logging
 import re
@@ -51,8 +51,7 @@ class SequenceMixin(models.AbstractModel):
         # Add an index to optimise the query searching for the highest sequence number
         if not self._abstract and self._sequence_index:
             index_name = self._table + '_sequence_index'
-            self.env.cr.execute(SQL('SELECT indexname FROM pg_indexes WHERE indexname = %s', index_name))
-            if not self.env.cr.fetchone():
+            if not index_exists(self.env.cr, index_name):
                 self.env.cr.execute(SQL("""
                     CREATE INDEX %(index_name)s ON %(table)s (%(sequence_index)s, sequence_prefix desc, sequence_number desc, %(field)s);
                     CREATE INDEX %(index2_name)s ON %(table)s (%(sequence_index)s, id desc, sequence_prefix);
@@ -72,6 +71,7 @@ class SequenceMixin(models.AbstractModel):
                                      AND a.attnum = ANY(ix.indkey)
                  WHERE t.relkind = 'r'
                    AND t.relname = %(table)s
+                   AND t.relnamespace = current_schema::regnamespace
                    AND a.attname = %(column)s
                    AND ix.indisunique
                 """,
@@ -89,9 +89,11 @@ class SequenceMixin(models.AbstractModel):
         # To avoid requiring multiple savepoints when generating successive
         # sequence numbers within a single transaction, we cache the sequence value
         # for the duration of the in-flight transaction.
-        # The `precommit.data` container is used instead of `cr.cache` to
-        # reduce the need for manual invalidation and ensure that the
-        # cache does not survive a commit or rollback.
+        #
+        # We use `cr.cache` and expects any savepoint rollback or commit to clear the cache.
+        # This is important because as soon as the lock is released, there might be a record
+        # consumming the next sequence in a concurent transaction for which the cache can't be
+        # aware.
         #
         # Before adding an entry for a sequence to this `sequence.mixin` cache,
         # the transaction must have locked the corresponding unique constraint,
@@ -107,7 +109,7 @@ class SequenceMixin(models.AbstractModel):
         # See also:
         # - https://postgres.ai/blog/20210831-postgresql-subtransactions-considered-harmful
         # - the documentation in _locked_increment()
-        return self.env.cr.precommit.data.setdefault('sequence.mixin', {})
+        return self.env.cr.cache.setdefault('sequence.mixin', {})
 
     def write(self, vals):
         if self._sequence_field in vals and self.env.context.get('clear_sequence_mixin_cache', True):

@@ -36,5 +36,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'pcg_7111',
                 'expense_account_id': 'pcg_6111',
                 'tax_exigibility': 'True',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'pcg_31211',
+            },
+        }
+
+    @template('ma', 'account.account')
+    def _get_ma_account_account(self):
+        return {
+            'pcg_31211': {
+                'account_stock_expense_id': 'pcg_61211',
+                'account_stock_variation_id': 'pcg_61241',
             },
         }

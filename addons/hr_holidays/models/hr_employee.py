@@ -139,22 +139,23 @@ class HrEmployee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('holiday_status_id.time_type', '=', 'leave'),
             ('state', '=', 'validate'),
         ])
         leave_data = {}
         for holiday in holidays:
-            leave_data[holiday.employee_id.id] = {}
+            leave_data.setdefault(holiday.employee_id.id, {})
             leave_data[holiday.employee_id.id]['leave_date_from'] = holiday.date_from.date()
             back_on = holiday.employee_id._get_first_working_interval(holiday.date_to)
             leave_data[holiday.employee_id.id]['leave_date_to'] = back_on.date() if back_on else None
             leave_data[holiday.employee_id.id]['current_leave_state'] = holiday.state
+            leave_data[holiday.employee_id.id]['is_absent'] = leave_data[holiday.employee_id.id].get('is_absent') or holiday.holiday_status_id.time_type == 'leave'
 
         for employee in self:
-            employee.leave_date_from = leave_data.get(employee.id, {}).get('leave_date_from')
-            employee.leave_date_to = leave_data.get(employee.id, {}).get('leave_date_to')
-            employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
-            employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id).get('current_leave_state') == 'validate'
+            employee_leave_data = leave_data.get(employee.id, {})
+            employee.leave_date_from = employee_leave_data.get('leave_date_from')
+            employee.leave_date_to = employee_leave_data.get('leave_date_to')
+            employee.current_leave_state = employee_leave_data.get('current_leave_state')
+            employee.is_absent = employee_leave_data and employee_leave_data.get('is_absent') and employee_leave_data.get('current_leave_state') == 'validate'
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
@@ -236,10 +237,14 @@ class HrEmployee(models.Model):
         # 'no_leave_resource_calendar_update'
         if 'resource_calendar_id' in values and not self.env.context.get('no_leave_resource_calendar_update'):
             try:
-                self.env['hr.leave'].search([
+                leaves = self.env['hr.leave'].search([
                     ('employee_id', 'in', self.ids),
                     ('resource_calendar_id', '!=', int(values['resource_calendar_id'])),
-                    ('date_from', '>', fields.Datetime.now())]).write({'resource_calendar_id': values['resource_calendar_id']})
+                    ('date_from', '>', fields.Datetime.now())])
+                leaves.write({'resource_calendar_id': values['resource_calendar_id']})
+                non_hourly_leaves = leaves.filtered(lambda l: not l.request_unit_hours)
+                non_hourly_leaves.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
+                non_hourly_leaves.filtered(lambda l: l.state == 'validate')._validate_leave_request()
             except ValidationError:
                 raise ValidationError(_("Changing this working schedule results in the affected employee(s) not having enough "
                                         "leaves allocated to accomodate for their leaves already taken in the future. Please "
@@ -378,7 +383,7 @@ class HrEmployee(models.Model):
             ('company_id', 'in', self.env.companies.ids),
             '|',
             ('resource_calendar_id', '=', False),
-            ('resource_calendar_id', '=', self.resource_calendar_id.id),
+            ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
         ]
 
         if self.job_id:
@@ -407,6 +412,11 @@ class HrEmployee(models.Model):
         return self.env.user.employee_id
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
+        """ This method won't call `_get_future_leaves_on` for the allocations contained by this variable (it will only use the current value of
+            the `number_of_days` of the allocation, alias `number_of_hours_display`)
+
+            `precomputed_allocations`: context variable (recordset) which can be used to pass allocation that are considered to be already computed
+        """
         employees = self or self._get_contextual_employee()
         leaves_domain = [
             ('holiday_status_id', 'in', leave_types.ids),
@@ -482,10 +492,16 @@ class HrEmployee(models.Model):
                 'to_recheck_leaves': self.env['hr.leave']
             })
         )
+        precomputed_allocations = self.env.context.get('precomputed_allocations')
         for allocation in allocations:
             allocation_data = allocations_leaves_consumed[allocation.employee_id][allocation.holiday_status_id][allocation]
+            precomputed = False
+            if precomputed_allocations:
+                if allocation.id in precomputed_allocations.ids:
+                    allocation = precomputed_allocations.filtered(lambda alloc: alloc._origin.id == allocation.id)[0]
+                    precomputed = True
             future_leaves = 0
-            if allocation.allocation_type == 'accrual':
+            if allocation.allocation_type == 'accrual' and not precomputed:
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
                 if allocation.holiday_status_id.request_unit in ['hour']\
@@ -509,7 +525,11 @@ class HrEmployee(models.Model):
                         allocations_with_date_to |= leave_allocation
                     else:
                         allocations_without_date_to |= leave_allocation
-                sorted_leave_allocations = allocations_with_date_to.sorted(key='date_to') + allocations_without_date_to
+                # Defines the order in which allocation will be used to take the leaves in priority
+                sorted_leave_allocations = (
+                    allocations_with_date_to.sorted(key='date_to') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'accrual') +
+                    allocations_without_date_to.filtered(lambda alloc: alloc.allocation_type == 'regular'))
 
                 if leave_type.request_unit in ['day', 'half_day']:
                     leave_duration_field = 'number_of_days'
@@ -523,7 +543,11 @@ class HrEmployee(models.Model):
                     leave_duration = leave[leave_duration_field]
                     skip_excess = False
 
-                    if sorted_leave_allocations.filtered(lambda alloc: alloc.allocation_type == 'accrual') and leave.date_from.date() > target_date:
+                    if leave.date_from.date() > target_date and sorted_leave_allocations.filtered(lambda a:
+                        a.allocation_type == 'accrual' and
+                        (not a.date_to or a.date_to >= target_date) and
+                        a.date_from <= leave.date_to.date()
+                    ):
                         to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
                         skip_excess = True
                         continue

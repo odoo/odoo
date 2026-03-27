@@ -11,8 +11,8 @@ export class ListingLayout extends Interaction {
         },
         ".o_website_grid, .o_website_list": {
             "t-att-class": () => ({
-                "o_website_list": this.isList,
-                "o_website_grid": !this.isList,
+                o_website_list: this.isList,
+                o_website_grid: !this.isList,
             }),
         },
         ".o_website_grid > div, .o_website_list > div": {
@@ -32,12 +32,12 @@ export class ListingLayout extends Interaction {
     async onApplyLayoutChange(ev) {
         const clickedValue = ev.target.value;
         this.isList = clickedValue === "list";
-        await this.waitFor(rpc("/website/save_session_layout_mode", {
-            layout_mode: this.isList ? "list" : "grid",
-            view_id: document
-                .querySelector(".listing_layout_switcher")
-                .dataset.viewId,
-        }));
+        await this.waitFor(
+            rpc("/website/save_session_layout_mode", {
+                layout_mode: this.isList ? "list" : "grid",
+                view_id: document.querySelector(".listing_layout_switcher").dataset.viewId,
+            })
+        );
 
         const activeClasses = ev.target.parentElement.dataset.activeClasses.split(" ");
         ev.target.parentElement.querySelectorAll(".btn").forEach((btn) => {
@@ -46,6 +46,4 @@ export class ListingLayout extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.listing_layout", ListingLayout);
+registry.category("public.interactions").add("website.listing_layout", ListingLayout);

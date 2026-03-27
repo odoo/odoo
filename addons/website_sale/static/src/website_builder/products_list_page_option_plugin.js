@@ -1,7 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ProductsListPageOption } from "@website_sale/website_builder/products_list_page_option";
@@ -10,15 +9,7 @@ class ProductsListPageOptionPlugin extends Plugin {
     static id = "productsListPageOptionPlugin";
 
     resources = {
-        builder_options: [
-            {
-                OptionComponent: ProductsListPageOption,
-                selector: "#o_wsale_container",
-                editableOnly: false,
-                title: _t("Products Page"),
-                groups: ["website.group_website_designer"],
-            },
-        ],
+        builder_options: [ProductsListPageOption],
         builder_actions: {
             SetShopContainerAction,
             SetPpgAction,

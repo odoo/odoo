@@ -33,8 +33,8 @@ export class BaseHeaderSpecial extends BaseHeader {
      * @param {Event} ev
      */
     onDropdownShow(ev) {
-        // If a dropdown inside the element 'this.hideEl' is clicked while the 
-        // header is fixed, we need to scroll the page up so that the 
+        // If a dropdown inside the element 'this.hideEl' is clicked while the
+        // header is fixed, we need to scroll the page up so that the
         // 'this.hideEl' element is no longer overflow hidden. Without
         // this, the dropdown would be invisible.
         if (this.cssAffixed) {
@@ -60,8 +60,8 @@ export class BaseHeaderSpecial extends BaseHeader {
 
         const scroll = this.scrollingElement.scrollTop;
 
-        this.atTop = (scroll <= this.topGap);
-        this.isScrolled = (scroll > this.topGap);
+        this.atTop = scroll <= this.topGap;
+        this.isScrolled = scroll > this.topGap;
 
         // Need to be 'unfixed' when the window is not scrolled so that the
         // transparent menu option still works.
@@ -82,18 +82,21 @@ export class BaseHeaderSpecial extends BaseHeader {
             this.hideEl.classList.remove("hidden");
             let elHeight = 0;
             if (this.cssAffixed) {
-                // Close the dropdowns if they are open when scrolling. 
+                // Close the dropdowns if they are open when scrolling.
                 // Otherwise, the calculated height of the 'hideEl' element will
                 // be incorrect because it will include the dropdown height.
-                this.hideEl.querySelectorAll(".dropdown-toggle.show").forEach(dropdownToggleEl => {
-                    Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
-                });
+                this.hideEl
+                    .querySelectorAll(".dropdown-toggle.show")
+                    .forEach((dropdownToggleEl) => {
+                        Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
+                    });
                 elHeight = this.hideEl.offsetHeight;
             } else {
                 elHeight = this.hideEl.scrollHeight;
             }
-            const scrollDelta = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches ?
-                scroll : Math.floor(scroll / 4);
+            const scrollDelta = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches
+                ? scroll
+                : Math.floor(scroll / 4);
             elHeight = Math.max(0, elHeight - scrollDelta);
             this.hideEl.classList.toggle("hidden", elHeight === 0);
             if (elHeight === 0) {
@@ -123,7 +126,7 @@ export class BaseHeaderSpecial extends BaseHeader {
         }
 
         if (this.isAnimated && this.transitionActive) {
-            const scrollingDownward = (scroll > this.position);
+            const scrollingDownward = scroll > this.position;
             this.position = scroll;
             if (this.scrollingDownward !== scrollingDownward) {
                 this.checkpoint = scroll;
@@ -131,13 +134,13 @@ export class BaseHeaderSpecial extends BaseHeader {
             this.scrollingDownward = scrollingDownward;
 
             if (scrollingDownward) {
-                const movement = (this.position - this.checkpoint);
-                if (this.isVisible && movement > (this.scrollOffset + this.topGap)) {
+                const movement = this.position - this.checkpoint;
+                if (this.isVisible && movement > this.scrollOffset + this.topGap) {
                     this.transformHide();
                 }
             } else {
-                const movement = (this.checkpoint - this.position);
-                if (!this.isVisible && movement > ((this.scrollOffset + this.topGap) / 2)) {
+                const movement = this.checkpoint - this.position;
+                if (!this.isVisible && movement > (this.scrollOffset + this.topGap) / 2) {
                     this.transformShow();
                 }
             }
@@ -145,9 +148,7 @@ export class BaseHeaderSpecial extends BaseHeader {
     }
 }
 
-registry
-    .category("public.interactions.edit")
-    .add("website.base_header_special", {
-        Interaction: BaseHeaderSpecial,
-        isAbstract: true,
-    });
+registry.category("public.interactions.edit").add("website.base_header_special", {
+    Interaction: BaseHeaderSpecial,
+    isAbstract: true,
+});

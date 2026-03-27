@@ -68,6 +68,7 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
             product=False,
             partner=False,
             is_refund=False,
+            rounding_method='round_per_line',
         )
         tax_amount = taxes_res['taxes'][0]['amount']
         tax_account_id = taxes_res['taxes'][0]['account_id']

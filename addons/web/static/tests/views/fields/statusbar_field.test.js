@@ -1,6 +1,7 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, resize, test } from "@odoo/hoot";
 import {
     click,
+    Deferred,
     edit,
     press,
     queryAll,
@@ -23,6 +24,8 @@ import {
     mountWithCleanup,
     onRpc,
     serverState,
+    pagerNext,
+    pagerPrevious,
 } from "@web/../tests/web_test_helpers";
 import { EventBus } from "@odoo/owl";
 import { WebClient } from "@web/webclient/webclient";
@@ -1065,4 +1068,194 @@ test('"status" with no stages does not crash command palette', async () => {
     const commands = queryAllTexts(".o_command");
 
     expect(commands).not.toInclude("Move to next Stage");
+});
+
+test.tags("desktop");
+test("cache: update current status if it changed", async () => {
+    class Stage extends models.Model {
+        name = fields.Char();
+        _records = [
+            { id: 1, name: "Stage 1" },
+            { id: 2, name: "Stage 2" },
+        ];
+    }
+    Partner._fields.stage_id = fields.Many2one({ relation: "stage" });
+    Partner._records = [
+        {
+            id: 1,
+            name: "first record",
+            stage_id: 1,
+        },
+        {
+            id: 2,
+            name: "second record",
+            stage_id: 2,
+        },
+        {
+            id: 3,
+            name: "third record",
+            stage_id: 2,
+        },
+    ];
+    defineModels([Stage]);
+
+    Partner._views = {
+        kanban: `
+            <kanban default_group_by="stage_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        form: `
+            <form>
+                <header>
+                    <field name="stage_id" widget="statusbar" />
+                </header>
+            </form>`,
+        search: `<search></search>`,
+    };
+
+    onRpc("has_group", () => true);
+    let def;
+    onRpc("web_read", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        id: 1,
+        name: "Partners",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        cache: true,
+        views: [
+            [false, "kanban"],
+            [false, "form"],
+        ],
+    });
+
+    // populate the cache by visiting the 3 records
+    await contains(".o_kanban_record").click();
+    expect(".o_last_breadcrumb_item").toHaveText("first record");
+    await pagerNext();
+    expect(".o_last_breadcrumb_item").toHaveText("second record");
+    await pagerNext();
+    expect(".o_last_breadcrumb_item").toHaveText("third record");
+
+    // go back to kanban and drag the first record of stage 2 on top of stage 1 column
+    await contains(".o_breadcrumb .o_back_button").click();
+    const dragActions = await contains(".o_kanban_record:contains(second record)").drag();
+    await dragActions.moveTo(".o_kanban_record:contains(first record)");
+    await dragActions.drop();
+    expect(queryAllTexts(".o_kanban_record")).toEqual([
+        "second record",
+        "first record",
+        "third record",
+    ]);
+
+    // re-open last record and use to pager to reach the record we just moved
+    await contains(".o_kanban_record:contains(third record)").click();
+    await pagerPrevious();
+    def = new Deferred();
+    await pagerPrevious();
+    // retrieved from the cache => former value
+    expect(".o_last_breadcrumb_item").toHaveText("second record");
+    expect('.o_statusbar_status button[data-value="2"]').toHaveClass("o_arrow_button_current");
+    def.resolve();
+    await animationFrame();
+    // updated when the rpc returns
+    expect(".o_last_breadcrumb_item").toHaveText("second record");
+    expect('.o_statusbar_status button[data-value="1"]').toHaveClass("o_arrow_button_current");
+});
+
+test("[adjust] statusbar with a lot of stages, click to change stage", async () => {
+    // force the window width and define long stage names s.t. at most 3 stages can be displayed
+    resize({ width: 800 });
+    class Stage extends models.Model {
+        name = fields.Char();
+        _records = Array.from(Array(6).keys()).map((i) => {
+            const id = i + 1;
+            return { id, name: `Stage with very long name ${id}` };
+        });
+    }
+    defineModels([Stage]);
+    Partner._fields.stage_id = { type: "many2one", relation: "stage" };
+    Partner._records[0].stage_id = 3;
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': 1}" />
+                </header>
+            </form>
+        `,
+    });
+
+    // initial rendering: there should be a dropdown before and a dropdown after
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(2);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 4",
+        "Stage with very long name 3",
+        "Stage with very long name 2",
+    ]);
+    expect(".o_statusbar_status button[data-value='3']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_last").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["Stage with very long name 1"]);
+    await contains(".o_statusbar_status .o_first").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 5",
+        "Stage with very long name 6",
+    ]);
+
+    // choose the next value: there should still be one dropdown before and one after
+    await contains(".o_statusbar_status button[data-value='4']").click();
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(2);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 5",
+        "Stage with very long name 4",
+        "Stage with very long name 3",
+    ]);
+    expect(".o_statusbar_status button[data-value='4']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_last").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 1",
+        "Stage with very long name 2",
+    ]);
+    await contains(".o_statusbar_status .o_first").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["Stage with very long name 6"]);
+
+    // choose the next value: there should only be a dropdown before
+    await contains(".o_statusbar_status button[data-value='5']").click();
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(1);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 6",
+        "Stage with very long name 5",
+        "Stage with very long name 4",
+    ]);
+    expect(".o_statusbar_status button[data-value='5']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_last").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 1",
+        "Stage with very long name 2",
+        "Stage with very long name 3",
+    ]);
+
+    // select the first item from the dropdown before => there should only be a dropdown after
+    await contains(".o-dropdown-item:first").click();
+    expect(".o_statusbar_status button:visible.dropdown-toggle").toHaveCount(1);
+    expect(queryAllTexts(".o_statusbar_status button:visible:not(.dropdown-toggle)")).toEqual([
+        "Stage with very long name 3",
+        "Stage with very long name 2",
+        "Stage with very long name 1",
+    ]);
+    expect(".o_statusbar_status button[data-value='1']").toHaveClass("o_arrow_button_current");
+    await contains(".o_statusbar_status .o_first").click();
+    expect(queryAllTexts(".o-dropdown-item")).toEqual([
+        "Stage with very long name 4",
+        "Stage with very long name 5",
+        "Stage with very long name 6",
+    ]);
 });

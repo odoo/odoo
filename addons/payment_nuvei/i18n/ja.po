@@ -3,13 +3,14 @@
 # * payment_nuvei
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-13 23:07+0000\n"
-"PO-Revision-Date: 2025-09-14 21:18+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-10-27 02:31+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "payment_nuvei/ja/>\n"
 "Language: ja\n"
@@ -29,8 +30,8 @@ msgstr "%(payment_method)s では氏名両方が必要です。"
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid ""
-"An error occurred during the processing of your payment (%(reason)s). Please"
-" try again."
+"An error occurred during the processing of your payment (%(reason)s). Please "
+"try again."
 msgstr "支払処理中にエラーが発生しました(%(reason)s)。再度試して下さい。"
 
 #. module: payment_nuvei
@@ -39,15 +40,21 @@ msgid "Code"
 msgstr "コード"
 
 #. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
 msgstr "加盟店識別子"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "No transaction found matching reference %(ref)s."
-msgstr "参照に一致する取引が見つかりません%(ref)s。"
 
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
@@ -77,7 +84,7 @@ msgstr "決済プロバイダー"
 #. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "決済トランザクション"
+msgstr "支払取引"
 
 #. module: payment_nuvei
 #. odoo-python
@@ -88,14 +95,7 @@ msgstr "支払ステータスが欠落している受信データ"
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "参照が欠落しているデータを受信しました。"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid ""
-"Received invalid transaction status %(status)s and reason '%(reason)s'."
+msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr "無効な取引ステータス%(status)sおよび理由'%(reason)s'を受信しました。"
 
 #. module: payment_nuvei
@@ -128,3 +128,9 @@ msgstr "加盟店アカウントに関連付けられたサイト識別コード
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "この決済プロバイダーのテクニカルコード。"
+
+#~ msgid "No transaction found matching reference %(ref)s."
+#~ msgstr "参照に一致する取引が見つかりません%(ref)s。"
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "参照が欠落しているデータを受信しました。"

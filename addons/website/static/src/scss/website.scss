@@ -435,6 +435,8 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
         }
 
         .accordion-button {
+            font-size: inherit;
+
             &:not(.collapsed) {
                 @if $-navbar-mobile-bg-color != null {
                     background-color: shade-color($-navbar-mobile-bg-color, 5%);
@@ -449,6 +451,22 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
                 font-family: 'odoo_ui_icons';
                 content: '\e839';
             }
+        }
+    }
+
+    .top_menu {
+        &.text-end > .accordion .accordion-button {
+            flex-direction: row-reverse;
+
+            &::after {
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+
+        &.text-center > .accordion .accordion-button > span {
+            text-align: center;
+            flex-grow: 1;
         }
     }
 }
@@ -503,7 +521,7 @@ $-header-nav-link-height: $nav-link-height;
     @include o-add-gradient('footer-gradient');
 
     .o_footer_copyright {
-        $-footer-color: o-color('footer-custom') or o-color('footer');
+        $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
         @include o-apply-colors('copyright', $background: $-footer-color);
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
@@ -714,6 +732,14 @@ font[class*='bg-'] {
     }
 }
 
+.btn-close {
+    // Most components with an integrated .btn-close (o_notification, modals, offcanvas)
+    // use $body-bg by default, which is why we check it here.
+    @if (lightness($body-bg) < 50) {
+        @include btn-close-white();
+    }
+}
+
 // Badges
 .badge, .o_filter_tag {
     --badge-color: var(--color);
@@ -721,6 +747,7 @@ font[class*='bg-'] {
     background: var(--badge-bg, var(--background-color)) !important;
     color: var(--badge-color, var(--color)) !important;
     border: $border-width solid var(--badge-border-color) !important;
+    font-size: var(--badge-font-size);
 
     // Similarly to list-group-item-x and alert-* classes, override text-bg-*
     // classes behavior when used on badges.
@@ -1343,17 +1370,39 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 
     // Style - Indicators outside
     &.s_carousel_controllers_indicators_outside {
-        .carousel-control-prev, .carousel-control-next {
-            margin-bottom: $-o-carousel-controllers-size;
+        &:not(:has(.s_carousel_indicators_hidden)) {
+            .carousel-control-prev, .carousel-control-next {
+                margin-bottom: $-o-carousel-controllers-size;
+            }
         }
 
         .carousel-indicators {
             position: relative;
             margin-bottom: 0;
 
-            button {
+            &:not(.s_carousel_indicators_numbers) button {
                 background-color: currentColor;
+            }
+
+            button {
                 color: inherit;
+            }
+            
+            &.s_carousel_indicators_numbers {
+                // For large screen, use the same size as the margin-bottom of
+                // the prev/next buttons (like other indicators; instead of
+                // "auto"), so that the bottom of the buttons is aligned with
+                // the bottom of the slides. For smaller screen, the buttons do
+                // not have the same appearance and their bottoms do not need
+                // to align, and also the numbers may need to go on a second
+                // line if there is many slides, so we keep "auto"
+                @include media-breakpoint-up(md) {
+                    height: $-o-carousel-controllers-size;
+                }
+
+                button:after {
+                    border-top-color: currentColor;
+                }
             }
         }
     }
@@ -1644,15 +1693,20 @@ header {
     }
 
     nav.navbar {
-        @if o-website-value('menu-border-width') {
+        $-menu-border-width: o-website-value('menu-border-width');
+        @if $-menu-border-width {
+            // When the header should only have a bottom border, only take the
+            // first value of the variable 'menu-border-width' to behave as if
+            // the input only accepted one number.
+            $-menu-border-bottom-width: nth($-menu-border-width, 1); 
             border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
-            border-width: 0 0 o-website-value('menu-border-width') 0 !important;
+            border-width: 0 0 $-menu-border-bottom-width 0 !important;
 
             &.o_border_right_only {
-                border-width: 0 o-website-value('menu-border-width') 0 0 !important;
+                border-width: 0 $-menu-border-bottom-width 0 0 !important;
             }
             &.o_full_border {
-                border-width: o-website-value('menu-border-width') !important;
+                border-width: $-menu-border-width !important;
             }
         }
         border-radius: o-website-value('menu-border-radius') !important;
@@ -1680,11 +1734,15 @@ header {
             display: none;
         }
     }
+
+    .hidden_mega_menu_li {
+        display: none;
+    }
 }
 
 @if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
-        #wrapwrap {
+        #wrapwrap:has(> header) {
             // Two different website options might add padding:
             // - The sidebar header template
             // - The website layout template when different than 'full'
@@ -1775,9 +1833,15 @@ header {
         @include o-apply-colors('header-sales_three-custom');
         @include o-add-gradient('menu-secondary-gradient');
     }
-    #wrapwrap header .o_header_sales_three_small_links {
-        // Force small links to be proportional to header font size
-        --nav-link-font-size: MAX(12px, .75em);
+    #wrapwrap header {
+        .o_header_sales_three_small_links {
+            // Force small links to be proportional to header font size
+            --nav-link-font-size: MAX(12px, .75em);
+        }
+        .ms-auto:has(> .o_header_sales_three_small_links + .top_menu.o_menu_loading) {
+            // Fix menu auto hide by preventing parent overflow
+            overflow: hidden !important;
+        }
     }
 } @else if o-website-value('header-template') == 'sales_four' {
     #wrapwrap .o_header_sales_four_bot {
@@ -1839,8 +1903,9 @@ header {
     .o_mega_nav, .o_mega_menu {
         @include transition(opacity $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
         z-index: $o-mega-menu-zindex;
-        max-width: $offcanvas-horizontal-width;
+        max-width: $offcanvas-horizontal-width !important;
         opacity: 0;
+        pointer-events: none;
 
         section {
             @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
@@ -1855,6 +1920,7 @@ header {
         @include transition(opacity $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
         visibility: visible !important;
         opacity: 1;
+        pointer-events: auto;
 
         section {
             @include transition(transform $offcanvas-transition-duration ease-in-out, visibility $offcanvas-transition-duration ease-in-out);
@@ -3181,4 +3247,8 @@ input[value*="data-oe-translation-source-sha"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    div.media_iframe_video {
+      width: 100%;
+    }
 }

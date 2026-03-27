@@ -317,8 +317,7 @@ class TestFlows(PaymentHttpCommon):
         self.authenticate(self.portal_user.login, self.portal_user.login)
 
         token = self._create_token()
-        provider_b = self.provider.copy()
-        provider_b.state = 'test'
+        provider_b = self.provider.copy({'is_published': True, 'state': 'test'})
         token_b = self._create_token(provider_id=provider_b.id)
 
         # User must see both tokens and compatible payment methods.

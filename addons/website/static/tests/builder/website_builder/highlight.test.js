@@ -11,6 +11,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "@html_editor/plugin";
 import { highlightIdToName } from "@website/builder/plugins/highlight/highlight_configurator";
 import { textHighlightFactory } from "@website/js/highlight_utils";
+import { unformat } from "@html_editor/../tests/_helpers/format";
 
 defineMailModels();
 
@@ -18,6 +19,13 @@ class FakeEditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
     static shared = ["stopInteraction"];
     stopInteraction() {}
+}
+
+function checkHighlightColor(highlightStyle) {
+    const color = document.documentElement
+        .querySelector(`span.${highlightStyle}`)
+        .style.getPropertyValue("--text-highlight-color");
+    expect(color).toBe("var(--hb-cp-o-color-1)");
 }
 
 test("Can highlight a selected text", async () => {
@@ -31,15 +39,26 @@ test("Can highlight a selected text", async () => {
     await waitFor(".o_popover .o_text_highlight_underline");
 
     expect("p>.o_text_highlight_underline").toHaveCount(0);
-    const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-1");
-    expect(".o_popover .o_text_highlight_underline").toHaveStyle({
-        "--text-highlight-color": color,
-    });
+    checkHighlightColor("o_text_highlight_underline");
+
     await click(".o_popover .o_text_highlight_underline");
     expect("p>.o_text_highlight_underline").toHaveCount(1);
-    expect("span.o_text_highlight_freehand_2").toHaveStyle({
-        "--text-highlight-color": color,
-    });
+    checkHighlightColor("o_text_highlight_freehand_2");
+});
+
+test("Check no highlight color is displayed in colorpicker when text with multiple highlight color is selected", async () => {
+    await setupEditor(
+        `<p>
+            [This is <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-color: #FFFF00;">first</span> and <span class="o_text_highlight o_text_highlight_freehand_2">second</span>]
+        </p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+
+    // Open highlight toolbar
+    await expandToolbar();
+    expect(".o-select-highlight").toHaveCount(1);
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    expect("#colorButton").toHaveAttribute("style", "background-color:");
 });
 
 test("Can set a color to a highlight", async () => {
@@ -56,7 +75,7 @@ test("Can set a color to a highlight", async () => {
     await animationFrame();
     await click("#colorButton");
     await animationFrame();
-    await click("button[style='background-color: var(--o-color-2)']");
+    await click("button[style='background-color: var(--hb-cp-o-color-2)']");
     await animationFrame();
     const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-2");
     expect("span.o_text_highlight_freehand_2").toHaveStyle({
@@ -191,4 +210,34 @@ test("each highlight has a name", () => {
     highlightWithAName.sort();
     highlightWithAPath.sort();
     expect(highlightWithAPath).toEqual(highlightWithAName);
+});
+
+test("Should override existing highlight", async () => {
+    const { el } = await setupEditor(
+        unformat(
+            `<p>
+                [a
+                <span class="o_text_highlight o_text_highlight_freehand_1" style="--text-highlight-width: 4px;">
+                    <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">b</span>
+                </span>
+                c]
+            </p>`
+        ),
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    await contains("#highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    expect(el.innerHTML).toBe(
+        unformat(
+            `<p>
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">
+                    a
+                    <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;"><span>b</span></span>
+                    c
+                </span>
+            </p>`
+        )
+    );
 });

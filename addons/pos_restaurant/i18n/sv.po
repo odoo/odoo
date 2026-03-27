@@ -14,13 +14,15 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Simon S, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2025-09-16 21:22+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-03-20 17:34+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/sv/>\n"
 "Language: sv\n"
@@ -28,19 +30,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid " and $1"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "% discount"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "%s, sent to the kitchen"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "/ Guest"
 msgstr "/ Gäst"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 Johannes 4P"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
@@ -193,6 +207,7 @@ msgstr "Tilldela"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "Tillbaka"
@@ -221,7 +236,7 @@ msgstr "Belgiska färska hemlagade pommes frites"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr "Faktura"
+msgstr "Leverantörsfaktura"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
@@ -370,7 +385,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__course_ids
 msgid "Courses"
-msgstr "Löpningar"
+msgstr "Kurser"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
@@ -401,7 +416,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Delete"
-msgstr "Ta bort"
+msgstr "Radera"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -422,7 +437,7 @@ msgstr "Designa golv och tilldela order till bord"
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_takein_preset
 msgid "Dine In"
-msgstr ""
+msgstr "Ät på plats"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -432,7 +447,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Discard"
 msgstr "Avbryt"
 
@@ -685,7 +700,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid ""
 "It seems that the order has not been sent. Would you like to send it to "
 "preparation?"
@@ -836,7 +851,7 @@ msgstr "Inget tips"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Note"
-msgstr "Notera"
+msgstr "Anteckning"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -880,9 +895,7 @@ msgstr "Alternativ"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Order"
 msgstr "Order"
 
@@ -1072,7 +1085,7 @@ msgstr "Det går inte att ångra borttagningen av en tabell"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Rename"
-msgstr "Byt namn"
+msgstr "Döp om"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1167,6 +1180,13 @@ msgstr "Välj bord för att överföra order"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Select the table first or after registering the order"
 msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Send"
+msgstr "Skicka"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1290,13 +1310,13 @@ msgstr "Tabell"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
 msgid "Table %(number)s"
-msgstr ""
+msgstr "Bord %(number)s"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
 msgid "Table %(number)s, Guests: %(count)s"
-msgstr ""
+msgstr "Bord %(number)s, Gäster: %(count)s"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number
@@ -1345,7 +1365,8 @@ msgstr "Bordets nummer som det visas på planritningen"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
 msgid "The parent table if this table is part of a group of tables"
-msgstr "Den överordnade tabellen om denna tabell är en del av en grupp tabeller"
+msgstr ""
+"Den överordnade tabellen om denna tabell är en del av en grupp tabeller"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
@@ -1500,7 +1521,7 @@ msgstr "Vodka 42 Nedan, lime, socker, ingefärsöl"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Warning !"
 msgstr ""
 
@@ -1533,6 +1554,12 @@ msgstr "Vit rom, socker, limejuice, sodavatten och mynta."
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
 msgid "Width"
 msgstr "Bredd"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "With"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1620,6 +1647,12 @@ msgstr "______________________________________________"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "e.g. John"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
 msgstr "artiklar"
@@ -1629,6 +1662,9 @@ msgstr "artiklar"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
 msgstr ""
+
+#~ msgid "18:45 John 4P"
+#~ msgstr "18:45 Johannes 4P"
 
 #~ msgid "Add"
 #~ msgstr "Lägg till"

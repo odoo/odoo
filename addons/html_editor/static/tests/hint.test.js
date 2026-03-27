@@ -8,7 +8,7 @@ import {
     setContent,
     setSelection,
 } from "./_helpers/selection";
-import { insertText } from "./_helpers/user_actions";
+import { insertText, simulateArrowKeyPress } from "./_helpers/user_actions";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
@@ -76,7 +76,53 @@ test("should not display hint in a non-editable paragraph", async () => {
     const content = '<div contenteditable="false"><p>[]</p></div>';
     const { el } = await setupEditor(content);
     // Unchanged, no empty paragraph hint.
+    expect(getContent(el)).toBe(
+        '<p data-selection-placeholder=""><br></p>' +
+            content +
+            '<p data-selection-placeholder=""><br></p>'
+    );
+});
+
+test("should not display hint in paragraph with tab", async () => {
+    const content =
+        '<p><span class="oe-tabs" contenteditable="false" style="width: 40px;">\t</span>\u200b[]</p>';
+    const { el } = await setupEditor(content);
+    // Unchanged, no empty paragraph hint.
     expect(getContent(el)).toBe(content);
+});
+
+test("should display hint in paragraph with strong (bold)", async () => {
+    const { el } = await setupEditor(
+        `<p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`
+    );
+    // hint should be visible
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`
+    );
+});
+
+test("should display hint in paragraph with em (italic)", async () => {
+    const { el } = await setupEditor(`<p><em data-oe-zws-empty-inline="">[]\u200B</em></p>`);
+    // hint should be visible
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><em data-oe-zws-empty-inline="">[]\u200B</em></p>`
+    );
+});
+
+test("should display hint in paragraph with u (underline)", async () => {
+    const { el } = await setupEditor(`<p><u data-oe-zws-empty-inline="">[]\u200B</u></p>`);
+    // hint should be visible
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u></p>`
+    );
+});
+
+test("should display hint in paragraph with s (strikethrough)", async () => {
+    const { el } = await setupEditor(`<p><s data-oe-zws-empty-inline="">[]\u200B</s></p>`);
+    // hint should be visible
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><s data-oe-zws-empty-inline="">[]\u200B</s></p>`
+    );
 });
 
 test("should not lose track of temporary hints on split block", async () => {
@@ -175,5 +221,27 @@ test("hint for list containing a nested list", async () => {
     const { el } = await setupEditor("<ul><li><p>[]<br></p><ul><li>abc</li></ul></li></ul>");
     expect(getContent(el)).toBe(
         `<ul><li><p o-we-hint-text="List" class="o-we-hint">[]<br></p><ul><li>abc</li></ul></li></ul>`
+    );
+});
+
+test("should debounce hint on selection change", async () => {
+    const { el, editor } = await setupEditor(
+        "<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>",
+        {
+            config: { debounceHints: true },
+        }
+    );
+    expect(getContent(el)).toBe(`<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    expect(getContent(el)).toBe(`<p><br></p><p>[]<br></p><p><br></p><p><br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p>[]<br></p><p><br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p><br></p><p>[]<br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await animationFrame();
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(getContent(el)).toBe(
+        `<p><br></p><p><br></p><p><br></p><p><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });

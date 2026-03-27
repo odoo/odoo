@@ -11,6 +11,7 @@ import {
     queryOne,
     waitFor,
     waitForNone,
+    setInputRange,
 } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
@@ -20,7 +21,6 @@ import {
 } from "./website_helpers";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { testImg } from "./image_test_helpers";
-import { delay } from "@web/core/utils/concurrency";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
@@ -50,14 +50,18 @@ test("Double click on image and replace it", async () => {
             public: true,
         },
     ]);
-    await setupWebsiteBuilder(`<div><img class=a_nice_img src='${dummyBase64Img}'></div>`);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<div><img class=a_nice_img src='${dummyBase64Img}'></div>`
+    );
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe img.a_nice_img");
     await animationFrame();
     expect(".modal-content:contains(Select a media) .o_upload_media_button").toHaveCount(1);
     expect("div.o-tooltip").toHaveCount(0);
     await contains(".o_select_media_dialog .o_button_area[aria-label='logo']").click();
+    await waitSidebarUpdated();
     await waitForNone(".o_select_media_dialog");
+    expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe img").toHaveClass("o_modified_image_to_save");
     expect(".options-container[data-container-title='Image']").toHaveCount(1);
 });
@@ -240,14 +244,14 @@ test("pasted/dropped images are converted to attachments on snippet save", async
 
 describe("Image format/optimize", () => {
     test("Should format an image to be 800px", async () => {
-        const { getEditor } = await setupWebsiteBuilder(`
+        const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
-
+        await waitSidebarUpdated();
         await contains("[data-label='Format'] .dropdown").click();
         await waitFor('[data-action-id="setImageFormat"]');
         queryAll(`[data-action-id="setImageFormat"]`)
@@ -265,7 +269,7 @@ describe("Image format/optimize", () => {
         expect(queryFirst("[data-label='Format'] .dropdown").textContent).toMatch(/800px/);
     });
     test("should set the quality of an image to 50", async () => {
-        const { getEditor } = await setupWebsiteBuilder(`
+        const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
@@ -274,13 +278,8 @@ describe("Image format/optimize", () => {
 
         const img = await waitFor(":iframe .test-options-target img");
         await contains(":iframe .test-options-target img").click();
-
-        const input = await waitFor('[data-action-id="setImageQuality"] input');
-        input.value = 50;
-        input.dispatchEvent(new Event("input"));
-        await delay();
-        input.dispatchEvent(new Event("change"));
-        await delay();
+        await waitSidebarUpdated();
+        await setInputRange(`[data-action-id="setImageQuality"] input`, 50);
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -312,5 +311,5 @@ test("Save image with correct parameter", async () => {
             >
         </div>`);
     await contains(".o-snippets-top-actions button:contains(Save)").click();
-    expect.verifySteps(["modify_image"]);
+    await expect.waitForSteps(["modify_image"]);
 });

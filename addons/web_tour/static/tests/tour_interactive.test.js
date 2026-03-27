@@ -1,7 +1,17 @@
 /** @odoo-module **/
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { click, hover, leave, queryFirst, waitFor, press, Deferred, edit } from "@odoo/hoot-dom";
+import {
+    click,
+    hover,
+    leave,
+    queryFirst,
+    waitFor,
+    press,
+    Deferred,
+    edit,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, disableAnimations, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
@@ -13,7 +23,6 @@ import {
     models,
     fields,
     defineModels,
-    preloadBundle,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -22,8 +31,6 @@ import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
-
-preloadBundle("web_tour.interactive");
 
 class Partner extends models.Model {
     _name = "partner";
@@ -49,7 +56,7 @@ defineModels([Partner, Product]);
 
 class Counter extends Component {
     static props = ["*"];
-    static template = xml/*html*/ `
+    static template = xml /*html*/ `
         <div class="counter">
             <div class="interval">
                 <input type="number" t-model.number="state.interval" />
@@ -134,7 +141,7 @@ test("next step with new anchor at same position", async () => {
     class Dummy extends Component {
         static props = ["*"];
         state = useState({ bool: true });
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
             <button class="bar w-100" t-if="!state.bool">Bar</button>
         `;
@@ -142,7 +149,7 @@ test("next step with new anchor at same position", async () => {
     class Root extends Component {
         static props = ["*"];
         static components = { Dummy };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <Dummy />
             </t>
@@ -183,7 +190,7 @@ test("pointer is added on top of overlay's stack", async () => {
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [
             { trigger: ".modal .a", run: "click" },
-            { trigger: ".btn-primary", run: "click" },
+            { trigger: ".modal .btn-close", run: "click" },
         ],
     });
     class DummyDialog extends Component {
@@ -217,7 +224,7 @@ test("pointer is added on top of overlay's stack", async () => {
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
 
-    await click(".btn-primary");
+    await click(".modal .btn-close");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });
@@ -226,7 +233,7 @@ test("registering test tour after service is started doesn't auto-start the tour
     patchWithCleanup(session, { tour_enabled: true });
     class Root extends Component {
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
                 <t>
                     <Counter />
                 </t>
@@ -266,7 +273,7 @@ test("hovering to the anchor element should show the content and not when conten
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <Counter />
                 <button class="other">Pogačar</button>
@@ -318,7 +325,7 @@ test("should show only 1 pointer at a time", async () => {
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <Counter />
             </t>
@@ -353,7 +360,7 @@ test("perform edit on next step", async () => {
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <Counter />
             </t>
@@ -388,7 +395,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
                 <Counter />
                 <div class="bottom-filler" style="height: 300px" />
@@ -457,7 +464,7 @@ test("scroller pointer to reach next step", async () => {
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
                 <button class="test">Test me</button>
                 <div class="top-filler" style="height: 500px" />
@@ -512,7 +519,7 @@ test("scroller pointer to reach next step (X axis)", async () => {
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <div class="scrollable-parent d-flex flex-row" style="overflow-x: scroll; width: 300px;">
                 <button class="test">Test me</button>
                 <div class="left-filler" style="min-width: 500px" />
@@ -594,7 +601,7 @@ test("manual tour with inactive steps", async () => {
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <Counter />
             </t>
@@ -640,7 +647,7 @@ test("manual tour with alternative trigger", async () => {
     });
     class Root extends Component {
         static components = {};
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <div class="container">
                     <button class="button0">0, hello</button>
@@ -713,7 +720,7 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [
             { trigger: "button.foo", run: "click" },
-            { trigger: "button.bar" },
+            { trigger: "button.foo" },
             { trigger: "button.bar", run: "click" },
         ],
     });
@@ -750,7 +757,7 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
     await contains("button.bar").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
-    expect.verifySteps(["Step 'button.bar' ignored.", "Step 'button.bar' ignored."]);
+    expect.verifySteps(["Step 'button.foo' ignored.", "Step 'button.foo' ignored."]);
 });
 
 test("Tour started by the URL", async () => {
@@ -847,7 +854,7 @@ test("check tooltip position", async () => {
     });
     class Root extends Component {
         static components = {};
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <div class="container">
                     <div class="p-3"><button class="button0">Button 0</button></div>
@@ -919,7 +926,7 @@ test("check rainbowManMessage", async () => {
     });
     class Root extends Component {
         static components = {};
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <div class="container">
                     <div class="p-3"><button class="button0">Button 0</button></div>
@@ -955,7 +962,7 @@ test("check alternative trigger that appear after the initial trigger", async ()
     });
     class Root extends Component {
         static components = {};
-        static template = xml/*html*/ `
+        static template = xml /*html*/ `
             <t>
                 <div class="container">
                     <div class="p-3"><button class="button0">Button 0</button></div>
@@ -1194,4 +1201,80 @@ test("Don't backward when action manager is busy", async () => {
     await contains("button.bar").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("pointer hidden when trigger is behind overlay", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+
+    class DummyDialog extends Component {
+        static props = ["*"];
+        static components = { Dialog };
+        static template = xml`
+            <Dialog>
+                <button class="a">A</button>
+            </Dialog>
+        `;
+    }
+
+    class Dummy extends Component {
+        static props = ["*"];
+        static components = {};
+        static template = xml`
+            <button class="foo w-100">Foo</button>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    getService("dialog").add(DummyDialog, {});
+    await waitFor(".modal");
+    await waitForNone(".o_tour_pointer");
+    await contains(".modal .btn-close").click();
+    await waitFor(".o_tour_pointer");
+    // Finalize the dummy tour to avoid leaving in a dirty state
+    await contains("button.foo").click();
+});
+
+test("pointer in active element", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.a", run: "click" },
+        ],
+    });
+
+    class DummyDialog extends Component {
+        static props = ["*"];
+        static components = { Dialog };
+        static template = xml`
+            <Dialog>
+                <button class="a">A</button>
+            </Dialog>
+        `;
+    }
+
+    class Dummy extends Component {
+        static props = ["*"];
+        static components = {};
+        static template = xml`
+            <button class="foo w-100" t-on-click="this.click">Foo</button>
+        `;
+
+        click() {
+            getService("dialog").add(DummyDialog, {});
+        }
+    }
+
+    await mountWithCleanup(Dummy);
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    await contains(".foo").click();
+    await waitFor(".modal");
+    await waitFor(".o_tour_pointer");
+    await contains(".modal .a").click();
+    await waitForNone(".o_tour_pointer");
 });

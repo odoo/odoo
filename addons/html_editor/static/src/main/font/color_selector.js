@@ -25,12 +25,14 @@ export class ColorSelector extends Component {
         getTargetedElements: Function,
         colorPrefix: { type: String },
         enabledTabs: { type: Array, optional: true },
-        themeColorPrefix: { type: String, optional: true },
+        cssVarColorPrefix: { type: String, optional: true },
         onClose: Function,
+        useDefaultThemeColors: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        themeColorPrefix: "",
+        cssVarColorPrefix: "",
         enabledTabs: ["solid", "gradient", "custom"],
+        useDefaultThemeColors: true,
     };
 
     setup() {
@@ -48,7 +50,8 @@ export class ColorSelector extends Component {
         effect(
             (selectedColors) => {
                 this.state.selectedColor = selectedColors[this.props.mode];
-                this.state.defaultTab = this.getCorrespondingColorTab(
+                this.state.defaultTab = "solid";
+                this.state.selectedTab = this.getCorrespondingColorTab(
                     selectedColors[this.props.mode]
                 );
                 this.state.getTargetedElements = this.props.getTargetedElements;
@@ -68,7 +71,8 @@ export class ColorSelector extends Component {
                 getUsedCustomColors: this.props.getUsedCustomColors,
                 colorPrefix: this.props.colorPrefix,
                 enabledTabs: this.props.enabledTabs,
-                themeColorPrefix: this.props.themeColorPrefix,
+                cssVarColorPrefix: this.props.cssVarColorPrefix,
+                useDefaultThemeColors: this.props.useDefaultThemeColors,
             },
             {
                 env: this.__owl__.childEnv,

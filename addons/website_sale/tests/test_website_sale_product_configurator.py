@@ -146,6 +146,28 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         self.assertTrue(show_configurator)
 
+    def test_optional_products_not_visible_on_other_websites(self):
+        """Optional products assigned to a different website should not be shown"""
+        second_website = self.env['website'].create({'name': 'second website'})
+        optional_product = self.env['product.template'].create({
+            'name': "Optional product",
+            'website_published': True,
+            'website_id': second_website.id
+        })
+
+        main_product = self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'optional_product_ids': [Command.set(optional_product.ids)],
+        })
+
+        with MockRequest(self.env, website=self.website):
+            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
+                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+            )
+
+        self.assertFalse(show_configurator)
+
     def test_product_configurator_single_variant(self):
         """ Test that the product configurator isn't shown if the product has a single variant. """
         attribute = self.env['product.attribute'].create({
@@ -410,3 +432,57 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             }),
         ]
         self.start_tour('/shop', 'website_sale_product_configurator_strikethrough_price')
+
+    def test_get_product_combination_multi_attribute_with_archived_variant_and_inactive_ptav(self):
+        """
+        This test covers a case where a product has multiple attributes and one
+        of the attribute values corresponds to an archived variant, with its
+        ptav_active set to False.
+
+        In this scenario, a valid combination should still be possible, and the
+        resulting combination product must not be the archived variant.
+        """
+        attribute_single = self.env['product.attribute'].create({
+            'name': "attribute single",
+            'value_ids': [
+                Command.create({
+                    'name': "single",
+                }),
+            ],
+        })
+        attribute_multi = self.env['product.attribute'].create({
+            'name': "attribute multi",
+            'value_ids': [
+                Command.create({'name': "first"}),
+                Command.create({'name': "second"}),
+                Command.create({'name': "third"}),
+            ],
+        })
+        main_product = self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute_single.id,
+                    'value_ids': [Command.set(attribute_single.value_ids.ids)],
+                }),
+                Command.create({
+                    'attribute_id': attribute_multi.id,
+                    'value_ids': [Command.set(attribute_multi.value_ids.ids)],
+                }),
+            ],
+        })
+        main_product.product_variant_ids.filtered(
+            lambda product: product.product_template_attribute_value_ids[1].name == 'first',
+        ).action_archive()
+        main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
+        with MockRequest(self.env, website=self.website):
+            product_values = self.pc_controller._prepare_product_values(
+                main_product,
+                self.env['product.public.category'],
+                attribute_values=str(attribute_single.value_ids.id),
+            )
+        is_combination_possible = product_values['combination_info']['is_combination_possible']
+        combination_product_id = product_values['combination_info']['product_id']
+        self.assertTrue(is_combination_possible)
+        self.assertTrue(self.env['product.product'].browse(combination_product_id).active)

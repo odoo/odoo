@@ -89,7 +89,7 @@ class BaseCommon(TransactionCase):
 
     @classmethod
     def get_default_groups(cls):
-        return cls.env['res.users']._default_groups()
+        return cls.env.ref('base.group_user')
 
     @classmethod
     def setup_main_company(cls, currency_code='USD'):
@@ -256,7 +256,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
                     'name': 'Austin Kennedy', # Tom Ruiz
                 })],
             }, {
-                'name': 'Pepper Street', # 'Deco Addict',
+                'name': 'Pepper Street',  # 'Acme Corporation',
                 'state_id': cls.env.ref('base.state_us_2').id,
                 'child_ids': [Command.create({
                     'name': 'Liam King', # 'Douglas Fletcher',

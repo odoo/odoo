@@ -28,5 +28,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_IN_CY_19_G',
                 'expense_account_id': 'cy_5100',
                 'income_account_id': 'cy_4000',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'cy_1020',
+            },
+        }
+
+    @template('cy', 'account.account')
+    def _get_cy_account_account(self):
+        return {
+            'cy_1020': {
+                'account_stock_variation_id': 'cy_5000',
             },
         }

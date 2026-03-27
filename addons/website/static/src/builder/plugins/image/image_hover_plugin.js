@@ -3,11 +3,18 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
+/**
+ * @typedef { Object } ImageHoverShared
+ * @property { ImageHoverPlugin['setHoverEffect'] } setHoverEffect
+ * @property { ImageHoverPlugin['removeHoverEffect'] } removeHoverEffect
+ */
+
 export class ImageHoverPlugin extends Plugin {
     static id = "imageHover";
     static shared = ["setHoverEffect", "removeHoverEffect"];
     static dependencies = ["imagePostProcess", "imageToolOption"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetHoverEffectAction,
@@ -132,6 +139,8 @@ export class ImageHoverPlugin extends Plugin {
                 }
             }
         },
+        remove_hover_effect_handlers: this.removeHoverEffect.bind(this),
+        set_hover_effect_handlers: this.setHoverEffect.bind(this),
     };
 
     defaultHoverEffectIntensity = 20;

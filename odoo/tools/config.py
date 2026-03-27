@@ -234,6 +234,8 @@ class configmanager:
                          help="install demo data in new databases")
         group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', nargs='?', const=True,
                          help="don't install demo data in new databases (default)")
+        group.add_option("--skip-auto-install", dest="skip_auto_install", action="store_true", my_default=False,
+                         help="skip the automatic installation of modules marked as auto_install")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='', file_loadable=False,
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
@@ -282,7 +284,7 @@ class configmanager:
                          help="Launch a python test file.")
         group.add_option("--test-enable", dest='test_enable', action="store_true", file_loadable=False,
                          help="Enable unit tests. Implies --stop-after-init")
-        group.add_option("--test-tags", dest="test_tags", file_loadable=False,
+        group.add_option("-t", "--test-tags", dest="test_tags", file_loadable=False,
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
                          "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "

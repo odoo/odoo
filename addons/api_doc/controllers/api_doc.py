@@ -15,9 +15,10 @@ from werkzeug.exceptions import NotFound
 from werkzeug.http import is_resource_modified, parse_cache_control_header
 
 import odoo
-from odoo import http
+from odoo import http, models
+from odoo.api import Self
 from odoo.exceptions import AccessError
-from odoo.http import request
+from odoo.http import content_disposition, request
 from odoo.modules.module_graph import ModuleGraph
 from odoo.service.model import get_public_method
 from odoo.tools import hmac, json_default, lazy_classproperty, py_to_js_locale
@@ -42,11 +43,11 @@ class DocController(http.Controller):
         res.headers['X-Frame-Options'] = 'deny'
         return res
 
-    @http.route('/doc-bearer/index.json', type='http', auth='bearer')
+    @http.route('/doc-bearer/index.json', type='json2', auth='bearer')
     def doc_bearer_index(self):
         return self.doc_index()
 
-    @http.route('/doc/index.json', type='http', auth='user')
+    @http.route('/doc/index.json', type='json2', auth='user')
     def doc_index(self):
         """
         Get a listing of all modules, models, methods and fields. But
@@ -77,6 +78,18 @@ class DocController(http.Controller):
                 "This page is only accessible to %s users.",
                 self.env.ref('api_doc.group_allow_doc').sudo().name))
 
+        # Client requested no cache, generate the document and send it.
+        if parse_cache_control_header(request.httprequest.headers.get('Cache-Control')).no_cache:
+            modules, models = self._doc_index()
+            return request.make_json_response(
+                {'modules': modules, 'models': models},
+                headers={
+                    'Cache-Control': 'no-store',
+                    'Content-Disposition': content_disposition('odoo-doc-index.json'),
+                    'Content-Language': py_to_js_locale(self.env.lang),
+                },
+            )
+
         # Cache key
         db_registry_sequence, _ = self.env.registry.get_sequences(self.env.cr)
         unique = hmac(
@@ -90,19 +103,14 @@ class DocController(http.Controller):
         )
 
         # Client cache
-        use_cache = not parse_cache_control_header(
-            request.httprequest.headers.get('Cache-Control')).no_cache
-        if use_cache and not is_resource_modified(request.httprequest.environ, etag=unique):
+        if not is_resource_modified(request.httprequest.environ, etag=unique):
             return request.make_response('', status=HTTPStatus.NOT_MODIFIED)
 
-        # Server cache, use an attachment and not ormcache because the
-        # index gets very large (>1MiB) when there are many modules
-        # installed.
-        # TODO: gzip
+        # Server cache, use an attachment because the index gets very
+        # large (>1MiB) when there are many modules installed.
         filename = f'odoo-doc-index-{db_registry_sequence}-{unique}.json'
         index_attach = self.env['ir.attachment'].sudo().search([('name', '=', filename)], limit=1)
         if not index_attach:
-            # No cache, generate the index and save it.
             modules, models = self._doc_index()
             index_attach = index_attach.create({
                 'name': filename,
@@ -117,7 +125,7 @@ class DocController(http.Controller):
                     {'modules': modules, 'models': models},
                     ensure_ascii=False,
                     default=json_default,
-                ),
+                ).encode(),
                 'public': False,
             })
             logger.info("new index attachment: %s", filename)
@@ -136,6 +144,7 @@ class DocController(http.Controller):
                     field.name: {'string': field.field_description}
                     for field in ir_model.field_id
                     # sorted(ir_model.field_id, key=partial(sort_key_field, modules, Model))
+                    if field.name in Model._fields  # band-aid, see task 5172546
                     if Model._has_field_access(Model._fields[field.name], 'read')
                 },
                 'methods': [
@@ -146,15 +155,16 @@ class DocController(http.Controller):
                 # sorted(..., key=partial(sort_key_method, modules, type(Model))),
             }
             for ir_model in self.env['ir.model'].sudo().search([])
+            if ir_model.model in self.env
             if (Model := self.env[ir_model.model]).has_access('read')
         ]
         return modules, models
 
-    @http.route('/doc-bearer/<model_name>.json', type='http', auth='bearer', readonly=True)
+    @http.route('/doc-bearer/<model_name>.json', type='json2', auth='bearer', readonly=True)
     def doc_bearer_modec(self, model_name):
         return self.doc_model(model_name)
 
-    @http.route('/doc/<model_name>.json', type='http', auth='user', readonly=True)
+    @http.route('/doc/<model_name>.json', type='json2', auth='user', readonly=True)
     def doc_model(self, model_name):
         """
         Get a complete listing of all the methods and fields for a
@@ -362,8 +372,11 @@ def parse_signature(method) -> Signature:
         break
 
     # replace BaseModel and such by list[int], see /json/2
-    return_type = str(isign.return_annotation).strip("'\"").rpartition('.')[2]
-    if return_type in ('Self', 'BaseModel', 'Model'):
+    if isign.return_annotation in (
+        Self, 'Self',
+        models.BaseModel, 'models.BaseModel',
+        models.Model, 'models.Model'
+    ):
         isign = isign.replace(return_annotation='list[int]')
 
     # parse the signature
@@ -395,7 +408,7 @@ def enhance_signature_using_docstring(signature, method):
 
     # extract the ":param [annotation] <name>: text" and alike fields
     # from the docstring
-    field_lists = [node for node in doctree if node.tagname == 'field_list']
+    field_lists = [node for node in doctree if node.tagname in ('docinfo', 'field_list')]
     for field_list in field_lists:
         for field in field_list:
             field_name, field_body = field.children
@@ -410,25 +423,25 @@ def enhance_signature_using_docstring(signature, method):
                     if param := signature.parameters.get(name.strip()):
                         if not param.annotation:
                             param.annotation = annotation.strip()
-                        param.doc = _DocUtils.html_firstchild(field_body)
+                        param.doc = _DocUtils.html_children(field_body)
                 # :param <name>: <rst>
                 case ('param', name):
                     if param := signature.parameters.get(name):
-                        param.doc = _DocUtils.html_firstchild(field_body)
+                        param.doc = _DocUtils.html_children(field_body)
                 # :type <name>: <annotation>
                 case ('type', name):
                     if (param := signature.parameters.get(name)) and not param.annotation:
                         param.annotations = field_body.children[0].astext().strip()
                 # :returns: <rst>
                 case ('returns', ''):
-                    signature.return_.doc = _DocUtils.html_firstchild(field_body)
+                    signature.return_.doc = _DocUtils.html_children(field_body)
                 # :rtype: <annotation>
                 case ('rtype', ''):
                     if not signature.return_.annotation:
                         signature.return_.annotation = field_body.children[0].astext().strip()
                 # :raises <exception>: <rst>
                 case ('raises', exception):
-                    signature.raise_[exception] = _DocUtils.html_firstchild(field_body)
+                    signature.raise_[exception] = _DocUtils.html_children(field_body)
                 case _:
                     logger.warning(RST_PARSE_ERROR.format(docstring, f"cannot parse {field_name[0]}"))
         doctree.remove(field_list)
@@ -470,6 +483,8 @@ def stringify_annotation(annotation) -> str | None:
         return None
     if isinstance(annotation, str):
         return annotation
+    if hasattr(annotation, '__origin__'):
+        return str(annotation)
     if isinstance(annotation, type):
         return annotation.__name__
     return str(annotation)
@@ -561,7 +576,7 @@ class Param:
             # ignore the default value when it is not json serializable
             try:
                 json.dumps(self.default)
-            except ValueError:
+            except (ValueError, TypeError):
                 d.pop('default')
         return d
 
@@ -644,7 +659,8 @@ class _DocUtils:
         return html.partition(head)[2].removesuffix(tail).strip().decode()
 
     @classmethod
-    def html_firstchild(cls, tree):
-        if not tree.children:
-            return ''
-        return cls.html(tree.children[0])
+    def html_children(cls, tree):
+        return "".join(
+            cls.html(child)
+            for child in tree.children
+        )

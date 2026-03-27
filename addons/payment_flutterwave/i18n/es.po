@@ -3,13 +3,15 @@
 # * payment_flutterwave
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2025-09-17 17:21+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 09:51+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "payment_flutterwave/es/>\n"
 "Language: es\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -25,7 +27,8 @@ msgstr ""
 msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
-msgstr "Ocurrió un error al procesar su pago (estado %s). Inténtelo de nuevo."
+msgstr ""
+"Se ha producido un error al procesar tu pago (estado %s). Inténtalo de nuevo."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -33,10 +36,11 @@ msgid "Code"
 msgstr "Código"
 
 #. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "No se ha podido establecer la conexión con el API."
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields.selection,name:payment_flutterwave.selection__payment_provider__code__flutterwave
@@ -64,11 +68,11 @@ msgid "Flutterwave Webhook Secret"
 msgstr "Secreto de webhook de Flutterwave"
 
 #. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr ""
-"No se ha encontrado ninguna transacción que coincida con la referencia %s."
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_provider
@@ -91,25 +95,9 @@ msgid "Public Key"
 msgstr "Clave pública"
 
 #. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "Datos recibidos sin referencia."
-
-#. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Secret Key"
 msgstr "Clave secreta"
-
-#. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_provider.py:0
-msgid ""
-"The communication with the API failed. Flutterwave gave us the following "
-"information: '%s'"
-msgstr ""
-"Falló la comunicación con la API. Flutterwave nos dio la siguiente "
-"información: '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
@@ -129,12 +117,6 @@ msgstr "El código técnico de este proveedor de pagos."
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "La transacción no está vinculada a un token."
-
-#. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "Unknown payment status: %s"
 msgstr "Estado de pago desconocido: %s"
 
@@ -142,3 +124,23 @@ msgstr "Estado de pago desconocido: %s"
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
 msgstr "Secreto de webhook"
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "No se ha podido establecer la conexión con el API."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr ""
+#~ "No se ha encontrado ninguna transacción que coincida con la referencia %s."
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "Datos recibidos sin referencia."
+
+#~ msgid ""
+#~ "The communication with the API failed. Flutterwave gave us the following "
+#~ "information: '%s'"
+#~ msgstr ""
+#~ "Falló la comunicación con la API. Flutterwave nos dio la siguiente "
+#~ "información: '%s'"
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "La transacción no está vinculada a un token."

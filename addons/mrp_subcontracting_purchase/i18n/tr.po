@@ -3,13 +3,16 @@
 # * mrp_subcontracting_purchase
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-17 17:26+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "mrp_subcontracting_purchase/tr/>\n"
 "Language: tr\n"
@@ -18,6 +21,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_move.py:0
+msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
+msgstr ""
 
 #. module: mrp_subcontracting_purchase
 #. odoo-python
@@ -57,6 +66,28 @@ msgid "Days to Supply Components"
 msgstr "Bileşenlerin Tedarik Edileceği Günler"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_report_mrp_report_bom_structure__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_move__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_report_mrp_report_bom_structure__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_move__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__id
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_account_move_line
 msgid "Journal Item"
 msgstr "Yevmiye Kalemi"
@@ -78,9 +109,26 @@ msgid "Number of subcontracting Purchase Order Source"
 msgstr "Fason Satınalma Kaynak Sayısı"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_product_product
+msgid "Product Variant"
+msgstr "Ürün Varyantı"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "Production Start Date"
+msgstr "Üretim Başlangıç Tarihi"
+
+#. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_purchase_order
 msgid "Purchase Order"
 msgstr "Satınalma Siparişi"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+msgid "Receipt Date"
+msgstr "Teslim Alma Tarihi"
 
 #. module: mrp_subcontracting_purchase
 #. odoo-python
@@ -99,11 +147,6 @@ msgid "Stock Rule"
 msgstr "Stok Kuralı"
 
 #. module: mrp_subcontracting_purchase
-#: model:ir.model,name:mrp_subcontracting_purchase.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "Stok Değerleme Katmanı"
-
-#. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_stock_picking
 msgid "Transfer"
 msgstr "Aktarım"
@@ -113,3 +156,6 @@ msgstr "Aktarım"
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
 msgid "Vendor Lead Time"
 msgstr "Tedarikçi Teslim Süresi"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Stok Değerleme Katmanı"

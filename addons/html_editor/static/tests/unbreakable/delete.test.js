@@ -449,13 +449,15 @@ describe("forward", () => {
 
 describe("list", () => {
     describe("selection collapsed", () => {
-        test("should not outdent while nested within a list item if the list is unbreakable", async () => {
+        test("should not outdent while nested within a list item if the list is unbreakable (1)", async () => {
             // Only one LI.
             await testEditor({
                 contentBefore: '<p>abc</p><ol class="oe_unbreakable"><li>[]def</li></ol>',
                 stepFunction: deleteBackward,
                 contentAfter: '<p>abc</p><ol class="oe_unbreakable"><li>[]def</li></ol>',
             });
+        });
+        test("should not outdent while nested within a list item if the list is unbreakable (2)", async () => {
             // First LI.
             await testEditor({
                 contentBefore:
@@ -464,6 +466,8 @@ describe("list", () => {
                 contentAfter:
                     '<ol class="oe_unbreakable"><li><div><div>[]abc</div></div></li><li>def</li></ol>',
             });
+        });
+        test("should not outdent while nested within a list item if the list is unbreakable (3)", async () => {
             // In the middle.
             await testEditor({
                 contentBefore:
@@ -472,6 +476,8 @@ describe("list", () => {
                 contentAfter:
                     '<ol class="oe_unbreakable"><li><div>abc</div></li><li><div><div>[]def</div></div></li><li>ghi</li></ol>',
             });
+        });
+        test("should not outdent while nested within a list item if the list is unbreakable (4)", async () => {
             // Last LI.
             await testEditor({
                 contentBefore:
@@ -480,6 +486,8 @@ describe("list", () => {
                 contentAfter:
                     '<ol class="oe_unbreakable"><li>abc</li><li><div><div>[]def</div></div></li></ol>',
             });
+        });
+        test("should not outdent while nested within a list item if the list is unbreakable (5)", async () => {
             // With a div before the list:
             await testEditor({
                 contentBefore:

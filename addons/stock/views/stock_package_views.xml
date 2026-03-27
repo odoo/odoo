@@ -103,7 +103,7 @@
                 </header>
                 <field name="name" string="Package"/>
                 <field name="package_type_id"/>
-                <field name="json_popover" widget="popover_widget" string=" " invisible="not json_popover" width="20px"/>
+                <field name="json_popover" widget="popover_widget" nolabel="1" invisible="not json_popover" width="18px"/>
                 <field name="location_dest_id" options="{'no_create': True}"/>
                 <field name="parent_package_id" string="Origin Container" readonly="1"/>
                 <field name="package_dest_id" domain="[('id', '!=', id), '|', '|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', parent_package_id), ('location_dest_id', '=', location_dest_id)]"/>

@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 
 class CardWidthOptionPlugin extends Plugin {
     static id = "cardWidthOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetCardWidthAction,

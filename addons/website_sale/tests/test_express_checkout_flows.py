@@ -512,3 +512,24 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             self.assertFalse(
                 self.sale_order.partner_shipping_id.name.endswith(self.sale_order.name)
             )
+
+    def test_express_checkout_compute_taxes_returns_amount_without_delivery(self):
+        """
+        Test that the /express_checkout/compute_taxes route returns the minor amount
+        without delivery costs.
+        """
+        websiteSaleDeliveryController = WebsiteSaleDeliveryController()
+
+        delivery_product = self.env['product.product'].create({'name': 'Delivery'})
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Normal Delivery Charges',
+            'fixed_price': 10,
+            'delivery_type': 'fixed',
+            'product_id': delivery_product.id,
+        })
+        self.sale_order._create_delivery_line(delivery, 10)
+        expected_amount = self.sale_order._compute_amount_total_without_delivery()
+
+        with MockRequest(self.env, website=self.website, sale_order_id=self.sale_order.id):
+            minor_amount = websiteSaleDeliveryController.express_checkout_shipping_address_compute_taxes()
+            self.assertEqual(minor_amount, expected_amount * 100)

@@ -1,10 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
-import { after, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { addOption, addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
@@ -20,10 +19,7 @@ test("do not update builder if in preview mode", async () => {
             },
         };
     }
-    registry.category("website-plugins").add(pluginId, P);
-    after(() => {
-        registry.category("website-plugins").remove(P);
-    });
+    addPlugin(P);
     addOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton id="'id1'" action="'customAction'">b1</BuilderButton>

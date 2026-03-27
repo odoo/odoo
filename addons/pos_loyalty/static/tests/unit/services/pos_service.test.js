@@ -2,6 +2,7 @@ import { test, describe, expect } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 definePosModels();
 
@@ -44,9 +45,9 @@ describe("PosStore - loyalty essentials", () => {
     });
 
     test("activateCode", async () => {
+        onRpc("loyalty.card", "get_loyalty_card_partner_by_code", () => false);
         const store = await setupPosEnv();
         store.addNewOrder();
-
         const result = await store.activateCode("EXPIRED");
 
         expect(result).toBe(true);
@@ -63,33 +64,5 @@ describe("PosStore - loyalty essentials", () => {
         const card = await store.fetchLoyaltyCard(program.id, partner.id);
 
         expect(card.id).toBe(2);
-    });
-
-    test("preSyncAllOrders", async () => {
-        const store = await setupPosEnv();
-        const models = store.models;
-
-        const coupon = models["loyalty.card"].create({
-            id: -5,
-            code: "X",
-            program_id: 1,
-            points: 0,
-        });
-        const rewardProduct = models["product.product"].get(1);
-
-        const fakeOrderData = {
-            lines: [
-                {
-                    uuid: "uuid-1",
-                    coupon_id: coupon,
-                    _reward_product_id: rewardProduct,
-                },
-            ],
-        };
-
-        await store.preSyncAllOrders([fakeOrderData]);
-
-        expect(store.couponByLineUuidCache["uuid-1"]).toBe(coupon.id);
-        expect(store.rewardProductByLineUuidCache["uuid-1"]).toBe(rewardProduct.id);
     });
 });

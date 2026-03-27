@@ -3,6 +3,7 @@ import logging
 import time
 
 from odoo.fields import Domain
+from odoo.modules.loading import force_demo
 from odoo.tools import make_index_name, SQL
 from odoo.tools.translate import TranslationImporter
 from odoo.tests import standalone
@@ -32,12 +33,26 @@ def test_all_l10n(env):
 
 
     # Ensure the presence of demo data, to see if they can be correctly installed
-    assert env.ref('base.module_account').demo, "Need the demo to test with data"
+    if not env.ref('base.module_account').demo:
+        force_demo(env)
 
-    # Install the requiriments
+    # Install prerequisite modules
+    _logger.info('Installing prerequisite modules')
+    pre_mods = env['ir.module.module'].search([
+        ('name', 'in', (
+            'stock_account',
+            'mrp_accountant',
+        )),
+        ('state', '=', 'uninstalled'),
+    ])
+    pre_mods.button_immediate_install()
+
+    # Install the requirements
     _logger.info('Installing all l10n modules')
     l10n_mods = env['ir.module.module'].search([
+        '|',
         ('name', '=like', 'l10n_%'),
+        ('name', '=like', 'test_l10n_%'),
         ('state', '=', 'uninstalled'),
     ])
     with patch.object(AccountChartTemplate, 'try_loading', try_loading_patch),\

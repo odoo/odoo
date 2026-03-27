@@ -20,7 +20,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Check b2b Tax-Excluded Prices",
-        trigger: ".product_price .oe_price .oe_currency_value:contains(/^79.00$/)",
+        trigger: ".product_price .oe_price .oe_currency_value:text(79.00)",
     },
     {
         content: "Click on add to cart",
@@ -74,6 +74,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         run: "click",
         expectUnloadPage: true,
     },
+    tourUtils.waitForInteractionToLoad(),
     {
         content: "Billing address is not same as delivery address",
         trigger: '#use_delivery_as_billing',
@@ -287,7 +288,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Check b2c Tax-Included Prices",
-        trigger: ".product_price .oe_price .oe_currency_value:contains(/^90.85$/)",
+        trigger: ".product_price .oe_price .oe_currency_value:text(90.85)",
     },
     {
         content: "Click on add to cart",

@@ -29,7 +29,10 @@ export class PartnerList extends Component {
         this.modalRef = useChildRef();
         this.modalContent = null;
         this.state = useState({
-            initialPartners: this.pos.models["res.partner"].getAll(),
+            initialPartners: this.pos.models["res.partner"].filter((p) => {
+                const par = p.property_account_receivable_id;
+                return !par || par.non_trade !== true;
+            }),
             loadedPartners: [],
             query: "",
             loading: false,
@@ -94,7 +97,7 @@ export class PartnerList extends Component {
     }
 
     goToOrders(partner) {
-        this.props.close();
+        this.clickPartner(this.props.partner);
         const partnerHasActiveOrders = this.pos
             .getOpenOrders()
             .some((order) => order.partner?.id === partner.id);
@@ -123,10 +126,19 @@ export class PartnerList extends Component {
         const numberString = searchWord.replace(/[+\s()-]/g, "");
         const isSearchWordNumber = /^[0-9]+$/.test(numberString);
 
+        const patternBase = isSearchWordNumber ? numberString : searchWord;
+        // Build a RegExp that mimics SQL ILIKE behavior:
+        // 1) Escape all RegExp metacharacters so user input is treated literally
+        //    (e.g. '.', '+', '[', ']' should not change regex meaning or cause errors)
+        // 2) Replace SQL wildcard '%' with RegExp wildcard '.*'
+        const regex = new RegExp(
+            patternBase
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // escape regex special characters
+                .replace(/%/g, ".*") // convert SQL wildcard to regex wildcard
+        );
+
         const availablePartners = searchWord
-            ? partners.filter((p) =>
-                  normalize(p.searchString).includes(isSearchWordNumber ? numberString : searchWord)
-              )
+            ? partners.filter((p) => regex.test(normalize(p.searchString)))
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>

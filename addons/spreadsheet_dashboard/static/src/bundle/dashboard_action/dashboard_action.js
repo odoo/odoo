@@ -5,14 +5,16 @@ import { Status } from "./dashboard_loader_service";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { useSetupAction } from "@web/search/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
+import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 
-import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { Component, onWillStart, useState, useEffect, useExternalListener } from "@odoo/owl";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 
 export const dashboardActionRegistry = new Registry();
@@ -24,6 +26,7 @@ export class SpreadsheetDashboardAction extends Component {
         ControlPanel,
         SpreadsheetComponent,
         DashboardMobileSearchPanel,
+        MobileFigureContainer,
         SpreadsheetShareButton,
         DashboardSearchBar,
     };
@@ -66,6 +69,8 @@ export class SpreadsheetDashboardAction extends Component {
                 return [dashboard?.model, dashboard?.status];
             }
         );
+        useExternalListener(window, "afterprint", this.logExport.bind(this));
+
         useSetupAction({
             getLocalState: () => ({
                 dashboardLoader: this.loader.getState(),
@@ -74,6 +79,7 @@ export class SpreadsheetDashboardAction extends Component {
         useSpreadsheetPrint(() => this.loader.getActiveDashboard()?.model);
         /** @type {{ sidebarExpanded: boolean}} */
         this.state = useState({ sidebarExpanded: true });
+        this.searchBarToggler = useSearchBarToggler();
     }
 
     get dashboardButton() {
@@ -84,7 +90,9 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {number | undefined}
      */
     get activeDashboardId() {
-        return this.loader.getActiveDashboard() ? this.loader.getActiveDashboard().data.id : undefined;
+        return this.loader.getActiveDashboard()
+            ? this.loader.getActiveDashboard().data.id
+            : undefined;
     }
 
     /**
@@ -111,8 +119,9 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {number | undefined}
      */
     getInitialActiveDashboard() {
-        if (this.props.state && this.props.state.activeDashboardId) {
-            return this.props.state.activeDashboardId;
+        const activeDashboardId = this.props.state?.dashboardLoader?.activeDashboardId;
+        if (activeDashboardId) {
+            return activeDashboardId;
         }
         const params = this.props.action.params;
         if (params && params.dashboard_id) {
@@ -178,6 +187,14 @@ export class SpreadsheetDashboardAction extends Component {
                 group.id !== "favorites" && // Skip the FAVORITES group
                 group.dashboards.some(({ data }) => data.id === this.activeDashboardId)
         )?.name;
+    }
+
+    logExport() {
+        const dashboard = this.state.activeDashboard;
+        if (!dashboard || dashboard.status !== Status.Loaded) {
+            return;
+        }
+        dashboard.model.dispatch("LOG_DATASOURCE_EXPORT", { action: "print" });
     }
 }
 

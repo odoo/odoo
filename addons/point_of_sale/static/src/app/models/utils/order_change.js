@@ -39,6 +39,13 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
     let changesCount = 0;
     let changeAbsCount = 0;
 
+    const hasPreparationCategory = (product) => {
+        if (!product) {
+            return false;
+        }
+        return product.parentPosCategIds.some((id) => prepaCategoryIds.has(id));
+    };
+
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
     for (const orderline of order.getOrderlines()) {
@@ -46,14 +53,14 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
         const note = orderline.getNote();
         const customerNote = orderline.getCustomerNote();
         const lineKey = orderline.uuid;
-        const baseProduct = orderline.combo_parent_id
-            ? orderline.combo_parent_id.product_id
-            : product;
-        const productCategoryIds = baseProduct.parentPosCategIds.filter((id) =>
-            prepaCategoryIds.has(id)
-        );
 
-        if (productCategoryIds.length > 0) {
+        const hasPrepaCategory =
+            hasPreparationCategory(product) ||
+            hasPreparationCategory(orderline.combo_parent_id?.product_id) ||
+            orderline.combo_line_ids?.some((line) => hasPreparationCategory(line.getProduct())) ||
+            false;
+
+        if (hasPrepaCategory) {
             const key = Object.keys(order.last_order_preparation_change.lines).find((k) =>
                 k.startsWith(orderline.uuid)
             ); // find old data but note changed
@@ -72,7 +79,8 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 uuid: orderline.uuid,
                 name: orderline.getFullProductName(),
                 basic_name: orderline.product_id.name,
-                isCombo: orderline.combo_item_id?.id,
+                isCombo: Boolean(orderline?.combo_line_ids?.length),
+                combo_parent_uuid: orderline?.combo_parent_id?.uuid,
                 product_id: product.id,
                 attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
@@ -126,7 +134,8 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     name: lineResume["name"],
                     basic_name: lineResume["basic_name"],
                     display_name: lineResume["display_name"],
-                    isCombo: lineResume["isCombo"],
+                    isCombo: Boolean(lineResume["isCombo"]),
+                    combo_parent_uuid: lineResume["combo_parent_uuid"],
                     note: lineResume["note"],
                     customer_note: lineResume["customer_note"],
                     attribute_value_names: lineResume["attribute_value_names"],

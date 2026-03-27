@@ -25,7 +25,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.tools import email_domain_extract, is_html_empty, frozendict, reset_cached_properties, SQL
+from odoo.tools import email_domain_extract, is_html_empty, frozendict, reset_cached_properties, str2bool, SQL
 
 
 _logger = logging.getLogger(__name__)
@@ -268,7 +268,7 @@ class ResUsers(models.Model):
     def _default_view_group_hierarchy(self):
         return self.env['res.groups']._get_view_group_hierarchy()
 
-    view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, default=_default_view_group_hierarchy)
+    view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, copy=False, default=_default_view_group_hierarchy)
     role = fields.Selection([('group_user', 'User'), ('group_system', 'Administrator')], compute='_compute_role', readonly=False, string="Role")
 
     _login_key = models.Constraint("UNIQUE (login)",
@@ -454,7 +454,7 @@ class ResUsers(models.Model):
     @api.depends('name')
     def _compute_signature(self):
         for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
-            user.signature = Markup('<p>%s</p>') % user['name']
+            user.signature = Markup('<div>%s</div>') % user['name']
 
     @api.depends('all_group_ids')
     def _compute_share(self):
@@ -647,6 +647,7 @@ class ResUsers(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_except_master_data(self):
         portal_user_template = self.env.ref('base.template_portal_user_id', False)
+        public_user = self.env.ref('base.public_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
@@ -655,6 +656,8 @@ class ResUsers(models.Model):
         self.env.registry.clear_cache()
         if portal_user_template and portal_user_template in self:
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
+        if public_user and public_user in self:
+            raise UserError(_("Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."))
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
@@ -1356,9 +1359,10 @@ class UsersMultiCompany(models.Model):
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
             for user in users:
-                if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+                company_count = len(user.sudo().company_ids)
+                if company_count <= 1 and group_multi_company_id in user.group_ids.ids:
                     user.write({'group_ids': [Command.unlink(group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+                elif company_count > 1 and group_multi_company_id not in user.group_ids.ids:
                     user.write({'group_ids': [Command.link(group_multi_company_id)]})
         return users
 
@@ -1370,9 +1374,10 @@ class UsersMultiCompany(models.Model):
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
             for user in self:
-                if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+                company_count = len(user.sudo().company_ids)
+                if company_count <= 1 and group_multi_company_id in user.group_ids.ids:
                     user.write({'group_ids': [Command.unlink(group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+                elif company_count > 1 and group_multi_company_id not in user.group_ids.ids:
                     user.write({'group_ids': [Command.link(group_multi_company_id)]})
         return res
 
@@ -1384,9 +1389,10 @@ class UsersMultiCompany(models.Model):
         group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
-            if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+            company_count = len(user.sudo().company_ids)
+            if company_count <= 1 and group_multi_company_id in user.group_ids.ids:
                 user.update({'group_ids': [Command.unlink(group_multi_company_id)]})
-            elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+            elif company_count > 1 and group_multi_company_id not in user.group_ids.ids:
                 user.update({'group_ids': [Command.link(group_multi_company_id)]})
         return user
 
@@ -1507,6 +1513,7 @@ KEY_CRYPT_CONTEXT = CryptContext(
     # attacks on API keys isn't much of a concern
     ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
 )
+DEFAULT_PROGRAMMATIC_API_KEYS_LIMIT = 10  # programmatic API key creation is refused if the user already has at least this amount of API keys
 
 
 class ResUsersApikeys(models.Model):
@@ -1560,6 +1567,7 @@ class ResUsersApikeys(models.Model):
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
                self.mapped('scope'), self.env.user.login, self.env.uid, ip)
             self.sudo().unlink()
+            self.env.registry.clear_cache()
             return {'type': 'ir.actions.act_window_close'}
         raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
 
@@ -1621,6 +1629,89 @@ class ResUsersApikeys(models.Model):
             self._description, scope, self.env.user.login, self.env.uid, ip)
 
         return k
+
+    def _ensure_can_manage_keys_programmatically(self):
+        # Administrators would not be restricted by the ICP check alone,
+        # as they could temporarily enable the setting via set_param().
+        # However, this is considered bad practice because it would create a time window
+        # where anyone could manage API keys programmatically.
+        # Additionally, the enable / call / restore process involves three distinct calls,
+        # which is not atomic and prone to errors (e.g., server unavailability during restore),
+        # potentially leaving the configuration enabled for all users.
+        # To avoid this, an exception is made for Administrators.
+        # However, if programmatic API key management were to be enabled by default,
+        # this exception should be removed, as disabling the feature should be global.
+        ICP = self.env['ir.config_parameter'].sudo()
+        programmatic_api_keys_enabled = str2bool(ICP.get_param('base.enable_programmatic_api_keys'), False)
+        if not (self.env.is_system() or programmatic_api_keys_enabled):
+            raise UserError(_("Programmatic API keys are not enabled"))
+
+    @api.model
+    def generate(self, key, scope, name, expiration_date):
+        """
+        Generate a new API key with an existing API key.
+        The provided `key` must be an existing API key that belongs to the current user.
+        Its scope must be compatible with `scope`.
+        The `expiration_date` must be allowed for the user's group.
+
+        To renew a key, generate the new one, store it, and then call `revoke` on the previous one.
+        """
+        self._ensure_can_manage_keys_programmatically()
+
+        with self.env['res.users']._assert_can_auth(user=key[:INDEX_SIZE]):
+            if not isinstance(expiration_date, datetime.datetime):
+                expiration_date = fields.Datetime.from_string(expiration_date)
+
+            nb_keys = self.search_count([('user_id', '=', self.env.uid),
+                                         '|', ('expiration_date', '=', False), ('expiration_date', '>=', self.env.cr.now())])
+            try:
+                ICP = self.env['ir.config_parameter'].sudo()
+                nb_keys_limit = int(ICP.get_param('base.programmatic_api_keys_limit', DEFAULT_PROGRAMMATIC_API_KEYS_LIMIT))
+            except ValueError:
+                _logger.warning("Invalid value for 'base.programmatic_api_keys_limit', using default value.")
+                nb_keys_limit = DEFAULT_PROGRAMMATIC_API_KEYS_LIMIT
+            if nb_keys >= nb_keys_limit:
+                raise UserError(_('Limit of %s API keys is reached for programmatic creation', nb_keys_limit))
+
+            # Scope compatibility rules:
+            # - A global key can generate credentials for any scope (including global).
+            # - A scoped key can only generate credentials for its own scope.
+            #
+            # This is enforced in _check_credentials by validating scope usage,
+            # and the validated scope is then reused when calling _generate.
+
+            uid = self.env['res.users.apikeys']._check_credentials(scope=scope or 'rpc', key=key)
+            if not uid or uid != self.env.uid:
+                raise AccessDenied(_("The provided API key is invalid or does not belong to the current user."))
+            new_key = self._generate(scope, name, expiration_date)
+            _logger.info("%s %r generated from %r", self._description, new_key[:INDEX_SIZE], key[:INDEX_SIZE])
+
+            return new_key
+
+    @api.model
+    def revoke(self, key):
+        """
+        Revoke an existing API key.
+        If it exists, the `key` will be removed from the server.
+        """
+        self._ensure_can_manage_keys_programmatically()
+        assert key, "key required"
+        with self.env['res.users']._assert_can_auth(user=key[:INDEX_SIZE]):
+            self.env.cr.execute(SQL('''
+                SELECT id, key
+                FROM %(table)s
+                WHERE
+                    index = %(index)s
+                    AND (
+                        expiration_date IS NULL OR
+                        expiration_date >= now() at time zone 'utc'
+                    )
+            ''', table=SQL.identifier(self._table), index=key[:INDEX_SIZE]))
+            for key_id, current_key in self.env.cr.fetchall():
+                if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
+                    self.env['res.users.apikeys'].browse(key_id)._remove()
+                    return True
+            raise AccessDenied(_("The provided API key is invalid."))
 
     @api.autovacuum
     def _gc_user_apikeys(self):

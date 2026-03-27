@@ -6,7 +6,7 @@ from functools import partial
 
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form
 
 
@@ -306,3 +306,9 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             user_env['res.company'].browse(company_b.id).write({
                 'currency_id': self.env.ref('base.EUR').id,
             })
+
+    def test_set_fiscalyear_last_day_to_negative_value(self):
+        """Test that ensure that fiscalyear_last_day raises ValidationError when set
+           to negative value."""
+        with self.assertRaises(ValidationError):
+            self.root_company.fiscalyear_last_day = -1

@@ -492,6 +492,13 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertFalse(ct1_1.vat)
         self.assertEqual(inv_1.street, 'Invoice Child Street', 'Should take parent address')
         self.assertFalse(inv_1.vat)
+        # test it also works with default_parent_id value in context
+        # also ensure it works directly on a non-empty recordset
+        inv_2 = (ct1_1 | inv_1).with_context(default_parent_id=inv.id).create({
+            'name': 'Address, Child of Invoice',
+        })
+        self.assertEqual(inv_2.street, 'Invoice Child Street', 'Should take parent address')
+        self.assertFalse(inv_2.vat)
 
         # sync P1 with parent, check address is update + other fields in write kept
         ct1_phone = '+320455999999'
@@ -1105,8 +1112,7 @@ class TestPartnerForm(TransactionCase):
     def test_lang_computation_form_view(self):
         """ Check computation of lang: coming from installed languages, forced
         default value and propagation from parent."""
-        default_lang_info = self.env['res.lang'].get_installed()[0]
-        default_lang_code = default_lang_info[0]
+        default_lang_code = self.env['ir.default']._get('res.partner', 'lang') or False
         self.assertNotEqual(default_lang_code, 'de_DE')  # should not be the case, just to ease test
         self.assertNotEqual(default_lang_code, 'fr_FR')  # should not be the case, just to ease test
 

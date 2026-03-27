@@ -122,12 +122,14 @@
 
     <!-- Complete page of the sale_order -->
     <template id="sale_order_portal_template" name="Sales Order" inherit_id="portal.portal_sidebar" primary="True">
-        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+        <t t-call="portal.portal_layout" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
                 <!-- Uses backend_url provided in rendering values -->
                 <t t-call="portal.portal_back_in_edit_mode"/>
             </t>
+        </t>
 
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div
                 class="row o_portal_sale_sidebar"
                 t-att-data-order-amount-total="sale_order.amount_total"
@@ -136,7 +138,7 @@
                 <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
                     <t t-set="title">
-                        <t t-if="sale_order.state in 'draft,sent' and sale_order.prepayment_percent != 1.0">
+                        <t t-if="sale_order._has_to_be_paid() and sale_order.prepayment_percent != 1.0">
                             <h4>Down payment</h4>
                             <h2>
                                 <t
@@ -146,7 +148,10 @@
                                         'display_currency': sale_order.currency_id,
                                     }"
                                 />
-                                (<t t-out="sale_order.prepayment_percent * 100"/>%)
+                                (<t
+                                    t-out="sale_order.prepayment_percent * 100"
+                                    t-options="{'widget': 'float'}"
+                                />%)
                             </h2>
                         </t>
                         <h2 t-else="" t-field="sale_order.amount_total" class="mb-0 text-break"/>
@@ -469,7 +474,10 @@
                                 class="fw-bold"
                             />
                             <t t-if="sale_order._get_prepayment_required_amount() == amount">
-                                (<b t-esc="sale_order.prepayment_percent * 100"/>%),
+                                (<b
+                                    t-esc="sale_order.prepayment_percent * 100"
+                                    t-options="{'widget': 'float'}"
+                                />%),
                             </t>
                         </span>
                         <span id="o_sale_portal_use_amount_total">By paying,</span>
@@ -608,7 +616,7 @@
                                 <th class="ps-0 pb-0">Your Reference:</th>
                                 <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.client_order_ref"/></td>
                             </tr>
-                            <tr t-if="sale_order.commitment_date">
+                            <tr t-if="sale_order.commitment_date and sale_order.state in ['sent', 'sale']">
                                 <th class="ps-0 pb-0">Delivery Date:</th>
                                 <td class="w-100 pb-0 text-wrap">
                                     <span
@@ -765,6 +773,7 @@
                                 </t>
 
                                 <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                                <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
 
                                 <t t-if="not line.collapse_composition">
                                     <tr
@@ -772,7 +781,6 @@
                                         name="tr_section"
                                         t-att-class="'fw-bolder o_line_section' if is_section else 'fw-bold o_line_subsection'"
                                     >
-                                        <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
                                         <t
                                             t-set="section_name_colspan"
                                             t-value="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
@@ -780,10 +788,26 @@
                                         <t t-if="not show_section_total">
                                             <t t-set="section_name_colspan" t-value="99"/>
                                         </t>
+                                        <!-- Some columns (e.g. Discount and Unit Price)
+                                        are not displayed on smaller viewports -->
+                                        <td
+                                            name="td_section_name_xs"
+                                            t-att-colspan="section_name_colspan - 1 - (1 if display_discount else 0) - (1 if display_taxes else 0)"
+                                            t-attf-class="d-sm-none {{padding_class}}"
+                                        >
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td
+                                            name="td_section_name_sm"
+                                            t-att-colspan="section_name_colspan - (1 if display_taxes else 0)"
+                                            t-attf-class="d-none d-sm-table-cell d-md-none {{padding_class}}"
+                                        >
+                                            <span t-field="line.name"/>
+                                        </td>
                                         <td
                                             name="td_section_name"
                                             t-att-colspan="section_name_colspan"
-                                            t-att-class="padding_class"
+                                            t-attf-class="d-none d-md-table-cell {{padding_class}}"
                                         >
                                             <span t-field="line.name"/>
                                         </td>
@@ -922,17 +946,18 @@
                                         <td name="td_section_group_quantity" class="text-end text-nowrap">
                                             <span>1.00 Units</span>
                                         </td>
-                                        <td name="td_section_group_priceunit" class="text-end text-nowrap">
+                                        <td name="td_section_group_priceunit" class="d-none d-sm-table-cell text-end text-nowrap">
                                             <span
+                                                t-if="show_section_total"
                                                 t-out="section_line['price_subtotal']"
                                                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
                                             />
                                         </td>
-                                        <td t-if="display_discount" name="td_section_group_discount"/>
+                                        <td t-if="display_discount" name="td_section_group_discount" class="d-none d-sm-table-cell"/>
                                         <td
                                             t-if="display_taxes"
                                             name="td_section_group_taxes"
-                                            t-attf-class="text-end {{ 'text-nowrap' if len(section_line['tax_labels']) &lt; 10 else '' }}"
+                                            t-attf-class="d-none d-md-table-cell text-end {{ 'text-nowrap' if len(section_line['tax_labels']) &lt; 10 else '' }}"
                                         >
                                             <span t-out="', '.join(section_line['tax_labels'])">
                                                 Tax 15%
@@ -940,6 +965,7 @@
                                         </td>
                                         <td name="td_section_group_total" class="text-end o_price_total">
                                             <span
+                                                t-if="show_section_total"
                                                 name="price_subtotal_section_grouped"
                                                 t-out="section_line[price_field]"
                                                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
@@ -990,6 +1016,11 @@
             <t t-call="#{sale_order._get_name_tax_totals_view()}">
                 <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
                 <t t-set="currency" t-value="sale_order.currency_id"/>
+                <!--
+                NOTE: This variable should not be used in templates before version 19.1, as it might
+                not be available in earlier versions if customer does not upgrade the `sale` module.
+                -->
+                <t t-set="doc" t-value="sale_order"/>
             </t>
         </table>
     </template>

@@ -8,6 +8,7 @@ export const addToCartValues = {
 
 export class AddToCartOption extends BaseOptionComponent {
     static template = "website_sale.AddToCartOption";
+    static selector = ".s_add_to_cart";
     static props = [];
     setup() {
         super.setup();

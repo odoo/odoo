@@ -3,13 +3,14 @@
 # * payment_asiapay
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-16 02:35+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-20 11:56+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "payment_asiapay/de/>\n"
 "Language: de\n"
@@ -17,19 +18,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 msgid ""
-"An error occurred during the processing of your payment (success code "
-"%(success_code)s; primary response code %(response_code)s). Please try "
-"again."
+"An error occurred during the processing of your payment (success code %"
+"(success_code)s; primary response code %(response_code)s). Please try again."
 msgstr ""
-"Während der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten ("
-"Erfolgscode %(success_code)s; primärer Antwortcode %(response_code)s). Bitte "
-"versuchen Sie es erneut."
+"Während der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten "
+"(Erfolgscode %(success_code)s; primärer Antwortcode %(response_code)s). "
+"Bitte versuchen Sie es erneut."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__code__asiapay
@@ -52,6 +52,12 @@ msgid "AsiaPay Secure Hash Secret"
 msgstr "Secure-Hash-Geheimnis von AsiaPay"
 
 #. module: payment_asiapay
+#. odoo-python
+#: code:addons/payment_asiapay/models/payment_provider.py:0
+msgid "AsiaPay does not support the following currencies: %(currencies)s."
+msgstr "AsiaPay unterstützt folgende Währungen nicht: %(currencies)s."
+
+#. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "Asiapay Brand"
 msgstr "Asiapay-Marke"
@@ -72,15 +78,21 @@ msgid "Code"
 msgstr "Code"
 
 #. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: payment_asiapay
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Merchant ID"
 msgstr "Händler-ID"
-
-#. module: payment_asiapay
-#. odoo-python
-#: code:addons/payment_asiapay/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Keine Transaktion gefunden, die der Referenz %s entspricht."
 
 #. module: payment_asiapay
 #. odoo-python
@@ -111,14 +123,8 @@ msgstr "PesoPay"
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
-msgid "Received data with missing reference %(ref)s."
-msgstr "Erhaltene Daten mit fehlender Referenz %(ref)s."
-
-#. module: payment_asiapay
-#. odoo-python
-#: code:addons/payment_asiapay/models/payment_transaction.py:0
 msgid "Received data with missing success code."
-msgstr "Erhaltene Daten mit fehlenden Erfolgscode."
+msgstr "Daten mit fehlendem Erfolgscode erhalten."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
@@ -176,3 +182,9 @@ msgstr "Der technische Code dieses Zahlungsanbieters."
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 msgid "Unknown success code: %s"
 msgstr "Unbekannter Erfolgscode: %s"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Keine Transaktion gefunden, die der Referenz %s entspricht."
+
+#~ msgid "Received data with missing reference %(ref)s."
+#~ msgstr "Erhaltene Daten mit fehlender Referenz %(ref)s."

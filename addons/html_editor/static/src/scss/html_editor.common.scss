@@ -148,8 +148,6 @@ ul.o_checklist {
     >li {
         list-style: none;
         position: relative;
-        margin-left: $o-checklist-margin-left;
-        margin-right: $o-checklist-margin-left;
 
         &:not(.oe-nested)::before {
             content: '';
@@ -493,65 +491,6 @@ a.o_underline {
     }
 }
 
-@include media-breakpoint-down(md) {
-    odoo-wysiwyg-container {
-        .btn-group {
-            position: static;
-        }
-    }
-    // modal select media
-    .o_technical_modal.o_web_editor_dialog {
-        // see template 'web_editor.FieldTextHtml.fullscreen'
-        z-index: $o-we-technical-modal-zindex;
-
-        > .o_select_media_dialog {
-            max-width: inherit !important;
-            z-index: $o-we-technical-modal-zindex;
-
-            .modal-dialog, .model-content {
-                height: 100%;
-            }
-
-            .modal-body {
-                .nav .nav-item.search {
-                    width: 100%;
-
-                    .btn-group {
-                        display: flex;
-                        justify-content: space-around;
-                        padding: 5px;
-                    }
-                }
-
-                // center pictogram
-                .font-icons-icons {
-                    text-align: center;
-                }
-
-                // fix search image
-                .form-control.o_we_search {
-                    height: inherit;
-                }
-
-                // attachment cells
-                .o_we_existing_attachments > .row {
-                    flex-direction: column;
-
-                    > .o_existing_attachment_cell {
-                        flex: initial;
-                        max-width: 100%;
-
-                        > .o_existing_attachment_remove {
-                            opacity: inherit;
-                            top: 10px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 // BS4 blockquote has no style anymore, except bloquote <footer>
 blockquote {
     padding: $spacer/2 $spacer;
@@ -628,6 +567,10 @@ pre {
                 }
             }
         }
+
+        .btn-close {
+            filter: unset;
+        }
     }
 }
 @for $index from 1 through length($o-color-combinations) {
@@ -697,7 +640,7 @@ pre {
             // Primary
             $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
             $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
-            $-btn-primary-outline-color: increase-contrast($-btn-primary-border-color, $-bg-color);
+            $-btn-primary-outline-color: if($-btn-primary, $-btn-primary-color, increase-contrast($-btn-primary-border-color, $-bg-color));
             .btn-fill-primary {
                 @include button-variant($-btn-primary-color, $-btn-primary-border-color);
             }
@@ -708,7 +651,7 @@ pre {
             // Secondary
             $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
             $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
-            $-btn-secondary-outline-color: increase-contrast($-btn-secondary-border-color, $-bg-color);
+            $-btn-secondary-outline-color: if($-btn-secondary, $-btn-secondary-color, increase-contrast($-btn-secondary-border-color, $-bg-color));
             .btn-fill-secondary {
                 @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
             }
@@ -735,6 +678,12 @@ pre {
                     border-color: $-btn-primary-color;
                 }
             }
+
+            .btn-close {
+                @if (lightness($-bg-color) < 50) {
+                    @include btn-close-white();
+                }
+            }
         }
     }
 }
@@ -748,49 +697,6 @@ pre {
     // element style. They must only be shown on hover for outline buttons.
     background-color: transparent !important;
     background-image: none !important;
-}
-
-// Base snippet rules
-%o-we-background-layer-parent {
-    &, & > * {
-        // Allow background layers to be placed accordingly and snippet content
-        // to be displayed on top. Note: we cannot just position the layers
-        // with z-index: -1, otherwise it would go under the snippet own
-        // background. Adding a z-index: 0 on the snippet to create its own
-        // stacking context won't solve that either as, in that case, any BS
-        // component inside would be using that stacking context (e.g. a
-        // dropdown inside snippet 1 of the page would go under snippet 2
-        // when opened since the dropdown z-index would be confined into
-        // snippet 1's stacking context.
-        position: relative;
-    }
-}
-%o-we-background-layer {
-    @include o-position-absolute(0, 0, 0, 0);
-    position: absolute !important;
-    display: block;
-    overflow: hidden;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    // For border with all 4 edges of equal value the max function is useless,
-    // but in case the border is uneven it approximates the correct roundness
-    // See BORDER_VARIABLES_RULES_EXTENSION
-    //
-    // --box-border-XXX-(radius|width) : editor Round Corners user input
-    // --box-border-(radius|width) : rounded-XXX classes
-    // --border-(radius|width) : theme (+ default bootstrap)
-    border-radius:
-        calc(var(--box-border-top-left-radius, 0px) - max(var(--box-border-top-width, 0px), var(--box-border-left-width, 0px)))
-        calc(var(--box-border-top-right-radius, 0px) - max(var(--box-border-top-width, 0px), var(--box-border-right-width, 0px)))
-        calc(var(--box-border-bottom-right-radius, 0px) - max(var(--box-border-bottom-width, 0px), var(--box-border-right-width, 0px)))
-        calc(var(--box-border-bottom-left-radius, 0px) - max(var(--box-border-bottom-width, 0px), var(--box-border-left-width, 0px)))
-}
-
-section, .oe_img_bg, [data-oe-shape-data] {
-    @extend %o-we-background-layer-parent;
-}
-.o_we_bg_filter {
-    @extend %o-we-background-layer;
 }
 
 .o_full_screen_height {
@@ -826,7 +732,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
     &.o_bg_img_opt_repeat {
         background-size: auto;
-        background-repeat: repeat;
+        background-repeat: repeat !important;
     }
     &.o_bg_img_center {
         background-position: center;
@@ -880,130 +786,6 @@ section, .oe_img_bg, [data-oe-shape-data] {
     u:not(font[style*="-webkit-text-fill-color"] u) {
         @extend %o-text-gradient-decoration;
         background-position: 0 95%;
-    }
-}
-
-/* QWEB */
-
-.odoo-editor-editable.odoo-editor-qweb, .o_readonly {
-    t,
-    [t-if],
-    [t-elif],
-    [t-else],
-    [t-foreach] {
-        background-color: rgba(0, 0, 102, 0.1) !important;
-    }
-    t,
-    [t-esc],
-    [t-out],
-    [t-raw] {
-        border-radius: 2px;
-    }
-    [t-esc],
-    [t-out],
-    [t-raw] {
-        background-color: rgba(36, 154, 255, 0.16) !important;
-    }
-    [t-esc]:empty::before {
-        content: attr(t-esc);
-    }
-    [t-raw]:empty::before {
-        content: attr(t-raw);
-    }
-    [t-out]:empty::before {
-        content: attr(t-out);
-    }
-    t[t-set] {
-        display: none;
-    }
-    t[data-oe-t-inline] {
-        display: inline;
-    }
-    t:not([data-oe-t-inline]) {
-        display: block;
-    }
-    t[data-oe-t-inline]:not([data-oe-t-group-active]) {
-        display: unset;
-    }
-    [data-oe-t-group]:not([data-oe-t-group-active]) {
-        display: none !important;
-    }
-    [data-oe-t-group][data-oe-t-selectable] {
-        outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
-    }
-}
-
-.oe-qweb-select {
-    position: absolute;
-    // Bootstrap sets .modal z-index at 1055.
-    // Ensure qweb-select is visible in modals.
-    z-index: 1056;
-    background-color: white;
-}
-
-// Background shapes
-@function compute-shape-url-params($colors, $color-to-cc-bg-map) {
-    $url-params: '';
-    @each $i in $colors {
-        $mapped-color: map-get($color-to-cc-bg-map, $i);
-        $color: encode-color(#{o-color($mapped-color)});
-        $url-params: '#{$url-params}&c#{$i}=#{$color}';
-    }
-    @return $url-params;
-}
-
-.o_we_shape {
-    @extend %o-we-background-layer;
-
-    &.o_we_animated {
-        will-change: transform;
-    }
-
-    // Default map to use to map shape file colors to color combination
-    // background colors.
-    $default-color-to-cc-bg-map: (
-        1: 4,
-        2: 3,
-        3: 2,
-        4: 1,
-        5: 5,
-    );
-    @each $module, $shapes in $o-bg-shapes {
-
-        // Compatibility
-        $current-module: $module;
-        @if $current-module == "web_editor" {
-            $current-module: "html_builder";
-        }
-
-        @each $shape, $style in $shapes {
-            $colors: map-get($style, 'colors');
-            $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, map-get($style, 'color-to-cc-bg-map') or ());
-            $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
-            $extra-mappings: map-get($style, 'extra-mappings') or ();
-
-            // eg: o_website_shape_bg_1
-            &.o_#{$module}_#{str-replace($shape, '/', '_')} {
-                // When the shape is not customized, this URL, built in SCSS,
-                // allows for the shape to respond to palette changes.
-                // Mainly useful for default pages built by the configurator.
-                background-image: url("/html_editor/shape/#{$current-module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
-                background-position: map-get($style, 'position');
-                background-size: map-get($style, 'size');
-                background-repeat:
-                    if(map-get($style, 'repeat-x'), repeat, no-repeat)
-                    if(map-get($style, 'repeat-y'), repeat, no-repeat);
-
-                @each $mapping-name, $mapping in $extra-mappings {
-                    $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, $mapping or ());
-                    $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
-
-                    &.o_#{$mapping-name}_extra_shape_mapping {
-                        background-image: url("/html_editor/shape/#{$current-module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
-                    }
-                }
-            }
-        }
     }
 }
 

@@ -14,6 +14,7 @@ patch(ProductScreen.prototype, {
         this.state.tableBuffer = "";
         this.state.isValidBuffer = true;
         this.doSubmitOrder = useTrackedAsync(() => this.pos.submitOrder());
+        this.doReprintOrder = useTrackedAsync(() => this.pos.reprintOrder());
         useBus(this.numberBuffer, "buffer-update", ({ detail: value }) => {
             this.checkIsValid(value);
         });

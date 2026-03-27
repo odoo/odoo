@@ -40,6 +40,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'transfer_account_id': 'a58',
                 'expense_account_id': 'a600',
                 'income_account_id': 'a7000',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'a300',
             },
         }
 
@@ -81,3 +83,12 @@ class AccountChartTemplate(models.AbstractModel):
                 (purchase_journal := self.ref('purchase', raise_if_not_found=False)) and \
                 (non_deductible_account := self.ref('a416', raise_if_not_found=False)):
             purchase_journal.non_deductible_account_id = non_deductible_account
+
+    @template('be', 'account.account')
+    def _get_be_account_account(self):
+        return {
+            'a300': {
+                'account_stock_expense_id': 'a600',
+                'account_stock_variation_id': 'a6090',
+            },
+        }

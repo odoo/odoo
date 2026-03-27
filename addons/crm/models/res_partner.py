@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 
 
 class ResPartner(models.Model):
@@ -12,26 +12,6 @@ class ResPartner(models.Model):
         groups='sales_team.group_sale_salesman',
         compute='_compute_opportunity_count',
     )
-
-    @api.model
-    def default_get(self, fields):
-        rec = super().default_get(fields)
-        active_model = self.env.context.get('active_model')
-        if active_model == 'crm.lead' and len(self.env.context.get('active_ids', [])) <= 1:
-            lead = self.env[active_model].browse(self.env.context.get('active_id')).exists()
-            if lead:
-                rec.update(
-                    phone=lead.phone,
-                    function=lead.function,
-                    website=lead.website,
-                    street=lead.street,
-                    street2=lead.street2,
-                    city=lead.city,
-                    state_id=lead.state_id.id,
-                    country_id=lead.country_id.id,
-                    zip=lead.zip,
-                )
-        return rec
 
     def _fetch_children_partners_for_hierarchy(self):
         # retrieve all children partners and prefetch 'parent_id' on them, saving

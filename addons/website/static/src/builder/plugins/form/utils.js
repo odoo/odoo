@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { escape } from "@web/core/utils/strings";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@html_builder/utils/utils_css";
 import { isSmallInteger } from "@html_builder/utils/utils";
@@ -122,11 +123,11 @@ export function renderField(field, resetId = false) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
-    const params = { field: { ...field } };
+    const params = { field: { ...field }, defaultName: escape(field.string || _t("Field")) };
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
     }
-    if (["boolean", "selection", "binary"].includes(field.type)) {
+    if (["boolean", "selection"].includes(field.type)) {
         params.field.isCheck = true;
     }
     if (field.type === "one2many" && field.relation !== "ir.attachment") {
@@ -155,6 +156,12 @@ export function renderField(field, resetId = false) {
     });
     template.content.querySelectorAll("[data-name]").forEach((el) => {
         el.dataset.name = getQuotesEncodedName(el.dataset.name);
+    });
+    // TODO remove this part in master and add offset classes in xml
+    template.content.querySelectorAll(".s_website_form_field").forEach((el) => {
+        if (field.formatInfo.offset) {
+            el.classList.add(field.formatInfo.offset);
+        }
     });
     return template.content.firstElementChild;
 }
@@ -212,6 +219,7 @@ export function getFieldFormat(fieldEl) {
         labelWidth: fieldEl.querySelector(".s_website_form_label").style.width,
         multiPosition: (multipleInputEl && multipleInputEl.dataset.display) || "horizontal",
         col: [...fieldEl.classList].filter((el) => el.match(/^col-/g)).join(" "),
+        offset: [...fieldEl.classList].filter((el) => el.match(/^offset-/g)).join(" "),
         requiredMark: requiredMark,
         optionalMark: optionalMark,
         mark: mark && mark.textContent,
@@ -265,7 +273,7 @@ export function setActiveProperties(fieldEl, field) {
     );
     const fileInputEl = fieldEl.querySelector("input[type=file]");
     const description = fieldEl.querySelector(".s_website_form_field_description");
-    field.placeholder = input && input.placeholder;
+    field.placeholder = input?.placeholder || "";
     if (input) {
         // textarea value has no attribute,  date/datetime timestamp property is formated
         field.value = input.getAttribute("value") || input.value;

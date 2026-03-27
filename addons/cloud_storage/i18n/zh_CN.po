@@ -3,13 +3,15 @@
 # * cloud_storage
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-16 15:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:25+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/cloud_storage/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -18,6 +20,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+#, fuzzy
+msgid "<span>MB</span>"
+msgstr "<span>MB</span>"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -34,11 +42,6 @@ msgstr "云端储存空间"
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
 msgstr "新附件的云存储提供商"
-
-#. module: cloud_storage
-#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-msgid "Cloud Storage Settings"
-msgstr "云存储设置"
 
 #. module: cloud_storage
 #. odoo-python
@@ -64,9 +67,40 @@ msgid "Config Settings"
 msgstr "配置设定"
 
 #. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_http__display_name
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid ""
+"Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
+msgstr ""
+
+#. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_http__id
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Minimum File Size"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size_mb
+msgid "Minimum File Size (MB)"
+msgstr ""
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
@@ -75,8 +109,8 @@ msgstr "最小文件大小（字节）"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
-msgstr "云存储中存储附件的最小大小（字节）"
+msgid "Minimum size for attachments to be stored in the cloud storage"
+msgstr ""
 
 #. module: cloud_storage
 #. odoo-python
@@ -111,9 +145,17 @@ msgstr "您可以从您的电脑上传一个文件或者复制/粘贴一个 Inte
 #: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid ""
 "webclient can upload files larger than the minimum file size\n"
-"        (in bytes) as url attachments to the server and then upload the file to\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
 "        the cloud storage."
 msgstr ""
 "网络客户端（webclient）可将超过档案大小限制（以字节为单位）的档案，\n"
 "        上传至服务器作为网址类型的附件，然后将档案上传至\n"
 "        云端储存空间。"
+
+#~ msgid "Cloud Storage Settings"
+#~ msgstr "云存储设置"
+
+#~ msgid ""
+#~ "Minimum size(bytes) for attachments to be stored in the cloud storage"
+#~ msgstr "云存储中存储附件的最小大小（字节）"

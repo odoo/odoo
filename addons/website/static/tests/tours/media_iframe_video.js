@@ -1,9 +1,12 @@
 import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour("website_media_iframe_video", {
+registerWebsitePreviewTour(
+    "website_media_iframe_video",
+    {
         url: "/",
         edition: true,
-    }, () => [
+    },
+    () => [
         ...insertSnippet({
             id: "s_text_image",
             name: "Text - Image",
@@ -34,6 +37,45 @@ registerWebsitePreviewTour("website_media_iframe_video", {
             content: "Click on video button",
             trigger: "a:contains('Videos')",
             run: "click",
+        },
+        {
+            content: "Enter text in video link input to enable add button",
+            trigger: "#o_video_text",
+            run: "edit https://youtu.be/nbso3NVz3p8",
+        },
+        {
+            content: "Wait for add button to be enabled",
+            trigger: ".modal-footer button:contains('Add'):not([disabled])",
+            run: () => {},
+        },
+        {
+            content: "Remove video link",
+            trigger: "#o_video_text",
+            run() {
+                const inputEl = this.anchor;
+                inputEl.value = "";
+                inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+            },
+        },
+        {
+            content: "Video input field should not be in valid state",
+            trigger: "#o_video_text:not(.is-valid)",
+            run: () => {},
+        },
+        {
+            content: "Check that the preview is not shown",
+            trigger: ".media_iframe_video:not(:has(iframe))",
+            run: () => {},
+        },
+        {
+            content: "Check that the add button is disabled in footer",
+            trigger: ".modal-footer",
+            run: function () {
+                const addButtonEl = this.anchor.querySelector(".btn.btn-primary");
+                if (!addButtonEl.disabled) {
+                    console.error("Add button is not disabled.");
+                }
+            },
         },
         {
             content: "Enter video link",

@@ -17,6 +17,7 @@ export class FontFamilyPicker extends BaseOptionComponent {
     static props = {
         action: String,
         actionParam: Object,
+        extraClass: { type: String, optional: true },
     };
     FONT_FAMILIES = FONT_FAMILIES;
 }

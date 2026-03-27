@@ -32,7 +32,8 @@ class SaleOrder(models.Model):
     show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     closed_task_count = fields.Integer(compute='_compute_tasks_ids', groups="project.group_project_user", export_string_translation=False)
     completed_task_percentage = fields.Float(compute="_compute_completed_task_percentage", groups="project.group_project_user", export_string_translation=False)
-    project_id = fields.Many2one('project.project', domain=[('allow_billable', '=', True), ('is_template', '=', False)], copy=False, help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
+    project_id = fields.Many2one('project.project', domain=[('allow_billable', '=', True), ('is_template', '=', False)], copy=False, index='btree_not_null',
+                                 help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
     project_account_id = fields.Many2one('account.analytic.account', related='project_id.account_id')
 
     def _compute_milestone_count(self):
@@ -114,18 +115,20 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
-        is_project_manager = self.env.user.has_group('project.group_project_manager')
         projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:
             projects_per_so[project.sale_order_id.id or project.reinvoiced_sale_order_id.id] |= project
         for order in self:
-            projects = order.order_line.mapped('product_id.project_id')
+            projects = order.order_line.filtered(
+                lambda sol:
+                    sol.is_service
+                    and not (sol._is_line_optional() and sol.product_uom_qty == 0)
+                ).mapped('product_id.project_id')
             projects |= order.project_id
             projects |= order.order_line.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
-            if not is_project_manager:
-                projects = projects._filtered_access('read')
+            projects = projects._filtered_access('read')
             order.project_ids = projects
             order.project_count = len(projects.filtered('active'))
 
@@ -269,7 +272,7 @@ class SaleOrder(models.Model):
         project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
         task = self.env['project.task'].browse(self.env.context.get('create_for_task_id'))
         if project or task:
-            service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
+            service_sol = next((sol for sol in created_records.order_line if sol.is_service), self.env['sale.order.line'])
             if project and not project.sale_line_id:
                 project.sale_line_id = service_sol
                 if not project.reinvoiced_sale_order_id:

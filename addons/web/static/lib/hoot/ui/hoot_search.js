@@ -339,7 +339,7 @@ export class HootSearch extends Component {
                     <input
                         type="search"
                         class="w-full rounded p-1 outline-none"
-                        autofocus="autofocus"
+                        t-att-autofocus="!config.manual"
                         placeholder="Filter suites, tests or tags"
                         t-ref="search-input"
                         t-att-class="{ 'text-gray': !config.filter }"

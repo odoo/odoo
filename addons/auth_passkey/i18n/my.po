@@ -3,13 +3,14 @@
 # * auth_passkey
 #
 # Oakarmin Iron <oakarminiron@gmail.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-09-23 02:31+0000\n"
-"Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:22+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/"
 "auth_passkey/my/>\n"
 "Language: my\n"
@@ -20,11 +21,21 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+
+#. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "<strong>Use your passkey to authenticate</strong>"
 msgstr ""
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Add Passkey"
 msgstr ""
@@ -43,12 +54,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_create_view_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_rename
 msgid "Cancel"
-msgstr ""
+msgstr "မလုပ်"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_create_view_form
 msgid "Create"
-msgstr ""
+msgstr "အသစ်ဖန်တီး"
 
 #. module: auth_passkey
 #. odoo-python
@@ -80,13 +91,7 @@ msgstr "ဖန်တီးသူ"
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__create_date
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid "Created:"
-msgstr ""
+msgstr "တည်ဆောက်သည့်အချိန်"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__credential_identifier
@@ -94,10 +99,9 @@ msgid "Credential Identifier"
 msgstr ""
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Delete"
-msgstr ""
+msgstr "ဖျက်"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__display_name
@@ -105,7 +109,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users__display_name
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users_identitycheck__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ပြသသော အမည်"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__id
@@ -113,7 +117,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users__id
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users_identitycheck__id
 msgid "ID"
-msgstr ""
+msgstr "နံပါတ်"
 
 #. module: auth_passkey
 #. odoo-python
@@ -133,11 +137,10 @@ msgstr "နောက်ဆုံးပြင်ဆင်သူ"
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__write_date
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "နောက်ဆုံးပြင်ဆင်ချိန်"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Last used:"
 msgstr ""
 
@@ -145,7 +148,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__name
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__name
 msgid "Name"
-msgstr ""
+msgstr "အမည်"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
@@ -165,13 +168,6 @@ msgid "Passkeys"
 msgstr ""
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid ""
-"Passkeys are a replacement for your username and password, offering a more "
-"secure way of logging in."
-msgstr ""
-
-#. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_res_users_identitycheck
 msgid "Password Check Wizard"
 msgstr ""
@@ -182,7 +178,7 @@ msgid "Public Key"
 msgstr ""
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Rename"
 msgstr ""
 
@@ -195,7 +191,7 @@ msgstr ""
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_rename
 msgid "Save"
-msgstr ""
+msgstr "သိမ်း"
 
 #. module: auth_passkey
 #. odoo-python
@@ -237,4 +233,4 @@ msgstr ""
 #. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_res_users
 msgid "User"
-msgstr ""
+msgstr "အသုံးပြုသူ"

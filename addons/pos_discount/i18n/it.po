@@ -6,21 +6,22 @@
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2025-09-14 21:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2025-10-16 17:04+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "pos_discount/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_discount
@@ -70,6 +71,7 @@ msgid "Discount Product"
 msgstr "Prodotto sconto"
 
 #. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
@@ -80,9 +82,10 @@ msgstr "Nome visualizzato"
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Error"
-msgstr ""
+msgstr "Errore"
 
 #. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__id
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
@@ -90,8 +93,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: pos_discount
+#: model:ir.model,name:pos_discount.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "No discount product found"
 msgstr "Nessun prodotto sconto trovato"
 
@@ -119,18 +127,19 @@ msgstr "Prodotto"
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount percentage when clicking on the Discount button"
-msgstr "Percentuale di sconto predefinita quando si fa clic sul pulsante Sconto"
+msgstr ""
+"Percentuale di sconto predefinita quando si fa clic sul pulsante Sconto"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be "
 "Sold' and 'Available in Point of Sale'."
 msgstr ""
 "Il prodotto sconto non sembra essere configurato correttamente. Controllare "
-"che sia contrassegnato come \"Può essere venduto\" e "
-"\"Disponibile nel punto vendita\"."
+"che sia contrassegnato come \"Può essere venduto\" e \"Disponibile nel punto "
+"vendita\"."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
@@ -141,7 +150,7 @@ msgstr "Prodotto utilizzato per applicare lo sconto sullo scontrino."
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "You cannot edit a discount line."
-msgstr ""
+msgstr "Non puoi modificare una riga di sconto."
 
 #~ msgid "Point of Sale Session"
 #~ msgstr "Sessione punto vendita"

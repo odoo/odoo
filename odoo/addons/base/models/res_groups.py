@@ -85,6 +85,10 @@ class ResGroups(models.Model):
         self.env.registry.clear_cache('groups')
         self.all_implied_by_ids._check_user_disjoint_groups()
 
+    @api.constrains('view_access')
+    def _check_inherited_view_groups(self):
+        self.view_access._check_groups()
+
     @api.constrains('user_ids')
     def _check_user_disjoint_groups(self):
         # Here we should check all the users in any group of 'self':
@@ -319,7 +323,7 @@ class ResGroups(models.Model):
         self.view_group_hierarchy = self._get_view_group_hierarchy()
 
     @api.model
-    @tools.ormcache(cache='groups')
+    @tools.ormcache('self.env.lang', cache='groups')
     def _get_view_group_hierarchy(self):
         return {
             'groups': {

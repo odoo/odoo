@@ -15,4 +15,7 @@ patch(PosStore.prototype, {
         }
         return french_countries.includes(this.company.country_id?.code);
     },
+    canEditPayment(order) {
+        return this.is_french_country() ? false : super.canEditPayment(order);
+    },
 });

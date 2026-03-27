@@ -23,7 +23,7 @@ export class SharedPopup extends Interaction {
                 // happens. Otherwise, the transition isn't visible.
                 this.updateContent();
             },
-            "t-on-shown.bs.modal": () => this.popupShown = true,
+            "t-on-shown.bs.modal": () => (this.popupShown = true),
             "t-on-hidden.bs.modal": this.onModalHidden,
             "t-att-class": () => ({ "d-none": !this.popupShown }),
         },
@@ -45,6 +45,4 @@ export class SharedPopup extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.shared_popup", SharedPopup);
+registry.category("public.interactions").add("website.shared_popup", SharedPopup);

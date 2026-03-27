@@ -305,3 +305,84 @@ class TestManualConsumption(TestMrpCommon):
         self.assertRecordValues(mo.move_raw_ids, [
             {"manual_consumption": True, "picked": True, "lot_ids": lots[1].ids},
         ])
+
+    def test_consumption_on_new_move_lines(self):
+        """
+        Test to ensure that from 'Details' wizard, when removing all the move_lines and then
+        adding new ones, the move is still properly consumed
+        """
+        bom = self.bom_4
+        component = bom.bom_line_ids.product_id
+        component.write({
+            "is_storable": True,
+            "tracking": "lot",
+        })
+
+        lot = self.env["stock.lot"].create({"name": "lot_1", "product_id": component.id})
+        self.env["stock.quant"]._update_available_quantity(component, self.stock_location, 5, lot_id=lot)
+
+        mo = self.env["mrp.production"].create({"bom_id": bom.id, "product_qty": 1})
+        mo.action_confirm()
+
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": False, "picked": False},
+        ])
+
+        with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as wiz_form:
+            wiz_form.move_line_ids.remove(0)
+            with wiz_form.move_line_ids.new() as line:
+                line.quantity = 2
+            wiz_form.save()
+
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": True, "picked": True},
+        ])
+
+    def test_manual_consumption_is_false_if_quantity_was_unchanged(self):
+        """
+        Check that a move's `manual_consumption` field is only set if the
+        quantity of the move line was modified.
+        """
+        product_lot = self.env['product.product'].create({
+            'name': 'Product Lot',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        lot_1, lot_2 = self.env['stock.lot'].create([{
+            'name': 'lot_1', 'product_id': product_lot.id,
+        }, {
+            'name': 'lot_2', 'product_id': product_lot.id,
+        }])
+        self.env['stock.quant']._update_available_quantity(product_lot, self.stock_location, 2, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(product_lot, self.stock_location, 2, lot_id=lot_2)
+
+        # Create an MO with one component from lot_1, quantity 2
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_qty': 2,
+            'move_raw_ids': [Command.create({
+                'product_id': product_lot.id,
+                'quantity': 2,
+                'move_line_ids': [Command.create({
+                    'product_id': product_lot.id,
+                    'lot_id': lot_1.id,
+                })],
+            })],
+        })
+
+        # Using the details form, change only the lot of the move line
+        action = mo.move_raw_ids.action_show_details()
+        details_form = Form(mo.move_raw_ids.with_context(action['context']), view=action['view_id'])
+        with details_form.move_line_ids.edit(0) as move_line:
+            move_line.lot_id = lot_2
+        move = details_form.save()
+        # Since quantity was unchanged, `manual_consumption` should not be set
+        self.assertFalse(move.manual_consumption)
+
+        # Use the form again, this time changing the lot and the quantity
+        with details_form.move_line_ids.edit(0) as move_line:
+            move_line.lot_id = lot_1
+            move_line.quantity = 1
+        move = details_form.save()
+        # Quantity was modified, so `manual_consumption` should be set
+        self.assertTrue(move.manual_consumption)

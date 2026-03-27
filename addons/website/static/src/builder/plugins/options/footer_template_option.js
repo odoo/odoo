@@ -3,11 +3,14 @@ import { useState } from "@odoo/owl";
 
 export class FooterTemplateOption extends BaseOptionComponent {
     static template = "website.FooterTemplateOption";
-    static props = { getTemplates: Function };
+    static dependencies = ["footerOption"];
+    static selector = "#wrapwrap > footer";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
 
     setup() {
         super.setup();
-        this.footerTemplates = useState(this.props.getTemplates());
+        this.footerTemplates = useState(this.dependencies.footerOption.getFooterTemplates());
     }
 }
 

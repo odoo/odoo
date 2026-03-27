@@ -209,7 +209,7 @@ class ProductTemplate(models.Model):
 
         special_products = config._get_special_products().filtered(
                     lambda product: not product.sudo().company_id
-                                    or product.sudo().company_id == self.company_id
+                                    or product.sudo().company_id == self.env.company
                 )
         products += special_products.product_tmpl_id
         if config.tip_product_id:
@@ -221,6 +221,10 @@ class ProductTemplate(models.Model):
         if products.filtered(lambda p: p.pos_optional_product_ids):
             products |= products.mapped("pos_optional_product_ids")
 
+        # Ensure products from loaded orders are loaded
+        if data.get('pos.order.line'):
+            products += self.env['product.product'].browse([l['product_id'] for l in data['pos.order.line']]).product_tmpl_id
+
         return self._load_pos_data_read(products, config)
 
     @api.model
@@ -230,7 +234,7 @@ class ProductTemplate(models.Model):
         return read_records
 
     def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=0):
-        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived, 'bin_size': True}
         domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
@@ -298,17 +302,26 @@ class ProductTemplate(models.Model):
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_special_product(self):
+        self._check_is_special_product()
+
     def _ensure_unused_in_pos(self):
-        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
-        used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
-        if used_products & self:
+        if any(self.mapped('available_in_pos')) and self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
             raise UserError(_(
                 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
                 "Make sure to close all sessions first to avoid any issues.",
             ))
 
+    def _check_is_special_product(self):
+        special_products = self.env['pos.config'].sudo()._get_special_products().product_tmpl_id
+        for product in self:
+            if product in special_products:
+                raise UserError(_("You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."))
+
     def action_archive(self):
         self._ensure_unused_in_pos()
+        self._check_is_special_product()
         return super().action_archive()
 
     @api.onchange('sale_ok')
@@ -341,7 +354,7 @@ class ProductTemplate(models.Model):
         while not tax_to_use and company:
             tax_to_use = self.taxes_id.filtered(lambda tax: tax.company_id.id == company.id)
             if not tax_to_use:
-                company = company.parent_id
+                company = company.sudo().parent_id
         taxes = tax_to_use.compute_all(price, config.currency_id, quantity, self)
         grouped_taxes = {}
         for tax in taxes['taxes']:

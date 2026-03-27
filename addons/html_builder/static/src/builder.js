@@ -26,6 +26,12 @@ import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
 
+/**
+ * @typedef {(() => void)[]} on_mobile_preview_clicked
+ * @typedef {(() => void)[]} trigger_dom_updated
+ * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
+ */
+
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
@@ -84,6 +90,7 @@ export class Builder extends Component {
 
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
+        /** @type {Editor} */
         this.editor = new Editor(
             {
                 Plugins: this.props.Plugins,
@@ -117,6 +124,7 @@ export class Builder extends Component {
                     await this.props.closeEditor?.();
                 },
                 installSnippetModule: (snippet) => this.props.installSnippetModule?.(snippet),
+                /** @type {import("plugins").BuilderResources} */
                 resources: {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
@@ -165,9 +173,6 @@ export class Builder extends Component {
                     }),
                     unsplittable_node_predicates: (/** @type {Node} */ node) =>
                         node.querySelector?.("[data-oe-translation-source-sha]"),
-                    can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
-
-                    // disable the toolbar for images and icons
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
@@ -180,7 +185,6 @@ export class Builder extends Component {
                         wrapWithSaveSnippetHandlers
                     ),
                 snippetModel: this.snippetModel,
-                getShared: () => this.editor.shared,
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
                 allowTargetBlank: true,
@@ -189,6 +193,7 @@ export class Builder extends Component {
                 baseContainers: ["P"],
                 cleanEmptyStructuralContainers: false,
                 isEditableRTL: false,
+                publicAttachments: true,
             },
             this.env.services
         );
@@ -260,7 +265,7 @@ export class Builder extends Component {
         const getStatePromises = [];
         const { promise: updatePromise, resolve } = Promise.withResolvers();
         this.editorBus.trigger("DOM_UPDATED", { getStatePromises, updatePromise });
-        await Promise.all(getStatePromises);
+        await Promise.allSettled(getStatePromises);
         const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
         resolve(isLastTriggerId);
     }
@@ -292,11 +297,11 @@ export class Builder extends Component {
         if (tab === "theme" || tab === "blocks") {
             this.colorPresetToShow = presetId;
             this.activeTargetEl = this.activeTargetEl || this.getActiveTarget();
-            this.editor.shared["builderOptions"].deactivateContainers();
+            this.editor.shared.builderOptions.deactivateContainers();
         } else if (this.activeTargetEl) {
             if (isVisible(this.activeTargetEl)) {
                 // Reactivate the previously active element.
-                this.editor.shared["builderOptions"].updateContainers(this.activeTargetEl);
+                this.editor.shared.builderOptions.updateContainers(this.activeTargetEl);
             }
             this.activeTargetEl = null;
         }
@@ -309,11 +314,11 @@ export class Builder extends Component {
     }
 
     undo() {
-        this.editor.shared.history.undo();
+        this.editor.shared.operation.next(() => this.editor.shared.history.undo());
     }
 
     redo() {
-        this.editor.shared.history.redo();
+        this.editor.shared.operation.next(() => this.editor.shared.history.redo());
     }
 
     onMobilePreviewClick() {

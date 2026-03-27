@@ -98,6 +98,7 @@ class StockLocation(models.Model):
         'check(cyclic_inventory_frequency >= 0)',
         'The inventory frequency (days) for a location must be non-negative',
     )
+    _parent_path_id_idx = models.Index("(parent_path, id)")
 
     @api.depends('name', 'location_id.complete_name', 'usage')
     @api.depends_context('formatted_display_name')
@@ -327,7 +328,9 @@ class StockLocation(models.Model):
                                              reverse=True)
 
         putaway_location = None
-        locations = self.child_internal_location_ids
+        locations = self.env.context.get("locations")
+        if not locations:
+            locations = self.child_internal_location_ids
         if putaway_rules:
             # get current product qty (qty in current quants and future qty on assigned ml) of all child locations
             qty_by_location = defaultdict(lambda: 0)

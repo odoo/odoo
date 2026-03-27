@@ -1,123 +1,38 @@
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
+import * as CustomerDisplay from "@point_of_sale/../tests/customer_display/customer_display_utils";
 import { registry } from "@web/core/registry";
-import { run } from "@point_of_sale/../tests/generic_helpers/utils";
-
-export function postMessage(message, description = "") {
-    return run(() => {
-        window.customerDisplayChannel.postMessage(
-            typeof message === "string" ? JSON.parse(message) : message
-        );
-    }, `send message to customer display: ${description},  with value: ${message}`);
-}
-
-export function amountIs(method, amount) {
-    return {
-        content: `Check that the ${method} amount is ${amount}`,
-        trigger: `div.row:has(div:contains('${method}')):has(div:contains('${amount}'))`,
-    };
-}
-const ADD_PRODUCT =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
-export const ADD_PRODUCT_SELECTED =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
-const PAY_WITH_CASH =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
-export const ORDER_IS_FINALIZED =
-    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":true,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
-export const NEW_ORDER =
-    '{"lines":[],"finalized":false,"amount":"0.00","paymentLines":[],"change":0,"onlinePaymentData":{}}';
-
-const QR_URL =
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
-
-const PAY_WITH_CARD = {
-    lines: [
-        {
-            productName: "Letter Tray",
-            price: "$ 2,972.75",
-            qty: "1.00",
-            unit: "Units",
-            unitPrice: "$ 2,972.75",
-            oldUnitPrice: "",
-            customerNote: "",
-            internalNote: "",
-            comboParent: "",
-            packLotLines: [],
-            price_without_discount: "$ 2,972.75",
-            isSelected: true,
-            imageSrc: "/web/image/product.product/855/image_128",
-        },
-    ],
-    finalized: false,
-    amount: "2,972.75",
-    paymentLines: [{ name: "CARD", amount: "2,972.75" }],
-    change: 0,
-    onlinePaymentData: {},
-    qrPaymentData: null,
-};
-
-const SEND_QR = {
-    lines: [
-        {
-            productName: "Letter Tray",
-            price: "$ 2,972.75",
-            qty: "1.00",
-            unit: "Units",
-            unitPrice: "$ 2,972.75",
-            oldUnitPrice: "",
-            customerNote: "",
-            internalNote: "",
-            comboParent: "",
-            packLotLines: [],
-            price_without_discount: "$ 2,972.75",
-            isSelected: true,
-            imageSrc: "/web/image/product.product/855/image_128",
-        },
-    ],
-    finalized: false,
-    amount: "2,972.75",
-    paymentLines: [{ name: "CARD", amount: "2,972.75" }],
-    change: 0,
-    onlinePaymentData: {},
-    qrPaymentData: {
-        amount: "$ 2,972.75",
-        name: "CARD",
-        qrCode: QR_URL,
-    },
-};
+import { isVisible } from "@web/core/utils/ui";
 
 registry.category("web_tour.tours").add("CustomerDisplayTour", {
     steps: () =>
         [
-            {
-                trigger: "div:contains('Welcome.')",
-                run: () => {
-                    window.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
-                    postMessage(ADD_PRODUCT, "add product").run();
-                },
-            },
+            CustomerDisplay.addProduct(CustomerDisplay.ADD_PRODUCT, "add product"),
             Order.hasLine({ productName: "Letter Tray", price: "2,972.75" }),
             {
                 content: "An order line with `isSelected: false` should not have 'selected' class",
                 trigger: ".order-container .orderline:last-child:not(.selected)",
             },
-            amountIs("Total", "2,972.75"),
-            postMessage(PAY_WITH_CASH, "pay with cash"),
-            amountIs("Cash", "2,972.75"),
-            postMessage(ORDER_IS_FINALIZED, "order is finalized"),
+            CustomerDisplay.amountIs("Total", "2,972.75"),
+            CustomerDisplay.postMessage(CustomerDisplay.PAY_WITH_CASH, "pay with cash"),
+            CustomerDisplay.amountIs("Cash", "2,972.75"),
+            CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
             {
                 content: "Check that we are now on the 'Thank you' screen",
                 trigger: "div:contains('Thank you.')",
             },
-            postMessage(NEW_ORDER, "new order"),
+            CustomerDisplay.postMessage(CustomerDisplay.NEW_ORDER, "new order"),
             {
                 trigger: " div:contains('Welcome.')",
             },
             Order.doesNotHaveLine({}),
-            amountIs("Total", "0.00"),
+            CustomerDisplay.amountIs("Total", "0.00"),
             {
                 trigger: "body",
-                run: () => postMessage(ADD_PRODUCT_SELECTED, "add products").run(),
+                run: () =>
+                    CustomerDisplay.postMessage(
+                        CustomerDisplay.ADD_PRODUCT_SELECTED,
+                        "add products"
+                    ).run(),
             },
             {
                 content: "An order line with `isSelected: true` should have 'selected' class",
@@ -126,23 +41,67 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("CustomerDisplayTourScroll", {
+    steps: () =>
+        [
+            CustomerDisplay.addProduct(CustomerDisplay.ADD_MULTI_PRODUCTS, "add 20 products"),
+            {
+                content: "An order line with `isSelected: true` should have 'selected' class",
+                trigger: ".order-container .orderline:last-child.selected",
+                run: async () =>
+                    await new Promise((resolve) => {
+                        const orderLine = document.querySelector(
+                            ".order-container .orderline:last-child.selected"
+                        );
+                        const animationDuration = parseFloat(
+                            getComputedStyle(orderLine).animationDuration
+                        );
+                        if (animationDuration === 0) {
+                            return resolve();
+                        }
+                        orderLine.onanimationend = function (event) {
+                            if (event.target === orderLine && event.animationName === "item_in") {
+                                resolve(event);
+                            }
+                        };
+                    }),
+            },
+            {
+                content: "The order container should have scrolled to show the selected order line",
+                trigger: ".order-container",
+                run: async () => {
+                    const orderContainer = document.querySelector(".order-container");
+                    const orderLine = document.querySelector(
+                        ".order-container .orderline:last-child.selected"
+                    );
+                    await new Promise((resolve) => {
+                        const checkScroll = () => {
+                            requestAnimationFrame(() => {
+                                if (orderContainer.scrollTop > 0 && isVisible(orderLine)) {
+                                    resolve();
+                                } else {
+                                    setTimeout(checkScroll, 1000);
+                                }
+                            });
+                        };
+                        checkScroll();
+                    });
+                },
+            },
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("CustomerDisplayTourWithQr", {
     steps: () =>
         [
-            {
-                trigger: "div:contains('Welcome.')",
-                run: () => {
-                    window.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
-                    postMessage(ADD_PRODUCT, "add product").run();
-                },
-            },
+            CustomerDisplay.addProduct(CustomerDisplay.ADD_PRODUCT, "add product"),
             Order.hasLine({ productName: "Letter Tray", price: "2,972.75" }),
-            amountIs("Total", "2,972.75"),
-            postMessage(PAY_WITH_CARD, "pay with card"),
-            postMessage(SEND_QR, "send qr code"),
+            CustomerDisplay.amountIs("Total", "2,972.75"),
+            CustomerDisplay.postMessage(CustomerDisplay.PAY_WITH_CARD, "pay with card"),
+            CustomerDisplay.postMessage(CustomerDisplay.SEND_QR, "send qr code"),
             { trigger: "img[alt='QR Code']" },
-            postMessage(PAY_WITH_CARD, "confirm payment"),
-            postMessage(ORDER_IS_FINALIZED, "order is finalized"),
+            CustomerDisplay.postMessage(CustomerDisplay.PAY_WITH_CARD, "confirm payment"),
+            CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
             {
                 content: "Check that we are now on the 'Thank you' screen",
                 trigger: "div:contains('Thank you.')",

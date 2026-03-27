@@ -29,4 +29,8 @@ patch(PosOrderline.prototype, {
         }
         return super.canBeMergedWith(orderline);
     },
+    // To be overriden by other modules (eg: pos_discount)
+    isGlobalDiscountApplicable() {
+        return true;
+    },
 });

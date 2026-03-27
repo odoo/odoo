@@ -132,6 +132,19 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_import_lot_groupable_and_non_groupable", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Groupable Product", []),
+            ProductScreen.checkOrderlinesNumber(5),
+            ProductScreen.totalAmountIs(60),
+            ProductScreen.selectedOrderlineHas("Groupable Product", "1", "10"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
     steps: () =>
         [
@@ -166,6 +179,19 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({}),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
     steps: () =>
         [
@@ -187,6 +213,10 @@ registry.category("web_tour.tours").add("PosSettleDraftOrder", {
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Test service product", "1", "50.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 
@@ -211,6 +241,27 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Down Payment (POS)"),
             ProductScreen.totalAmountIs(980.0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_settle_so_with_downpayment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.checkOrderlinesNumber(3),
+            ProductScreen.totalAmountIs(755.0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_uom", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Pomme de Terre", "0.5", "5.00"),
         ].flat(),
 });
 
@@ -251,6 +302,31 @@ registry.category("web_tour.tours").add("PoSApplyDownpayment", {
             PosSale.downPaymentFirstOrder("+10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSApplyDownpaymentInvoice", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSApplyDownpaymentInvoice2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
         ].flat(),
 });
@@ -511,7 +587,7 @@ registry.category("web_tour.tours").add("test_multiple_lots_sale_order_1", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            Order.hasLine({ productName: "Product", quantity: "3.0" }),
+            Order.hasLine({ productName: "Product", quantity: "6.0" }),
         ].flat(),
 });
 
@@ -519,17 +595,94 @@ registry.category("web_tour.tours").add("test_multiple_lots_sale_order_2", {
     steps: () =>
         [
             Chrome.startPoS(),
+            PosSale.settleNthOrder(1, { loadSN: false }),
+            Order.hasLine({ productName: "Product", quantity: "6.0" }),
+            {
+                content: "Check that the line-lot-icon has text-danger class",
+                trigger: `.order-container .orderline:has(.product-name:contains("Product")) .line-lot-icon.text-danger`,
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order_3", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
             PosSale.settleNthOrder(1, { loadSN: true }),
             PosSale.selectedOrderLinesHasLots("Product", ["1002"]),
             Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1001"])),
             ProductScreen.selectedOrderlineHas("Product", "2.00"),
-            ProductScreen.clickOrderline("Product", "1"),
+            ProductScreen.clickOrderline("Product", "4"),
             PosSale.selectedOrderLinesHasLots("Product", ["1001"]),
-            ProductScreen.selectedOrderlineHas("Product", "1.00"),
+            ProductScreen.selectedOrderlineHas("Product", "4.00"),
             Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1002"])),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_selected_partner_quotation_loading", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A Test Partner 1"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A Test Partner 2"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Product B", "2.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_ecommerce_paid_order_is_hidden_in_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A Test Partner 1"),
+            PosSale.checkOrdersListEmpty(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_ecommerce_unpaid_order_is_shown_in_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A Test Partner 1"),
+            PosSale.checkOrdersListNotEmpty(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            Order.hasTotal("12.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs("180.00"),
+            Order.doesNotHaveLine({
+                productName: "Settle Lots",
+                quantity: "1.0",
+                price: "100",
+            }),
         ].flat(),
 });

@@ -4,10 +4,16 @@ import { NavbarLinkPopover } from "./navbar_link_popover/navbar_link_popover";
 import { MenuDialog, EditMenuDialog } from "@website/components/dialog/edit_menu";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef { Object } MenuDataShared
+ * @property { MenuDataPlugin['openEditMenu'] } openEditMenu
+ */
+
 export class MenuDataPlugin extends Plugin {
     static id = "menuDataPlugin";
     static shared = ["openEditMenu"];
     static dependencies = ["savePlugin"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         link_popovers: [
             withSequence(10, {
@@ -44,7 +50,7 @@ export class MenuDataPlugin extends Plugin {
                             },
                         });
                     },
-                    onClickEditMenu: this.openEditMenu.bind(this),
+                    onClickEditMenu: this.openEditMenu.bind(this, props.linkElement),
                 }),
             }),
         ],
@@ -55,14 +61,19 @@ export class MenuDataPlugin extends Plugin {
         this.websiteService = this.services.website;
     }
 
-    openEditMenu() {
+    openEditMenu(linkEl) {
         if (this.isEditMenuOpening) {
             return Promise.resolve();
         }
         this.isEditMenuOpening = true;
         return new Promise((resolve) => {
-            this.services.dialog.add(EditMenuDialog,
+            const rootID = parseInt(
+                linkEl?.closest("[data-content_menu_id]")?.dataset.content_menu_id
+            );
+            this.services.dialog.add(
+                EditMenuDialog,
                 {
+                    rootID: isNaN(rootID) ? null : rootID,
                     save: async (newPageUrl) => {
                         // Save the page before reloading the editor.
                         await this.dependencies.savePlugin.save();
@@ -96,7 +107,7 @@ export class MenuDataPlugin extends Plugin {
         return (
             linkElement &&
             (linkElement.getAttribute("role") === "menuitem" ||
-            linkElement.classList.contains("nav-link")) &&
+                linkElement.classList.contains("nav-link")) &&
             !linkElement.dataset.bsToggle
         );
     }

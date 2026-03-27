@@ -8,4 +8,5 @@ from . import test_payment_provider
 from . import test_payment_transaction
 from . import test_product_template
 from . import test_sale_order
+from . import test_stock_warehouse
 from . import test_website

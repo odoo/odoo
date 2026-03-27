@@ -5,15 +5,17 @@
 # Translators:
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2025-09-14 08:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-18 17:58+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/product/nl/"
 ">\n"
 "Language: nl\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product
 #. odoo-python
@@ -69,8 +71,8 @@ msgid ""
 msgstr ""
 "%(base)s met een %(discount)s %% %(discount_type)s en %(surcharge)s extra "
 "vergoeding\n"
-"Voorbeeld: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
-"%(total_amount)s"
+"Voorbeeld: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -79,8 +81,8 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date (%"
 "(start_date)s)"
 msgstr ""
-"%(item_name)s: einddatum (%(end_date)s) moet na de startdatum plaatsvinden "
-"(%(start_date)s)"
+"%(item_name)s: einddatum (%(end_date)s) moet na de startdatum plaatsvinden (%"
+"(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -102,6 +104,7 @@ msgstr "%(percentage)s %% korting op verkoopprijs"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
@@ -214,7 +217,7 @@ msgstr "160"
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs"
-msgstr ""
+msgstr "160x80cm, met lange poten"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -244,7 +247,7 @@ msgstr "39"
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 msgid "3XL"
-msgstr ""
+msgstr "3XL"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
@@ -312,8 +315,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\""
-">Neem contact op</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
+"o_translate_inline\">Neem contact op</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -450,6 +453,16 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
+"een prijslijst-item met \"Andere prijslijst\" als basis moet een "
+"base_pricelist_id hebben."
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/product_uom.py:0
 msgid "A product already uses the barcode"
 msgstr "Een product gebruikt reeds de barcode"
@@ -458,7 +471,8 @@ msgstr "Een product gebruikt reeds de barcode"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr "Een verkoopbaar combiproduct kan alleen verkoopbare producten bevatten."
+msgstr ""
+"Een verkoopbaar combiproduct kan alleen verkoopbare producten bevatten."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -872,7 +886,7 @@ msgstr "Beige"
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Big table seats 10–12 for team discussions"
-msgstr ""
+msgstr "Grote tafel met 10-12 zitplaatsen voor teambesprekingen"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_black
@@ -887,7 +901,7 @@ msgstr "Blauw"
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
 msgid "Blue plastic bin for flexible office storage"
-msgstr ""
+msgstr "Blauwe plastic bak voor flexibele kantooropslag"
 
 #. module: product
 #: model:product.attribute,name:product.pa_brand
@@ -961,8 +975,8 @@ msgid ""
 "All existing records (Sales orders, Purchase orders, etc.) using this "
 "product will be updated by replacing the unit name."
 msgstr ""
-"Het wijzigen van de maateenheid van je product zorgt voor een conversie: 1 "
-"%(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Het wijzigen van de maateenheid van je product zorgt voor een conversie: 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "Alle bestaande records (zoals verkooporders, inkooporders, etc.) die dit "
 "product gebruiken, worden bijgewerkt door de eenheidsnaam te vervangen."
 
@@ -1071,7 +1085,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.product_delivery_01_product_template
 msgid "Comfortable yellow chair for daily work"
-msgstr ""
+msgstr "Comfortabele gele stoel voor dagelijks gebruik"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1134,7 +1148,7 @@ msgstr "Contact"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
 msgid "Copies"
-msgstr ""
+msgstr "Kopieën"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1340,7 +1354,7 @@ msgstr "Standaard extra prijs gewijzigd"
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Standaard maateenheid gebruikt voor alle voorraadbewegingen."
+msgstr "Standaard maateenheid gebruikt voor alle voorraadverplaatsingen."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -1350,7 +1364,7 @@ msgstr "Bepaal een nieuw label"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr "Geef je volumeeenheid in"
+msgstr "Geef je volume-eenheid in"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1379,7 +1393,7 @@ msgstr "Omschrijving"
 #. module: product
 #: model:product.template,description_sale:product.product_order_01_product_template
 msgid "Design and plan smart offices with ease"
-msgstr ""
+msgstr "Ontwerp en plan eenvoudig slimme kantoren"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1404,7 +1418,7 @@ msgstr "Bureaustandaard met scherm"
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer"
-msgstr ""
+msgstr "Bureaucombinatie, zwartbruin: stoel + bureau + lade"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1473,7 +1487,7 @@ msgstr "Weergave toegepast op"
 #: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_type
@@ -1536,7 +1550,7 @@ msgstr "Zwarte lade"
 #. module: product
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities"
-msgstr ""
+msgstr "Lade met twee mogelijke uitschuifrichtingen"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_drawers
@@ -1738,7 +1752,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
 msgid "Format"
-msgstr "Formatteer"
+msgstr "Formaat"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
@@ -1845,7 +1859,7 @@ msgstr "Heeft bericht"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__has_thumbnail
 msgid "Has Thumbnail"
-msgstr ""
+msgstr "Heeft thumbnail"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_head_shoulders
@@ -1870,7 +1884,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.product_product_12_product_template
 msgid "High-back office chair with great support"
-msgstr ""
+msgstr "Bureaustoel met hoge rug en goede ondersteuning"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -2119,7 +2133,7 @@ msgstr "Is een volger"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_in_selected_section_of_order
 msgid "Is In Selected Section Of Order"
-msgstr ""
+msgstr "Is in geselecteerde sectie van bestelling"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_pricelist_required
@@ -2237,7 +2251,7 @@ msgstr "Te late activiteiten"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Lead Time"
-msgstr ""
+msgstr "Levertijd"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -2258,7 +2272,7 @@ msgstr "Leer"
 #. module: product
 #: model:product.template,description_sale:product.product_product_13_product_template
 msgid "Left-sided workspace with storage"
-msgstr ""
+msgstr "Links hoekbureau met opslagruimte"
 
 #. module: product
 #: model:product.attribute,name:product.pa_legs
@@ -2396,7 +2410,7 @@ msgstr "Metaal"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__mimetype
 msgid "Mime Type"
-msgstr "Mime Type"
+msgstr "MIME-type"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2421,7 +2435,7 @@ msgstr "Min. aantal"
 #. module: product
 #: model:product.template,description_sale:product.product_product_8_product_template
 msgid "Minimalist wooden desk for executive use"
-msgstr ""
+msgstr "Minimalistisch houten bureau voor zakelijk gebruik"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
@@ -2580,7 +2594,7 @@ msgstr "Nee, hou het"
 #. module: product
 #: model:product.template,description_sale:product.product_template_acoustic_bloc_screens
 msgid "Noise-reducing panels for open spaces"
-msgstr ""
+msgstr "Geluiddempende panelen voor open ruimtes"
 
 #. module: product
 #. odoo-python
@@ -2999,7 +3013,7 @@ msgstr "Labels afdrukken"
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
 msgid "Private pod with desk and chair"
-msgstr ""
+msgstr "Afgescheiden werkpod met bureau en stoel"
 
 #. module: product
 #. odoo-python
@@ -3215,7 +3229,7 @@ msgstr "Product sjabloon"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr "Knopinfo voor producten"
+msgstr "Tooltip voor producten"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -3352,7 +3366,7 @@ msgstr "Aantallen (Prijs)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: product
 #. odoo-python
@@ -3380,6 +3394,12 @@ msgstr "Keuzerondje"
 #: model:product.attribute.value,name:product.pav_brand_rayban
 msgid "Ray-Ban"
 msgstr "Ray-Ban"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid "Recursive pricelist rules detected: %s"
+msgstr "Recursieve prijslijstregels gedetecteerd: %s"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_red
@@ -3463,12 +3483,12 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr "Restaurantdeclaratie"
+msgstr "Restaurant-onkosten"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_5_product_template
 msgid "Right-aligned desk with storage"
-msgstr ""
+msgstr "Bureau rechts met opbergruimte"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rolex
@@ -3607,7 +3627,7 @@ msgstr "Grootte"
 #. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
 msgid "Soft-close pedal bin for office use"
-msgstr ""
+msgstr "Zacht sluitende pedaalemmer voor kantoorgebruik"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_sony
@@ -3725,7 +3745,7 @@ msgstr "Prijslijst leverancier"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Tag"
-msgstr ""
+msgstr "Label"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
@@ -3878,7 +3898,8 @@ msgstr "De prijs om een product te kopen"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The product template is archived so no combination is possible."
-msgstr "De productsjabloon is gearchiveerd, dus er is geen combinatie mogelijk."
+msgstr ""
+"De productsjabloon is gearchiveerd, dus er is geen combinatie mogelijk."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -3993,7 +4014,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Thumbnail"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_tide
@@ -4442,7 +4463,7 @@ msgstr "Wat kun je verwachten?"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_tag__visible_to_customers
 msgid "Whether the tag is displayed to customers."
-msgstr "Of de tag aan klanten wordt getoond."
+msgstr "Of het label aan klanten wordt getoond."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_whirlpool
@@ -4487,8 +4508,8 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
-"Je staat op het punt om de waarde \"%(attribute_value)s\" toe te voegen aan "
-"%(product_count)s producten."
+"Je staat op het punt om de waarde \"%(attribute_value)s\" toe te voegen aan %"
+"(product_count)s producten."
 
 #. module: product
 #. odoo-python
@@ -4562,15 +4583,6 @@ msgstr ""
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid ""
-"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr ""
-"Je kunt de hoofd prijslijst niet toewijzen als andere prijslijst in een "
-"prijslijst item"
-
-#. module: product
-#. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s "
@@ -4598,8 +4610,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"Je kunt het product van de waarde %(value)s dat ingesteld is op het product "
-"%(product)s niet veranderen."
+"Je kunt het product van de waarde %(value)s dat ingesteld is op het product %"
+"(product)s niet veranderen."
 
 #. module: product
 #. odoo-python
@@ -4608,8 +4620,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product %"
 "(product)s."
 msgstr ""
-"Je kunt de waarde van de waarde %(value)s die is ingesteld op het product "
-"%(product)s niet veranderen."
+"Je kunt de waarde van de waarde %(value)s die is ingesteld op het product %"
+"(product)s niet veranderen."
 
 #. module: product
 #. odoo-python
@@ -4662,8 +4674,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s "
 "to the product %(product_dest)s."
 msgstr ""
-"Je kunt het kenmerk %(attribute)s niet verplaatsen van product %(product_src)"
-"s naar product %(product_dest)s."
+"Je kunt het kenmerk %(attribute)s niet verplaatsen van product %"
+"(product_src)s naar product %(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -4877,6 +4889,12 @@ msgstr "aan"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid ""
+#~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+#~ msgstr ""
+#~ "Je kunt de hoofd prijslijst niet toewijzen als andere prijslijst in een "
+#~ "prijslijst item"
 
 #~ msgid ""
 #~ "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"

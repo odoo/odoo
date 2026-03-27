@@ -18,6 +18,7 @@ export class ChatGPTTranslatePlugin extends Plugin {
         "dialog",
         "split",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_groups: withSequence(50, {
             id: "ai",

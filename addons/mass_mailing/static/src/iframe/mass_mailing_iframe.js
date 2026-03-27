@@ -2,8 +2,8 @@ import {
     Component,
     onMounted,
     onWillDestroy,
-    onWillUpdateProps,
     status,
+    useComponent,
     useEffect,
     useRef,
     useState,
@@ -20,8 +20,32 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { loadIframe } from "@mail/convert_inline/iframe_utils";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
+
+/**
+ * The MassMailingIframe will use this modified overlay service that will guarantee:
+ * 1. Internal ordering of its different overlays
+ * 2. To not mess up with owl's reconciliation of foreach when adding/removing overlays
+ * This is a sub-optimal fix to the more general issue of owl displacing nodes that contain
+ * an iframe, in which the iframe effectively unloads.
+ */
+export function useOverlayServiceOffset() {
+    const comp = useComponent();
+    const originalOverlay = comp.env.services.overlay;
+    const subServices = Object.create(comp.env.services);
+    subServices.overlay = Object.create(originalOverlay);
+    subServices.overlay.add = (C, props, opts = {}) => {
+        opts = {
+            ...opts,
+            sequence: (opts.sequence ?? 50) + 1000,
+        };
+        return originalOverlay.add(C, props, opts);
+    };
+    useSubEnv({ services: subServices });
+}
 
 export class MassMailingIframe extends Component {
     static template = "mass_mailing.MassMailingIframe";
@@ -32,23 +56,28 @@ export class MassMailingIframe extends Component {
     static props = {
         config: { type: Object },
         iframeRef: { type: Function },
+        iframeWrapperRef: { type: Function },
         showThemeSelector: { type: Boolean, optional: true },
-        onIframeLoad: { type: Function, optional: true },
+        onIframeLoad: { type: Function, optional: true }, // deprecated
         showCodeView: { type: Boolean, optional: true },
         toggleCodeView: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
         onEditorLoad: { type: Function, optional: true },
-        onBlur: { type: Function, optional: true },
+        onBlur: { type: Function, optional: true }, // deprecated
+        onFocus: { type: Function, optional: true },
         extraClass: { type: String, optional: true },
         withBuilder: { type: Boolean, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
+        onFocus: () => {},
     };
 
     setup() {
+        useOverlayServiceOffset();
         this.overlayRef = useChildRef();
         this.iframeRef = useForwardRefToParent("iframeRef");
+        this.iframeWrapperRef = useForwardRefToParent("iframeWrapperRef");
         this.sidebarRef = useRef("sidebarRef");
         this.isRTL = localization.direction === "rtl";
         useSubEnv({
@@ -59,21 +88,9 @@ export class MassMailingIframe extends Component {
             isMobile: false,
             ready: false,
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.showCodeView) {
-                this.state.showFullscreen = false;
-            }
-        });
         this.iframeLoaded = new Deferred();
         onMounted(() => {
-            if (this.iframeRef.el.contentDocument.readyState === "complete") {
-                this.setupIframe();
-            } else {
-                // Browsers like Firefox only make iframe document available after dispatching "load"
-                this.iframeRef.el.addEventListener("load", () => this.setupIframe(), {
-                    once: true,
-                });
-            }
+            this.setupIframe();
         });
         if (!this.props.readonly && !this.props.withBuilder) {
             this.editor = new Editor(this.props.config, this.env.services);
@@ -190,12 +207,38 @@ export class MassMailingIframe extends Component {
             },
             () => [this.state.isMobile]
         );
+        onWillDestroy(() => {
+            this.iframeLoaded.resolve(false);
+        });
+    }
+
+    get isBrowserSafari() {
+        return isBrowserSafari();
+    }
+
+    getIframeBundles({ readonly, withBuilder } = this.props) {
+        if (readonly) {
+            return ["mass_mailing.assets_iframe_style"];
+        } else if (withBuilder) {
+            return ["mass_mailing.assets_inside_builder_iframe"];
+        }
+        return ["mass_mailing.assets_inside_basic_editor_iframe"];
     }
 
     async setupIframe() {
-        await this.loadIframeAssets();
+        let loadingError;
+        try {
+            this.bundleControls = await loadIframe(this.iframeRef.el, (iframe) => {
+                iframe.contentDocument?.head.appendChild(this.renderHeadContent());
+                return this.loadIframeAssets();
+            });
+        } catch (error) {
+            loadingError = error;
+        }
         if (status(this) === "destroyed") {
             return;
+        } else if (loadingError) {
+            throw loadingError;
         }
         const htmlResizeObserver = new ResizeObserver(this.throttledResize);
         this.iframeRef.el.contentDocument.body.classList.add("o_in_iframe");
@@ -204,7 +247,6 @@ export class MassMailingIframe extends Component {
         } else {
             this.iframeRef.el.contentDocument.body.classList.add("bg-white");
         }
-        this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
         htmlResizeObserver.observe(
             this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
@@ -213,15 +255,48 @@ export class MassMailingIframe extends Component {
             this.retargetLinks(
                 this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
             );
+            this.fixInlineDynamicPlaceholders(this.iframeRef.el);
         }
         // Set `ready` symbol for tours
         this.iframeRef.el.setAttribute("is-ready", "true");
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
         });
-        this.iframeLoaded.resolve(this.iframeRef.el);
+        this.iframeRef.el.contentWindow.addEventListener("focus", this.props.onFocus.bind(this));
+        this.iframeLoaded.resolve({
+            iframe: this.iframeRef.el,
+            // TODO EGGMAIL: deprecated bundleControls
+            bundleControls: this.bundleControls,
+        });
         this.props.onIframeLoad?.(this.iframeLoaded);
         this.state.ready = true;
+    }
+
+    /**
+     * As no plugins are loaded in readonly mode, we manually set inlining attributes to
+     * any t-element that might be present in the document, provided its children are inline
+     * (which should always be the case for mass_mailing).
+     * TODO: move this to a readonly plugin once they are implemented
+     * @param {HTMLElement} iframe
+     */
+    fixInlineDynamicPlaceholders(iframe) {
+        const checkAllInline = function (el) {
+            return [...el.children].every((child) => {
+                if (child.tagName === "T") {
+                    return this.checkAllInline(child);
+                } else {
+                    return (
+                        child.nodeType !== Node.ELEMENT_NODE ||
+                        iframe.contentWindow.getComputedStyle(child).display === "inline"
+                    );
+                }
+            });
+        };
+        for (const el of iframe.contentDocument.body.querySelectorAll("t")) {
+            if (checkAllInline(el)) {
+                el.setAttribute("data-oe-t-inline", "true");
+            }
+        }
     }
 
     async setupBasicEditor() {
@@ -229,21 +304,53 @@ export class MassMailingIframe extends Component {
         if (status(this) === "destroyed") {
             return;
         }
+        this.editor.config.localOverlayContainers = {
+            key: this.env.localOverlayContainerKey,
+            ref: this.overlayRef,
+        };
         this.editor.attachTo(
             this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
         );
     }
 
+    /**
+     * @returns {Object} bundleControls { bundleName: activatorObject }
+     * TODO EGGMAIL: bundleControls are deprecated (unused)
+     */
     async loadIframeAssets() {
-        await Promise.all([
-            loadBundle("mass_mailing.assets_iframe_style", {
-                targetDoc: this.iframeRef.el.contentDocument,
-                css: true,
-                js: false,
-            }),
-        ]);
+        const bundleEntryPromises = this.getIframeBundles().map(async (bundle) => {
+            const targets = (
+                await loadBundle(bundle, {
+                    targetDoc: this.iframeRef.el.contentDocument,
+                    css: true,
+                    js: false,
+                })
+            ).map((bundleEvent) => bundleEvent.target);
+            const iframe = this.iframeRef.el;
+            return [
+                bundle,
+                {
+                    toggle(enable = false) {
+                        if (!iframe?.isConnected) {
+                            return;
+                        }
+                        for (const target of targets) {
+                            if (enable && !iframe.contentDocument.head.contains(target)) {
+                                iframe.contentDocument.head.appendChild(target);
+                            } else if (!enable && iframe.contentDocument.head.contains(target)) {
+                                target.remove();
+                            }
+                        }
+                    },
+                },
+            ];
+        });
+        return Object.fromEntries(await Promise.all(bundleEntryPromises));
     }
 
+    /**
+     * @deprecated
+     */
     onBlur(ev) {
         if (!this.props.readonly) {
             this.props.onBlur(ev);
@@ -261,7 +368,10 @@ export class MassMailingIframe extends Component {
     getBuilderProps() {
         return {
             overlayRef: this.overlayRef,
-            iframeLoaded: this.iframeLoaded,
+            // TODO EGGMAIL: iframeInfo is deprecated (should resolve to iframe directly)
+            iframeLoaded: this.iframeLoaded.then((iframeInfo) =>
+                iframeInfo ? iframeInfo.iframe : false
+            ),
             snippetsName: "mass_mailing.email_designer_snippets",
             config: this.props.config,
             isMobile: this.state.isMobile,

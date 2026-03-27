@@ -260,7 +260,11 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
-        if vals.get('description_ecommerce') and is_html_empty(vals['description_ecommerce']):
+        if (
+            (description_ecommerce := vals.get('description_ecommerce'))
+            and is_html_empty(description_ecommerce)
+            and not ('media_iframe_video' in description_ecommerce or 'data-embedded' in description_ecommerce)  # don't remove "empty" video div
+        ):
             vals['description_ecommerce'] = ''
         return super().write(vals)
 
@@ -347,18 +351,21 @@ class ProductTemplate(models.Model):
         res = defaultdict(dict)
         show_count = 20
         for template in self:
-            available_attribute_lines = template.attribute_line_ids.filtered(
-                lambda ptal: ptal.attribute_id.preview_variants != 'hidden'
-            )
-            if available_attribute_lines:
-                previewed_ptal = available_attribute_lines[0]
-                previewed_ptavs = previewed_ptal.product_template_value_ids.filtered(
-                    lambda ptav: ptav.ptav_active and ptav.ptav_product_variant_ids
-                )
+            previewed_ptal = next((
+                p for p in template.attribute_line_ids
+                if p.attribute_id.preview_variants != 'hidden'
+            ), None)
+            if previewed_ptal:
+                previewed_ptavs = [
+                    ptav
+                    for ptav in previewed_ptal.product_template_value_ids
+                    if ptav.ptav_active and ptav.ptav_product_variant_ids
+                ]
+
                 if len(previewed_ptavs) > 1:
                     previewed_ptavs_data = []
                     for ptav in previewed_ptavs[:show_count]:
-                        matching_variant = ptav.ptav_product_variant_ids.sorted('id')[0]
+                        matching_variant = min(ptav.ptav_product_variant_ids, key=lambda p: p.id)
                         variant_query_params = {
                             **(product_query_params or {}),
                             'attribute_values': str(ptav.product_attribute_value_id.id)
@@ -368,6 +375,7 @@ class ProductTemplate(models.Model):
                             'variant_image_url': self.env['website'].image_url(matching_variant, 'image_512'),
                             'variant_url': template._get_product_url(category, variant_query_params),
                         })
+
                     res[template.id] = {
                         'ptavs_data': previewed_ptavs_data,
                         'hidden_ptavs_count': max(0, len(previewed_ptavs) - show_count)
@@ -591,7 +599,7 @@ class ProductTemplate(models.Model):
             product=product_or_template,
             quantity=quantity,
             uom=uom,
-            target_currency=currency,
+            currency=currency,
         )
 
         price_before_discount = pricelist_price
@@ -703,24 +711,25 @@ class ProductTemplate(models.Model):
         Note AWA: Known "exploit" issues with this method:
 
         - This method could be used by an unauthenticated user to generate a
-            lot of useless variants. Unfortunately, after discussing the
-            matter with ODO, there's no easy and user-friendly way to block
-            that behavior.
-
-            We would have to use captcha/server actions to clean/... that
-            are all not user-friendly/overkill mechanisms.
+          lot of useless variants. Unfortunately, after discussing the
+          matter with ODO, there's no easy and user-friendly way to block
+          that behavior.
+          We would have to use captcha/server actions to clean/... that
+          are all not user-friendly/overkill mechanisms.
 
         - This method could be used to try to guess what product variant ids
-            are created in the system and what product template ids are
-            configured as "dynamic", but that does not seem like a big deal.
+          are created in the system and what product template ids are
+          configured as "dynamic", but that does not seem like a big deal.
 
         The error messages are identical on purpose to avoid giving too much
         information to a potential attacker:
-            - returning 0 when failing
-            - returning the variant id whether it already existed or not
+
+        - returning 0 when failing
+        - returning the variant id whether it already existed or not
 
         :param product_template_attribute_value_ids: the combination for which
             to get or create variant
+
         :type product_template_attribute_value_ids: list of id
             of `product.template.attribute.value`
 
@@ -863,8 +872,11 @@ class ProductTemplate(models.Model):
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
-            tags = list(map(int, tags)) # Convert list of strings to list of integers
-            domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
+            tags = list(map(int, tags))  # Convert list of strings to list of integers
+            domains.append(Domain.OR([
+                Domain('product_tag_ids', 'in', tags),
+                Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
+            ]))
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:
@@ -1021,6 +1033,13 @@ class ProductTemplate(models.Model):
         if self.product_variant_count == 1:
             return self.product_variant_id._to_markup_data(website)
 
+        # perf: temporal solution to avoid slowness when product have many variants and pricelist rules
+        limit = self.env['ir.config_parameter'].sudo().get_param('website_sale.markup_data_limit_variants', False)
+        if limit:
+            product_variant_ids = self.product_variant_ids[:int(limit)]
+        else:
+            product_variant_ids = self.product_variant_ids
+
         base_url = website.get_base_url()
         markup_data = {
             '@context': 'https://schema.org/',
@@ -1028,7 +1047,7 @@ class ProductTemplate(models.Model):
             'name': self.name,
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'url': f'{base_url}{self.website_url}',
-            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
+            'hasVariant': [product._to_markup_data(website) for product in product_variant_ids]
         }
         if self.description_ecommerce:
             markup_data['description'] = text_from_html(self.description_ecommerce)
@@ -1050,13 +1069,13 @@ class ProductTemplate(models.Model):
         :rtype: `product.ribbon` recordset
         """
         variant = variant or self.product_variant_id
-        ribbon = variant.variant_ribbon_id or self.sudo().website_ribbon_id
+        ribbon = variant.sudo().variant_ribbon_id or self.sudo().website_ribbon_id
         if not ribbon:
             # The None check ensures that we do not recompute the ribbons when no ribbons were
             # previously found.
             if auto_assign_ribbons is None:
                 # On product page, the auto_assign_ribbons are not provided.
-                auto_assign_ribbons = self.env['product.ribbon'].search([
+                auto_assign_ribbons = self.env['product.ribbon'].search_fetch([
                     ('assign', '!=', 'manual'),
                 ])
             for rb in auto_assign_ribbons:
@@ -1068,7 +1087,7 @@ class ProductTemplate(models.Model):
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
-        if force_website or self.website_published:
+        if force_website or (self.website_published and self.env.user.share):
             return {
                 "type": "ir.actions.act_url",
                 "url": self.website_url,

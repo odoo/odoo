@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { canLoadLivechat } from "@im_livechat/embed/common/misc";
 
@@ -69,31 +70,45 @@ export class LivechatService {
         if (!thread.isTransient) {
             return thread;
         }
-        const temporaryThread = thread;
-        const deleteTemporary = async () => {
-            await this.store.chatHub.initPromise;
-            await this.store.ChatWindow.get({ thread: temporaryThread })?.close({ force: true });
-            temporaryThread?.delete();
-        };
-        const savedThread = await this._createThread({ originThread: thread, persist: true });
-        if (!savedThread) {
-            await deleteTemporary();
-            return;
+        if (this._persistDeferred) {
+            return this._persistDeferred;
         }
-        savedThread.fetchNewMessages();
-        this.env.services["mail.store"].initialize();
-        savedThread.readyToSwapDeferred.then(async () => {
-            if (!savedThread?.exists()) {
+        this._persistDeferred = new Deferred();
+        try {
+            const temporaryThread = thread;
+            const deleteTemporary = async () => {
+                await this.store.chatHub.initPromise;
+                await this.store.ChatWindow.get({ thread: temporaryThread })?.close({
+                    force: true,
+                });
+                temporaryThread?.delete();
+            };
+            const savedThread = await this._createThread({ originThread: thread, persist: true });
+            if (!savedThread) {
+                await deleteTemporary();
                 return;
             }
-            // Do not load unread messaes: new messages were loaded to avoid
-            // flickering, we do not want another load that would result in the
-            // same issue.
-            savedThread.scrollUnread = false;
-            deleteTemporary();
-            savedThread.openChatWindow({ focus: true });
-        });
-        return savedThread;
+            savedThread.fetchNewMessages();
+            this.env.services["mail.store"].initialize();
+            savedThread.readyToSwapDeferred.then(async () => {
+                if (!savedThread?.exists()) {
+                    return;
+                }
+                // Do not load unread messages: new messages were loaded to avoid
+                // flickering, we do not want another load that would result in the
+                // same issue.
+                savedThread.scrollUnread = false;
+                deleteTemporary();
+                savedThread.openChatWindow({ focus: true });
+            });
+            this._persistDeferred.resolve(savedThread);
+            return savedThread;
+        } catch (error) {
+            this._persistDeferred.reject(error);
+            throw error;
+        } finally {
+            this._persistDeferred = null;
+        }
     }
 
     /**

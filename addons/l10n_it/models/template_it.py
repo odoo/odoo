@@ -30,5 +30,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': '22am',
                 'expense_account_id': '4101',
                 'income_account_id': '3101',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': '1404',
+            },
+        }
+
+    @template('it', 'account.account')
+    def _get_it_account_account(self):
+        return {
+            '1404': {
+                'account_stock_expense_id': '4101',
+                'account_stock_variation_id': '4131',
             },
         }

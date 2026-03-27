@@ -18,6 +18,10 @@
 
         img {
             cursor: zoom-in;
+
+            &.zoomed-in {
+                cursor: zoom-out;
+            }
         }
     }
 
@@ -26,20 +30,18 @@
 
         ol {
             list-style: none;
-
-            .o_wsale_image_viewer_thumbnail {
-                aspect-ratio: 1/1;
-                width: 128px;
-            }
+            transition: transform 250ms ease-out;
 
             li > div {
                 background: $body-bg;
 
-                img {
+                img.o_wsale_image_viewer_thumbnail {
+                    aspect-ratio: var(--o-wsale-product-image-ratio, 1/1);
                     border: 4px solid transparent;
+                    height: 128px;
 
                     &:not(.active, :hover) {
-                        opacity: 0.5;
+                        opacity: 0.75;
                     }
 
                     &.active {

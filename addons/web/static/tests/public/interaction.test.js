@@ -1079,6 +1079,29 @@ describe("waitFor...", () => {
             await click(".test");
             expect.verifySteps(["before", "in catch", "updatecontent"]);
         });
+
+        test("waitFor support promise is 'undefined'", async () => {
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    _root: { "t-on-click": this.onClick },
+                };
+
+                async onClick() {
+                    await this.waitFor(undefined);
+                    expect.step("clicked");
+                }
+
+                updateContent() {
+                    expect.step("updatecontent");
+                    super.updateContent();
+                }
+            }
+            await startInteraction(Test, TemplateTest);
+            expect.verifySteps([]);
+            await click(".test");
+            expect.verifySteps(["clicked", "updatecontent"]);
+        });
     });
 
     describe("waitForTimeout", () => {
@@ -1903,6 +1926,41 @@ describe("t-att and t-out", () => {
         expect("span").not.toHaveAttribute("animal");
         expect("span").toHaveAttribute("egg", "mysterious");
     });
+
+    test("t-out-... resets at stop", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                _root: { "t-out": () => "colibri" },
+            };
+        }
+        const { core } = await startInteraction(Test, TemplateTest);
+        expect("span").toHaveText("colibri");
+        core.stopInteractions();
+        expect("span").toHaveText("coucou");
+    });
+
+    test("t-out-... restores all values on stop", async () => {
+        class Test extends Interaction {
+            static selector = "div";
+            dynamicContent = {
+                span: { "t-out": () => "colibri" },
+            };
+        }
+        const { core } = await startInteraction(
+            Test,
+            `
+            <div>
+                <span>penguin</span>
+                <span>ostrich</span>
+            </div>
+        `
+        );
+        expect("span").toHaveText("colibri");
+        core.stopInteractions();
+        expect("span:first").toHaveText("penguin");
+        expect("span:last").toHaveText("ostrich");
+    });
 });
 
 describe("components", () => {
@@ -2436,23 +2494,64 @@ describe("locked", () => {
         expect(queryFirst("span")).toBe(null);
     });
 
-    test("locked add a loading icon when the execution takes more than 400ms", async () => {
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                button: {
-                    "t-on-click": this.locked(this.onClickLong, true),
-                },
-            };
-            async onClickLong() {
-                await new Promise((resolve) => setTimeout(resolve, 5000));
+    describe("loading effect", () => {
+        let handlerDuration = 5000;
+
+        beforeEach(async () => {
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    button: {
+                        "t-on-click": this.locked(this.onClickLong, true),
+                    },
+                };
+                async onClickLong() {
+                    await new Promise((resolve) => setTimeout(resolve, handlerDuration));
+                    expect.step("handler done");
+                }
             }
-        }
-        await startInteraction(Test, TemplateTestDoubleButton);
-        expect(queryFirst("span")).toBe(null);
-        await click("button");
-        await advanceTime(500);
-        expect(queryFirst("span")).not.toBe(null);
+
+            await startInteraction(Test, TemplateTestDoubleButton, {
+                waitForStart: false,
+            });
+
+            const observer = new MutationObserver((mutations) => {
+                for (const m of mutations) {
+                    if ([...m.addedNodes].some((node) => node.tagName === "SPAN")) {
+                        expect.step("loading added");
+                    }
+                }
+            });
+            observer.observe(queryFirst("button"), { childList: true });
+        });
+
+        test("should be added when the handler takes more than 400ms", async () => {
+            expect("span.fa-spin").toHaveCount(0);
+            await click("button");
+            // Advance time more than the debounce delay of makeButtonHandler
+            // (400ms) but less than the handler duration.
+            await advanceTime(500);
+            expect("span.fa-spin").toHaveCount(1);
+            expect.verifySteps(["loading added"]);
+            await advanceTime(handlerDuration);
+            expect.verifySteps(["handler done"]);
+        });
+
+        test("should never be added when the handler takes less than 400ms", async () => {
+            handlerDuration = 100;
+            expect("span.fa-spin").toHaveCount(0);
+            await click("button");
+            // Advance time more than the handler duration but less than the
+            // debounce delay of makeButtonHandler (400ms).
+            await advanceTime(200);
+            expect.verifySteps(["handler done"]);
+            await advanceTime(1000);
+            expect("span.fa-spin").toHaveCount(0);
+            expect.verifySteps([], {
+                message:
+                    "Loading effect should never be added in the DOM for handlers shorter than 400ms",
+            });
+        });
     });
 
     test("locked automatically binds functions", async () => {

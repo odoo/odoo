@@ -1,4 +1,5 @@
 import {
+    assertChatBubbleAndWindowImStatus,
     assertChatHub,
     click,
     contains,
@@ -22,17 +23,14 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { EventBus } from "@odoo/owl";
 import {
     Command,
     contains as webContains,
     getService,
-    patchWithCleanup,
     preloadBundle,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -472,7 +470,7 @@ test("chat window: TAB cycle with 3 open chat windows", async () => {
 test("chat window should open when receiving a new DM", async () => {
     mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ im_status: "online", name: "DemoUser" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -491,13 +489,19 @@ test("chat window should open when receiving a new DM", async () => {
     await contains(".o-mail-ChatHub");
     withUser(userId, () =>
         rpc("/mail/message/post", {
-            post_data: { body: "Hi, are you here?", message_type: "comment" },
+            post_data: {
+                body: "Hi, are you here?",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })
     );
     await contains(".o-mail-ChatBubble");
     await contains(".o-mail-ChatBubble-counter", { text: "1" });
+    await contains(".o-mail-ChatBubble .o-mail-ImStatus [title='Online']");
+    await assertChatBubbleAndWindowImStatus("DemoUser", 1);
 });
 
 test("chat window should not open when receiving a new DM from odoobot", async () => {
@@ -729,17 +733,19 @@ test("folded chat window should hide member-list and settings buttons", async ()
     await contains(".o-dropdown-item", { text: "Call Settings" });
 });
 
-test("Chat window in mobile are not foldable", async () => {
+test("chat window: fold (mobile)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     patchUiSize({ size: SIZES.SM });
-    setupChatHub({ opened: [channelId] });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-header.cursor-pointer", { count: 0 });
-    await click(".o-mail-ChatWindow-header");
-    await contains(".o-mail-Thread"); // content => non-folded
+    await click(".o-mail-ChatWindow-header [title='Fold']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-mail-ChatBubble", { count: 0 });
+    await openListView("discuss.channel", { res_id: channelId });
+    await contains(".o-mail-ChatBubble");
+    assertChatHub({ folded: [channelId] });
 });
 
 test("Synced chat windows should open at page load on mobile", async () => {
@@ -777,7 +783,7 @@ test("Open chat window of new inviter", async () => {
     });
     await contains(".o-mail-ChatWindow", { text: "Newbie" });
     await contains(".o_notification", {
-        text: "Newbie connected. This is their first connection. Wish them luck.",
+        text: "Newbie just connected for the first time. Wish them luck!",
     });
 });
 
@@ -889,12 +895,6 @@ test("Notification settings rendering in chatwindow", async () => {
 });
 
 test("open channel in chat window from push notification", async () => {
-    patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), {
-            register: () => Promise.resolve(),
-            ready: Promise.resolve(),
-        }),
-    });
     const pyEnv = await startServer();
     const [channelId, salesId] = pyEnv["discuss.channel"].create([
         { name: "General" },
@@ -904,7 +904,7 @@ test("open channel in chat window from push notification", async () => {
     await start();
     await contains(".o-mail-ChatWindow", { text: "Sales" });
     await contains(".o-mail-ChatWindow", { text: "General", count: 0 });
-    browser.navigator.serviceWorker.dispatchEvent(
+    navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId } },
         })

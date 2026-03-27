@@ -34,7 +34,10 @@ class MailMessage(models.Model):
             ('message_id', '!=', False),
             ('consumed', '=', True),
         ])
-        return [('id', 'in', ratings.subselect('message_id'))]
+        domain = Domain("id", "in", ratings.subselect("message_id"))
+        if operator == "in" and 0 in operand:
+            return domain | Domain("rating_ids", "=", False)
+        return domain
 
     def _to_store_defaults(self, target):
         # sudo: mail.message - guest and portal user can receive rating of accessible message

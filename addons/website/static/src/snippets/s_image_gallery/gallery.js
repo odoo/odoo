@@ -7,14 +7,16 @@ import { renderToElement } from "@web/core/utils/render";
 export class Gallery extends Interaction {
     static selector = ".s_image_gallery:not(.o_slideshow)";
     dynamicContent = {
-        "img": {
+        img: {
             "t-on-click": this.onClickImg,
         },
     };
 
     setup() {
         this.modalEl = null;
-        this.originalSources = [...this.el.querySelectorAll("img")].map(img => img.getAttribute("src"));
+        this.originalSources = [...this.el.querySelectorAll("img")].map((img) =>
+            img.getAttribute("src")
+        );
     }
 
     /**
@@ -51,9 +53,10 @@ export class Gallery extends Interaction {
         };
 
         const milliseconds = this.el.dataset.interval || false;
-        const lightboxTemplate = this.el.dataset.vcss === "002"
-            ? "website.gallery.s_image_gallery_mirror.lightbox"
-            : "website.gallery.slideshow.lightbox";
+        const lightboxTemplate =
+            this.el.dataset.vcss === "002"
+                ? "website.gallery.s_image_gallery_mirror.lightbox"
+                : "website.gallery.slideshow.lightbox";
 
         this.modalEl = renderToElement(lightboxTemplate, {
             images: imageEls,
@@ -78,11 +81,15 @@ export class Gallery extends Interaction {
             this.modalEl = undefined;
         });
 
-        this.modalEl.addEventListener("shown.bs.modal", () => {
-            const slideshowEl = this.modalEl.querySelector(".modal-body.o_slideshow");
-            this.services["public.interactions"].startInteractions(slideshowEl);
-            this.modalEl.addEventListener("keydown", this.onModalKeydownBound);
-        }, { once: true });
+        this.modalEl.addEventListener(
+            "shown.bs.modal",
+            () => {
+                const slideshowEl = this.modalEl.querySelector(".modal-body.o_slideshow");
+                this.services["public.interactions"].startInteractions(slideshowEl);
+                this.modalEl.addEventListener("keydown", this.onModalKeydownBound);
+            },
+            { once: true }
+        );
 
         this.insert(this.modalEl, document.body);
         const modalBS = new Modal(this.modalEl, { keyboard: true, backdrop: true });
@@ -104,6 +111,4 @@ export class Gallery extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.gallery", Gallery);
+registry.category("public.interactions").add("website.gallery", Gallery);

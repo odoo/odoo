@@ -1558,10 +1558,12 @@ test("Open record on new window", async () => {
     expect(".o_form_view").toHaveCount(0);
     expect.verifySteps([
         "get menu_id-null",
+        "get current_lang-null",
         "get current_state-null",
         "get current_action-null",
         'set current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"}],"model":"hr.employee"}',
         'set current_action-{"res_model":"hr.employee","type":"ir.actions.act_window","views":[[false,"hierarchy"],[false,"form"]]}',
+        "set current_lang-en",
         'get current_action-{"res_model":"hr.employee","type":"ir.actions.act_window","views":[[false,"hierarchy"],[false,"form"]]}',
         'get current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"}],"model":"hr.employee"}',
         'set current_action-{"res_model":"hr.employee","type":"ir.actions.act_window","views":[[false,"hierarchy"],[false,"form"]]}',

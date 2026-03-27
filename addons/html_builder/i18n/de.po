@@ -3,13 +3,14 @@
 # * html_builder
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2025-09-27 02:30+0000\n"
+"POT-Creation-Date: 2026-03-20 18:36+0000\n"
+"PO-Revision-Date: 2026-03-20 15:13+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "html_builder/de/>\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: html_builder
 #. odoo-javascript
@@ -59,9 +60,13 @@ msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/sidebar/option_container.xml:0
-msgid "ACCESS OPTIONS ANYWAY"
-msgstr "OPTIONEN TROTZDEM ANSEHEN"
+#: code:addons/html_builder/static/src/core/operation_plugin.js:0
+msgid ""
+"A technical issue occurred in the builder, you should save or discard your "
+"changes."
+msgstr ""
+"Es ist ein technisches Problem im HTML-Bauer aufgetreten. Sie sollten Ihre "
+"Änderungen speichern oder verwerfen."
 
 #. module: html_builder
 #. odoo-javascript
@@ -72,7 +77,7 @@ msgstr "Hinzufügen"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/plugins/add_product_option.xml:0
+#: code:addons/html_builder/static/src/plugins/add_product_option.js:0
 msgid "Add Product"
 msgstr "Produkt hinzufügen"
 
@@ -243,8 +248,12 @@ msgstr "Alt-Tag"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
-msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
-msgstr "Anker in die Zwischenablage kopiert%(br)sLink: %(anchorLink)s"
+msgid ""
+"Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%"
+"(close_span)s"
+msgstr ""
+"Anker in die Zwischenablage kopiert%(br)s%(open_span)sLink: %(anchor_link)s%"
+"(close_span)s"
 
 #. module: html_builder
 #. odoo-javascript
@@ -527,7 +536,7 @@ msgstr "Kleckse"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/utils/utils.js:0
 msgid "Block"
-msgstr "Blockieren"
+msgstr "Block"
 
 #. module: html_builder
 #. odoo-javascript
@@ -767,9 +776,10 @@ msgstr "Gepinselt"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
 #: code:addons/html_builder/static/src/utils/utils.js:0
 msgid "Button"
-msgstr "Button"
+msgstr "Schaltfläche"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1351,6 +1361,7 @@ msgstr "EarlyBird"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
+#: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -1676,6 +1687,14 @@ msgstr "Unsichtbare Elemente"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/version_error_plugin.js:0
+msgid ""
+"It might have caused problem during the editing. Please drag the new version "
+"from the snippet panel to update it."
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list.js:0
 msgid "Item"
 msgstr "Element"
@@ -1695,6 +1714,7 @@ msgstr "Labyrinth"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Large"
 msgstr "Groß"
 
@@ -1797,6 +1817,7 @@ msgstr "Medien"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Medium"
 msgstr "Medium"
 
@@ -2135,12 +2156,6 @@ msgstr "Qualität"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/sidebar/option_container.xml:0
-msgid "REPLACE BY NEW VERSION"
-msgstr "DURCH NEUE VERSION ERSETZEN"
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_shapes_definition.js:0
 msgid "Rain"
 msgstr "Regen"
@@ -2212,6 +2227,12 @@ msgstr ""
 #: code:addons/html_builder/static/src/core/anchor/anchor_dialog.xml:0
 msgid "Remove"
 msgstr "Entfernen"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/background_option/background_image.xml:0
+msgid "Remove image"
+msgstr "Bild entfernen"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2287,6 +2308,12 @@ msgstr "Zurücksetzen"
 #: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 msgid "Reset crop"
 msgstr "Crop zurücksetzen"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
+msgid "Reset shape transformation"
+msgstr "Formtransformation zurücksetzen"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2369,6 +2396,12 @@ msgstr "Speichern & kopieren"
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Save and Install"
 msgstr "Speichern und istallieren"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
+msgid "Saved as %s. Find it in your snippets."
+msgstr "Gespeichert als „ %s “. In Ihren Snippets verfügbar."
 
 #. module: html_builder
 #. odoo-javascript
@@ -2456,7 +2489,7 @@ msgstr "Form: Gerundet"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 msgid "Shape: Thumbnail"
-msgstr "Form: Vorschaubild"
+msgstr "Form: Miniaturbild"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2487,6 +2520,7 @@ msgstr "Shuriken (R)"
 #: code:addons/html_builder/static/src/plugins/image/image_size.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Size"
 msgstr "Größe"
 
@@ -2500,6 +2534,7 @@ msgstr "Abgeschrägt"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/font/font_plugin.js:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Small"
 msgstr "Klein"
 
@@ -2764,6 +2799,12 @@ msgstr "Tetris"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
+msgid "Text"
+msgstr "Text"
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_dialog.xml:0
 msgid "The chosen name already exists"
 msgstr "Der gewählte Name existiert bereits"
@@ -2771,6 +2812,7 @@ msgstr "Der gewählte Name existiert bereits"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/builder.js:0
+#: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.js:0
 msgid "Theme"
 msgstr "Design"
 
@@ -2783,12 +2825,6 @@ msgstr "Dieser Baustein kann nicht überall auf dieser Seite abgelegt werden."
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/sidebar/option_container.xml:0
-msgid "This block is outdated."
-msgstr "Dieser Block ist veraltet."
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_fontfamilypicker.xml:0
 msgid "This font is hosted and served to your visitors by Google servers"
 msgstr ""
@@ -2797,9 +2833,21 @@ msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/version_error_plugin.js:0
+msgid "This snippet is outdated"
+msgstr ""
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "Thumbs"
 msgstr "Daumen"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
+msgid "Title"
+msgstr "Titel"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2897,6 +2945,12 @@ msgstr "Typ"
 #: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 msgid "Unalign"
 msgstr "Ausrichtung aufheben"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/core/building_blocks/builder_many2one.xml:0
+msgid "Unselect"
+msgstr "Abwählen"
 
 #. module: html_builder
 #. odoo-javascript
@@ -3058,6 +3112,18 @@ msgstr "Wellig 14"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_filter_option.js:0
+msgid "WebGL is not enabled on your browser."
+msgstr "WebGL ist in Ihrem Browser nicht aktiviert."
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_format_option.xml:0
+msgid "WebP compression not supported on this browser"
+msgstr "WebP-Komprimierung wird von diesem Browser nicht unterstützt."
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/background_option/background_position_option.xml:0
 #: code:addons/html_builder/static/src/plugins/separator_option.xml:0
 #: code:addons/html_builder/static/src/plugins/width_option.xml:0
@@ -3084,39 +3150,15 @@ msgstr "Ja"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/sidebar/option_container.xml:0
-msgid "You can still access the block options but it might be ineffective."
-msgstr ""
-"Sie können zwar immer noch auf die Blockoptionen zugreifen, aber das könnte "
-"erfolglos sein."
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list.xml:0
 msgid "You don't have any record to add"
 msgstr "Sie haben keine hinzuzufügenden Datensätze"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/sidebar/option_container.xml:0
-msgid "You might not be able to customize it anymore."
-msgstr "Sie können ihn möglicherweise nicht mehr anpassen."
-
-#. module: html_builder
-#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/replace_media_option.xml:0
 msgid "Your URL"
 msgstr "Ihre URL"
-
-#. module: html_builder
-#. odoo-javascript
-#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
-msgid ""
-"Your custom snippet was successfully saved as %s. Find it in your snippets "
-"collection."
-msgstr ""
-"Ihr benutzerdefiniertes Snippet wurde erfolgreich als %s gespeichert. Sie "
-"finden ihn in Ihrer Snippet-Sammlung."
 
 #. module: html_builder
 #. odoo-javascript
@@ -3237,3 +3279,30 @@ msgstr "Aktiv"
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "⌙ Inactive"
 msgstr "⌙ Inaktiv"
+
+#~ msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
+#~ msgstr "Anker in die Zwischenablage kopiert%(br)sLink: %(anchorLink)s"
+
+#~ msgid ""
+#~ "Your custom snippet was successfully saved as %s. Find it in your "
+#~ "snippets collection."
+#~ msgstr ""
+#~ "Ihr benutzerdefiniertes Snippet wurde erfolgreich als %s gespeichert. Sie "
+#~ "finden ihn in Ihrer Snippet-Sammlung."
+
+#~ msgid "ACCESS OPTIONS ANYWAY"
+#~ msgstr "OPTIONEN TROTZDEM ANSEHEN"
+
+#~ msgid "REPLACE BY NEW VERSION"
+#~ msgstr "DURCH NEUE VERSION ERSETZEN"
+
+#~ msgid "This block is outdated."
+#~ msgstr "Dieser Block ist veraltet."
+
+#~ msgid "You can still access the block options but it might be ineffective."
+#~ msgstr ""
+#~ "Sie können zwar immer noch auf die Blockoptionen zugreifen, aber das "
+#~ "könnte erfolglos sein."
+
+#~ msgid "You might not be able to customize it anymore."
+#~ msgstr "Sie können ihn möglicherweise nicht mehr anpassen."

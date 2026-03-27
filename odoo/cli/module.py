@@ -62,6 +62,8 @@ class Module(Command):
             parser.add_argument(
                 '-d', '--database', dest='db_name', default=None,
                 help="database name, connection details will be taken from the config file")
+            parser.add_argument("-D", "--data-dir", dest="data_dir",
+                 help="directory where to store Odoo data")
 
         install_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',
@@ -81,19 +83,22 @@ class Module(Command):
             help="names of the modules to be uninstalled")
         upgrade_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',
-            help="name of the modules to be upgraded, use 'base' if you want to upgrade everything")
+            help="name of the modules to be upgraded, use 'base' or 'all' if you want to upgrade everything")
         upgrade_parser.add_argument(
             '--outdated', action='store_true',
-            help="only update modules that have a newer version on disk",
+            help="only update modules that have a newer version on disk. "
+                 "If 'all' is used as `modules` argument, this applies to all installed modules.",
         )
 
     def run(self, cmdargs):
         parsed_args = self.parser.parse_args(args=cmdargs)
-        config_args = []
+        config_args = ['--no-http']
         if parsed_args.config:
             config_args += ['-c', parsed_args.config]
         if parsed_args.db_name:
             config_args += ['-d', parsed_args.db_name]
+        if parsed_args.data_dir:
+            config_args += ['-D', parsed_args.data_dir]
         config.parse_config(config_args, setup_logging=True)
 
         db_names = config['db_name']
@@ -119,10 +124,16 @@ class Module(Command):
             or self._get_zip_path(module)
         }
 
-    def _get_modules(self, env, module_names):
+    def _get_module_model(self, env):
         Module = env['ir.module.module']
         Module.update_list()
-        return Module.search([('name', 'in', module_names)])
+        return Module
+
+    def _get_all_installed_modules(self, env):
+        return self._get_module_model(env).search([['state', '=', 'installed']])
+
+    def _get_modules(self, env, module_names):
+        return self._get_module_model(env).search([('name', 'in', module_names)])
 
     @contextmanager
     def _create_env_context(self, db_name):
@@ -156,8 +167,11 @@ class Module(Command):
 
     def _upgrade(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
-            valid_module_names = self._get_module_names(parsed_args.modules)
-            upgradable_modules = self._get_modules(env, valid_module_names)
+            if 'all' in parsed_args.modules:
+                upgradable_modules = self._get_all_installed_modules(env)
+            else:
+                valid_module_names = self._get_module_names(parsed_args.modules)
+                upgradable_modules = self._get_modules(env, valid_module_names)
             if parsed_args.outdated:
                 upgradable_modules = upgradable_modules.filtered(
                     lambda x: parse_version(x.installed_version) > parse_version(x.latest_version),

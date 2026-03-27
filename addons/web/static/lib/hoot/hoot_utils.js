@@ -6,6 +6,7 @@ import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
     isIterable,
+    isPromise,
     parseRegExp,
     R_WHITE_SPACE,
     toSelector,
@@ -114,6 +115,7 @@ const {
     TypeError,
     URL,
     URLSearchParams,
+    WeakMap,
     WeakSet,
     window,
 } = globalThis;
@@ -165,10 +167,21 @@ function getGenericSerializer(value) {
 }
 
 function makeObjectCache() {
-    const cache = new Set();
+    const cache = new WeakSet();
     return {
-        add: (...values) => values.forEach((value) => cache.add(value)),
-        has: (...values) => values.every((value) => cache.has(value)),
+        add: (...values) => {
+            for (const value of values) {
+                cache.add(value);
+            }
+        },
+        has: (...values) => {
+            for (const value of values) {
+                if (!cache.has(value)) {
+                    return false;
+                }
+            }
+            return true;
+        },
     };
 }
 
@@ -178,11 +191,7 @@ function makeObjectCache() {
  * @returns {T}
  */
 function resolve(value) {
-    if (typeof value === "function") {
-        return value();
-    } else {
-        return value;
-    }
+    return typeof value === "function" ? value() : value;
 }
 
 /**
@@ -203,6 +212,51 @@ function stringSort(a, b) {
 function truncate(value, length = MAX_HUMAN_READABLE_SIZE) {
     const strValue = String(value);
     return strValue.length <= length ? strValue : strValue.slice(0, length) + ELLIPSIS;
+}
+
+/**
+ * @template T
+ * @param {T} value
+ * @param {ReturnType<makeObjectCache>} cache
+ * @returns {T}
+ */
+function _deepCopy(value, cache) {
+    if (!value) {
+        return value;
+    }
+    if (typeof value === "function") {
+        if (value.name) {
+            return `<function ${value.name}>`;
+        } else {
+            return "<anonymous function>";
+        }
+    }
+    if (typeof value === "object" && !Markup.isMarkup(value)) {
+        if (isInstanceOf(value, String, Number, Boolean)) {
+            return value;
+        }
+        if (isNode(value)) {
+            // Nodes
+            return value.cloneNode(true);
+        } else if (isInstanceOf(value, Date, RegExp)) {
+            // Dates & regular expressions
+            return new (getConstructor(value))(value);
+        } else if (isIterable(value)) {
+            const isArray = $isArray(value);
+            const valueArray = isArray ? value : [...value];
+            // Iterables
+            const values = valueArray.map((item) => _deepCopy(item, cache));
+            return $isArray(value) ? values : new (getConstructor(value))(values);
+        } else {
+            // Other objects
+            if (cache.has(value)) {
+                return S_CIRCULAR;
+            }
+            cache.add(value);
+            return $fromEntries($ownKeys(value).map((key) => [key, _deepCopy(value[key], cache)]));
+        }
+    }
+    return value;
 }
 
 /**
@@ -521,6 +575,8 @@ class QueryPartialString extends QueryString {
     compareFn = getFuzzyScore;
 }
 
+const EMPTY_CONSTRUCTOR = { name: null };
+
 /** @type {Map<Function, (value: unknown) => string>} */
 const GENERIC_SERIALIZERS = new Map([
     [BigInt, (v) => v.valueOf()],
@@ -551,10 +607,12 @@ const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
-const labelObjects = new WeakSet();
-const objectConstructors = new Map();
 /** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
 const hootKeys = [];
+const labelObjects = new WeakSet();
+const objectConstructors = new Map();
+/** @type {WeakMap<unknown, unknown>} */
+const syncValues = new WeakMap();
 const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
@@ -595,6 +653,22 @@ export function callHootKey(ev) {
             }
         }
     }
+}
+
+/**
+ * @template T
+ * @param {T} object
+ * @returns {T}
+ */
+export function copyAndBind(object) {
+    const copy = {};
+    for (const [key, desc] of $entries($getOwnPropertyDescriptors(object))) {
+        if (key !== "constructor" && typeof desc.value === "function") {
+            desc.value = desc.value.bind(object);
+        }
+        $defineProperty(copy, key, desc);
+    }
+    return copy;
 }
 
 /**
@@ -666,6 +740,7 @@ export function createReporting(parentReporting) {
 
     const reporting = reactive({
         assertions: 0,
+        duration: 0,
         failed: 0,
         passed: 0,
         skipped: 0,
@@ -715,45 +790,6 @@ export function createMock(target, descriptors) {
 }
 
 /**
- * @template T
- * @param {T} value
- * @returns {T}
- */
-export function deepCopy(value) {
-    if (!value) {
-        return value;
-    }
-    if (typeof value === "function") {
-        if (value.name) {
-            return `<function ${value.name}>`;
-        } else {
-            return "<anonymous function>";
-        }
-    }
-
-    if (typeof value === "object" && !Markup.isMarkup(value)) {
-        if (isInstanceOf(value, String, Number, Boolean)) {
-            return value;
-        }
-        if (isNode(value)) {
-            // Nodes
-            return value.cloneNode(true);
-        } else if (isInstanceOf(value, Date, RegExp)) {
-            // Dates & regular expressions
-            return new (getConstructor(value))(value);
-        } else if (isIterable(value)) {
-            // Iterables
-            const values = [...value].map(deepCopy);
-            return $isArray(value) ? values : new (getConstructor(value))(values);
-        } else {
-            // Other objects
-            return $fromEntries($ownKeys(value).map((key) => [key, deepCopy(value[key])]));
-        }
-    }
-    return value;
-}
-
-/**
  * @template {(...args: any[]) => any} T
  * @param {T} fn
  */
@@ -799,6 +835,15 @@ export function debounce(fn, delay) {
             }, delay);
         },
     }[name];
+}
+
+/**
+ * @template T
+ * @param {T} value
+ * @returns {T}
+ */
+export function deepCopy(value) {
+    return _deepCopy(value, makeObjectCache());
 }
 
 /**
@@ -955,7 +1000,7 @@ export function generateHash(...strings) {
 export function getConstructor(value) {
     const { constructor } = value;
     if (constructor !== Object) {
-        return constructor || { name: null };
+        return constructor || EMPTY_CONSTRUCTOR;
     }
     const str = value.toString();
     const match = str.match(R_OBJECT);
@@ -1019,6 +1064,30 @@ export function getFuzzyScore(pattern, string) {
         fuzzyScoreMap[string] = score;
     }
     return score;
+}
+
+/**
+ * Returns the value associated to the given object.
+ * If 'toStringValue' is set, the result will concatenate any inner object that
+ * also has an associated sync value. This is typically useful for nested Blobs.
+ *
+ * @param {unknown} object
+ * @param {boolean} toStringValue
+ */
+export function getSyncValue(object, toStringValue) {
+    const result = syncValues.get(object);
+    if (!toStringValue) {
+        return result;
+    }
+    let textResult = "";
+    if (isIterable(result)) {
+        for (const part of result) {
+            textResult += syncValues.has(part) ? getSyncValue(part, toStringValue) : String(part);
+        }
+    } else {
+        textResult += String(result);
+    }
+    return textResult;
 }
 
 /**
@@ -1255,7 +1324,9 @@ export function makeRuntimeHook(name) {
                 valid ||= Boolean(last.global);
             }
             if (!valid) {
-                throw new HootError(`cannot call "${name}" callback outside of a suite`);
+                throw new HootError(`cannot call "${name}" callback outside of a suite`, {
+                    level: "critical",
+                });
             }
             return runner[name](...callbacks);
         },
@@ -1385,6 +1456,14 @@ export async function paste() {
     } catch (error) {
         console.warn("Could not paste from clipboard:", error);
     }
+}
+
+/**
+ * @param {unknown} object
+ * @param {unknown} value
+ */
+export function setSyncValue(object, value) {
+    syncValues.set(object, value);
 }
 
 /**
@@ -1589,7 +1668,7 @@ export class Callbacks {
      * @param {boolean} [once]
      */
     add(type, callback, once) {
-        if (isInstanceOf(callback, Promise)) {
+        if (isPromise(callback)) {
             const promiseValue = callback;
             callback = function waitForPromise() {
                 return Promise.resolve(promiseValue).then(resolve);
@@ -1764,6 +1843,22 @@ export class ElementMap extends Map {
 
 export class HootError extends Error {
     name = "HootError";
+    /** @type {keyof typeof import("./core/logger").ISSUE_LEVELS} */
+    level;
+
+    /**
+     *
+     * @param {string} [message]
+     * @param {ErrorOptions & {
+     *  level?: keyof typeof import("./core/logger").ISSUE_LEVELS;
+     * }} [options]
+     */
+    constructor(message, options) {
+        super(message, options);
+
+        // See 'logger.js' for details on each issue level
+        this.level = options?.level;
+    }
 }
 
 /** @template [T=string] */
@@ -1976,9 +2071,12 @@ export const INCLUDE_LEVEL = {
 };
 
 export const MIME_TYPE = {
+    formData: "multipart/form-data",
     blob: "application/octet-stream",
+    html: "text/html",
     json: "application/json",
     text: "text/plain",
+    xml: "text/xml",
 };
 
 export const STORAGE = {
@@ -1988,6 +2086,7 @@ export const STORAGE = {
 };
 
 export const S_ANY = Symbol("any value");
+export const S_CIRCULAR = Symbol("circular object");
 export const S_NONE = Symbol("no value");
 
 export const R_QUERY_EXACT = new RegExp(

@@ -3,7 +3,7 @@ import { pyToJsLocale } from "@web/core/l10n/utils/locales";
 import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
 import { session } from "@web/session";
-import { ensureArray } from "./utils/arrays";
+import { ensureArray, sortBy } from "./utils/arrays";
 import { cookie } from "@web/core/browser/cookie";
 import { EventBus } from "@odoo/owl";
 
@@ -65,6 +65,13 @@ export function _makeUser(session) {
         ) {
             activeCompanies = [defaultCompanyId];
         }
+        // Sort companies, except for the first one which has a different status, as the order of
+        // the others doesn't matter, and we want to reduce the entropy of the `allowed_company_ids`
+        // key in the context. This is important for the caches, as the stringified context is
+        // always present in the rpc cache keys.
+        activeCompanies = [activeCompanies[0]].concat(
+            sortBy(activeCompanies.slice(1), (c) => c.id)
+        );
 
         // update browser data
         cookie.set("cids", activeCompanies.map((c) => c.id).join("-"));

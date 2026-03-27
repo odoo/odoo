@@ -1162,7 +1162,7 @@ stepUtils.autoExpandMoreButtons(true),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_back_button",
+    trigger: "div.o_breadcrumb:contains('Tasks') .o_back_button",
     content: _t('Back to the sale order'),
     tooltipPosition: "bottom",
     run: "click",

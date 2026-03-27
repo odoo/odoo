@@ -8,6 +8,8 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, RecordCapturer
+from odoo.tools import file_open
+from odoo.tools.misc import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
@@ -251,7 +253,14 @@ class TestAccountInvoiceImportMixin:
                 case _:
                     raise ValueError(f"Unknown origin: {origin}")
 
-        return attachment_capturer.records, message_capturer.records, move_capturer.records
+        attachments_created = attachment_capturer.records
+        moves = move_capturer.records
+        # if account_edi_ubl_cii is installed and used as decoder, an attachment is linked to the imported bill with res_field = ubl_cii_xml_file
+        # Therefore it is not detected in the attachment_capturer (because res_field is not specified in domain used to search, see `_search` method override in ir.attachment)
+        # So we need to catch it as some tests check that it has been created
+        if 'ubl_cii_xml_id' in moves._fields:
+            attachments_created |= moves.ubl_cii_xml_id
+        return attachments_created, message_capturer.records, moves
 
     def _get_raw_mail_message_str(self, attachments_vals, email_to, message_id=None):
         """
@@ -417,7 +426,54 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
         }
 
         invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
-        self.assertEqual(invoice.partner_id, self.internal_user.partner_id)
+        self.assertFalse(invoice.partner_id)
+
+        message_ids = invoice.message_ids
+        self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
+        self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
+
+        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        self.assertEqual(following_partners, self.env.user.partner_id)
+
+    def test_supplier_invoice_forwarded_by_internal_with_company_in_body(self):
+        """ In this test, the bill was forwarded by an employee,
+            and the company email address is found in the body."""
+        self.journal.company_id.partner_id.email = 'contact@example.com'
+        message_parsed = {
+            'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
+            'subject': 'Incoming bill',
+            'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
+            'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
+            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % (self.journal.company_id.partner_id.name, self.journal.company_id.partner_id.email),
+            'attachments': [b'Hello, invoice'],
+        }
+
+        invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertFalse(invoice.partner_id)
+
+        message_ids = invoice.message_ids
+        self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
+        self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
+
+        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        self.assertEqual(following_partners, self.env.user.partner_id)
+
+    def test_supplier_invoice_forwarded_by_internal_with_unknown_supplier_in_body(self):
+        """ In this test, the bill was forwarded by an employee,
+            and an unknown partner email address is found in the body."""
+        message_parsed = {
+            'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
+            'subject': 'Incoming bill',
+            'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
+            'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
+            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % ("Test supplier", "unknown_supplier@other.com"),
+            'attachments': [b'Hello, invoice'],
+        }
+
+        invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertFalse(invoice.partner_id)
 
         message_ids = invoice.message_ids
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
@@ -427,21 +483,25 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
         self.assertEqual(following_partners, self.env.user.partner_id)
 
     def test_einvoice_notification(self):
-        self.company_data['default_journal_purchase'].incoming_einvoice_notification_email = 'oops_another_bill@example.com'
+        purchase_journal = self.company_data['default_journal_purchase']
+        purchase_journal.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
 
         with self.mock_mail_gateway():
             self.assert_attachment_import(
                 origin='mail_alias',
                 attachments_vals=[self.pdf1_vals],
                 expected_invoices={
-                    1: {'invoice1.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
+                    1: {
+                        'invoice1.pdf': {'on_message': True, 'on_invoice': True, 'is_decoded': True, 'is_new': True},
+                        'MAIL_invoice1.pdf': {'on_message': True},
+                    },
                 },
             )
 
         self.assertSentEmail(
             self.company_data['company'].email_formatted,
             ['oops_another_bill@example.com'],
-            subject='New Electronic Invoices Received',
+            subject=f"{self.company_data['company'].name} - New invoice in {purchase_journal.display_name} journal",
         )
 
     def test_01_decoder_called(self):
@@ -586,6 +646,18 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                     'gif2.gif': {'on_message': True},
                 },
                 2: {'invoice2.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
+            },
+        )
+
+    def test_25_mail_alias_gifs(self):
+        self.assert_attachment_import(
+            origin='mail_alias',
+            attachments_vals=[self.gif1_vals, self.gif2_vals],
+            expected_invoices={
+                1: {
+                    'gif1.gif': {'on_message': True},
+                    'gif2.gif': {'on_message': True},
+                },
             },
         )
 
@@ -922,7 +994,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                     'gif1.gif': {'on_message': True},
                     'gif2.gif': {'on_message': True},
                     'invoice1.pdf': {'on_invoice': True, 'on_message': True},
-                    'invoice1.xml': {'is_decoded': True, 'is_new': True, 'on_message': True}
+                    'invoice1.xml': {'is_decoded': True, 'is_new': True, 'on_message': True},
                 },
                 2: {
                     'invoice2.pdf': {'on_invoice': True, 'on_message': True},
@@ -935,5 +1007,61 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                     'embedded.xml': {'is_decoded': True, 'is_new': True},
                     'invoice3.pdf': {'on_invoice': True, 'on_message': True},
                 }
+            },
+        )
+
+    def test_import_with_traceback(self):
+        # Verify that even an Exception does not cause the import to fail, and that we log the attachment in the chatter
+        attachment = self.env['ir.attachment'].create(self.xml1_vals)
+
+        with (
+            self._patch_import_methods(),
+            patch('odoo.addons.account.models.partner.ResPartner.search', side_effect=ValueError('We want to test an unexpected error')),
+            mute_logger('odoo.addons.account.models.account_document_import_mixin'),
+        ):
+            move_id = self.journal.create_document_from_attachment(attachment.ids).get('res_id')
+
+        self.assertEqual(self.env['account.move'].browse(move_id).attachment_ids, attachment)
+
+    def test_import_xml_with_embedded_pdf(self):
+        self.ensure_installed('account_edi_ubl_cii')
+        with file_open("account/tests/test_files/xml_with_embedded_pdf.xml", 'rb') as file:
+            xml_vals = {'name': 'invoice.xml', 'raw': file.read(), 'mimetype': 'application/xml'}
+
+        self.assert_attachment_import(
+            origin='journal',
+            attachments_vals=[xml_vals],
+            expected_invoices={
+                1: {
+                    'invoice.xml': {
+                        'on_invoice': True,
+                        'on_message': True,
+                        'is_decoded': True,
+                        'is_new': True,
+                    },
+                    'test_pdf.pdf': {
+                        'on_invoice': True,
+                        'on_message': True,
+                    },
+                },
+            },
+        )
+
+        self.assert_attachment_import(
+            origin='mail_alias',
+            attachments_vals=[xml_vals],
+            expected_invoices={
+                1: {
+                    'invoice.xml': {
+                        'on_invoice': True,
+                        'on_message': True,
+                        'is_decoded': True,
+                        'is_new': True,
+                    },
+                    'test_pdf.pdf': {
+                        'on_invoice': True,
+                        'on_message': True,
+                    },
+                },
             },
         )

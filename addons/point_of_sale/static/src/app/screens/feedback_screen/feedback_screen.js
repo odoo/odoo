@@ -12,7 +12,6 @@ export class FeedbackScreen extends Component {
     static props = {
         orderUuid: String,
         waitFor: { type: Object, optional: true },
-        paymentMethodId: { type: Number, optional: true, default: null },
     };
 
     setup() {
@@ -39,7 +38,7 @@ export class FeedbackScreen extends Component {
                     } finally {
                         this.state.loading = false;
                         this.timeout = setTimeout(() => {
-                            this.pos.orderDone(this.currentOrder);
+                            this.goNext();
                         }, 5000);
                     }
                 };
@@ -77,6 +76,10 @@ export class FeedbackScreen extends Component {
             return;
         }
         clearTimeout(this.timeout);
+        this.goNext();
+    }
+
+    goNext() {
         this.pos.orderDone(this.currentOrder);
     }
 }

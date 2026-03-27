@@ -10,7 +10,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <FormActionFieldsOption activeForm="state.activeForm" prepareFormModel="props.prepareFormModel"/>
+    <FormActionFieldsOption activeForm="state.activeForm"/>
     <BuilderRow label.translate="Marked Fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
@@ -39,7 +39,7 @@
                        action="'toggleEndMessage'"/>
     </BuilderRow>
     <BuilderRow label.translate="URL">
-        <WebsiteUrlPicker dataAttributeAction="'successPage'" default="'/contactus-thank-you'" id="'url_opt'" t-if="isActiveItem('show_redirect_opt')"/>
+        <BuilderUrlPicker dataAttributeAction="'successPage'" default="'/contactus-thank-you'" id="'url_opt'" t-if="isActiveItem('show_redirect_opt')"/>
     </BuilderRow>
     <BuilderRow t-if="hasRecaptchaKey" label.translate="Show reCaptcha Policy">
         <BuilderCheckbox action="'formToggleRecaptchaLegal'" preview="false"/>
@@ -74,7 +74,7 @@
 </t>
 
 <t t-name="website.s_website_form_form_option_add_field_button">
-    <button type="button" class="btn o_we_bg_brand_primary"
+    <button type="button" class="btn btn-success pe-2"
         t-att-title="props.tooltip"
         t-on-click="() => this.addField()"
     >
@@ -88,7 +88,7 @@
 
 <t t-name="website.s_website_form_field_option">
     <t t-if="domState.elClassList.includes('s_website_form_model_required')">
-        <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" fetchModels="props.fetchModels"/>
+        <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" />
     </t>
     <BuilderRow label.translate="Type">
         <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"
@@ -130,7 +130,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Selection type">
-        <BuilderSelect t-if="isExistingFieldSelectType"
+        <BuilderSelect t-if="isExistingFieldSelectType and state.valueList"
             id="'existing_field_select_type_opt'" preview="false" action="'existingFieldSelectType'"
         >
             <BuilderSelectItem actionValue="'many2one'">Dropdown List</BuilderSelectItem>
@@ -149,7 +149,7 @@
         <BuilderNumberInput unit.translate="rows" saveUnit="''" step="1" attributeAction="'rows'" default="3"/>
     </BuilderRow>
     <BuilderRow label.translate="Label">
-        <BuilderTextInput action="'setLabelText'"/>
+        <BuilderTextInput action="'setLabelText'" default="domState.fieldTranslatedName"/>
     </BuilderRow>
     <BuilderRow label.translate="Position" level="1">
         <BuilderButtonGroup action="'selectLabelPosition'">
@@ -225,7 +225,9 @@
                 itemShape="{ display_name: 'text', selected: state.valueList.checkType }"
                 default="{ display_name: state.valueList.defaultItemName, selected: false }"
                 defaultNewValue="{ id: state.valueList.defaultItemName }"
-                records="state.valueList.availableRecords" />
+                forbidLastItemRemoval="true"
+                records="state.valueList.availableRecords"
+                isInputDisabled="state.valueList.isInputDisabled" />
         </div>
     </BuilderRow>
     <BuilderRow label.translate="Requirement"

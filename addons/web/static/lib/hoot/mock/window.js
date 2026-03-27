@@ -12,7 +12,7 @@ import {
 } from "@web/../lib/hoot-dom/helpers/time";
 import { interactor } from "../../hoot-dom/hoot_dom_utils";
 import { MockEventTarget, strictEqual, waitForDocument } from "../hoot_utils";
-import { getRunner } from "../main_runner";
+import { ensureTest, getRunner } from "../main_runner";
 import {
     MockAnimation,
     mockedAnimate,
@@ -25,9 +25,11 @@ import {
     mockedWindowScrollTo,
 } from "./animation";
 import { MockConsole } from "./console";
+import { mockCrypto } from "./crypto";
 import { MockDate, MockIntl } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
+    MockBlob,
     MockBroadcastChannel,
     MockMessageChannel,
     MockMessagePort,
@@ -46,8 +48,6 @@ import {
 } from "./network";
 import { MockNotification } from "./notification";
 import { MockStorage } from "./storage";
-import { MockBlob } from "./sync_values";
-import { mockCrypto } from "./crypto";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -61,6 +61,7 @@ const {
     Object: {
         assign: $assign,
         defineProperties: $defineProperties,
+        defineProperty: $defineProperty,
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
         getPrototypeOf: $getPrototypeOf,
@@ -70,9 +71,11 @@ const {
     Reflect: { ownKeys: $ownKeys },
     Set,
     WeakMap,
+    WeakSet,
 } = globalThis;
 
 const { addEventListener, removeEventListener } = EventTarget.prototype;
+const { preventDefault } = Event.prototype;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -327,6 +330,11 @@ function mockedMatchMedia(mediaQueryString) {
     return new MockMediaQueryList(mediaQueryString);
 }
 
+function mockedPreventDefault() {
+    preventedEvents.add(this);
+    return preventDefault.call(this, ...arguments);
+}
+
 /** @type {typeof removeEventListener} */
 function mockedRemoveEventListener(...args) {
     if (getRunner().dry) {
@@ -420,6 +428,18 @@ class MockMediaQueryList extends MockEventTarget {
     }
 }
 
+class MockMutationObserver extends MutationObserver {
+    disconnect() {
+        activeMutationObservers.delete(this);
+        return super.disconnect(...arguments);
+    }
+
+    observe() {
+        activeMutationObservers.add(this);
+        return super.observe(...arguments);
+    }
+}
+
 const DEFAULT_MEDIA_VALUES = {
     "display-mode": "browser",
     pointer: "fine",
@@ -438,12 +458,16 @@ const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 const originalDescriptors = new WeakMap();
 const originalTouchFunctions = getTouchTargets(globalThis).map(getTouchDescriptors);
 
+/** @type {Set<MockMutationObserver>} */
+const activeMutationObservers = new Set();
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
 const mockConsole = new MockConsole();
 const mockLocalStorage = new MockStorage();
 const mockMediaValues = { ...DEFAULT_MEDIA_VALUES };
 const mockSessionStorage = new MockStorage();
+/** @type {WeakSet<Event>} */
+const preventedEvents = new WeakSet();
 let mockTitle = "";
 
 // Mock descriptors
@@ -493,6 +517,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     matchMedia: { value: mockedMatchMedia },
     MessageChannel: { value: MockMessageChannel },
     MessagePort: { value: MockMessagePort },
+    MutationObserver: { value: MockMutationObserver },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
     outerHeight: { get: () => getCurrentDimensions().height },
@@ -547,6 +572,11 @@ export function cleanupWindow() {
 
     // Touch
     restoreTouch(view);
+
+    // Mutation observers
+    for (const observer of activeMutationObservers) {
+        observer.disconnect();
+    }
 }
 
 export function getTitle() {
@@ -580,18 +610,36 @@ export function getViewPortWidth() {
 }
 
 /**
+ * @param {Event} event
+ */
+export function isPrevented(event) {
+    return event.defaultPrevented || preventedEvents.has(event);
+}
+
+/**
  * @param {Record<string, string>} name
  */
 export function mockMatchMedia(values) {
+    ensureTest("mockMatchMedia");
     $assign(mockMediaValues, values);
 
     callMediaQueryChanges($keys(values));
 }
 
 /**
+ * @param {Event} event
+ */
+export function mockPreventDefault(event) {
+    $defineProperty(event, "preventDefault", {
+        value: mockedPreventDefault,
+    });
+}
+
+/**
  * @param {boolean} setTouch
  */
 export function mockTouch(setTouch) {
+    ensureTest("mockTouch");
     const objects = getTouchTargets(getWindow());
     if (setTouch) {
         for (const object of objects) {
@@ -695,13 +743,13 @@ export function watchListeners(view = getWindow()) {
  *  afterEach(watchKeys(window, ["odoo"]));
  */
 export function watchKeys(target, whiteList) {
-    const acceptedKeys = new Set([...$ownKeys(target), ...(whiteList || [])]);
+    const acceptedKeys = new Set($ownKeys(target).concat(whiteList || []));
 
     return function checkKeys() {
-        const keysDiff = $ownKeys(target).filter(
-            (key) => $isNaN($parseFloat(key)) && !acceptedKeys.has(key)
-        );
-        for (const key of keysDiff) {
+        for (const key of $ownKeys(target)) {
+            if (!$isNaN($parseFloat(key)) || acceptedKeys.has(key)) {
+                continue;
+            }
             const descriptor = $getOwnPropertyDescriptor(target, key);
             if (descriptor.configurable) {
                 delete target[key];

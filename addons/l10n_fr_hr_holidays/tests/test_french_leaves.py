@@ -6,6 +6,9 @@ import time
 from datetime import date
 from odoo.tests.common import TransactionCase, tagged
 
+from odoo import fields
+import pytz
+
 _logger = logging.getLogger(__name__)
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'french_leaves')
@@ -417,3 +420,164 @@ class TestFrenchLeaves(TransactionCase):
         self.assertEqual(leave_2.number_of_days, 5.0)
         self.assertEqual(leave_2.date_from.date(), date(2024, 10, 21))
         self.assertEqual(leave_2.date_to.date(), date(2024, 10, 27))
+
+    def test_leave_employee_different_schedule_from_company(self):
+        self.company.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Company Calendar',
+            'attendance_ids': [attendance for i in range(5) for attendance in [
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})]
+            ]
+        })
+        self.employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [attendance for i in range(5) for attendance in [
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': f'Day {i} of week', 'dayofweek': str(i), 'hour_from': 13, 'hour_to': 17.50, 'day_period': 'afternoon'})]
+            ]
+        })
+
+        leave_1 = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2025-08-04',
+            'request_date_to': '2025-08-04',
+        })
+
+        work_hours_data = leave_1.employee_id._list_work_time_per_day(
+            leave_1.date_from,
+            leave_1.date_to)
+
+        self.assertEqual(work_hours_data[leave_1.employee_id.id][0][1], 7.50)
+
+    def test_holiday_in_week(self):
+        """
+        Test Case:
+        ==========
+        - Employee works from Monday to Wednesday
+        - Company works from Monday to Friday
+        - Employee requests monday to wednesday off -> according to french law, he has to take all week (5 days)
+        - In a given week thursday is a holiday -> in that week a whole week is 4 days -> 4 days off
+        """
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            ],
+        })
+
+        self.employee.resource_calendar_id = employee_calendar
+        self.company.resource_calendar_id = self.base_calendar
+
+        # Here we have to create a holiday with company, since the company is set based on the env
+        # We also need to take into account that in the frontend this is a one day leave from
+        # 00h00 to 23h59 , but in the server it is saved as utc, so we consider the current user tz
+        # and subtract that from the holiday. With this, wherever you may be running the tests, the
+        # result should be consistent
+        tz = pytz.timezone(self.env.user.tz)
+        self.env['resource.calendar.leaves'].with_company(self.company).create({
+            'name': 'Public Holiday',
+            'calendar_id': False,
+            'date_from': tz.localize(fields.Datetime.from_string("2024-12-26 00:00:00")).astimezone(pytz.UTC).replace(tzinfo=None),
+            'date_to': tz.localize(fields.Datetime.from_string("2024-12-26 23:59:59")).astimezone(pytz.UTC).replace(tzinfo=None),
+            'resource_id': False,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2024-12-23',
+            'request_date_to': '2024-12-25',
+        })
+        self.assertEqual(leave.number_of_days, 4.0, 'Public holidays for French part-time employees should be considered')
+
+    def test_employee_2_week_calendar(self):
+        """
+        Test Case:
+        ==========
+        - Employee has a two week calendar
+        - Company has a standard 40hr/week calendar
+        - Time off type is Paid Time Off
+        - Employee requests Monday off
+        """
+        self.time_off_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'requires_allocation': 'yes',
+            'employee_requests': 'no',
+            'allocation_validation_type': 'hr',
+            'leave_validation_type': 'both',
+            'request_unit': 'day'
+        })
+        self.company.write({'l10n_fr_reference_leave_type': self.time_off_type.id})
+        self.employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'two_weeks_calendar': True,
+            'attendance_ids': [
+                (0, 0, {'week_type': '0', 'name': 'First week', 'dayofweek': '0', 'hour_from': 0.0, 'hour_to': 0.0, 'day_period': 'morning', 'display_type': 'line_section'}),
+                (0, 0, {'week_type': '0', 'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+
+                (0, 0, {'week_type': '1', 'name': 'Second week', 'dayofweek': '0', 'hour_from': 0.0, 'hour_to': 0.0, 'day_period': 'morning', 'display_type': 'line_section'}),
+                (0, 0, {'week_type': '1', 'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+            ],
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'PTO allocation',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'date_from': '2025-01-01',
+            'number_of_days': 10.0,
+        })
+        allocation.action_approve()
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-01-12',
+            'request_date_to': '2026-01-12',
+        })
+        self.assertEqual(leave.number_of_days, 1, 'The duration should be equal 1 day')
+        self.assertEqual(leave.date_from.date(), date(2026, 1, 12))
+        self.assertEqual(leave.date_to.date(), date(2026, 1, 12))
+        self.assertEqual(leave.number_of_hours, 8.0, 'Duration should be 8 hours (one working day)')

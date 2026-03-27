@@ -50,7 +50,7 @@ class PortalChatter(ThreadController):
                                 fields=[
                                     "active",
                                     "avatar_128",
-                                    Store.One("main_user_id", "share"),
+                                    Store.One("main_user_id", ["partner_id", "share"]),
                                     "name",
                                 ],
                             )
@@ -79,10 +79,7 @@ class PortalChatter(ThreadController):
             & Domain(field.get_comodel_domain(model))
             & Domain("res_id", "=", thread_id)
             & Domain("subtype_id", "=", request.env.ref("mail.mt_comment").id)
-            & (
-                Domain("body", "not in", [False, '<span class="o-mail-Message-edited"></span>'])
-                | Domain("attachment_ids", "!=", False)
-            )
+            & self._get_non_empty_message_domain()
         )
 
         # Check access
@@ -110,6 +107,11 @@ class PortalChatter(ThreadController):
             "data": {"mail.message": messages.portal_message_format(options=kw)},
             "messages": messages.ids,
         }
+
+    def _get_non_empty_message_domain(self):
+        return Domain(
+            "body", "not in", [False, '<span class="o-mail-Message-edited"></span>']
+        ) | Domain("attachment_ids", "!=", False)
 
     def _setup_portal_message_fetch_extra_domain(self, data) -> Domain:
         return Domain.TRUE

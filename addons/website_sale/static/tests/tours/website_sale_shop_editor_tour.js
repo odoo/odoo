@@ -1,4 +1,10 @@
-import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import {
+    changeBackgroundColor,
+    changeOption,
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour("shop_editor", {
     url: "/shop",
@@ -49,3 +55,92 @@ registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
     content: "Check that the ribbon was properly saved",
     trigger: ':iframe .oe_product:first .o_ribbons:contains("Sale")',
 }]);
+
+registerWebsitePreviewTour("shop_editor_no_alternative_products_visibility_tour", {
+    url: "/shop",
+    edition: false,
+}, () => [
+    {
+        content: "Select the product with alternative products",
+        trigger: ':iframe .oe_product_cart[aria-label="product_with_alternative"] a',
+        run: "click",
+    },
+    {
+        content: "Ensure product page is loaded before clicking on Edit",
+        trigger: ':iframe #product_details',
+    },
+    ...clickOnEditAndWaitEditMode(),
+    {
+        trigger: ':iframe .s_dynamic_snippet_title h4',
+        run: "click",
+    },
+    {
+        content: "Edit the alternative products section header",
+        trigger: `:iframe .container[contenteditable="true"] h4`,
+        run: function () {
+            this.anchor.textContent = "Edited Alternative"
+            this.anchor.dispatchEvent(new Event("input", { bubbles: true }));
+        },
+    },
+    ...clickOnSave(),
+    {
+        content: "Navigate back to shop page",
+        trigger: ':iframe .breadcrumb-item a',
+        run: "click",
+    },
+    {
+        content: "Select the product without alternative products",
+        trigger: ':iframe .oe_product_cart[aria-label="product_without_alternative"] a',
+        run: "click",
+    },
+    {
+        content: "Ensure alternative products section is hidden",
+        trigger: ':iframe .s_dynamic_snippet_products:not(:visible)',
+    }
+]);
+
+registerWebsitePreviewTour(
+    "shop_editor_create_and_set_product_ribbon",
+    {
+        url: "/shop",
+        edition: true,
+    },
+    () => [
+        {
+            content: "Click on first product",
+            trigger: ":iframe .oe_product:first",
+            run: "click",
+        },
+        changeOption("Product", "createRibbon"),
+        {
+            trigger: "[data-action-id='modifyRibbon'] input",
+            run: "edit New Ribbon",
+        },
+        changeBackgroundColor(),
+        {
+            content: "Select the color #FF9C00",
+            trigger: ".popover button[data-color='#FF9C00']",
+            run: "click",
+        },
+        {
+            content: "Check the ribbon name appears in the dropdown title",
+            trigger: "[data-container-title='Product'] .o-hb-select-toggle:contains(New Ribbon)",
+        },
+        {
+            content: "Check the background color preview displays correctly in the dropdown",
+            trigger:
+                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style='background-color: #FF9C00; border: ;']",
+        },
+        {
+            content: "Check the font color preview displays correctly in the dropdown",
+            trigger:
+                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style='background-color: purple !important; border: ;']",
+        },
+        ...clickOnSave(),
+        {
+            content: "Check that the ribbon was properly saved",
+            trigger:
+                ":iframe .oe_product:first .o_ribbons:contains('New Ribbon')[style='color: purple; background-color:#FF9C00']",
+        },
+    ]
+);

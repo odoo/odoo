@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, Command, fields, models, SUPERUSER_ID, _
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.exceptions import UserError
 from odoo.tools.misc import OrderedSet
@@ -124,7 +125,7 @@ class PurchaseOrder(models.Model):
             'vendor_suggest_days': self.partner_id.suggest_days,
             'vendor_suggest_based_on': self.partner_id.suggest_based_on,
             'vendor_suggest_percent': self.partner_id.suggest_percent,
-            'po_state': self.state,
+            'product_catalog_order_state': self.state,
         }
 
     def action_purchase_order_suggest(self):
@@ -134,12 +135,11 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         ctx = self.env.context
         domain = [('type', '=', 'consu')]
-        if ctx.get("domain"):
-            domain = fields.Domain.AND([domain, ctx.get("domain")])
-
+        if ctx.get("suggest_domain"):
+            domain = fields.Domain.AND([domain, ctx.get("suggest_domain")])
         products = self.env['product.product'].search(domain)
 
-        self.partner_id.write({
+        self.partner_id.sudo().write({
             'suggest_days': ctx.get('suggest_days'),
             'suggest_based_on': ctx.get('suggest_based_on'),
             'suggest_percent': ctx.get('suggest_percent'),
@@ -155,17 +155,24 @@ class PurchaseOrder(models.Model):
                 self.partner_id,
                 self
             )
-            existing_po_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
-            if existing_po_lines:
+            existing_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
+            if section_id := ctx.get("section_id"):
+                existing_lines = existing_lines.filtered(lambda pol: pol.get_parent_section_line().id == section_id)
+                suggest_line["sequence"] = self._get_new_line_sequence("order_line", section_id)
+            else:
+                existing_lines = existing_lines.filtered(lambda pol: not pol.parent_id)  # lines with no sections
+            if existing_lines:
                 # Collapse into 1 or 0 po line, discarding previous data in favor of suggested qtys
-                to_unlink = existing_po_lines if product.suggested_qty == 0 else existing_po_lines[:-1]
+                to_unlink = existing_lines if product.suggested_qty == 0 else existing_lines[:-1]
                 po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
                 if product.suggested_qty > 0:
-                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
+                    po_lines_commands.append(Command.update(existing_lines[-1].id, suggest_line))
             elif product.suggested_qty > 0:
                 po_lines_commands.append(Command.create(suggest_line))
 
         self.order_line = po_lines_commands
+        # Return the change in number of po_lines for the given section
+        return sum({"CREATE": 1, "UNLINK": -1}.get(line[0].name, 0) for line in po_lines_commands)
 
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)
@@ -226,9 +233,6 @@ class PurchaseOrder(models.Model):
             pikings_to_cancel = self.env['stock.picking'].browse(pickings_to_cancel_ids)
             pikings_to_cancel.action_cancel()
 
-        if order_lines:
-            order_lines.write({'move_dest_ids': [(5, 0, 0)]})
-
         return super().button_cancel()
 
     def action_view_picking(self):
@@ -259,6 +263,12 @@ class PurchaseOrder(models.Model):
         result['my']['otd'] = _("%(otd)s %%", otd=float_repr(my_otd_purchase_count / my_purchase_count * 100 if my_purchase_count else 100, precision_digits=0))
         result['days_to_purchase'] = self.env.company.days_to_purchase
         return result
+
+    def _get_domain_is_late(self, operator, value):
+        domain = super()._get_domain_is_late(operator, value)
+        if operator == "=" and value or operator == "!=" and not value:
+            domain &= Domain.OR([Domain('picking_ids', '=', False), Domain('picking_ids.state', '!=', 'done')])
+        return domain
 
     def _get_action_view_picking(self, pickings):
         """ This function returns an action that display existing picking orders of given purchase order ids. When only one found, show the picking immediately.
@@ -440,12 +450,14 @@ class PurchaseOrder(models.Model):
         res["suggested_qty"] = product.suggested_qty
         return res
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _add_reference(self, reference):
-        """ link the given reference to the list of references. """
+        """ link the given references to the list of references. """
         self.ensure_one()
-        self.reference_ids = [Command.link(reference.id)]
+        self.reference_ids = [Command.link(stock_reference.id) for stock_reference in reference]
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _remove_reference(self, reference):
-        """ remove the given reference to the list of references. """
+        """ remove the given references from the list of references. """
         self.ensure_one()
-        self.reference_ids = [Command.unlink(reference.id)]
+        self.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]

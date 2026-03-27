@@ -12,12 +12,12 @@ import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
  * @param {boolean} needCookiesApproval
  */
 export function setupAutoplay(src, needCookiesApproval = false) {
-    const isYoutubeVideo = src.indexOf('youtube') >= 0;
+    const isYoutubeVideo = src.indexOf("youtube") >= 0;
     const isMobileEnv = uiUtils.getSize() <= SIZES.LG && hasTouch();
 
     if (isYoutubeVideo && isMobileEnv && !window.YT && !needCookiesApproval) {
         const oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
-        const promise = new Promise(resolve => {
+        const promise = new Promise((resolve) => {
             window.onYouTubeIframeAPIReady = () => {
                 if (oldOnYoutubeIframeAPIReady) {
                     oldOnYoutubeIframeAPIReady();
@@ -25,7 +25,7 @@ export function setupAutoplay(src, needCookiesApproval = false) {
                 return resolve();
             };
         });
-        loadJS('https://www.youtube.com/iframe_api');
+        loadJS("https://www.youtube.com/iframe_api");
         return promise;
     }
     return Promise.resolve();
@@ -35,7 +35,7 @@ export function setupAutoplay(src, needCookiesApproval = false) {
  * @param {HTMLIframeElement} iframeEl - the iframe containing the video player
  */
 export function triggerAutoplay(iframeEl) {
-    const isYoutubeVideo = iframeEl.src.indexOf('youtube') >= 0;
+    const isYoutubeVideo = iframeEl.src.indexOf("youtube") >= 0;
     const isMobileEnv = uiUtils.getSize() <= SIZES.LG && hasTouch();
 
     // YouTube does not allow to auto-play video in mobile devices, so we
@@ -43,8 +43,8 @@ export function triggerAutoplay(iframeEl) {
     if (isYoutubeVideo && isMobileEnv && iframeEl.closest("[data-need-cookies-approval]")) {
         new window.YT.Player(iframeEl, {
             events: {
-                onReady: ev => ev.target.playVideo(),
-            }
+                onReady: (ev) => ev.target.playVideo(),
+            },
         });
     }
 }

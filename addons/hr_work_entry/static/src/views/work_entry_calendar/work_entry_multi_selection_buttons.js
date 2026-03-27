@@ -59,7 +59,7 @@ export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButton
 
     makeValues(workEntryTypeId) {
         return {
-            employee_id: this.actionService.currentController.currentState.active_id,
+            employee_id: this.props.reactive.context.default_employee_id,
             duration: -1,
             work_entry_type_id: workEntryTypeId,
         };

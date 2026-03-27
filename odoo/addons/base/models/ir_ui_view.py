@@ -216,8 +216,8 @@ actual arch.
             return re.sub(r'(?P<prefix>[^%])%\((?P<xmlid>.*?)\)[ds]', replacer, arch_fs)
 
         lang = self.env.lang or 'en_US'
-        env_en = self.with_context(edit_translations=None, lang='en_US').env
-        env_lang = self.with_context(lang=lang).env
+        env_en = self.with_context(edit_translations=None, lang='en_US', check_translations=True).env
+        env_lang = self.with_context(lang=lang, check_translations=True).env
         field_arch_db = self._fields['arch_db']
         for view in self:
             arch_fs = None
@@ -246,6 +246,7 @@ actual arch.
 
     def _inverse_arch(self):
         for view in self:
+            self._validate_xml_encoding(view.arch)
             data = dict(arch_db=view.arch)
             if 'install_filename' in self.env.context:
                 # we store the relative path to the resource instead of the absolute path, if found
@@ -272,6 +273,7 @@ actual arch.
 
     def _inverse_arch_base(self):
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
+            self._validate_xml_encoding(view.arch_base)
             view_wo_lang.arch = view.arch_base
 
     def reset_arch(self, mode='soft'):
@@ -320,6 +322,7 @@ actual arch.
     @api.depends('arch', 'inherit_id')
     def _compute_invalid_locators(self):
         def assess_locator(source, spec):
+            node = None
             with suppress(ValidationError):  # Syntax error
                 # If locate_node returns None here:
                 # Invalid expression: Ok Syntax, but cannot be anchored to the parent view.
@@ -439,7 +442,8 @@ actual arch.
                 combined_arch = view._get_combined_arch()
 
                 # check primary view that extends this current view
-                if view.inherit_id or view.inherit_children_ids:
+                # keep a way to skip this check to avoid marking too many views as failed during an upgrade
+                if not self.env.context.get('_skip_primary_extensions_check') and (view.inherit_id or view.inherit_children_ids):
                     root = view
                     while root.inherit_id and root.mode != 'primary':
                         root = root.inherit_id
@@ -591,8 +595,6 @@ actual arch.
                 # delete empty arch_db to avoid triggering _check_xml before _inverse_arch_base is called
                 del values['arch_db']
 
-            if values.get('arch_base'):
-                self._validate_xml_encoding(values['arch_base'])
             if not values.get('type'):
                 if values.get('inherit_id'):
                     values['type'] = self.browse(values['inherit_id']).type
@@ -609,7 +611,7 @@ actual arch.
                                 "Allowed types are: %(valid_types)s",
                                 view_type=values['type'], valid_types=', '.join(valid_types)
                             ))
-                    except LxmlError:
+                    except (etree.ParseError, ValueError):
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.
                         pass
@@ -652,8 +654,6 @@ actual arch.
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
-        if vals.get('arch_base'):
-            self._validate_xml_encoding(vals['arch_base'])
         res = super().write(self._compute_defaults(vals))
 
         # Check the xml of the view if it gets re-activated or changed.
@@ -692,8 +692,11 @@ actual arch.
         :return: id of the default view of False if none found
         :rtype: int
         """
-        domain = [('model', '=', model), ('type', '=', view_type), ('mode', '=', 'primary')]
-        return self.search(domain, limit=1).id
+        return self.search(self._get_default_view_domain(model, view_type), limit=1).id
+
+    @api.model
+    def _get_default_view_domain(self, model, view_type):
+        return Domain([('model', '=', model), ('type', '=', view_type), ('mode', '=', 'primary')])
 
     #------------------------------------------------------
     # Inheritance mecanism
@@ -1331,7 +1334,15 @@ actual arch.
         # check the read/visibility access
         for node in tree.xpath('//*[@__groups_key__]'):
             if not has_access(node.attrib.pop('__groups_key__')):
-                node.getparent().remove(node)
+                tail = node.tail
+                parent = node.getparent()
+                previous = node.getprevious()
+                parent.remove(node)
+                if tail:
+                    if previous is not None:
+                        previous.tail = (previous.tail or '') + tail
+                    elif parent is not None:
+                        parent.text = (parent.text or '') + tail
             elif node.tag == 't' and not node.attrib:
                 # Move content of <t groups=""> blocks
                 # and remove the <t> node.
@@ -3197,9 +3208,9 @@ class Base(models.AbstractModel):
         :rtype: list
         """
         return [
-            'change_default', 'context', 'currency_field', 'definition_record', 'definition_record_field', 'digits', 'domain', 'aggregator', 'groups',
-            'help', 'model_field', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
-            'sortable', 'store', 'string', 'translate', 'trim', 'type', 'groupable', 'falsy_value_label'
+            'change_default', 'context', 'currency_field', 'definition_record', 'definition_record_field', 'digits', 'min_display_digits', 'domain',
+            'aggregator', 'groups', 'help', 'model_field', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable',
+            'selection', 'size', 'sortable', 'store', 'string', 'translate', 'trim', 'type', 'groupable', 'falsy_value_label'
         ]
 
     @api.readonly

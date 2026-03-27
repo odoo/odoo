@@ -202,6 +202,7 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
 
     def test_invoice_line_currency_rate_from_sale(self):
         if self.env['ir.module.module']._get('sale_stock').state == 'installed':
+            self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
             currency = self.setup_other_currency('HRK', rates=[
                 ('2016-01-01', 3.0),
                 ('2017-01-01', 2.0),

@@ -18,6 +18,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
         [
             // press close button in receipt screen
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),

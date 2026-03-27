@@ -7,13 +7,15 @@
 # Abe Manyo, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-16 02:30+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-01-06 10:37+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/sms/"
 "id/>\n"
 "Language: id\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -104,8 +106,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">Tambahkan</span>\n"
-"                                <span class=\"o_stat_text\">Context "
-"Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -120,16 +122,16 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">Hapus</span>\n"
-"                                <span class=\"o_stat_text\">Context "
-"Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
-"<span class=\"text-warning\" invisible=\"not no_record\">Tidak ada "
-"record</span>"
+"<span class=\"text-warning\" invisible=\"not no_record\">Tidak ada record</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -164,8 +166,8 @@ msgstr ""
 "dipost sebagai\n"
 "                                    catatan internal di sejarah pesan.\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\">"
-"\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\">\n"
 "                                    SMS akan dikirim sebagai SMS ke "
 "penerima\n"
 "                                    templat dan akan juga dipost sebagai "
@@ -321,7 +323,7 @@ msgstr "Pilih nama pengirim Anda"
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Perusahaan"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -602,7 +604,7 @@ msgstr "Mengindikasikan bila pembuat SMS menarget penerima tunggaltertentu"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "Insert Field"
-msgstr ""
+msgstr "Masukkan Field"
 
 #. module: sms
 #. odoo-javascript
@@ -803,6 +805,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Bahasa terjemahan opsional (kode ISO) untuk dipilih saat mengirimkan email. "
+"Bila tidak ditetapkan, bahasa utama partner akan digunakan. Ini biasanya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"contoh. {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -819,7 +825,8 @@ msgstr "Nomor Telepon"
 msgid ""
 "Phone number of the recipient. If changed, it will be recorded on "
 "recipient's profile."
-msgstr "Nomor telepon penerima. Bila diubah, akan dicatat pada profil penerima."
+msgstr ""
+"Nomor telepon penerima. Bila diubah, akan dicatat pada profil penerima."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -832,6 +839,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Cegah mengirim pesan ke kontak yang di-blacklist. Nonaktifkan hanya saat "
+"betul-betul diperlukan."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1474,7 +1483,7 @@ msgstr "Akun Tidak Didaftarkan"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_exclusion_list
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "Gunakan Daftar Pengecualian"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id

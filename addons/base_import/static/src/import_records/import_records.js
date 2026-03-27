@@ -27,11 +27,11 @@ export class ImportRecords extends Component {
     //---------------------------------------------------------------------
 
     importRecords() {
-        const { context } = this.env.searchModel;
+        const { context, resModel } = this.env.searchModel;
         this.action.doAction({
             type: "ir.actions.client",
             tag: "import",
-            params: { context },
+            params: { active_model: resModel, context },
         });
     }
 }

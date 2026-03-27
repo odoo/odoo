@@ -5,6 +5,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
+import pytz
+
 
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
@@ -37,10 +39,12 @@ class HrLeave(models.Model):
             def adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, employee_id):
                 period_ids_from = attendance_ids.filtered(lambda a: a.day_period in from_period
                                                                     and int(a.dayofweek) == date_from.weekday()
-                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_from)))
+                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_from))
+                                                                    and not a.display_type)
                 period_ids_to = attendance_ids.filtered(lambda a: a.day_period in to_period
                                                                     and int(a.dayofweek) == date_to.weekday()
-                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_to)))
+                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_to))
+                                                                    and not a.display_type)
                 if period_ids_from:
                     min_hour = min(attendance.hour_from for attendance in period_ids_from)
                     date_from = self._to_utc(date_from, min_hour, employee_id)
@@ -55,7 +59,7 @@ class HrLeave(models.Model):
             else:
                 from_period = ['morning', 'afternoon']
                 to_period = ['morning', 'afternoon']
-            attendance_ids = self.company_id.resource_calendar_id.attendance_ids
+            attendance_ids = self.company_id.resource_calendar_id.attendance_ids | self.resource_calendar_id.attendance_ids
             date_from, date_to = adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, self.employee_id)
 
         similar = date_from.date() == date_to.date() and self.request_date_from_period == self.request_date_to_period
@@ -119,8 +123,27 @@ class HrLeave(models.Model):
             fr_leaves = self.filtered(lambda leave: leave._l10n_fr_leave_applies())
             duration_by_leave_id = super(HrLeave, self - fr_leaves)._get_durations(resource_calendar=resource_calendar)
             fr_leaves_by_company = fr_leaves.grouped('company_id')
+            if fr_leaves:
+                public_holidays = self.env['resource.calendar.leaves'].search([
+                    ('resource_id', '=', False),
+                    ('company_id', 'in', fr_leaves.company_id.ids + [False]),
+                    ('date_from', '<', max(fr_leaves.mapped('date_to')) + relativedelta(days=1)),
+                    ('date_to', '>', min(fr_leaves.mapped('date_from')) - relativedelta(days=1)),
+                ])
             for company, leaves in fr_leaves_by_company.items():
                 company_cal = company.resource_calendar_id
+                holidays_days_list = []
+                public_holidays_filtered = public_holidays.filtered_domain([
+                    ('calendar_id', 'in', [False, company_cal.id]),
+                    ('company_id', '=', company.id)
+                ])
+                for holiday in public_holidays_filtered:
+                    tz = pytz.timezone(holiday.write_uid.tz)
+                    current = holiday.date_from.replace(tzinfo=pytz.utc).astimezone(tz).date()
+                    holiday_date_to = holiday.date_to.replace(tzinfo=pytz.utc).astimezone(tz).date()
+                    while current <= holiday_date_to:
+                        holidays_days_list.append(current)
+                        current += relativedelta(days=1)
                 for leave in leaves:
                     if leave.request_unit_half:
                         duration_by_leave_id.update(leave._get_durations(resource_calendar=company_cal))
@@ -138,6 +161,9 @@ class HrLeave(models.Model):
                     end_date = extended_date_end.date()
                     legal_days = 0.0
                     while current <= end_date:
+                        if current in holidays_days_list:
+                            current += relativedelta(days=1)
+                            continue
                         if company_cal._works_on_date(current):
                             legal_days += 1.0
                         current += relativedelta(days=1)

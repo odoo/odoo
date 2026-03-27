@@ -2,6 +2,8 @@
 
 from datetime import timedelta
 
+from freezegun import freeze_time
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -117,6 +119,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         for line in new_order.order_line:
             self.assertEqual(line.move_ids[0].date, right_date, "The expected date for the Stock Move is wrong")
 
+    @freeze_time('2025-10-10')
     def test_expected_date_with_storable_product(self):
         ''' This test ensures the expected date is computed based on only goods(consu) products.
         It's avoiding computation for non-goods products.
@@ -144,3 +147,104 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
             })],
         })
         self.assertEqual(sale_order.expected_date, fields.Datetime.now() + timedelta(days=sale_delay))
+
+    def test_invoice_delivery_date(self):
+        self.env['stock.quant']._update_available_quantity(
+            self.test_product_order,
+            self.company_data['default_warehouse'].lot_stock_id,
+            75.0,
+        )
+        order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'picking_policy': 'one',
+            'order_line': [Command.create({
+                'product_id': self.test_product_order.id,
+                'product_uom_qty': 100.0,
+            })],
+        })
+        order.action_confirm()
+        picking_1 = order.picking_ids
+        picking_1.move_ids.picked = True
+        invoice = order._create_invoices()
+        self.assertFalse(invoice.delivery_date)
+        picking_1._action_done()
+        self.assertTrue(order.effective_date, "Effective date should exist after done picking")
+        effective_date = order.effective_date.date()
+        self.assertEqual(
+            invoice.delivery_date, effective_date,
+            "Default invoice delivery date should equal effective date",
+        )
+
+        self.env['stock.quant']._update_available_quantity(
+            self.test_product_order,
+            self.company_data['default_warehouse'].lot_stock_id,
+            25.0,
+        )
+        with freeze_time(effective_date + timedelta(days=3)):
+            custom_delivery_date = fields.Date.today()
+            picking_2 = (order.picking_ids - picking_1).ensure_one()
+            picking_2.move_ids.write({'quantity': 25.0, 'picked': True})
+            picking_2._action_done()
+            self.assertEqual(
+                invoice.delivery_date, effective_date,
+                "Invoice delivery date should default to earliest picking date",
+            )
+            product_line = invoice.line_ids[0]
+            invoice.write({
+                'delivery_date': custom_delivery_date,
+                'line_ids': [Command.update(product_line.id, {'quantity': 0.0})],
+            })
+            product_line.quantity += 75.0
+            self.assertEqual(
+                invoice.delivery_date, custom_delivery_date,
+                "Custom invoice delivery shouldn't change after line change",
+            )
+            invoice.action_post()
+            self.assertEqual(
+                invoice.delivery_date, custom_delivery_date,
+                "Custom invoice delivery shouldn't change posting invoice",
+            )
+            invoice.button_draft()
+            self.assertEqual(
+                invoice.delivery_date, custom_delivery_date,
+                "Custom invoice delivery shouldn't change resetting to draft invoice",
+            )
+
+    @freeze_time('2025-3-02 23:30:00')
+    def test_so_invoice_delivery_date(self):
+        """
+        Testing that the delivery date is set correctly on the invoice
+        for different user timezones.
+
+        For example:
+        2025-03-02 23:30:00 UTC corresponds to
+        2025-03-03 05:00:00 IST.
+
+        Without proper timezone handling, the delivery date is incorrectly assigned
+        as 2025-03-02 on the UI instead of 2025-03-03.
+        """
+        self.env.user.tz = 'Asia/Kolkata'
+        self.env['stock.quant']._update_available_quantity(
+            self.test_product_delivery,
+            self.company_data['default_warehouse'].lot_stock_id,
+            100,
+        )
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.test_product_delivery.id,
+            })],
+        })
+        so.action_confirm()
+        so.picking_ids.button_validate()
+        invoice = so._create_invoices()
+        expected_date = fields.Date.context_today(so)
+        self.assertEqual(
+            invoice.delivery_date, expected_date,
+            "Delivery date should use the client's timezone at invoice creation.",
+        )
+        so.picking_ids.date_done = so.picking_ids.date_done - timedelta(hours=1)
+        self.assertEqual(
+            invoice.delivery_date, expected_date,
+            "Delivery date should use the client's timezone after effective date change.",
+        )

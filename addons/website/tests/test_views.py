@@ -1207,6 +1207,20 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
                          "loading module translation for a specific language should not remove existing translations for other languages")
 
+    def test_view_translation_without_website(self):
+        # When get_related_views is called with no website in the
+        # context, the returned views should not be translated.
+        # All get_related_views calls in website should have a website
+        # in the context, however this is tested to simulate the
+        # behavior when called by other modules.
+        fr_BE = self.env['res.lang']._activate_lang('fr_BE')
+        self.env['website'].browse(1).default_lang_id = fr_BE
+        self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+
+        views = self.env['ir.ui.view'].with_context(is_customization_code=False).get_related_views(self.base_view.key)
+        self.assertEqual(views.browse(self.base_view.id).arch, '<div>hello</div>')
+
     def test_view_to_translate_tag(self):
         fr_BE = self.env['res.lang']._activate_lang('fr_BE')
         self.base_view.with_context(lang='en_US').arch_db = '<div>hello</div>'
@@ -1233,6 +1247,30 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # specific view with website_id
         self.assertIn('to_translate', specific_view.with_context(lang='en_US', edit_translations=True).arch)
         self.assertIn('translated', specific_view.with_context(lang='fr_BE', edit_translations=True).arch)
+
+    def test_load_module_terms_preserve_delayed_translation(self):
+        self.env['res.lang']._activate_lang('fr_BE')
+        base_footer = self.env['ir.ui.view'].search([
+            ('key', '=', 'website.footer_custom'),
+            ('website_id', '=', False),
+        ], limit=1)
+        base_footer.with_context(website_id=1).write({'active': True})
+        specific_footer = base_footer._get_specific_views()
+        specific_footer.with_context(lang='en_US').arch_db = '<div>hello</div>'
+        specific_footer.update_field_translations('arch_db', {'fr_BE': {'hello': 'bonjour'}})
+
+        self.assertEqual(specific_footer.with_context(lang='en_US').arch, '<div>hello</div>')
+        self.assertEqual(specific_footer.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
+
+        specific_footer.with_context(delay_translations=True, lang='en_US').arch_db = '<h1>hello</h1>'
+
+        self.assertEqual(specific_footer.with_context(lang='en_US').arch, '<h1>hello</h1>')
+        self.assertEqual(specific_footer.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
+
+        self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE'])
+
+        self.assertEqual(specific_footer.with_context(lang='en_US').arch, '<h1>hello</h1>')
+        self.assertEqual(specific_footer.with_context(lang='fr_BE').arch, '<div>bonjour</div>')
 
     def test_soc_complete_flow(self):
         """

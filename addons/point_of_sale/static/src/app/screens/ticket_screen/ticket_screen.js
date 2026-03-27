@@ -160,7 +160,7 @@ export class TicketScreen extends Component {
             const order = orders[0];
             if (order) {
                 this.state.filter = "SYNCED";
-                this.state.selectedOrder = order;
+                this.setSelectedOrder(order);
                 this.pos.scanning = !this.pos.scanning;
             } else {
                 this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
@@ -189,6 +189,11 @@ export class TicketScreen extends Component {
             if (firstLine) {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
+        }
+    }
+    onDblClickOrder(order) {
+        if (!order.finalized) {
+            this.setOrder(order);
         }
     }
     async onClickReprintAll(order) {
@@ -231,6 +236,38 @@ export class TicketScreen extends Component {
             this.setOrder(refundOrder);
         }
     }
+    _setToRefundDetail(toRefundDetail, buffer) {
+        // When already linked to an order, do not modify the to refund quantity.
+        if (toRefundDetail.destionation_order_id) {
+            return this.numberBuffer.reset();
+        }
+
+        toRefundDetail.refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
+        if (toRefundDetail.refundableQty <= 0) {
+            return this.numberBuffer.reset();
+        }
+
+        if (buffer == null || buffer == "") {
+            toRefundDetail.qty = 0;
+        } else {
+            const quantity = Math.abs(parseFloat(buffer));
+            if (quantity > toRefundDetail.refundableQty) {
+                this.numberBuffer.reset();
+                if (!toRefundDetail.line.combo_parent_id) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Maximum Exceeded"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                            quantity,
+                            toRefundDetail.refundableQty
+                        ),
+                    });
+                }
+            } else {
+                toRefundDetail.qty = quantity;
+            }
+        }
+    }
     _onUpdateSelectedOrderline({ key, buffer }) {
         const order = this.getSelectedOrder();
         if (!order) {
@@ -238,45 +275,27 @@ export class TicketScreen extends Component {
         }
 
         const selectedOrderlineId = this.getSelectedOrderlineId();
-        const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
+        let orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (!orderline) {
             return this.numberBuffer.reset();
         }
 
-        const toRefundDetails = orderline
-            .getAllLinesInCombo()
-            .map((line) => this.getToRefundDetail(line));
-        for (const toRefundDetail of toRefundDetails) {
-            // When already linked to an order, do not modify the to refund quantity.
-            if (toRefundDetail.destionation_order_id) {
-                return this.numberBuffer.reset();
-            }
+        if (!orderline.isPartOfCombo()) {
+            const toRefundDetail = this.getToRefundDetail(orderline);
+            this._setToRefundDetail(toRefundDetail, buffer);
+            return;
+        }
 
-            const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
-            if (refundableQty <= 0) {
-                return this.numberBuffer.reset();
-            }
+        if (orderline.combo_parent_id) {
+            orderline = orderline.combo_parent_id;
+        }
 
-            if (buffer == null || buffer == "") {
-                toRefundDetail.qty = 0;
-            } else {
-                const quantity = Math.abs(parseFloat(buffer));
-                if (quantity > refundableQty) {
-                    this.numberBuffer.reset();
-                    if (!toRefundDetail.line.combo_parent_id) {
-                        this.dialog.add(AlertDialog, {
-                            title: _t("Maximum Exceeded"),
-                            body: _t(
-                                "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
-                                quantity,
-                                refundableQty
-                            ),
-                        });
-                    }
-                } else {
-                    toRefundDetail.qty = quantity;
-                }
-            }
+        const parentToRefundDetail = this.getToRefundDetail(orderline);
+        this._setToRefundDetail(parentToRefundDetail, buffer);
+
+        for (const comboLine of orderline.combo_line_ids) {
+            const toRefundDetail = this.getToRefundDetail(comboLine);
+            toRefundDetail.qty = (comboLine.qty / orderline.qty) * parentToRefundDetail.qty;
         }
     }
     async addAdditionalRefundInfo(order, destinationOrder) {
@@ -307,10 +326,18 @@ export class TicketScreen extends Component {
         const destinationOrder = this._getEmptyOrder(partner);
 
         destinationOrder.is_refund = true;
+        destinationOrder.pricelist_id = order.pricelist_id;
         // Add orderline for each toRefundDetail to the destinationOrder.
         const lines = [];
         for (const refundDetail of this._getRefundableDetails(partner, order)) {
             const refundLine = refundDetail.line;
+            const alreadyRefundedLots = refundLine.refund_orderline_ids
+                .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
+                .flatMap((item) => item.pack_lot_ids)
+                .map((pack_lot) => pack_lot.lot_name);
+            const options = refundLine.pack_lot_ids
+                .map((p) => p.lot_name)
+                .filter((lotName) => !alreadyRefundedLots.includes(lotName));
             const line = this.pos.models["pos.order.line"].create({
                 qty: -refundDetail.qty,
                 price_unit: refundLine.price_unit,
@@ -319,11 +346,12 @@ export class TicketScreen extends Component {
                 discount: refundLine.discount,
                 tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
                 refunded_orderline_id: refundLine,
-                pack_lot_ids: refundLine.pack_lot_ids.map((packLot) => [
-                    "create",
-                    { lot_name: packLot.lot_name },
-                ]),
+                // Only include as many pack_lot_ids as the refunded quantity requires.
+                pack_lot_ids: options
+                    .slice(0, refundDetail.qty)
+                    .map((lotName) => ["create", { lot_name: lotName }]),
                 price_type: "automatic",
+                attribute_value_ids: refundLine.attribute_value_ids.map((attr) => ["link", attr]),
             });
             lines.push(line);
             refundDetail.destination_order_uuid = destinationOrder.uuid;
@@ -456,7 +484,7 @@ export class TicketScreen extends Component {
         return this.pos.getDate(order.date_order);
     }
     getTotal(order) {
-        return this.env.utils.formatCurrency(order.getTotalWithTax());
+        return this.env.utils.formatCurrency(order.priceIncl);
     }
     getPartner(order) {
         return order.getPartnerName();
@@ -643,7 +671,7 @@ export class TicketScreen extends Component {
                 !this.pos.isProductQtyZero(refund.qty) &&
                 refund.line.order_id.uuid === order.uuid &&
                 (partner ? refund.line.order_id.partner_id?.id === partner.id : true) &&
-                !refund.destination_order_id
+                !refund.destinationOrder
         );
     }
 
@@ -654,6 +682,16 @@ export class TicketScreen extends Component {
         this.pos.setOrder(order);
         this.pos.navigateToOrderScreen(order);
     }
+
+    onClickNewOrder() {
+        const order = this.pos.createNewOrder({
+            preset_id: this.state.selectedPreset || null,
+        });
+        this.pos.selectedOrderUuid = order.uuid;
+        this.pos.addPendingOrder([order.id]);
+        this.pos.navigateToOrderScreen(order);
+    }
+
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
         orderStates.set("SYNCED", { text: _t("Paid") });

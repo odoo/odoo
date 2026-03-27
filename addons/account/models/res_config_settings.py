@@ -183,14 +183,14 @@ class ResConfigSettings(models.TransientModel):
         string='Vendor Bills Discounts Account',
         readonly=False,
         related='company_id.account_discount_income_allocation_id',
-        domain="[('account_type', 'in', ('income', 'expense'))]",
+        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
     account_discount_expense_allocation_id = fields.Many2one(
         comodel_name='account.account',
         string='Customer Invoices Discounts Account',
         readonly=False,
         related='company_id.account_discount_expense_allocation_id',
-        domain="[('account_type', 'in', ('income', 'expense'))]",
+        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
 
     # PEPPOL
@@ -205,8 +205,8 @@ class ResConfigSettings(models.TransientModel):
 
     # Autopost of bills
     autopost_bills = fields.Boolean(related='company_id.autopost_bills', readonly=False)
-    income_account_id = fields.Many2one(related='company_id.income_account_id', readonly=False)
-    expense_account_id = fields.Many2one(related='company_id.expense_account_id', readonly=False)
+    income_account_id = fields.Many2one(related='company_id.income_account_id', readonly=False, check_company=True)
+    expense_account_id = fields.Many2one(related='company_id.expense_account_id', readonly=False, check_company=True)
 
     @api.depends('country_code')
     def _compute_is_account_peppol_eligible(self):

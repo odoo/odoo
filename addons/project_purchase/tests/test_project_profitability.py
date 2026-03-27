@@ -794,11 +794,11 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 'data': [{
                     'id': 'purchase_order',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
-                    'to_bill': 0.0,
+                    'to_bill': -235.0,
                     'billed': 0.0,
                 }],
                 'total': {
-                    'to_bill': 0.0,
+                    'to_bill': -235.0,
                     'billed': 0.0,
                 },
             },
@@ -869,4 +869,165 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         self.assertTrue(
             float_compare(actual_billed, expected_cost, precision_digits=2) == 0,
             f"Expected billed {expected_cost}, got {actual_billed}"
+        )
+
+    def test_project_purchase_profitability_with_split_bills(self):
+        """
+        Test that project profitability is correctly computed when a purchase order
+        is billed in multiple steps (e.g. one partial bill followed by a final bill
+        covering the remaining quantity)
+        """
+
+        purchase_order = self.env['purchase.order'].create({
+            'name': "A purchase order",
+            'partner_id': self.partner_a.id,
+            'company_id': self.env.company.id,
+            'order_line': [Command.create({
+                'product_id': self.product_order.id,
+                'price_unit': 100,
+                'tax_ids': [],
+                'product_qty': 5.0,
+            })],
+            'project_id': self.project.id,
+        })
+        purchase_order.button_confirm()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': -500.0,
+                    'billed': 0.0,
+                }],
+                'total': {
+                    'to_bill': -500.0,
+                    'billed': 0.0,
+                },
+            },
+        )
+
+        purchase_order.action_create_invoice()
+        vendor_bill = purchase_order.invoice_ids
+        vendor_bill.invoice_date = datetime.today()
+        vendor_bill.invoice_line_ids.quantity = 2.0
+        vendor_bill.action_post()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': -300.0,
+                    'billed': -200.0,
+                }],
+                'total': {
+                    'to_bill': -300.0,
+                    'billed': -200.0,
+                },
+            },
+        )
+
+        purchase_order.action_create_invoice()
+        vendor_bill_2 = purchase_order.invoice_ids[1]
+        vendor_bill_2.invoice_date = datetime.today()
+        vendor_bill_2.invoice_line_ids.quantity = 3.0
+        vendor_bill_2.invoice_line_ids.analytic_distribution = {}
+        vendor_bill_2.action_post()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': -300.0,
+                    'billed': -200.0,
+                }],
+                'total': {
+                    'to_bill': -300.0,
+                    'billed': -200.0,
+                },
+            },
+        )
+
+        purchase_order.action_create_invoice()
+        vendor_bill_3 = purchase_order.invoice_ids[2]
+        vendor_bill_3.invoice_date = datetime.today()
+        vendor_bill_3.invoice_line_ids.quantity = 3.0
+        vendor_bill_3.action_post()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': 0.0,
+                    'billed': -500.0,
+                }],
+                'total': {
+                    'to_bill': 0.0,
+                    'billed': -500.0,
+                },
+            },
+        )
+
+    def test_project_profitability_when_multiple_aa_in_the_same_line(self):
+        other_analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Not important',
+            'code': 'KO-1234',
+            'plan_id': self.analytic_plan.id,
+        })
+        # create a new purchase order
+        purchase_order = self.env['purchase.order'].create({
+            "name": "A purchase order",
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "analytic_distribution": {
+                        # this is the analytic_account that is linked to the project
+                        f"{self.analytic_account.id},{other_analytic_account.id}": 100,
+                    },
+                    "product_id": self.product_order.id,
+                    "product_qty": 1,
+                    "price_unit": self.product_order.standard_price,
+                    "currency_id": self.env.company.currency_id.id,
+                }),
+                Command.create({
+                    "analytic_distribution": {
+                        # this is the analytic_account that is linked to the project
+                        f"{other_analytic_account.id},{self.analytic_account.id}": 100,
+                    },
+                    "product_id": self.product_order.id,
+                    "product_qty": 1,
+                    "price_unit": self.product_order.standard_price,
+                    "currency_id": self.env.company.currency_id.id,
+                }),
+            ],
+        })
+        purchase_order.button_confirm()
+
+        purchase_order.action_create_invoice()
+
+        vendor_bill = purchase_order.invoice_ids[0]
+        vendor_bill.invoice_date = datetime.today()
+        vendor_bill.action_post()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': 0.0,
+                    'billed': -470.0,
+                }],
+                'total': {
+                    'to_bill': 0.0,
+                    'billed': -470.0,
+                },
+            },
         )

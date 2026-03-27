@@ -41,12 +41,12 @@ class ProductProduct(models.Model):
 
     def button_bom_cost(self):
         self.ensure_one()
-        self._set_price_from_bom()
+        self.with_context(action_button_product=self)._set_price_from_bom()
 
     def action_bom_cost(self):
         boms_to_recompute = self.env['mrp.bom'].search(['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.mapped('product_tmpl_id').ids)])
         for product in self:
-            product._set_price_from_bom(boms_to_recompute)
+            product.with_context(action_button_product=product)._set_price_from_bom(boms_to_recompute)
 
     def _set_price_from_bom(self, boms_to_recompute=False):
         self.ensure_one()

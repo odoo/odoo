@@ -23,6 +23,7 @@ export class TableAlignPlugin extends Plugin {
     static id = "tableAlign";
     static dependencies = ["history", "selection"];
 
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {

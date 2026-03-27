@@ -35,7 +35,9 @@ const {
 function validateConfig(config) {
     for (const [key, value] of $entries(config)) {
         if (!isOfType(value, CONFIG_TAG_SCHEMA[key])) {
-            throw new HootError(`invalid config tag: parameter "${key}" does not exist`);
+            throw new HootError(`invalid config tag: parameter "${key}" does not exist`, {
+                level: "critical",
+            });
         }
     }
 }

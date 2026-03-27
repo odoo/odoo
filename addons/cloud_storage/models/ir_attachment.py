@@ -1,10 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import requests
 import uuid
 
 from odoo import models, fields, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import Stream
+
+_logger = logging.getLogger(__name__)
 
 
 class IrAttachment(models.Model):
@@ -40,6 +44,25 @@ class IrAttachment(models.Model):
                     'type': 'cloud_storage',
                     'url': record._generate_cloud_storage_url(),
                 })
+
+    def _migrate_remote_to_local(self):
+        if self.type != 'cloud_storage':
+            return super()._migrate_remote_to_local()
+        url = self._generate_cloud_storage_download_info()['url']
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        if response.status_code != 200:
+            raise ValidationError(_(
+                "Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s",
+                id=self.id, code=response.status_code, reason=response.reason,
+            ))
+        attachment_data = response.content
+        _logger.info("Migrating attachment (%s) with url (%s) from cloud_storage to binary.", self.id, self.url)
+        self.write({
+            'type': 'binary',
+            'url': False,
+            'raw': attachment_data,
+        })
 
     def _generate_cloud_storage_blob_name(self):
         """
@@ -94,4 +117,8 @@ class IrAttachment(models.Model):
     def _get_cloud_storage_unsupported_models(self):
         # Some models may use their attachments' data in the business code
         # We should avoid those attachments to be uploaded to the cloud storage
-        return list(self.env.registry.descendants(['mail.thread.main.attachment'], '_inherit', '_inherits'))
+        models = self.env.registry.descendants(['mail.thread.main.attachment'], '_inherit', '_inherits')
+        if 'documents.mixin' in self.env:
+            models.update(self.env.registry.descendants(['documents.mixin'], '_inherit'))
+            models.add('documents.document')
+        return list(models)

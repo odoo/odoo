@@ -11,13 +11,15 @@
 # Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 14:55+0000\n"
-"PO-Revision-Date: 2025-09-16 04:44+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:38+0000\n"
+"PO-Revision-Date: 2025-12-04 17:51+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/web/"
 "vi/>\n"
 "Language: vi\n"
@@ -25,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: web
 #. odoo-javascript
@@ -302,7 +304,7 @@ msgstr "3.30"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "31/01/%s"
-msgstr ""
+msgstr "31/01/%s"
 
 #. module: web
 #. odoo-javascript
@@ -483,6 +485,18 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">Tách biệt "
+"(một cho mỗi tab)</option>\n"
+"                                        <option value=\"temporal\">Tạm thời "
+"(thử nghiệm)</option>\n"
+"                                    </select>\n"
+"                                   <span id=\"temporal_warning\" "
+"class=\"alert alert-warning\" style=\"display:none\"><b> Cảnh báo:</b> Chế "
+"độ tạm thời sẽ gộp tất cả các mẫu.<br/>Điều này có thể dẫn đến kết quả không "
+"chính xác một phần trong trường hợp có nhiều hồ sơ đồng thời.<br/>Hãy sử "
+"dụng cẩn thận </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -495,8 +509,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\"><span class=\"oe_currency_value\""
-">11.750,00</span>$</span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">11.750,00</"
+"span>$</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -504,8 +518,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
 "span></span>"
 msgstr ""
-"<span class=\"text-nowrap\"><span class=\"oe_currency_value\""
-">7.500.000</span>đ</span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">7.500.000</"
+"span>đ</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -542,8 +556,8 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "<span itemprop=\"name\">Deco Addict</span>"
-msgstr "<span itemprop=\"name\">Deco Addict</span>"
+msgid "<span itemprop=\"name\">Acme Corporation</span>"
+msgstr ""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -624,8 +638,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
-"                                                       "
-"22.137,50</span></strong>"
+"                                                       22.137,50</span></"
+"strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -1102,12 +1116,6 @@ msgstr "Và thêm nữa"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Angle"
-msgstr "Góc độ"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Animals & Nature"
 msgstr "Động vật & thiên nhiên"
@@ -1471,7 +1479,6 @@ msgstr "Cam kết sửa lỗi"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/view_button/view_button.xml:0
 msgid "Button"
 msgstr "Nút"
@@ -1884,8 +1891,8 @@ msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
-"Khẩu hiệu của công ty, được đưa vào header hoặc footer của tài liệu được in ("
-"tùy thuộc vào bố cục đã chọn)."
+"Khẩu hiệu của công ty, được đưa vào header hoặc footer của tài liệu được in "
+"(tùy thuộc vào bố cục đã chọn)."
 
 #. module: web
 #. odoo-javascript
@@ -2183,7 +2190,7 @@ msgstr "Tiền tệ"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Currency field"
-msgstr ""
+msgstr "Trường tiền tệ"
 
 #. module: web
 #. odoo-javascript
@@ -2193,7 +2200,7 @@ msgstr "Trường giá trị hiện tại"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
+#: code:addons/web/static/src/core/color_picker/tabs/color_picker_custom_tab.js:0
 msgid "Custom"
 msgstr "Tùy chỉnh"
 
@@ -2306,7 +2313,7 @@ msgstr "Ngày & giờ"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Date Format"
-msgstr ""
+msgstr "Định dạng Ngày"
 
 #. module: web
 #. odoo-javascript
@@ -2406,12 +2413,6 @@ msgstr "Phông chữ mặc định"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Default:"
 msgstr "Mặc định:"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Define a custom gradient"
-msgstr "Xác định một gradient tùy chỉnh"
 
 #. module: web
 #. odoo-javascript
@@ -2561,11 +2562,9 @@ msgstr "Huỷ bỏ mọi thay đổi"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 msgid "Discard changes"
-msgstr "Loại bỏ những thay đổi"
+msgstr "Huỷ bỏ thay đổi"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
@@ -2795,7 +2794,6 @@ msgstr "Ngày được chấp nhận sớm nhất"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
@@ -2929,12 +2927,6 @@ msgstr "Số lượng mục nhập"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
-msgid "Error"
-msgstr "Lỗi"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Europe"
 msgstr "Châu Âu"
@@ -3000,30 +2992,6 @@ msgstr "Đang xuất nhóm dữ liệu qua csv chưa được hỗ trợ."
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.js:0
 msgid "Expression is invalid. Please correct it"
 msgstr "Biểu thức không hợp lệ. Vui lòng sửa lại"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the closest corner"
-msgstr "Mở rộng đến góc gần nhất"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the closest side"
-msgstr "Mở rộng đến phía gần nhất"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the farthest corner"
-msgstr "Mở rộng đến góc xa nhất"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Extend to the farthest side"
-msgstr "Mở rộng đến phía xa nhất"
 
 #. module: web
 #. odoo-javascript
@@ -3256,6 +3224,8 @@ msgid ""
 "For example, if the value is \"1\" and you enter \"+=2\", it will be updated "
 "to \"3\"."
 msgstr ""
+"Ví dụ, nếu giá trị là \"1\" và bạn nhập \"+=2\", nó sẽ được cập nhật thành "
+"\"3\"."
 
 #. module: web
 #. odoo-javascript
@@ -3375,12 +3345,6 @@ msgstr "Người xem Google Slide"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Gradient"
-msgstr "Gradient"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Green"
 msgstr "Xanh lá"
@@ -3439,6 +3403,9 @@ msgid ""
 "click the %(upload_icon)s button now to ensure your work is saved before you "
 "exit this tab."
 msgstr ""
+"Cảnh báo! Các thay đổi gần đây của bạn quá lớn để lưu tự động. Vui lòng nhấn "
+"nút %(upload_icon)s ngay để đảm bảo công việc của bạn được lưu trước khi "
+"thoát khỏi tab này."
 
 #. module: web
 #. odoo-javascript
@@ -3507,7 +3474,7 @@ msgstr "Menu Chính"
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Hour"
-msgstr ""
+msgstr "Giờ"
 
 #. module: web
 #. odoo-python
@@ -3608,6 +3575,14 @@ msgstr ""
 "Nếu được chọn, việc nhấp vào thẻ sẽ mở biểu mẫu cho phép chỉnh sửa trực "
 "tiếp. Lưu ý rằng nếu trường màu cũng được thiết lập, phiên bản thẻ sẽ được "
 "ưu tiên. Vì vậy, bộ chọn màu sẽ không được hiển thị khi nhấp vào thẻ."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
+msgid ""
+"If checked, the checkboxes will be displayed in a column. Otherwise, they "
+"will be inlined."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3759,6 +3734,12 @@ msgstr "Khoảng thời gian"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
+msgid "Invalid Display Name"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "Invalid Operation"
 msgstr "Thao tác không hợp lệ"
@@ -3811,13 +3792,6 @@ msgstr "Chuỗi trường không hợp lệ"
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 msgid "Invalid fields"
 msgstr "Invalid fields"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/model/relational_model/record.js:0
-#: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
-msgid "Invalid fields: "
-msgstr "Trường không hợp lệ: "
 
 #. module: web
 #. odoo-python
@@ -4190,13 +4164,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "30 ngày qua"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "7 ngày qua"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__write_uid
@@ -4214,7 +4188,7 @@ msgstr "Cập nhật lần cuối vào"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Last month"
-msgstr ""
+msgstr "Tháng trước"
 
 #. module: web
 #. odoo-javascript
@@ -4288,12 +4262,6 @@ msgstr "Biểu đồ đường"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Linear"
-msgstr "Đường thẳng"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Load"
 msgstr "Nạp"
@@ -4363,7 +4331,7 @@ msgstr "Đăng xuất"
 #. odoo-python
 #: code:addons/web/controllers/home.py:0
 msgid "Login"
-msgstr ""
+msgstr "Đăng nhập"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -4570,6 +4538,12 @@ msgstr "Độ chính xác tối thiểu"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/float/float_field.js:0
+msgid "Minimum Digits"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/timezone_mismatch/timezone_mismatch_field.js:0
 msgid "Mismatch title"
 msgstr "Tiêu đề không khớp"
@@ -4591,6 +4565,12 @@ msgstr "Bản ghi thiếu"
 #: code:addons/web/controllers/json.py:0
 msgid "Missing record id"
 msgstr "Thiếu ID bản ghi"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+msgid "Missing required fields"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4975,6 +4955,12 @@ msgid "No data to display"
 msgstr "Không có dữ liệu để hiển thị"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/pivot.py:0
+msgid "No data to export"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "No debug command found"
@@ -4989,8 +4975,8 @@ msgstr "Không tìm thấy thiết bị nào."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji matches your search"
-msgstr "Không có biểu tượng cảm xúc nào phù hợp với tìm kiếm của bạn"
+msgid "No emojis match your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5041,7 +5027,7 @@ msgstr "Không có kết quả nào"
 #. odoo-javascript
 #: code:addons/web/static/src/core/select_menu/select_menu.xml:0
 msgid "No results"
-msgstr ""
+msgstr "Không có kết quả"
 
 #. module: web
 #. odoo-javascript
@@ -5265,7 +5251,6 @@ msgstr "Ôi chao!"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
-#: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -5293,7 +5278,8 @@ msgstr "Chỉ có thể tìm kiếm"
 msgid ""
 "Only the first %(count)s records have been deleted (out of %(total)s "
 "selected)"
-msgstr "Chỉ có %(count)s dữ liệu đầu tiền được xóa (trong số %(total)s đã chọn)"
+msgstr ""
+"Chỉ có %(count)s dữ liệu đầu tiền được xóa (trong số %(total)s đã chọn)"
 
 #. module: web
 #. odoo-python
@@ -5595,8 +5581,8 @@ msgid ""
 "in red."
 msgstr ""
 "Xin lưu ý rằng chế độ xem của bạn bao gồm các bộ định vị không hợp lệ.<br/>\n"
-"Các nút này không thể được gắn vào chế độ xem chính và sẽ không có tác dụng.<"
-"br/>\n"
+"Các nút này không thể được gắn vào chế độ xem chính và sẽ không có tác dụng."
+"<br/>\n"
 "Vấn đề này có thể phát sinh do các chỉnh sửa thủ công hoặc trong quá trình "
 "nâng cấp.<br/>\n"
 "Để tiện tham khảo, các nút xpath không hợp lệ được tô đỏ nổi bật."
@@ -5621,26 +5607,14 @@ msgid "Please, scan again!"
 msgstr "Vui lòng quét lại!"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Position X"
-msgstr "Vị trí X"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Position Y"
-msgstr "Vị trí Y"
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
-msgstr "Cung cấp bởi %s%s"
+msgstr "Được hỗ trợ bởi %s%s"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr "Cung cấp bởi <span>Odoo</span>"
+msgstr "Được hỗ trợ bởi <span>Odoo</span>"
 
 #. module: web
 #. odoo-javascript
@@ -5860,12 +5834,6 @@ msgstr "Tìm nhanh: %s"
 #: model:ir.model,name:web.model_ir_qweb_field_image_url
 msgid "Qweb Field Image"
 msgstr "Trường ảnh Qweb"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "Radial"
-msgstr "Xuyên tâm"
 
 #. module: web
 #. odoo-javascript
@@ -6662,7 +6630,6 @@ msgstr "Hiển thị cuối tuần"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
@@ -6685,7 +6652,7 @@ msgstr "Mặt cười & cảm xúc"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
+#: code:addons/web/static/src/core/color_picker/tabs/color_picker_solid_tab.js:0
 msgid "Solid"
 msgstr "Rắn"
 
@@ -6726,10 +6693,11 @@ msgstr "Đặc biệt:"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Speedscope"
-msgstr ""
+msgstr "Speedscope"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.js:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 msgid "Stacked"
 msgstr "Chồng"
@@ -6831,7 +6799,7 @@ msgstr "Lỗi kiểu"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Suffix"
-msgstr ""
+msgstr "Hậu tố"
 
 #. module: web
 #. odoo-javascript
@@ -6975,7 +6943,6 @@ msgstr "Mẫu:"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -7045,6 +7012,12 @@ msgid "The domain should not involve non-literals"
 msgstr ""
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The file is not an image, resizing is not possible"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
@@ -7071,6 +7044,18 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/errors/error_dialogs.js:0
+msgid "The request sent to the server was too large"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+msgid "The resizing of the image failed"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 msgid "The selected field will be used to pre-fill the signature"
 msgstr "Trường đã chọn sẽ được dùng để điền trước chữ ký"
@@ -7082,8 +7067,8 @@ msgid ""
 "The selected file (%(size)sB) is larger than the maximum allowed file size (%"
 "(maxSize)sB)."
 msgstr ""
-"Tệp đã chọn (%(size)sB) vượt quá kích thước tệp tối đa cho phép "
-"(%(maxSize)sB)."
+"Tệp đã chọn (%(size)sB) vượt quá kích thước tệp tối đa cho phép (%"
+"(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -7104,12 +7089,6 @@ msgid ""
 "The user should have one unique embedded action setting per user setting, "
 "action and record id."
 msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
-msgid "Theme"
-msgstr "Giao diện"
 
 #. module: web
 #. odoo-javascript
@@ -7267,7 +7246,6 @@ msgstr "Titania"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Title"
@@ -7396,6 +7374,8 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                        active filter in the search bar."
 msgstr ""
+"Hãy thử thêm một số bản ghi, hoặc đảm bảo rằng không có\n"
+"bộ lọc nào đang hoạt động trong thanh tìm kiếm."
 
 #. module: web
 #. odoo-javascript
@@ -7415,7 +7395,6 @@ msgstr "Thứ 3"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 #: code:addons/web/static/src/views/fields/float_toggle/float_toggle_field.js:0
@@ -7446,7 +7425,7 @@ msgstr "Loại:"
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Typeahead search"
-msgstr ""
+msgstr "Tìm kiếm theo kiểu gõ trước"
 
 #. module: web
 #. odoo-javascript
@@ -7733,7 +7712,7 @@ msgstr "Giao diện Người dùng"
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Cài đặt của người dùng"
 
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings_embedded_action
@@ -7895,9 +7874,9 @@ msgstr "WC"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
-#: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#: code:addons/web/static/src/views/fields/json_checkboxes/json_checkboxes_field.xml:0
 msgid "Warning"
 msgstr "Cảnh báo"
 
@@ -8300,7 +8279,7 @@ msgstr "cây gậy của Asclepius"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "after"
-msgstr ""
+msgstr "sau"
 
 #. module: web
 #. odoo-javascript
@@ -12050,12 +12029,6 @@ msgstr "trang trí"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "deer"
 msgstr "con nai"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/color_picker/gradient_picker/gradient_picker.xml:0
-msgid "deg"
-msgstr "độ"
 
 #. module: web
 #. odoo-javascript
@@ -27046,6 +27019,57 @@ msgstr "“vacancy”"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ココ"
 msgstr "ココ"
+
+#~ msgid "No emoji matches your search"
+#~ msgstr "Không có biểu tượng cảm xúc nào phù hợp với tìm kiếm của bạn"
+
+#~ msgid "<span itemprop=\"name\">Deco Addict</span>"
+#~ msgstr "<span itemprop=\"name\">Deco Addict</span>"
+
+#~ msgid "Angle"
+#~ msgstr "Góc độ"
+
+#~ msgid "Define a custom gradient"
+#~ msgstr "Xác định một gradient tùy chỉnh"
+
+#~ msgid "Error"
+#~ msgstr "Lỗi"
+
+#~ msgid "Extend to the closest corner"
+#~ msgstr "Mở rộng đến góc gần nhất"
+
+#~ msgid "Extend to the closest side"
+#~ msgstr "Mở rộng đến phía gần nhất"
+
+#~ msgid "Extend to the farthest corner"
+#~ msgstr "Mở rộng đến góc xa nhất"
+
+#~ msgid "Extend to the farthest side"
+#~ msgstr "Mở rộng đến phía xa nhất"
+
+#~ msgid "Gradient"
+#~ msgstr "Gradient"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "Trường không hợp lệ: "
+
+#~ msgid "Linear"
+#~ msgstr "Đường thẳng"
+
+#~ msgid "Position X"
+#~ msgstr "Vị trí X"
+
+#~ msgid "Position Y"
+#~ msgstr "Vị trí Y"
+
+#~ msgid "Radial"
+#~ msgstr "Xuyên tâm"
+
+#~ msgid "Theme"
+#~ msgstr "Giao diện"
+
+#~ msgid "deg"
+#~ msgstr "độ"
 
 #~ msgid " records"
 #~ msgstr " dữ liệu"

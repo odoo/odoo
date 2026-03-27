@@ -151,12 +151,19 @@ class RatingMixin(models.AbstractModel):
         return values
 
     def rating_get_grades(self, domain=None):
-        """ get the repatition of rating grade for the given res_ids.
-            :param domain : optional domain of the rating to include/exclude in grades computation
-            :return dictionnary where the key is the grade (great, okay, bad), and the value, the number of object (res_model, res_id) having the grade
-                    the grade are compute as    0-30% : Bad
-                                                31-69%: Okay
-                                                70-100%: Great
+        """ Get the repartitions of rating grade for the given res_ids.
+        :param domain: Optional domain of the rating to include/exclude
+            in the grades computation.
+        :returns: A dictionary where the key is the rating and the value
+            is the count of unique ``(res_model, res_id)`` pairs whose
+            grades are associated with that rating.
+
+            The rates are:
+
+            * ``"great"``, graded between 70 and 100
+            * ``"okay"``, graded between 31 and 69
+            * ``"bad"``, graded between 0 and 30
+        :rtype: dict[typing.Literal["great", "okay", "bad"], int]
         """
         data = self._rating_get_repartition(domain=domain)
         res = dict.fromkeys(['great', 'okay', 'bad'], 0)
@@ -166,12 +173,14 @@ class RatingMixin(models.AbstractModel):
         return res
 
     def rating_get_stats(self, domain=None):
-        """ get the statistics of the rating repatition
-            :param domain : optional domain of the rating to include/exclude in statistic computation
-            :return dictionnary where
-                - key is the name of the information (stat name)
-                - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
-                  and 'total' is the number of rating
+        """Get the statistics of the rating repartitions
+
+        :param domain : optional domain of the rating to include/exclude in statistic computation
+        :returns: A dictionnary where:
+
+            - key is the name of the information (stat name)
+            - value is statistic value : 'percent' contains the repartition in percentage, 'avg' is the average rate
+              and 'total' is the number of rating
         """
         data = self._rating_get_repartition(domain=domain, add_stats=True)
         result = {

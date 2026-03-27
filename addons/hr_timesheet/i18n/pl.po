@@ -27,23 +27,25 @@
 # Cezary Drożak, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2025-09-16 10:04+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-14 09:34+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
-"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -96,14 +98,14 @@ msgstr "%(project_name)s (%(days)sd)"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-msgid "%(project_name)s (%(hours)sh%(minutes)s)"
-msgstr "%(project_name)s (%(hours)sh%(minutes)s)"
+msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
+msgstr "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
-msgid "%(project_name)s (%(hours)sh)"
-msgstr "%(project_name)s (%(hours)sh)"
+msgid "%(project_name)s (%(sign)s%(hours)sh)"
+msgstr "%(project_name)s (%(sign)s%(hours)sh)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -112,8 +114,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project '%"
 "(project_name)s' linked to the timesheet."
 msgstr ""
-"Plany analityczne '%(missing_plan_names)s' wymagane w projekcie "
-"'%(project_name)s' powiązane z wykazem czasu."
+"Plany analityczne '%(missing_plan_names)s' wymagane w projekcie '%"
+"(project_name)s' powiązane z wykazem czasu."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -131,7 +133,7 @@ msgstr "(%s pozostałe dni)"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "(incl."
-msgstr "(zawiera."
+msgstr "(wł."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -152,8 +154,8 @@ msgstr "2021-09-01"
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
 msgstr ""
-"<b class=\"tip_title\">Wskazówka: Szybsze rejestrowanie arkuszy czasu "
-"pracy</b>"
+"<b class=\"tip_title\">Wskazówka: Szybsze rejestrowanie arkuszy czasu pracy</"
+"b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -161,8 +163,8 @@ msgid ""
 "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
 "title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title="
-"\"Date\"/>"
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Data\" "
+"title=\"Data\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -173,7 +175,7 @@ msgstr "<i class=\"fa fa-print\"/> Pokaż szczegóły"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\">Karta pracy</span>"
+msgstr "<span class=\"o_stat_text\">Ewidencja czasu pracy</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -184,43 +186,18 @@ msgstr "<span class=\"text-nowrap\">Czas spędzony na podzadaniach:</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        Uh-oh! The employee you’re trying to delete still "
-"has some timesheets hanging around and can’t be deleted.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            So here are your two options: either delete "
-"those timesheets or consider archiving the employee instead.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" "
-"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Please first delete all of their timesheets.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
+"<span invisible=\"has_timesheet\">\n"
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"not has_timesheet\">\n"
-"                        Oho! Pracownik, którego starasz się usunąć ma wciąż "
-"niedokończone wykazy czasu pracy i nie może zostać usunięty.\n"
-"                        <span invisible=\"not has_active_employee\">\n"
-"                            Oto dwie opcje: możesz usunąć te wykazy czasu "
-"lub rozważyć zarchiwizowanie pracownika.\n"
-"                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups="
-"\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            W pierwszej kolejności usuń wszystkie wykazy "
-"czasu pracownika.\n"
-"                        </span>\n"
-"                    </span>\n"
-"                    <span invisible=\"has_timesheet\">\n"
-"                       Czy na pewno chcesz usunąć tych pracowników?\n"
-"                    </span>"
+"<span invisible=\"has_timesheet\">\n"
+"                        Czy na pewno chcesz usunąć tych pracowników?\n"
+"                   </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span style=\"margin-right: 15px;\">Total (Days)</span>"
-msgstr "<span style=\"margin-right: 15px;\">Razem (Dni)</span>"
+msgstr "<span style=\"margin-right: 15px;\">Łącznie (Dni)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -265,17 +242,17 @@ msgstr "<strong>Czas zarejestrowany na podzadaniach: </strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Days: </strong>"
-msgstr "<strong>Całkowita liczba dni: </strong>"
+msgstr "<strong>Łączna liczba dni: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Hours: </strong>"
-msgstr "<strong>Całkowita liczba godzin: </strong>"
+msgstr "<strong>Łączna liczba godzin: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Time Spent: </strong>"
-msgstr "<strong>Całkowity spędzony czas: </strong>"
+msgstr "<strong>Łączny spędzony czas: </strong>"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -336,8 +313,8 @@ msgid ""
 "<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Przeanalizuj projekty i zadania, na które pracownicy poświęcają swój "
-"czas.<br>\n"
+"Przeanalizuj projekty i zadania, na które pracownicy poświęcają swój czas."
+"<br>\n"
 "Oceń, która część jest rozliczana i jakie koszty reprezentuje."
 
 #. module: hr_timesheet
@@ -348,7 +325,7 @@ msgstr "Przypomnienie o akceptacji"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Archive Employees"
-msgstr "Archiwizacja pracowników"
+msgstr "Archiwizuj pracowników"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -363,7 +340,7 @@ msgstr "Średnia postępu"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
 msgid "By Employee"
-msgstr "Wg pracowników"
+msgstr "Wg pracownika"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
@@ -373,7 +350,7 @@ msgstr "Wg projektu"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
 msgid "By Task"
-msgstr "wg zadań"
+msgstr "Wg zadań"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -404,7 +381,7 @@ msgstr "Firma"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -463,7 +440,7 @@ msgstr "Pozostałe dni"
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_active
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__analytic_account_active
 msgid "Deactivate the account."
-msgstr "Dezaktywacja konta."
+msgstr "Dezaktywuj konto."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
@@ -623,7 +600,7 @@ msgstr "Ma dostęp menadżera działu"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_public__has_timesheet
 msgid "Has Timesheet"
-msgstr ""
+msgstr "Ma ewidencję czasu pracy"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
@@ -655,7 +632,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Import Template for Timesheets"
-msgstr ""
+msgstr "Importuj szablon ewidencji czasu pracy"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -791,6 +768,14 @@ msgstr "Brak danych!"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+"Nie utworzono ewidencji czasu pracy: pracownicy nie pracują w wybranych "
+"dniach."
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "Brak"
@@ -824,12 +809,17 @@ msgstr "Zadanie nadrzędne"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__partner_id
 msgid "Partner"
-msgstr "Kontrahent"
+msgstr "Partner"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
 msgstr "Osobiste filtry pracowników w widoku kalendarza"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Please first delete all of their timesheets."
+msgstr "Najpierw usuń wszystkie ich karty ewidencji czasu pracy."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -877,12 +867,12 @@ msgstr "Aktualizacja projektu"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr "Arkusze czasu pracy projektu"
+msgstr "Karty pracy projektu"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Pracownik publiczny"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -896,8 +886,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"Błyskawicznie rejestruj arkusze czasu pracy, naciskając Shift + odpowiedni "
-"klawisz skrótu, aby dodać 15 minut do projektów."
+"Błyskawicznie rejestruj karty pracy, naciskając Shift + odpowiedni klawisz "
+"skrótu, aby dodać 15 minut do projektów."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_kanban_inherit_project_task_view_kanban
@@ -936,7 +926,7 @@ msgstr "Szukaj w opisie"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Employee"
-msgstr "Wyszukiwanie wśród pracowników"
+msgstr "Wyszukaj wśród pracowników"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1000,6 +990,16 @@ msgid ""
 msgstr ""
 "Niektóre wpisy w arkuszu czasu pracy obciążają te zadania! Najpierw je usuń, "
 "a następnie będziesz mógł usunąć zadania!"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
+"Niektóre karty ewidencji czasu pracy nie zostały utworzone: pracownicy nie "
+"pracują w wybranych dniach"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1082,13 +1082,13 @@ msgstr "Bieżący kwartał"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "This Week"
-msgstr "Ten tydzień"
+msgstr "Bieżacy tydzień"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "This Year"
-msgstr "W tym roku"
+msgstr "Bieżący rok"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1187,7 +1187,7 @@ msgstr "Pozostały czas na ZS"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Time Spent"
-msgstr "Spędzony czas"
+msgstr "Poświęcony czas"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1197,7 +1197,7 @@ msgstr "Czas spędzony na podzadaniach"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time Spent on Sub-tasks"
-msgstr "Czas spędzony na podzadaniach"
+msgstr "Czas poświęcony na podzadania"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1208,8 +1208,7 @@ msgstr "Czas poświęcony na podzadania tego zadania."
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
 msgstr ""
-"Czas spędzony na tym zadaniu i jego podzadaniach (oraz ich własnych "
-"podzadaniach)."
+"Czas poświęcony na to zadanie i jego podzadania (oraz ich własne podzadania)."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1245,12 +1244,12 @@ msgstr "Aktywności karty pracy"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr "Koszty arkusza czasu pracy"
+msgstr "Koszty karty pracy"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Jednostka kodująca arkusz czasu pracy"
+msgstr "Jednostka kodująca karty pracy"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
@@ -1260,7 +1259,7 @@ msgstr "Raport z karty pracy"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_time
 msgid "Timesheet Time"
-msgstr "Czas na ewidencji czasu pracy"
+msgstr "Czas na karcie pracy"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1305,7 +1304,7 @@ msgstr "Karty pracy"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets - %s"
-msgstr "Arkusze czasu pracy - %s"
+msgstr "Karty pracy - %s"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
@@ -1324,12 +1323,12 @@ msgstr "Karty pracy >100%"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
 msgid "Timesheets Analysis"
-msgstr "Analiza arkuszy czasu pracy"
+msgstr "Analiza kart pracy"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr "Raport z analizy arkuszy czasu pracy"
+msgstr "Raport z analizy kart pracy"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1339,17 +1338,17 @@ msgstr "Kontrola arkuszy czasu pracy"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets by Employee"
-msgstr "Arkusze czasu pracy według pracownika"
+msgstr "Karty pracy według pracownika"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr "Arkusze czasu pracy według projektu"
+msgstr "Karty pracy według projektu"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets by Task"
-msgstr "Arkusze czasu pracy według zadań"
+msgstr "Karty pracy wg zadania"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1358,19 +1357,12 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "Karty pracy nie mogą być tworzone dla zadań prywatnych."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr ""
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
 "Timesheets must be created with an active employee in the selected companies."
 msgstr ""
-"Arkusze czasu pracy muszą być tworzone z aktywnym pracownikiem w wybranych "
-"firmach."
+"Karty pracy muszą być tworzone z aktywnym pracownikiem w wybranych firmach."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1379,8 +1371,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
-"Arkusze czasu pracy muszą być tworzone przy użyciu co najmniej jednego "
-"aktywnego konta analitycznego zdefiniowanego w planie '%(plan_name)s'."
+"Karty pracy muszą być tworzone przy użyciu co najmniej jednego aktywnego "
+"konta analitycznego zdefiniowanego w planie '%(plan_name)s'."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1389,15 +1381,15 @@ msgid "Timesheets of %(name)s"
 msgstr "Karty pracy z %(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
-msgstr ""
+msgstr "Ewidencja czasu pracy utworzona pomyślnie"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr "Wskazówka: Szybsze rejestrowanie arkuszy czasu pracy"
+msgstr "Wskazówka: Szybsze rejestrowanie kart pracy"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1407,9 +1399,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
-"Aby korzystać z funkcji kart czasu pracy, potrzebujesz konta analitycznego "
-"dla swojego projektu. Skonfiguruj je w planie \"%(plan_name)s\" lub wyłącz "
-"funkcję kart czasu pracy."
+"Aby korzystać z funkcji kart pracy, potrzebujesz konta analitycznego dla "
+"swojego projektu. Skonfiguruj je w planie \"%(plan_name)s\" lub wyłącz "
+"funkcję kart pracy."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1422,7 +1414,7 @@ msgstr "Dzisiaj"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_list
 msgid "Total"
-msgstr "Suma"
+msgstr "Łącznie"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1448,7 +1440,7 @@ msgstr "Suma spędzonego czasu"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 msgid "Total:"
-msgstr "Suma:"
+msgstr "Łącznie:"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1468,6 +1460,22 @@ msgid "Training"
 msgstr "Szkolenie"
 
 #. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid ""
+"Uh-oh! The employee you’re trying to delete still has some timesheets "
+"hanging around and can’t be deleted.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            So here are your two options: either delete "
+"those timesheets or consider archiving the employee instead.\n"
+"                        </span>"
+msgstr ""
+"Oho! Pracownik, którego próbujesz usunąć, nadal ma kilka otwartych kart "
+"czasu pracy i nie można go usunąć. <span invisible=\"not "
+"has_active_employee\">Masz więc dwie możliwości: albo usunąć te karty pracy, "
+"albo rozważyć archiwizację pracownika.\n"
+"                       </span>"
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
@@ -1482,6 +1490,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Użyj tych słów kluczowych w tytule, aby ustawić nowe zadania:\n"
+"\n"
+"        30h Przydziel 30 godzin na wykonanie zadania\n"
+"        #tagi Ustaw tagi dla zadania\n"
+"        @użytkownik Przypisz zadanie do użytkownika\n"
+"        ! Ustaw średni priorytet zadania\n"
+"        !! Ustaw wysoki priorytet zadania\n"
+"        !!! Ustaw pilny priorytet zadania\n"
+"\n"
+"        Pamiętaj, aby używać właściwego formatu i kolejności, np. Popraw "
+"ekran konfiguracji 5h #funkcja #v16 @Maciej !!"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1492,12 +1511,12 @@ msgstr "Użytkownik"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "User: all timesheets"
-msgstr "Użytkownik: wszystkie arkusze czasu pracy"
+msgstr "Użytkownik: wszystkie karty pracy"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr "Użytkownik: tylko własne arkusze czasu pracy"
+msgstr "Użytkownik: tylko własne karty pracy"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -1521,8 +1540,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot access timesheets that are not yours."
-msgstr ""
-"Nie możesz uzyskać dostępu do arkuszy czasu, które nie należą do Ciebie."
+msgstr "Nie możesz uzyskać dostępu do kart pracy, które nie należą do Ciebie."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1538,11 +1556,10 @@ msgid ""
 "                            Please switch to another account, or reactivate "
 "the current one to timesheet on the project."
 msgstr ""
-"Nie możesz rejestrować czasu pracy na tym projekcie, ponieważ jest powiązany "
+"Nie możesz rejestrować kart pracy na tym projekcie, ponieważ jest powiązany "
 "z nieaktywnym kontem analitycznym.<br/>\n"
 "                            Przejdź do innego konta lub ponownie aktywuj "
-"bieżące konto, aby wprowadzić dane do karty ewidencji czasu pracy w "
-"projekcie."
+"bieżące konto, aby wprowadzić dane do karty pracy w projekcie."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1551,18 +1568,16 @@ msgid ""
 "analytic account.<br/> Please change this account, or reactivate the current "
 "one to timesheet on the project."
 msgstr ""
-"Nie możesz rejestrować kart czasu pracy w tym projekcie, ponieważ jest on "
+"Nie możesz rejestrować kart pracy w tym projekcie, ponieważ jest on "
 "powiązany z nieaktywnym kontem analitycznym.<br/> Zmień to konto lub "
-"ponownie aktywuj bieżące konto, aby rejestrować karty czasu pracy w "
-"projekcie."
+"ponownie aktywuj bieżące konto, aby rejestrować karty pracy w projekcie."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot set an archived employee on existing timesheets."
 msgstr ""
-"Nie możesz ustawić zarchiwizowanego pracownika w istniejących wykazach czasu "
-"pracy."
+"Nie możesz ustawić zarchiwizowanego pracownika w istniejących kartach pracy."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1573,12 +1588,12 @@ msgstr "data"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "e.g. Sending E-mails"
-msgstr "np. Wysyłanie E-maili"
+msgstr "np. Wysyłanie e-maili"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
 msgid "for"
-msgstr "do"
+msgstr "dla"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -1603,6 +1618,46 @@ msgid ""
 msgstr ""
 "na\n"
 "<span class=\"fw-bold text-dark\">podzadania</span>)"
+
+#~ msgid "%(project_name)s (%(hours)sh%(minutes)s)"
+#~ msgstr "%(project_name)s (%(hours)sh%(minutes)s)"
+
+#~ msgid "%(project_name)s (%(hours)sh)"
+#~ msgstr "%(project_name)s (%(hours)sh)"
+
+#~ msgid ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        Uh-oh! The employee you’re trying to delete still "
+#~ "has some timesheets hanging around and can’t be deleted.\n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            So here are your two options: either delete "
+#~ "those timesheets or consider archiving the employee instead.\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                            Please first delete all of their timesheets.\n"
+#~ "                        </span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                        Are you sure you want to delete these employees?\n"
+#~ "                    </span>"
+#~ msgstr ""
+#~ "<span invisible=\"not has_timesheet\">\n"
+#~ "                        Oho! Pracownik, którego starasz się usunąć ma "
+#~ "wciąż niedokończone wykazy czasu pracy i nie może zostać usunięty.\n"
+#~ "                        <span invisible=\"not has_active_employee\">\n"
+#~ "                            Oto dwie opcje: możesz usunąć te wykazy czasu "
+#~ "pracy lub rozważyć zarchiwizowanie pracownika.\n"
+#~ "                        </span>\n"
+#~ "                        <span invisible=\"has_active_employee\" "
+#~ "groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+#~ "                            W pierwszej kolejności usuń całą ewidencję "
+#~ "czasu pracy pracownika.\n"
+#~ "                        </span>\n"
+#~ "                    </span>\n"
+#~ "                    <span invisible=\"has_timesheet\">\n"
+#~ "                       Czy na pewno chcesz usunąć tych pracowników?\n"
+#~ "                    </span>"
 
 #~ msgid "<i class=\"fa fa-download\"/> Download"
 #~ msgstr "<i class=\"fa fa-download\"/> Pobierz"

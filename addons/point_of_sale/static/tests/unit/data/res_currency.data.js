@@ -27,6 +27,16 @@ export class ResCurrency extends webModels.ResCurrency {
             decimal_places: 2,
             iso_numeric: 840,
         },
+        {
+            id: 125,
+            name: "EUR",
+            symbol: "€",
+            position: "after",
+            rounding: 0.01,
+            rate: 1.0,
+            decimal_places: 2,
+            iso_numeric: 978,
+        },
         ...webModels.ResCurrency._records.filter((record) => record.id !== 1),
     ];
 }

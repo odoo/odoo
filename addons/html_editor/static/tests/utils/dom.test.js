@@ -1,8 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import {
     cleanTextNode,
     fillEmpty,
+    removeInvisibleWhitespace,
+    makeContentsInline,
     splitTextNode,
     wrapInlinesInBlocks,
 } from "@html_editor/utils/dom";
@@ -208,6 +210,58 @@ describe("cleanTextNode", () => {
     });
 });
 
+describe("makeContentsInline", () => {
+    test("should unwrap P", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<p>text</p>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text");
+    });
+    test("should unwrap DIV", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<div>text</div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text");
+    });
+    test("should unwrap P in DIV", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<div><p>text</p></div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text");
+    });
+    test("should not unwrap inline", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<strong>text</strong>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("<strong>text</strong>");
+    });
+    test("should unwrap multiple Ps and insert BR between", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<p>text1</p><p>text2</p>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text1<br>text2");
+    });
+    test("should unwrap multiple Ps in multiple DIVs and insert BR between", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML =
+            "<div><p>text1</p><p>text2</p><div><div><p>text3</p><p>text4</p><div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("text1<br>text2<br>text3<br>text4");
+    });
+    test("should preserve inline elements when unwrapping P", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<p><strong>text1</strong><u>text2</u></p>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("<strong>text1</strong><u>text2</u>");
+    });
+    test("should preserve inline elements when unwrapping P in DIV", async () => {
+        const container = document.createElement("fake-container");
+        container.innerHTML = "<div><p><strong>text1</strong><u>text2</u></p><div>";
+        makeContentsInline(container);
+        expect(container.innerHTML).toBe("<strong>text1</strong><u>text2</u>");
+    });
+});
+
 describe("wrapInlinesInBlocks", () => {
     test("should wrap text node in P", async () => {
         const div = document.createElement("div");
@@ -301,13 +355,15 @@ describe("wrapInlinesInBlocks", () => {
         // element).
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -335,12 +391,13 @@ describe("wrapInlinesInBlocks", () => {
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     text
                     <div contenteditable="false" style="display: inline;">inline</div>
                     <span class="a">span</span>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -391,10 +448,14 @@ describe("wrapInlinesInBlocks", () => {
 describe("fillEmpty", () => {
     test("should not add fill a shrunk protected block, nor add a ZWS to it", async () => {
         const { el } = await setupEditor('<div data-oe-protected="true"></div>');
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            '<p data-selection-placeholder=""><br></p><div data-oe-protected="true" contenteditable="false"></div><p data-selection-placeholder=""><br></p>'
+        );
         const div = el.firstChild;
         fillEmpty(div);
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            '<p data-selection-placeholder=""><br></p><div data-oe-protected="true" contenteditable="false"></div><p data-selection-placeholder=""><br></p>'
+        );
     });
     test("should not fill a block containing a canvas", async () => {
         const { el } = await setupEditor("<div><canvas></canvas></div>");
@@ -402,5 +463,43 @@ describe("fillEmpty", () => {
         const div = el.firstChild;
         fillEmpty(div);
         expect(el.innerHTML).toBe('<div class="o-paragraph"><canvas></canvas></div>');
+    });
+});
+
+describe("removeInvisibleWhitespace", () => {
+    test("should remove invisible whitespace from an element and preserve the selection", async () => {
+        await testEditor({
+            contentBefore: `<p>
+                <u>
+                    abc
+                </u>
+                def
+                <span>
+                    <b>
+                        ghi
+                    </b>
+                    jkl
+                </span>
+                mno
+                <i>
+                    pqr
+                </i>
+            </p>`,
+            stepFunction: (editor) => {
+                const cursors = editor.shared.selection.preserveSelection();
+                removeInvisibleWhitespace(editor.editable.querySelector("p"), cursors);
+                cursors.restore();
+            },
+            contentAfter: `<p><u>abc</u> def<span><b> ghi</b> jkl</span> mno<i> pqr</i></p>`,
+        });
+    });
+});
+
+describe("crash fixes", () => {
+    test("inserting a br should not crash", async () => {
+        const { el, editor } = await setupEditor("<p>a[]</p>");
+        const br = document.createElement("br");
+        editor.shared.dom.insert(br);
+        expect(getContent(el)).toBe("<p>a[]</p>");
     });
 });

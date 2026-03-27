@@ -2,11 +2,22 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
+/**
+ * @typedef { Object } EditInteractionShared
+ * @property { EditInteractionPlugin['restartInteractions'] } restartInteractions
+ * @property { EditInteractionPlugin['stopInteraction'] } stopInteraction
+ */
+
+/**
+ * @typedef {((commonAncestorEl: HTMLElement) => void)[]} content_manually_updated_handlers
+ */
+
 export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
 
     static shared = ["restartInteractions", "stopInteraction"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         normalize_handlers: this.refreshInteractions.bind(this),
         content_manually_updated_handlers: this.refreshInteractions.bind(this),
@@ -31,7 +42,7 @@ export class EditInteractionPlugin extends Plugin {
             { once: true }
         );
         const event = new CustomEvent("edit_interaction_plugin_loaded");
-        event.shared = this.config.getShared();
+        event.shared = this.__editor.shared;
         window.parent.document.dispatchEvent(event);
     }
     destroy() {

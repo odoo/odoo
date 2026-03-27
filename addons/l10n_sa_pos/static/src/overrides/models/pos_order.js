@@ -16,8 +16,8 @@ patch(PosOrder.prototype, {
                     company.name,
                     company.vat,
                     this.date_order,
-                    this.getTotalWithTax(),
-                    this.getTotalTax()
+                    this.priceIncl,
+                    this.amountTaxes
                 );
                 const qr_code_svg = new XMLSerializer().serializeToString(
                     codeWriter.write(qr_values, 200, 200)
@@ -27,6 +27,15 @@ patch(PosOrder.prototype, {
         }
         return false;
     },
+    /**
+     * If the module pos_settle_due is not installed,
+     * the function always returns false (since "isAnySettleLine" doesn't exist)
+     * @returns {boolean} true if the current order is a settlement or deposit, else false
+     */
+    is_settlement() {
+        return this.lines.some((line) => line.isAnySettleLine?.());
+    },
+
     compute_sa_qr_code(name, vat, date_isostring, amount_total, amount_tax) {
         return computeSAQRCode(name, vat, date_isostring, amount_total, amount_tax);
     },

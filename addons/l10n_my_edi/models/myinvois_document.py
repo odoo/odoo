@@ -572,14 +572,19 @@ class MyInvoisDocument(models.Model):
                         base_line["price_unit"] * base_line["quantity"]
                     )
 
+                # Only compute discount if any base_line has an actual discount percentage
+                has_discount = any(base_line['discount'] for base_line in base_lines)
+                discount_amount = (total_amount - total_amount_discounted) if has_discount else 0.0
+                discount_amount_currency = (total_amount_currency - total_amount_discounted_currency) if has_discount else 0.0
+
                 # for the line name, when consolidating, we want to show first sequence - last sequence
                 sequenced_records = records.sorted(key=lambda r: r.name)
                 new_base_line = AccountTax._prepare_base_line_for_taxes_computation(
                     {},
                     tax_ids=taxes,
                     price_unit=total_amount_currency,
-                    discount_amount=total_amount - total_amount_discounted,
-                    discount_amount_currency=total_amount_currency - total_amount_discounted_currency,
+                    discount_amount=discount_amount,
+                    discount_amount_currency=discount_amount_currency,
                     quantity=1.0,
                     currency_id=self.currency_id,
                     tax_details={
@@ -671,7 +676,15 @@ class MyInvoisDocument(models.Model):
         :return: a dict of potential errors in the format {record: errors_list}
         """
         def _format_error_messages(errors_list):
-            return self.env["account.move.send"]._format_error_html({"error_title": self.env._("Error when sending the documents to the E-invoicing service."), "errors": errors_list})
+            AccountMoveSend = self.env['account.move.send']
+            error_data = {
+                'error_title': self.env._("Error when sending the documents to the E-invoicing service."),
+                'errors': errors_list,
+            }
+            return {
+                'html_error': AccountMoveSend._format_error_html(error_data),
+                'plain_text_error': AccountMoveSend._format_error_text(error_data),
+            }
 
         records_to_send = self.filtered(lambda record: record in submissions_content)
         if not records_to_send:
@@ -747,7 +760,7 @@ class MyInvoisDocument(models.Model):
         if error_messages:
             unsuccessful_records = self.browse(list(error_messages.keys()))
             unsuccessful_records._myinvois_log_message(
-                bodies=error_messages,
+                bodies={rid: msg['html_error'] for rid, msg in error_messages.items()},
             )
 
         if invoice_to_cancel:
@@ -906,7 +919,7 @@ class MyInvoisDocument(models.Model):
         if len(self) == 1 and errors:
             if self._can_commit():
                 self.env.cr.commit()  # Save the error logged in the chatter.
-            raise UserError(errors[self.id])
+            raise UserError(errors[self.id]['plain_text_error'])
 
         # Try and get the status, up to three time, stopping if all documents have a status already.
         for _i in range(3):

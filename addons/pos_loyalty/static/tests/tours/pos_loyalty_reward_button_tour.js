@@ -6,6 +6,7 @@ import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selecti
 import { registry } from "@web/core/registry";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
     steps: () =>
@@ -39,6 +40,9 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1"),
+            ProductScreen.clickNumpad("9"),
+            ProductScreen.selectedOrderlineHas("Desk Organizer", "9"),
+            PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-15.30", "3"),
             ProductScreen.clickNumpad("⌫"),
             ProductScreen.selectedOrderlineHas("Desk Organizer", "0"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1"),
@@ -83,10 +87,11 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", "2"),
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
+            ProductScreen.selectedOrderlineHas("Magnetic Board", "3"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
             PosLoyalty.isRewardButtonHighlighted(false),
 
-            PosLoyalty.orderTotalIs("9.14"),
+            PosLoyalty.orderTotalIs("5.94"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
             // Promotion: 2 items of shelves, get desk_pad/monitor_stand free
@@ -150,6 +155,7 @@ registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1.00"),
@@ -218,6 +224,12 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
             ProductScreen.clickDisplayedProduct("Product B"),
             ProductScreen.selectedOrderlineHas("Product B", "1", "50.00"),
             PosLoyalty.orderTotalIs("40.00"),
+
+            ProductScreen.clickControlButton("Reward"),
+            SelectionPopup.has("10$ on your order - Product B - Saleable", { run: "click" }),
+            ProductScreen.clickControlButton("Reward"),
+            SelectionPopup.has("10$ on your order - Product B - Not Saleable", { run: "click" }),
+            PosLoyalty.orderTotalIs("30.00"),
         ].flat(),
 });
 
@@ -269,7 +281,11 @@ registry.category("web_tour.tours").add("test_loyalty_reward_with_variant", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-
+            ProductScreen.clickPartnerButton(),
+            PartnerList.searchCustomerValue("Test Partner", true),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            Dialog.discard(),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductConfiguratorPopup.pickRadio("Value 1"),
             Dialog.confirm(),

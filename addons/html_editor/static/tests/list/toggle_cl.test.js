@@ -56,6 +56,22 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should turn a ordered list without marker into a checklist", async () => {
+            await testEditor({
+                contentBefore: '<ol><li class="oe-nested">ab[]cd</li></ol>',
+                stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+            });
+        });
+
+        test("should turn a unordered list without marker into a checklist", async () => {
+            await testEditor({
+                contentBefore: '<ul><li class="oe-nested">ab[]cd</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
+            });
+        });
+
         test("should turn an empty heading into a checklist and display the right hint", async () => {
             const { el, editor } = await setupEditor("<h1>[]</h1>");
             expect(getContent(el)).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1>`);
@@ -97,7 +113,7 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should turn a unordered list into a checklist between 2 checklists inside a checklist", async () => {
+        test("should turn a unordered list into a checklist between 2 checklists inside a checklist (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -136,6 +152,9 @@ describe("Range collapsed", () => {
                         </li>
                     </ul>`),
             });
+        });
+
+        test("should turn a unordered list into a checklist between 2 checklists inside a checklist (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -201,6 +220,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleCheckList,
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -215,6 +235,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
@@ -267,6 +288,66 @@ describe("Range collapsed", () => {
                 contentBefore: '<p dir="rtl" class="text-uppercase">a[]b</p>',
                 stepFunction: toggleCheckList,
                 contentAfter: '<ul class="o_checklist text-uppercase" dir="rtl"><li>a[]b</li></ul>',
+            });
+        });
+
+        test("should apply both color and size styles on list item (1)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ul>',
+            });
+        });
+
+        test("should apply both color and size styles on list item (2)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></i></b></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;"><b><i>[abc]</i></b></li></ul>',
+            });
+        });
+
+        test("should not apply color and size styles on list item (1)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span>b</p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span>b</li></ul>',
+            });
+        });
+
+        test("should not apply color and size styles on list item (2)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><b><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></i></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li><b><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span></i></li></ul>',
+            });
+        });
+
+        test("should only apply color style on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><font style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></font></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></li></ul>',
+            });
+        });
+
+        test("should only apply size style on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></span></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="font-size: 18px;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></li></ul>',
             });
         });
     });
@@ -366,6 +447,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleCheckList,
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -380,6 +462,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
@@ -400,12 +483,15 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should convert list item with line breaks into a single paragraph", async () => {
+        test("should convert list item with line breaks into a single paragraph (1)", async () => {
             await testEditor({
                 contentBefore: '<ul class="o_checklist"><li>ab<br>cd<br>ef[]</li></ul>',
                 stepFunction: toggleCheckList,
                 contentAfter: "<p>ab<br>cd<br>ef[]</p>",
             });
+        });
+
+        test("should convert list item with line breaks into a single paragraph (2)", async () => {
             await testEditor({
                 contentBefore:
                     '<ul class="o_checklist"><li>ab<br><b>cd</b><br><i>ef[]</i></li></ul>',
@@ -459,7 +545,7 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn a paragraph and a checklist item into two list items", async () => {
+        test("should turn a paragraph and a checklist item into two list items (1)", async () => {
             await testEditor({
                 contentBefore:
                     '<p>a[b</p><ul class="o_checklist"><li class="o_checked">c]d</li><li>ef</li></ul>',
@@ -467,6 +553,9 @@ describe("Range not collapsed", () => {
                 contentAfter:
                     '<ul class="o_checklist"><li>a[b</li><li class="o_checked">c]d</li><li>ef</li></ul>',
             });
+        });
+
+        test("should turn a paragraph and a checklist item into two list items (2)", async () => {
             await testEditor({
                 contentBefore:
                     '<p>a[b</p><ul class="o_checklist"><li class="o_checked">c]d</li><li class="o_checked">ef</li></ul>',

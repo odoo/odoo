@@ -4,6 +4,7 @@ import {
     contains,
     defineModels,
     editSelectMenu,
+    getMockEnv,
     mountView,
     onRpc,
     serverState,
@@ -191,6 +192,7 @@ beforeEach(() => {
                         description: false,
                         group_ids: [1, 2],
                         category_id: 121,
+                        placeholder: "No",
                     },
                     222: {
                         id: 222,
@@ -198,6 +200,7 @@ beforeEach(() => {
                         description: "Project access rights description",
                         group_ids: [11, 12, 13],
                         category_id: 221,
+                        placeholder: "View",
                     },
                     223: {
                         id: 223,
@@ -271,6 +274,27 @@ test("simple rendering", async () => {
     ).toEqual(["Project User", ""]);
 
     expect(".o_group_info_button").toHaveCount(0); // not displayed in non debug mode
+});
+
+test("simple rendering in readonly", async () => {
+    await mountView({
+        type: "form",
+        arch: `
+            <form edit="0">
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids] input").toHaveCount(0);
+    expect(queryAllTexts(".o_field_res_user_group_ids_privilege span")).toEqual([
+        "Access Rights",
+        "Project User",
+        "",
+    ]);
 });
 
 test("simple rendering (debug)", async () => {
@@ -357,6 +381,34 @@ test("editing groups doesn't remove groups (debug)", async () => {
     );
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
+});
+
+test(`Click on "?" should not trigger a focus`, async () => {
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(`.o_form_label[for="field_222_0"] :contains("?")`).toHaveCount(1);
+    await contains(`.o_form_label[for="field_222_0"] :contains("?")`).click();
+    await runAllTimers();
+    expect(".o-overlay-container .o-dropdown-item").toHaveCount(0);
+    if (getMockEnv().isSmall) {
+        expect(".o-overlay-container .o-tooltip").toHaveCount(1);
+    } else {
+        expect(".o-overlay-container .o-tooltip").toHaveCount(0);
+    }
+    await contains(`.o_form_label[for="field_222_0"]`).click();
+    await runAllTimers();
+    expect(".o-overlay-container .o-dropdown-item").toHaveCount(4);
+    expect(".o-overlay-container .o-tooltip").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -522,7 +574,7 @@ test("implied groups: lower level groups no longer available", async () => {
     expect(".o_inner_group:eq(1) .o_select_menu").toHaveCount(2);
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("Project User");
-    expect(".o_select_menu_item").toHaveCount(3);
+    expect(".o_select_menu_item").toHaveCount(4);
     expect(".o_inner_group:eq(1) .o_wrap_input:last-child input").toHaveValue("");
     await editSelectMenu(
         ".o_field_widget[name='group_ids'] .o_inner_group:nth-child(2) .o_wrap_input:last-child input",
@@ -543,7 +595,7 @@ test("implied groups: lower level groups no longer available", async () => {
 
     expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveValue("Project User");
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
-    expect(".o_select_menu_item").toHaveCount(3);
+    expect(".o_select_menu_item").toHaveCount(4);
 });
 
 test("implied groups: lower level groups of same privilege still available", async () => {
@@ -560,7 +612,7 @@ test("implied groups: lower level groups of same privilege still available", asy
         resId: 1,
     });
     await contains(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).click();
-    expect(".o_select_menu_item").toHaveCount(3);
+    expect(".o_select_menu_item").toHaveCount(4);
 });
 
 test("do not lose shadowed groups when editing", async () => {
@@ -737,4 +789,47 @@ test("privileges without category", async () => {
     });
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
+});
+
+test("privileges with placeholder", async () => {
+    ResUsers._records[0].group_ids = [];
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(queryAllValues(".o_select_menu_input")).toEqual(["No", "View", ""]);
+
+    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual([
+        "View",
+        "Project User",
+        "Project Manager",
+        "Project Administrator",
+    ]);
+
+    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)").click();
+    expect(`.o_select_menu_item`).toHaveCount(2);
+
+    await editSelectMenu(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input:eq(1)", {
+        value: "Helpdesk Administrator",
+    });
+    expect(queryAllValues(".o_select_menu_input")).toEqual(["No", "", "Helpdesk Administrator"]);
+    expect(queryFirst(".o_inner_group:eq(1) .o_wrap_input input")).toHaveAttribute(
+        "placeholder",
+        "Project Manager"
+    );
+
+    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(1) input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual([
+        "Project Manager",
+        "Project Administrator",
+    ]);
 });

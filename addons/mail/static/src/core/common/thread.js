@@ -89,6 +89,7 @@ export class Thread extends Component {
         });
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
+        this.ui = useService("ui");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageScrolling>|null} */
         this.messageHighlight = this.env.messageHighlight
             ? useState(this.env.messageHighlight)
@@ -514,6 +515,22 @@ export class Thread extends Component {
         this.props.thread.isFocusedCounter--;
     }
 
+    async onParentMessageClick(parentMessage) {
+        if (!parentMessage) {
+            return;
+        }
+        const targetThread = parentMessage.thread;
+        if (!targetThread) {
+            return;
+        }
+        if (targetThread.eq(this.props.thread)) {
+            this.env.messageHighlight?.highlightMessage(parentMessage, targetThread);
+        } else {
+            targetThread.highlightMessage = parentMessage;
+            await targetThread.open({ focus: true });
+        }
+    }
+
     getMessageClassName(message) {
         return !message.isNotification && this.messageHighlight?.highlightedMessageId === message.id
             ? "o-highlighted bg-view shadow-lg pb-1"
@@ -528,6 +545,9 @@ export class Thread extends Component {
             this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
+        if (!this.ui.isSmall) {
+            this.props.thread.composer.autofocus++;
+        }
     }
 
     registerMessageRef(message, ref) {
@@ -701,7 +721,7 @@ export class Thread extends Component {
                 channelName: this.props.thread.name,
             });
         }
-        if (this.props.thread.channel_type === "channel") {
+        if (this.props.thread.channel_type === "group") {
             return _t("This is the start of %(conversationName)s group", {
                 conversationName: this.props.thread.displayName,
             });

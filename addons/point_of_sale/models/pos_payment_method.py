@@ -12,10 +12,13 @@ class PosPaymentMethod(models.Model):
         return []
 
     def _get_payment_method_type(self):
-        selection = [('none', 'None required'), ('terminal', 'Terminal')]
+        selection = [('none', self.env._("None required")), ('terminal', self.env._("Terminal"))]
         if self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
-            selection.append(('qr_code', 'Bank App (QR Code)'))
+            selection.append(('qr_code', self.env._("Bank App (QR Code)")))
         return selection
+
+    def _is_online_payment(self):
+        return False
 
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
     sequence = fields.Integer(copy=False)
@@ -35,6 +38,7 @@ class PosPaymentMethod(models.Model):
         domain=['|', '&', ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False), ('type', '=', 'bank')],
         ondelete='restrict',
         index='btree_not_null',
+        check_company=True,
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
              'For cash journal, we directly write to the default account in the journal via statement lines.\n'
@@ -206,6 +210,12 @@ class PosPaymentMethod(models.Model):
                 error_msg = self.journal_id.bank_account_id._get_error_messages_for_qr(self.qr_code_method, False, rec.company_id.currency_id)
                 if error_msg:
                     raise ValidationError(error_msg)
+
+    @api.constrains('config_ids')
+    def _check_company_config(self):
+        for payment in self:
+            if self.env['pos.config'].search_count([('id', 'in', payment.config_ids.ids), ('company_id', '!=', payment.company_id.id)]):
+                raise ValidationError(_("The points of sale for the payment method %s must belong to its company.", payment.name))
 
     @api.depends('payment_method_type', 'journal_id')
     def _compute_qr(self):

@@ -417,6 +417,49 @@ class TestDropship(common.TransactionCase):
             self.env.ref('stock.stock_location_customers')
         )
 
+    def test_non_dropship_mtso_unaffected_by_dropship_logic(self):
+        '''
+        When using MTSO routes, ensure that purchases are only created for the
+        difference between stock and SO qty, instead of the full SO qty.
+        '''
+        # Make delivery default to MTSO
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_route_id.rule_ids.procure_method = 'mts_else_mto'
+
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'is_storable': "True",
+            'lst_price': 100.0,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.supplier.id,
+                    'price': 4
+                }),
+            ],
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product.id,
+            'inventory_quantity': 5,
+            'location_id': warehouse.lot_stock_id.id,
+        }).action_apply_inventory()
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 6,
+            })],
+        })
+        sale_order.action_confirm()
+        po = sale_order._get_purchase_orders()
+        self.assertTrue(po)
+        po.button_confirm()
+        sale_order.order_line.product_uom_qty = 8
+        po = sorted(sale_order._get_purchase_orders(), key=lambda order: order.id)
+        self.assertEqual(len(po), 2)
+        self.assertEqual(po[1].order_line.product_uom_qty, 2)
+
 
 @tagged('post_install', '-at_install')
 class TestDropshipPostInstall(common.TransactionCase):
@@ -495,3 +538,65 @@ class TestDropshipPostInstall(common.TransactionCase):
         return_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         self.assertEqual(purchase_order.order_line.qty_received, 0)
+
+    def test_so_cancel_creates_one_activity_on_po(self):
+        """
+        Create Sale order with dropshipping product, confirm it, confirm the generated
+        purchase order, then cancel the sale order. This should create an activity on the
+        purchase order.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.dropship_product.id,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = self.env['purchase.order'].search([
+            ('origin', '=', sale_order.name)
+        ], limit=1)
+        purchase_order.button_confirm()
+        sale_order._action_cancel()
+        self.assertEqual(len(purchase_order.activity_ids), 1)
+
+    def test_product_replenish_wizard_excludes_dropship_routes(self):
+        '''
+        Ensure the dropship route is not included in the replenish wizard.
+        '''
+        buy_route = self.env['stock.rule'].search([
+            ('action', '=', 'buy'),
+            ('company_id', '=', self.env.company.id),
+            ('location_dest_id.usage', '=', 'internal'),
+        ], limit=1).route_id
+        # Ensure no buy route so the widget tries to default to dropship
+        buy_route.action_archive()
+        self.dropship_product.route_ids = False
+        replenish_wizard = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.dropship_product.product_tmpl_id.id
+        ))
+        self.assertNotEqual(replenish_wizard.route_id, self.env.ref('stock_dropshipping.route_drop_shipping'))
+
+    def test_dest_address_when_changing_po_to_dropship(self):
+        """
+        Check that the destination address is set on the purchase order when
+        its picking type is manually changed to the dropshipping picking type.
+        """
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.action_unarchive()
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        self.dropship_product.route_ids += buy_route
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.dropship_product.id,
+                'product_uom_qty': 1.00,
+                'price_unit': 1,
+            })],
+        })
+        so.action_confirm()
+        po = so.order_line.purchase_line_ids.order_id
+        po.picking_type_id = buy_route.rule_ids.picking_type_id[-1]
+        self.assertFalse(po.dest_address_id)
+        po.picking_type_id = self.env['stock.picking.type'].search([('name', '=', 'Dropship'), ('company_id', '=', self.env.company.id)], limit=1)
+        self.assertEqual(po.dest_address_id, self.customer)

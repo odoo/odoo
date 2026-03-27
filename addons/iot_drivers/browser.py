@@ -38,11 +38,11 @@ class Browser:
         :param kiosk: Whether the browser should be in kiosk mode
         """
         self.url = url
-        self.browser = 'chromium-browser'
-        self.browser_process_name = 'chromium'
+        self.browser = 'chromium'
         self.state = BrowserState.NORMAL
         self._x_screen = _x_screen
         self._set_environment(env)
+        self.open_browser()
 
     def _set_environment(self, env):
         """
@@ -55,7 +55,7 @@ class Browser:
         for key in ['HOME', 'XDG_RUNTIME_DIR', 'XDG_CACHE_HOME']:
             self.env[key] = '/tmp/' + self._x_screen
 
-    def open_browser(self, url=None, state=BrowserState.NORMAL):
+    def open_browser(self, url=None, state=BrowserState.FULLSCREEN):
         """
         open the browser with the given URL, or reopen it if it is already open
         :param url: URL to open in the browser
@@ -89,7 +89,7 @@ class Browser:
         """close the browser"""
         # Kill browser instance (can't `instance.pkill()` as we can't keep the instance after Odoo service restarts)
         # We need to terminate it because Odoo will create a new instance each time it is restarted.
-        subprocess.run(['pkill', self.browser_process_name], check=False)
+        subprocess.run(['pkill', self.browser], check=False)
 
     def xdotool_keystroke(self, keystroke):
         """
@@ -100,7 +100,7 @@ class Browser:
             'xdotool', 'search',
             '--sync', '--onlyvisible',
             '--screen', self._x_screen,
-            '--class', self.browser_process_name,
+            '--class', self.browser,
             'key', keystroke,
         ], check=False)
 
@@ -113,7 +113,7 @@ class Browser:
             'xdotool', 'search',
             '--sync', '--onlyvisible',
             '--screen', self._x_screen,
-            '--class', self.browser_process_name,
+            '--class', self.browser,
             'type', text,
         ], check=False)
 

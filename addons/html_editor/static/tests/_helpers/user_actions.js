@@ -1,6 +1,13 @@
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { findInSelection } from "@html_editor/utils/selection";
-import { click, manuallyDispatchProgrammaticEvent, press, tick, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    tick,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { setSelection } from "./selection";
 import { execCommand } from "./userCommands";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -10,6 +17,11 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /** @typedef {import("@html_editor/plugin").Editor} Editor */
 
 /**
+ * Simulates text insertion in the editor by dispatching keyboard/input events
+ * for each character and inserting them into the current selection's position.
+ * In case of a non-collapsed selection, the selection is deleted first
+ * (assuming the Delete Plugin is present in Editor).
+ *
  * @param {Editor} editor
  * @param {string} text
  */
@@ -40,7 +52,6 @@ export async function insertText(editor, text) {
         }
     };
     for (const char of text) {
-        // KeyDownEvent is required to trigger deleteRange.
         const [keydownEvent] = await manuallyDispatchProgrammaticEvent.silent(
             editor.editable,
             "keydown",
@@ -49,6 +60,7 @@ export async function insertText(editor, text) {
         if (keydownEvent.defaultPrevented) {
             continue;
         }
+        // Beforeinput is required to trigger deleteSelection.
         // InputEvent is required to simulate the insert text.
         const [beforeinputEvent] = await manuallyDispatchProgrammaticEvent.silent(
             editor.editable,
@@ -218,8 +230,12 @@ export function splitBlock(editor) {
 }
 
 export async function simulateArrowKeyPress(editor, keys) {
-    await press(keys);
+    const events = await press(keys);
     const keysArray = Array.isArray(keys) ? keys : [keys];
+    if (events.some((event) => event.defaultPrevented)) {
+        // Selection change was already handled.
+        return;
+    }
     const alter = keysArray.includes("Shift") ? "extend" : "move";
     const direction =
         keysArray.includes("ArrowLeft") || keysArray.includes("ArrowUp") ? "left" : "right";
@@ -240,6 +256,8 @@ export async function unlinkFromToolbar() {
 
 export async function unlinkFromPopover() {
     await waitFor(".o-we-linkpopover");
+    await click(".o_we_edit_link");
+    await animationFrame();
     await click(".o_we_remove_link");
 }
 

@@ -7,13 +7,15 @@
 # Thi Huong Nguyen, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-16 02:36+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-03-14 09:36+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "repair/vi/>\n"
 "Language: vi\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: repair
 #. odoo-python
@@ -155,6 +157,8 @@ msgid ""
 "? , but get ready to have fun taking inventory to fix the negative stock "
 "quantity!"
 msgstr ""
+"? , nhưng hãy chuẩn bị tinh thần để vui vẻ kiểm kê hàng tồn kho và khắc phục "
+"tình trạng tồn kho âm!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -255,9 +259,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Vì sản phẩm này đã sử dụng các đơn vị tính (VD: %(problem_uom)s) khác %(uom)"
-"s nên không thể thay đổi đơn vị tính. Nếu bạn muốn thay đổi, vui lòng lưu "
-"trữ sản phẩm và tạo sản phẩm mới."
+"Vì sản phẩm này đã sử dụng các đơn vị tính (VD: %(problem_uom)s) khác %"
+"(uom)s nên không thể thay đổi đơn vị tính. Nếu bạn muốn thay đổi, vui lòng "
+"lưu trữ sản phẩm và tạo sản phẩm mới."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -473,7 +477,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Exp %s"
-msgstr "Ngày hết hạn %s"
+msgstr "Ngày dự kiến %s"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__expected
@@ -724,6 +728,12 @@ msgid "Next Activity Type"
 msgstr "Loại hoạt động tiếp theo"
 
 #. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_warehouse.py:0
+msgid "No location of type Inventory Loss found"
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
 msgstr "Không tìm thấy lệnh sửa chữa nào. Hãy tạo mới!"
@@ -891,7 +901,7 @@ msgstr "Vị trí đích của sản phẩm"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Product Moves"
-msgstr "Dịch chuyển sản phẩm"
+msgstr "Điều chuyển sản phẩm"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move_line
@@ -992,7 +1002,7 @@ msgstr "Vị trí đích của linh kiện được tái chế"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reference_ids
 msgid "References"
-msgstr ""
+msgstr "Các tham chiếu"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
@@ -1497,8 +1507,8 @@ msgid ""
 "Lots/Serial Numbers\"."
 msgstr ""
 "Bạn không được phép tạo số lô hoặc sê-ri với loại hoạt động này. Để thay đổi "
-"điều này, vui lòng đi đến loại hoạt động và tích chọn ô "
-"\"Tạo số lô/ sê-ri mới\"."
+"điều này, vui lòng đi đến loại hoạt động và tích chọn ô \"Tạo số lô/ sê-ri "
+"mới\"."
 
 #. module: repair
 #. odoo-python

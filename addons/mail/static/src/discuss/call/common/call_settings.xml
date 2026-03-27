@@ -45,7 +45,7 @@
                                 <span class="d-flex invisible text-nowrap">
                                     <t t-out="testText.length > stopText.length ? testText : stopText"/>
                                 </span>
-                                <span class="position-absolute end-0 top-0">
+                                <span class="position-absolute start-0 top-0">
                                     <t t-if="microphoneVolume.isActive" t-out="stopText"/>
                                     <t t-else="" t-out="testText"/>
                                 </span>

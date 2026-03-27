@@ -5,7 +5,21 @@ import { isElementInViewport } from "@html_builder/utils/utils";
 import { isRemovable } from "./remove_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-const clonableSelector = "a.btn:not(.oe_unremovable)";
+/**
+ * @typedef { Object } CloneShared
+ * @property { ClonePlugin['cloneElement'] } cloneElement
+ */
+
+/**
+ * @typedef {((arg: { cloneEl: HTMLElement, originalEl: HTMLElement }) => Promise<void>)[]} on_cloned_handlers
+ * Called after an element was cloned and inserted in the DOM.
+ *
+ * @typedef {((arg: { originalEl: HTMLElement }) => void)[]} on_will_clone_handlers
+ * Called on the original element before clone.
+ */
+
+const clonableSelector =
+    "a.btn:not(.oe_unremovable, .js_subscribe_btn, .s_website_form_send, .s_website_form_submit)";
 
 export function isClonable(el) {
     // TODO and isDraggable
@@ -17,6 +31,7 @@ export class ClonePlugin extends Plugin {
     static dependencies = ["history", "builderOptions", "dom"];
     static shared = ["cloneElement"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             // Maybe rename cloneItem ?
@@ -25,17 +40,6 @@ export class ClonePlugin extends Plugin {
         get_overlay_buttons: withSequence(2, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        // Resource definitions:
-        on_will_clone_handlers: [
-            // ({ originalEl: el }) => {
-            //     called on the original element before clone
-            // }
-        ],
-        on_cloned_handlers: [
-            // async ({ cloneEl: cloneEl, originalEl: el }) => {
-            //     called after an element was cloned and inserted in the DOM
-            // }
-        ],
     };
 
     setup() {
@@ -49,7 +53,7 @@ export class ClonePlugin extends Plugin {
         }
         const buttons = [];
         this.overlayTarget = target;
-        const disabledReason = this.dependencies["builderOptions"].getCloneDisabledReason(target);
+        const disabledReason = this.dependencies.builderOptions.getCloneDisabledReason(target);
         buttons.push({
             class: "o_snippet_clone fa fa-clone",
             title: _t("Duplicate"),
@@ -91,7 +95,8 @@ export class ClonePlugin extends Plugin {
 
         // Scroll to the clone if required and if it is not visible.
         if (scrollToClone && !isElementInViewport(cloneEl)) {
-            cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+            cloneEl.scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
         for (const onCloned of this.getResource("on_cloned_handlers")) {
@@ -107,7 +112,9 @@ export class CloneItemAction extends BuilderAction {
     static dependencies = ["clone", "history"];
     async apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {
         const itemEl = editingElement.querySelector(itemSelector);
-        await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
-        this.dependencies.history.addStep();
+        if (itemEl) {
+            await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
+            this.dependencies.history.addStep();
+        }
     }
 }

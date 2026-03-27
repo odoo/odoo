@@ -4,11 +4,42 @@ import { withSequence } from "@html_editor/utils/resource";
 import { groupBy } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/**
+ * @typedef { Object } SaveShared
+ * @property { SavePlugin['save'] } save
+ * @property { SavePlugin['saveView'] } saveView
+ * @property { SavePlugin['ignoreDirty'] } ignoreDirty
+ * @property { SavePlugin['groupElements'] } groupElements
+ */
+
+/**
+ * @typedef {(() => void)[]} after_save_handlers
+ * @typedef {((el?: HTMLElement) => Promise<void>)[]} before_save_handlers
+ * Called at the very beginning of the save process.
+ *
+ * @typedef {((groupedEls: Object.<string, HTMLElement[]>) => Promise<void>)[]} pre_save_handlers
+ * Called before the save process with the grouped dirty elements.
+ *
+ * @typedef {((el: HTMLElement) => Promise<void>)[]} save_element_handlers
+ * Called when saving an element (in parallel to saving the view).
+ *
+ * @typedef {(() => Promise<boolean>)[]} save_handlers
+ * Called at the very end of the save process.
+ *
+ * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
+ *
+ * @typedef {(() => HTMLElement[] | NodeList)[]} get_dirty_els
+ *
+ * @typedef {CSSSelector[]} savable_selectors
+ */
+
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "saveView", "ignoreDirty"];
+    static shared = ["save", "saveView", "ignoreDirty", "groupElements"];
     static dependencies = ["history"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         handleNewRecords: this.handleMutations.bind(this),
         start_edition_handlers: this.startObserving.bind(this),
@@ -18,28 +49,13 @@ export class SavePlugin extends Plugin {
             "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])",
             "#wrapwrap .s_cover[data-res-model]",
         ],
-        before_save_handlers: [
-            // async () => {
-            //     called at the very beginning of the save process
-            // }
-        ],
         clean_for_save_handlers: [
             // ({root}) => {
             //     clean DOM before save (leaving edit mode)
             //     root is the clone of a node that was o_dirty
             // }
         ],
-        save_element_handlers: [
-            // async (el) => {
-            //     called when saving an element (in parallel to saving the view)
-            // }
-            this.saveView.bind(this),
-        ],
-        save_handlers: [
-            // async () => {
-            //     called at the very end of the save process
-            // }
-        ],
+        save_element_handlers: [this.saveView.bind(this)],
         get_dirty_els: () => this.editable.querySelectorAll(".o_dirty"),
         // Do not change the sequence of this resource, it must stay the first
         // one to avoid marking dirty when not needed during the drag and drop.
@@ -51,28 +67,11 @@ export class SavePlugin extends Plugin {
         this.savableSelector = this.getResource("savable_selectors").join(", ");
     }
 
-    async save({ alwaysSkipAfterSaveHandlers = true } = {}) {
-        let success;
-        try {
-            await Promise.all(this.getResource("before_save_handlers").map((handler) => handler()));
-            await this._save();
-            success = true;
-        } finally {
-            if (!(alwaysSkipAfterSaveHandlers || success)) {
-                this.getResource("after_save_handlers").forEach((handler) => handler());
-            }
-        }
-    }
-    async _save() {
-        const dirtyEls = [];
-        for (const getDirtyEls of this.getResource("get_dirty_els")) {
-            dirtyEls.push(...getDirtyEls());
-        }
-        // Group elements to save if possible
-        const groupedElements = groupBy(dirtyEls, (dirtyEl) => {
-            const model = dirtyEl.dataset.oeModel;
-            const recordId = dirtyEl.dataset.oeId;
-            const field = dirtyEl.dataset.oeField;
+    groupElements(toGroupEls) {
+        return groupBy(toGroupEls, (toGroupEl) => {
+            const model = toGroupEl.dataset.oeModel;
+            const recordId = toGroupEl.dataset.oeId;
+            const field = toGroupEl.dataset.oeField;
 
             // There are elements which have no linked model as something
             // special is to be done "to save them". In that case, do not group
@@ -84,6 +83,32 @@ export class SavePlugin extends Plugin {
             // Group elements which are from the same field of the same record.
             return `${model}::${recordId}::${field}`;
         });
+    }
+
+    async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
+        let skipAfterSaveHandlers;
+        try {
+            await Promise.all(this.getResource("before_save_handlers").map((handler) => handler()));
+            await this._save();
+            skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
+        } finally {
+            if (!skipAfterSaveHandlers) {
+                this.getResource("after_save_handlers").forEach((handler) => handler());
+            }
+        }
+    }
+    async _save() {
+        const dirtyEls = [];
+        for (const getDirtyEls of this.getResource("get_dirty_els")) {
+            dirtyEls.push(...getDirtyEls());
+        }
+        // Group elements to save if possible
+        const groupedElements = this.groupElements(dirtyEls);
+        const preSaveHandlers = [];
+        for (const preSaveHandler of this.getResource("pre_save_handlers")) {
+            preSaveHandlers.push(preSaveHandler(groupedElements));
+        }
+        await Promise.all(preSaveHandlers);
         const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
             const cleanedEls = dirtyEls.map((dirtyEl) => {
                 dirtyEl.classList.remove("o_dirty");

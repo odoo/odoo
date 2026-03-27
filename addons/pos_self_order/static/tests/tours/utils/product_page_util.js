@@ -4,7 +4,7 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 export function clickProduct(productName) {
     return {
         content: `Click on product '${productName}'`,
-        trigger: `.o_self_product_box span:contains('${productName}')`,
+        trigger: `.product_list .o_self_product_box span:contains('${productName}')`,
         run: "click",
     };
 }
@@ -12,6 +12,14 @@ export function clickCategory(categoryName) {
     return {
         content: `Click on category '${categoryName}'`,
         trigger: `.category_btn:contains('${categoryName}')`,
+        run: "click",
+    };
+}
+
+export function clickChildCategory(childCategoryName) {
+    return {
+        content: `Click on child category '${childCategoryName}'`,
+        trigger: `.child_category_btn:contains('${childCategoryName}')`,
         run: "click",
     };
 }
@@ -53,6 +61,20 @@ export function clickCancel() {
     ];
 }
 
+export function checkOrderTotal(amount) {
+    return {
+        content: `Confirm '${amount}' is displayed correctly`,
+        trigger: `.o_self_product_list_page .o_self_shadow_bottom .o-so-tabular-nums:contains('${amount}')`,
+    };
+}
+
+export function checkProductQty(productName, qty) {
+    return {
+        content: `Confirm product '${qty}' is displayed correctly`,
+        trigger: `.o_self_product_list_page .o_self_product_box:has(.self_order_product_name:contains('${productName}')) .badge:contains('${qty}')`,
+    };
+}
+
 export function clickDiscard() {
     return {
         content: "Click on Discard button",
@@ -80,6 +102,20 @@ export function setupAttribute(attributes, addToCart = true) {
     }
 
     return steps;
+}
+
+export function attributeHasColorDot(attribute) {
+    return {
+        content: `The ${attribute} has a color dot`,
+        trigger: `div:has(span:contains("${attribute}")) ~ div.rounded-5`,
+    };
+}
+
+export function attributeHasImage(attribute) {
+    return {
+        content: `The ${attribute} has an image`,
+        trigger: `div:has(span:contains("${attribute}")) ~ img.rounded-4`,
+    };
 }
 
 export function verifyIsCheckedAttribute(attribute, values = []) {
@@ -161,5 +197,12 @@ export function checkProductOutOfStock(productName) {
     return {
         content: `Check if '${productName}' is marked as out of stock`,
         trigger: `.o_self_product_box:has(span:contains('${productName}')):has(div:contains('Out of stock'))`,
+    };
+}
+
+export function isShown() {
+    return {
+        content: "Check whether the Product List page is displayed",
+        trigger: ".o_self_product_list_page",
     };
 }

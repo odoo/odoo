@@ -1,4 +1,9 @@
-import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDateTime,
+    serializeDateTime,
+    deserializeDate,
+    serializeDate,
+} from "@web/core/l10n/dates";
 export const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 export const DATE_TIME_TYPE = new Set(["date", "datetime"]);
 export const X2MANY_TYPES = new Set(["many2many", "one2many"]);
@@ -55,6 +60,28 @@ export function convertDateTimeToRaw(value) {
     return value;
 }
 
+export function convertRawToDate(model, value, prop) {
+    if (!value) {
+        return undefined;
+    }
+    const date = deserializeDate(value);
+    if (!date.isValid) {
+        throw new Error(`Invalid date: ${value} for model ${model.model} in field ${prop}`);
+    }
+    return date;
+}
+
+export function convertDateToRaw(value) {
+    if (!value) {
+        return undefined;
+    }
+    // Verify if is already a valid date object
+    if (typeof value !== "string") {
+        return serializeDate(value);
+    }
+    return value;
+}
+
 /**
  * Creates a deep immutable proxy for the given object or array.
  * Any attempts to modify, delete, or redefine properties will throw an error.
@@ -64,16 +91,19 @@ export function convertDateTimeToRaw(value) {
  *
  * @param {Object|Array} obj - The object or array to make immutable.
  * @param {string} errorMsg - The error message to throw on modification attempts.
+ * @param valueConverter
  * @returns {Proxy} A Proxy that enforces deep immutability.
  */
-export function deepImmutable(obj, errorMsg) {
+export function deepImmutable(obj, errorMsg, valueConverter = (value) => value) {
     return new Proxy(obj, {
         get(target, prop, receiver) {
             if ("__deepImmutable" === prop) {
                 return true;
             }
-            const value = Reflect.get(target, prop, receiver);
-            return value && typeof value === "object" ? deepImmutable(value, errorMsg) : value;
+            const value = valueConverter(Reflect.get(target, prop, receiver));
+            return value && typeof value === "object"
+                ? deepImmutable(value, errorMsg, valueConverter)
+                : value;
         },
         set() {
             throw new Error(errorMsg);

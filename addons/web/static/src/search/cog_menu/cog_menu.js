@@ -52,9 +52,14 @@ export class CogMenu extends ActionMenus {
     }
 
     async _registryItems() {
+        const registryItems = cogMenuRegistry.getAll();
+        const areDisplayed = await Promise.all(
+            registryItems.map((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
+        );
         const items = [];
-        for (const item of cogMenuRegistry.getAll()) {
-            if ("isDisplayed" in item ? await item.isDisplayed(this.env) : true) {
+        for (let i = 0; i < registryItems.length; i++) {
+            if (areDisplayed[i]) {
+                const item = registryItems[i];
                 items.push({
                     Component: item.Component,
                     groupNumber: item.groupNumber,

@@ -34,6 +34,7 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { setGlobalFilterValue } from "../../helpers/commands";
 
 const { toZone } = spreadsheet.helpers;
+const { chartRegistry } = spreadsheet.registries;
 
 const cumulativeDateServerData = getBasicServerData();
 cumulativeDateServerData.models.partner.records = [
@@ -627,7 +628,11 @@ test("Duplicating a sheet correctly duplicates Odoo chart", async () => {
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "secondSheetId";
     const chartId = model.getters.getChartIds(sheetId)[0];
-    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    model.dispatch("DUPLICATE_SHEET", {
+        sheetId,
+        sheetIdTo: secondSheetId,
+        sheetNameTo: "Next name",
+    });
     const chartIds = model.getters.getChartIds(secondSheetId);
     expect(chartIds.length).toBe(1);
     expect(model.getters.getChart(chartIds[0]) instanceof OdooChart).toBe(true);
@@ -876,6 +881,36 @@ test("Odoo chart datasource display name has a default when the chart title is e
         sheetId,
     });
     expect(model.getters.getOdooChartDisplayName(chartId)).toBe("(#1) Odoo Line Chart");
+});
+
+test("Every Odoo chart type has a default title", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_line" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const figureId = model.getters.getFigureIdFromChartId(chartId);
+    const chartTypes = chartRegistry.getKeys().filter((type) => type.startsWith("odoo_"));
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...model.getters.getChartDefinition(chartId), title: { text: undefined } },
+        chartId,
+        figureId,
+        sheetId,
+    });
+
+    for (const chartType of chartTypes) {
+        const definition = {
+            ...model.getters.getChartDefinition(chartId),
+            type: chartType,
+        };
+        model.dispatch("UPDATE_CHART", {
+            definition,
+            chartId,
+            figureId,
+            sheetId,
+        });
+        await waitForDataLoaded(model);
+        const chartName = chartRegistry.get(chartType).name;
+        expect(model.getters.getOdooChartDisplayName(chartId)).toBe(`(#1) Odoo ${chartName} Chart`);
+    }
 });
 
 test("See records when clicking on a bar chart bar", async () => {
@@ -1536,6 +1571,7 @@ test("available granularities without filter", async () => {
     const chartId = model.getters.getChartIds(sheetId)[0];
 
     expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
         "week",
         "month",
         "quarter",
@@ -1584,6 +1620,7 @@ test("available granularities with a date filter", async () => {
     );
     model.updateMode("dashboard");
     expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
         "week",
         "month",
         "quarter",
@@ -1632,6 +1669,7 @@ test("hour is an available granularity with a filtered datetime field", async ()
     );
     model.updateMode("dashboard");
     expect(model.getters.getAvailableChartGranularities(chartId).map((g) => g.value)).toEqual([
+        "day",
         "week",
         "month",
         "quarter",

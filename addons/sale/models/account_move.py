@@ -17,7 +17,7 @@ class AccountMove(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-    sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count')
+    sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count', compute_sudo=True)
     sale_warning_text = fields.Text(
         "Sale Warning",
         help="Internal warning for the partner or the products as set by the user.",
@@ -50,13 +50,19 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'invoice_line_ids.product_id.sale_line_warn_msg', 'invoice_line_ids.product_id.display_name')
     def _compute_sale_warning_text(self):
+        if not self.env.user.has_group('sale.group_warning_sale'):
+            self.sale_warning_text = ''
+            return
         for move in self:
             if move.move_type != 'out_invoice':
                 move.sale_warning_text = ''
                 continue
             warnings = OrderedSet()
             if partner_msg := move.partner_id.sale_warn_msg:
-                warnings.add(move.partner_id.name + ' - ' + partner_msg)
+                warnings.add((move.partner_id.name or move.partner_id.display_name) + ' - ' + partner_msg)
+            if partner_parent_msg := move.partner_id.parent_id.sale_warn_msg:
+                parent = move.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + ' - ' + partner_parent_msg)
             for product in move.invoice_line_ids.product_id:
                 if product_msg := product.sale_line_warn_msg:
                     warnings.add(product.display_name + ' - ' + product_msg)

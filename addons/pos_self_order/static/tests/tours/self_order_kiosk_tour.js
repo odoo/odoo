@@ -209,6 +209,17 @@ registry.category("web_tour.tours").add("test_self_order_pricelist", {
     ],
 });
 
+registry.category("web_tour.tours").add("test_self_order_kiosk_unpaid", {
+    steps: () => [
+        Utils.clickBtn("Order now"),
+        ProductPage.clickCategory("Miscellaneous"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        ConfirmationPage.orderNumberShown(),
+    ],
+});
+
 registry.category("web_tour.tours").add("test_self_order_kiosk_product_availability", {
     steps: () => [
         Utils.clickBtn("Order Now"),
@@ -243,6 +254,19 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_product_availabil
         Dialog.confirm("OK"),
         Utils.clickBtn("Order"),
         Numpad.click("3"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Close"),
+    ],
+});
+
+registry.category("web_tour.tours").add("test_self_order_parent_category", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickChildCategory("Test Child Category 1"),
+        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickChildCategory("Test Child Category 2"),
+        ProductPage.clickProduct("Pepsi"),
+        Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
         Utils.clickBtn("Close"),
     ],

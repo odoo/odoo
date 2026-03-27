@@ -165,7 +165,16 @@ class InteractionService {
     }
 
     shouldStop(el, interaction) {
-        return el === interaction.el || el.contains(interaction.el);
+        const { selectorNotHas, selectorHas } = interaction.interaction.constructor;
+        if (!interaction.el) {
+            return true;
+        }
+        return (
+            el === interaction.el ||
+            el.contains(interaction.el) ||
+            (selectorHas && !interaction.el.querySelector(selectorHas)) ||
+            (selectorNotHas && !!interaction.el.querySelector(selectorNotHas))
+        );
     }
 
     stopInteractions(el = this.el) {

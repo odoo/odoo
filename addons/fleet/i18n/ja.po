@@ -10,15 +10,17 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-14 21:13+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-02 13:43+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/fleet/"
 "ja/>\n"
 "Language: ja\n"
@@ -26,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -62,7 +64,8 @@ msgstr "<span>cm</span>"
 msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,             such as pulling trailers, boats, or other vehicles."
-msgstr "トレーラーヒッチは、トレーラーやボート、その他の車両を牽引するために、車両の"
+msgstr ""
+"トレーラーヒッチは、トレーラーやボート、その他の車両を牽引するために、車両の"
 "骨組みに取り付けられる装置です。"
 
 #. module: fleet
@@ -70,7 +73,8 @@ msgstr "トレーラーヒッチは、トレーラーやボート、その他の
 msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,            such as pulling trailers, boats, or other vehicles."
-msgstr "トレーラーヒッチは、トレーラーやボート、その他の車両を牽引するために、車両の"
+msgstr ""
+"トレーラーヒッチは、トレーラーやボート、その他の車両を牽引するために、車両の"
 "骨組みに取り付けられる装置です。"
 
 #. module: fleet
@@ -118,7 +122,7 @@ msgstr "初期費用"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__active
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_ids
@@ -139,7 +143,7 @@ msgstr "活動"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "例外活動文字装飾"
+msgstr "例外の活動を示す装飾"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
@@ -147,7 +151,7 @@ msgstr "例外活動文字装飾"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_state
 msgid "Activity State"
-msgstr "活動状態"
+msgstr "活動ステータス"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_mail_activity_type
@@ -160,7 +164,7 @@ msgstr "活動タイプ"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
@@ -214,6 +218,7 @@ msgstr "アーカイブ"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -256,18 +261,18 @@ msgstr "注意: 更新期限切れ"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__author_id
 msgid "Author"
-msgstr "著作者"
+msgstr "作成者"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__automatic
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__transmission__automatic
 msgid "Automatic"
-msgstr "自動"
+msgstr "オートマ"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Available"
-msgstr "処理可能"
+msgstr "利用可能"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1920
@@ -535,7 +540,7 @@ msgstr "会社"
 #. module: fleet
 #: model:ir.model,name:fleet.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
@@ -880,7 +885,7 @@ msgstr "運転者"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Drivers History"
-msgstr "運転履歴"
+msgstr "運転手履歴"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
@@ -897,7 +902,8 @@ msgstr "車両の運転手履歴"
 msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
-msgstr "各契約（例：リース）には、複数のサービス（修理、保険、定期整備）が含まれる場"
+msgstr ""
+"各契約（例：リース）には、複数のサービス（修理、保険、定期整備）が含まれる場"
 "合がある。"
 
 #. module: fleet
@@ -930,7 +936,8 @@ msgstr "排出量基準"
 msgid ""
 "Emission Standard specifies the regulatory test procedure             or "
 "guideline under which a vehicle's emissions are measured."
-msgstr "排出ガス基準とは、車両の排出ガスを測定する際に適用される規制試験手順または指"
+msgstr ""
+"排出ガス基準とは、車両の排出ガスを測定する際に適用される規制試験手順または指"
 "針を指します。"
 
 #. module: fleet
@@ -938,7 +945,8 @@ msgstr "排出ガス基準とは、車両の排出ガスを測定する際に適
 msgid ""
 "Emission Standard specifies the regulatory test procedure or             "
 "guideline under which a vehicle's emissions are measured."
-msgstr "排出ガス基準とは、車両の排出ガスを測定する際に適用される規制試験手順または指"
+msgstr ""
+"排出ガス基準とは、車両の排出ガスを測定する際に適用される規制試験手順または指"
 "針を指します。"
 
 #. module: fleet
@@ -999,7 +1007,8 @@ msgstr "サービス税への入国"
 msgid ""
 "Every service and contract of this vehicle will be considered as archived. "
 "Are you sure that you want to archive this record?"
-msgstr "この車両のすべてのサービスおよび契約はアーカイブされたものとみなされます。こ"
+msgstr ""
+"この車両のすべてのサービスおよび契約はアーカイブされたものとみなされます。こ"
 "の記録をアーカイブしてもよろしいですか？"
 
 #. module: fleet
@@ -1296,7 +1305,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_has_error
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -1435,7 +1444,7 @@ msgstr "最終更新日"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
@@ -1461,7 +1470,7 @@ msgstr "車両のナンバープレート番号（i =車のプレート番号）
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Load template"
-msgstr "テンプレートをロード"
+msgstr "テンプレートを読み込む"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
@@ -1504,7 +1513,8 @@ msgid ""
 "Manage all your contracts (leasing, insurances, etc.) with\n"
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
-msgstr "すべての契約（リース、保険など）を関連サービス、費用と共に管理できます。契約"
+msgstr ""
+"すべての契約（リース、保険など）を関連サービス、費用と共に管理できます。契約"
 "更新が必要な場合、Odooが自動的に警告します。"
 
 #. module: fleet
@@ -1526,7 +1536,7 @@ msgstr "管理手数料"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__manual
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__transmission__manual
 msgid "Manual"
-msgstr "手動"
+msgstr "マニュアル"
 
 #. module: fleet
 #. odoo-python
@@ -1562,7 +1572,7 @@ msgstr "メッセージ"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__mileage_delta
 msgid "Mileage Delta"
-msgstr "マイレージDelta"
+msgstr "走行距離差"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
@@ -1783,7 +1793,7 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter
@@ -1885,6 +1895,9 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"メール送信時に選択できる任意の翻訳言語(ISOコード)。未設定の場合は、関連する取"
+"引先の言語が使用されます。通常は、たとえば {{ object.partner_id.lang }} のよ"
+"うな、適切な言語を指定するプレースホルダー式を使用します。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -1909,7 +1922,7 @@ msgstr "その他整備"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__overdue
 msgid "Overdue"
-msgstr "滞納"
+msgstr "期限超過"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_34
@@ -1984,7 +1997,7 @@ msgstr "購入金額"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
 msgid "Purchased"
-msgstr "購入した"
+msgstr "購入済"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_37
@@ -2076,7 +2089,7 @@ msgstr "レポーティング"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_reserve
 msgid "Reserve"
-msgstr "引当"
+msgstr "予約"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
@@ -2275,7 +2288,7 @@ msgstr "スターター交換"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__state_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
 msgid "State"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_state_fleet_state_name_unique
@@ -2288,7 +2301,7 @@ msgstr "州名はすでに存在しています"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_state
@@ -2302,7 +2315,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -2385,14 +2398,16 @@ msgstr "温度計交換"
 msgid ""
 "This is the date at which the car will be available, if not set it means "
 "available instantly"
-msgstr "これは、車が利用可能になる日付であり、設定されていない場合は、即座に利用可能"
+msgstr ""
+"これは、車が利用可能になる日付であり、設定されていない場合は、即座に利用可能"
 "になることを意味します。"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid ""
 "This will allow this vehicle to be selectable for the Salary Configurator"
-msgstr "これにより、給与コンフィギュレータでこの車両を選択できるようになります。"
+msgstr ""
+"これにより、給与コンフィギュレータでこの車両を選択できるようになります。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44

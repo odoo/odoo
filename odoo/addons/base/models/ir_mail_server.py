@@ -1,27 +1,52 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 import datetime
-import email
 import email.policy
 import functools
-import idna
 import logging
 import re
 import smtplib
 import ssl
 from email.message import EmailMessage
+from email.parser import BytesParser
 from email.utils import make_msgid
 from socket import gaierror, timeout
 
+import idna
+import OpenSSL
 from OpenSSL import crypto as SSLCrypto
-from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
-from OpenSSL.SSL import Error as SSLError, VERIFY_PEER, VERIFY_FAIL_IF_NO_PEER_CERT
+from OpenSSL.crypto import FILETYPE_PEM
+from OpenSSL.crypto import Error as SSLCryptoError
+from OpenSSL.SSL import VERIFY_FAIL_IF_NO_PEER_CERT, VERIFY_PEER
+from OpenSSL.SSL import Error as SSLError
 from urllib3.contrib.pyopenssl import PyOpenSSLContext, get_subj_alt_name
 
-from odoo import api, fields, models, tools, _, modules
+from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
-from odoo.tools import formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
+from odoo.tools import (
+    email_domain_extract,
+    email_domain_normalize,
+    email_normalize,
+    encapsulate_email,
+    formataddr,
+    human_size,
+    parse_version,
+)
+
+if parse_version(OpenSSL.__version__) >= parse_version('24.3.0'):
+    from cryptography.hazmat.primitives.serialization import load_pem_private_key
+    from cryptography.x509 import load_pem_x509_certificate
+else:
+    from OpenSSL import crypto as SSLCrypto
+    from OpenSSL.crypto import FILETYPE_PEM
+    from OpenSSL.crypto import Error as SSLCryptoError
+
+    def load_pem_private_key(pem_key, password):
+        return SSLCrypto.load_privatekey(FILETYPE_PEM, pem_key)
+
+    def load_pem_x509_certificate(pem_cert):
+        return SSLCrypto.load_certificate(FILETYPE_PEM, pem_cert)
 
 try:
     # urllib3 1.26 (ubuntu jammy and up, debian bullseye and up)
@@ -47,14 +72,20 @@ smtplib.SMTP._print_debug = _print_debug
 
 # Python 3: workaround for bpo-35805, only partially fixed in Python 3.8.
 RFC5322_IDENTIFICATION_HEADERS = {'message-id', 'in-reply-to', 'references', 'resent-msg-id'}
+USER_DEFINED_HEADERS = {'bcc', 'cc', 'from', 'reply-to', 'subject', 'to'}
 _noFoldPolicy = email.policy.SMTP.clone(max_line_length=None)
+_maxFoldPolicy = email.policy.SMTP.clone(max_line_length=998)  # rfc5322#section-2.1.1
 class IdentificationFieldsNoFoldPolicy(email.policy.EmailPolicy):
     # Override _fold() to avoid folding identification fields, excluded by RFC2047 section 5
     # These are particularly important to preserve, as MTAs will often rewrite non-conformant
     # Message-ID headers, causing a loss of thread information (replies are lost)
+    # Also override _fold() for user-defined headers that may not fit on 78 characters,
+    # as Python's folding algorithm is unreliable and fail to handle all weird cases.
     def _fold(self, name, value, *args, **kwargs):
         if name.lower() in RFC5322_IDENTIFICATION_HEADERS:
             return _noFoldPolicy._fold(name, value, *args, **kwargs)
+        if name.lower() in USER_DEFINED_HEADERS:
+            return _maxFoldPolicy._fold(name, value, *args, **kwargs)
         return super()._fold(name, value, *args, **kwargs)
 
 # Global monkey-patch for our preferred SMTP policy, preserving the non-default linesep
@@ -423,12 +454,11 @@ class IrMail_Server(models.Model):
                         )
                     else:  # ssl, starttls
                         ssl_context.verify_mode = ssl.CERT_NONE
-                    smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
-                    certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
-                    smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
-                    private_key = SSLCrypto.load_privatekey(FILETYPE_PEM, smtp_ssl_private_key)
-                    ssl_context._ctx.use_certificate(certificate)
-                    ssl_context._ctx.use_privatekey(private_key)
+                    ssl_context._ctx.use_certificate(load_pem_x509_certificate(
+                        base64.b64decode(mail_server.smtp_ssl_certificate)))
+                    ssl_context._ctx.use_privatekey(load_pem_private_key(
+                        base64.b64decode(mail_server.smtp_ssl_private_key),
+                        password=None))
                     # Check that the private key match the certificate
                     ssl_context._ctx.check_privatekey()
                 except SSLCryptoError as e:
@@ -607,8 +637,7 @@ class IrMail_Server(models.Model):
             for (fname, fcontent, mime) in attachments:
                 maintype, subtype = mime.split('/') if mime and '/' in mime else ('application', 'octet-stream')
                 if maintype == 'message' and subtype == 'rfc822':
-                    #  Use binary encoding for "message/rfc822" attachments (see RFC 2046 Section 5.2.1)
-                    msg.add_attachment(fcontent, maintype, subtype, filename=fname, cte='binary')
+                    msg.add_attachment(BytesParser().parsebytes(fcontent), filename=fname)
                 else:
                     msg.add_attachment(fcontent, maintype, subtype, filename=fname)
         return msg

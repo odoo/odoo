@@ -4,13 +4,16 @@ from datetime import date
 from psycopg2.errors import CheckViolation
 
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase, freeze_time
-from odoo.exceptions import ValidationError
+from odoo.tests.common import freeze_time
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import mute_logger
+
+from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('post_install', '-at_install')
-class TestHrVersion(TransactionCase):
+class TestHrVersion(TestHrCommon):
     def test_dates_constraints(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
@@ -520,6 +523,27 @@ class TestHrVersion(TransactionCase):
             self.assertEqual(version.job_id.id, jobB.id)
             self.assertEqual(version.contract_date_end, date(2020, 9, 30))
 
+    def test_delete_version(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        v1 = employee.version_id
+        v2 = employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        v3 = employee.create_version({
+            'date_version': '2022-01-01',
+        })
+        self.assertEqual(employee.current_version_id, v3)
+
+        v3.unlink()
+        self.assertEqual(employee.current_version_id, v2)
+        v1.unlink()
+        self.assertEqual(employee.current_version_id, v2)
+        with self.assertRaises(ValidationError):
+            v2.unlink()
+
     def test_multi_edit_multi_employees_no_contract(self):
         """
         Test the multi-edit when there is one version per employee, without contract
@@ -631,6 +655,7 @@ class TestHrVersion(TransactionCase):
             "currency_id",
             "date_end",
             "date_start",
+            "departure_description",
             "display_name",
             "id",
             "is_current",
@@ -669,10 +694,149 @@ class TestHrVersion(TransactionCase):
                 continue
             if hasattr(field, 'store') and field.store is False:
                 continue
-            if not (hasattr(field, 'tracking') and field.tracking):
+            if hasattr(field, 'tracking') and not field.tracking:
                 fields_without_tracking.append(field_name)
 
         self.assertFalse(
             fields_without_tracking,
             f"The following hr.version fields should have tracking=True: {fields_without_tracking}",
         )
+
+    def test_related_fields_on_version_onchange(self):
+        """ This test is to ensure that each _onchange method on version has a corresponding _onchange on employee that calls it. """
+        version_methods = {method for method in dir(self.env['hr.version']) if method.startswith('_onchange')}
+        employee_methods = {method for method in dir(self.env['hr.employee']) if method.startswith('_onchange')}
+        not_implemented_onchanges = version_methods - employee_methods
+        self.assertFalse(
+            not_implemented_onchanges,
+            f"""The following _onchange methods on hr.version should have corresponding methods implemented on hr.employee: {not_implemented_onchanges}\n
+                You might need to implement methods with the same name on hr.employee and call the corresponding self.version_id._onchange inside"""
+        )
+
+    def test_search_on_version_fields(self):
+        Department = self.env['hr.department'].with_context(tracking_disable=True)
+        rd_dep = Department.create({
+            'name': 'Research and devlopment',
+        })
+        employee1, employee2 = employees = self.env['hr.employee'].create([
+            {
+                'contract_date_start': '2020-10-10',
+                'wage': 3000,
+                'name': 'Employee1',
+                'hr_responsible_id': self.res_users_hr_manager.id,
+                'department_id': rd_dep.id,
+            },
+            {
+                'contract_date_start': '2022-10-10',
+                'wage': 2000,
+                'name': 'Employee2',
+            },
+        ])
+        internal_user = mail_new_test_user(
+            self.env,
+            email='internal_user@example.com',
+            login='internal_user',
+            name='Internal User',
+        )
+        self.employee.department_id = rd_dep
+        self.employee.user_id = internal_user
+
+        HrEmployeePublic_with_internal_user = self.env['hr.employee.public'].with_user(internal_user)
+        with self.assertRaises(AccessError, msg="Internal user should not be able to access to hr.employee model"):
+            HrEmployeePublic_with_internal_user.search([
+                ('employee_id.contract_date_start', '<', '2022-01-01'),
+                ('id', 'in', employees.ids),
+            ])
+        with self.assertRaises(AccessError, msg="Internal user should not be able to access to hr.employee model"):
+            HrEmployeePublic_with_internal_user.search([('employee_id.wage', '=', 2000), ('id', 'in', employees.ids)])
+        with self.assertRaises(AccessError, msg="Internal user should not be able to access to hr.employee model"):
+            HrEmployeePublic_with_internal_user.search([('employee_id.version_id.wage', '=', 2000), ('id', 'in', employees.ids)])
+        self.assertEqual(
+            HrEmployeePublic_with_internal_user.search([('name', '=', 'Employee2'), ('id', 'in', employees.ids)]),
+            self.env['hr.employee.public'].browse(employee2.id),
+        )
+        self.assertEqual(
+            HrEmployeePublic_with_internal_user.search([('member_of_department', '=', True), ('id', 'in', employees.ids)]),
+            self.env['hr.employee.public'].browse(employee1.id),
+        )
+
+        HrEmployee_with_office_user = self.env['hr.employee'].with_user(self.res_users_hr_officer)
+        self.employee.user_id = self.res_users_hr_officer
+        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
+            HrEmployee_with_office_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)])
+        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
+            HrEmployee_with_office_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)])
+        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
+            HrEmployee_with_office_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)])
+        self.assertEqual(HrEmployee_with_office_user.search([('name', '=', 'Employee1'), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_office_user.search([('hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_office_user.search([('version_id.hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_office_user.search([('member_of_department', '=', True), ('id', 'in', employees.ids)]), employee1)
+
+        if payroll_group := self.env.ref('hr_payroll.group_hr_payroll_user', raise_if_not_found=False):
+            self.res_users_hr_manager.group_ids += payroll_group
+        HrEmployee_with_manager_user = self.env['hr.employee'].with_user(self.res_users_hr_manager)
+        self.employee.user_id = self.res_users_hr_manager
+        self.assertEqual(HrEmployee_with_manager_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_manager_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
+        self.assertEqual(HrEmployee_with_manager_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
+        self.assertEqual(HrEmployee_with_manager_user.search([('hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_manager_user.search([('version_id.hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
+        self.assertEqual(HrEmployee_with_manager_user.search([('member_of_department', '=', True), ('id', 'in', employees.ids)]), employee1)
+
+    def test_archive_or_unassign_all_versions(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        another_employee = self.env['hr.employee'].create({
+            'name': 'Jane Doe'
+        })
+        employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        # make sure there are at least 2 versions
+        self.assertEqual(len(employee.version_ids), 2)
+        # attempt to archive all versions
+        with self.assertRaises(ValidationError):
+            employee.version_ids.action_archive()
+        # attempt to reassign all versions
+        with self.assertRaises(ValidationError):
+            employee.version_ids.write({"employee_id": another_employee.id})
+
+    def test_unlink_version_except_one(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        version = employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        self.assertEqual(len(employee.version_ids), 2)
+        version.unlink()
+        self.assertEqual(len(employee.version_ids), 1)
+
+    def test_date_version_sync_contract_date_start_for_single_version(self):
+        """
+        This test is to ensure that in case when an employee has only one version, writing contract_date_start on the employee
+        will synchronize the version.date_version with that contract_date_start
+        """
+        with freeze_time(date(2025, 12, 20)), self.enter_registry_test_mode():
+            employee = self.env['hr.employee'].create({
+                'name': 'John Doe',
+            })
+            version = employee.version_id
+            self.assertEqual(version.date_version, date(2025, 12, 20))
+
+            employee.write({'contract_date_start': '2025-12-10'})
+            self.assertEqual(version.contract_date_start, date(2025, 12, 10))
+            self.assertEqual(version.date_version, date(2025, 12, 10))
+
+            # date_version should not be reset if contract_date_start is cleared
+            employee.write({'contract_date_start': False})
+            self.assertEqual(version.date_version, date(2025, 12, 10))
+
+            # and setting it again should re-sync
+            employee.write({'contract_date_start': '2025-12-15'})
+            self.assertEqual(version.contract_date_start, date(2025, 12, 15))
+            self.assertEqual(version.date_version, date(2025, 12, 15))

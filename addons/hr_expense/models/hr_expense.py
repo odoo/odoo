@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty, parse_version
 
 
 _logger = logging.getLogger(__name__)
@@ -64,6 +64,7 @@ class HrExpense(models.Model):
         string="Employee",
         compute='_compute_employee_id', precompute=True, store=True, readonly=False,
         required=True,
+        index=True,
         default=_default_employee_id,
         check_company=True,
         domain=[('filter_for_expense', '=', True)],
@@ -193,7 +194,7 @@ class HrExpense(models.Model):
         string="Unit Price",
         compute='_compute_price_unit', precompute=True, store=True, required=True, readonly=True,
         copy=True,
-        digits='Product Price',
+        min_display_digits='Product Price',
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
@@ -224,6 +225,7 @@ class HrExpense(models.Model):
     selectable_payment_method_line_ids = fields.Many2many(
         comodel_name='account.payment.method.line',
         compute='_compute_selectable_payment_method_line_ids',
+        compute_sudo=True,
     )
     payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
@@ -271,9 +273,9 @@ class HrExpense(models.Model):
     )
 
     # Security fields
-    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True, compute_sudo=True)
-    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True, compute_sudo=True)
-    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True, compute_sudo=True)
+    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True)
+    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True)
+    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True)
 
     # Legacy sheet field, allow grouping of expenses to keep the grouping mechanic data and allow it to be re-used when re-implemented
     former_sheet_id = fields.Integer(string='Former Report')
@@ -329,14 +331,15 @@ class HrExpense(models.Model):
                 ).ids
             )
         for expense in self:
-            if not expense.company_id:
-                # This would be happening when emptying the required company_id field, triggering the "onchange"s.
-                # This would lead to fields being set as editable, instead of using the env company,
-                # recomputing the interface just to be blocked when trying to save we choose not to recompute anything
-                # and wait for a proper company to be inputted.
-                continue
-            if expense.state not in {'draft', 'submitted', 'approved'} and not self.env.su:
-                # Not editable
+            if (
+                not expense.company_id
+                or (expense.state not in {'draft', 'submitted', 'approved'} and not self.env.su)
+            ):
+                # When emptying the required company_id field, onchanges are triggered.
+                # To avoid recomputing the interface without a company (which could
+                # temporarily make fields editable), we do not recompute anything and wait
+                # for a proper company to be set. The interface is also made not editable
+                # when the state is not draft/submitted/approved and the user is not a superuser.
                 expense.is_editable = False
                 continue
 
@@ -355,7 +358,7 @@ class HrExpense(models.Model):
             managers = (
                 expense.manager_id
                 | employee.expense_manager_id
-                | employee.department_id.manager_id.user_id
+                | employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
             )
             if is_all_approver:
                 managers |= self.env.user
@@ -669,6 +672,7 @@ class HrExpense(models.Model):
                     # The journal is the source of the payment method line company
                     *self.env['account.journal']._check_company_domain(expense.company_id),
                     ('payment_type', '=', 'outbound'),
+                    ('journal_id.active', '=', True),
                 ])
 
     @api.depends('product_id', 'company_id')
@@ -999,7 +1003,7 @@ class HrExpense(models.Model):
         expenses_submitted_to_review = self.env['hr.expense']
         for expense in self:
             if expense.state == 'submitted':
-                expense.activity_schedule(
+                expense.with_context(mail_activity_quick_update=True).activity_schedule(
                     'hr_expense.mail_act_expense_approval',
                     user_id=expense.manager_id.id or
                     expense.sudo()._get_default_responsible_for_approval().id or
@@ -1016,40 +1020,53 @@ class HrExpense(models.Model):
             expenses_activity_done.activity_feedback(['hr_expense.mail_act_expense_approval'])
         if expenses_activity_unlink:
             expenses_activity_unlink.activity_unlink(['hr_expense.mail_act_expense_approval'])
-        # Avoid sending yourself mails
-        expenses_submitted_to_review = expenses_submitted_to_review.filtered(lambda expense: expense.manager_id != self.env.user)
+
+        # TODO: Remove in master
+        # Note: field latest_version of model ir.module.module is the installed version
+        installed_module_version = self.sudo().env.ref('base.module_hr_expense').latest_version
+        if expenses_submitted_to_review and parse_version(installed_module_version)[2:] < parse_version('2.1'):
+            self._send_submitted_expenses_mail()
+
+    @api.model
+    def _cron_send_submitted_expenses_mail(self):
+        expenses_submitted_to_review = self.search([('state', '=', 'submitted')])
         if expenses_submitted_to_review:
-            new_mails = []
-            for company, expenses_submitted_per_company in expenses_submitted_to_review.grouped('company_id').items():
-                parent_company_mails = company.parent_ids[::-1].mapped('email_formatted')
-                mail_from = (
-                        self.env.user.email
-                        or company.email_formatted
-                        or (parent_company_mails and parent_company_mails[0])
-                )
+            expenses_submitted_to_review._send_submitted_expenses_mail()
 
-                if not mail_from:  # We can't send a mail without sender
-                    _logger.warning(_("Failed to send mails for submitted expenses. No valid email was found for the company"))
+    def _send_submitted_expenses_mail(self):
+        new_mails = []
+        for company, expenses_submitted_per_company in self.grouped('company_id').items():
+            parent_company_mails = company.parent_ids[::-1].mapped('email_formatted')
+            mail_from = (
+                    self.env.user.email
+                    or company.email_formatted
+                    or (parent_company_mails and parent_company_mails[0])
+            )
+
+            if not mail_from:  # We can't send a mail without sender
+                _logger.warning(_("Failed to send mails for submitted expenses. No valid email was found for the company"))
+                continue
+
+            for manager, expenses_submitted in expenses_submitted_per_company.grouped('manager_id').items():
+                if not manager:
                     continue
-
-                for manager, expenses_submitted in expenses_submitted_per_company.grouped('manager_id').items():
-                    manager_langs = tuple(lang for lang in manager.partner_id.mapped('lang') if lang)
-                    mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
-                    body = self.env['ir.qweb']._render(
-                        template='hr_expense.hr_expense_template_submitted_expenses',
-                        values={'manager_name': manager.name, 'url': '/expenses-to-approve'},
-                        lang=mail_lang,
-                    )
-                    new_mails.append({
-                        'author_id': self.env.user.partner_id.id,
-                        'auto_delete': True,
-                        'body_html': body,
-                        'email_from': mail_from,
-                        'email_to': manager.employee_id.work_email or manager.email,
-                        'subject': _("New expenses waiting for your approval"),
-                    })
-                if new_mails:
-                    self.env['mail.mail'].sudo().create(new_mails).send()
+                manager_langs = tuple(lang for lang in manager.partner_id.mapped('lang') if lang)
+                mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
+                body = self.env['ir.qweb']._render(
+                    template='hr_expense.hr_expense_template_submitted_expenses',
+                    values={'manager_name': manager.name, 'url': '/odoo/expenses-to-process', 'company': company},
+                    lang=mail_lang,
+                )
+                new_mails.append({
+                    'author_id': self.env.user.partner_id.id,
+                    'auto_delete': True,
+                    'body_html': body,
+                    'email_from': mail_from,
+                    'email_to': manager.employee_id.work_email or manager.email,
+                    'subject': _("New expenses waiting for your approval"),
+                })
+            if new_mails:
+                self.env['mail.mail'].sudo().create(new_mails).send()
 
     @api.model
     def get_empty_list_help(self, help_message):
@@ -1065,12 +1082,8 @@ class HrExpense(models.Model):
 
         expense_description = msg_dict.get('subject', '')
 
-        if employee.user_id:
-            company = employee.user_id.company_id
-            currencies = company.currency_id | employee.user_id.company_ids.mapped('currency_id')
-        else:
-            company = employee.company_id
-            currencies = company.currency_id
+        company = employee.company_id
+        currencies = company.currency_id
 
         if not company:  # ultimate fallback, since company_id is required on expense
             company = self.env.company
@@ -1119,11 +1132,16 @@ class HrExpense(models.Model):
                 raise UserError(_("You can not submit an expense without a category."))
             if not expense.manager_id:
                 expense.sudo().manager_id = expense._get_default_responsible_for_approval()
-        expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
+        expenses_autovalidated = self.filtered(lambda expense: expense._can_be_autovalidated())
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
             expenses_autovalidated._do_approve(check=False)
         self.sudo().update_activities_and_mails()
+
+    def _can_be_autovalidated(self):
+        """ Check whether the given expenses can be auto-validated (no approver) """
+        self.ensure_one()
+        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
@@ -1276,15 +1294,6 @@ class HrExpense(models.Model):
             expense_state[state]['amount'] += total_amount_sum
         return expense_state
 
-    def action_get_attachment_view(self):
-        self.ensure_one()
-        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
-        res.update({
-            'domain': [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)],
-            'context': {'default_res_model': 'hr.expense', 'default_res_id': self.id},
-        })
-        return res
-
     def action_approve_duplicates(self):
         root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
         for expense in self.duplicate_expense_ids:
@@ -1383,7 +1392,7 @@ class HrExpense(models.Model):
             elif not is_hr_admin:
                 current_managers = (
                         expense_employee.expense_manager_id
-                        | expense_employee.department_id.manager_id.user_id
+                        | expense_employee.sudo().department_id.manager_id.user_id.sudo(self.env.su)
                         | expense.manager_id
                 )
                 if expense_employee.id in expenses_employee_ids_under_user_ones:
@@ -1423,7 +1432,7 @@ class HrExpense(models.Model):
             expense.write({
                 'approval_state': 'approved',
                 'manager_id': self.env.user.id,
-                'approval_date': fields.Date.context_today(expense),
+                'approval_date': fields.Datetime().now(),
             })
         self.update_activities_and_mails()
 
@@ -1573,7 +1582,7 @@ class HrExpense(models.Model):
 
     def _prepare_receipts_vals(self):
         attachments_data = []
-        for attachment in self.message_main_attachment_id:
+        for attachment in self.attachment_ids:
             attachments_data.append(
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
             )
@@ -1674,7 +1683,7 @@ class HrExpense(models.Model):
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-                for attachment in self.message_main_attachment_id]
+                for attachment in self.attachment_ids]
         }
         return move_vals, payment_vals
 
@@ -1733,7 +1742,7 @@ class HrExpense(models.Model):
 
         # expense account of the product then the product category
         if self.product_id:
-            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+            account = self.product_id.with_company(self.company_id).product_tmpl_id._get_product_accounts()['expense']
         else:
             account = self.env.company.expense_account_id
 
@@ -1746,25 +1755,41 @@ class HrExpense(models.Model):
             account = journal.default_account_id
 
         if not account:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
                 "Give Odoo a hand to find an account by setting up an expense account.\n"
-                "%(expense)s %(expense_name)s.\n"
-            ), {'expense': self, 'expense_name': self.name})
+                "%(expense)s %(expense_name)s.\n",
+                expense=self,
+                expense_name=self.name,
+            ))
         return account
 
     def _get_expense_account_destination(self):
-        self.ensure_one()
-        if self.payment_mode == 'company_account':
-            account_dest = self.payment_method_line_id.payment_account_id or self._get_outstanding_account_id()
-        else:
-            if not self.employee_id.sudo().work_contact_id:
-                raise UserError(
-                    _("No work contact found for the employee %(name)s, please configure one.", name=self.employee_id.name)
-                )
-            partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
-            account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
-        return account_dest.id
+        # account.move used to allow having several expenses with payment_mode = 'company_account'.
+        # This method needs to support processing several expenses to allow reconciliation of old account.move.line
+        ids = set()
+        for expense in self:
+            if expense.payment_mode == 'company_account':
+                account_dest = expense.payment_method_line_id.payment_account_id or expense._get_outstanding_account_id()
+            elif not expense.employee_id.sudo().work_contact_id:
+                raise UserError(self.env._(
+                    "No work contact found for the employee %(name)s, please configure one.",
+                    name=expense.employee_id.name,
+                ))
+            else:
+                partner = expense.employee_id.sudo().work_contact_id.with_company(expense.company_id)
+                account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
+            ids.add(account_dest.id)
+
+        # mimics <account.account>.id
+        if not ids:
+            return False
+        if len(ids) > 1:
+            raise UserError(self.env._(
+                "The following expenses payment method leads to several accounts payable and this isn't supported:\n%(expenses)s",
+                expenses=self.browse(ids),
+            ))
+        return ids.pop()
 
     def _get_outstanding_account_id(self):
         account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_line_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
@@ -1772,8 +1797,8 @@ class HrExpense(models.Model):
         outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
         if not outstanding_account:
             bank_prefix = self.company_id.bank_account_code_prefix
-            template_data = chart_template._get_chart_template_data(self.company_id.chart_template).get('template_data')
-            code_digits = int(template_data.get('code_digits', 6))
+            first_account = self.env['account.account'].search([('company_ids', 'in', self.company_id.id)], limit=1)
+            code_digits = len(first_account.code or '') or 6
             chart_template._create_outstanding_accounts(self.company_id, bank_prefix, code_digits)
             outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
         if not outstanding_account.active:

@@ -1,3 +1,5 @@
+import { IrWebSocket } from "@im_livechat/../tests/mock_server/mock_models/ir_websocket";
+
 import { mailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { RatingRating } from "@rating/../tests/mock_server/models/rating_rating";
 import {
@@ -28,6 +30,7 @@ export const livechatModels = {
     LivechatChannel,
     LivechatChannelRule,
     Im_LivechatExpertise,
+    IrWebSocket,
     RatingRating,
     ResPartner,
     ResUsers,
@@ -36,6 +39,7 @@ export const livechatModels = {
 };
 
 serverState.groupLivechatId = 42;
+serverState.groupLivechatManagerId = 43;
 
 /**
  * Setup the server side of the livechat app.

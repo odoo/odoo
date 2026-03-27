@@ -12,13 +12,15 @@
 # Henning Fyllingsnes, 2023
 # Mads Søndergaard, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Victoria Granlie <victoria@flytconsulting.no>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-16 18:41+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"PO-Revision-Date: 2026-03-06 17:47+0000\n"
+"Last-Translator: Victoria Granlie <victoria@flytconsulting.no>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
 "sale/nb_NO/>\n"
 "Language: nb\n"
@@ -26,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -114,7 +116,7 @@ msgstr "27.00"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "30.00"
-msgstr ""
+msgstr "30.00"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -257,9 +259,8 @@ msgid ""
 "weight:bold;\">Quantity</span></td>\n"
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
-"                        <t t-"
-"if=\"object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'\">\n"
+"                        <t t-if=\"hasattr(object, 'website_id') and "
+"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
 "                            Tax Excl.\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
@@ -272,7 +273,7 @@ msgid ""
 "        <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
 "            <t t-set=\"line_subtotal\" t-value=\"                     "
-"line.price_subtotal                     if "
+"line.price_subtotal                     if hasattr(object, 'website_id') and "
 "object.website_id.show_line_subtotals_tax_selection == "
 "'tax_excluded'                     else line.price_total                 \"/"
 ">\n"
@@ -322,9 +323,9 @@ msgid ""
 "                        <td style=\"width: 150px;\">\n"
 "                            <img t-attf-src=\"/web/image/product.product/"
 "{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: "
-"{{object.website_id and object.website_id._get_product_image_ratio_height() "
-"or '64px'}}; object-fit: cover; object-position: center;\" alt=\"Product "
-"image\"/>\n"
+"{{hasattr(object, 'website_id') and object.website_id and "
+"object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
+"cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
 "                        <td align=\"left\" t-out=\"line.product_id.name or "
 "''\">\tTaking care of Trees Course</td>\n"
@@ -332,9 +333,8 @@ msgid ""
 "out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><span style=\"font-"
 "weight:bold; white-space: nowrap;\">\n"
-"                        <t t-"
-"if=\"object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'\">\n"
+"                        <t t-if=\"hasattr(object, 'website_id') and "
+"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
 "                            <t t-"
 "out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ "
 "10.00</t>\n"
@@ -469,8 +469,9 @@ msgid ""
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
-"    <div t-if=\"object.partner_shipping_id and not object.only_services\" "
-"style=\"margin: 0px; padding: 0px;\">\n"
+"    <div t-if=\"hasattr(object, 'only_services') and "
+"object.partner_shipping_id and not object.only_services\" style=\"margin: "
+"0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
@@ -692,13 +693,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr "<span class=\"flex-grow-1\"> / måned</span>"
@@ -781,12 +775,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Delivery Date</strong>"
-msgstr ""
+msgstr "<strong>Leveringsdato</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>Utløpsdato</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -796,7 +790,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
-msgstr ""
+msgstr "<strong>Selger</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -916,6 +910,7 @@ msgstr "Kontoplan-mal"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
+#: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry_sale_order_line
 msgid "Accrued Revenue Entry"
 msgstr "Opptjent inntektsføring"
 
@@ -927,12 +922,12 @@ msgstr "Handling påkrevet"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Activate"
-msgstr ""
+msgstr "Aktiver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Aktiver Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
@@ -1098,6 +1093,7 @@ msgstr "Amazon synkronisering"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Amount"
@@ -1125,8 +1121,8 @@ msgid ""
 "            ordered quantities, and the invoicing policy is based on ordered "
 "quantities."
 msgstr ""
-"En ordre anses som mersalg når leverte kvantiteter overstiger de opprinnelig "
-"\n"
+"En ordre anses som mersalg når leverte kvantiteter overstiger de "
+"opprinnelig \n"
 "             bestilte kvantitetene, og faktureringspolicyen er basert på "
 "bestilte kvantiteter."
 
@@ -1380,8 +1376,8 @@ msgstr ""
 "• For forbruksvarer eller lagervarer, åpne produktet, gå til fanen 'Generell "
 "informasjon' og endre 'Faktureringspolicy' fra 'Leverte kvantiteter' til "
 "'Bestilte kvantiteter'.\n"
-"• For tjenester (og andre produkter), endre 'Faktureringspolicy' til 'Forhå"
-"ndsbetalt/fiksert pris'.\n"
+"• For tjenester (og andre produkter), endre 'Faktureringspolicy' til "
+"'Forhåndsbetalt/fiksert pris'.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1587,7 +1583,7 @@ msgstr "Konfigurasjon"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurer"
 
 #. module: sale
 #. odoo-javascript
@@ -1903,7 +1899,7 @@ msgstr "Standardprodukt brukt for rabatter"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1911,6 +1907,7 @@ msgid "Deliver Content by Email"
 msgstr "Lever innhold med e-post"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
 msgstr "Levert"
@@ -2246,7 +2243,7 @@ msgstr "Rediger konfigurasjon"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "E-postmal"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
@@ -2731,6 +2728,7 @@ msgid "Invoice what is ordered"
 msgstr "Fakturer det som er bestilt"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
 msgstr "Fakturert"
@@ -3711,6 +3709,7 @@ msgid "Product Catalog Product Is In Sale Order"
 msgstr "Produktkatalog Produkt er i salgsordre"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
@@ -4099,6 +4098,12 @@ msgid "Sale Information"
 msgstr "Salgsinformasjon"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
+msgid "Sale Line Warn Msg"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__sale_order_id
 #: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
@@ -4245,10 +4250,8 @@ msgid "Sales Order Line"
 msgstr "Salgsordrelinje"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
 msgid "Sales Order Line Warning"
 msgstr ""
 
@@ -5007,6 +5010,12 @@ msgstr "Produktet (%(product)s) har inkompatible verdier: %(value_list)s"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/wizard/payment_link_wizard.py:0
+msgid "The sale order has expired."
+msgstr ""
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "The value of the down payment amount must be positive."
 msgstr "Nedbetalingsbeløpet må være en positiv verdi."
@@ -5431,6 +5440,11 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Values set here are company-specific."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
 msgstr "Variant gitter-innføring"
 
@@ -5542,7 +5556,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr "Du kan ikke kansellere en låst bestilling. Vennligst lås den opp først."
+msgstr ""
+"Du kan ikke kansellere en låst bestilling. Vennligst lås den opp først."
 
 #. module: sale
 #. odoo-python

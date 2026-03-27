@@ -530,3 +530,14 @@ class ProjectProject(models.Model):
             *super()._get_template_default_context_whitelist(),
             "allow_timesheets",
         ]
+
+    def _get_processed_analytic_account_vals(self, vals_list):
+        analytic_accounts_vals = super()._get_processed_analytic_account_vals(vals_list)
+        for vals in analytic_accounts_vals:
+            if (
+                (partner_id := self.env['res.partner'].browse(vals.get('partner_id')))
+                and partner_id.company_id
+                and vals.get('company_id') != partner_id.company_id.id
+            ):
+                vals['company_id'] = partner_id.company_id.id
+        return analytic_accounts_vals

@@ -6,6 +6,7 @@ export class CompositeActionPlugin extends Plugin {
     static id = "compositeAction";
     static dependencies = ["builderActions"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             CompositeAction,

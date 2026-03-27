@@ -1,13 +1,16 @@
 import logging
 import re
+from stdnum.in_ import pan
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 
 TEST_GST_NUMBER = "36AABCT1332L011"
+TEST_GST_NUMBER_BVM = "29AAGCB1286Q000"
 
 
 class ResPartner(models.Model):
@@ -94,7 +97,7 @@ class ResPartner(models.Model):
         if 'import_file' in self.env.context:
             return res
         for partner in res.filtered(lambda p: p.country_code == 'IN' and p.vat and p.check_vat_in(p.vat)):
-            partner.l10n_in_pan_entity_id = partner._l10n_in_search_create_pan_entity_from_vat(partner.vat).id
+            partner._set_l10n_in_pan_tan_from_vat()
         return res
 
     def write(self, vals):
@@ -103,14 +106,23 @@ class ResPartner(models.Model):
             return res
         if vals.get('vat') or vals.get('country_id'):
             for partner in self.filtered(lambda p: p.country_code == 'IN' and p.vat and p.check_vat_in(p.vat)):
-                partner.l10n_in_pan_entity_id = partner._l10n_in_search_create_pan_entity_from_vat(partner.vat).id
+                partner._set_l10n_in_pan_tan_from_vat()
         return res
+
+    def _set_l10n_in_pan_tan_from_vat(self):
+        self.ensure_one()
+        identifier = self.vat[2:12].upper()
+        if pan.is_valid(identifier):
+            self.l10n_in_pan_entity_id = self._l10n_in_search_create_pan_entity_from_vat(self.vat).id
+        elif re.match(r'^[A-Z]{4}[0-9]{5}[A-Z]{1}$', identifier):
+            self.l10n_in_tan = identifier
 
     def _l10n_in_search_create_pan_entity_from_vat(self, vat):
         pan_number = vat[2:12].upper()
         pan_entity = self.env['l10n_in.pan.entity'].search([('name', '=', pan_number)], limit=1)
         if not pan_entity:
-            pan_entity = self.env['l10n_in.pan.entity'].create({'name': pan_number})
+            context = clean_context(self.env.context)
+            pan_entity = self.env['l10n_in.pan.entity'].with_context(context).create({'name': pan_number})
         return pan_entity
 
     def action_l10n_in_verify_gstin_status(self):
@@ -222,7 +234,7 @@ class ResPartner(models.Model):
             but this is not a valid number as per the regular expression
             so TEST_GST_NUMBER is considered always valid
         """
-        if vat == TEST_GST_NUMBER:
+        if vat in (TEST_GST_NUMBER, TEST_GST_NUMBER_BVM):
             return True
         return super().check_vat_in(vat)
 
@@ -236,7 +248,7 @@ class ResPartner(models.Model):
             'country_id': partner_data.get('country_id', {}).get('id'),
             'state_id': partner_data.get('state_id', {}).get('id'),
             'company_type': 'company',
-            'l10n_in_gst_treatment': 'regular',
+            'l10n_in_gst_treatment': partner_data.get('l10n_in_gst_treatment', 'regular'),
         })
         return partner_data
 

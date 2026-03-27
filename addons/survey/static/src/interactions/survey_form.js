@@ -423,8 +423,6 @@ export class SurveyForm extends Interaction {
                 },
                 cancel: () => {},
             });
-        } else if (targetEl.value === "finish") {
-            this.submitForm({ isFinish: true });
         } else {
             this.submitForm();
         }
@@ -844,7 +842,7 @@ export class SurveyForm extends Interaction {
                 case "matrix":
                     if (questionRequired) {
                         const subQuestionsIds = JSON.parse(
-                            questionWrapperEl.querySelector("table").dataset.subQuestions
+                            inputEl.dataset.subQuestions
                         );
                         // Highlight unanswered rows' header
                         const questionBodySelector = `div[id="${questionId}"] > .o_survey_question_matrix > tbody`;

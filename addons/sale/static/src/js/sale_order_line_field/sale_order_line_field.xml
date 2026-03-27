@@ -25,14 +25,14 @@
                     </button>
                     <t t-set-slot="content">
                         <DropdownItem
-                            t-if="!record.isNew and this.getPreviousRecords(record)"
+                            t-if="this.getPreviousRecords(record)"
                             onSelected="() => this.moveCombo(record, 'up')"
                         >
                             <i class="me-1 fa fa-fw fa-arrow-up"/>
                             <span>Move Up</span>
                         </DropdownItem>
                         <DropdownItem
-                            t-if="!record.isNew and this.getNextRecords(record)"
+                            t-if="this.getNextRecords(record)"
                             onSelected="() => this.moveCombo(record, 'down')"
                         >
                             <i class="me-1 fa fa-fw fa-arrow-down"/>

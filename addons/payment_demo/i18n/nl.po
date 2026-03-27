@@ -3,13 +3,15 @@
 # * payment_demo
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2025-09-14 08:06+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-01-14 15:12+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "payment_demo/nl/>\n"
 "Language: nl\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
@@ -29,7 +31,8 @@ msgid ""
 "                    <option value=\"pending\" title=\"Payment processing\">\n"
 "                        Pending\n"
 "                    </option>\n"
-"                    <option value=\"cancel\" title=\"Payment cancelled by customer\">\n"
+"                    <option value=\"cancel\" title=\"Payment cancelled by "
+"customer\">\n"
 "                        Cancelled\n"
 "                    </option>\n"
 "                    <option value=\"error\" title=\"Processing error\">\n"
@@ -44,8 +47,8 @@ msgstr ""
 "                    <option value=\"pending\" title=\"Payment processing\">\n"
 "                        In behandeling\n"
 "                    </option>\n"
-"                    <option value=\"cancel\" title="
-"\"Payment cancelled by customer\">\n"
+"                    <option value=\"cancel\" title=\"Payment cancelled by "
+"customer\">\n"
 "                        Geannuleerd\n"
 "                    </option>\n"
 "                    <option value=\"error\" title=\"Processing error\">\n"
@@ -102,6 +105,11 @@ msgstr "<small>Straat 2</small>"
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
 msgstr "Goedkeuren"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "Belgium"
+msgstr "België"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -164,7 +172,14 @@ msgstr "Snel afrekenen demo"
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
 msgid "Demo providers should never be enabled."
-msgstr "Demoproviders moet nooit ingeschakeld zijn."
+msgstr "Demoproviders mogen nooit ingeschakeld zijn."
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Weergavenaam"
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -172,16 +187,17 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: payment_demo
-#. odoo-javascript
-#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
-msgid "No delivery method is available."
-msgstr "Er is geen verzendwijze beschikbaar."
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_demo
-#. odoo-python
-#: code:addons/payment_demo/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/interactions/express_checkout.js:0
+msgid "No delivery method is available."
+msgstr "Er is geen verzendwijze beschikbaar."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -210,7 +226,7 @@ msgstr "Betalingstransactie"
 
 #. module: payment_demo
 #. odoo-javascript
-#: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
+#: code:addons/payment_demo/static/src/interactions/payment_demo_mixin.js:0
 msgid "Payment processing failed"
 msgstr "Betalingsverwerking mislukt"
 
@@ -222,8 +238,8 @@ msgstr "Betalingen met deze betaalmethode zullen <b>succesvol</b> zijn."
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will be automatically "
-"<b>cancelled</b>."
+"Payments made with this payment method will be automatically <b>cancelled</"
+"b>."
 msgstr ""
 "Betalingen met deze betaalmethode worden automatisch <b>geannuleerd</b>."
 
@@ -235,8 +251,8 @@ msgstr "Betalingen met deze betaalmethode blijven <b>in behandeling</b>."
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will simulate a processing "
-"<b>error</b>."
+"Payments made with this payment method will simulate a processing <b>error</"
+"b>."
 msgstr ""
 "Betalingen met deze betaalmethode zullen een verwerkings<b>fout</b> "
 "simuleren."
@@ -274,21 +290,15 @@ msgid "The technical code of this payment provider."
 msgstr "De technische code van deze betaalprovider."
 
 #. module: payment_demo
-#. odoo-python
-#: code:addons/payment_demo/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "De transactie is niet gekoppeld aan een token."
-
-#. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Unpublished"
 msgstr "Niet gepubliceerd"
 
 #. module: payment_demo
 #. odoo-javascript
-#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#: code:addons/payment_demo/static/src/interactions/express_checkout.js:0
 msgid "Validation Error"
-msgstr "Bevestiging fout"
+msgstr "Validatiefout"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
@@ -300,3 +310,9 @@ msgstr "XXXX XXXX XXXX XXXX"
 #: code:addons/payment_demo/models/payment_transaction.py:0
 msgid "You selected the following demo payment status: %s"
 msgstr "Je hebt de volgende demobetalingsstatus geselecteerd: %s"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "De transactie is niet gekoppeld aan een token."

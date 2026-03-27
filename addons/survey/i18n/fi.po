@@ -30,13 +30,14 @@
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2025-09-16 15:30+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-25 14:48+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/survey/"
 "fi/>\n"
 "Language: fi\n"
@@ -44,7 +45,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -238,13 +239,13 @@ msgid ""
 "span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-muted\""
-">Rekisteröity</span>"
+"                                    <span class=\"text-muted\">Rekisteröity</"
+"span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "<br/> <span>by</span>"
-msgstr "<br/> <span>tekijä</span>"
+msgstr "<br/> <span>ja sen on myöntänyt</span>"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
@@ -291,32 +292,32 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- We use the logo of the company that created the survey ("
-"to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if="
-"\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src="
-"\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style"
-"=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <!-- We use the logo of the company that created the survey "
+"(to handle multi company cases) -->\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    Sertifiointi: <t t-out="
-"\"object.survey_id.display_name or ''\">Palautelomake</t>\n"
+"                    Sertifiointi: <t t-out=\"object.survey_id.display_name "
+"or ''\">Palautelomake</t>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style="
-"\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
+"solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>Hyvä <span t-out="
-"\"object.partner_id.name or 'participant'\">osallistuja</span></p>\n"
+"                <p>Hyvä <span t-out=\"object.partner_id.name or "
+"'participant'\">osallistuja</span></p>\n"
 "                <p>\n"
 "                    Ohessa on liitteenä\n"
-"                       <strong t-out=\"object.survey_id.display_name or ''\""
-">Huonekalujen luominen</strong>\n"
+"                       <strong t-out=\"object.survey_id.display_name or "
+"''\">Huonekalujen luominen</strong>\n"
 "                    sertifiointi\n"
 "                </p>\n"
-"                <p>Onnittelut testin läpäisystä: pistemääräsi oli <strong "
-"t-out=\"object.scoring_percentage\"/>%!</p>\n"
+"                <p>Onnittelut testin läpäisystä: pistemääräsi oli <strong t-"
+"out=\"object.scoring_percentage\"/>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -367,8 +368,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hyvä <t t-out=\"object.partner_id.name or 'participant'\""
-">osallistuja</t><br/><br/>\n"
+"        Hyvä <t t-out=\"object.partner_id.name or "
+"'participant'\">osallistuja</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Sinut on kutsuttu suorittamaan uusi sertifiointi.\n"
 "        </t>\n"
@@ -376,11 +377,11 @@ msgstr ""
 "            Luomme parhaillamme kyselyä ja arvostaisimme vastaustasi.\n"
 "        </t>\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" t-attf-style"
-"=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; "
-"padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-"
-"size:13px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    Aloita sertifiointi\n"
 "                </t>\n"
@@ -390,8 +391,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or ''\">"
-"05/05/2021</t> mennessä.<br/><br/>\n"
+"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or "
+"''\">05/05/2021</t> mennessä.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Toivotamme sinulle onnea!\n"
@@ -473,8 +474,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
-"\"Arrow\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -491,24 +492,24 @@ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Siirry kyselyyn"
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\""
-">Keskimääräinen</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 "
+"pt-1\">Keskimääräinen</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Max</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\""
-">Enintään</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Enintään</"
+"span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Min</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\""
-">Vähintään</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 "
+"pt-1\">Vähintään</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -528,8 +529,8 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                            <span id=\"enter-tooltip\">tai paina Enter</span>"
-"\n"
+"                            <span id=\"enter-tooltip\">tai paina Enter</"
+"span>\n"
 "                        </span>"
 
 #. module: survey
@@ -556,10 +557,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_company_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\""
-">Sertifikaatit</span>\n"
-"                        <span class=\"o_stat_text\" invisible="
-"\"certifications_company_count &gt; 1\">Sertifikaatti</span>"
+"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; "
+"2\">Sertifikaatit</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"certifications_company_count &gt; 1\">Sertifikaatti</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -569,10 +570,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\""
-">Sertifikaatit</span>\n"
-"                        <span class=\"o_stat_text\" invisible="
-"\"certifications_count &gt; 1\">Sertifikaatti</span>"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
+"2\">Sertifikaatit</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"certifications_count &gt; 1\">Sertifikaatti</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -580,8 +581,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or "
 "press Enter</span>"
 msgstr ""
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\""
-">tai paina Enter</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-"
+"inline\">tai paina Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -697,8 +698,8 @@ msgstr ""
 "<span>Kuinka monta ...?</span><br/>\n"
 "                                    <i class=\"fa fa-2x\" role=\"img\" aria-"
 "label=\"Numeerinen\" title=\"Numeerinen\">123 </i>\n"
-"                                    <i class=\"fa fa-2x fa-sort\" role="
-"\"img\" aria-label=\"Numeerinen\"/>"
+"                                    <i class=\"fa fa-2x fa-sort\" "
+"role=\"img\" aria-label=\"Numeerinen\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -719,8 +720,8 @@ msgid ""
 "role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
 msgstr ""
 "<span>Nimeä yksi eläin</span><br/>\n"
-"                                    <i class=\"fa fa-minus fa-4x\" role="
-"\"img\" aria-label=\"Yksi rivi\" title=\"Yksi rivi\"/>"
+"                                    <i class=\"fa fa-minus fa-4x\" "
+"role=\"img\" aria-label=\"Yksi rivi\" title=\"Yksi rivi\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -743,7 +744,7 @@ msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
 msgstr ""
-"<span>Tämä todistus on myönnetty</span>\n"
+"<span>Tämän todistuksen on ansainnut</span>\n"
 "                                <br/>"
 
 #. module: survey
@@ -839,8 +840,8 @@ msgid ""
 "A scored survey needs at least one question that gives points.\n"
 "Please check answers and their scores."
 msgstr ""
-"Pisteytetyssä kyselyssä on oltava vähintään yksi kysymys, josta saa pisteitä."
-"\n"
+"Pisteytetyssä kyselyssä on oltava vähintään yksi kysymys, josta saa "
+"pisteitä.\n"
 "Tarkista vastaukset ja niiden pisteet."
 
 #. module: survey
@@ -940,8 +941,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Date\" questions "
 "need an answer"
 msgstr ""
-"Kaikki \"Onko pisteytetty kysymys = Tosi\" ja "
-"\"Kysymyksen tyyppi: Päivämäärä\" kysymykset tarvitsevat vastauksen"
+"Kaikki \"Onko pisteytetty kysymys = Tosi\" ja \"Kysymyksen tyyppi: "
+"Päivämäärä\" kysymykset tarvitsevat vastauksen"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scored_datetime_have_answers
@@ -949,8 +950,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Datetime\" "
 "questions need an answer"
 msgstr ""
-"Kaikki \"Onko pisteytetty kysymys = Tosi\" ja "
-"\"Kysymyksen tyyppi: Päivämäärä ja aika\" tarvitsevat vastauksen"
+"Kaikki \"Onko pisteytetty kysymys = Tosi\" ja \"Kysymyksen tyyppi: "
+"Päivämäärä ja aika\" tarvitsevat vastauksen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -1339,7 +1340,7 @@ msgstr "Sertifioitu"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_mail_template_id
 msgid "Certified Email Template"
-msgstr "Sertifioitu sähköpostimalli"
+msgstr "Sertifioitu sähköpostipohja"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -1405,7 +1406,7 @@ msgstr "Klassinen violetti"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Click to copy link"
-msgstr ""
+msgstr "Klikkaa linkin kopioimiseksi"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug4
@@ -1512,7 +1513,8 @@ msgstr "Konferenssin puheenjohtaja"
 #. module: survey
 #: model_terms:web_tour.tour,rainbow_man_message:survey.survey_tour
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
-msgstr "Onnittelut! Olet nyt valmis keräämään palautetta kuin ammattilainen :-)"
+msgstr ""
+"Onnittelut! Olet nyt valmis keräämään palautetta kuin ammattilainen :-)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -1774,7 +1776,8 @@ msgstr "Määräaika"
 #: model:ir.model.fields,help:survey.field_survey_question__survey_session_speed_rating_time_limit
 #: model:ir.model.fields,help:survey.field_survey_survey__session_speed_rating_time_limit
 msgid "Default time given to receive additional points for right answers"
-msgstr "Oletusaika, jonka kuluessa oikeista vastauksista voi saada lisäpisteitä"
+msgstr ""
+"Oletusaika, jonka kuluessa oikeista vastauksista voi saada lisäpisteitä"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_gamification_challenge__challenge_category
@@ -1854,7 +1857,7 @@ msgstr "Onko sinulla muita kommentteja, kysymyksiä tai huolenaiheita?"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
 msgid "Do you think we have missing products in our catalog? (not rated)"
-msgstr "Puuttuuko tuoteluettelostamme mielestäsi tuotteita? (ei arvioitu)"
+msgstr "Puuttuuko katalogistamme mielestäsi tuotteita? (ei arvioitu)"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_4
@@ -2003,6 +2006,12 @@ msgid "Food Preferences"
 msgstr "Ruokamieltymykset"
 
 #. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+msgid "For this question, you can only select one answer."
+msgstr "Voit valita vain yhden vastauksen tähän kysymykseen."
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
 msgid "Free Text"
 msgstr "Vapaamuotoinen teksti"
@@ -2080,7 +2089,7 @@ msgstr "Käsittele nykyisiä"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Handle quiz & certifications"
-msgstr ""
+msgstr "Käsittele testejä & sertifikaatteja"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_message
@@ -2112,7 +2121,7 @@ msgstr "Hemiunu"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Here, you can view the participants."
-msgstr ""
+msgstr "Täältä näet osallistujat."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug1
@@ -2361,7 +2370,7 @@ msgstr "Kuvan tiedostonimi"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_image_zoomer_templates.xml:0
 msgid "Image Zoom Dialog"
-msgstr "Kuvan zoomausvalintaikkuna"
+msgstr "Kuvan Suurennusikkuna"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug1
@@ -3301,6 +3310,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia "
+"lähetettäessä. Jos sitä ei ole määritetty, käytetään pääkumppanin kieltä. "
+"Tämän tulisi yleensä olla lausekkeen paikkamerkki, joka antaa sopivan "
+"kielen, esim. {{ object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3646,12 +3659,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_success
 msgid "Quiz Passed"
-msgstr ""
+msgstr "Testi läpäisty"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Quiz passed"
-msgstr ""
+msgstr "Testi läpäisty"
 
 #. module: survey
 #. odoo-javascript
@@ -4551,8 +4564,8 @@ msgid ""
 "use this to give the purpose and guidelines to your candidates before they "
 "start it."
 msgstr ""
-"Kuvaus näytetään kyselyn aloitussivulla. Voit käyttää sitä antaaksesi "
-"ehdokkaille tavoitteen ja ohjeet ennen kuin he aloittavat kyselyn."
+"Kuvaus näytetään kyselyn aloitussivulla. Voit käyttää sitä kertoaksesi "
+"ehdokkaille kyselyn tavoitteet ja ohjeet ennen aloittamista."
 
 #. module: survey
 #. odoo-python
@@ -4836,7 +4849,7 @@ msgstr "Liittyminen:"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "To take this survey, please close all other tabs on %(hostname)s"
-msgstr ""
+msgstr "Sulje kaikki muut %(hostname)s -välilehdet vastataksesi tähän kyselyyn"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -4973,7 +4986,7 @@ msgstr "Käytä mallipohjaa"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
-msgstr "Käytä linkkipolkua palataksesi nopeasti takaisin koontinäytölle."
+msgstr "Käytä linkkipolkua palataksesi nopeasti koontinäytölle."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
@@ -5268,8 +5281,8 @@ msgid ""
 "role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
 "VVVV-KK-PP\n"
-"                                       <i class=\"fa fa-calendar\" role="
-"\"img\" aria-label=\"Kalenteri\" title=\"Kalenteri\"/>"
+"                                       <i class=\"fa fa-calendar\" "
+"role=\"img\" aria-label=\"Kalenteri\" title=\"Kalenteri\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5279,8 +5292,8 @@ msgid ""
 "role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
 "VVVVV-KK-PP hh:mm:ss\n"
-"                                       <i class=\"fa fa-calendar\" role="
-"\"img\" aria-label=\"Kalenteri\" title=\"Kalenteri\"/>"
+"                                       <i class=\"fa fa-calendar\" "
+"role=\"img\" aria-label=\"Kalenteri\" title=\"Kalenteri\"/>"
 
 #. module: survey
 #. odoo-python
@@ -5383,7 +5396,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_image_zoomer_templates.xml:0
 msgid "Zoom in"
-msgstr "Lähennä"
+msgstr "Suurenna"
 
 #. module: survey
 #. odoo-javascript

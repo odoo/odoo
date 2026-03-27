@@ -17,7 +17,7 @@
  *  | "symbol"
  *  | "undefined"} ArgumentPrimitive
  *
- * @typedef {[string, any[], any]} InteractionDetails
+ * @typedef {[string, string | undefined, any[], any]} InteractionDetails
  *
  * @typedef {"interaction" | "query" | "server" | "time"} InteractionType
  */
@@ -55,27 +55,28 @@ const $toString = Object.prototype.toString;
  * @param {InteractionType} type
  * @param {T} fn
  * @param {string} name
+ * @param {string} [alias]
  * @returns {T}
  */
-function makeInteractorFn(type, fn, name) {
+function makeInteractorFn(type, fn, name, alias) {
     return {
-        [name](...args) {
+        [alias || name](...args) {
             const result = fn(...args);
-            if (isInstanceOf(result, Promise)) {
+            if (isPromise(result)) {
                 for (let i = 0; i < args.length; i++) {
-                    if (isInstanceOf(args[i], Promise)) {
+                    if (isPromise(args[i])) {
                         // Get promise result for async arguments if possible
                         args[i].then((result) => (args[i] = result));
                     }
                 }
                 return result.then((promiseResult) =>
-                    dispatchInteraction(type, name, args, promiseResult)
+                    dispatchInteraction(type, name, alias, args, promiseResult)
                 );
             } else {
-                return dispatchInteraction(type, name, args, result);
+                return dispatchInteraction(type, name, alias, args, result);
             }
         },
-    }[name];
+    }[alias || name];
 }
 
 function polyfillIsError(value) {
@@ -237,20 +238,21 @@ export function addInteractionListener(types, callback) {
 /**
  * @param {InteractionType} type
  * @param {string} name
+ * @param {string | undefined} alias
  * @param {any[]} args
  * @param {any} returnValue
  */
-export function dispatchInteraction(type, name, args, returnValue) {
+export function dispatchInteraction(type, name, alias, args, returnValue) {
     interactionBus.dispatchEvent(
         new CustomEvent(type, {
-            detail: [name, args, returnValue],
+            detail: [name, alias, args, returnValue],
         })
     );
     return returnValue;
 }
 
 /**
- * @param  {...any} helpers
+ * @param {...any} helpers
  */
 export function exposeHelpers(...helpers) {
     let nameSpaceIndex = 1;
@@ -299,7 +301,7 @@ export function getTag(node) {
 export function interactor(type, fn) {
     return $assign(makeInteractorFn(type, fn, fn.name), {
         as(alias) {
-            return makeInteractorFn(type, fn, alias);
+            return makeInteractorFn(type, fn, fn.name, alias);
         },
         get silent() {
             return fn;
@@ -312,6 +314,16 @@ export function interactor(type, fn) {
  */
 export function isFirefox() {
     return /firefox/i.test($userAgent);
+}
+
+Array.isArray;
+
+/**
+ * @param {any} instance
+ * @returns {instance is Promise<any>}
+ */
+export function isPromise(instance) {
+    return instance && typeof instance.then === "function";
 }
 
 /**
@@ -412,7 +424,7 @@ export function toSelector(node, options) {
 
 export class HootDebugHelpers {
     /**
-     * @param  {...any} helpers
+     * @param {...any} helpers
      */
     constructor(...helpers) {
         $assign(this, ...helpers);

@@ -20,23 +20,24 @@ class AccountAnalyticAccount extends models.Model {
     color = fields.Integer({ string: "Color" });
     code = fields.Char({ string: "Ref" });
     partner_id = fields.Many2one({ string: "Partner", relation: "partner" });
+    company_id = fields.Many2one({ relation: "res.company" });
     _records = [
-        { id: 1, color: 1, root_plan_id: 2, plan_id: 2, name: "RD" },
-        { id: 2, color: 1, root_plan_id: 2, plan_id: 2, name: "HR" },
-        { id: 3, color: 1, root_plan_id: 2, plan_id: 2, name: "FI" },
-        { id: 4, color: 2, root_plan_id: 1, plan_id: 1, name: "Time Off" },
-        { id: 5, color: 2, root_plan_id: 1, plan_id: 1, name: "Operating Costs" },
-        { id: 6, color: 6, root_plan_id: 4, plan_id: 4, name: "Incognito" },
-        { id: 7, color: 5, root_plan_id: 5, plan_id: 5, name: "Belgium" },
-        { id: 8, color: 6, root_plan_id: 5, plan_id: 6, name: "Brussels" },
-        { id: 9, color: 6, root_plan_id: 5, plan_id: 6, name: "Beirut" },
-        { id: 10, color: 6, root_plan_id: 5, plan_id: 6, name: "Berlin" },
-        { id: 11, color: 6, root_plan_id: 5, plan_id: 6, name: "Bruges" },
-        { id: 12, color: 6, root_plan_id: 5, plan_id: 6, name: "Birmingham" },
-        { id: 13, color: 6, root_plan_id: 5, plan_id: 6, name: "Bologna" },
-        { id: 14, color: 6, root_plan_id: 5, plan_id: 6, name: "Bratislava" },
-        { id: 15, color: 6, root_plan_id: 5, plan_id: 6, name: "Budapest" },
-        { id: 16, color: 6, root_plan_id: 5, plan_id: 6, name: "Namur" },
+        { id: 1, color: 1, root_plan_id: 2, plan_id: 2, name: "RD", company_id: 1 },
+        { id: 2, color: 1, root_plan_id: 2, plan_id: 2, name: "HR", company_id: 1 },
+        { id: 3, color: 1, root_plan_id: 2, plan_id: 2, name: "FI", company_id: 1 },
+        { id: 4, color: 2, root_plan_id: 1, plan_id: 1, name: "Time Off", company_id: 1 },
+        { id: 5, color: 2, root_plan_id: 1, plan_id: 1, name: "Operating Costs", company_id: 1 },
+        { id: 6, color: 6, root_plan_id: 4, plan_id: 4, name: "Incognito", company_id: 1 },
+        { id: 7, color: 5, root_plan_id: 5, plan_id: 5, name: "Belgium", company_id: 1 },
+        { id: 8, color: 6, root_plan_id: 5, plan_id: 6, name: "Brussels", company_id: 1 },
+        { id: 9, color: 6, root_plan_id: 5, plan_id: 6, name: "Beirut", company_id: 1 },
+        { id: 10, color: 6, root_plan_id: 5, plan_id: 6, name: "Berlin", company_id: 1 },
+        { id: 11, color: 6, root_plan_id: 5, plan_id: 6, name: "Bruges", company_id: 1 },
+        { id: 12, color: 6, root_plan_id: 5, plan_id: 6, name: "Birmingham", company_id: 1 },
+        { id: 13, color: 6, root_plan_id: 5, plan_id: 6, name: "Bologna", company_id: 1 },
+        { id: 14, color: 6, root_plan_id: 5, plan_id: 6, name: "Bratislava", company_id: 1 },
+        { id: 15, color: 6, root_plan_id: 5, plan_id: 6, name: "Budapest", company_id: 1 },
+        { id: 16, color: 6, root_plan_id: 5, plan_id: 6, name: "Namur", company_id: 1 },
     ];
     _views = {
         search: `
@@ -95,6 +96,7 @@ class Aml extends models.Model {
     analytic_distribution = fields.Json({ string: "Analytic" });
     move_id = fields.Many2one({ string: "Account Move", relation: "move" });
     analytic_precision = fields.Integer({ string: "Analytic Precision" });
+    company_id = fields.Many2one({ relation: "res.company" });
 
     _records = [
         {
@@ -103,10 +105,11 @@ class Aml extends models.Model {
             amount: 100.0,
             analytic_distribution: { "1, 7": 30.3, 3: 69.704 },
             analytic_precision: 3,
+            company_id: 1,
         },
-        { id: 2, label: "Coke", amount: 100.0, analytic_distribution: {} },
-        { id: 3, label: "Sprite", amount: 100.0, analytic_distribution: {}, analytic_precision: 3 },
-        { id: 4, label: "", amount: 100.0, analytic_distribution: {} },
+        { id: 2, label: "Coke", amount: 100.0, analytic_distribution: {}, company_id: 1 },
+        { id: 3, label: "Sprite", amount: 100.0, analytic_distribution: {}, analytic_precision: 3, company_id: 1 },
+        { id: 4, label: "", amount: 100.0, analytic_distribution: {}, company_id: 1 },
     ];
 }
 

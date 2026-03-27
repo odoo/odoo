@@ -70,7 +70,7 @@ class FleetVehicle(models.Model):
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
     next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
     order_date = fields.Date('Order Date')
-    acquisition_date = fields.Date('Registration Date', required=False,
+    acquisition_date = fields.Date('Registration Date', required=False, default=fields.Date.today,
         tracking=True, help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
     contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.today, tracking=True)
@@ -367,31 +367,34 @@ class FleetVehicle(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        vehicles = super().create(vals_list)
         to_update_drivers_cars = set()
         to_update_drivers_bikes = set()
         state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
-        for vehicle, vals in zip(vehicles, vals_list):
-            if vals.get('driver_id'):
-                vehicle.create_driver_history(vals)
+        for vals in vals_list:
             if vals.get('future_driver_id'):
-                state_id = vehicle.state_id.id
+                state_id = vals.get('state_id')
                 if not state_waiting_list or state_waiting_list.id != state_id:
                     future_driver = vals['future_driver_id']
-                    if vehicle.vehicle_type == 'bike':
+                    if vals.get('vehicle_type') == 'bike':
                         to_update_drivers_bikes.add(future_driver)
-                    elif vehicle.vehicle_type == 'car':
+                    elif vals.get('vehicle_type') == 'car':
                         to_update_drivers_cars.add(future_driver)
         if to_update_drivers_cars:
             self.search([
                 ('driver_id', 'in', to_update_drivers_cars),
                 ('vehicle_type', '=', 'car'),
-            ]).plan_to_change_car = False
+            ]).plan_to_change_car = True
         if to_update_drivers_bikes:
             self.search([
                 ('driver_id', 'in', to_update_drivers_bikes),
                 ('vehicle_type', '=', 'bike'),
-            ]).plan_to_change_bike = False
+            ]).plan_to_change_bike = True
+
+        vehicles = super().create(vals_list)
+
+        for vehicle, vals in zip(vehicles, vals_list):
+            if vals.get('driver_id'):
+                vehicle.create_driver_history(vals)
         return vehicles
 
     def write(self, vals):
@@ -416,7 +419,7 @@ class FleetVehicle(models.Model):
                                 vals.get('state_id', vehicle.state_id.id) not in [state_waiting_list.id, state_new_request.id]).mapped('vehicle_type'))
             if vehicle_types:
                 vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
-                    domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types)],
+                    domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)],
                     groupby=['vehicle_type'],
                     aggregates=['id:recordset'])
                 )

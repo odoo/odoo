@@ -45,7 +45,7 @@ const messagePatch = {
                 return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
             },
         });
-        /** @type {Promise<Thread>[]} */
+        /** @type {Promise<Thread>[]} @deprecated */
         this.mentionedChannelPromises = [];
         this.threadAsFirstUnread = fields.One("Thread", { inverse: "firstUnreadMessage" });
     },
@@ -63,12 +63,8 @@ const messagePatch = {
         attachments = [],
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
-        const validChannels = (await Promise.all(this.mentionedChannelPromises)).filter(
-            (channel) => channel !== undefined
-        );
-        const allChannels = this.store.Thread.insert([...validChannels, ...mentionedChannels]);
         return await super.edit(body, attachments, {
-            mentionedChannels: allChannels,
+            mentionedChannels,
             mentionedPartners,
             mentionedRoles,
         });

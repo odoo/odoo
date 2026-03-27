@@ -12,6 +12,7 @@ access_product_tag_public_public,product.tag.public,product.model_product_tag,ba
 access_product_tag_public_portal,product.tag.public,product.model_product_tag,base.group_portal,1,0,0,0
 access_product_tag_public_employee,product.tag.public,product.model_product_tag,base.group_user,1,0,0,0
 access_product_category_pos_manager,product.public.category manager,model_product_public_category,sales_team.group_sale_manager,1,1,1,1
+access_product_public_category_designer,product.public.category designer,model_product_public_category,website.group_website_designer,1,1,1,0
 access_product_public_category_public_public,product.category.public,model_product_public_category,base.group_public,1,0,0,0
 access_product_public_category_public_portal,product.category.public,model_product_public_category,base.group_portal,1,0,0,0
 access_product_public_category_public_employee,product.category.public,model_product_public_category,base.group_user,1,0,0,0
@@ -21,7 +22,9 @@ access_product_pricelist_public_employee,product.pricelist.public,product.model_
 access_product_pricelist_item_public_public,product.pricelist.item.public,product.model_product_pricelist_item,base.group_public,1,0,0,0
 access_product_pricelist_item_public_portal,product.pricelist.item.public,product.model_product_pricelist_item,base.group_portal,1,0,0,0
 access_product_pricelist_item_public_employee,product.pricelist.item.public,product.model_product_pricelist_item,base.group_user,1,0,0,0
-access_product_ribbon_public,product.ribbon.public,website_sale.model_product_ribbon,base.group_user,1,0,0,0
+access_product_ribbon_public_public,product.ribbon.public,website_sale.model_product_ribbon,base.group_public,1,0,0,0
+access_product_ribbon_public_portal,product.ribbon.public,website_sale.model_product_ribbon,base.group_portal,1,0,0,0
+access_product_ribbon_public_employee,product.ribbon.public,website_sale.model_product_ribbon,base.group_user,1,0,0,0
 access_product_ribbon_sale_manager,product.ribbon.sale_manager,website_sale.model_product_ribbon,sales_team.group_sale_manager,1,1,1,1
 access_product_attribute_public_public,product.attribute public,product.model_product_attribute,base.group_public,1,0,0,0
 access_product_attribute_public_portal,product.attribute public,product.model_product_attribute,base.group_portal,1,0,0,0
@@ -65,4 +68,5 @@ access_website_base_unit_public_employee,website.base.unit public,model_website_
 access_website_base_unit_sale_manager,website.base.unit sale manager,model_website_base_unit,sales_team.group_sale_manager,1,1,1,1
 access_website_checkout_step_website_designer,access_website_checkout_step website_designer,model_website_checkout_step,website.group_website_designer,1,1,1,1
 
-access_product_feed_base_group,access_product_feed base_group,model_product_feed,base.group_user,1,1,1,1
+access_product_feed_base_group_system,access_product_feed base_group_system,model_product_feed,base.group_system,1,1,1,1
+access_product_feed_website_group_website_designer,access_product_feed website_group_website_designer,model_product_feed,website.group_website_designer,1,1,1,1

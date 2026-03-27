@@ -1,11 +1,21 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
-import { describe, dryRun, globals, start, stop } from "@odoo/hoot";
-import { Deferred, delay } from "@odoo/hoot-dom";
-import { watchAddedNodes, watchKeys, watchListeners } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    delay,
+    describe,
+    dryRun,
+    globals,
+    start,
+    stop,
+    watchAddedNodes,
+    watchKeys,
+    watchListeners,
+} from "@odoo/hoot";
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
+import { mockFunctionsFactory } from "./mock_functions.hoot";
 import { mockIndexedDB } from "./mock_indexed_db.hoot";
 import { mockSessionFactory } from "./mock_session.hoot";
 import { makeTemplateFactory } from "./mock_templates.hoot";
@@ -510,6 +520,7 @@ const MODULE_MOCKS_BY_NAME = new Map([
     ["@web/core/currency", mockCurrencyFactory],
     ["@web/core/templates", makeTemplateFactory],
     ["@web/core/user", mockUserFactory],
+    ["@web/core/utils/functions", mockFunctionsFactory],
     ["@web/session", mockSessionFactory],
 ]);
 const MODULE_MOCKS_BY_REGEX = new Map([

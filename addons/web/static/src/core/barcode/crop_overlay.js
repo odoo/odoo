@@ -1,5 +1,6 @@
 import { Component, useRef, onPatched } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { isIOS } from "@web/core/browser/feature_detection";
 import { clamp } from "@web/core/utils/numbers";
 
 export class CropOverlay extends Component {
@@ -27,6 +28,7 @@ export class CropOverlay extends Component {
         onPatched(() => {
             this.setupCropRect();
         });
+        this.isIOS = isIOS();
     }
 
     setupCropRect() {
@@ -114,6 +116,9 @@ export class CropOverlay extends Component {
     }
 
     pointerDown(event) {
+        if (event.target.matches("input")) {
+            return;
+        }
         event.preventDefault();
         if (event.target.matches(".o_crop_icon")) {
             this.computeOverlayPosition();

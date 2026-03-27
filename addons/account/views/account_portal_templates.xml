@@ -69,7 +69,7 @@
                         </td>
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'
-                            t-att-class="'text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else ''">
+                            t-att-class="'d-none d-md-table-cell text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else 'd-none d-md-table-cell'">
                             <span t-field="invoice.invoice_date_due"/>
                         </td>
                         <td name="invoice_amount" class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
@@ -120,14 +120,26 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Invoice Notifications</h5>
-                            <p class="card-text">You can unsubscribe from emails received upon invoice reception here.</p>
-                            <div t-if="completed" class="alert alert-success" role="alert">
-                                Successfully unsubscribed from invoice notifications
-                            </div>
-                            <form t-else="" method="POST">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <button type="submit" class="btn btn-primary">Unsubscribe</button>
-                            </form>
+                            <p class="card-text">You can unsubscribe from emails received upon invoice sending and reception here.</p>
+                            <t t-if="completed">
+                                <div class="alert alert-success" role="alert">
+                                    Successfully unsubscribed <t t-if="email"><strong t-out="email"/></t> from invoice notifications.
+                                </div>
+                            </t>
+                            <t t-elif="error">
+                                <div class="alert alert-danger" role="alert">
+                                    <t t-out="error"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div t-if="email" class="alert alert-info" role="alert">
+                                    You are about to unsubscribe <strong t-out="email"/> from invoice notifications.
+                                </div>
+                                <form method="POST">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                                </form>
+                            </t>
                         </div>
                     </div>
                 </div>
@@ -136,13 +148,15 @@
     </template>
 
     <template id="portal_invoice_page" name="Invoice/Bill" inherit_id="portal.portal_sidebar" primary="True">
-        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+        <t t-call="portal.portal_layout" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
                 <t t-call="portal.portal_back_in_edit_mode">
                     <t t-set="backend_url" t-value="'/odoo/action-account.action_move_out_invoice_type/%s' % invoice.id"/>
                 </t>
             </t>
+        </t>
 
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div class="row o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
@@ -278,11 +292,13 @@
 
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <div name="address_details" position="inside">
-            <div class="col-12 d-none d-xl-block">
-                <small class="form-text text-muted">
-                    You can choose how you want us to send your invoices, and with which electronic format.
-                </small>
-            </div>
+            <t t-if="len(invoice_sending_methods) > 1 and invoice_edi_format">
+                <div class="col-12 d-none d-xl-block">
+                    <small class="form-text text-muted">
+                        You can choose how you want us to send your invoices, and with which electronic format.
+                    </small>
+                </div>
+            </t>
             <div t-if="len(invoice_sending_methods) > 1" class="row m-0 p-0">
                 <div class="col-xl-6">
                     <label class="col-form-label label-optional" for="invoice_sending_method">

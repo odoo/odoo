@@ -1,7 +1,6 @@
 import { test, expect } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { strong } from "../_helpers/tags";
 import { setFontSize, setFontSizeClassName, tripleClick } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -178,11 +177,9 @@ test("should apply font size in unbreakable span without class", async () => {
 
 test("should add style to a span parent of an inline", async () => {
     await testEditor({
-        contentBefore: `<p>a<span style="background-color: black;">${strong(`[bc]`)}</span>d</p>`,
+        contentBefore: `<p>a<span style="background-color: black;"><strong>[bc]</strong></span>d</p>`,
         stepFunction: setFontSize("10px"),
-        contentAfter: `<p>a<span style="background-color: black; font-size: 10px;">${strong(
-            `[bc]`
-        )}</span>d</p>`,
+        contentAfter: `<p>a<span style="background-color: black; font-size: 10px;"><strong>[bc]</strong></span>d</p>`,
     });
 });
 
@@ -232,5 +229,21 @@ test("should update the font class if the parent already has one", async () => {
         contentBefore: '<h2 class="h4-fs">[abcdefg]</h2>',
         stepFunction: setFontSizeClassName("h3-fs"),
         contentAfter: '<h2 class="h4-fs"><span class="h3-fs">[abcdefg]</span></h2>',
+    });
+});
+
+test("should apply font size on space", async () => {
+    await testEditor({
+        contentBefore: `<div><p>a[ ]b</p></div>`,
+        stepFunction: setFontSize("36px"),
+        contentAfter: `<div><p>a<span style="font-size: 36px;">[ ]</span>b</p></div>`,
+    });
+});
+
+test("should apply font size on non breaking space", async () => {
+    await testEditor({
+        contentBefore: `<div><p>a[&nbsp;]b</p></div>`,
+        stepFunction: setFontSize("36px"),
+        contentAfter: `<div><p>a<span style="font-size: 36px;">[&nbsp;]</span>b</p></div>`,
     });
 });

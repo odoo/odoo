@@ -98,7 +98,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
             mailing.action_update_cards()
         self.assertEqual(len(self._wkhtmltoimage_bodies), 5)
 
-        with self.mock_mail_gateway(), self.assertQueryCount(65):
+        with self.mock_mail_gateway(), self.assertQueryCount(54):
             mailing._action_send_mail()
 
         cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])
@@ -173,6 +173,7 @@ class TestMarketingCardRender(MarketingCardCommon):
         ])
         self.assertEqual(len(card), 1)
         self.assertTrue(card.image)
+        self.assertTrue(card.requires_sync)
         self.assertEqual(card.res_id, self.partners[0].id)
 
         # second record, modified tags
@@ -193,6 +194,8 @@ class TestMarketingCardRender(MarketingCardCommon):
             ('campaign_id', '=', campaign.id),
             ('active', '=', False)
         ])
+        self.assertEqual(cards.mapped('requires_sync'), [True] * 2)
+        self.assertEqual(cards.mapped('active'), [False] * 2)
         self.assertTrue(cards.mapped('res_id'), self.partners.ids)
 
         # update previewed record fields

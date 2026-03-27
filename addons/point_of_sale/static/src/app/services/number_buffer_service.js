@@ -55,7 +55,7 @@ const getDefaultConfig = () => ({
  * - Write more integration tests. NumberPopup can be used as test component.
  */
 class NumberBuffer extends EventBus {
-    static serviceDependencies = ["mail.sound_effects", "localization"];
+    static serviceDependencies = ["mail.sound_effects", "localization", "overlay"];
     constructor() {
         super();
         this.setup(...arguments);
@@ -65,7 +65,8 @@ class NumberBuffer extends EventBus {
         this.isReset = false;
         this.bufferHolderStack = [];
         this.sound = services["mail.sound_effects"];
-        this.defaultDecimalPoint = services.localization.decimalPoint;
+        this.localization = services.localization;
+        this.overlay = services.overlay;
         window.addEventListener("keyup", this._onKeyboardInput.bind(this));
     }
     /**
@@ -156,12 +157,19 @@ class NumberBuffer extends EventBus {
         this.component = component;
         this.state = state;
         this.config = config;
-        this.decimalPoint = config.decimalPoint || this.defaultDecimalPoint;
+        this.decimalPoint = config.decimalPoint || this.localization.decimalPoint;
         this.maxTimeBetweenKeys = this.config.useWithBarcode
             ? barcodeService.maxTimeBetweenKeysInMs
             : 0;
     }
     _onKeyboardInput(event) {
+        const overlays = Object.values(this.overlay.overlays);
+        if (
+            overlays.length &&
+            !overlays.some((overlay) => overlay.props.subComponent?.name === "NumberPopup")
+        ) {
+            return;
+        }
         return (
             this._currentBufferHolder &&
             this._bufferEvents(this._onInput((event) => event.key))(event)
@@ -180,6 +188,10 @@ class NumberBuffer extends EventBus {
     _bufferEvents(handler) {
         return (event) => {
             if (["INPUT", "TEXTAREA"].includes(event.target.tagName) || !this.eventsBuffer) {
+                return;
+            }
+            // Ignore any input if combined with Ctrl, Cmd, or Alt
+            if (event.ctrlKey || event.metaKey || event.altKey) {
                 return;
             }
             clearTimeout(this._timeout);
@@ -291,8 +303,12 @@ class NumberBuffer extends EventBus {
         } else if (input[0] === "+" && !isNaN(parseFloat(input))) {
             // when input is like '+10', '+50', etc
             const inputValue = oParseFloat(input.slice(1));
-            const currentBufferValue = this.state.buffer ? oParseFloat(this.state.buffer) : 0;
-            this.state.buffer = (inputValue + currentBufferValue).toString();
+            const currentBufferValue = this.state.buffer
+                ? oParseFloat(this.state.buffer.replace(".", this.decimalPoint))
+                : 0;
+            this.state.buffer = (inputValue + currentBufferValue)
+                .toString()
+                .replace(".", this.decimalPoint);
         } else if (!isNaN(parseInt(input, 10))) {
             if (this.state.toStartOver) {
                 // when we want to erase the current buffer for a new value

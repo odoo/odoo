@@ -1,4 +1,5 @@
 import uuid
+from json import JSONDecodeError
 import requests
 
 from odoo import _, api, fields, models
@@ -81,6 +82,7 @@ class AccountMove(models.Model):
 
     @api.depends("country_code", "move_type")
     def _compute_l10n_rs_edi_is_eligible(self):
+        self.fetch(["country_code"])
         for move in self:
             move.l10n_rs_edi_is_eligible = move.country_code == 'RS' and move.is_sale_document() and move.l10n_rs_edi_state in (False, 'sending_failed')
 
@@ -138,7 +140,7 @@ class AccountMove(models.Model):
         dict_response = {}
         try:
             dict_response = response.json()
-        except requests.exceptions.JSONDecodeError as e:
+        except JSONDecodeError as e:
             error_message = _("Invalid response from eFaktura: %s", str(e))
         self.l10n_rs_edi_state = 'sending_failed' if error_message else 'sent'
         self.l10n_rs_edi_error = error_message

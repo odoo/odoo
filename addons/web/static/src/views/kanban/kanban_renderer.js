@@ -205,10 +205,12 @@ export class KanbanRenderer extends Component {
 
         useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
             area: () => this.rootRef.el,
+            isAvailable: () => !this.props.quickCreateState.groupId,
         });
 
         useHotkey("shift+space", ({ target }) => this.onSpaceKeyPress(target, true), {
             area: () => this.rootRef.el,
+            isAvailable: () => !this.props.quickCreateState.groupId,
         });
 
         const arrowsOptions = { area: () => this.rootRef.el, allowRepeat: true };
@@ -502,7 +504,7 @@ export class KanbanRenderer extends Component {
     }
 
     toggleSelection(record, isRange = false) {
-        if (isRange) {
+        if (isRange && this.lastCheckedRecord) {
             this.toggleRangeSelection(record);
         } else {
             record.toggleSelection();
@@ -592,6 +594,12 @@ export class KanbanRenderer extends Component {
             parent.classList.contains("o_kanban_hover") ||
             parent.dataset.id === element.parentElement.dataset.id
         ) {
+            if (!this.props.list.records.find((r) => r.id === dataRecordId)) {
+                // Race condition: a new rendering has been scheduled/is ongoing but hasn't been
+                // applied to the DOM yet, so the user dropped a record that is no longer referenced
+                // in the model. In that case, we can't to anything else than abort.
+                return;
+            }
             this.toggleProcessing(dataRecordId, true);
 
             parent?.classList.remove("o_kanban_hover");

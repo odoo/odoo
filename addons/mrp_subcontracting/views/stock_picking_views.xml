@@ -11,9 +11,6 @@
                         type="object" class="oe_stat_button" icon="fa-sitemap"
                         invisible="not show_subcontracting_details_visible"/>
             </xpath>
-            <xpath expr="//field[@name='move_ids']/list//field[@name='quantity']" position="attributes">
-                <attribute name="readonly" separator="or" add="has_tracking != 'none'"/>
-            </xpath>
         </field>
     </record>
 </odoo>

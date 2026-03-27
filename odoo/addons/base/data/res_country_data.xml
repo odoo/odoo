@@ -144,7 +144,7 @@
         <record id="bg" model="res.country">
             <field name="name">Bulgaria</field>
             <field name="code">bg</field>
-            <field name="currency_id" ref="BGN" />
+            <field name="currency_id" ref="EUR" />
             <field eval="359" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -182,6 +182,7 @@
         <record id="bn" model="res.country">
             <field name="name">Brunei Darussalam</field>
             <field name="code">bn</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(country_name)s'"  name="address_format" />
             <field name="currency_id" ref="BND" />
             <field eval="673" name="phone_code" />
         </record>
@@ -343,7 +344,7 @@
         <record id="cw" model="res.country">
             <field name="name">Curaçao</field>
             <field name="code">cw</field>
-            <field name="currency_id" ref="ANG" />
+            <field name="currency_id" ref="XCG" />
             <field eval="599" name="phone_code" />
         </record>
         <record id="cx" model="res.country">
@@ -1119,6 +1120,7 @@
         <record id="pe" model="res.country">
             <field name="name">Peru</field>
             <field name="code">pe</field>
+            <field name='zip_required'>0</field>
             <field name="currency_id" ref="PEN" />
             <field eval="51" name="phone_code" />
             <field name="vat_label">RUC</field>
@@ -1353,7 +1355,7 @@
         <record id="sx" model="res.country">
             <field name="name">Sint Maarten (Dutch part)</field>
             <field name="code">sx</field>
-            <field name="currency_id" ref="ANG" />
+            <field name="currency_id" ref="XCG" />
             <field eval="1721" name="phone_code" />
         </record>
         <record id="sy" model="res.country">

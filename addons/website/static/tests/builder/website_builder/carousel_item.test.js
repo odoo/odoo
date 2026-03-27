@@ -1,6 +1,9 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilderWithSnippet,
+} from "@website/../tests/builder/website_helpers";
 import { waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
@@ -13,7 +16,7 @@ test("Reordering a carousel item should update the container title", async () =>
     firstItemEl.classList.add("first-slide");
 
     const editor = getEditor();
-    const builderOptions = editor.shared["builderOptions"];
+    const builderOptions = editor.shared.builderOptions;
     const expectOptionContainerToInclude = (elem) => {
         expect(builderOptions.getContainers().map((container) => container.element)).toInclude(
             elem
@@ -51,4 +54,33 @@ test("Remove slide", async () => {
 
     expect(":iframe .carousel-indicators > *").toHaveCount(2);
     expect(":iframe .carousel-indicators > .active").toHaveCount(1);
+});
+
+test("Should disable reordering and navigation buttons when carousel has a single slide", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_carousel");
+    expect(":iframe .carousel-item").toHaveCount(3);
+    await contains(":iframe .carousel-item").click();
+    expect("[data-action-value='first']").toHaveClass("disabled");
+
+    await contains("button[title='Move Backward']").click();
+    await waitSidebarUpdated();
+    expect("[data-container-title='Slide (3/3)']").toHaveCount(1);
+    expect("[data-action-value='last']").toHaveClass("disabled");
+
+    await contains("button[title='Remove Slide']").click();
+    await waitSidebarUpdated();
+    expect("[data-container-title='Slide (2/2)']").toHaveCount(1);
+
+    await contains("button[title='Remove Slide']").click();
+    await waitSidebarUpdated();
+    expect("[data-container-title='Slide (1/1)']").toHaveCount(1);
+
+    const reorderingButtons = ["first", "prev", "next", "last"];
+    for (const button of reorderingButtons) {
+        expect(`[data-action-value='${button}']`).toHaveClass("disabled");
+    }
+
+    expect('[data-label="Re-order"]').toHaveAttribute("data-disabled");
+    expect("button[title='Move Backward']").toHaveClass("disabled");
+    expect("button[title='Move Forward']").toHaveClass("disabled");
 });

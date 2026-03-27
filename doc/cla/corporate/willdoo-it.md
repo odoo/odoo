@@ -13,6 +13,9 @@ Richard deMeester richard@willdooit.com https://github.com/richard-willdooit
 List of contributors:
 
 Richard deMeester richard@willdooit.com https://github.com/richard-willdooit
+Richard deMeester richard.demeester@willdooit.com https://github.com/richard-willdooit
 Douglas Parker doug@willdooit.com https://github.com/doug-willdooit
-Akash Bhavsar akash.bhavsar@willdooit.com https://github.com/akash-willdooit
 David James david.james@willdooit.com https://github.com/davejames
+James Bos james.bos@willdooit.com https://github.com/james-willdooit
+Michael Villamar michael.villamar@willdooit.com https://github.com/michael-villamar
+Raphael Valencia raphael.valencia@willdooit.com https://github.com/rapvalencia

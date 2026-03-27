@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- view used for product.template only -->
+        <record id="product_template_only_form_view_inherit_l10n_tr_nilvera_extended" model="ir.ui.view">
+            <field name="name">product.template.product.form.view.inherit.l10n_tr_nilvera_extended</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='barcode']" position="after">
+                        <field name="l10n_tr_ctsp_number"
+                               invisible="product_variant_count &gt; 1
+                                    or (product_variant_count == 0
+                                    and valid_product_template_attribute_line_ids)
+                                    or 'TR' not in fiscal_country_codes"/>
+                    </xpath>
+                </field>
+        </record>
+        <!-- view used for product.product only -->
+        <record id="product_product_only_form_view_inherit_l10n_tr_nilvera_extended" model="ir.ui.view">
+            <field name="name">product.product.form.view.inherit.l10n_tr_nilvera_extended</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='barcode']" position="after">
+                    <field name="l10n_tr_ctsp_number" invisible="'TR' not in fiscal_country_codes"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

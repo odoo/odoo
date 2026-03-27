@@ -511,8 +511,13 @@ class MailComposeMessage(models.TransientModel):
         When not having a template, recipients may come from the parent in
         comment mode, to be sure to notify the same people. """
         for composer in self:
-            if (composer.template_id and composer.composition_mode == 'comment'
-                and not composer.composition_batch):
+            template = composer.template_id
+            # Use template in comment mode only if there are no partners yet or if the template specifies different ones
+            # as suggested recipients should normally not change and we don't want to re-add them every time
+            if (template and composer.composition_mode == 'comment'
+                and not composer.composition_batch
+                and (not template.use_default_to or not composer.partner_ids)
+            ):
                 res_ids = composer._evaluate_res_ids() or [0]
                 rendered_values = composer._generate_template_for_composer(
                     res_ids,
@@ -1208,7 +1213,10 @@ class MailComposeMessage(models.TransientModel):
                 mail_values['attachment_ids'] = process_record._process_attachments_for_post(
                     decoded_attachments,
                     attachment_ids,
-                    {'model': 'mail.message', 'res_id': 0}
+                    {'model': 'mail.message', 'res_id': 0} if (
+                        not hasattr(record, "_process_attachments_for_post")
+                        or (self.auto_delete and not self.auto_delete_keep_log)
+                    ) else {}  # link to record if kept in chatter, for ease of access
                 )['attachment_ids']
             # comment mode: prepare attachments as a list of IDs, to be processed by MailThread
             else:

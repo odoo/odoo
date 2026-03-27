@@ -70,8 +70,6 @@ import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_
 
 const formatters = registry.category("formatters");
 
-const DEFAULT_GROUP_PAGER_COLSPAN = 1;
-
 const FIELD_CLASSES = {
     char: "o_list_char",
     float: "o_list_number",
@@ -198,7 +196,21 @@ export class ListRenderer extends Component {
         });
         this.state = useState({ groupInput: false, currencyRates: null });
         onWillStart(async () => {
-            if (!this.isX2Many && this.hasMonetary) {
+            const needsCurrencyRates = this.props.archInfo.columns.some((column) => {
+                if (column.type !== "field") {
+                    return false;
+                }
+                const field = this.props.list.fields[column.name];
+                if (field.type !== "monetary" && column.widget !== "monetary") {
+                    return false;
+                }
+                const currencyField = this.getCurrencyField(column);
+                if (!(currencyField in this.props.list.activeFields)) {
+                    return false;
+                }
+                return ["sum", "avg", "max", "min"].some((agg) => agg in column.attrs);
+            });
+            if (needsCurrencyRates) {
                 this.state.currencyRates = await getCurrencyRates();
             }
         });
@@ -288,10 +300,11 @@ export class ListRenderer extends Component {
                     const column = this.cellToFocus.column;
                     const forward = this.cellToFocus.forward;
                     this.focusCell(column, forward);
-                } else if (this.lastEditedCell) {
-                    this.focusCell(this.lastEditedCell.column, true);
                 } else {
-                    this.focusCell(this.columns[0]);
+                    const column = this.lastEditedCell?.column || this.columns[0];
+                    if (column.widget !== "daterange" || !this.editedRecord.data[column.name]) {
+                        this.focusCell(column);
+                    }
                 }
             }
             this.cellToFocus = null;
@@ -344,6 +357,7 @@ export class ListRenderer extends Component {
         );
     }
 
+    // deprecated, remove in master
     get hasMonetary() {
         return this.props.archInfo.columns.some((column) => {
             if (column.type !== "field") {
@@ -720,7 +734,7 @@ export class ListRenderer extends Component {
                     } else {
                         currencyId = values[0][currencyField] && values[0][currencyField].id;
                     }
-                    if (currencyId && func) {
+                    if (func && type === "monetary") {
                         const currencies = this.getFieldCurrencies(fieldName);
                         // in case of multiple currencies, convert values into default currency using conversion rates
                         if (currencies.size > 1) {
@@ -1122,33 +1136,18 @@ export class ListRenderer extends Component {
         // if there are aggregates, the first th spans until the first
         // aggregate column then all cells between aggregates are rendered
         const firstAggregateIndex = this.getFirstAggregateIndex(group);
-        let colspan;
-        if (firstAggregateIndex > -1) {
-            colspan = firstAggregateIndex;
-        } else {
-            colspan = Math.max(1, this.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
-            if (this.displayOptionalFields) {
-                colspan++;
-            }
-        }
+        let colspan = firstAggregateIndex > -1 ? firstAggregateIndex : this.columns.length;
         if (this.hasSelectors) {
             colspan++;
         }
         return colspan;
     }
 
+    // TODO: rename in master
     getGroupPagerCellColspan(group) {
-        const lastAggregateIndex = this.getLastAggregateIndex(group);
-        let colspan;
-        if (lastAggregateIndex > -1) {
-            colspan = this.columns.length - lastAggregateIndex - 1;
-        } else {
-            colspan = this.columns.length > 1 ? DEFAULT_GROUP_PAGER_COLSPAN : 0;
-        }
-        if (this.hasOpenFormViewColumn) {
-            colspan++;
-        }
-        return colspan;
+        // this colspan is the number of columns after the last column with aggregates
+        const lastIndex = this.getLastAggregateIndex(group);
+        return lastIndex > -1 ? this.columns.length - lastIndex - 1 : 0;
     }
 
     getGroupPagerProps(group) {
@@ -1703,9 +1702,13 @@ export class ListRenderer extends Component {
      * @returns {boolean} true if some behavior has been taken
      */
     onCellKeydownEditMode(hotkey, cell, group, record) {
+        if (!record) {
+            return false;
+        }
+
         const { cycleOnTab, list } = this.props;
         const row = cell.parentElement;
-        const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
+        const applyMultiEditBehavior = record.selected && list.model.multiEdit;
         const isDirty = record.dirty || this.lastIsDirty;
         const topReCreate = this.props.editable === "top" && record.isNew;
 
@@ -2218,7 +2221,6 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.previous]
      */
     async sortDrop(dataRowId, dataGroupId, { element, previous }) {
-        await this.props.list.leaveEditMode();
         element.classList.remove("o_row_draggable");
         const refId = previous ? previous.dataset.id : null;
         try {
@@ -2237,6 +2239,7 @@ export class ListRenderer extends Component {
             await this.resequencePromise;
         } finally {
             element.classList.add("o_row_draggable");
+            await this.props.list.leaveEditMode();
         }
     }
 

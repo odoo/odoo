@@ -1,4 +1,9 @@
-import { defineParams, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
+import {
+    defineParams,
+    patchWithCleanup,
+    preloadBundle,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 import {
     click,
@@ -19,10 +24,11 @@ describe.current.tags("desktop");
 defineMailModels();
 preloadBundle("web.assets_emoji");
 
-test("emoji picker works well with translation with double quotes", async () => {
+test("emoji picker correctly handles translations with special characters", async () => {
     defineParams({
         translations: {
             "Japanese “here” button": `Bouton "ici" japonais`,
+            "heavy dollar sign": `Symbole du dollar\nlourd`,
         },
     });
     const pyEnv = await startServer();
@@ -30,8 +36,10 @@ test("emoji picker works well with translation with double quotes", async () => 
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search emoji']", "ici");
+    await insertText(".o-EmojiPicker-search input", "ici");
     await contains(`.o-Emoji[title='Bouton "ici" japonais']`);
+    await insertText(".o-EmojiPicker-search input", "dollar", { replace: true });
+    await contains(`.o-Emoji[title*='Symbole du dollar']`);
 });
 
 test("search emoji from keywords", async () => {
@@ -167,9 +175,11 @@ test("search matches only frequently used emojis", async () => {
     await contains(".o-EmojiPicker-sectionIcon", { count: 0 }); // await search performed
     await contains(".o-EmojiPicker-content .o-Emoji:eq(0)", { text: "🥦" });
     await contains(".o-EmojiPicker-content .o-Emoji", { count: 1 });
-    await contains(".o-EmojiPicker-content", { text: "No emoji matches your search", count: 0 });
+    await contains(".o-EmojiPicker-content:has(:text('No emojis match your search'))", {
+        count: 0,
+    });
     await insertText(".o-EmojiPicker-search input", "2");
-    await contains(".o-EmojiPicker-content", { text: "No emoji matches your search" });
+    await contains(".o-EmojiPicker-content:has(:text('No emojis match your search'))");
 });
 
 test("emoji usage amount orders frequent emojis", async () => {
@@ -233,4 +243,19 @@ test("shortcodes shown in emoji title in message", async () => {
     await contains(".o-mail-Message", { text: "💑😇" });
     await contains(".o-mail-Message span[title=':couple_with_heart:']", { text: "💑" });
     await contains(".o-mail-Message span[title=':innocent: :halo:']", { text: "😇" });
+});
+
+test("Emoji picker shows failure to load emojis", async () => {
+    // Simulate failure to load emojis
+    patchWithCleanup(odoo.loader.modules.get("@web/core/emoji_picker/emoji_data"), {
+        getEmojis() {
+            return [];
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await contains(".o-EmojiPicker", { text: "😵‍💫Failed to load emojis..." });
 });

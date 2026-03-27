@@ -61,15 +61,15 @@
                         <div class="o_wsale_product_info_attributes_wrapper">
                             <div class="o_wsale_product_information_text">
                                 <!-- Product Name -->
-                                <h2 class="o_wsale_products_item_title h6 text-break">
+                                <h6 class="o_wsale_products_item_title text-break">
                                     <a
                                         class="text-decoration-none"
                                         t-att-href="product.website_url"
-                                        t-att-content="product.display_name"
-                                        t-att-title="product.display_name"
-                                        t-field="product.display_name"
+                                        t-att-content="data.get('display_name')"
+                                        t-att-title="data.get('display_name')"
+                                        t-out="data.get('display_name')"
                                     />
-                                </h2>
+                                </h6>
                                 <!-- Description -->
                                 <div class="oe_subdescription_wrapper">
                                     <div
@@ -143,10 +143,9 @@
         </template>
 
         <!-- Assets -->
-        <record id="website_sale.s_dynamic_snippet_products_000_scss" model="ir.asset">
-            <field name="name">Dynamic snippet products 000 SCSS</field>
-            <field name="bundle">web.assets_frontend</field>
-            <field name="path">website_sale/static/src/snippets/s_dynamic_snippet_products/000.scss</field>
-        </record>
+        <asset id="website_sale.s_dynamic_snippet_products_000_scss" name="Dynamic snippet products 000 SCSS">
+            <bundle>web.assets_frontend</bundle>
+            <path>website_sale/static/src/snippets/s_dynamic_snippet_products/000.scss</path>
+        </asset>
 
 </odoo>

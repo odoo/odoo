@@ -34,5 +34,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'purchase_tax_template_vat20_psbo',
                 'expense_account_id': 'ua_psbp_901',
                 'income_account_id': 'ua_psbp_701',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'ua_psbp_201',
+            },
+        }
+
+    @template('ua_psbo', 'account.account')
+    def _get_ua_psbo_account_account(self):
+        return {
+            'ua_psbp_201': {
+                'account_stock_expense_id': 'ua_psbp_808',
+                'account_stock_variation_id': 'ua_psbp_801',
             },
         }

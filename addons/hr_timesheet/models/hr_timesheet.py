@@ -32,7 +32,7 @@ class AccountAnalyticLine(models.Model):
         )
         if not last_timesheets:
             internal_project = self.env.company.internal_project_id
-            return internal_project.active and internal_project.allow_timesheets and internal_project.id
+            return internal_project.has_access('read') and internal_project.active and internal_project.allow_timesheets and internal_project.id
         return mode([t.project_id.id for t in last_timesheets])
 
     @api.model
@@ -182,18 +182,20 @@ class AccountAnalyticLine(models.Model):
                 )
             else:
                 minutes = round(line.unit_amount * 60)
-                hours, minutes = divmod(minutes, 60)
+                hours, minutes = divmod(abs(round(minutes)), 60)
                 if minutes:
                     line.calendar_display_name = self.env._(
-                        "%(project_name)s (%(hours)sh%(minutes)s)",
+                        "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)",
                         project_name=line.project_id.display_name,
+                        sign='-' if line.unit_amount < 0 else '',
                         hours=hours,
                         minutes=minutes,
                     )
                 else:
                     line.calendar_display_name = self.env._(
-                        "%(project_name)s (%(hours)sh)",
+                        "%(project_name)s (%(sign)s%(hours)sh)",
                         project_name=line.project_id.display_name,
+                        sign='-' if line.unit_amount < 0 else '',
                         hours=hours,
                     )
 
@@ -220,6 +222,8 @@ class AccountAnalyticLine(models.Model):
         if self.env.context.get('timesheet_calendar'):
             self.env['hr.employee'].browse([vals.get('employee_id') for vals in vals_list])
         # 1/ Collect the user_ids and employee_ids from each timesheet vals
+        skipped_vals = 0
+        valid_vals = 0
         for vals in vals_list[:]:
             if self.env.context.get('timesheet_calendar'):
                 if not 'employee_id' in vals:
@@ -231,6 +235,7 @@ class AccountAnalyticLine(models.Model):
                     datetime.combine(date, time.max, tzinfo=user_timezone),
                 )[0][employee.resource_id.id]):
                     vals_list.remove(vals)
+                    skipped_vals += 1
                     continue
             task = self.env['project.task'].sudo().browse(vals.get('task_id'))
             project = self.env['project.project'].sudo().browse(vals.get('project_id'))
@@ -263,6 +268,7 @@ class AccountAnalyticLine(models.Model):
                 user_id = vals.get('user_id', default_user_id)
                 if user_id not in user_ids:
                     user_ids.append(user_id)
+            valid_vals += 1
 
         # 2/ Search all employees related to user_ids and employee_ids, in the selected companies
         HrEmployee_sudo = self.env['hr.employee'].sudo()
@@ -331,6 +337,23 @@ class AccountAnalyticLine(models.Model):
         for line, values in zip(lines, vals_list):
             if line.project_id:  # applied only for timesheet
                 line._timesheet_postprocess(values)
+
+        if self.env.context.get('timesheet_calendar'):
+            if skipped_vals:
+                type = "danger"
+                if valid_vals:
+                    message = self.env._("Some timesheets were not created: employees aren’t working on the selected days")
+                else:
+                    message = self.env._("No timesheets created: employees aren’t working on the selected days")
+            else:
+                type = "success"
+                message = self.env._("Timesheets successfully created")
+
+            self.env.user._bus_send('simple_notification', {
+                "type": type,
+                "message": message,
+            })
+
         return lines
 
     def write(self, vals):

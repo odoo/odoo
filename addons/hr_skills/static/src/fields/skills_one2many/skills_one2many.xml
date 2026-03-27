@@ -4,11 +4,8 @@
         <xpath expr="//table" position="attributes">
             <attribute name="t-attf-class" add="mb-1 {{ !isEditable ? 'cursor-default' : '' }} {{ !showTable ? 'd-none' : ''}} o_skill_table overflow-hidden" separator=" "/>
         </xpath>
-        <xpath expr="//thead" position="attributes">
-            <attribute name="style">visibility: collapse;</attribute>
-        </xpath>
         <xpath expr="//table" position="before">
-            <div name="skills_header" class="skills_header text-uppercase fw-bolder py-2" t-attf-style="{{!showTable ? 'box-shadow: 0 1px 0 #e6e6e6' : ''}}">
+            <div name="skills_header" class="skills_header text-uppercase small fw-bolder py-2 mt-4" t-att-class="{'o_horizontal_separator': !showTable }">
                 Skills &amp; Certifications
                 <a t-if="!isEmpty &amp;&amp; showTimeline" t-on-click="openSkillsReport" class="float-end cursor-pointer">
                     <span class="fa fa-line-chart me-1"/>

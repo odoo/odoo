@@ -8,6 +8,7 @@ import {
     getMultipleInputs,
     isFieldCustom,
     getCurrentFieldInputEl,
+    getModelName,
 } from "./utils";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
@@ -15,15 +16,15 @@ const { DateTime } = luxon;
 
 export class FormFieldOption extends BaseOptionComponent {
     static template = "website.s_website_form_field_option";
+    static dependencies = ["websiteFormOption"];
     static props = {
-        fetchModels: Function,
-        loadFieldOptionData: Function,
         redrawSequence: { type: Number, optional: true },
     };
     static components = { FormActionFieldsOption, FormModelRequiredFieldAlert };
 
     setup() {
         super.setup();
+        const { loadFieldOptionData } = this.dependencies.websiteFormOption;
         this.state = useState({
             availableFields: [],
             conditionInputs: [],
@@ -32,13 +33,14 @@ export class FormFieldOption extends BaseOptionComponent {
             valueList: null,
         });
         this.domState = useDomState((el) => {
-            const modelName = el.closest("form")?.dataset.model_name;
+            const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);
             return {
                 elDataset: { ...el.dataset },
                 elClassList: [...el.classList],
                 fieldName,
                 modelName,
+                fieldTranslatedName: el.dataset.translatedName,
             };
         });
         this.format = {
@@ -71,7 +73,7 @@ export class FormFieldOption extends BaseOptionComponent {
             };
         });
 
-        this.domStateCurrentFieldInput = useDomState(el => {
+        this.domStateCurrentFieldInput = useDomState((el) => {
             const currentFieldInputEl = getCurrentFieldInputEl(el);
             if (!currentFieldInputEl) {
                 return {
@@ -98,7 +100,7 @@ export class FormFieldOption extends BaseOptionComponent {
 
         onWillStart(async () => {
             const el = this.env.getEditingElement();
-            const fieldOptionData = await this.props.loadFieldOptionData(el);
+            const fieldOptionData = await loadFieldOptionData(el);
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
@@ -106,7 +108,7 @@ export class FormFieldOption extends BaseOptionComponent {
         });
         onWillUpdateProps(async (props) => {
             const el = this.env.getEditingElement();
-            const fieldOptionData = await props.loadFieldOptionData(el);
+            const fieldOptionData = await loadFieldOptionData(el);
             this.state.availableFields.length = 0;
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.length = 0;
@@ -118,15 +120,7 @@ export class FormFieldOption extends BaseOptionComponent {
         // TODO select field's hack ?
     }
     get canHaveTextValidationCondition() {
-        return [
-            "text",
-            "email",
-            "tel",
-            "url",
-            "search",
-            "password",
-            "number",
-        ];
+        return ["text", "email", "tel", "url", "search", "password", "number"];
     }
     get isTextConditionValueVisible() {
         const el = this.env.getEditingElement();

@@ -14,7 +14,7 @@ export const ProductNameAndDescriptionListRendererMixin = {
         if (this.productColumns.includes(column.name)) {
             return;
         }
-        super.getCellTitle(column, record);
+        return super.getCellTitle(column, record);
     },
 
     getActiveColumns() {
@@ -122,6 +122,7 @@ export class ProductNameAndDescriptionField extends Component {
             ...p,
             canOpen: !this.props.readonly || this.isProductClickable,
             placeholder: _t("Search a product"),
+            preventMemoization: true,
             value,
         };
     }

@@ -11,10 +11,15 @@ import { rpc } from "@web/core/network/rpc";
  * @property { ImageSavePlugin['savePendingImages'] } savePendingImages
  */
 
+/**
+ * @typedef {((el: HTMLElement) => HTMLElement)[]} closest_savable_providers
+ */
+
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
     static shared = ["savePendingImages"];
 
+    /** @type {import("plugins").EditorResources} */
     resources = {
         before_save_handlers: this.savePendingImages.bind(this),
 
@@ -35,16 +40,21 @@ export class ImageSavePlugin extends Plugin {
                 }
             }
         };
+        const oldSrcToNewSrcMap = new Map();
         const b64Proms = [...editableEl.querySelectorAll(".o_b64_image_to_save")].map(
             async (el) => {
                 const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
+                const oldSrc = el.getAttribute("src");
                 await this.saveB64Image(el, resModel, resId);
+                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
             }
         );
         const modifiedProms = [...editableEl.querySelectorAll(".o_modified_image_to_save")].map(
             async (el) => {
                 const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
+                const oldSrc = el.getAttribute("src");
                 await this.saveModifiedImage(el, resModel, resId);
+                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
             }
         );
         const proms = [...b64Proms, ...modifiedProms];
@@ -52,7 +62,7 @@ export class ImageSavePlugin extends Plugin {
         if (hasChange) {
             await Promise.all(proms);
         }
-        return hasChange;
+        return hasChange ? oldSrcToNewSrcMap : undefined;
     }
 
     createAttachment({ el, imageData, resModel, resId }) {
@@ -159,11 +169,11 @@ export class ImageSavePlugin extends Plugin {
                     canvas.height
                 );
                 altData[size] = {
-                    "image/jpeg": canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                    "image/jpeg": canvas.toDataURL("image/jpeg").split(",")[1],
                 };
                 if (size !== originalSize) {
                     altData[size]["image/webp"] = canvas
-                        .toDataURL("image/webp", 0.75)
+                        .toDataURL("image/webp")
                         .split(",")[1];
                 }
             }
@@ -190,6 +200,7 @@ export class ImageSavePlugin extends Plugin {
         } else {
             el.setAttribute("src", newAttachmentSrc);
         }
+        this.dispatchTo("on_image_saved_handlers", { imageEl: el });
     }
 
     getRecordInfo(editableEl = null) {

@@ -3,13 +3,14 @@
 # * certificate
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-16 02:34+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-13 09:20+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "certificate/de/>\n"
 "Language: de\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: certificate
 #. odoo-python
@@ -220,6 +221,14 @@ msgstr ""
 "Schlüssel."
 
 #. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a public key to verify the signature of documents."
+msgstr ""
+"Stellen Sie sicher, dass Sie einen öffentlichen Schlüssel verwenden, um die "
+"Signatur von Dokumenten zu überprüfen."
+
+#. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
 msgstr "Ihre Zertifikate verwalten"
@@ -342,22 +351,14 @@ msgid "The certificate and public key are not compatible."
 msgstr "Das Zertifikat und der öffentliche Schlüssel sind nicht kompatibel."
 
 #. module: certificate
-#. odoo-python
-#: code:addons/certificate/models/certificate.py:0
-msgid ""
-"The certificate subject field contains invalid characters. Make sure all "
-"characters are unicode valid."
-msgstr ""
-
-#. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
-msgid "The date on which the certificate expires (UTC)"
-msgstr ""
+msgid "The date on which the certificate expires"
+msgstr "Das Datum, an dem das Zertifikat abläuft"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
-msgid "The date on which the certificate starts to be valid (UTC)"
-msgstr ""
+msgid "The date on which the certificate starts to be valid"
+msgstr "Das Datum, ab dem das Zertifikat gültig ist"
 
 #. module: certificate
 #. odoo-python
@@ -394,7 +395,8 @@ msgstr "Der öffentliche Schlüssel des Zertifikats kann nicht geladen werden."
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
 msgid "The serial number to add to electronic documents"
-msgstr "Die Seriennummer, die elektronischen Dokumenten hinzugefügt werden soll"
+msgstr ""
+"Die Seriennummer, die elektronischen Dokumenten hinzugefügt werden soll"
 
 #. module: certificate
 #. odoo-python
@@ -446,8 +448,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: ED25519, EC and RSA."
+msgstr ""
+"Der asymmetrische Kryptografiealgorithmus ‚%s‘ wird nicht unterstützt. "
+"Derzeit werden für Signaturen folgende Algorithmen unterstützt: ED25519, EC "
+"und RSA."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
 msgstr ""
 "Nicht unterstützter asymmetrischer Kryptografiealgorithmus „%s“. Derzeit "
 "unterstützt: EC, RSA."
@@ -455,8 +468,10 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
 "Wird verwendet, um einen öffentlichen Schlüssel festzulegen, falls der im "

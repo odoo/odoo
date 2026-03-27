@@ -37,6 +37,10 @@
 
         width: var(--o-website-sale-comparison-table-column-width);
         padding: 0 var(--o-website-sale-comparison-table-column-padding-x);
+
+        img {
+            @extend %o-wsale-shop-thumb;
+        }
     }
 
     #o_comparelist_table {
@@ -95,11 +99,7 @@
 }
 
 .o_wsale_comparison_bottom_bar {
-    z-index: var(--o-wsale-comparison-bottom-bar-z-index, 3);
-
-    &:where(:has(.collapsing, .collapse.show)) {
-        --o-wsale-comparison-bottom-bar-z-index: 4;
-    }
+    z-index: $zindex-modal;
 
     box-shadow: 0px -12px 32px rgba($black, .175);
 
@@ -128,9 +128,7 @@
     .o_wsale_comparison_bottom_bar_image {
         width: 2.5rem;
         height: fit-content;
-        aspect-ratio: var(--wsale-product-thumb-aspect-ratio, 1/1);
-        object-fit: cover;
-        object-position: center;
+        @extend %o-wsale-shop-thumb;
     }
 }
 

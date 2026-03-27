@@ -5,7 +5,7 @@ from datetime import datetime
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.tests import new_test_user
+from odoo.tests import Form, new_test_user
 from odoo.tests.common import tagged, TransactionCase, freeze_time
 
 
@@ -22,6 +22,7 @@ class TestHrAttendance(TransactionCase):
             'name': "François Russie",
             'user_id': cls.user.id,
             'pin': '1234',
+            'ruleset_id': False,
         })
         cls.employee_kiosk = cls.env['hr.employee'].create({
             'name': "Machiavel",
@@ -100,6 +101,13 @@ class TestHrAttendance(TransactionCase):
         with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(pytz.utc).replace(tzinfo=None)):
             self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
 
+    def test_remove_check_in_value_from_attendance(self):
+        attendance_form = Form(self.env['hr.attendance'])
+        attendance_form.employee_id = self.test_employee
+        attendance_form.check_in = False
+        with self.assertRaises(AssertionError):
+            attendance_form.save()
+
     # @freeze_time("2024-02-1")
     # def test_change_in_out_mode_when_manual_modification(self):
     #     TODO naja: cron should work eventually when the adjustment feature is back
@@ -111,6 +119,8 @@ class TestHrAttendance(TransactionCase):
     #     employee = self.env['hr.employee'].create({
     #         'name': "James P. Sullivan",
     #         'company_id': company.id,
+    #         'date_version': date(2021, 1, 1),
+    #         'contract_date_start': date(2021, 1, 1),
     #     })
     #     breakpoint()
 

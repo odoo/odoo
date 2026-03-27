@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 _ref_company_registry = {
     'jp': '7000012050002',
     'dk': '58403288',
+    'fi': '8763054-9',
 }
 
 
@@ -45,7 +46,6 @@ class AccountFiscalPosition(models.Model):
         column1='account_fiscal_position_id',
         column2='account_tax_id',
         string='Taxes',
-        context={'active_test': False},
     )
     tax_map = fields.Binary(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
@@ -154,7 +154,7 @@ class AccountFiscalPosition(models.Model):
     def map_tax(self, taxes):
         if not self:
             return taxes
-        if not self.tax_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
+        if not self.tax_ids and taxes.fiscal_position_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
             return self.env['account.tax']
         return self.env['account.tax'].browse(unique(
             tax_id
@@ -279,7 +279,15 @@ class AccountFiscalPosition(models.Model):
         return all_auto_apply_fpos._get_first_matching_fpos(delivery)
 
     def action_open_related_taxes(self):
-        return self.tax_ids._get_records_action(name=_("%s taxes", self.display_name))
+        list_view = self.env.ref('account.account_tax_fiscal_position_view_tree', raise_if_not_found=False)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("%s taxes", self.display_name),
+            'res_model': 'account.tax',
+            'views': [(list_view.id if list_view else False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', self.tax_ids.ids)],
+            'context': {'active_test': False},
+        }
 
     def action_create_foreign_taxes(self):
         self.ensure_one()
@@ -324,12 +332,15 @@ class ResPartner(models.Model):
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
     duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'country_code')
     @api.depends_context('allowed_company_ids')
     def _compute_fiscal_country_codes(self):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
-            record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
+            country_codes = allowed_companies.mapped('account_fiscal_country_id.code')
+            if record.country_code:
+                country_codes.append(record.country_code)
+            record.fiscal_country_codes = ",".join(set(country_codes))
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -524,20 +535,25 @@ class ResPartner(models.Model):
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency") # currency of amount currency
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
+        check_company=True,
         string="Account Payable",
         domain="[('account_type', '=', 'liability_payable')]",
         ondelete='restrict')
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
+        check_company=True,
         string="Account Receivable",
         domain="[('account_type', '=', 'asset_receivable')]",
         ondelete='restrict')
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
+        check_company=True,
         string="Fiscal Position",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
+        check_company=True,
         string='Customer Payment Terms',
         ondelete='restrict')
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
+        check_company=True,
         string='Vendor Payment Terms',
     )
     ref_company_ids = fields.One2many('res.company', 'partner_id',
@@ -593,14 +609,16 @@ class ResPartner(models.Model):
 
     property_outbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
+        check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     property_inbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
+        check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     def _compute_bank_count(self):
@@ -870,8 +888,8 @@ class ResPartner(models.Model):
         if not vat:
             return None
 
-        # Sometimes, the vat is specified with some whitespaces.
-        normalized_vat = vat.replace(' ', '')
+        # Sometimes, the vat is specified with some whitespaces or dots.
+        normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
         partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=2)
@@ -1040,3 +1058,20 @@ class ResPartner(models.Model):
 
     def action_open_business_doc(self):
         return self._get_records_action()
+
+    @api.model
+    def _clear_removed_edi_formats(self, *formats):
+        """Helper to clear outdated EDI formats.
+
+        Usually called as an uninstall hook of modules that add these formats.
+        It avoids the form view to become unusable after module uninstallation.
+        """
+        self.env.cr.execute(
+            """
+            UPDATE res_partner
+            SET invoice_edi_format_store = invoice_edi_format_store - res_company.id::char
+            FROM res_company
+            WHERE res_partner.invoice_edi_format_store ->> res_company.id::char IN %s
+            """,
+            (formats,),
+        )

@@ -67,21 +67,15 @@ function closePreferencesDialog({content, totp_state}) {
         }
     },
     {
-        trigger: 'body',
-        async run() {
-            while (document.querySelector('.o_dialog')) {
-                await Promise.resolve();
-            }
-            this.anchor.classList.add("dialog-closed");
-        },
-    }, {
-        trigger: 'body.dialog-closed',
+        trigger: 'body:not(:has(.o_dialog))',
     }];
 }
 
 registry.category("web_tour.tours").add('totp_tour_setup', {
     url: '/odoo',
-    steps: () => [...openUserPreferencesAtSecurityTab(), {
+    steps: () => [
+...openUserPreferencesAtSecurityTab(),
+{
     content: "Open totp wizard",
     trigger: 'a[role=tab]:contains("Security").active',
 },
@@ -119,7 +113,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
             offset: 0,
         });
         await helpers.edit(token, '[name=code] input');
-        document.querySelector("body").classList.add("got-token");
     }
 },
 {
@@ -127,11 +120,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     run: "click",
 },
 {
-    trigger: "body:not(:has(.modal))",
-},
-{
-    content: 'wait for rpc',
-    trigger: 'body.got-token',
+    trigger: ".o_notification_content:contains(2-Factor authentication is now enabled)",
 },
 ...openRoot(),
 ...openUserPreferencesAtSecurityTab(),
@@ -259,7 +248,11 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: ".o_web_client .o_navbar",
     async run() {
         await whenReady();
-        await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+},
+{
+    trigger: ".o_web_client .o_navbar",
+    async run() {
         await new Promise((resolve) => {
             const bus = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
             bus.addEventListener("BUS:CONNECT", resolve, { once: true });
@@ -324,7 +317,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     run: "click",
 },
 {
-    trigger: "body:not(:has(.modal))",
+    trigger:".o_notification_content:contains(Two-factor authentication disabled)",
 },
 ...openRoot(),
 ...openUserPreferencesAtSecurityTab(),
@@ -365,7 +358,6 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 ...closePreferencesDialog({})
 ]});
 
-const columns = {};
 registry.category("web_tour.tours").add('totp_admin_disables', {
     url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
@@ -385,17 +377,9 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     run: "click",
 }, {
     content: "Find test_user User",
-    trigger: 'td.o_data_cell:contains("test_user")',
-    run(helpers) {
-        const { queryAll } = odoo.loader.modules.get("@odoo/hoot-dom");
-        const titles = queryAll("tr:first th", { root: this.anchor.closest("table") });
-        titles.forEach((el, i) => {
-            columns[el.getAttribute('data-name')] = i;
-        })
-        const row = this.anchor.closest('tr');
-        const sel = row.querySelector('.o_list_record_selector input[type=checkbox]');
-        helpers.click(sel);
-    }
+    trigger: 'tr:has(td.o_data_cell:contains("test_user")) ' +
+                '.o_list_record_selector input[type=checkbox]',
+    run: "click",
 }, {
     content: "Open Actions menu",
     trigger: 'button.dropdown-toggle:contains("Action")',
@@ -418,8 +402,9 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     run: "click",
 },
 {
-    content: "Wait the modal is closed",
-    trigger: "body:not(:has(.modal))",
+    content: "Wait for user to be unchecked (~ action done)",
+    trigger: 'tr:has(td.o_data_cell:contains(test_user)) ' +
+                '.o_list_record_selector input[type=checkbox]:not(:checked)',
 },
 {
     content: "open the user's form",
@@ -433,13 +418,7 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     trigger: "a.nav-link:contains(Security)",
     run: "click",
 }, {
-    content: "check that the button to disable 2FA is absent",
-    trigger: 'body',
-    run: () => {
-        const button = document.querySelector('button[name=action_totp_enable_wizard]');
-        if (button) {
-            console.error("2FA button should be absent.");
-        }
-    },
+    content: "check 2FA button: should be disabled",
+    trigger: 'body:not(:has(button[name=action_totp_enable_wizard]))',
 }
 ]})

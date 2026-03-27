@@ -26,13 +26,14 @@ class HrJob(models.Model):
     user_id = fields.Many2one(
         "res.users",
         "Recruiter",
-        domain="[('share', '=', False), ('id', 'in', allowed_user_ids)]",
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
         default=lambda self: self.env.user,
         groups="hr.group_hr_user",
         tracking=True,
         help="The Recruiter will be the default value for all Applicants in this job \
             position. The Recruiter is automatically added to all meetings with the Applicant.",
     )
+    # TODO (master): remove the field `allowed_user_ids`.
     allowed_user_ids = fields.Many2many('res.users', compute='_compute_allowed_user_ids', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', check_company=True, tracking=True, index='btree_not_null')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True)

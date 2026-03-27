@@ -431,6 +431,21 @@ class TestSaleToInvoice(TestSaleCommon):
                 self.assertEqual(line.untaxed_amount_to_invoice, line.product_uom_qty * line.price_unit, "The amount to invoice should the total of the line, as the line is confirmed (no confirmed invoice)")
                 self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as no invoice are validated for now")
 
+        invoice.button_cancel()
+        # amount to invoice / invoiced should should be reset
+        for line in self.sale_order.order_line:
+            if line.product_id.invoice_policy == 'delivery':
+                self.assertEqual(line.qty_to_invoice, 0.0, 'Quantity to invoice should be same as ordered quantity')
+                self.assertEqual(line.qty_invoiced, 0.0, 'Invoiced quantity should be zero as no any invoice created for SO')
+                self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
+                self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as the line based on delivered quantity")
+            else:
+                self.assertEqual(line.qty_to_invoice, line.product_uom_qty, 'Quantity to invoice should be same as ordered quantity')
+                self.assertEqual(line.qty_invoiced, 0.0, 'Invoiced quantity should be zero as no any invoice created for SO')
+                self.assertEqual(line.untaxed_amount_to_invoice, line.product_uom_qty * line.price_unit, "The amount to invoice should the total of the line, as the line is confirmed")
+                self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as the line is confirmed")
+
+        invoice.button_draft()
         invoice.action_post()
 
         # Check quantity to invoice on SO lines
@@ -1230,10 +1245,10 @@ class TestSaleToInvoice(TestSaleCommon):
         inv = self.sale_order._create_invoices()
 
         # Check the invoice line names
-        self.assertEqual(inv.invoice_line_ids[0].name, f"{so.order_line[0].product_id.display_name} {so.order_line[0].name}", "When the description doesn't contain the product name, it should be added to the invoice line name")
+        self.assertEqual(inv.invoice_line_ids[0].name, f"{so.order_line[0].product_id.display_name}\n{so.order_line[0].name}", "When the description doesn't contain the product name, it should be added to the invoice line name")
         self.assertEqual(inv.invoice_line_ids[1].name, f"{so.order_line[1].name}", "When the description is the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[2].name, f"{so.order_line[2].name}", "When description contains the product name, the invoice line name should only be the description")
-        self.assertEqual(inv.invoice_line_ids[3].name, f"{so.order_line[3].product_id.display_name} {so.order_line[3].name}", "When the product name contains the description, the invoice line name should contain the product name and the description")
+        self.assertEqual(inv.invoice_line_ids[3].name, f"{so.order_line[3].product_id.display_name}\n{so.order_line[3].name}", "When the product name contains the description, the invoice line name should contain the product name and the description")
 
     def test_credit_note_automatic_matching(self):
         sale_order = self.env['sale.order'].create({

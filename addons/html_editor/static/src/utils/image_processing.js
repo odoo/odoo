@@ -8,6 +8,27 @@ import { getImageSrc } from "./image";
 export const cropperDataFields = ["x", "y", "width", "height", "rotate", "scaleX", "scaleY"];
 export const cropperDataFieldsWithAspectRatio = [...cropperDataFields, "aspectRatio"];
 export const isGif = (mimetype) => mimetype === "image/gif";
+
+let _isWebGLEnabled;
+/**
+ * Cacheable check telling whether the current browser can allocate a WebGL context.
+ */
+export function isWebGLEnabled() {
+    if (_isWebGLEnabled !== undefined) {
+        return _isWebGLEnabled;
+    }
+    try {
+        const canvas = document.createElement("canvas");
+        _isWebGLEnabled = !!(
+            window.WebGLRenderingContext &&
+            (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+        );
+    } catch {
+        _isWebGLEnabled = false;
+    }
+    return _isWebGLEnabled;
+}
+
 const modifierFields = [
     "filter",
     "quality",
@@ -186,7 +207,7 @@ export async function loadImageInfo(el, attachmentSrc = "") {
     }
 
     const srcUrl = new URL(src, docHref);
-    let relativeSrc = srcUrl.pathname;
+    let relativeSrc = decodeURI(srcUrl.pathname);
 
     let match = relativeSrc.match(/\/(?:web_editor|html_editor)\/image_shape\/(\w+\.\w+)/);
     if (el.dataset.shape && match) {

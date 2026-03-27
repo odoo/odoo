@@ -3,13 +3,15 @@
 # * pos_event
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-14 21:17+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 19:06+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "pos_event/ja/>\n"
 "Language: ja\n"
@@ -21,26 +23,35 @@ msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
-msgid " (%s seats available)"
-msgstr ""
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid " for this slot"
+msgstr " このスロット用"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "--- Select ---"
 msgstr "--- 選択 ---"
 
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.pos_order_form_view_inherit
-msgid "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Badges"
-msgstr "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>イベントバッジを印刷"
+msgid ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Badges"
+msgstr ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>イベントバッジを印刷"
 
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.pos_order_form_view_inherit
-msgid "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Tickets"
-msgstr "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\""
-"/>イベントチケットを印刷"
+msgid ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Tickets"
+msgstr ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>イベントチケットを印"
+"刷"
+
+#. module: pos_event
+#: model_terms:ir.ui.view,arch_db:pos_event.event_registration_ticket_view_form
+msgid "<span class=\"o_stat_text\">PoS Order</span>"
+msgstr "<span class=\"o_stat_text\">PoS オーダ</span>"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
@@ -54,21 +65,38 @@ msgstr "出席者"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
 msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
 msgid "Confirm"
 msgstr "確定"
 
 #. module: pos_event
+#: model:ir.model.fields,field_description:pos_event.field_event_event__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_question__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_slot__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_session__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Error"
 msgstr "エラー"
 
@@ -105,6 +133,11 @@ msgid "Event Registrations"
 msgstr "イベント登録"
 
 #. module: pos_event
+#: model:ir.model,name:pos_event.model_event_slot
+msgid "Event Slot"
+msgstr "イベントスロット"
+
+#. module: pos_event
 #: model:ir.model,name:pos_event.model_event_event_ticket
 #: model:ir.model.fields,field_description:pos_event.field_pos_order_line__event_ticket_id
 msgid "Event Ticket"
@@ -123,15 +156,36 @@ msgstr "イベント"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/screens/product_screen/product_screen.js:0
-msgid "From %s"
-msgstr "%sから"
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+msgid "Global questions"
+msgstr "一般的な質問"
+
+#. module: pos_event
+#: model:ir.model.fields,field_description:pos_event.field_event_event__id
+#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:pos_event.field_event_question__id
+#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__id
+#: model:ir.model.fields,field_description:pos_event.field_event_registration__id
+#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__id
+#: model:ir.model.fields,field_description:pos_event.field_event_slot__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_session__id
+msgid "ID"
+msgstr "ID"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
-msgid "Global questions"
-msgstr "一般的な質問"
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
+msgid "No Slot Selected"
+msgstr "スロットが選択されていません"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "No slots"
+msgstr "スロットなし"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__image_1024
@@ -182,20 +236,40 @@ msgstr "全ページチケットを印刷"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
-msgid "Select tickets for %s"
-msgstr ""
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.js:0
+msgid "Select a slot for %(event)s"
+msgstr "%(event)s用にスロットを選択"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Select tickets for %(event)s"
+msgstr "%(event)s用にチケットを選択"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Select tickets for %(event)s (%(seats)s seats available%(suffix)s)"
+msgstr "%(event)s 用にチケットを選択 (残り%(seats)s 席%(suffix)s)"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "Sold out"
+msgstr "完売"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid ""
 "The selected ticket (%s) is not available. Please select a different ticket."
-msgstr "選択されたチケット (%s) は利用できません。他のチケットを選択して下さい。"
+msgstr ""
+"選択されたチケット (%s) は利用できません。他のチケットを選択して下さい。"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Ticket #"
 msgstr "チケット数"
 
@@ -207,32 +281,47 @@ msgstr "チケットエラー"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Tickets"
 msgstr "チケット"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "Unlimited"
 msgstr "無制限"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/models/pos_order_line.js:0
-msgid ""
-"You cannot change quantity for a line linked with an event registration"
+msgid "You cannot change quantity for a line linked with an event registration"
 msgstr "イベント登録にリンクされた明細の数量を変更することはできません。"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "for"
 msgstr "for"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/generic_components/product_card/product_card.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "left"
 msgstr "左"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "slot"
+msgstr "スロット"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "slots"
+msgstr "スロット"
+
+#~ msgid "From %s"
+#~ msgstr "%sから"

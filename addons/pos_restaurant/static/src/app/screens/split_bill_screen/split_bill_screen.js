@@ -20,6 +20,7 @@ export class SplitBillScreen extends Component {
         this.ui = useService("ui");
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
+        this.isTransferred = false;
         useRouterParamsChecker();
 
         onWillDestroy(() => {
@@ -52,7 +53,8 @@ export class SplitBillScreen extends Component {
             const currentQty = this.qtyTracker[uuid] || 0;
             const nextQty = currentQty === maxQty ? 0 : currentQty + 1;
             this.qtyTracker[uuid] = Math.min(nextQty, maxQty);
-            this.priceTracker[uuid] = (line.getPriceWithTax() / line.qty) * this.qtyTracker[uuid];
+            this.priceTracker[uuid] =
+                (line.prices.total_included / line.qty) * this.qtyTracker[uuid];
             this.setLineQtyStr(line);
         }
     }
@@ -85,23 +87,42 @@ export class SplitBillScreen extends Component {
         return `${latestOrderName.slice(0, -1)}${nextChar}`;
     }
 
+    get totOrderQty() {
+        return this.currentOrder.lines.reduce(
+            (sum, line) => sum + (line.isGlobalDiscountApplicable() ? line.qty : 0),
+            0
+        );
+    }
+
     async paySplittedOrder() {
-        if (this.getNumberOfProducts() > 0) {
+        const totalQty = this.totOrderQty;
+        const selectedQty = this.getNumberOfProducts();
+
+        if (selectedQty > 0 && selectedQty < totalQty) {
             const originalOrder = this.currentOrder;
             await this.createSplittedOrder();
             originalOrder.setScreenData({ name: "SplitBillScreen" });
         }
         this.pos.pay();
     }
+
     async transferSplittedOrder(event) {
         // Prevents triggering the 'startTransferOrder' event listener
         event.stopPropagation();
-        if (this.getNumberOfProducts() > 0) {
+        const totalQty = this.totOrderQty;
+        const selectedQty = this.getNumberOfProducts();
+        if (selectedQty > 0 && selectedQty !== totalQty) {
+            this.isTransferred = true;
             await this.createSplittedOrder();
         }
         this.pos.startTransferOrder();
     }
-
+    async handleDiscountLines(originalOrder, newOrder) {
+        const discountPercentage = originalOrder.globalDiscountPc;
+        if (!this.isTransferred && discountPercentage) {
+            await this.pos.applyDiscount(discountPercentage, newOrder);
+        }
+    }
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
@@ -182,7 +203,7 @@ export class SplitBillScreen extends Component {
         for (const line of lineToDel) {
             line.delete();
         }
-
+        await this.handleDiscountLines(originalOrder, newOrder);
         await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         originalOrder.customer_count -= 1;
         originalOrder.setScreenData({ name: "ProductScreen" });

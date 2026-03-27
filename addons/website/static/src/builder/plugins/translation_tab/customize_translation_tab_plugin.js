@@ -9,18 +9,29 @@ import { uniqueId } from "@web/core/utils/functions";
 import { TranslateWebpageOption } from "./translate_webpage_option";
 
 /**
+ * @typedef { Object } CustomizeTranslationTabShared
+ * @property { CustomizeTranslationTabPlugin['getTranslationState'] } getTranslationState
+ */
+
+/**
  * Action to translate the entire webpage using AI.
  */
 class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
     static dependencies = ["customizeTranslationTab"];
 
+    setup() {
+        this.canTimeout = false;
+    }
+
     async apply() {
         const translationState = this.dependencies.customizeTranslationTab.getTranslationState();
         try {
             translationState.isTranslating = true;
             const language = this.services.website.currentWebsite.metadata.langName;
-            const { translationChunks, translationMap } = this.generateTranslationChunks(this.editable);
+            const { translationChunks, translationMap } = this.generateTranslationChunks(
+                this.editable
+            );
             if (translationChunks) {
                 const responses = await this.runTranslationChunks(translationChunks, language);
                 const failedNodeCount = this.applyTranslationsToDOM(translationMap, responses);
@@ -73,13 +84,14 @@ class TranslateToAction extends BuilderAction {
     generateTranslationChunks(containerEl, limit = 2000) {
         const elements = Array.from(
             containerEl.querySelectorAll("[data-oe-translation-state='to_translate']")
-        ).filter(el => {
-            // TODO: fix `o_frontend_to_backend_buttons` to have no
-            // attribute `data-oe-translation-state`
-            return !el.closest(".o_not_editable, .o_frontend_to_backend_buttons")
+        ).filter(
+            (el) =>
+                // TODO: fix `o_frontend_to_backend_buttons` to have no
+                // attribute `data-oe-translation-state`
+                !el.closest(".o_not_editable, .o_frontend_to_backend_buttons") &&
                 // Skip attribute translations, will handle in task-5047714
-                && !el.classList.contains("o_translatable_attribute");
-        });
+                !el.classList.contains("o_translatable_attribute")
+        );
 
         const translationChunks = [];
         const translationMap = new Map();
@@ -154,8 +166,8 @@ class TranslateToAction extends BuilderAction {
             return rpc(
                 "/html_editor/generate_text",
                 {
-                    'prompt': prompt,
-                    'conversation_history': conversation,
+                    prompt: prompt,
+                    conversation_history: conversation,
                 },
                 { silent: true }
             );
@@ -164,14 +176,20 @@ class TranslateToAction extends BuilderAction {
         // Limit concurrency to avoid
         // "Oops, it looks like our AI is unreachable!" error
         // when too many requests are sent in a short time.
-        const concurrencyLimit = 5;
+        const concurrencyLimit = 3;
         const allResults = [];
         const executing = new Set();
         for (const task of tasks) {
             if (executing.size >= concurrencyLimit) {
                 await Promise.race(executing);
             }
-            const promise = task().finally(() => executing.delete(promise));
+            const promise = task()
+                .catch((error) => {
+                    // Ignore failed request to save successfull ones
+                    console.warn("Translation chunck failed:", error);
+                    return {};
+                })
+                .finally(() => executing.delete(promise));
             executing.add(promise);
             allResults.push(promise);
         }
@@ -187,13 +205,12 @@ class TranslateToAction extends BuilderAction {
      * @return {Number} Count of failed translation nodes
      */
     applyTranslationsToDOM(translationMap, responses) {
-        let numOfFailedTranslationNodes = 0;
+        let numOfFailedTranslationNodes = translationMap.size;
         for (const response of responses) {
             let translations;
             try {
                 translations = JSON.parse(response);
             } catch {
-                numOfFailedTranslationNodes += translationMap.size;
                 continue;
             }
 
@@ -204,9 +221,9 @@ class TranslateToAction extends BuilderAction {
                 }
                 const translated = (text || "").trim();
                 if (!translated) {
-                    numOfFailedTranslationNodes++;
                     continue;
                 }
+                numOfFailedTranslationNodes--;
                 node.textContent = translated;
                 const parentEl = node.parentElement?.closest("[data-oe-translation-state]");
                 if (parentEl) {
@@ -238,6 +255,7 @@ export class CustomizeTranslationTabPlugin extends Plugin {
         isTranslating: false,
     });
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             TranslateToAction,
@@ -245,12 +263,11 @@ export class CustomizeTranslationTabPlugin extends Plugin {
         translate_options: [
             withSequence(
                 1,
-                this.getTranslationOptionBlock("translate-webpage", _t("Translation"), {
-                    OptionComponent: TranslateWebpageOption,
-                    props: {
-                        translationState: this.translationState,
-                    },
-                })
+                this.getTranslationOptionBlock(
+                    "translate-webpage",
+                    _t("Translation"),
+                    TranslateWebpageOption
+                )
             ),
         ],
     };
@@ -264,19 +281,18 @@ export class CustomizeTranslationTabPlugin extends Plugin {
      *
      * @param {string} id - Unique identifier for the block
      * @param {string} name - Display name for the block
-     * @param {Object} options - Configuration options for the block
+     * @param {Object} Option - Option component
      */
-    getTranslationOptionBlock(id, name, options) {
+    getTranslationOptionBlock(id, name, Option) {
         const el = this.document.createElement("div");
         el.dataset.name = name;
         this.document.body.appendChild(el);
 
-        options.selector = "*";
         return {
             id: id,
             snippetModel: {},
             element: el,
-            options: [options],
+            options: [Option],
             isRemovable: false,
             isClonable: false,
             containerTopButtons: [],
@@ -284,5 +300,6 @@ export class CustomizeTranslationTabPlugin extends Plugin {
     }
 }
 
-registry.category("translation-plugins")
+registry
+    .category("translation-plugins")
     .add(CustomizeTranslationTabPlugin.id, CustomizeTranslationTabPlugin);

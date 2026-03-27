@@ -38,16 +38,11 @@ export default class OrderPaymentValidation {
     }
 
     get nextPage() {
-        if (
-            this.pos.config.iface_print_auto &&
-            this.pos.config.iface_print_skip_screen &&
-            this.order.payment_ids[0]?.payment_method_id
-        ) {
+        if (this.pos.config.iface_print_auto && this.pos.config.iface_print_skip_screen) {
             return {
                 page: "FeedbackScreen",
                 params: {
                     orderUuid: this.order.uuid,
-                    paymentMethodId: this.order.payment_ids[0]?.payment_method_id.id,
                 },
             };
         }
@@ -109,7 +104,9 @@ export default class OrderPaymentValidation {
         if ((await this.askBeforeValidation()) === false) {
             return false;
         }
-        await this._askForCustomerIfRequired();
+        if ((await this._askForCustomerIfRequired()) === false) {
+            return false;
+        }
         this.pos.numberBuffer.capture();
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return false;
@@ -132,13 +129,14 @@ export default class OrderPaymentValidation {
             }
 
             await this.shouldHideValidationBehindFeedbackScreen();
+            return true;
         }
 
         return false;
     }
 
     async finalizeValidation() {
-        if (this.order.isPaidWithCash() || this.order.getChange()) {
+        if (this.order.isPaidWithCash() || this.order.change) {
             this.pos.hardwareProxy.openCashbox();
         }
 
@@ -236,11 +234,12 @@ export default class OrderPaymentValidation {
     }
 
     checkCashRoundingHasBeenWellApplied() {
-        const cashRounding = this.pos.config.rounding_method;
-        if (!cashRounding) {
+        const useRound = this.pos.config.hasCashRounding;
+        if (!useRound) {
             return true;
         }
 
+        const cashRounding = this.pos.config.rounding_method;
         const order = this.pos.getOrder();
         const currency = this.pos.currency;
         for (const payment of order.payment_ids) {
@@ -326,7 +325,7 @@ export default class OrderPaymentValidation {
         }
 
         if (
-            !this.pos.currency.isZero(this.order.getTotalWithTax()) &&
+            !this.pos.currency.isZero(this.order.priceIncl) &&
             this.order.payment_ids.length === 0
         ) {
             this.pos.notification.add(_t("Select a payment method to validate the order."));
@@ -339,11 +338,8 @@ export default class OrderPaymentValidation {
 
         // The exact amount must be paid if there is no cash payment method defined.
         if (
-            Math.abs(
-                this.order.getTotalWithTax() -
-                    this.order.getTotalPaid() +
-                    this.order.getRoundingApplied()
-            ) > 0.00001
+            Math.abs(this.order.priceIncl - this.order.amountPaid + this.order.appliedRounding) >
+            0.00001
         ) {
             if (!this.pos.models["pos.payment.method"].some((pm) => pm.is_cash_count)) {
                 this.pos.dialog.add(AlertDialog, {
@@ -359,19 +355,19 @@ export default class OrderPaymentValidation {
         // if the change is too large, it's probably an input error, make the user confirm.
         if (
             !isForceValidate &&
-            this.order.getTotalWithTax() > 0 &&
-            this.order.getTotalWithTax() * 1000 < this.order.getTotalPaid()
+            this.order.priceIncl > 0 &&
+            this.order.priceIncl * 1000 < this.order.amountPaid
         ) {
             this.pos.dialog.add(ConfirmationDialog, {
                 title: _t("Please Confirm Large Amount"),
                 body:
                     _t("Are you sure that the customer wants to  pay") +
                     " " +
-                    this.env.utils.formatCurrency(this.order.getTotalPaid()) +
+                    this.pos.env.utils.formatCurrency(this.order.amountPaid) +
                     " " +
                     _t("for an order of") +
                     " " +
-                    this.env.utils.formatCurrency(this.order.getTotalWithTax()) +
+                    this.pos.env.utils.formatCurrency(this.order.priceIncl) +
                     " " +
                     _t('? Clicking "Confirm" will validate the payment.'),
                 confirm: () => this.validateOrder(true),

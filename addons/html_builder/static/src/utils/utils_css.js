@@ -120,7 +120,7 @@ export function areCssValuesEqual(value1, value2, cssProp, htmlStyle) {
     // to do this: should not we just list the right CSS property explicitly
     // if we want to do this? That would have avoided the CSS variable fix that
     // had to be made here (the '--' part).
-    if (cssProp && cssProp.endsWith('-size') && !cssProp.startsWith('--')) {
+    if (cssProp && cssProp.endsWith("-size") && !cssProp.startsWith("--")) {
         // Avoid re-splitting each part during their individual comparison.
         const pseudoPartProp = cssProp + "-part";
         const re = /-?[0-9.]+(?:e[+|-]?[0-9]+)?\s*[A-Za-z%-]+|auto/g;
@@ -207,7 +207,10 @@ export function areCssValuesEqual(value1, value2, cssProp, htmlStyle) {
         return false;
     }
     const numValue1 = data[0];
-    const numValue2 = convertValueToUnit(value2, data[1], htmlStyle);
+    // Zero values don't need unit conversion (0px === 0rem === 0em === 0)
+    const numValue2 = parseFloat(numValue1) === 0
+        ? getNumericAndUnit(value2)[0]
+        : convertValueToUnit(value2, data[1], htmlStyle);
     return Math.abs(numValue1 - numValue2) < Number.EPSILON;
 }
 /**
@@ -456,7 +459,7 @@ export function setBuilderCSSVariables(htmlStyle) {
 export function parseBoxShadow(value) {
     const regex =
         /(?<color>(rgb(a)?\([^)]*\))|(var\([^)]+\)))\s+(?<offsetX>-?\d+\.?\d*px)\s+(?<offsetY>-?\d+\.?\d*px)\s+(?<blur>-?\d+\.?\d*px)\s+(?<spread>-?\d+\.?\d*px)(?:\s+(?<mode>\w+))?/;
-    return value.match(regex).groups;
+    return value.match(regex)?.groups ?? {};
 }
 
 export function getAllUsedColors(el) {

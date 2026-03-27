@@ -6,7 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 
 const savableSelector = "[data-snippet], a.btn";
 // TODO `so_submit_button_selector` ?
-const savableExclude = ".o_no_save, .s_donation_donate_btn, .s_website_form_send";
+const savableExclude =
+    ".o_no_save, .s_donation_donate_btn, .s_website_form_send, .js_subscribe_btn";
 
 // Checks if the element can be saved as a custom snippet.
 function isSavable(el) {
@@ -15,6 +16,7 @@ function isSavable(el) {
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         get_options_container_top_buttons: withSequence(
             1,
@@ -71,7 +73,7 @@ export class SaveSnippetPlugin extends Plugin {
         );
         if (savedName) {
             const message = _t(
-                "Your custom snippet was successfully saved as %s. Find it in your snippets collection.",
+                "Saved as %s. Find it in your snippets.",
                 markup`<strong>${savedName}</strong>`
             );
             this.services.notification.add(message, {

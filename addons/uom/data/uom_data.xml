@@ -35,6 +35,11 @@
         <field name="relative_factor" eval="8.0"/>
         <field name="relative_uom_id" ref="uom.product_uom_hour"/>
     </record>
+    <record id="product_uom_minute" model="uom.uom">
+        <field name="name">Minutes</field>
+        <field name="relative_factor" eval="0.0166667"/>
+        <field name="relative_uom_id" ref="uom.product_uom_hour"/>
+    </record>
 
     <!-- LENGTH -->
     <record id="product_uom_millimeter" model="uom.uom">
@@ -177,5 +182,11 @@
         <field name="relative_uom_id" ref="uom.product_uom_cubic_inch"/>
         <field name="relative_factor" eval="1728"/>
         <field name="active" eval="False"/>
+    </record>
+
+    <!-- ENERGY -->
+    <record id="product_uom_kwh" model="uom.uom">
+        <field name="name">KWH</field>
+        <field name="relative_factor" eval="1.0"/>
     </record>
 </odoo>

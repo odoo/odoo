@@ -40,13 +40,16 @@ class StockMove(models.Model):
         'product.product', 'Product',
         check_company=True,
         domain="[('type', '=', 'consu')]", index=True, required=True)
+    product_category_id = fields.Many2one(
+        'product.category', 'Product Category',
+        related='product_id.categ_id')
     never_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value',
         'template_attribute_value_stock_move_rel',
         'move_id', 'template_attribute_value_id',
         string="Never attribute Values"
     )
-    description_picking = fields.Text(string="Description Of Picking", compute='_compute_description_picking', inverse='_inverse_description_picking')
+    description_picking = fields.Text(string="Description Of Picking", compute='_compute_description_picking', inverse='_inverse_description_picking', compute_sudo=True)
     description_picking_manual = fields.Text(readonly=True)
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
@@ -175,6 +178,7 @@ class StockMove(models.Model):
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(compute='_compute_is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+    is_date_editable = fields.Boolean("Is Date Editable", compute="_compute_is_date_editable")
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
@@ -187,7 +191,7 @@ class StockMove(models.Model):
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
-    packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, recursive=True, store=True)
+    packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, store=True)
     packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
@@ -264,14 +268,14 @@ class StockMove(models.Model):
         for move in self:
             move.has_lines_without_result_package = move.move_line_ids.result_package_id and any(not line.result_package_id for line in move.move_line_ids)
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.result_package_id.outermost_package_id')
     def _compute_package_ids(self):
         for move in self:
             if move.state in ['done', 'cancel']:
                 move.package_ids = move.move_line_ids.package_history_id.outermost_dest_id
             else:
                 # Only display the top-level packages until the move is done.
-                move.package_ids = move.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+                move.package_ids = move.move_line_ids.result_package_id.outermost_package_id
 
     @api.depends('move_line_ids.picked', 'state')
     def _compute_picked(self):
@@ -303,6 +307,13 @@ class StockMove(models.Model):
                 move.is_locked = move.picking_id.is_locked
             else:
                 move.is_locked = False
+
+    def _compute_is_date_editable(self):
+        for move in self:
+            if move.picking_id:
+                move.is_date_editable = move.picking_id.is_date_editable
+            else:
+                move.is_date_editable = True
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids')
     def _compute_show_details_visible(self):
@@ -579,7 +590,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                     continue
                 if move_update.date_deadline and delta:
                     move_update.date_deadline -= delta
-                else:
+                elif not move_update.date_deadline or move_update.date_deadline != new_deadline:
                     move_update.date_deadline = new_deadline
 
     @api.depends('move_line_ids.lot_id', 'move_line_ids.quantity')
@@ -595,7 +606,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _set_lot_ids(self):
         for move in self:
-            if move.state == 'assigned' and all(ml.lot_id for ml in move.move_line_ids):
+            if move.state == 'assigned' and all(ml.lot_id in move.lot_ids for ml in move.move_line_ids):
                 continue
             move_lines_commands = []
             mls = move.move_line_ids
@@ -611,13 +622,13 @@ Please change the quantity done or the rounding precision in your settings.""",
                         move_line = mls_without_lots[:1]
                         move_lines_commands.append(Command.update(move_line.id, {
                             'lot_id': lot.id,
-                            'product_uom_id': move.product_id.uom_id.id,
+                            'product_uom_id': move.product_id.uom_id.id if move.product_id.tracking == 'serial' else move.product_uom.id,
                             'quantity': 1 if move.product_id.tracking == 'serial' else move.quantity,
                         }))
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
                         reserved_quants = self.env['stock.quant'].with_context(packaging_uom_id=move.packaging_uom_id)._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
-                        if reserved_quants:
+                        if reserved_quants and reserved_quants[0][0].lot_id:
                             move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
                         else:
                             move_line_vals = self._prepare_move_line_vals(quantity=0)
@@ -641,15 +652,10 @@ Please change the quantity done or the rounding precision in your settings.""",
             elif move.picking_type_id.reservation_method == 'manual':
                 move.reservation_date = False
 
-    @api.depends('product_uom', 'move_orig_ids', 'move_dest_ids', 'move_orig_ids.packaging_uom_id', 'move_dest_ids.packaging_uom_id')
+    @api.depends('product_uom')
     def _compute_packaging_uom_id(self):
         for move in self:
-            if move.move_orig_ids.packaging_uom_id:
-                move.packaging_uom_id = move.move_orig_ids[0].packaging_uom_id
-            elif move.move_dest_ids.packaging_uom_id:
-                move.packaging_uom_id = move.move_dest_ids[0].packaging_uom_id
-            else:
-                move.packaging_uom_id = move.product_uom
+            move.packaging_uom_id = move.product_uom
 
     @api.depends('product_uom_qty', 'packaging_uom_id')
     def _compute_packaging_uom_qty(self):
@@ -897,6 +903,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'res_id': self.id,
             'context': dict(
                 self.env.context,
+                allow_parent_move_picked_reset=True,
             ),
         }
 
@@ -1068,15 +1075,15 @@ Please change the quantity done or the rounding precision in your settings.""",
             lot_qties = [1] * len(lot_names)
 
         vals_list = []
+        loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
+        product = self.env['product.product'].browse(default_vals['product_id'])
         for lot, qty in zip(lot_names, lot_qties):
             if not lot.get('quantity'):
                 lot['quantity'] = qty
-            loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
-            product = self.env['product.product'].browse(default_vals['product_id'])
-            loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
+            putaway_loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
             vals_list.append({**default_vals,
                              **lot,
-                             'location_dest_id': loc_dest.id,
+                             'location_dest_id': putaway_loc_dest.id,
                              'product_uom_id': product.uom_id.id,
                             })
         if default_vals.get('picking_type_id'):
@@ -1093,6 +1100,19 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'id': value,
                         'display_name': self.env['stock.move.line'][key].browse(value).display_name
                     }
+        if product.lot_sequence_id and first_lot:
+            current_sequence = product.lot_sequence_id._get_current_sequence()
+            increment = product.lot_sequence_id.number_increment
+            first_number = current_sequence.number_next_actual - increment
+            final_number = first_number
+            # Since the value might have been incremented by the "New" button of the "Generate Serial Numbers" wizard
+            # we need to consider both the decremented and the current value of the sequence
+            if first_lot == product.lot_sequence_id.get_next_char(first_number):
+                final_number = first_number + len(lot_qties)
+            elif first_lot == product.lot_sequence_id.get_next_char(first_number + increment):
+                final_number = first_number + increment + len(lot_qties)
+            if first_number != final_number:
+                current_sequence.sudo().write({'number_next_actual': final_number})
         return vals_list
 
     def _push_apply(self):
@@ -1111,15 +1131,17 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
                 warehouse_id = False
 
+            related_packages = self.env['stock.package'].search_fetch([('id', 'parent_of', move.move_line_ids.result_package_id.ids)], ['package_type_id'])
+
             rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
-                'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
+                'route_ids': move.route_ids | related_packages.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
             })
 
             excluded_rule_ids = []
             while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
                 excluded_rule_ids.append(rule.id)
                 rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
-                    'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
+                    'route_ids': move.route_ids | related_packages.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
                     'domain': [('id', 'not in', excluded_rule_ids)],
                 })
 
@@ -1197,7 +1219,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         float_precision = {f_name: (self.env['stock.move']._fields[f_name].get_digits(self.env) or (False, 2))[1] for f_name in float_fields}
         if 'price_unit' in float_fields:
             price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-            currency_precision = self.company_id.currency_id.decimal_places
+            currency_precision = min(self.company_id.mapped('currency_id.decimal_places')) if self.company_id else False
             float_precision['price_unit'] = min(currency_precision, price_unit_prec) if currency_precision else price_unit_prec
 
         def _get_formatted_float_fields(move, f_name, precision):
@@ -1358,8 +1380,8 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _key_assign_picking(self):
         self.ensure_one()
         keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id)
-        if self.partner_id and not self.reference_ids:
-            keys += (self.partner_id, )
+        if self.move_orig_ids.picking_id and not self.reference_ids:
+            keys += (self.move_orig_ids.picking_id, )
         return keys
 
     def _search_picking_for_assignation_domain(self):
@@ -1370,12 +1392,12 @@ Please change the quantity done or the rounding precision in your settings.""",
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
-        if self.partner_id and not self.reference_ids:
-            domain += [('partner_id', '=', self.partner_id.id)]
         return domain
 
     def _search_picking_for_assignation(self):
         self.ensure_one()
+        if not self.reference_ids:
+            return self.env['stock.picking']
         domain = self._search_picking_for_assignation_domain()
         picking = self.env['stock.picking'].search(domain, limit=1)
         return picking
@@ -1418,14 +1440,11 @@ Please change the quantity done or the rounding precision in your settings.""",
         if any(picking.partner_id != m.partner_id for m in self):
             vals['partner_id'] = False
         if any(picking.origin != m.origin for m in self):
-            current_origins = set(picking.origin.split(',') + [False]) if picking.origin else {False}
-            vals['origin'] = picking.origin
-            for move in self:
-                if move.origin not in current_origins:
-                    if not vals['origin']:
-                        vals['origin'] = move.origin
-                    else:
-                        vals['origin'] += f',{move.origin}'
+            current_origins = picking.origin.split(',') if picking.origin else []
+            new_moves_origins = [move.origin for move in self if move.origin]
+            new_origin = ','.join(OrderedSet(current_origins + new_moves_origins))
+            if picking.origin != new_origin:
+                vals['origin'] = new_origin
         return vals
 
     def _assign_picking_post_process(self, new=False):
@@ -1652,6 +1671,12 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         return quantities
 
+    def _get_partner_id(self):
+        self.ensure_one()
+        if self.location_id == self.env.company.internal_transit_location_id:
+            return self.location_dest_id.warehouse_id.partner_id.id
+        return self.partner_id.id
+
     def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other componenets that will be created from a stock rule
         comming from a stock move. This method could be override in order to add other custom key that could
@@ -1661,13 +1686,16 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         product_id = self.product_id.with_context(lang=self._get_lang())
         dates_info = {'date_planned': self._get_mto_procurement_date()}
-        route = []
+        route = self.route_ids
+        if not route:
+            related_packages = self.env['stock.package'].search_fetch([('id', 'parent_of', self.move_line_ids.result_package_id.ids)], ['package_type_id'])
+            route = related_packages.package_type_id.route_ids
         if self.location_id.warehouse_id and self.location_id.warehouse_id.lot_stock_id.parent_path in self.location_id.parent_path:
-            dates_info = self.product_id._get_dates_info(self.date, self.location_id, route_ids=self.route_ids)
+            dates_info = self.product_id._get_dates_info(self.date, self.location_id, route_ids=route)
         warehouse = self.warehouse_id or self.picking_type_id.warehouse_id
         if not self.location_id.warehouse_id:
-            warehouse = self.env['stock.warehouse']
-            route = self.route_ids or self.move_line_ids.result_package_id.package_type_id.route_ids
+            warehouse = self.rule_id.route_id.supplier_wh_id
+
         move_dest_ids = False
         if self.procure_method == "make_to_order":
             move_dest_ids = self
@@ -1679,6 +1707,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'date_order': dates_info.get('date_order'),
             'date_deadline': self.date_deadline,
             'move_dest_ids': move_dest_ids,
+            'partner_id': self._get_partner_id() if self.rule_id.procure_method in ('make_to_order', 'mts_else_mto') else False,
             'route_ids': route,
             'warehouse_id': warehouse,
             'priority': self.priority,
@@ -1976,7 +2005,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
                         move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
-                        taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
+                        if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
+                            taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
                     if all_move_line_vals:
                         self.env['stock.move.line'].create(all_move_line_vals)
 
@@ -2021,7 +2051,13 @@ Please change the quantity done or the rounding precision in your settings.""",
             if move.propagate_cancel:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
-                    move.move_dest_ids.filtered(lambda m: m.state != 'done' and move.location_dest_id == m.location_id)._action_cancel()
+                    move_dest_to_cancel = move.move_dest_ids.filtered(lambda m: m.state != 'done' and move.location_dest_id == m.location_id)
+                    move_dest_to_cancel._action_cancel()
+                    # Unlink from dest if dest is not in the chain
+                    (move.move_dest_ids - move_dest_to_cancel).write({
+                        'procure_method': 'make_to_stock',
+                        'move_orig_ids': [Command.unlink(move.id)]
+                    })
                     if cancel_moves_origin:
                         move.move_orig_ids.sudo().filtered(lambda m: m.state != 'done')._action_cancel()
             else:
@@ -2031,11 +2067,17 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'procure_method': 'make_to_stock',
                         'move_orig_ids': [Command.unlink(move.id)]
                     })
+        if not self.env.context.get('skip_cancel_activity'):
+            # log an activity on the non-cancelled origin to warn the user that some actions might be required
+            moves_to_cancel._log_cancel_activity()
         moves_to_cancel.write({
             'move_orig_ids': [(5, 0, 0)],
             'procure_method': 'make_to_stock',
         })
         return True
+
+    def _log_cancel_activity(self):
+        return
 
     def _skip_push(self):
         return self.is_inventory or (
@@ -2081,7 +2123,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                 .move_line_ids.filtered(lambda ml: ml.picked).mapped('result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.filtered(lambda q: q.product_uom_id.compare(q.quantity, 0.0) > 0).mapped('location_id')) > 1:
-                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+                error_msg = _(
+                    'You cannot move the same package content more than once in the same transfer'
+                    ' or split the same package into two location.'
+                )
+                package_msg = _("\nPackage: %s", result_package.name)
+                raise UserError(error_msg + package_msg)
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
@@ -2202,6 +2249,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         new_product_qty = self.product_id.uom_id._compute_quantity(max(0, self.product_qty - qty), self.product_uom, round=False)
         new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit'))
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
+        self._recompute_state()
         return new_move_vals
 
     def _post_process_created_moves(self):
@@ -2260,45 +2308,90 @@ Please change the quantity done or the rounding precision in your settings.""",
         else:
             return []
 
+    def _get_report_description_picking(self):
+        self.ensure_one()
+        description = self.description_picking or ""
+        if description.startswith(self.product_id.display_name):
+            description = description.removeprefix(self.product_id.display_name).strip()
+        return description
+
     def _set_quantity_done_prepare_vals(self, qty):
+        def _move_qty(qty):
+            return self.product_id.uom_id._compute_quantity(qty, self.product_uom, round=False)
+
+        self.ensure_one()
         res = []
+        qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id, round=False)
+        total_qty = qty
+        consumed_quant = set()
         for ml in self.move_line_ids:
             ml_qty = ml.quantity
-            if self.product_uom.is_zero(qty):
-                res.append((2, ml.id))
+            if ml.product_uom_id.compare(ml_qty, 0) < 0:
                 continue
-            if (qty_comparison := ml.product_uom_id.compare(ml_qty, 0)) < 0:
-                continue
-            elif qty_comparison == 0:
-                # Convert qty into move line uom
-                if ml.product_uom_id != self.product_uom:
-                    qty = self.product_uom._compute_quantity(qty, ml.product_uom_id, round=False)
-                return [Command.update(ml.id, {'quantity': qty})]
-            # Convert move line qty into move uom
-            if ml.product_uom_id != self.product_uom:
-                ml_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
 
+            if ml.product_uom_id != self.product_id.uom_id:
+                ml_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_id.uom_id, round=False)
+
+            if self.product_uom.is_zero(_move_qty(qty)):
+                res.append(Command.delete(ml.id))
+                continue
+
+            if ml.product_id.uom_id.compare(ml_qty, qty) > 0:
+                if ml.product_uom_id != self.product_id.uom_id:
+                    qty = ml.product_id.uom_id._compute_quantity(qty, ml.product_uom_id, round=False)
+                res.append(Command.update(ml.id, {'quantity': qty}))
+                qty = 0
+                continue
+
+            if ml.result_package_id:
+                qty -= ml_qty
+                continue
+            # remove what already on the line
             taken_qty = min(qty, ml_qty)
-            # Convert taken qty into move line uom
-            if ml.product_uom_id != self.product_uom:
-                taken_qty = self.product_uom._compute_quantity(taken_qty, ml.product_uom_id, round=False)
-
-            # Assign qty_done and explicitly round to make sure there is no inconsistency between
-            # ml.qty_done and qty.
-            taken_qty = ml.product_uom_id.round(taken_qty)
-            res.append((1, ml.id, {'quantity': taken_qty}))
-            if ml.product_uom_id != self.product_uom:
-                taken_qty = ml.product_uom_id._compute_quantity(taken_qty, self.product_uom, round=False)
             qty -= taken_qty
+            if self.product_uom.compare(_move_qty(qty), 0) <= 0:
+                continue
 
-        if self.product_uom.compare(qty, 0.0) > 0:
+            # find a quant similar to the move line on which we can reserve
+            ml_quants = self.env['stock.quant']._get_reserve_quantity(self.product_id,
+                                                                      ml.location_id,
+                                                                      qty,
+                                                                      lot_id=ml.lot_id,
+                                                                      package_id=ml.package_id,
+                                                                      owner_id=ml.owner_id,
+                                                                      strict=True)
+            avail_qty = sum(q[1] for q in ml_quants)
+            # the quant did not add the quantity reserved on this specific move line
+            consumed_quant |= {q[0].id for q in ml_quants}
+            if self.product_uom.compare(avail_qty, qty) <= 0:
+                qty -= avail_qty  # decrease the target quantity for the next move lines
+                avail_qty += ml_qty  # add the actual move line quantity as we will update it and not `+=` it
+                if ml.product_uom_id != self.product_id.uom_id:
+                    avail_qty = ml.product_id.uom_id._compute_quantity(avail_qty, ml.product_uom_id, round=False)
+                res.append(Command.update(ml.id, {'quantity': avail_qty}))
+
+        # First reserve on quants
+        if self.product_uom.compare(_move_qty(qty), 0.0) > 0:
+            quants = self.env['stock.quant']._get_reserve_quantity(self.product_id, self.location_id, total_qty)
+            for quant, avail_qty in quants:
+                if quant.id in consumed_quant:
+                    continue
+                # compare the stock move quantity with the product free quantity
+                taken_qty = min(qty, avail_qty)
+                qty -= taken_qty
+                res.append(Command.create(self._prepare_move_line_vals(quantity=taken_qty, reserved_quant=quant)))
+                if self.product_id.uom_id.compare(_move_qty(qty), 0.0) <= 0:
+                    break
+
+        # If quant is not enough, create a(some) move lines from the move itself
+        if self.product_uom.compare(_move_qty(qty), 0.0) > 0:
             if self.product_id.tracking != 'serial':
+                qty = _move_qty(qty)
                 vals = self._prepare_move_line_vals(quantity=0)
                 vals['quantity'] = qty
                 res.append((0, 0, vals))
             else:
-                uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
-                for _i in range(0, int(uom_qty)):
+                for _i in range(0, int(qty)):
                     vals = self._prepare_move_line_vals(quantity=0)
                     vals['quantity'] = 1
                     vals['product_uom_id'] = self.product_id.uom_id.id

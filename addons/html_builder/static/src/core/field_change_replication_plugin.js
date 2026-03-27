@@ -2,10 +2,15 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {((arg: { sourceEl: HTMLElement, targetEl: HTMLElement }) => void)[]} after_replication_handlers
+ */
+
 export class FieldChangeReplicationPlugin extends Plugin {
     static id = "fieldChangeReplication";
     static dependencies = ["dom"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         handleNewRecords: this.handleMutations.bind(this),
         normalize_handlers: withSequence(9000, this.normalizeHandler.bind(this)),
@@ -16,9 +21,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
     }
 
     /**
-     * @typedef { import("./history_plugin").HistoryMutationRecord } HistoryMutationRecord
-     *
-     * @param { HistoryMutationRecord[] } records
+     * @param { import("@html_editor/core/history_plugin").HistoryMutationRecord[] } records
      */
     handleMutations(records) {
         records
@@ -89,6 +92,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
             );
             if (targetEls.length) {
                 const cloneEl = sourceEl.cloneNode(true);
+                cloneEl.toggleAttribute("contenteditable", sourceEl.isContentEditable);
                 this.dependencies.dom.removeSystemProperties(cloneEl);
                 this.dispatchTo("clean_for_save_handlers", { root: cloneEl });
                 for (const targetEl of targetEls) {
@@ -106,6 +110,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
                             touchedEls.add(targetEl);
                         }
                     }
+                    this.dispatchTo("after_replication_handlers", { sourceEl, targetEl });
                 }
             }
         }

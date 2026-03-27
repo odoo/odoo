@@ -4,16 +4,18 @@
 #
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022, 2025.
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-14 08:05+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-03-17 22:06+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/hr_skills/"
 "nl/>\n"
 "Language: nl\n"
@@ -21,13 +23,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_skills
 #. odoo-python
 #: code:addons/hr_skills/models/hr_skill_type.py:0
-msgid "%s (copy)"
-msgstr "%s (kopie)"
+msgid "%(skill_type_name)s (copy)"
+msgstr "%(skill_type_name)s (kopie)"
 
 #. module: hr_skills
 #: model:ir.actions.report,print_report_name:hr_skills.action_report_employee_cv
@@ -55,6 +57,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Pijlicoon\" "
+"title=\"Pijl\"/>"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_7
@@ -154,7 +158,7 @@ msgstr "Arroyo Ltd"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_chs_avoca_primary_school
@@ -240,12 +244,12 @@ msgstr "Categorie"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__certificate_file
 msgid "Certificate"
-msgstr ""
+msgstr "Certificaat"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__certificate_filename
 msgid "Certificate Filename"
-msgstr ""
+msgstr "Bestandsnaam certificaat"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_employee_certification_report_action
@@ -367,22 +371,22 @@ msgstr "Publicitaire copywriter"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__is_course
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__is_course
 msgid "Course"
-msgstr ""
+msgstr "Cursus"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__course_type
 msgid "Course Type"
-msgstr ""
+msgstr "Cursustype"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_resume_line_type_tree_view
 msgid "Course?"
-msgstr ""
+msgstr "Cursus?"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_learnings_training_attendances_courses
 msgid "Courses"
-msgstr ""
+msgstr "Cursussen"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_ngh_craigmore_south_junior_primary_school
@@ -451,7 +455,7 @@ msgstr "Huidige werknemer"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_job__current_job_skill_ids
 msgid "Current Job Skill"
-msgstr ""
+msgstr "Huidige functievaardigheid"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_certification_report_view_list
@@ -587,6 +591,12 @@ msgid "Discard"
 msgstr "Negeren"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_certification_page
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_certification_page
+msgid "Display Certification Page"
+msgstr "Certificeringspagina weergeven"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_certification_report__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__display_name
@@ -605,7 +615,7 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_warning_message
@@ -737,7 +747,7 @@ msgstr "Evans, Cooper and White"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.view_hr_job_form
 msgid "Expected Skills"
-msgstr ""
+msgstr "Verwachte vaardigheden"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
@@ -748,7 +758,7 @@ msgstr "Ervaring"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.xml:0
 msgid "Experience -"
-msgstr ""
+msgstr "Ervaring -"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_certification_report_view_search
@@ -758,12 +768,12 @@ msgstr "Verlopen certificering"
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__course_type__external
 msgid "External"
-msgstr ""
+msgstr "Extern"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__external_url
 msgid "External URL"
-msgstr ""
+msgstr "Externe URL"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_jep_cole_ltd
@@ -793,7 +803,7 @@ msgstr "Vloeiend"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Forever"
-msgstr ""
+msgstr "Voor altijd"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_jgo_fox_and_sons
@@ -862,7 +872,7 @@ msgstr "Glasblazer/-ontwerper"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_go
 msgid "Go"
-msgstr "Ga"
+msgstr "Go"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_jth_goodman_inc
@@ -1014,7 +1024,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "If skills are missing, they can be created by an HR officer."
-msgstr "Ontbrekende vaardigheden kunnen worden gemaakt door een HR-medewerker."
+msgstr "Als er vaardigheden ontbreken, kan een HR-medewerker ze toevoegen."
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_report__active
@@ -1085,7 +1095,7 @@ msgstr "Functie"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_job
 msgid "Job Position"
-msgstr ""
+msgstr "Functie"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_4
@@ -1412,7 +1422,7 @@ msgstr "Nieuw"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.js:0
 msgid "New Resume Line"
-msgstr ""
+msgstr "Nieuwe cv-regel"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_nosql
@@ -1432,7 +1442,7 @@ msgstr "Norton-Silva"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_resume_line_list_view
 msgid "Number of Hours"
-msgstr ""
+msgstr "Aantal uren"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__levels_count
@@ -1473,7 +1483,7 @@ msgstr "Overige"
 #. module: hr_skills
 #: model:hr.resume.line.type,name:hr_skills.resume_type_experience
 msgid "Other Experience"
-msgstr ""
+msgstr "Andere ervaring"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_others
@@ -1523,7 +1533,7 @@ msgstr "Personeelsfunctionaris"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_persuasion
 msgid "Persuasion"
-msgstr "Overtuiging"
+msgstr "Overtuigingskracht"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_vad_loganmartin
@@ -1559,7 +1569,7 @@ msgstr "Portugees"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 msgid "Present"
-msgstr "Huidig"
+msgstr "Aanwezig"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__color_primary
@@ -1584,7 +1594,7 @@ msgstr "Cv afdrukken"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_problem_solving
 msgid "Problem-Solving"
-msgstr "Probleemoplossend"
+msgstr "Probleemoplossend denken"
 
 #. module: hr_skills
 #: model:hr.skill.type,name:hr_skills.hr_skill_type_dev
@@ -1630,7 +1640,7 @@ msgstr "Projectbeheer"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__resume_line_properties
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschappen"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_mit_robinson_crawford_and_norman
@@ -1640,7 +1650,7 @@ msgstr "Psychiatrisch verpleegkundige"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
 msgid "Public Employee"
-msgstr "Openbare werknemer"
+msgstr "Ambtenaar"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_public
@@ -1686,7 +1696,7 @@ msgstr "Vindingrijkheid"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_resource_resource
 msgid "Resources"
-msgstr "Middelen"
+msgstr "Resources"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
@@ -1707,17 +1717,17 @@ msgstr "Cv %s"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.view_resume_lines_filter
 msgid "Resume Lines"
-msgstr ""
+msgstr "Cv-regels"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_resume_line_list_view
 msgid "Resume Section"
-msgstr ""
+msgstr "Cv-sectie"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
 msgid "Resume Sections"
-msgstr ""
+msgstr "Cv-secties"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
@@ -1824,12 +1834,12 @@ msgstr "Bedrijfssecretaris"
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Sections"
-msgstr ""
+msgstr "Secties"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__resume_line_type_properties_definition
 msgid "Sections Properties"
-msgstr ""
+msgstr "Eigenschappen van secties"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -1847,7 +1857,7 @@ msgstr "Selecteren & Nieuw"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/one2many_tags_skills/one2many_tags_skills.js:0
 msgid "Select Skills"
-msgstr ""
+msgstr "Selecteer vaardigheden"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
@@ -1967,7 +1977,7 @@ msgstr "Vaardigheden"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Skills & Certifications"
-msgstr ""
+msgstr "Vaardigheden en certificaten"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_department_view_kanban
@@ -1989,13 +1999,15 @@ msgstr "Vaardighedenrapport"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_job_skill
 msgid "Skills for job positions"
-msgstr ""
+msgstr "Vaardigheden voor functies"
 
 #. module: hr_skills
 #: model:ir.actions.server,name:hr_skills.hr_job_skills_cron_add_certification_activity_to_employees_ir_actions_server
 msgid ""
 "Skills: Add an activity to employees with missing or expiring certifications"
 msgstr ""
+"Vaardigheden: Een activiteit toevoegen aan werknemers met ontbrekende of "
+"aflopende certificeringen"
 
 #. module: hr_skills
 #: model:hr.skill.type,name:hr_skills.hr_skill_type_softskill
@@ -2199,7 +2211,7 @@ msgstr "Thomas Chirnside Primary School"
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_time_management
 msgid "Time Management"
-msgstr "Tijdbeheer"
+msgstr "Timemanagement"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -2218,7 +2230,7 @@ msgstr "Titel"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_view_list
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
 msgid "To"
-msgstr "Aan"
+msgstr "Tot"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_jgo_tottenham_central_school
@@ -2233,18 +2245,18 @@ msgstr "Onderzoeksmedewerker vakbond"
 #. module: hr_skills
 #: model:hr.resume.line.type,name:hr_skills.resume_type_training
 msgid "Training"
-msgstr ""
+msgstr "Training"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_lines_training_action
 #: model:ir.ui.menu,name:hr_skills.menu_learnings_training_attendances
 msgid "Training Attendances"
-msgstr ""
+msgstr "Gevolgde trainingen"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_resume_line_list_view
 msgid "Training Title"
-msgstr ""
+msgstr "Titel training"
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_jep_trinity_college
@@ -2296,8 +2308,8 @@ msgstr "Vaardigheden"
 
 #. module: hr_skills
 #: model:mail.activity.type,summary:hr_skills.mail_activity_data_upload_certification
-msgid "Upload a document for a missing certification"
-msgstr ""
+msgid "Upload a certification"
+msgstr "Certificering uploaden"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_urdu
@@ -2326,7 +2338,7 @@ msgstr "Begin geldigheid"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_individual_skill_mixin__valid_to
 #: model:ir.model.fields,field_description:hr_skills.field_hr_job_skill__valid_to
 msgid "Validity Stop"
-msgstr "Geldigheid stop"
+msgstr "Einde geldigheid"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_virtualization_containerization
@@ -2410,7 +2422,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_skills/models/hr_employee.py:0
 msgid "You cannot access the resume of this employee."
-msgstr ""
+msgstr "Je hebt geen toegang tot het cv van deze werknemer."
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
@@ -2430,18 +2442,18 @@ msgstr "bijv. Odoo Inc."
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "e.g. https://duolingo.com/course/xyz"
-msgstr ""
+msgstr "bv. https://duolingo.com/course/xyz"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "hours"
-msgstr ""
+msgstr "uur"
 
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "hours)"
-msgstr ""
+msgstr "uur)"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__is_certification
@@ -2466,6 +2478,9 @@ msgstr "www.demo.com"
 #: code:addons/hr_skills/models/hr_individual_skill_mixin.py:0
 msgid "• %(skill_name)s from %(valid_from)s to %(valid_to)s"
 msgstr "- %(skill_name)s van %(valid_from)s naar %(valid_to)s"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (kopie)"
 
 #~ msgid "CREATE A NEW ENTRY"
 #~ msgstr "EEN NIEUWE REGEL MAKEN"

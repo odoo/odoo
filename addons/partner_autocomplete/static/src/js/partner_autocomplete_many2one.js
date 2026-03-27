@@ -9,20 +9,20 @@ import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relat
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
 import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
 
-class PartnerMany2XAutocomplete extends Many2XAutocomplete {
+export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
     static components = {
         ...super.components,
         AutoComplete: PartnerAutoComplete,
     };
 }
-class PartnerMany2One extends Many2One {
+export class PartnerMany2One extends Many2One {
     static components = {
         ...super.components,
         Many2XAutocomplete: PartnerMany2XAutocomplete,
     };
 }
 
-class PartnerAutoCompleteMany2one extends Component {
+export class PartnerAutoCompleteMany2one extends Component {
     static template = "partner_autocomplete.PartnerAutoCompleteMany2one";
     static components = { Many2One: PartnerMany2One };
     static props = { ...Many2OneField.props };
@@ -108,15 +108,12 @@ class PartnerAutoCompleteMany2one extends Component {
             context.default_image_1920 = data.logo;
         }
 
-        const unspsc_codes = data.company.unspsc_codes;
-        if(unspsc_codes){
-            context.default_category_id = await this.orm.call("res.partner", "iap_partner_autocomplete_get_tag_ids", [[], unspsc_codes]);
-        }
-
         return this.openRecord({ context });
     }
 }
 
-registry.category("fields").add("res_partner_many2one", {
+export const PartnerAutoCompleteMany2oneField = {
     ...buildM2OFieldDescription(PartnerAutoCompleteMany2one),
-});
+};
+
+registry.category("fields").add("res_partner_many2one", PartnerAutoCompleteMany2oneField);

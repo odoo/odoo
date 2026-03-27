@@ -20,9 +20,9 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.uk',
-                'bank_account_code_prefix': '120001',
-                'cash_account_code_prefix': '999001',
-                'transfer_account_code_prefix': '122001',
+                'bank_account_code_prefix': '1200',
+                'cash_account_code_prefix': '1210',
+                'transfer_account_code_prefix': '1220',
                 'account_default_pos_receivable_account_id': '110400',
                 'income_currency_exchange_account_id': '770000',
                 'expense_currency_exchange_account_id': '770000',
@@ -32,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': '400000',
                 'deferred_expense_account_id': '110300',
                 'deferred_revenue_account_id': '210900',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': '100100',
             },
         }
 
@@ -39,15 +41,23 @@ class AccountChartTemplate(models.AbstractModel):
         """If the company is located in Northern Ireland, activate the relevant taxes and fiscal postions."""
         result = super()._post_load_data(template_code, company, template_data)
 
-        is_ni = {
+        is_ni_state = {
             'base.state_uk18', 'base.state_uk19', 'base.state_uk20', 'base.state_uk21',
             'base.state_uk22', 'base.state_uk23', 'base.state_uk24',
         }.intersection(
             company.state_id._get_external_ids().get(company.state_id.id, [])
         )
 
-        if is_ni:
+        if is_ni_state or company.country_id.code == 'XI':
             for xmlid in ['PT8', 'ST4', 'PT7', 'account_fiscal_position_ni_to_eu_b2b']:
                 self.ref(xmlid).active = True
 
         return result
+
+    @template('uk', 'account.account')
+    def _get_uk_account_account(self):
+        return {
+            '100100': {
+                'account_stock_variation_id': '630000',
+            },
+        }

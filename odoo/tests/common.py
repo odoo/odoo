@@ -7,9 +7,11 @@ helpers and classes to write tests.
 from __future__ import annotations
 
 import base64
+import binascii
 import concurrent.futures
 import contextlib
 import difflib
+import functools
 import importlib
 import inspect
 import itertools
@@ -19,6 +21,7 @@ import os
 import pathlib
 import platform
 import pprint
+import psutil
 import re
 import shutil
 import signal
@@ -117,9 +120,9 @@ DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
 IGNORED_MSGS = re.compile(r"""
-    (?: failed\ to\ fetch  # base error
-      | connectionlosterror:  # conversion by offlineFailToFetchErrorHandler
-    )
+    failed\ to\ fetch  # base error
+  | connectionlosterror:  # conversion by offlineFailToFetchErrorHandler
+  | assetsloadingerror: # lazy loaded bundle
 """, flags=re.VERBOSE | re.IGNORECASE).search
 
 def get_db_name():
@@ -381,13 +384,22 @@ class BaseCase(case.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        def check_remaining_processes():
+            current_process = psutil.Process()
+            children = current_process.children(recursive=False)
+            for child in children:
+                _logger.warning('A child process was found, terminating it: %s', child)
+                child.terminate()
+            psutil.wait_procs(children, timeout=10)  # mainly to avoid a zombie process that would be logged again at the end.
+        cls.addClassCleanup(check_remaining_processes)
+
         def check_remaining_patchers():
             for patcher in _patch._active_patches:
                 _logger.warning("A patcher (targeting %s.%s) was remaining active at the end of %s, disabling it...", patcher.target, patcher.attribute, cls.__name__)
                 patcher.stop()
         cls.addClassCleanup(check_remaining_patchers)
         super().setUpClass()
-        if 'standard' in cls.test_tags:
+        if 'standard' in cls.test_tags or 'click_all' in cls.test_tags:
             # if the method is passed directly `patch` discards the session
             # object which we need
             # pylint: disable=unnecessary-lambda
@@ -1239,16 +1251,17 @@ def run(gen_func):
     except StopIteration:
         return
 
-def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot', date_format="%Y%m%d_%H%M%S_%f"):
+
+def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot', date_format="%Y%m%d_%H%M%S_%f", loglevel=logging.RUNBOT, directory=''):
     assert re.fullmatch(r'\w*_', prefix)
     assert re.fullmatch(r'[a-z]+', extension)
     assert re.fullmatch(r'\w+', test_name)
     now = datetime.now().strftime(date_format)
-    screenshots_dir = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / 'screenshots'
-    screenshots_dir.mkdir(parents=True, exist_ok=True)
-    full_path = screenshots_dir / f'{prefix}{now}_{test_name}.{extension}'
+    dest = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / directory
+    dest.mkdir(parents=True, exist_ok=True)
+    full_path = dest / f'{prefix}{now}_{test_name}.{extension}'
     full_path.write_bytes(content)
-    logger.runbot(f'{document_type} in: {full_path}')
+    logger.log(loglevel, "%s in: %s", document_type, full_path)
 
 
 if os.name == 'posix' and platform.system() != 'Darwin':
@@ -1267,34 +1280,45 @@ class ChromeBrowser:
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
     def __init__(self, test_case: HttpCase, success_signal: str = DEFAULT_SUCCESS_SIGNAL, headless: bool = True, debug: bool = False):
+        self.cleanup = ExitStack()
+        self.throttling_factor = 1
         self._logger = test_case._logger
         self.test_case = test_case
         self.success_signal = success_signal
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
-        self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
-
-        if scs := odoo.tools.config['screencasts']:
-            self.screencaster = Screencaster(self, scs)
-        else:
-            self.screencaster = NoScreencast()
+        self.user_data_dir = self.cleanup.enter_context(
+            tempfile.TemporaryDirectory(
+                suffix='_chrome_odoo',
+                ignore_cleanup_errors=True,
+            )
+        )
+        self.cleanup.callback(
+            self._logger.info,
+            'Removing chrome user profile "%s"',
+            self.user_data_dir,
+        )
 
         if os.name == 'posix':
-            self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
-            signal.signal(signal.SIGXCPU, self.signal_handler)
-        else:
-            self.sigxcpu_handler = None
+            sigxcpu_handler = signal.signal(signal.SIGXCPU, self.signal_handler)
+            self.cleanup.callback(
+                signal.signal, signal.SIGXCPU, sigxcpu_handler)
 
         test_case.browser_size = test_case.browser_size.replace('x', ',')
 
-        self.chrome, self.devtools_port = self._chrome_start(
+        self.chrome, self.devtools_port = self.cleanup.enter_context(self._chrome_start(
             user_data_dir=self.user_data_dir,
             touch_enabled=test_case.touch_enabled,
             headless=headless,
             debug=debug,
-        )
-        self.ws = self._open_websocket()
+        ))
+        self.ws = self.cleanup.enter_context(self._open_websocket())
+        if scs := odoo.tools.config['screencasts']:
+            self.screencaster = self.cleanup.enter_context(Screencaster(self, scs))
+        else:
+            self.screencaster = self.cleanup.enter_context(NoScreencast())
+
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
@@ -1334,18 +1358,10 @@ class ChromeBrowser:
         }
         emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
         self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
+        self.cleanup.callback(self._ws_winddown)
 
-    def signal_handler(self, sig, frame):
-        if sig == signal.SIGXCPU:
-            _logger.info('CPU time limit reached, stopping Chrome and shutting down')
-            self.stop()
-            exit()
-
-    def stop(self):
-        # method may be called during `_open_websocket`
-        if hasattr(self, 'ws'):
-            self.screencaster.stop()
-
+    def _ws_winddown(self):
+        try:
             self._websocket_request('Page.stopLoading')
             self._websocket_request('Runtime.evaluate', params={'expression': """
             ('serviceWorker' in navigator) &&
@@ -1359,35 +1375,68 @@ class ChromeBrowser:
 
             self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
             self._websocket_request('Browser.close')
-            self._logger.info("Closing websocket connection")
-            self.ws.close()
+        except ChromeBrowserException as e:
+            _logger.runbot("WS error during browser shutdown: %s", e)
+        except Exception:  # noqa: BLE001
+            _logger.warning("Error during browser shutdown", exc_info=True)
 
-        self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
-        self.chrome.terminate()
-        self.chrome.wait(5)
+    def signal_handler(self, sig, frame):
+        if sig == signal.SIGXCPU:
+            _logger.info('CPU time limit reached, stopping Chrome and shutting down')
+            self.stop()
+            exit()
 
-        self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
-        shutil.rmtree(self.user_data_dir, ignore_errors=True)
+    def throttle(self, factor: int | None) -> None:
+        if not factor:
+            return
 
-        # Restore previous signal handler
-        if self.sigxcpu_handler:
-            signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
+        assert 1 <= factor <= 50  # arbitrary upper limit
+        self.throttling_factor = factor
+        self._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': factor})
+
+    def stop(self):
+        self.cleanup.close()
 
     @property
     def executable(self):
-        return _find_executable()
+        try:
+            return _find_executable()
+        except Exception:
+            self._logger.warning('Chrome executable not found')
+            raise
 
     def _spawn_chrome(self, cmd):
         # pylint: disable=subprocess-popen-preexec-fn
-        proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=_preexec)  # noqa: PLW1509
+        proc = subprocess.Popen(
+            cmd,
+            stderr=subprocess.DEVNULL,
+            preexec_fn=_preexec,
+            env={**os.environ, 'TMPDIR': self.user_data_dir},
+        )  # noqa: PLW1509
+
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
             time.sleep(CHECK_BROWSER_SLEEP)
             if port_file.is_file() and port_file.stat().st_size > 5:
                 with port_file.open('r', encoding='utf-8') as f:
                     return proc, int(f.readline())
+
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait()
+        self._logger.warning(
+            'Chrome headless failed to start:\n%s',
+            self.read_log().decode(),
+        )
+        self.stop()
+
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
 
+    @contextlib.contextmanager
     def _chrome_start(
             self,
             user_data_dir: str,
@@ -1410,6 +1459,8 @@ class ChromeBrowser:
             '--disable-translate': '',
             '--no-sandbox': '',
             '--disable-gpu': '',
+            '--enable-unsafe-swiftshader': '',
+            '--mute-audio': '',
         }
         switches = {
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
@@ -1420,6 +1471,8 @@ class ChromeBrowser:
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
+            '--enable-logging': '',
+            '--v': str(int(os.environ.get("ODOO_BROWSER_LOG_VERBOSITY", "0"))),
             '--no-first-run': '',
             # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
@@ -1450,8 +1503,22 @@ class ChromeBrowser:
             raise unittest.SkipTest("%s not found" % cmd[0])
         self._logger.info('Chrome pid: %s', proc.pid)
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
+        try:
+            yield proc, devtools_port
+        finally:
+            self._logger.info("Terminating chrome headless with pid %s", proc.pid)
+            proc.terminate()
+            try:
+                proc.wait(5)
+            except subprocess.TimeoutExpired:
+                self._logger.warning("Killing chrome headless with pid %s: still alive", proc.pid)
+                proc.kill()
 
-        return proc, devtools_port
+    def read_log(self) -> bytes:
+        try:
+            return pathlib.Path(self.user_data_dir, 'chrome_debug.log').read_bytes()
+        except FileNotFoundError:
+            return b''
 
     def _json_command(self, command, timeout=3):
         """Queries browser state using JSON
@@ -1505,6 +1572,7 @@ class ChromeBrowser:
         self.stop()
         raise unittest.SkipTest("Error during Chrome headless connection")
 
+    @contextlib.contextmanager
     def _open_websocket(self):
         version = self._json_command('version')
         self._logger.info('Browser version: %s', version['Browser'])
@@ -1530,7 +1598,11 @@ class ChromeBrowser:
         if ws.getstatus() != 101:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
         ws.settimeout(0.01)
-        return ws
+        try:
+            yield ws
+        finally:
+            self._logger.info("Closing websocket connection")
+            ws.close()
 
     def _receive(self, dbname):
         threading.current_thread().dbname = dbname
@@ -1589,7 +1661,7 @@ class ChromeBrowser:
 
         f = self._websocket_send(method, params=params, with_future=True)
         try:
-            return f.result(timeout=timeout)
+            return f.result(timeout=timeout * self.throttling_factor)
         except concurrent.futures.TimeoutError:
             raise TimeoutError(f'{method}({params or ""})')
 
@@ -1624,7 +1696,7 @@ class ChromeBrowser:
             self._websocket_send(cmd, params={'requestId': params['requestId'], **response})
         except websocket.WebSocketConnectionClosedException:
             pass
-        except (BrokenPipeError, ConnectionResetError):
+        except (BrokenPipeError, ConnectionResetError, OSError):
             # this can happen if the browser is closed. Just ignore it.
             _logger.info("Websocket error while handling request %s", params['request']['url'])
 
@@ -1665,7 +1737,6 @@ class ChromeBrowser:
                 return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
-                self.screencaster.save()
                 try:
                     self._result.set_exception(ChromeBrowserException(message))
                 except CancelledError:
@@ -1730,7 +1801,6 @@ which leads to stray network requests and inconsistencies."""
             return
 
         self.take_screenshot()
-        self.screencaster.save()
         try:
             self._result.set_exception(ChromeBrowserException(message))
         except CancelledError:
@@ -1768,8 +1838,8 @@ which leads to stray network requests and inconsistencies."""
             if not base_png:
                 self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
                 return
-            decoded = base64.b64decode(base_png, validate=True)
-            save_test_file(type(self.test_case).__name__, decoded, prefix, logger=self._logger)
+            decoded = binascii.a2b_base64(base_png)
+            save_test_file(self.test_case._testMethodName, decoded, prefix, logger=self._logger, directory='screenshots')
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
@@ -1787,6 +1857,7 @@ which leads to stray network requests and inconsistencies."""
         self._websocket_request('Network.deleteCookies', params=params)
 
     def _wait_ready(self, ready_code=None, timeout=60):
+        timeout *= self.throttling_factor
         ready_code = ready_code or "document.readyState === 'complete'"
         self._logger.info('Evaluate ready code "%s"', ready_code)
         start_time = time.time()
@@ -1812,6 +1883,7 @@ which leads to stray network requests and inconsistencies."""
         return False
 
     def _wait_code_ok(self, code, timeout, error_checker=None):
+        timeout *= self.throttling_factor
         self.error_checker = error_checker
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
@@ -1823,21 +1895,35 @@ which leads to stray network requests and inconsistencies."""
             raise ChromeBrowserException("Running code returned an error: %s" % res)
 
         err = ChromeBrowserException("failed")
+        save_log = functools.partial(
+            save_test_file,
+            self.test_case._testMethodName,
+            self.read_log(),
+            prefix='chrome_log_',
+            extension='txt',
+            document_type="Chrome Log",
+            logger=self._logger,
+            directory='chrome_logs',
+        )
         try:
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
+                save_log(loglevel=logging.INFO)
                 return
         except CancelledError:
             # regular-ish shutdown
+            save_log(loglevel=logging.INFO)
             return
+        except ChromeBrowserException:
+            self.screencaster.save()
+            raise
         except Exception as e:
             err = e
 
+        save_log()
         self.take_screenshot()
         self.screencaster.save()
-        if isinstance(err, ChromeBrowserException):
-            raise err
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
@@ -1933,7 +2019,10 @@ class NoScreencast:
     def start(self):
         pass
 
-    def stop(self):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
     def save(self):
@@ -1963,9 +2052,9 @@ class Screencaster:
         if self.stopped:
             # if already stopped, drop the frames as we might have removed the directory already
             return
-        outfile = self.frames_dir / f'frame_{len(self.frames):05d}.b64'
+        outfile = self.frames_dir / f'frame_{len(self.frames):05d}.png'
         try:
-            outfile.write_text(data)
+            outfile.write_bytes(binascii.a2b_base64(data.encode()))
         except FileNotFoundError:
             return
         self.frames.append({
@@ -1973,13 +2062,18 @@ class Screencaster:
             'timestamp': metadata.get('timestamp')
         })
 
-    def stop(self):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.browser._websocket_send('Page.stopScreencast')
         self.stopped = True
         if self.frames_dir.is_dir():
             shutil.rmtree(self.frames_dir, ignore_errors=True)
 
     def save(self):
+        if self.stopped:
+            return
         self.browser._websocket_send('Page.stopScreencast')
         # Wait for frames just in case, ideally we'd wait for the Browse.close
         # event or something but that doesn't exist.
@@ -1989,15 +2083,13 @@ class Screencaster:
             self._logger.debug('No screencast frames to encode')
             return
 
+        frames, self.frames = self.frames, []
         t = time.time()
         duration = 1/24
         concat_script_path = self.frames_dir.with_suffix('.txt')
         with concat_script_path.open("w") as concat_file:
-            for f, next_frame in zip_longest(self.frames, islice(self.frames, 1, None)):
-                frame = base64.b64decode(f['file_path'].read_bytes(), validate=True)
-                f['file_path'].unlink()
-                frame_file_path = f['file_path'].with_suffix('.png')
-                frame_file_path.write_bytes(frame)
+            for f, next_frame in zip_longest(frames, islice(frames, 1, None)):
+                frame_file_path = f['file_path']
 
                 if f['timestamp'] is not None:
                     end_time = next_frame['timestamp'] if next_frame else t
@@ -2018,7 +2110,7 @@ class Screencaster:
                 '-y', '-loglevel', 'warning',
                 '-f', 'concat', '-safe', '0', '-i', concat_script_path,
                 '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2',
-                '-pix_fmt', 'yuv420p', '-g', '0',
+                '-c:v', 'libx265', '-x265-params', 'lossless=1',
                 outfile,
             ], preexec_fn=_preexec, check=True)
         except subprocess.CalledProcessError:
@@ -2031,6 +2123,9 @@ class Screencaster:
 
 @lru_cache(1)
 def _find_executable():
+    browser_bin_path = os.environ.get('ODOO_BROWSER_BIN')  # used for testing specific Chrome builds
+    if browser_bin_path and os.path.exists(browser_bin_path):
+        return browser_bin_path
     system = platform.system()
     if system == 'Linux':
         for bin_ in ['google-chrome', 'chromium', 'chromium-browser', 'google-chrome-stable']:
@@ -2243,6 +2338,9 @@ class HttpCase(TransactionCase):
 
         start_time = time.time()
         request_threads = get_http_request_threads()
+        if not request_threads:
+            return
+
         self._logger.info('waiting for threads: %s', request_threads)
 
         for thread in request_threads:
@@ -2261,13 +2359,25 @@ class HttpCase(TransactionCase):
         self.session.logout(keep_db=keep_db)
         odoo.http.root.session_store.save(self.session)
 
-    def authenticate(self, user, password, browser: ChromeBrowser = None):
+    def authenticate(self, user, password, *,
+        browser: ChromeBrowser = None, session_extra: dict | None = None):
         if getattr(self, 'session', None):
             odoo.http.root.session_store.delete(self.session)
 
         self.session = session = odoo.http.root.session_store.new()
-        session.update(odoo.http.get_default_session(), db=get_db_name())
+        session.update(
+            odoo.http.get_default_session(),
+            db=get_db_name(),
+            # In order to avoid perform a query to each first `url_open`
+            # in a test (insert `res.device.log`).
+            _trace_disable=True,
+        )
         session.context['lang'] = odoo.http.DEFAULT_LANG
+
+        if session_extra:
+            if extra_ctx := session_extra.pop('context', None):
+                session.context.update(extra_ctx)
+            session.update(session_extra)
 
         if user: # if authenticated
             # Flush and clear the current transaction.  This is useful, because
@@ -2379,6 +2489,7 @@ class HttpCase(TransactionCase):
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
         with self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
             atexit.callback(self._wait_remaining_requests)
+            atexit.enter_context(browser.cleanup)
             if "bus.bus" in self.env.registry:
                 from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler  # noqa: PLC0415
                 from odoo.addons.bus.models.bus import BusBus  # noqa: PLC0415
@@ -2421,16 +2532,13 @@ class HttpCase(TransactionCase):
             cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
 
             if cpu_throttling:
-                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
-                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
                 _logger.log(
                     logging.INFO if cpu_throttling_os else logging.WARNING,
                     'CPU throttling mode is only suitable for local testing - '
                     'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
-                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
+                browser.throttle(cpu_throttling)
 
             browser.navigate_to(url, wait_stop=not bool(ready))
-            atexit.callback(browser.stop)
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""

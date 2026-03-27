@@ -85,10 +85,11 @@ export function getBasicServerData() {
  *
  * @param {string} model
  * @param {Array<string>} columns
+ * @param {{name: string, asc: boolean}[]} orderBy
  *
  * @returns { {definition: Object, columns: Array<Object>}}
  */
-export function generateListDefinition(model, columns, actionXmlId) {
+export function generateListDefinition(model, columns, actionXmlId, orderBy = []) {
     const cols = [];
     for (const name of columns) {
         const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
@@ -106,7 +107,7 @@ export function generateListDefinition(model, columns, actionXmlId) {
             searchParams: {
                 domain: [],
                 context: {},
-                orderBy: [],
+                orderBy,
             },
             name: "List",
             actionXmlId,
@@ -121,13 +122,10 @@ export function getBasicListArchs() {
     };
 }
 
-function mockSpreadsheetDataController(request) {
-    const parts = request.url.split("/");
-    const resModel = parts.at(-2);
-    const resId = parseInt(parts.at(-1));
-    const record = this.env[resModel].search_read([["id", "=", resId]])[0];
+function mockSpreadsheetDataController(_request, { res_model, res_id }) {
+    const [record] = this.env[res_model].search_read([["id", "=", parseInt(res_id)]]);
     if (!record) {
-        const error = new RPCError(`Spreadsheet ${resId} does not exist`);
+        const error = new RPCError(`Spreadsheet ${res_id} does not exist`);
         error.data = {};
         throw error;
     }
@@ -140,7 +138,7 @@ function mockSpreadsheetDataController(request) {
     };
 }
 
-onRpc("/spreadsheet/data/*", mockSpreadsheetDataController, { pure: true });
+onRpc("/spreadsheet/data/<string:res_model>/<int:res_id>", mockSpreadsheetDataController);
 
 export function defineSpreadsheetModels() {
     defineModels(SpreadsheetModels);
@@ -166,11 +164,20 @@ export function defineSpreadsheetActions() {
 
 export class IrModel extends webModels.IrModel {
     display_name_for(models) {
-        const records = this.env["ir.model"].search_read([["model", "in", models]]);
-        return records.map((record) => ({
-            model: record.model,
-            display_name: record.name,
-        }));
+        const records = this.env["ir.model"].search_read(
+            [["model", "in", models]],
+            ["name", "model"]
+        );
+        const result = [];
+        for (const model of models) {
+            const record = records.find((record) => record.model === model);
+            if (record) {
+                result.push({ model: model, display_name: record.name });
+            } else {
+                result.push({ model: model, display_name: model });
+            }
+        }
+        return result;
     }
 
     /**

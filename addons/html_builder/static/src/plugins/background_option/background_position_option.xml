@@ -12,10 +12,10 @@
         </BuilderRow>
         <BuilderContext t-if="isActiveItem('background_repeat_opt')" action="'setBackgroundSize'">
             <BuilderRow label.translate="Width" level="3">
-                <BuilderNumberInput actionParam="'width'" placeholder.translate="auto" unit="'px'" min="0"/>
+                <BuilderNumberInput actionParam="'width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
             <BuilderRow label.translate="Height" level="3">
-                <BuilderNumberInput actionParam="'height'" placeholder.translate="auto" unit="'px'" min="0"/>
+                <BuilderNumberInput actionParam="'height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
         </BuilderContext>
     </t>

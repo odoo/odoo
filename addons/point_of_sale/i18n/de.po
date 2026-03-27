@@ -8,13 +8,16 @@
 # Larissa Manderfeld, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Michael Hofer <michael.hofer@nordicdrinks.ch>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2025-09-16 04:42+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"PO-Revision-Date: 2026-03-20 15:13+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/de/>\n"
 "Language: de\n"
@@ -22,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -126,7 +129,7 @@ msgstr "%(vatLabel)s: %(vatId)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "%s almost runs out of paper."
-msgstr ""
+msgstr "%s hat bald kein Papier mehr."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -147,7 +150,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "%s required"
-msgstr ""
+msgstr "%s erforderlich"
 
 #. module: point_of_sale
 #. odoo-python
@@ -159,13 +162,19 @@ msgstr "%s unversteuert"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "%s update not allowed"
-msgstr ""
+msgstr "Aktualisierung von %s nicht erlaubt"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "(DUPLICATE !)"
 msgstr "(DUPLIKAT!)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "(Replace [printer_ip] with the printer IP address)"
+msgstr "(Ersetzen Sie [printer_ip] durch die IP-Adresse des Druckers)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -183,6 +192,12 @@ msgstr "+ Hinzufügen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "+ New Shop"
 msgstr "+ Neuer Shop"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ", you can skip the system parameter section."
+msgstr "ist, können Sie den Abschnitt über die Systemparameter überspringen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -221,6 +236,11 @@ msgstr "10000,00"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "11.11"
+msgstr "11.11"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "123.45"
 msgstr "123,45"
 
@@ -230,9 +250,20 @@ msgid "1234567890"
 msgstr "1234567890"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "19.1 or above"
+msgstr "19.1 oder neuere Version"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
 msgstr "02-03-2000 9:00"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "38.83"
+msgstr "38.83"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -331,9 +362,9 @@ msgstr ""
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hallo <t t-"
+"                        <t t-if=\"client_name\">Guten Tag <t t-"
 "out=\"client_name\">Name des Kunden</t>,</t>\n"
-"                        <t t-else=\"\">Hallo,</t>\n"
+"                        <t t-else=\"\">Guten Tag,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Vielen Dank für Ihren Einkauf bei <t t-"
@@ -358,8 +389,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
-"PoS.\" pos-data-toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"Diese Einstellung gilt für alle "
+"Kassensysteme.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -374,7 +405,7 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Hallo %(client_name)s,<br/>Hier ist Ihr Beleg %"
+"<p>Guten Tag %(client_name)s,<br/>Hier ist Ihr Beleg %"
 "(is_invoiced)sfür             %(pos_name)s in Höhe von %(amount)s von %"
 "(company_name)s. </p>"
 
@@ -406,7 +437,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
 "                                    <i class=\"fa fa-info-circle me-1\" "
-"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"title=\"Diese Einstellung gilt für alle Kassensysteme.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -442,22 +474,22 @@ msgstr "<span>Saldo</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Closing</span>"
-msgstr "<span>Abschluss</span>"
+msgstr "<span>Schließung</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Date</span>"
-msgstr ""
+msgstr "<span>Datum</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Ongoing</span>"
-msgstr ""
+msgstr "<span>Laufend</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Opening</span>"
-msgstr ""
+msgstr "<span>Eröffnung</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -467,7 +499,7 @@ msgstr "<span>Berichtswesen</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Sold</span>"
-msgstr ""
+msgstr "<span>Verkauft</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -549,6 +581,7 @@ msgstr "Es gibt bereits eine Zahlung mit UUID vorhanden"
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
 msgid "A request is still being processed in the background. Please wait."
 msgstr ""
+"Im Hintergrund wird eine Anfrage verarbeitet. Wir bitten Sie um etwas Geduld."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -566,9 +599,8 @@ msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
 msgstr ""
-"Es ist gerade eine Sitzung für dieses Kassensystem aktiv. Einige "
-"Einstellungen können nur verändert werden, nachdem die Sitzung geschlossen "
-"wurde."
+"Für dieses Kassensystem läuft derzeit eine Sitzung. Einige Einstellungen "
+"können nur verändert werden, nachdem die Sitzung geschlossen wurde."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
@@ -600,42 +632,45 @@ msgstr "BETRAG"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr "Nehmen Sie Trinkgelder an oder wandeln Sie Wechselgeld in Trinkgeld um"
+msgstr ""
+"Nehmen Sie Trinkgelder an oder wandeln Sie Wechselgeld in Trinkgeld um."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Mercado Pago on a terminal"
-msgstr "Akzeptieren Sie Zahlungen mit Mercado Pago auf einem Terminal"
+msgstr "Akzeptieren Sie Zahlungen mit Mercado Pago auf einem Terminal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Viva.com on a terminal or tap on phone"
-msgstr "Zahlungen mit Viva.com auf einem Terminal oder „Tap to phone“"
+msgstr ""
+"Akzeptieren Sie Zahlungen mit Viva.com am Terminal oder per „Kontaktlos "
+"bezahlen“."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Pine Labs payment terminal"
-msgstr "Akzeptieren Sie Zahlungen mit einem Pine-Labs-Zahlungsterminal"
+msgstr "Akzeptieren Sie Zahlungen mit einem Pine-Labs-Zahlungsterminal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a QFPay payment terminal"
-msgstr ""
+msgstr "Akzeptieren Sie Zahlungen mit einem QFPay-Zahlungsterminal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr "Akzeptieren Sie Zahlungen mit einem Razorpay-Zahlungsterminal"
+msgstr "Akzeptieren Sie Zahlungen mit einem Razorpay-Zahlungsterminal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Stripe payment terminal"
-msgstr "Akzeptieren Sie Zahlungen mit einem Stripe-Zahlungsterminal"
+msgstr "Akzeptieren Sie Zahlungen mit einem Stripe-Zahlungsterminal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
-msgstr "Akzeptieren Sie Zahlungen mit einem Adyen-Zahlungsterminal"
+msgstr "Akzeptieren Sie Zahlungen mit einem Adyen-Zahlungsterminal."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -650,11 +685,31 @@ msgid "Access Token"
 msgstr "Zugriffstoken"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"Access printer configuration panel by puttin this URL in your search bar:"
+msgstr ""
+"Rufen Sie das Druckerkonfigurationsfenster auf, indem Sie diese URL in Ihre "
+"Suchleiste eingeben:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"Access the below URL but replace [printer_ip] with your current Pritner IP "
+"address"
+msgstr ""
+"Rufen Sie die unten stehende URL auf, ersetzen Sie jedoch [printer_ip] durch "
+"Ihre aktuelle Drucker-IP-Adresse"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
 msgid "Access warning"
 msgstr "Zugriffswarnung"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_account_account
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 msgid "Account"
 msgstr "Konto"
@@ -710,19 +765,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Action cancelled (%s)"
-msgstr "Aktion abgebrochen (%s)"
+msgid "Action cancelled (%(ACTION)s)"
+msgstr "Aktion abgebrochen (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Actions"
-msgstr ""
+msgstr "Aktionen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -752,7 +807,7 @@ msgstr "Aktivitäten"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitätsausnahme-Dekoration"
+msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
@@ -772,12 +827,6 @@ msgid "Add"
 msgstr "Hinzufügen"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button.js:0
-msgid "Add %s"
-msgstr "Hinzufügen %s"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add Printer"
 msgstr "Drucker hinzufügen"
@@ -787,6 +836,12 @@ msgstr "Drucker hinzufügen"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Add Tip"
 msgstr "Trinkgeld hinzufügen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button.js:0
+msgid "Add a "
+msgstr "Hinzufügen: "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
@@ -807,7 +862,7 @@ msgstr "Eine abschließende Notiz hinzufügen ..."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add a custom message to header and footer"
-msgstr "Fügen Sie eine persönliche Nachricht zur Kopf- und Fußzeile hinzu"
+msgstr "Fügen Sie eine persönliche Nachricht zur Kopf- und Fußzeile hinzu."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -839,13 +894,19 @@ msgstr "Eine Eröffnungsnotiz hinzufügen ..."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr "Fügen Sie Bestellzeilen interne Notizen für die Küche hinzu"
+msgstr "Fügen Sie Bestellzeilen interne Notizen für die Küche hinzu."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/buttons/quantity_buttons/quantity_buttons.xml:0
 msgid "Add one"
 msgstr "Hinzufügen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Add system parameter"
+msgstr "Fügen Sie Systemparameter hinzu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -884,7 +945,7 @@ msgstr "Adresse"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Adds a button to set a global discount"
-msgstr "Fügt eine Schaltfläche hinzu, um einen Gesamtrabatt einzustellen"
+msgstr "Fügt eine Schaltfläche hinzu, um einen Gesamtrabatt festzulegen."
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -906,6 +967,12 @@ msgstr "Adyen"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_adyen
 msgid "Adyen Payment Terminal"
 msgstr "Adyen-Zahlungsterminal"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "After 19.1:"
+msgstr "Nach 19.1:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -961,6 +1028,12 @@ msgid "All sales lines"
 msgstr "Alle Verkaufszeilen"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Allow"
+msgstr "Zulassen"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow Ship Later"
 msgstr "Späteren Versand ermöglichen"
@@ -968,19 +1041,22 @@ msgstr "Späteren Versand ermöglichen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow cashiers to set a discount per line"
-msgstr "Ermöglichen Sie es Kassierern, einen Rabatt pro Zeile festzulegen"
+msgstr "Ermöglichen Sie es Kassierern, einen Rabatt pro Zeile festzulegen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to access each other's active orders"
-msgstr "Erlauben Sie den Zugriff auf die aktiven Aufträge des anderen"
+msgstr ""
+"Erlauben Sie, dass Mitarbeiter gegenseitig auf ihre aktiven Aufträge "
+"zugreifen können."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to log and switch between selected Employees"
 msgstr ""
-"Erlauben Sie die Anmeldung und den Wechsel zwischen ausgewählten Mitarbeitern"
+"Erlauben Sie die Anmeldung und den Wechsel zwischen ausgewählten "
+"Mitarbeitern."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1021,7 +1097,7 @@ msgstr "Genehmigter Differenzbetrag"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Amount Paid"
-msgstr ""
+msgstr "Bezahlter Betrag"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1029,6 +1105,12 @@ msgstr ""
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
 msgstr ""
 "Betrag für %(old_pm)s wurde von %(old_amount)s auf %(new_amount)s geändert"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
+msgid "Amount of guests"
+msgstr "Anzahl der Gäste"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -1059,7 +1141,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/product_template.js:0
+#: code:addons/point_of_sale/static/src/app/models/accounting/product_template_accounting.js:0
 msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
@@ -1085,6 +1167,8 @@ msgid ""
 "An error occurred while generating an invoice. You can try again from the "
 "order list."
 msgstr ""
+"Beim Generieren einer Rechnung ist ein Fehler aufgetreten. Sie können es "
+"erneut über die Auftragsliste versuchen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1271,7 +1355,7 @@ msgstr "Auftrag automatisch bestätigen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Automatically validates orders paid with a payment terminal."
 msgstr ""
-"Aufträge, die über einen Zahlungsterminal bezahlt wurden, werden automatisch "
+"Aufträge, die über ein Zahlungsterminal bezahlt wurden, werden automatisch "
 "bestätigt."
 
 #. module: point_of_sale
@@ -1351,7 +1435,7 @@ msgstr "Backend"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Backend Invoice"
-msgstr ""
+msgstr "Backend-Rechnung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img
@@ -1396,6 +1480,12 @@ msgstr "Saldo"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__bank
 msgid "Bank"
 msgstr "Bank"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Bank App (QR Code)"
+msgstr "Bank-App (QR-Code)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
@@ -1448,6 +1538,27 @@ msgid "Basic Receipt"
 msgstr "Standardbeleg"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Be aware that it works only on chromium based browser:"
+msgstr ""
+"Beachten Sie, dass dies nur in Chromium-basierten Browsern funktioniert:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
+msgid "Be aware that reloading data will delete unsaved orders."
+msgstr ""
+"Beachten Sie, dass beim erneuten Laden der Daten nicht gespeicherte Aufträge "
+"gelöscht werden."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Before 19.1:"
+msgstr "Vor 19.1:"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
 msgstr "Differenz vor Abschluss"
@@ -1498,7 +1609,7 @@ msgid ""
 msgstr ""
 "Steigern Sie Ihren Umsatz mit einer Vielzahl von Programmen: Gutscheine, "
 "Werbeaktionen, Geschenkkarten, Treueprogramme. Es können spezifische "
-"Bedingungen festgelegt werden (Produkte, Kunden, Mindesteinkaufsbetrag, "
+"Bedingungen festgelegt werden (Produkte, Kunden, Mindesteinkaufswert, "
 "Zeitraum). Belohnungen können Rabatte (% oder Betrag) oder kostenlose "
 "Produkte sein."
 
@@ -1511,6 +1622,12 @@ msgstr "Marke der Karte"
 #: model:pos.category,name:point_of_sale.pos_category_breads
 msgid "Breads"
 msgstr "Brote"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Browser LNA Prompt"
+msgstr "Eingabeaufforderung des Browser-LNZ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
@@ -1600,6 +1717,12 @@ msgstr "Zahlungsanforderung stornieren"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Cancelled"
 msgstr "Storniert"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Cannot edit orderline"
+msgstr "Auftragszeile kann nicht bearbeitet werden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1802,8 +1925,8 @@ msgstr "Während der Zählung festgestellte Kassendifferenz (Gewinn) – Abschlu
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash drawer opened (%s)"
-msgstr "Kasse geöffnet (%s)"
+msgid "Cash drawer opened (%(ACTION)s)"
+msgstr "Kassierschublade geöffnet (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1926,7 +2049,7 @@ msgstr "Stühle"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Change"
@@ -1937,6 +2060,12 @@ msgstr "Wechselgeld"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Change Tip"
 msgstr "Trinkgeld anpassen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Check if"
+msgstr "Prüfen Sie, ob"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
@@ -1962,6 +2091,17 @@ msgstr ""
 "möchten."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Check list"
+msgstr "Checkliste"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Check printer reachability:"
+msgstr "Prüfen Sie, ob der Drucker erreichbar ist:"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_cash_control
 msgid "Check the amount of the cashbox at opening and closing."
@@ -1979,11 +2119,29 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"Check the printer configuration for the 'Device ID' setting.\n"
+"It should be set to: 'local_printer'"
+msgstr ""
+"Prüfen Sie die Druckerkonfiguration für die Einstellung „Gerät-ID“.\n"
+"Sollte auf „local_printer“ eingestellt sein"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid ""
 "Check the printer configuration for the 'Device ID' setting.\n"
 "It should be set to: local_printer"
 msgstr ""
+"Prüfen Sie die Druckerkonfiguration für die Einstellung „Gerät-ID“.\n"
+"Sollte auf local_printer festgelegt sein"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Checking Local Network Access permission..."
+msgstr "Lokale Netzwerkzugriffsberechtigung wird überprüft …"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -2011,7 +2169,7 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Wählen Sie je nach Art des Kunden eine bestimmte Steuerposition bei dem "
+"Wählen Sie je nach Art des Kunden eine bestimmte Steuerposition für den "
 "Auftrag (steuerfrei, vor Ort oder zum Mitnehmen usw.)."
 
 #. module: point_of_sale
@@ -2036,7 +2194,7 @@ msgstr "Wählen Sie aus, wie die URL zum Portal auf dem Beleg gedruckt wird."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Choose the tax you want to apply"
-msgstr ""
+msgstr "Wählen Sie die Steuer, die Sie anwenden möchten"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2068,7 +2226,7 @@ msgstr "Klassischer Ledergürtel, ein Must-Have für jeden Kleiderschrank."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Click here to close the session"
-msgstr "Hier klicken, um die Sitzung zu schließen"
+msgstr "Klicken Sie hier, um die Sitzung zu schließen"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__client
@@ -2079,6 +2237,7 @@ msgstr "Kunde"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2168,8 +2327,26 @@ msgstr "Sitzung schließen"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr "Abschlusszählung: %s \n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
 msgstr "Abschlussdifferenz in %(payment_method)s (%(session)s)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr "Abschlussdifferenz: %s \n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
+msgstr "Erwartet bei Abschluss: %s \n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2292,6 +2469,7 @@ msgstr "Konfigurationseinstellungen"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configuration"
 msgstr "Konfiguration"
 
@@ -2299,6 +2477,11 @@ msgstr "Konfiguration"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configurations &gt; Settings"
 msgstr "Konfigurationen &gt; Einstellungen"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "Configure"
+msgstr "Konfigurieren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2316,6 +2499,7 @@ msgstr "Konfigurieren Sie zumindest ein Kassensystem"
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -2333,12 +2517,6 @@ msgid "Confirm Payment"
 msgstr "Zahlung bestätigen"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Confirm?"
-msgstr "Bestätigen?"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirmation_wizard
 msgid "Confirmation Wizard"
 msgstr "Bestätigungsassistent"
@@ -2347,7 +2525,7 @@ msgstr "Bestätigungsassistent"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect device to your PoS without an IoT Box"
-msgstr "Verbinden Sie ein Gerät ohne IoT-Box mit Ihrem Kassensystem"
+msgstr "Verbinden Sie ein Gerät ohne IoT-Box mit Ihrem Kassensystem."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -2359,7 +2537,13 @@ msgstr "Verbinden Sie Geräte ohne IoT-Box mit Ihrem Kassensystem."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect devices using an IoT Box"
-msgstr "Verbinden Sie Geräte mit der IoT-Box"
+msgstr "Verbinden Sie Geräte mit einer IoT-Box."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Connect printer to internet (Ethernet cable recommended)"
+msgstr "Verbinden Sie den Drucker mit dem Internet (Ethernet-Kabel empfohlen)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2423,9 +2607,10 @@ msgstr "Kontaktinfo"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "Fortfahren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2438,6 +2623,16 @@ msgstr "Verkauf fortsetzen"
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Continue with limited functionality"
 msgstr "Mit eingeschränkten Funktionen fortfahren"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"Continuous printing of high-density printing caused a printing error. Please "
+"retry later"
+msgstr ""
+"Der kontinuierliche Druck mit hoher Dichte hat zu einem Druckfehler geführt. "
+"Versuchen Sie es später erneut."
 
 #. module: point_of_sale
 #. odoo-python
@@ -2845,7 +3040,7 @@ msgstr "Standardjournale"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default POS Receivable Account"
-msgstr "Standard-Debitorenkonto für Kassensystem"
+msgstr "Standardforderungskonto für Kassensystem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_preset_id
@@ -2922,8 +3117,8 @@ msgstr "Definieren Sie Produkte und Kategorien für Einzelhandel und Restaurant"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
-"Definieren Sie die kleinste Münzeinheit der Währung, die zur Bezahlung "
-"genutzt wird."
+"Definieren Sie die kleinste Münzeinheit der Währung, die zur Zahlung genutzt "
+"wird."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__name
@@ -2955,7 +3150,7 @@ msgstr "Aufträge löschen?"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Delete all indexed DB"
-msgstr ""
+msgstr "Alle indexierten Datenbanken löschen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3025,12 +3220,12 @@ msgstr "Legen Sie die Reihenfolge im Kassenterminal fest"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Device ID:"
-msgstr ""
+msgstr "Geräte-ID:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__device_seq_id
 msgid "Device Sequence"
-msgstr ""
+msgstr "Geräte-Sequenz"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3073,6 +3268,12 @@ msgstr "Deaktivieren"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Disable \"Redirect HTTP to HTTPS\""
+msgstr "Deaktivieren Sie „HTTP zu HTTPS umleiten“"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Disable debug mode"
 msgstr "Fehlerbeseitigungsmodus deaktivieren"
@@ -3096,7 +3297,6 @@ msgstr "Rabatt:"
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
@@ -3135,6 +3335,7 @@ msgid "Discounts"
 msgstr "Rabatte"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_account__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__display_name
@@ -3207,19 +3408,25 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr "QR-Code anzeigen"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
 msgstr ""
-"Zeigen Sie Ihre Produktinformationen an und aktualisieren Sie sie auf "
-"elektronischen Pricer-Etiketten"
+"Verwenden Sie elektronische Pricer-Etiketten, um Ihre Produktinformationen "
+"anzuzeigen und zu aktualisieren."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_group_by_categ
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Display products grouped by categories."
-msgstr ""
+msgstr "Zeigen Sie Produkte nach Kategorien gruppiert an."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__is_closing_entry_by_product
@@ -3230,7 +3437,7 @@ msgid ""
 "generated closing entry."
 msgstr ""
 "Zeigen Sie eine Aufschlüsselung der Verkaufszeilen pro Produkt in der "
-"automatisch generierten Abschlussbuchung an"
+"automatisch generierten Abschlussbuchung an."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
@@ -3260,9 +3467,21 @@ msgstr "Herunterladen"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr "Protokolle herunterladen"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "Bericht mit allen Verkäufen der laufenden Kassensitzung herunterladen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr "Protokolle herunterladen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3292,7 +3511,6 @@ msgstr "Laden Sie ganz einfach eine Reihe von Konfigurationsoptionen"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -3363,14 +3581,20 @@ msgid ""
 "form."
 msgstr ""
 "Mitarbeiter können ihren Ausweis scannen oder eine PIN eingeben, um sich an "
-"einer Kassensitzung anzumelden. Diese Anmeldedaten sind auf der "
-"Registerkarte *HR-Einstellungen* des Mitarbeiterformulars konfigurierbar."
+"einer Kassensitzung anzumelden. Diese Anmeldedaten sind im Reiter *HR-"
+"Einstellungen* des Mitarbeiterformulars konfigurierbar."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Empty Order"
 msgstr "Leerer Auftrag"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Enable LNA on your database"
+msgstr "Aktivieren Sie LNZ auf Ihrer Datenbank"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -3386,6 +3610,18 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Enable fast payment methods to validate orders on the product screen."
 msgstr ""
+"Aktivieren Sie schnelle Zahlungsmethoden, um Aufträge auf dem "
+"Produktbildschirm zu validieren."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"Enable the “Use Local Network Access” checkbox directly on the printer "
+"configuration."
+msgstr ""
+"Aktivieren Sie das Kontrollkästchen „Lokalen Netzwerkzugriff verwenden“ "
+"direkt in der Druckerkonfiguration."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
@@ -3421,27 +3657,33 @@ msgstr ""
 "weiteren Auftrag annehmen."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Environment check"
+msgstr "Umgebungsprüfung"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_epson_printer_ip
 msgid "Epson Printer IP"
-msgstr ""
+msgstr "Epson-Drucker-IP"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__epson_printer_ip
 msgid "Epson Printer IP Address"
-msgstr ""
+msgstr "IP-Adresse des Epson-Druckers"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_printer.py:0
 msgid "Epson Printer IP Address cannot be empty."
-msgstr ""
+msgstr "IP-Adresse des Epson-Druckers darf nicht leer sein."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Epson Receipt Printer IP Address"
-msgstr ""
+msgstr "IP-Adresse des Epson-Belegdruckers"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3466,7 +3708,7 @@ msgstr "Fehler: keine Internetverbindung."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Everything is ready to go!"
-msgstr ""
+msgstr "Alles ist startklar!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3515,6 +3757,22 @@ msgstr "Kommissionierung fehlgeschlagen"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Failed to print a test receipt. Check your printer."
+msgstr "Der Testbeleg konnte nicht gedruckt werden. Prüfen Sie Ihren Drucker."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"Failed to reach the printer. Check the configured url. Make sure that the "
+"printer is online and you are on the same network."
+msgstr ""
+"Drucker ist nicht erreichbar. Prüfen Sie die konfigurierte URL. Stellen Sie "
+"sicher, dass der Drucker online ist und Sie sich im selben Netzwerk befinden."
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Failure to generate Payment QR Code"
 msgstr "QR-Code für die Zahlung kann nicht generiert werden"
@@ -3530,13 +3788,13 @@ msgstr "Ersatz-Nomenklatur"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "Fast Payment Methods"
-msgstr ""
+msgstr "Schnelle Zahlungsmethoden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_fast_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Fast Payment Validation"
-msgstr ""
+msgstr "Schnelle Zahlungsvalidierung"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3562,7 +3820,7 @@ msgstr "Steuerposition nicht gefunden"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fiscal_position_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fiscal Positions"
-msgstr "Steuerposition"
+msgstr "Steuerpositionen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner__fiscal_position_id
@@ -3655,6 +3913,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "Für ungenaue Industrie-Touchscreens."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr "Stornierung erzwingen"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3666,6 +3930,12 @@ msgstr "Schließen der Sitzung erzwingen"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
 msgstr "Erledigt erzwingen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr "Stornierung erzwingen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3690,7 +3960,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+#: code:addons/point_of_sale/static/src/app/models/accounting/pos_order_line_accounting.js:0
 msgid "Free"
 msgstr "Verfügbar"
 
@@ -3787,6 +4057,12 @@ msgstr "Zurück"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Google chrome, Microsoft Edge, Brave, Opera, Arc and others"
+msgstr "Google Chrome, Microsoft Edge, Brave, Opera, Arc und andere"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid "Greater than allowed"
 msgstr "Größer als erlaubt"
@@ -3812,7 +4088,7 @@ msgstr "Produkte im Kassensystem gruppieren"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_group_by_categ
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
 msgid "Group products by categories"
-msgstr ""
+msgstr "Produkte nach Kategorien gruppieren"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_http
@@ -3881,6 +4157,12 @@ msgid "Hide Use Payment Terminal"
 msgstr "„Zahlungsterminal verwenden“ verbergen"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Hide details"
+msgstr "Details ausblenden"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
 msgstr ""
@@ -3890,7 +4172,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Hide pictures in POS"
-msgstr "Bild im Kassensystem verbergen"
+msgstr "Bild im Kassensystem ausblenden"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
@@ -3922,11 +4204,40 @@ msgid "Hour of the day for the order"
 msgstr "Uhrzeit des Auftrags"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "How to configure my devices properly:"
+msgstr "So können Sie Geräte richtig konfigurieren:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "How to configure my printers"
+msgstr "So können Drucker konfiguriert werden"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "How to manage tax-included prices"
 msgstr "Preise inklusive Steuern verwalten"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "I have access to my router configuration (To fix device IP addresses)"
+msgstr ""
+"Ich habe Zugriff auf meine Router-Konfiguration (um die IP-Adressen der "
+"Geräte festzulegen)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "I use an Epson printer (Check supported printers in Odoo documentation)"
+msgstr ""
+"Ich verwende einen Epson-Drucker (Abschnitt zu unterstützten Druckern in der "
+"Odoo-Dokumentation)"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_account__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__id
@@ -4045,6 +4356,45 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"If everything is correct, the Local Network Access status icon will turn "
+"green:"
+msgstr ""
+"Wenn alles korrekt ist, wird das Status-Symbol für den lokalen "
+"Netzwerkzugriff grün:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"If the permission is denied, refreshing the PoS will show this notification:"
+msgstr ""
+"Wenn die Berechtigung verweigert wird, wird beim Aktualisieren des "
+"Kassensystems folgende Benachrichtigung angezeigt:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"If the system parameter is set, but the browser doesn't support LNA, the PoS "
+"will show this notification:"
+msgstr ""
+"Wenn der Systemparameter gesetzt ist, der Browser LNZ jedoch nicht "
+"unterstützt, zeigt das Kassensystem folgende Meldung an:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"If this endpoint does not returan a 404 error and displays a blank page, "
+"everything is ready."
+msgstr ""
+"Wenn dieser Endpunkt keinen 404-Fehler zurückgibt und eine leere Seite "
+"anzeigt, ist alles startklar."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_orderline_id
 msgid ""
 "If this orderline is a refund, then the refunded orderline is specified in "
@@ -4060,6 +4410,9 @@ msgid ""
 "If you are on a secure server (HTTPS) please make sure you manually accepted "
 "the certificate by accessing %s. "
 msgstr ""
+"Wenn Sie sich auf einem sicheren Server (HTTPS) befinden, stellen Sie bitte "
+"sicher, dass Sie das Zertifikat manuell akzeptiert haben, indem Sie %s "
+"aufrufen. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__picking_policy
@@ -4072,6 +4425,20 @@ msgstr ""
 "Wenn Sie alle Produkte auf einmal liefern, wird die Lieferzeit auf die "
 "längste Vorlaufzeit aller Produkte gesetzt. Andernfalls auf diejenige des "
 "zuerst lieferbaren Produktes."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "If you have the secure printing setting, disable it"
+msgstr ""
+"Wenn Sie die Einstellung für sicheres Drucken aktiviert haben, deaktivieren "
+"Sie diese"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "If your database is version"
+msgstr "Wenn Ihre Datenbank in Version"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_512
@@ -4101,13 +4468,13 @@ msgstr "Aufträge importieren"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Improve navigation for imprecise industrial touchscreens"
-msgstr "Verbessern Sie die Navigation für ungenaue Industrie-Touchscreens"
+msgstr "Verbessern Sie die Navigation für ungenaue Industrie-Touchscreens."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.js:0
 msgid "In"
-msgstr "In"
+msgstr "Einzahlung"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opened
@@ -4183,7 +4550,7 @@ msgstr "Zwischenkonto"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Intermediary account used for unidentified customers."
-msgstr "Zwischenkonto, verwendet für unbekannte Kunden."
+msgstr "Zwischenkonto, das für unbekannte Kunden verwendet wird."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -4254,7 +4621,7 @@ msgstr "Rechnungsname"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Invoice Number"
-msgstr ""
+msgstr "Rechnungsnummer"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
@@ -4416,7 +4783,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid "It seems that the printer runs out of paper."
-msgstr ""
+msgstr "Es scheint, dass der Drucker kein Papier mehr hat."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -4449,6 +4816,15 @@ msgid "Journal Items"
 msgstr "Buchungszeilen"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"Keep TLS settings enabled, otherwise the printer will not work with HTTPS."
+msgstr ""
+"Lassen Sie die TLS-Einstellungen aktiviert, da der Drucker sonst nicht mit "
+"HTTPS funktioniert."
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "Kindly ensure that each order contains a customer."
@@ -4463,6 +4839,24 @@ msgstr "KPI Kassensystem Gesamtwert"
 #: model:product.template,name:point_of_sale.led_lamp_product_template
 msgid "LED Lamp"
 msgstr "LED-Lampe"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "LNA Green Status"
+msgstr "LNF-Status „Grün“"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+msgid "LNA Permission status"
+msgstr "LNA-Berechtigungsstatus"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "LNA not supported message"
+msgstr "Meldung, dass LNZ nicht unterstützt wird"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -4659,6 +5053,12 @@ msgid "Line No"
 msgstr "Zeile Nr."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Link Cashdrawer"
+msgstr "Kasse verbinden"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
 msgid "Link between products and their UoMs"
 msgstr "Verknüpfung zwischen Produkten und ihren Maßeinheiten"
@@ -4668,6 +5068,12 @@ msgstr "Verknüpfung zwischen Produkten und ihren Maßeinheiten"
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "Link copied to clipboard"
 msgstr "Link in Zwischenablage kopiert."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Link your printers to your POS (ePOS)"
+msgstr "Verbinden Sie Ihre Drucker mit Ihrem Kassensystem (ePOS)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4687,6 +5093,8 @@ msgid ""
 "List of account moves created when this POS order was reversed and invoiced "
 "after session close."
 msgstr ""
+"Liste der Kontobuchungen, die erstellt wurden, als diesen Kassenauftrag "
+"storniert und nach Sitzungsende in Rechnung gestellt wurde."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4715,14 +5123,103 @@ msgstr "Lädt …"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__epson_printer_ip
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_epson_printer_ip
-msgid "Local IP address of an Epson receipt printer."
+msgid ""
+"Local IP address of an Epson receipt printer, or its serial number if the "
+"'Automatic Certificate Update' option is enabled in the printer settings."
 msgstr ""
+"Lokale IP-Adresse eines Epson-Bondruckers oder dessen Seriennummer, wenn in "
+"den Druckereinstellungen die Option „Automatische Zertifikatsaktualisierung“ "
+"aktiviert ist."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Local Network Access"
+msgstr "Lokaler Netzwerkzugriff"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid ""
+"Local Network Access (LNA) is a Chrome feature that allows your browser to "
+"communicate \n"
+"                directly with your local network. It means you can make your "
+"browser communicate with \n"
+"                your devices without the need for importing certificates."
+msgstr ""
+"Lokaler Netzwerkzugriff (LNZ) ist eine Chrome-Funktion, die es Ihrem Browser "
+"ermöglicht, \n"
+"                direkt mit Ihrem lokalen Netzwerk zu kommunizieren. Das "
+"bedeutet, dass Sie Ihren Browser mit \n"
+"                Ihren Geräten kommunizieren lassen können, ohne Zertifikate "
+"importieren zu müssen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access configuration is enabled, but your browser is not "
+"Chromium-based. Please use a Chromium-based browser to benefit from this "
+"feature. Please note that IOS devices do not support Local Network Access "
+"yet."
+msgstr ""
+"Die Konfiguration für den lokalen Netzwerkzugriff ist aktiviert, aber Ihr "
+"Browser basiert nicht auf Chromium. Verwenden Sie einen Chromium-basierten "
+"Browser, um diese Funktion nutzen zu können. Beachten Sie, dass iOS-Geräte "
+"den lokalen Netzwerkzugriff noch nicht unterstützen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access is enabled for this POS, but your browser version does "
+"not support it. Please update your browser to the latest version."
+msgstr ""
+"Der lokale Netzwerkzugriff ist für dieses Kassensystem aktiviert, aber Ihre "
+"Browserversion unterstützt ihn nicht. Aktualisieren Sie Ihren Browser auf "
+"die neueste Version."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access is not configured for this POS."
+msgstr ""
+"Der lokale Netzwerkzugriff ist für dieses Kassensystem nicht konfiguriert."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access permission granted."
+msgstr "Berechtigung für lokalen Netzwerkzugriff gewährt."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access permission is denied. Some hardware devices might not "
+"work properly. Please allow Local Network Access in your browser settings."
+msgstr ""
+"Die Berechtigung für den lokalen Netzwerkzugriff wurde verweigert. Einige "
+"Hardwaregeräte funktionieren möglicherweise nicht richtig. Erlauben Sie den "
+"lokalen Netzwerkzugriff in den Einstellungen Ihres Browsers."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access permission is not yet granted. Some hardware devices "
+"might not work properly. Please allow Local Network Access in your browser "
+"settings."
+msgstr ""
+"Die Berechtigung für den lokalen Netzwerkzugriff wurde noch nicht erteilt. "
+"Einige Hardwaregeräte funktionieren möglicherweise nicht ordnungsgemäß. "
+"Erlauben Sie den lokalen Netzwerkzugriff in Ihren Browsereinstellungen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
-msgstr "Mit Mitarbeiter anmelden"
+msgstr "Mit Mitarbeiter-App anmelden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4753,6 +5250,14 @@ msgstr "Los-/Seriennummer(n) erforderlich für"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
 msgstr "Los-/Seriennummer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Low voltage unrecoverable error occured, please check the printer"
+msgstr ""
+"Es ist ein nicht behebbarer Fehler mit niedriger Spannung aufgetreten. "
+"Prüfen Sie den Drucker."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_lower
@@ -4823,7 +5328,7 @@ msgstr "Aufträge nach Zeit verwalten"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
 msgstr ""
-"Verwalten Sie Werbeaktionen, die Kunden Rabatte oder Geschenke gewähren"
+"Verwalten Sie Werbeaktionen, die Kunden Rabatte oder Geschenke gewähren."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__manual
@@ -4883,6 +5388,12 @@ msgid "Maximum value reached"
 msgstr "Höchstbetrag erreicht"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Mechanical error, please check the printer"
+msgstr "Mechanischer Fehler. Prüfen Sie den Drucker."
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Mercado Pago"
 msgstr "Mercado Pago"
@@ -4928,7 +5439,7 @@ msgstr "Diverse"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Missing required"
-msgstr ""
+msgstr "Erforderliche Angaben fehlen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
@@ -4987,6 +5498,24 @@ msgstr "Frist für meine Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "My Sessions"
 msgstr "Meine Sitzungen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "My browser is above version 142"
+msgstr "Mein Browser ist älter als Version 142"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "My browser is chromium based (Chrome, Edge, Brave, etc.)"
+msgstr "Mein Browser basiert auf Chromium (Chrome, Edge, Brave usw.)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "My printer can be connected through ethernet cables (recommended)"
+msgstr "Mein Drucker kann über Ethernet-Kabel angeschlossen werden (empfohlen)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5069,6 +5598,7 @@ msgstr "Neu"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "New Order"
 msgstr "Neuer Auftrag"
 
@@ -5118,7 +5648,7 @@ msgstr "Liste nächster Aufträge"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Next number:"
-msgstr ""
+msgstr "Nächste Nummer:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5224,7 +5754,7 @@ msgstr "Keine vorhandene Serien-/Losnummer"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No invoice journal configured for this POS session."
-msgstr ""
+msgstr "Für diese Kassensitzung wurde kein Rechnungsjournal konfiguriert."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5284,9 +5814,23 @@ msgid "No slot available for this day"
 msgstr "Kein Zeitraum für diesen Tag verfügbar"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
+msgid "No valid orders were selected. No new invoices could be generated"
+msgstr ""
+"Es wurden keine gültigen Aufträge ausgewählt. Es konnten keine neuen "
+"Rechnungen erstellt werden."
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
 msgstr "Nomenklatur"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "None required"
+msgstr "Nicht erforderlich"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5308,7 +5852,7 @@ msgstr "Nicht abgerechnet"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Not available"
-msgstr ""
+msgstr "Nicht verfügbar"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -5338,6 +5882,13 @@ msgstr "Notizen"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Now your printer is properly configured to work with LNA"
+msgstr ""
+"Jetzt ist Ihr Drucker ordnungsgemäß für die Verwendung mit LNZ konfiguriert"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Number by page"
 msgstr "Nach Seite nummerieren"
@@ -5346,7 +5897,7 @@ msgstr "Nach Seite nummerieren"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction_counter
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl der Aktionen"
+msgstr "Anzahl Aktionen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__nb_print
@@ -5367,7 +5918,7 @@ msgstr "Anzahl Auffangsitzungen"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_has_error_counter
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_combo__qty_free
@@ -5389,7 +5940,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_has_error_counter
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl Nachrichten mit Zustellungsfehler"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__refund_orders_count
@@ -5406,7 +5957,7 @@ msgstr "Anzahl der Aktionen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Number stack:"
-msgstr ""
+msgstr "Zahlenstapel:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5416,6 +5967,7 @@ msgstr "Odoo"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Odoo Server Error"
 msgstr "Odoo-Serverfehler"
@@ -5432,15 +5984,9 @@ msgid "Offline Orders"
 msgstr "Offline-Aufträge"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
-msgstr ""
+msgstr "Zahlung mit einem Klick"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5460,6 +6006,9 @@ msgid ""
 "Online payment, delivery payment, terminal payment, and methods that require "
 "customer identification are not supported for fast payment validation."
 msgstr ""
+"Online-Zahlungen, Zahlungen bei Lieferung, Terminalzahlungen und Methoden, "
+"die eine Kundenidentifizierung erfordern, werden für die schnelle "
+"Zahlungsvalidierung nicht unterstützt."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5512,7 +6061,13 @@ msgid ""
 "prices on orders."
 msgstr ""
 "Nur Benutzer mit Manager-Zugriffsrechten für die Kassensystem-App können die "
-"Produktpreise von Aufträgen ändern."
+"Produktpreise in Aufträgen ändern."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Oops!"
+msgstr "Hoppla!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5556,6 +6111,12 @@ msgstr "Fehlerbeseitigungswidget öffnen"
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Open the money details popup"
 msgstr "Öffnen Sie das Pop-up-Fenster mit den Details zu Scheinen und Münzen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Open your POS and try to print a ticket"
+msgstr "Öffnen Sie Ihr Kassensystem und versuchen Sie, ein Ticket auszudrucken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -5609,6 +6170,24 @@ msgstr "Eröffnungssaldo, summiert mit allen Bargeldtransaktionen."
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening cash"
 msgstr "Eröffnungssaldo"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr "Bargeld bei Eröffnung: %s \n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr "Bargelddifferenz bei Eröffnung: %s \n"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr "Erwartetes Bargeld bei Eröffnung: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5678,7 +6257,7 @@ msgstr "Auftrag %s ist nicht vollständig bezahlt."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_backend_seq_id
 msgid "Order Backend Sequence"
-msgstr ""
+msgstr "Backend-Sequenz des Auftrags"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__count
@@ -5696,7 +6275,7 @@ msgstr "Auftragsdatum"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_line_seq_id
 msgid "Order Line Sequence"
-msgstr ""
+msgstr "Sequenz der Auftragszeile"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -5754,6 +6333,12 @@ msgid "Order lines"
 msgstr "Auftragspositionen"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order saved for later"
+msgstr "Auftrag für später gespeichert"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Order(s)"
 msgstr "Aufträge"
@@ -5799,7 +6384,7 @@ msgstr "Auftragsstatus"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__source
 msgid "Origin"
-msgstr ""
+msgstr "Ursprung"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__original
@@ -5832,7 +6417,7 @@ msgstr "Andere"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.js:0
 msgid "Out"
-msgstr "Heraus"
+msgstr "Auszahlung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
@@ -5844,6 +6429,12 @@ msgstr "Konto für offene Rechnungen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "POS Category"
 msgstr "Kategorie des Kassensystems"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "POS LNA denied message"
+msgstr "Meldung zur Ablehnung des LNZ des Kassensystems"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__pos_optional_product_ids
@@ -5921,25 +6512,25 @@ msgstr "Kassensitzungen"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS device from config #%s"
-msgstr ""
+msgstr "Kassengerät aus Konfiguration #%s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order backend from config #%s"
-msgstr ""
+msgstr "Backend des Kassenauftrags aus Konfiguration #%s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order from config #%s"
-msgstr ""
+msgstr "Kassenauftrag aus Konfiguration #%s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order line from config #%s"
-msgstr ""
+msgstr "Kassenauftragszeile aus Konfiguration #%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6154,7 +6745,7 @@ msgstr "Pekannusskuchen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
 msgstr ""
-"Wählen Sie aus, welche Produktkategorien im Kassensystem verfügbar sind"
+"Wählen Sie aus, welche Produktkategorien im Kassensystem verfügbar sind."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -6233,12 +6824,17 @@ msgstr ""
 "Offene Sitzungen: %s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Please configure a valid ePoS url in order to test the printer"
+msgstr "Konfigurieren Sie eine gültige ePoS-URL, um den Drucker zu testen."
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Please create/select a Point of Sale above to show the configuration options."
 msgstr ""
-"Bitte wählen Sie ein Kassensystem aus, um die Konfigurationsoptionen zu "
-"sehen."
+"Wählen Sie ein Kassensystem aus, um die Konfigurationsoptionen anzuzeigen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6323,7 +6919,7 @@ msgstr "Bitte wählen Sie eine Zahlungsmethode"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please select a time slot before proceeding."
-msgstr ""
+msgstr "Wählen Sie ein Zeitfenster aus, bevor Sie fortfahren."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6350,7 +6946,7 @@ msgstr "Kassensystem-Konfiguration"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr "Kundendisplay des Kassensystems in einem Fenster geöffnet"
 
@@ -6560,6 +7156,12 @@ msgid "Point of Sales"
 msgstr "Kassensystem"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Point of sale configuration:"
+msgstr "Kassensystem-Konfiguration:"
+
+#. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
@@ -6680,7 +7282,7 @@ msgstr "Gebucht"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Powered by"
-msgstr "Powered by"
+msgstr "Unterstützt durch"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6835,7 +7437,7 @@ msgstr "Pricer-Etiketten"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricing"
-msgstr "Preiskalkulation"
+msgstr "Preise"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6884,8 +7486,8 @@ msgstr "Bericht mit allen Aufträgen der laufenden Kassensitzung drucken"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print basic ticket without prices. Can be used for gifts."
 msgstr ""
-"Drucken Sie das Standardticket ohne Preise. Kann für Geschenke verwendet "
-"werden"
+"Drucken Sie den Standardbeleg ohne Preise. Kann für Geschenke verwendet "
+"werden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -6895,8 +7497,8 @@ msgid ""
 "Print information on the receipt to allow the customer to easily access the "
 "invoice anytime, from Odoo's portal."
 msgstr ""
-"Drucken Sie Informationen auf dem Beleg, um es Kunden zu ermöglichen, "
-"jederzeit auf die Rechnung aus dem Odoo-Portal zuzugreifen"
+"Drucken Sie Informationen auf dem Beleg, damit Kunden jederzeit über das "
+"Odoo-Portal auf die Rechnung zugreifen können."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6907,7 +7509,8 @@ msgstr "Drucken Sie Bestellungen in der Küche, an der Bar usw."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print receipts automatically once the payment is registered"
 msgstr ""
-"Drucken Sie Kassenbons automatisch aus, sobald die Zahlung registriert ist."
+"Drucken Sie Kassenbelege automatisch aus, sobald die Zahlung registriert "
+"wurde."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -6927,9 +7530,21 @@ msgid "Printer"
 msgstr "Drucker"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Printer Checkbox"
+msgstr "Drucker-Kontrollkästchen"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__name
 msgid "Printer Name"
 msgstr "Druckername"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Printer Password Location"
+msgstr "Speicherort des Druckerpassworts"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_type
@@ -6938,9 +7553,23 @@ msgstr "Druckermodell"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Printer cover is open, please close it before printing"
+msgstr "Die Druckerabdeckung ist offen. Schließen Sie sie vor dem Drucken."
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid "Printer cover is open. Please close it and try again!"
 msgstr ""
+"Der Deckel des Druckers ist geöffnet. Schließen Sie sie und versuchen Sie es "
+"erneut."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Printer's local IP address is printerd"
+msgstr "Die lokale IP-Adresse des Druckers wird gedruckt"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7160,12 +7789,12 @@ msgstr "Proxy-Warnung"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "QFPay"
-msgstr ""
+msgstr "QFPay"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_qfpay
 msgid "QFPay Payment Terminal"
-msgstr ""
+msgstr "QFPay-Zahlungsterminal"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7295,7 +7924,7 @@ msgstr "Bonnummer"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Receipt Printer"
-msgstr "Bondrucker"
+msgstr "Belegdrucker"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7334,7 +7963,7 @@ msgstr "Referenz"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Referenz zwischen Bestandsdokumenten"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7431,7 +8060,7 @@ msgstr "Rückerstattungen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Register"
-msgstr "Anmelden"
+msgstr "Kasse"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7443,6 +8072,8 @@ msgstr "Verknüpfte Sitzung: %(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 msgid "Reload Data"
 msgstr "Daten neu laden"
 
@@ -7459,7 +8090,13 @@ msgstr "Alle Daten neu laden (kann je nach Anzahl der Daten länger dauern)"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Reload data"
+msgstr "Daten neu laden"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 msgid "Remaining"
 msgstr "Verbleibend"
 
@@ -7540,7 +8177,7 @@ msgstr "Preisänderungen für Manager einschränken"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Restrict price modification to managers"
-msgstr "Beschränken Sie Preisänderungen auf Manager"
+msgstr "Lassen Sie nur Manager Preisänderungen vornehmen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7576,7 +8213,7 @@ msgstr "Retourniert"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__reversed_move_ids
 msgid "Reversal Account Moves"
-msgstr ""
+msgstr "Rückbuchungen"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7684,6 +8321,18 @@ msgid "SOLD:"
 msgstr "VERKAUFT:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "SSL Settings"
+msgstr "SSL-Einstellungen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "SSL/TLS > Basic"
+msgstr "SSL/TLS > Basis"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
 msgstr "Anzahl der Verkaufspositionen"
@@ -7765,6 +8414,12 @@ msgstr "Scannen"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr "QR-Code scannen"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr ""
@@ -7828,6 +8483,12 @@ msgstr "Mehr suchen"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Search products..."
 msgstr "Produkte suchen ..."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Secure printing"
+msgstr "Sicheres Drucken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__access_token
@@ -7945,7 +8606,7 @@ msgstr "Rücherstattungsantrag versenden"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Send Text receipt Using sms"
-msgstr "Senden Sie den Beleg per SMS"
+msgstr "Senden Sie den Beleg per SMS."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8030,7 +8691,7 @@ msgstr "Sitzungsbericht"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__statistics_for_current_session
 msgid "Session Statistics"
-msgstr ""
+msgstr "Sitzungsstatistiken"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -8059,7 +8720,7 @@ msgid ""
 "during the closing of the session"
 msgstr ""
 "Legen Sie eine maximal zulässige Differenz zwischen dem erwarteten und dem "
-"gezählten Geld beim Abschluss der Sitzung fest."
+"gezählten Geldbetrag beim Abschluss der Sitzung fest."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
@@ -8080,7 +8741,7 @@ msgstr "Steuerposition festlegen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "Setzen Sie mehrere Preise pro Produkt, automatische Rabatte etc."
+msgstr "Legen Sie mehrere Preise pro Produkt, automatische Rabatte usw. fest."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8165,7 +8826,7 @@ msgstr "Mürbeteig mit einer Füllung aus Sauerkirschen."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Shortcut to skip payment screen"
-msgstr ""
+msgstr "Verknüpfung zum Überspringen des Zahlungsbildschirms"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
@@ -8182,7 +8843,7 @@ msgstr "Produktbilder anzeigen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show category images"
-msgstr "Katgeoriebilder anzeigen"
+msgstr "Kategoriebilder anzeigen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__show_category_images
@@ -8190,6 +8851,12 @@ msgstr "Katgeoriebilder anzeigen"
 msgid "Show category images in the Point of Sale interface."
 msgstr ""
 "<div></div>Zeigen Sie Bilder von Kategorien in der Kassenschnittstelle an."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Show details"
+msgstr "Details anzeigen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -8205,7 +8872,7 @@ msgstr "Margen & Kosten anzeigen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs on product information"
-msgstr "Zeigen Sie Margen & Kosten auf der Produktinformation an"
+msgstr "Zeigen Sie Margen und Kosten in den Produktinformationen an."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8233,7 +8900,7 @@ msgstr "Vorschaufenster überspringen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Slot"
-msgstr ""
+msgstr "Zeitfenster"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
@@ -8252,6 +8919,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Some Serial/Lot Numbers are missing"
 msgstr "Einige Serien-/Losnummern fehlen"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
+"Einige Aufträge werden bereits in Rechnung gestellt. Versuchen Sie es später "
+"erneut."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8283,12 +8958,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Some process are still running in background, please wait..."
 msgstr ""
+"Einige Prozesse laufen noch im Hintergrund, bitte haben Sie einen Moment "
+"Geduld …"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Some required information is missing."
-msgstr ""
+msgstr "Einige erforderliche Informationen fehlen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8297,6 +8974,16 @@ msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
 "Einige, wenn nicht alle, Nachbearbeitungen nach der Synchronisierung sind "
 "fehlgeschlagen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid ""
+"Something went wrong... If you really are stuck, share the report with your "
+"friendly support service"
+msgstr ""
+"Etwas ist schiefgelaufen … Wenn Sie wirklich feststecken, teilen Sie den "
+"Bericht mit dem freundlichen Kundenservice."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -8328,12 +9015,6 @@ msgstr "Sportschuhe"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
 msgstr "Startdatum"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/order_display/order_display.js:0
-msgid "Start adding products"
-msgstr "Produkte hinzufügen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -8378,6 +9059,12 @@ msgid "Stock should be updated at closing"
 msgstr "Der Bestand sollte beim Abschluss aktualisiert werden"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Stock variation for %s"
+msgstr "Bestandsabweichung für %s"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Stock, product configurator, replenishment, discounts"
@@ -8401,18 +9088,12 @@ msgstr "Barcode-Scanner beenden"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_order_edit_tracking
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Store edited orders in the backend"
-msgstr "Speichern Sie bearbeitete Aufträge im Backend"
+msgstr "Speichern Sie bearbeitete Aufträge im Backend."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Some orders are already being invoiced. Please try again later."
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -8426,7 +9107,9 @@ msgstr "Stylische Lederjacke, robust und modisch für alle Gelegenheiten."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "Zwischensumme"
 
@@ -8442,9 +9125,15 @@ msgstr "Zwischensumme mit/ohne Rabatt"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Succesfully printed a test receipt"
+msgstr "Testbeleg wurde erfolgreich gedruckt"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
 msgid "Successfully made a cash %s of %s."
-msgstr "Bargeld %s in Höhe von %s war erfolgreich."
+msgstr "%s in Höhe von %s erfolgreich abgeschlossen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -8468,6 +9157,12 @@ msgid ""
 msgstr ""
 "Süßer, mit Pekannüssen gefüllter Kuchen mit einer reichhaltigen, buttrigen "
 "Füllung und Salzkörnern."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "System Parameter Setup"
+msgstr "Einrichtung der Systemparameter"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.t_shirt_slim_product_template
@@ -8560,6 +9255,7 @@ msgstr "Preis inkl. Steuern"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -8603,8 +9299,21 @@ msgstr "Technische Sachen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Tel:"
 msgstr "Tel.:"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Terminal"
+msgstr "Terminal"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos_button.xml:0
+msgid "Test"
+msgstr "Test"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8637,6 +9346,8 @@ msgid ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
 msgstr ""
+"Der Epson-Belegdrucker wird anstelle des an die IoT-Box angeschlossenen "
+"Belegdruckers verwendet."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__proxy_ip
@@ -8686,8 +9397,8 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
-msgid "The Ticket Number should be at least 14 characters long."
-msgstr "Die Bonnummer sollte mindestens 14 Zeichen lang sein."
+msgid "The Ticket Number should be at least 12 characters long."
+msgstr "Die Ticketnummer sollte mindestens 12 Zeichen lang sein."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8708,6 +9419,10 @@ msgid ""
 "The rounding precision is %(rounding)s so you should set %(expectedAmount)s "
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
+"Der Betrag Ihrer Zahlungszeilen muss gerundet werden, um die Transaktion zu "
+"validieren.\n"
+"Die Rundungsgenauigkeit beträgt %(rounding)s, daher sollten Sie %"
+"(expectedAmount)s als Zahlungsbetrag anstelle von %(paidAmount)s festlegen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -8721,6 +9436,20 @@ msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr ""
 "Die Bargeldrundungsstrategie des Kassensystems %(pos)s muss „%(value)s“ sein."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "The company must have a fiscal country set."
+msgstr "Das Unternehmen muss ein Steuerland festgelegt haben."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "The cutter has a foreign matter, please check the cutter mechanism"
+msgstr ""
+"In der Schneidemaschine befindet sich ein Fremdkörper. Prüfen Sie den "
+"Schneidemechanismus."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8748,6 +9477,15 @@ msgid ""
 msgstr ""
 "Das Standardtrinkgeldprodukt fehlt. Bitte geben Sie das Trinkgeld manuell "
 "ein. (Siehe Trinkgeldfeld)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"The device is not connected, please check the printer power / connection"
+msgstr ""
+"Das Gerät ist nicht verbunden. Prüfen Sie die Stromversorgung/Verbindung des "
+"Druckers."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8784,6 +9522,9 @@ msgid ""
 "To find more details on the error reason, please search online for: Epson "
 "Server Direct Print %s "
 msgstr ""
+"Der folgende Fehlercode wurde vom Drucker ausgegeben: %s\n"
+"Um weitere Informationen zur Fehlerursache zu erhalten, recherchieren Sie "
+"online: Epson Server Direct Print %s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -8856,6 +9597,12 @@ msgstr ""
 #: code:addons/point_of_sale/models/product_combo.py:0
 msgid "The maximum quantity of a combo must be greater or equal to 1."
 msgstr "Die maximale Menge einer Kombi muss größer oder gleich 1 sein."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "The message will appear from the browser."
+msgstr "Die Meldung wird im Browser angezeigt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8932,6 +9679,20 @@ msgstr ""
 "der Bestellung."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "The paper is empty, please load paper into the printer"
+msgstr "Das Papierfach ist leer. Legen Sie Papier in den Drucker ein."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "The password is located on the back of the printer (remove covers)."
+msgstr ""
+"Das Passwort befindet sich auf der Rückseite des Druckers (Abdeckungen "
+"entfernen)."
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
@@ -8989,7 +9750,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid "The printer is not reachable."
-msgstr ""
+msgstr "Der Drucker ist nicht erreichbar."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "The printers are properly configured and the LNA is activated."
+msgstr "Die Drucker sind ordnungsgemäß konfiguriert und der LNZ ist aktiviert."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_after
@@ -9135,7 +9902,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Mercado Pago on terminal"
-msgstr "Die Transaktionen werden von Mercado Pago auf dem Terminal verarbeitet"
+msgstr "Die Transaktionen werden von Mercado Pago am Terminal verarbeitet."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercado_pago
@@ -9149,7 +9916,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Pine Labs on the terminal."
-msgstr "Die Transaktionen werden von Pine Labs auf dem Terminal verarbeitet."
+msgstr "Die Transaktionen werden von Pine Labs am Terminal verarbeitet."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pine_labs
@@ -9163,7 +9930,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by QFPay on the terminal."
-msgstr ""
+msgstr "Die Transaktionen werden von QFPay am Terminal verarbeitet."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_qfpay
@@ -9171,6 +9938,8 @@ msgid ""
 "The transactions are processed by QFPay. Set your QFPay credentials on the "
 "related payment method."
 msgstr ""
+"Die Transaktionen werden von QFPay verarbeitet. Legen Sie Ihre QFPay-"
+"Anmeldedaten für die entsprechende Zahlungsmethode fest."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
@@ -9197,8 +9966,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Viva.com on terminal or tap on phone."
 msgstr ""
-"Die Transaktionen werden von Viva.com auf dem Terminal oder per „Tap to "
-"phone“ verarbeitet."
+"Die Transaktionen werden von Viva.com am Terminal oder per „Kontaktlos "
+"zahlen“ verarbeitet."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
@@ -9241,6 +10010,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "There is already an electronic payment in progress."
 msgstr "Es ist bereits eine elektronische Zahlung im Gange."
@@ -9307,7 +10077,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "These payment methods will be available for fast payment"
-msgstr ""
+msgstr "Diese Zahlungsmethoden stehen für eine schnelle Zahlung zur Verfügung"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9330,6 +10100,12 @@ msgstr ""
 "Diese Barzahlungsmethode wird bereits in einem anderen Kassensystem "
 "verwendet.\n"
 "Für dieses Kassensystem sollte eine neue Barzahlungsmethode erstellt werden."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr "Dieses Gerät"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -9389,17 +10165,6 @@ msgstr ""
 "nicht ändern"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-msgid ""
-"This journal is associated with payment method %(payment_method)s that is "
-"being used by order %(pos_order)s in the active pos session %(pos_session)s"
-msgstr ""
-"Dieses Journal ist mit einer Zahlungsmethode %(payment_method)s verbunden, "
-"die im Auftrag %(pos_order)s der aktiven Kassensitzung %(pos_session)s "
-"verwendet wird"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "This operation will destroy all ${"
@@ -9440,6 +10205,15 @@ msgid ""
 msgstr ""
 "Dieser Auftrag ist noch nicht mit dem Server synchronisiert. Vergewissern "
 "Sie sich, dass er synchronisiert wurde und versuchen Sie es erneut."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid ""
+"This orderline has already been sent to the kitchen and cannot be edited."
+msgstr ""
+"Diese Auftragszeile wurde bereits an die Küche weitergeleitet und kann nicht "
+"mehr bearbeitet werden."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9500,6 +10274,12 @@ msgstr ""
 #: model:product.template,name:point_of_sale.product_tiger_white_loaf_product_template
 msgid "Tiger white loaf"
 msgstr "Tigerweißbrot"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Timeout occured, please try again"
+msgstr "Das hat zu lange gedauert. Versuchen Sie es erneut."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9578,16 +10358,8 @@ msgstr ""
 msgid ""
 "To enable invoice creation, please add a journal for it in the settings."
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid ""
-"To ensure due balance follow-up, generate an invoice or download the "
-"accounting application. "
-msgstr ""
-"Um die Verfolgung fälliger Beträge zu gewährleisten, erstellen Sie eine "
-"Rechnung oder laden Sie die Buchhaltungsapp herunter. "
+"Um die Rechnungserstellung zu aktivieren, fügen Sie in den Einstellungen ein "
+"Journal dafür hinzu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -9620,6 +10392,7 @@ msgstr "Heute"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Total"
 msgstr "Insgesamt"
 
@@ -9669,7 +10442,7 @@ msgstr "Gesamtpreis inkl. Steuern:"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total VAT:"
 msgstr "MwSt. insgesamt:"
 
@@ -9792,20 +10565,6 @@ msgstr ""
 "%s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
-msgid ""
-"Unable to create consolidated invoice/s because the following orders can't "
-"be invoiced.\n"
-"\n"
-"%s"
-msgstr ""
-"Es können keine konsolidierten Rechnungen erstellt werden, da die folgenden "
-"Aufträge nicht in Rechnung gestellt werden können.\n"
-"\n"
-"%s"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Unable to download invoice."
@@ -9911,7 +10670,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr "Aktualisierung der auf Lager befindlichen Mengen"
+msgstr "Aktualisieren Sie die auf Lager befindlichen Mengen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "Update the printer firmware"
+msgstr "Aktualisieren Sie die Drucker-Firmware"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_upper
@@ -9943,17 +10708,17 @@ msgstr "Eine Preisliste verwenden."
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid "Use a printer connected to the IoT Box"
-msgstr ""
+msgstr "Einen an die IoT-Box angeschlossenen Drucker verwenden"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
 msgid "Use an Epson printer"
-msgstr ""
+msgstr "Epson-Drucker verwenden"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use automatic taxes mapping with Avatax"
-msgstr "Verwenden Sie automatische Steuerzuordnung mit Avatax"
+msgstr "Verwenden Sie die automatische Steuerzuordnung mit Avatax."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_avatax
@@ -9964,14 +10729,14 @@ msgstr "Verwenden Sie automatische Steuerzuordnung mit Avatax im Kassensystem"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use barcodes to scan products, customer cards, etc."
-msgstr "Verwenden Sie Barcodes, um Produkte, Kundenkarten usw. zu scannen"
+msgstr "Verwenden Sie Barcodes, um Produkte, Kundenkarten usw. zu scannen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
 msgstr ""
 "Verwenden Sie Steuerpositionen, um unterschiedliche Steuern pro Auftrag zu "
-"erhalten"
+"erhalten."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9979,8 +10744,8 @@ msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
 msgstr ""
-"Verwendet, um Produktkommissionierung zu erfassen. Produkte werden von ihrem "
-"Standardquelllagerort verbraucht."
+"Wird verwendet, um Produktkommissionierungen zu erfassen. Produkte werden "
+"aus ihrem Standardquelllagerort genommen."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_users
@@ -10013,7 +10778,7 @@ msgstr "MwSt."
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "VAT:"
 msgstr "USt."
 
@@ -10081,9 +10846,7 @@ msgid "Warehouse (PoS)"
 msgstr "Lagerhaus (Kassensystem)"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Warning"
@@ -10096,6 +10859,13 @@ msgid ""
 "Warning, the paid amount is higher than the total amount. (Difference: %s)"
 msgstr ""
 "Warnung! Der bezahlte Betrag ist höher als der Gesamtbetrag. (Differenz: %s)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "We duly advise you to use Chrome or Brave browser."
+msgstr ""
+"Wir empfehlen Ihnen dringend, den Chrome- oder Brave-Browser zu verwenden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
@@ -10125,6 +10895,12 @@ msgstr "Gewogenes Produkt"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Welcome."
 msgstr "Willkommen!"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "What is it?"
+msgstr "Was ist das?"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
@@ -10182,7 +10958,7 @@ msgstr "Arbeitsdetail"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Would you like to continue without printing or retry?"
-msgstr ""
+msgstr "Möchten Sie ohne Drucken fortfahren oder es erneut versuchen?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10224,9 +11000,29 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
+"Sie können es entweder auf diesem Gerät verwenden oder den QR-Code scannen, "
+"um es auf einem anderen Gerät anzuzeigen."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid ""
+"You can not archive this journal because it is set on the following payment "
+"method : %s."
+msgstr ""
+"Sie können dieses Journal nicht archivieren, da es auf die folgende "
+"Zahlungsmethode eingestellt ist: %s."
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
-msgstr ""
+msgstr "Sie können %s der Rückerstattungsanweisung nicht ändern."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10264,6 +11060,17 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"You can't reset this invoice to draft because the POS session is still open. "
+"Please close the ongoing session first, then try again."
+msgstr ""
+"Sie können diese Rechnung nicht auf Entwurf zurücksetzen, da die "
+"Kassensitzung noch geöffnet ist. Schließen Sie zuerst die laufende Sitzung "
+"und versuchen Sie es dann erneut."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "You can't: create a pos order from the backend interface, or unset the "
@@ -10284,6 +11091,16 @@ msgid ""
 msgstr ""
 "Sie können „%(picking_type)s“ nicht archivieren, da es von der Kassensystem-"
 "Konfiguration „%(config)s“ verwendet wird."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
+"Sie können ein Produkt archivieren, das in einer Kassensystem-Konfiguration "
+"als Sonderprodukt festgelegt ist. Ändern Sie zunächst die Konfiguration."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10327,6 +11144,16 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/res_partner.py:0
+msgid ""
+"You cannot delete a customer that has point of sales orders. You can archive "
+"it instead."
+msgstr ""
+"Sie können einen Kunden nicht löschen, der über Kassenaufträge verfügt. Sie "
+"können ihn jedoch archivieren."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
@@ -10357,20 +11184,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/ir_sequence.py:0
 msgid "You cannot delete a sequence used in an active POS config: %s"
 msgstr ""
+"Es ist nicht möglich, eine Sequenz zu löschen, die in einer aktiven "
+"Kassensystem-Konfiguration verwendet wird: %s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
 msgstr "Sie können die Zahlung für einen gebuchten Auftrag nicht ändern."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr ""
-"Sie können keine Aufträge in Rechnung stellen, die zu verschiedenen "
-"Unternehmen gehören."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10533,6 +11354,12 @@ msgid "Your {{ object.config_id.name }} receipt"
 msgstr "Ihr Beleg {{ object.config_id.name }}"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "access"
+msgstr "Zugriff"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "and"
 msgstr "und"
@@ -10580,7 +11407,6 @@ msgstr "z. B. 1234567890"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "e.g. Cash"
 msgstr "z. B. Bargeld"
 
@@ -10593,6 +11419,11 @@ msgstr "z. B. Cheeseburger"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "e.g. Company Address, Website"
 msgstr "z. B. Unternehmensadresse, Website"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "e.g. Dine in"
+msgstr "z. B. Zum Essen im Restaurant"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -10608,6 +11439,30 @@ msgstr "z. B. Rücksendebedingungen, Vielen Dank für Ihren Einkauf bei uns!"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
 msgstr "z. B. Softdrinks"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "ePOS print enabled"
+msgstr "ePOS-Druckfunktion aktiviert"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "ePOS printers (Epson) configuration"
+msgstr "Konfiguration von ePOS-Druckern (Epson)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "ePOS-print"
+msgstr "ePOS-print"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "ePoS Printer Service"
+msgstr "ePoS-Druckerservice"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -10651,16 +11506,21 @@ msgstr "prognostiziert"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
-msgid "free"
-msgstr "verfügbare"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
 msgstr "von"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer"
+msgstr "http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "iOS devices (iPad, iPhones) are not compatible yet."
+msgstr "iOS-Geräte (iPad, iPhones) sind noch nicht kompatibel."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10690,9 +11550,21 @@ msgstr "in dieser Kategorie."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
+msgid "included"
+msgstr "inbegriffen"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "install a chart of accounts"
 msgstr "installieren Sie einen Kontenplan"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "is enabled"
+msgstr "aktiviert ist"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10719,10 +11591,15 @@ msgstr "zu"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "open orders for the next few days."
 msgstr "offene Aufträge für die nächsten Tage."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
+msgid "open orders planned for later."
+msgstr "offene Aufträge, die für später geplant sind."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -10739,6 +11616,12 @@ msgstr "Aufträge:"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "outstanding rescue session"
 msgstr "ausstehende Auffangssitzung"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "point_of_sale.use_lna"
+msgstr "point_of_sale.use_lna"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10758,6 +11641,12 @@ msgid "return"
 msgstr "retournieren"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "terminal"
+msgstr "Terminal"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "to activate the buttons."
@@ -10767,6 +11656,92 @@ msgstr ", um die Schaltflächen zu aktivieren."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "unter Anwendung von"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
+msgid "with a value of"
+msgstr "mit einem Wert von"
+
+#~ msgid "Action cancelled (%s)"
+#~ msgstr "Aktion abgebrochen (%s)"
+
+#~ msgid "Cash drawer opened (%s)"
+#~ msgstr "Kasse geöffnet (%s)"
+
+#~ msgid "There is already a cash payment line."
+#~ msgstr "Es gibt bereits eine Kassenzahlungszeile."
+
+#~ msgid "free"
+#~ msgstr "verfügbar"
+
+#~ msgid ""
+#~ "This journal is associated with payment method %(payment_method)s that is "
+#~ "being used by order %(pos_order)s in the active pos session %"
+#~ "(pos_session)s"
+#~ msgstr ""
+#~ "Dieses Journal ist mit einer Zahlungsmethode %(payment_method)s "
+#~ "verbunden, die im Auftrag %(pos_order)s der aktiven Kassensitzung %"
+#~ "(pos_session)s verwendet wird"
+
+#~ msgid ""
+#~ "Local Network Access configuration is enabled, but your browser is not "
+#~ "Chromium-based. Please use a Chromium-based browser to benefit from this "
+#~ "feature."
+#~ msgstr ""
+#~ "Die Konfiguration für den lokalen Netzwerkzugriff ist aktiviert, aber Ihr "
+#~ "Browser basiert nicht auf Chromium. Verwenden Sie einen Chromium-"
+#~ "basierten Browser, um diese Funktion nutzen zu können."
+
+#~ msgid ""
+#~ "Unable to create consolidated invoice/s because the following orders "
+#~ "can't be invoiced.\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Es können keine konsolidierten Rechnungen erstellt werden, da die "
+#~ "folgenden Aufträge nicht in Rechnung gestellt werden können.\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Confirm?"
+#~ msgstr "Bestätigen?"
+
+#~ msgid "Start adding products"
+#~ msgstr "Produkte hinzufügen"
+
+#~ msgid ""
+#~ "This invoice is linked to a POS Order, resetting it to draft prevents "
+#~ "closing the session. You should rather refund the order or create a "
+#~ "credit note."
+#~ msgstr ""
+#~ "Diese Rechnung ist mit einem Kassenauftrag verknüpft. Das Zurücksetzen in "
+#~ "den Entwurfsstatus verhindert das Schließen der Sitzung. Sie sollten "
+#~ "stattdessen den Auftrag erstatten oder eine Gutschrift erstellen."
+
+#~ msgid "Warning: Invoice Reset Risk"
+#~ msgstr "Warnung: Risiko beim Zurücksetzen der Rechnung"
+
+#~ msgid "Add %s"
+#~ msgstr "Hinzufügen %s"
+
+#~ msgid ""
+#~ "To ensure due balance follow-up, generate an invoice or download the "
+#~ "accounting application. "
+#~ msgstr ""
+#~ "Um die Verfolgung fälliger Beträge zu gewährleisten, erstellen Sie eine "
+#~ "Rechnung oder laden Sie die Buchhaltungsapp herunter. "
+
+#~ msgid "The Ticket Number should be at least 14 characters long."
+#~ msgstr "Die Bonnummer sollte mindestens 14 Zeichen lang sein."
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr ""
+#~ "Sie können keine Aufträge in Rechnung stellen, die zu verschiedenen "
+#~ "Unternehmen gehören."
 
 #~ msgid " REFUND"
 #~ msgstr "RÜCKERSTATTUNG"

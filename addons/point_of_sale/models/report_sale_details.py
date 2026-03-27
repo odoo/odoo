@@ -98,7 +98,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             currency = order.session_id.currency_id
 
             for line in order.lines:
-                if line.price_subtotal_incl >= 0:
+                if not line.order_id.is_refund:
                     products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
                 else:
                     refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
@@ -119,6 +119,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 WHERE payment.payment_method_id = method.id
                     AND payment.id IN %(payment_ids)s
                 GROUP BY method.name, method.is_cash_count, payment.session_id, method.id, journal_id
+                ORDER BY method.id, payment.session_id
             """, method_name=method_name, payment_ids=tuple(payment_ids)))
             payments = self.env.cr.dictfetchall()
         else:
@@ -222,7 +223,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     })
 
                 # If there is a cash difference, we remove the last cash move which is the cash difference
-                if cash_difference != 0:
+                if session.currency_id.round(cash_difference) != 0:
                     cash_moves = cash_moves[:-1]
 
                 for cash_move in cash_moves:
@@ -317,10 +318,18 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             })
             invoiceTotal += session._get_total_invoice()
             totalPaymentsAmount += session.total_payments_amount
-
+        payments_per_method = {}
         for payment in payments:
             if payment.get('id'):
-                payment['name'] = self.env['pos.payment.method'].browse(payment['id']).name + ' ' + self.env['pos.session'].browse(payment['session']).name
+                method_name = self.env['pos.payment.method'].browse(payment['id']).name
+                payment['name'] = method_name + ' ' + self.env['pos.session'].browse(payment['session']).name
+                if payments_per_method.get(payment['id']):
+                    payments_per_method[payment['id']]['total'] += payment['total']
+                else:
+                    payments_per_method[payment['id']] = {
+                        'name': method_name,
+                        'total': payment['total'],
+                    }
 
         return {
             'opening_note': sessions[0].opening_notes if len(sessions) == 1 else False,
@@ -347,6 +356,8 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'invoiceList': invoiceList,
             'invoiceTotal': invoiceTotal,
             'total_paid': totalPaymentsAmount,
+            'payments_per_method': payments_per_method.values(),
+            'show_payment_per_method': not session_ids,
         }
 
     def _get_product_total_amount(self, line):
@@ -376,12 +387,13 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 base_amounts[tax['id']] = tax['base']
 
             for tax_id, base_amount in base_amounts.items():
-                taxes['taxes'][tax_id]['base_amount'] += base_amount
+                taxes['taxes'][tax_id]['base_amount'] += currency.round(base_amount)
         else:
             taxes['taxes'].setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
             taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl
 
-        taxes['base_amount'] += line.price_subtotal
+        refund_sign = -1 if line.order_id.is_refund else 1
+        taxes['base_amount'] += line.price_subtotal * refund_sign
         return products, taxes
 
     def _get_total_and_qty_per_category(self, categories):

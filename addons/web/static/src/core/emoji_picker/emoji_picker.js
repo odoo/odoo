@@ -18,7 +18,7 @@ import {
 } from "@odoo/owl";
 
 import { loadBundle } from "@web/core/assets";
-import { _t } from "@web/core/l10n/translation";
+import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -136,12 +136,12 @@ export class EmojiPicker extends Component {
                 : this.categories[0].sortId;
         });
         onMounted(() => {
-            this.navbarResizeObserver = new ResizeObserver(() => this.adaptNavbar());
-            this.navbarResizeObserver.observe(this.navbarRef.el);
-            this.adaptNavbar();
             if (this.emojis.length === 0) {
                 return;
             }
+            this.navbarResizeObserver = new ResizeObserver(() => this.adaptNavbar());
+            this.navbarResizeObserver.observe(this.navbarRef.el);
+            this.adaptNavbar();
             this.highlightActiveCategory();
             if (this.props.storeScroll) {
                 this.gridRef.el.scrollTop = this.props.storeScroll.get();
@@ -204,7 +204,7 @@ export class EmojiPicker extends Component {
             () => [this.searchTerm]
         );
         onWillUnmount(() => {
-            this.navbarResizeObserver.disconnect();
+            this.navbarResizeObserver?.disconnect();
             if (!this.gridRef.el) {
                 return;
             }
@@ -335,6 +335,9 @@ export class EmojiPicker extends Component {
      * navigation of the emoji picker.
      */
     updateEmojiPickerRepr() {
+        if (this.emojis.length === 0) {
+            return;
+        }
         const emojiEls = Array.from(this.gridRef.el.querySelectorAll(".o-Emoji"));
         const emojiRects = emojiEls.map((el) => el.getBoundingClientRect());
         this.emojiMatrix = [];
@@ -516,7 +519,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
         ...options,
         onClose: () => {
             state.isOpen = false;
-            options.onClose?.();
+            props.onClose?.();
         },
     };
     const popover = usePopover(PickerComponent, {
@@ -568,6 +571,8 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     env: component.env,
                     props: pickerMobileProps,
                     getTemplate,
+                    translatableAttributes: ["data-tooltip"],
+                    translateFn: appTranslateFn,
                 });
                 app.mount(ref.el);
                 remove = () => {
@@ -580,6 +585,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     context: component,
                     onClose: () => {
                         state.isOpen = false;
+                        props.onClose?.();
                         return def.resolve(false);
                     },
                 });

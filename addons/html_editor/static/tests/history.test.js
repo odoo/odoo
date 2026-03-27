@@ -1042,17 +1042,53 @@ describe("unobserved mutations", () => {
             // addition of A is reverted
             expect(nodeA.parentNode).toBe(null);
         });
+        test("node addition to descendant of unobserved node is not observed", async () => {
+            const { editor } = await setupEditor(`<p></p>`);
+            const p = editor.editable.querySelector("p");
+            const nodeA = editor.document.createElement("span");
+            const nodeB = editor.document.createElement("span");
+            nodeA.append(nodeB);
+            editor.shared.history.ignoreDOMMutations(() => p.append(nodeA));
+            const nodeC = editor.document.createElement("span");
+            withAddStep(editor, () => nodeB.append(nodeC)); // should be an empty step
+            expect(editor.shared.history.getHistorySteps().length).toBe(1);
+        });
     });
-    test("node addition to descendant of unobserved node is not observed", async () => {
-        const { editor } = await setupEditor(`<p></p>`);
-        const p = editor.editable.querySelector("p");
-        const nodeA = editor.document.createElement("span");
-        const nodeB = editor.document.createElement("span");
-        nodeA.append(nodeB);
-        editor.shared.history.ignoreDOMMutations(() => p.append(nodeA));
-        const nodeC = editor.document.createElement("span");
-        withAddStep(editor, () => nodeB.append(nodeC)); // should be an empty step
-        expect(editor.shared.history.getHistorySteps().length).toBe(1);
+
+    describe("snapshot step", () => {
+        test("unobserved nodes should be ignored in snapshot step", async () => {
+            const { editor, plugins } = await setupEditor(`<p>p1</p>`);
+            const historyPlugin = plugins.get("history");
+            const p1 = editor.editable.querySelector("p");
+            // Insert unobserved node as direct child of editable
+            const p2 = editor.document.createElement("p");
+            p2.textContent = "p2";
+            editor.shared.history.ignoreDOMMutations(() => editor.editable.append(p2));
+            expect(getContent(editor.editable)).toBe("<p>p1</p><p>p2</p>");
+            // Only p1 should be present in the snapshot step
+            const snapshotStep = editor.shared.history.makeSnapshotStep();
+            expect(snapshotStep.mutations.length).toBe(1);
+            const childNodeId = snapshotStep.mutations[0].nodeId;
+            expect(historyPlugin.nodeMap.getNode(childNodeId)).toBe(p1);
+        });
+        test("unobserved nodes should be ignored in snapshot step (2)", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            const p = editor.editable.querySelector("p");
+            // Insert unobserved node as child of p (thus, not direct child of editable)
+            const span = editor.document.createElement("span");
+            span.textContent = "unobserved";
+            editor.shared.history.ignoreDOMMutations(() => p.append(span));
+            expect(getContent(editor.editable)).toBe("<p>test<span>unobserved</span></p>");
+            // Only p and its text node should be present in the snapshot step
+            const snapshotStep = editor.shared.history.makeSnapshotStep();
+            expect(snapshotStep.mutations.length).toBe(1);
+            const serializedNode = snapshotStep.mutations[0].serializedNode;
+            expect(serializedNode.tagName).toBe("P");
+            const pChildren = serializedNode.children;
+            expect(pChildren.length).toBe(1);
+            expect(pChildren[0].nodeType).toBe(Node.TEXT_NODE);
+            expect(pChildren[0].textValue).toBe("test");
+        });
     });
 });
 

@@ -78,6 +78,36 @@ class AccountMove(models.Model):
                 )
             )
 
+    def _compute_l10n_in_warning(self):
+        super()._compute_l10n_in_warning()
+        gsp_provider = self.env["ir.config_parameter"].sudo().get_param("l10n_in.gsp_provider", "tera")
+        if gsp_provider != "tera":
+            return
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry' and
+            m.l10n_in_edi_status in ('to_send', 'sent') and not m.l10n_in_edi_error
+        )
+        edi_error_message = _(
+            "⚠️ Important Notice – GSP Deprecation \n"
+            "The currently selected GSP (Tera Soft) will be deprecated soon.\n"
+            "To ensure uninterrupted e-Invoice and E-way operations, please switch to BVM GSP as per the"
+        )
+        if not self.env.is_admin():
+            edi_error_message += _(
+                "\n\nYou must contact your system administrator to update the GSP."
+            )
+        for move in indian_invoice:
+            l10n_in_warning = move.l10n_in_warning or {}
+            l10n_in_warning['in_edi_gsp_deprecation'] = {
+                'message': edi_error_message,
+                'action_text': _("Documentation"),
+                'action': {
+                    'name': _("Documentation"),
+                    'type': 'ir.actions.act_url',
+                    'url': 'https://www.odoo.com/documentation/19.0/applications/finance/fiscal_localizations/india.html#gsp-configuration',
+                }
+            }
+            move.l10n_in_warning = l10n_in_warning
+
     #  Action Methods
     def action_export_l10n_in_edi_content_json(self):
         self.ensure_one()
@@ -203,7 +233,7 @@ class AccountMove(models.Model):
         for partner in partners:
             if partner_validation := partner._l10n_in_edi_strict_error_validation():
                 self.l10n_in_edi_error = Markup("<br>").join(partner_validation)
-                return partner_validation
+                return {'messages': partner_validation}
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
         response = self._l10n_in_edi_connect_to_server(
@@ -278,13 +308,17 @@ class AccountMove(models.Model):
                 msg = Markup("<br/>").join(
                     ["[%s] %s" % (e.get("code"), e.get("message")) for e in error]
                 )
+                is_warning = any(warning_code in error_codes for warning_code in ('404', 'timeout'))
                 self.l10n_in_edi_error = (
                     self._l10n_in_edi_get_iap_buy_credits_message()
                     if no_credit else msg
                 )
                 # avoid return `l10n_in_edi_error` because as a html field
                 # values are sanitized with `<p>` tag
-                return msg
+                return {
+                    'messages': [msg],
+                    'is_warning': is_warning
+                }
         data = response.get("data", {})
         json_dump = json.dumps(data)
         json_name = "%s_einvoice.json" % (self.name.replace("/", "_"))
@@ -297,6 +331,16 @@ class AccountMove(models.Model):
             'mimetype': 'application/json',
             'company_id': self.company_id.id,
         })
+        request_json_dump = json.dumps(generate_json, indent=4)
+        request_json_name = "%s_request.json" % (self.name.replace("/", "_"))
+        request_attachment = self.env["ir.attachment"].create({
+            'name': request_json_name,
+            'raw': request_json_dump.encode(),
+            'res_model': self._name,
+            'res_id': self.id,
+            'mimetype': 'application/json',
+            'company_id': self.company_id.id,
+        })
         self.l10n_in_edi_status = 'sent'
         message = []
         for partner in partners:
@@ -304,8 +348,10 @@ class AccountMove(models.Model):
                 message.append(
                     Markup("<strong><em>%s</em></strong><br>%s") % (partner.name, Markup("<br>").join(partner_validation))
                 )
+        message.append(self.env._("E-invoice submitted successfully."))
         if message:
             self.message_post(
+                attachment_ids=[request_attachment.id, attachment.id],
                 body=Markup("<strong>%s</strong><br>%s") % (_("Following:"), Markup("<br>").join(message))
             )
 
@@ -367,12 +413,21 @@ class AccountMove(models.Model):
                     'res_id': self.id,
                     'mimetype': 'application/json',
                 })
+            request_json_dump = json.dumps(cancel_json, indent=4)
+            request_json_name = "%s_cancel_request.json" % (self.name.replace("/", "_"))
+            request_attachment = self.env['ir.attachment'].create({
+                'name': request_json_name,
+                'raw': request_json_dump.encode(),
+                'res_model': self._name,
+                'res_id': self.id,
+                'mimetype': 'application/json',
+            })
             self.message_post(author_id=_get_odoobot_id(self), body=_(
                 "E-Invoice has been cancelled successfully. "
                 "Cancellation Reason: %(reason)s and Cancellation Remark: %(remark)s",
                 reason=EDI_CANCEL_REASON[self.l10n_in_edi_cancel_reason],
                 remark=self.l10n_in_edi_cancel_remarks
-            ))
+            ), attachment_ids=[request_attachment.id, attachment.id] if attachment else [request_attachment.id])
             self.l10n_in_edi_status = 'cancelled'
             self.button_cancel()
         if self._can_commit():
@@ -464,7 +519,7 @@ class AccountMove(models.Model):
         in_round = self._l10n_in_round_value
         line_details = {
             'SlNo': str(index),
-            'IsServc': line.product_id.type == 'service' and 'Y' or 'N',
+            'IsServc': self._l10n_in_is_service_hsn(line.l10n_in_hsn_code) and 'Y' or 'N',
             'HsnCd': self._l10n_in_extract_digits(line.l10n_in_hsn_code),
             'Qty': in_round(quantity or 0.0, 3),
             'Unit': (
@@ -500,7 +555,7 @@ class AccountMove(models.Model):
             'TotItemVal': in_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
         }
         if line.name:
-            line_details['PrdDesc'] = line.name.replace("\n", "")
+            line_details['PrdDesc'] = line.name.replace("\n", "")[:300]
         return line_details
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, json_payload):
@@ -594,7 +649,14 @@ class AccountMove(models.Model):
                 "TaxSch": "GST",
                 "SupTyp": self._l10n_in_get_supply_type(tax_details_by_code.get('igst_amount')),
                 "RegRev": tax_details_by_code.get('is_reverse_charge') and "Y" or "N",
-                "IgstOnIntra": is_intra_state and tax_details_by_code.get('igst_amount') and "Y" or "N",
+                "IgstOnIntra": (
+                    # for Export SEZ LUT tax as per e-invoice api doc validation point 32
+                    # Export and SEZ must be treated as Inter state supply
+                    self.l10n_in_gst_treatment not in ('special_economic_zone', 'overseas')
+                    and is_intra_state
+                    and tax_details_by_code.get("igst_amount")
+                    and "Y" or "N"
+                ),
             },
             "DocDtls": {
                 "Typ": (self.move_type == "out_refund" and "CRN") or (self.debit_origin_id and "DBN") or "INV",
@@ -616,7 +678,7 @@ class AccountMove(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": in_round(tax_details['base_amount'] + global_discount_amount),
+                "AssVal": in_round(tax_details['base_amount']),
                 "CgstVal": in_round(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": in_round(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": in_round(tax_details_by_code.get("igst_amount", 0.00)),
@@ -631,7 +693,11 @@ class AccountMove(models.Model):
                 "Discount": in_round(global_discount_amount),
                 "RndOffAmt": in_round(rounding_amount),
                 "TotInvVal": in_round(
-                    (tax_details["base_amount"] + tax_details["tax_amount"] + rounding_amount)),
+                    tax_details["base_amount"]
+                    + tax_details["tax_amount"]
+                    + rounding_amount
+                    - global_discount_amount
+                ),
             },
         }
         if self.company_currency_id != self.currency_id:
@@ -662,6 +728,29 @@ class AccountMove(models.Model):
                 json_payload['ExpDtls']['ShipBDt'] = shipping_bill_date.strftime("%d/%m/%Y")
             if shipping_port_code_id := self.l10n_in_shipping_port_code_id:
                 json_payload['ExpDtls']['Port'] = shipping_port_code_id.code
+            json_valdtls = json_payload['ValDtls']
+            base_and_tax_amount = tax_details.get("base_amount") + tax_details.get("tax_amount")
+            # For Export If with payment of Tax then we need to include Tax in Total Invoice Value
+            if json_payload['TranDtls']['SupTyp'] == 'EXPWP' and json_valdtls['AssVal'] == base_and_tax_amount:
+                json_payload["ValDtls"]["TotInvVal"] = self._l10n_in_round_value(sum([
+                    json_valdtls['TotInvVal'],
+                    json_valdtls['IgstVal'],
+                    json_valdtls['CgstVal'],
+                    json_valdtls['SgstVal'],
+                    json_valdtls['CesVal'],
+                    json_valdtls['StCesVal'],
+                ]))
+                for line in json_payload["ItemList"]:
+                    line["TotItemVal"] = self._l10n_in_round_value(sum([
+                        line["TotItemVal"],
+                        line["IgstAmt"],
+                        line["CgstAmt"],
+                        line["SgstAmt"],
+                        line["CesAmt"],
+                        line["CesNonAdvlAmt"],
+                        line["StateCesAmt"],
+                        line["StateCesNonAdvlAmt"],
+                    ]))
         return self._l10n_in_edi_generate_invoice_json_managing_negative_lines(json_payload)
 
     def _l10n_in_get_supply_type(self, is_igst_amount):

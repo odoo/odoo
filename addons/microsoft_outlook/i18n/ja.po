@@ -3,13 +3,15 @@
 # * microsoft_outlook
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-14 21:08+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-11 17:17+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "microsoft_outlook/ja/>\n"
 "Language: ja\n"
@@ -38,28 +40,35 @@ msgstr ""
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 msgid ""
-"<span invisible=\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible="
-"\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class="
-"\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlookトークン有効\n"
 "                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid ""
-"<span invisible=\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible="
-"\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" "
-"class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlookトークン有効\n"
 "                    </span>"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__active
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__active
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__active
+msgid "Active"
+msgstr "有効"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -82,19 +91,21 @@ msgstr "認証URI"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
 msgid "Config Settings"
-msgstr "詳細設定"
+msgstr "構成設定"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
-"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
 msgstr ""
 "OAuth認証プロセスでOutlookアカウントを接続します。 \n"
 "デフォルトでは、一致するメールアドレスを持つユーザのみがこのサーバを使用でき"
-"ます。使用範囲を広げるには、\"mail.default.from \""
-"システムパラメータを設定する必要があります。"
+"ます。使用範囲を広げるには、\"mail.default.from \"システムパラメータを設定す"
+"る必要があります。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -107,11 +118,25 @@ msgstr ""
 "、許可を受け入れるためにOutlookのログインページにリダイレクトされます。"
 
 #. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
-msgid "Go back to your mail server"
-msgstr "メールサーバに戻る"
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__display_name
+msgid "Display Name"
+msgstr "表示名"
 
 #. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
+msgid "Go back"
+msgstr "戻る"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__id
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID"
 msgstr "ID"
@@ -130,17 +155,11 @@ msgstr "受信メールサーバ"
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 msgid ""
-"Incorrect Connection Security for Outlook mail server “%s”. Please set it to"
-" \"TLS (STARTTLS)\"."
-msgstr "メールサーバ“%s”の不正な接続セキュリティ。\"TLS (STARTTLS)\""
-"にセットして下さい。"
-
-#. module: microsoft_outlook
-#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
-#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
-#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
-msgid "Is Outlook Credential Configured"
-msgstr "Outlookのクレデンシャルが設定されているか"
+"Incorrect Connection Security for Outlook mail server “%s”. Please set it to "
+"\"TLS (STARTTLS)\"."
+msgstr ""
+"メールサーバ“%s”の不正な接続セキュリティ。\"TLS (STARTTLS)\"にセットして下さ"
+"い。"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -157,6 +176,32 @@ msgstr "Microsoft Outlook Mixin"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "Only the administrator can link an Outlook mail server."
 msgstr "Outlookメールサーバにリンクできるのは管理者のみです。"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Oops, we could not authenticate you. Please try again later."
+msgstr "おっと、認証に失敗しました。時間をおいてもう一度お試しください。"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/controllers/main.py:0
+msgid ""
+"Oops, you're creating an authorization to send from %(email_login)s but your "
+"address is %(email_server)s. Make sure your addresses match!"
+msgstr ""
+"おっと! 送信元として %(email_login)s を認証しようとしていますが、現在のアドレ"
+"スは %(email_server)s です。アドレスが一致していることをご確認ください。"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__outgoing_mail_server_type
+msgid "Outgoing Mail Server Type"
+msgstr "送信メールサーバの種類"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__res_users__outgoing_mail_server_type__outlook
+msgid "Outlook"
+msgstr "Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
@@ -209,15 +254,21 @@ msgstr "使用前にOutlookアカウントと接続して下さい。"
 
 #. module: microsoft_outlook
 #. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Please enter a valid email address."
+msgstr "有効なEメールアドレスを入力してください。"
+
+#. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 msgid ""
 "Please fill the \"Username\" field with your Outlook/Office365 username "
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
-"\"ユーザ名\"の欄には、Outlook/"
-"Office365のユーザ名(メールアドレス)を入力して下さい。これはOutlook "
-"OAuthenticationトークンに使用したものと同じアカウントでなければなりません。"
+"\"ユーザ名\"の欄には、Outlook/Office365のユーザ名(メールアドレス)を入力して下"
+"さい。これはOutlook OAuthenticationトークンに使用したものと同じアカウントでな"
+"ければなりません。"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -225,7 +276,8 @@ msgstr ""
 msgid ""
 "Please leave the password field empty for Outlook mail server “%s”. The "
 "OAuth process does not require it"
-msgstr "Outlookメールサーバ“%s”のパスワードフィールドは空欄にして下さい。OAuth処理は"
+msgstr ""
+"Outlookメールサーバ“%s”のパスワードフィールドは空欄にして下さい。OAuth処理は"
 "それを必要としません。"
 
 #. module: microsoft_outlook
@@ -255,14 +307,6 @@ msgid "Server Type"
 msgstr "サーバタイプ"
 
 #. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
-msgid ""
-"Setup your Outlook API credentials in the general settings to link a Outlook"
-" account."
-msgstr "一般設定でOutlook API認証情報を設定し、Outlookアカウントをリンクします。"
-
-#. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
@@ -274,3 +318,23 @@ msgstr "Outlookの許可コードを生成するためのURL"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "Unknown error."
 msgstr "不明なエラー"
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_res_users
+msgid "User"
+msgstr "ユーザー"
+
+#~ msgid "An error occurred: %s."
+#~ msgstr "エラーが発生しました: %s"
+
+#~ msgid "Go back to your mail server"
+#~ msgstr "メールサーバに戻る"
+
+#~ msgid "Is Outlook Credential Configured"
+#~ msgstr "Outlookのクレデンシャルが設定されているか"
+
+#~ msgid ""
+#~ "Setup your Outlook API credentials in the general settings to link a "
+#~ "Outlook account."
+#~ msgstr ""
+#~ "一般設定でOutlook API認証情報を設定し、Outlookアカウントをリンクします。"

@@ -119,7 +119,9 @@ function createFileUploadForm(maxFiles = 1) {
                                         <div class="o_files_zone row gx-1"></div>
                                         <input type="file" class="form-control s_website_form_input"
                                             name="File Upload" required id="o3xe8o85w0ct"
-                                           ${maxFiles > 1 ? "multiple" : ""} data-max-files-number="${maxFiles}" data-max-file-size="64">
+                                           ${
+                                               maxFiles > 1 ? "multiple" : ""
+                                           } data-max-files-number="${maxFiles}" data-max-file-size="64">
                                     </div>
                                 </div>
                             </div>
@@ -258,9 +260,7 @@ test("(name) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(nameEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(nameEl, true, false);
 });
@@ -315,9 +315,7 @@ test("(mail) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(mailEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(mailEl, true, false);
 });
@@ -352,9 +350,7 @@ test("(subject) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(subjectEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(subjectEl, true, false);
 });
@@ -389,9 +385,7 @@ test("(question) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(questionEl, true, true);
     // Submit
-    onRpc("/website/form/mail.mail", async () => {
-        return {};
-    });
+    onRpc("/website/form/mail.mail", async () => ({}));
     await click("a.s_website_form_send");
     checkField(questionEl, true, false);
 });

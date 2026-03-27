@@ -82,8 +82,8 @@ export class BomOverviewControlPanel extends Component {
             target: "current",
             context: {
                 default_bom_id: this.props.data.bom_id,
-                default_picking_type_id: this.props.currentWarehouse.manu_type_id[0],
-                default_product_qty: this.props.bomQuantity,
+                bom_overview_picking_type_id: this.props.currentWarehouse.manu_type_id[0],
+                bom_overview_product_qty: this.props.bomQuantity,
             },
         };
         return this.action.doAction(action);

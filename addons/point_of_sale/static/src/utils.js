@@ -1,5 +1,8 @@
+/* global QRCode */
+
 import { session } from "@web/session";
 import { getDataURLFromFile } from "@web/core/utils/urls";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -20,7 +23,7 @@ export function uuidv4() {
  * @returns {string}
  */
 export function deduceUrl(url) {
-    const { protocol } = window.location;
+    const protocol = odoo.use_lna ? "http:" : window.location.protocol;
     if (!url.includes("//")) {
         url = `${protocol}//${url}`;
     }
@@ -49,6 +52,13 @@ export function constructAttributeString(line) {
         }
 
         attributeString = attributeString.slice(0, -2);
+    } else if (
+        attributeString === "" &&
+        line?.product_id?.product_template_variant_value_ids?.length > 0
+    ) {
+        attributeString = line.product_id.product_template_variant_value_ids
+            ?.map((attr) => attr.name)
+            .join(", ");
     }
 
     return attributeString;
@@ -169,14 +179,89 @@ export class Counter {
     }
 }
 
+export function isValidPhone(string) {
+    const phone = string.replace(/[\s.\-()]/g, "");
+    const pattern = /^\+\d{8,18}$/;
+    return pattern.test(phone);
+}
+
 export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export const LONG_PRESS_DURATION = session.test_mode ? 100 : 1000;
+// Checks whether an ip address is on the local network. So one of the ranges:
+// 10.0.0.0 - 10.255.255.255
+// 127.0.0.0 - 127.255.255.255
+// 172.16.0.0 - 172.31.255.255
+// 169.254.0.0 - 169.254.255.255
+// 192.168.0.0 - 192.168.255.255
+export function isPrivateIp(ip) {
+    const blocks = ip.split(".");
+    if (blocks.length !== 4) {
+        return false;
+    }
+
+    const [a, b, c, d] = blocks.map(Number);
+    const invalidBlock = blocks.some(
+        (b, i) => isNaN([a, b, c, d][i]) || [a, b, c, d][i] < 0 || [a, b, c, d][i] > 255
+    );
+
+    if (invalidBlock) {
+        return false;
+    }
+
+    return (
+        a === 10 ||
+        a === 127 ||
+        (a === 172 && b >= 16 && b <= 31) ||
+        (a === 192 && b === 168) ||
+        (a === 169 && b === 254)
+    );
+}
+
+export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
 
 export async function getImageDataUrl(imageUrl) {
     const res = await fetch(imageUrl);
     const blob = await res.blob();
     return await getDataURLFromFile(blob);
+}
+
+export function orderUsageUTCtoLocalUtil(data) {
+    const result = {};
+    for (const [datetime, usage] of Object.entries(data)) {
+        const dt = deserializeDateTime(datetime);
+        const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
+        result[formattedDt] = usage;
+    }
+    return result;
+}
+
+/**
+ * Generates a QR code as a data URL in SVG format for a given URL.
+ *
+ * @param {string} url - The URL or text to encode in the QR code.
+ * @param {Object} [options={}] - Optional configuration for the QR code.
+ * @param {number} [options.width=150] - The width of the QR code.
+ * @param {number} [options.height=150] - The height of the QR code.
+ * @param {number} [options.correctLevel=QRCode.CorrectLevel.L] - The error correction level for the QR code.
+ * @param {boolean} [options.useSVG=true] - Whether to generate the QR code as SVG.
+ * @param {Object} [options.rest] - Additional options to pass to the QRCode constructor.
+ * @returns {string} The QR code as a data URL in SVG format.
+ */
+export function generateQRCodeDataUrl(
+    url,
+    { width = 150, height = 150, correctLevel = QRCode.CorrectLevel.L, ...rest } = {}
+) {
+    const tempDiv = document.createElement("div");
+    const options = { width, height, correctLevel, ...rest };
+
+    new QRCode(tempDiv, { text: url, useSVG: true, ...options });
+
+    const svg = tempDiv.querySelector("svg");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+
+    const qr_code_svg = new XMLSerializer().serializeToString(svg);
+    return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
 }

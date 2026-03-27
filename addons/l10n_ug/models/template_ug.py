@@ -38,5 +38,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': '411726',
                 'expense_account_id': '2240',
                 'income_account_id': '1420',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': '320114',
             }
+        }
+
+    @template('ug', 'account.account')
+    def _get_ug_account_account(self):
+        return {
+            '320114': {
+                'account_stock_variation_id': '2291',
+            },
         }

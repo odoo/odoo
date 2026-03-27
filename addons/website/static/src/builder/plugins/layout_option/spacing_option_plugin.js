@@ -6,6 +6,7 @@ import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 
 class SpacingOptionPlugin extends Plugin {
     static id = "SpacingOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetGridSpacingAction,

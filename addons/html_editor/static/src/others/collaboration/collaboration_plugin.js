@@ -22,9 +22,14 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  * @property { CollaborationPlugin['setInitialBranchStepId'] } setInitialBranchStepId
  */
 
+/**
+ * @typedef {(() => void)[]} external_history_step_handlers
+ */
+
 export class CollaborationPlugin extends Plugin {
     static id = "collaboration";
     static dependencies = ["history", "selection", "sanitize"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         history_cleaned_handlers: this.onHistoryClean.bind(this),

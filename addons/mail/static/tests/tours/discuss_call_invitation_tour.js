@@ -44,8 +44,11 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
                 trigger: ".o-discuss-CallInvitation-cameraPreview button[title='Unmute']",
             },
             {
-                trigger:
-                    ".o-discuss-CallInvitation-cameraPreview button[title='Blur Background']:disabled",
+                trigger: ".o-discuss-CallInvitation-cameraPreview button[title='Video Settings']",
+                run: "click",
+            },
+            {
+                trigger: "label:contains('Blur background')",
             },
             {
                 trigger: ".o-discuss-CallInvitation button[title='Hide camera preview']",

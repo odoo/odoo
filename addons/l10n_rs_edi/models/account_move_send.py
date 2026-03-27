@@ -42,21 +42,9 @@ class AccountMoveSend(models.AbstractModel):
                     "errors": [error],
                 }
                 continue
-            invoice_data['l10n_rs_edi_attachment_values'] = invoice._l10n_rs_edi_get_attachment_values(xml)
+            attachment_values = invoice._l10n_rs_edi_get_attachment_values(xml)
+            self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_values)
+            invoice.invalidate_recordset(fnames=['l10n_rs_edi_attachment_id', 'l10n_rs_edi_attachment_file'])
 
             if self._can_commit():
                 self.env.cr.commit()
-
-    @api.model
-    def _link_invoice_documents(self, invoices_data):
-        # EXTENDS 'account'
-        super()._link_invoice_documents(invoices_data)
-        attachments_vals = [
-            invoice_data.get('l10n_rs_edi_attachment_values')
-            for invoice_data in invoices_data.values()
-            if invoice_data.get('l10n_rs_edi_attachment_values')
-        ]
-        if attachments_vals:
-            attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
-            res_ids = [attachment.res_id for attachment in attachments]
-            self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_rs_edi_attachment_id', 'l10n_rs_edi_attachment_file'])

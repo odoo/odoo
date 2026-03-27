@@ -39,10 +39,12 @@ export function settleNthOrder(n, options = {}) {
             run: "click",
         },
     ];
-    if (loadSN) {
+    if (loadSN !== undefined) {
         step.push({
             content: `Choose to auto link the lot number to the order line`,
-            trigger: `.modal-content:contains('Do you want to load the SN/Lots linked to the Sales Order?') button:contains('Ok')`,
+            trigger: `.modal-content:contains('Do you want to load the SN/Lots linked to the Sales Order?') button:contains('${
+                loadSN ? "Ok" : "Cancel"
+            }')`,
             run: "click",
         });
     }
@@ -61,7 +63,7 @@ export function downPaymentFirstOrder(amount) {
             run: "click",
         },
         Numpad.click(amount),
-        Dialog.confirm("Ok"),
+        Dialog.confirm("Apply"),
     ];
 }
 
@@ -82,4 +84,14 @@ export function selectedOrderLinesHasLots(productName, lots) {
     });
     const lotSteps = lots.reduce((acc, serial, i) => acc.concat(getSerialStep(i, serial)), []);
     return [...ProductScreen.selectedOrderlineHas(productName), ...lotSteps];
+}
+
+export function checkOrdersListNotEmpty() {
+    return [
+        ...ProductScreen.clickControlButton("Quotation/Order"),
+        {
+            content: "Check that the orders list is not empty",
+            trigger: ".o_data_row",
+        },
+    ];
 }

@@ -40,40 +40,82 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         if process_type == 'billing':
             return 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0'
 
-    def _add_invoice_payment_means_nodes(self, document_node, vals):
+    def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_payment_means_nodes(document_node, vals)
-        # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
-        payment_means_node = document_node['cac:PaymentMeans']
-        if 'name' in payment_means_node['cbc:PaymentMeansCode']:
-            payment_means_node['cbc:PaymentMeansCode']['name'] = None
-        if 'listID' in payment_means_node['cbc:PaymentMeansCode']:
-            payment_means_node['cbc:PaymentMeansCode']['listID'] = None
+        grouping_key = super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not grouping_key:
+            return
 
-    def _get_address_node(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        address_node = super()._get_address_node(vals)
-        # [BR-NL-28] The use of a country subdivision (cac:AccountingCustomerParty/cac:Party/cac:PostalAddress
-        # /cbc:CountrySubentity) is not recommended
-        address_node['cbc:CountrySubentity'] = None
-        return address_node
+        grouping_key['tax_exemption_reason_code'] = None
+        return grouping_key
 
-    def _get_line_discount_allowance_charge_node(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        node = super()._get_line_discount_allowance_charge_node(vals)
-        if node:
-            # [BR-NL-32] Use of Discount reason code ( AllowanceChargeReasonCode ) is not recommended.
-            # [BR-EN-34] Use of Charge reason code ( AllowanceChargeReasonCode ) is not recommended.
-            # Careful! [BR-42]-Each Invoice line allowance (BG-27) shall have an Invoice line allowance reason (BT-139)
-            # or an Invoice line allowance reason code (BT-140).
-            node['cbc:AllowanceChargeReason'] = {'_text': 'Discount'}
-            node['cbc:AllowanceChargeReasonCode'] = None
-        return node
+    def _ubl_add_tax_currency_code_node(self, vals):
+        # OVERRIDE account.edi.xml.ubl_bis3
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
-    def _get_tax_category_node(self, vals):
+    def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
-        node = super()._get_tax_category_node(vals)
-        # [BR-NL-35] The use of a tax exemption reason code (cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory
-        # /cbc:TaxExemptionReasonCode) is not recommended
-        node['cbc:TaxExemptionReasonCode'] = None
-        return node
+        tax_total_keys = super()._ubl_tax_totals_node_grouping_key(base_line, tax_data, vals, currency)
+
+        company_currency = vals['company'].currency_id
+        if (
+            tax_total_keys['tax_total_key']
+            and company_currency != vals['currency']
+            and tax_total_keys['tax_total_key']['currency'] == company_currency
+        ):
+            tax_total_keys['tax_total_key'] = None
+
+        return tax_total_keys
+
+    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
+        # EXTENDS account.edi.xml.ubl_bis3
+        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
+        discount_node['cbc:AllowanceChargeReasonCode'] = None
+        discount_node['cbc:MultiplierFactorNumeric'] = None
+        discount_node['cbc:BaseAmount'] = None
+        return discount_node
+
+    def _ubl_add_accounting_supplier_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_supplier_party_identification_nodes(vals)
+        nodes = vals['party_node']['cac:PartyIdentification']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.peppol_endpoint:
+            nodes.append({
+                'cbc:ID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': None,
+                },
+            })
+
+    def _ubl_add_accounting_customer_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_customer_party_identification_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if (
+            commercial_partner.country_code == 'NL'
+            and commercial_partner.peppol_endpoint
+        ):
+            vals['party_node']['cac:PartyIdentification'] = [{
+                'cbc:ID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': commercial_partner.peppol_eas if commercial_partner.peppol_eas in ('0106', '0190') else None,
+                },
+            }]
+
+    def _ubl_add_customization_id_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0'
+
+    def _ubl_add_payment_means_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_payment_means_nodes(vals)
+        for node in vals['document_node']['cac:PaymentMeans']:
+            # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
+            node['cbc:PaymentMeansCode']['name'] = None
+            node['cbc:PaymentMeansCode']['listID'] = None

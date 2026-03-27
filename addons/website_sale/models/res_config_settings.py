@@ -99,12 +99,13 @@ class ResConfigSettings(models.TransientModel):
         for record in self:
             if not record.website_id:
                 continue
-            record.website_id.account_on_checkout = record.account_on_checkout
             # account_on_checkout implies different values for `auth_signup_uninvited`
-            if record.account_on_checkout in ['optional', 'mandatory']:
-                record.website_id.auth_signup_uninvited = 'b2c'
-            else:
-                record.website_id.auth_signup_uninvited = 'b2b'
+            if record.website_id.account_on_checkout != record.account_on_checkout:
+                if self.account_on_checkout in ['optional', 'mandatory']:
+                    record.website_id.auth_signup_uninvited = 'b2c'
+                else:
+                    record.website_id.auth_signup_uninvited = 'b2b'
+            record.website_id.account_on_checkout = record.account_on_checkout
 
     # === CRUD METHODS === #
 
@@ -121,6 +122,13 @@ class ResConfigSettings(models.TransientModel):
                 )
             ):
                 website._populate_product_feeds()
+
+            # Due to an earlier oversight, the GMC feature flag was implemented as website-specific,
+            # even though a group-based feature flag is global. This has been corrected in future
+            # versions, but fixing it here would require a model change, which cannot be backported.
+            # This line serves as a workaround to ensure that all websites share the same setting,
+            # providing consistent behavior across versions.
+            self.env['website'].sudo().search_fetch([], []).enabled_gmc_src = self.group_gmc_feed
 
     # === ACTION METHODS === #
 

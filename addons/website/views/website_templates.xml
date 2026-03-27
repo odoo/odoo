@@ -88,10 +88,10 @@
             'data-seo-object': repr(seo_object) if seo_object else None,
         }"/>
         <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
-            'data-is-published': 'website_published' in main_object.fields_get() and main_object.sudo().website_published,
-            'data-can-optimize-seo': 'website_meta_description' in main_object.fields_get(),
-            'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.sudo(False).can_publish,
-            'data-editable-in-backend': edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page'),
+            'data-is-published': 'website_published' in main_object._fields and main_object.sudo().website_published,
+            'data-can-optimize-seo': 'website_meta_description' in main_object._fields,
+            'data-can-publish': 'can_publish' in main_object._fields and main_object.sudo(False).can_publish,
+            'data-editable-in-backend': edit_in_backend or ('website_published' in main_object._fields and main_object._name != 'website.page'),
         })"/>
         <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
             'data-editable': '1' if editable else None,
@@ -695,6 +695,10 @@
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
         <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
+    <xpath expr="//t[@t-call='website.submenu']" position="attributes">
+        <attribute name="dropdown_toggler_classes.f"/>
+        <attribute name="dropdown_menu_classes.f" add="text-center" separator=" "/>
+    </xpath>
 </template>
 
 <template id="template_header_hamburger_mobile_align_right" inherit_id="website.template_header_hamburger" active="False">
@@ -706,6 +710,10 @@
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
         <attribute name="_div_class.f">mt-2 text-end</attribute>
+    </xpath>
+    <xpath expr="//t[@t-call='website.submenu']" position="attributes">
+        <attribute name="dropdown_toggler_classes.f"/>
+        <attribute name="dropdown_menu_classes.f" add="text-end" separator=" "/>
     </xpath>
 </template>
 
@@ -1042,8 +1050,8 @@
                 <div class="o_header_hide_on_scroll">
                     <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
                         <ul t-attf-class="#{header_content_width} navbar-nav d-grid h-100 px-3 o_grid_header_3_cols">
-                            <!-- Return empty placeholder if the element is not active to keep the right layout -->
-                            <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False"/>
+                            <!-- Return empty placeholder if the element is not active or if there is only one language to keep the right layout -->
+                            <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False or len(frontend_languages) == 1"/>
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector"
                                 _div_classes.f="d-flex align-items-center h-100"
@@ -2564,7 +2572,7 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="True">
     <xpath expr="." position="inside">
-        <li data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
+        <li t-if="len(frontend_languages) > 1" data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
             <t id="header_language_selector_call"
                 t-call="portal.language_selector"
                 _div_classes="(_div_classes or '') + ' dropdown'"/>
@@ -2696,21 +2704,17 @@
 </template>
 
 <!-- Effect options -->
-<record id="website.ripple_effect_scss" model="ir.asset">
+<asset id="website.ripple_effect_scss" name="Ripple effect SCSS" active="False">
     <field name="key">website.ripple_effect_scss</field>
-    <field name="name">Ripple effect SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">/website/static/src/scss/options/ripple_effect.scss</field>
-    <field name="active" eval="False"/>
-</record>
+    <bundle>web.assets_frontend</bundle>
+    <path>/website/static/src/scss/options/ripple_effect.scss</path>
+</asset>
 
-<record id="website.ripple_effect_js" model="ir.asset">
+<asset id="website.ripple_effect_js" name="Ripple effect JS" active="False">
     <field name="key">website.ripple_effect_js</field>
-    <field name="name">Ripple effect JS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">/website/static/src/interactions/ripple_effect.js</field>
-    <field name="active" eval="False"/>
-</record>
+    <bundle>web.assets_frontend</bundle>
+    <path>/website/static/src/interactions/ripple_effect.js</path>
+</asset>
 
 <!-- Error and special pages -->
 <template id="website_info" name="Odoo Information">

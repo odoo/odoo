@@ -9,8 +9,9 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round, float_repr, date_utils, SQL
+from odoo.tools import float_round, float_repr, float_compare, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
+from odoo.tools.sql import column_exists, create_column
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
     NS_MAP,
     _canonicalize_node,
@@ -49,6 +50,32 @@ COUNTRY_CODE_MAP = {
     "AX": "ALA", "AZ": "AZE", "IE": "IRL", "ID": "IDN", "UA": "UKR", "QA": "QAT", "MZ": "MOZ"
 }
 REVERSED_COUNTRY_CODE = {v: k for k, v in COUNTRY_CODE_MAP.items()}
+#  The reason type should be exactly the fields given below.
+#  We cannot rely on the translated Selection since a single character difference would render the XML incorrect.
+SPANISH_CREDIT_REASON_TYPE = {
+    '01': 'Número de la factura',
+    '02': 'Serie de la factura',
+    '03': 'Fecha expedición',
+    '04': 'Nombre y apellidos/Razón Social-Emisor',
+    '05': 'Nombre y apellidos/Razón Social-Receptor',
+    '06': 'Identificación fiscal Emisor/obligado',
+    '07': 'Identificación fiscal Receptor',
+    '08': 'Domicilio Emisor/Obligado',
+    '09': 'Domicilio Receptor',
+    '10': 'Detalle Operación',
+    '11': 'Porcentaje impositivo a aplicar',
+    '12': 'Cuota tributaria a aplicar',
+    '13': 'Fecha/Periodo a aplicar',
+    '14': 'Clase de factura',
+    '15': 'Literales legales',
+    '16': 'Base imponible',
+    '80': 'Cálculo de cuotas repercutidas',
+    '81': 'Cálculo de cuotas retenidas',
+    '82': 'Base imponible modificada por devolución de envases / embalajes',
+    '83': 'Base imponible modificada por descuentos y bonificaciones',
+    '84': 'Base imponible modificada por resolución firme, judicial o administrativa',
+    '85': 'Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso',
+}
 
 
 class AccountMove(models.Model):
@@ -89,7 +116,12 @@ class AccountMove(models.Model):
             ('83', "Taxable Base modified due to discounts and rebates"),
             ('84', "Taxable Base modified due to firm court ruling or administrative decision"),
             ('85', "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"),
-        ], string='Spanish Facturae EDI Reason Code', default='10')
+        ],
+        string='Spanish Facturae EDI Reason Code',
+        compute='_compute_l10n_es_edi_facturae_reason_code',
+        store=True,
+        readonly=False,
+    )
     l10n_es_invoicing_period_start_date = fields.Date(string="Invoice Period Start Date")
     l10n_es_invoicing_period_end_date = fields.Date(string="Invoice Period End Date")
     l10n_es_payment_means = fields.Selection(
@@ -113,7 +145,31 @@ class AccountMove(models.Model):
             ('17', "Banker’s draft"),
             ('18', "Cash on delivery"),
             ('19', "Payment by card"),
-        ], string="Payment Means", default='04')
+        ],
+        string="Payment Means",
+        compute='_compute_l10n_es_payment_means',
+        store=True,
+        readonly=False,
+    )
+
+    def _auto_init(self):
+        # Create compute stored field l10n_es_edi_facturae_reason_code and
+        # l10n_es_payment_means here to avoid timeout error on large databases.
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code', 'varchar')
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_payment_means'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_payment_means', 'varchar')
+        return super()._auto_init()
+
+    @api.depends('country_code')
+    def _compute_l10n_es_edi_facturae_reason_code(self):
+        for move in self.filtered(lambda move: move.country_code == 'ES'):
+            move.l10n_es_edi_facturae_reason_code = move.l10n_es_edi_facturae_reason_code or '10'
+
+    @api.depends('country_code')
+    def _compute_l10n_es_payment_means(self):
+        for move in self.filtered(lambda move: move.country_code == 'ES'):
+            move.l10n_es_payment_means = move.l10n_es_payment_means or '04'
 
     def _get_fields_to_detach(self):
         # EXTENDS account
@@ -199,8 +255,7 @@ class AccountMove(models.Model):
             tax_period = refunded_invoice._l10n_es_edi_facturae_get_tax_period()
 
             reason_code = self.l10n_es_edi_facturae_reason_code or '10'
-            reason_description = [label for code, label in self._fields['l10n_es_edi_facturae_reason_code'].selection
-                                  if code == reason_code][0]
+            reason_description = SPANISH_CREDIT_REASON_TYPE[reason_code]
             return {
                 'refunded_invoice_record': refunded_invoice,
                 'ReasonCode': reason_code,
@@ -233,19 +288,21 @@ class AccountMove(models.Model):
                 })
         return administrative_centers
 
-    def _l10n_es_edi_facturae_get_tax_node_from_tax_data(self, values):
+    def _l10n_es_edi_facturae_get_tax_node_from_tax_data(self, values, round=False):
         self.ensure_one()
         tax = values['grouping_key']
+        prefix = '' if round else 'raw_'
+        tax_sign = -1 if tax.amount < 0.0 else 1
         return {
             'tax_record': tax,
             'TaxRate': f'{abs(tax.amount):.3f}',
             'TaxableBase': {
-                'TotalAmount': self.currency_id.round(values['raw_base_amount_currency']),
-                'EquivalentInEuros': self.company_currency_id.round(values['raw_base_amount']),
+                'TotalAmount': self.currency_id.round(values[f'{prefix}base_amount_currency']),
+                'EquivalentInEuros': self.company_currency_id.round(values[f'{prefix}base_amount']),
             },
             'TaxAmount': {
-                'TotalAmount': self.currency_id.round(abs(values['raw_tax_amount_currency'])),
-                'EquivalentInEuros': self.company_currency_id.round(abs(values['raw_tax_amount'])),
+                'TotalAmount': self.currency_id.round(tax_sign * values[f'{prefix}tax_amount_currency']),
+                'EquivalentInEuros': self.company_currency_id.round(tax_sign * values[f'{prefix}tax_amount']),
             },
         }
 
@@ -261,7 +318,7 @@ class AccountMove(models.Model):
                 installments.append({
                     'InstallmentDueDate': payment_term.date_maturity,
                     'InstallmentAmount': payment_term.amount_residual_currency,
-                    'PaymentMeans': self.l10n_es_payment_means,
+                    'PaymentMeans': self.l10n_es_payment_means or '04',
                     'AccountToBeCredited': {
                         'IBAN': self.partner_bank_id.sanitized_acc_number,
                         'BIC': self.partner_bank_id.bank_bic,
@@ -276,7 +333,6 @@ class AccountMove(models.Model):
         :return: A tuple containing the Face items, the taxes and the invoice totals data.
         """
         self.ensure_one()
-        extended_dp = 6 if self.company_id.tax_calculation_rounding_method == 'round_globally' else 2
         invoice_ref = self.ref and self.ref[:20]
         line = base_line['record']
         tax_details = base_line['tax_details']
@@ -297,37 +353,34 @@ class AccountMove(models.Model):
             'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
             'DiscountsAndRebates': [],
             'Charges': [],
-            'GrossAmount': line.price_subtotal,
+            'GrossAmount': float_round(tax_details['raw_total_excluded_currency'], precision_digits=8),
         }
 
         if line.discount == 100.0:
             raw_total_cost = line.price_unit * line.quantity
         else:
-            raw_total_cost = tax_details['total_excluded_currency'] / (1 - (line.discount / 100.0))
-        xml_values['TotalCost'] = line.currency_id.round(raw_total_cost)
+            raw_total_cost = tax_details['raw_total_excluded_currency'] / (1 - (line.discount / 100.0))
+        xml_values['TotalCost'] = float_round(raw_total_cost, precision_digits=8)
 
         if line.quantity:
-            xml_values['UnitPriceWithoutTax'] = float_round(raw_total_cost / line.quantity, precision_digits=extended_dp)
+            xml_values['UnitPriceWithoutTax'] = float_round(raw_total_cost / line.quantity, precision_digits=8)
         else:
             xml_values['UnitPriceWithoutTax'] = 0.0
 
-        raw_discount_amount = xml_values['TotalCost'] - line.price_subtotal
-        discount_amount = max(raw_discount_amount, 0.0)
-        if discount_amount:
+        discount_amount = xml_values['TotalCost'] - xml_values['GrossAmount']
+        if float_compare(discount_amount, 0.0, precision_digits=8) > 0:
             xml_values['DiscountsAndRebates'].append({
                 'DiscountReason': '/',
                 'DiscountRate': f'{line.discount:.2f}',
                 'DiscountAmount': discount_amount,
             })
 
-        surcharge_amount = -min(0.0, raw_discount_amount)
-        if surcharge_amount:
+        if float_compare(discount_amount, 0.0, precision_digits=8) < 0:
             xml_values['Charges'].append({
                 'ChargeReason': '/',
                 'ChargeRate': f'{-line.discount:.2f}',
-                'ChargeAmount': surcharge_amount,
+                'ChargeAmount': -discount_amount,
             })
-
         xml_values['TaxesOutputs'] = [
             self._l10n_es_edi_facturae_get_tax_node_from_tax_data(values)
             for values in aggregated_values.values()
@@ -422,40 +475,50 @@ class AccountMove(models.Model):
 
         # Taxes.
         AccountTax = self.env['account.tax']
-        base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
-        base_lines = [self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
-        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
-        tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
 
-        def grouping_function(base_line, tax_data):
+        def grouping_function_per_tax(base_line, tax_data):
             return tax_data['tax'] if tax_data else None
 
-        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_tax)
         for base_line, aggregated_values in base_lines_aggregated_values:
             invoice_line_values = self._l10n_es_edi_facturae_prepare_inv_line(base_line, aggregated_values)
             invoice_values['TotalGrossAmount'] += invoice_line_values['GrossAmount']
             invoice_values['Items'].append(invoice_line_values)
 
-            for values in aggregated_values.values():
-                tax = values['grouping_key']
-                if not tax:
-                    continue
+        def grouping_function_per_base_line_tax(base_line, tax_data):
+            if not tax_data:
+                return
+            return {
+                'tax_es_type': tax_data['tax'].l10n_es_edi_facturae_tax_type,
+                'tax_rate': tax_data['tax'].amount,
+                'tax_amount_type': tax_data['tax'].amount_type,
+            }
 
-                tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data(values)
-                if tax.amount < 0.0:
-                    invoice_values['TaxesWithheld'].append(tax_data)
-                    invoice_values['TotalTaxesWithheld'] += tax_data['TaxAmount']['TotalAmount']
-                else:
-                    invoice_values['TaxOutputs'].append(tax_data)
-                    invoice_values['TotalTaxOutputs'] += tax_data['TaxAmount']['TotalAmount']
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_base_line_tax)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            tax_record = values['base_line_x_taxes_data'][0][1][0]['tax']
+            if not tax_record:
+                continue
+
+            is_withholding = values['grouping_key']['tax_rate'] < 0.0
+            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax_record}, round=True)
+            if is_withholding:
+                invoice_values['TaxesWithheld'].append(tax_data)
+                invoice_values['TotalTaxesWithheld'] -= values['tax_amount_currency']
+            else:
+                invoice_values['TaxOutputs'].append(tax_data)
+                invoice_values['TotalTaxOutputs'] += values['tax_amount_currency']
+
+        invoice_values['TotalTaxesWithheld'] = abs(invoice_values['TotalTaxesWithheld'])
 
         invoice_values['TotalGrossAmountBeforeTaxes'] = (
             invoice_values['TotalGrossAmount']
             - invoice_values['TotalGeneralDiscounts']
             + invoice_values['TotalGeneralSurcharges']
         )
+        refund_multiplier = -1 if self.move_type in ('out_refund', 'in_refund') else 1
 
         template_values = {
             'self_party': company.partner_id,
@@ -472,7 +535,7 @@ class AccountMove(models.Model):
             'file_currency': inv_curr,
             'eur': eur_curr,
             'conversion_needed': conversion_needed,
-            'refund_multiplier': -1 if self.move_type in ('out_refund', 'in_refund') else 1,
+            'refund_multiplier': refund_multiplier,
 
             'Modality': 'I',
             'BatchIdentifier': self.name,
@@ -492,6 +555,7 @@ class AccountMove(models.Model):
             'InvoiceCurrencyCode': inv_curr.name,
             'Invoices': [invoice_values],
         }
+
         if self.l10n_es_invoicing_period_start_date and self.l10n_es_invoicing_period_end_date:
             template_values['Invoices'][0]['InvoiceIssueData']['InvoicingPeriod'] = {
                 'StartDate': self.l10n_es_invoicing_period_start_date,
@@ -827,7 +891,6 @@ class AccountMove(models.Model):
 
         signed_info_xml = signature.find("ds:SignedInfo", namespaces=NS_MAP)
         signature.find("ds:SignatureValue", namespaces=NS_MAP).text = certificate_sudo._sign(_canonicalize_node(signed_info_xml)).decode()
-
         return etree.tostring(root, xml_declaration=True, encoding='UTF-8', standalone=True)
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):

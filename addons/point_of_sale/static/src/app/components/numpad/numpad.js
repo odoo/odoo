@@ -23,8 +23,13 @@ export const DECIMAL = {
     get value() {
         return localization.decimalPoint;
     },
+    class: "o_colorlist_item_numpad_color_6",
 };
-export const BACKSPACE = { value: "Backspace", text: "⌫" };
+export const BACKSPACE = {
+    value: "Backspace",
+    text: "⌫",
+    class: "o_colorlist_item_numpad_color_1",
+};
 export const ZERO = { value: "0" };
 export const SWITCHSIGN = { value: "-", text: "+/-" };
 export const DEFAULT_LAST_ROW = [SWITCHSIGN, ZERO, DECIMAL];

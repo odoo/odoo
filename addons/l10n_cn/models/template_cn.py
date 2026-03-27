@@ -10,6 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_cn_template_data(self):
         return {
             'name': _('Accounting Standards for Small Business Enterprises'),
+            'code_digits': 4,
             'parent': 'cn_common',
             'property_account_expense_categ_id': 'l10n_cn_account_5401',
             'property_account_income_categ_id': 'l10n_cn_account_5001',
@@ -36,5 +37,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'l10n_cn_account_5401',
                 'income_account_id': 'l10n_cn_account_5001',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_cn_common_account_1403',
+            },
+        }
+
+    @template('cn', 'account.account')
+    def _get_cn_account_account(self):
+        return {
+            'l10n_cn_common_account_1403': {
+                'account_stock_variation_id': 'l10n_cn_account_5601',
             },
         }

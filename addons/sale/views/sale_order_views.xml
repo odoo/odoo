@@ -463,6 +463,7 @@
                             nolabel="1"
                             invisible="state in ['draft', 'sent']"
                             readonly="state in ['cancel', 'sale']"/>
+                        <field name="show_update_pricelist" invisible="1"/>
                         <label for="pricelist_id"
                                groups="product.group_product_pricelist"
                                invisible="not has_active_pricelist"/>
@@ -520,7 +521,10 @@
                                                 invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                             />
                                             <field name="product_id"
-                                                context="{'default_uom_id': product_uom_id}"
+                                                context="{
+                                                    'default_uom_id': product_uom_id,
+                                                    'partner_id': parent.partner_id,
+                                                }"
                                                 readonly="not product_updatable"
                                                 required="not display_type and not is_downpayment"
                                                 force_save="1"
@@ -576,6 +580,18 @@
                                 <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                 <field name="name"/>
+                                <group>
+                                    <field
+                                        name="collapse_composition"
+                                        invisible="display_type not in ['line_section', 'line_subsection']"
+                                        readonly="1"
+                                    />
+                                    <field
+                                        name="collapse_prices"
+                                        invisible="display_type not in ['line_section', 'line_subsection']"
+                                        readonly="1"
+                                    />
+                                </group>
                                 <div name="invoice_lines" groups="base.group_no_one" invisible="display_type">
                                     <label for="invoice_lines"/>
                                     <field name="invoice_lines"/>
@@ -615,8 +631,8 @@
                                 <field name="selected_combo_items" column_invisible="1"/>
                                 <field name="virtual_id" column_invisible="1"/>
                                 <field name="linked_virtual_id" column_invisible="1"/>
-                                <field name="collapse_prices" column_invisible="1"/>
                                 <field name="collapse_composition" column_invisible="1"/>
+                                <field name="collapse_prices" column_invisible="1"/>
 
                                 <!-- Currency, needed for monetary widgets to display the currency symbol -->
                                 <field name="currency_id" column_invisible="True"/>
@@ -632,6 +648,7 @@
                                     context="{
                                         'default_lst_price': price_unit,
                                         'default_uom_id': product_uom_id,
+                                        'partner_id': parent.partner_id,
                                     }"
                                     options="{
                                         'show_label_warning': True
@@ -645,6 +662,7 @@
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
+                                        'partner_id': parent.partner_id,
                                     }"
                                     options="{
                                         'show_label_warning': True
@@ -802,7 +820,7 @@
                                 </templates>
                             </kanban>
                         </field>
-                        <div class="float-end d-flex gap-1 mb-2"
+                        <div class="float-end d-flex d-print-none gap-1 mb-2"
                              name="so_button_below_order_lines">
                             <button
                                 string="Discount"

@@ -6,7 +6,9 @@ from functools import cache, wraps
 from importlib import util
 import inspect
 import io
+from ipaddress import ip_address
 import logging
+import netifaces
 from pathlib import Path
 import re
 import requests
@@ -22,15 +24,20 @@ import zipfile
 from werkzeug.exceptions import Locked
 
 from odoo import http, release, service
-from odoo.addons.iot_drivers.tools.system import IOT_CHAR, IOT_RPI_CHAR, IOT_WINDOWS_CHAR, IS_RPI, IS_TEST, IS_WINDOWS
+from odoo.addons.iot_drivers.tools.system import (
+    IOT_CHAR,
+    IOT_RPI_CHAR,
+    IOT_WINDOWS_CHAR,
+    IS_RPI,
+    IS_TEST,
+    IS_WINDOWS,
+    mtr,
+)
 from odoo.tools.func import reset_cached_properties
 from odoo.tools.misc import file_path
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
-
-if IS_RPI:
-    import crypt
 
 
 class Orientation(Enum):
@@ -46,7 +53,7 @@ class IoTRestart(Thread):
     Thread to restart odoo server in IoT Box when we must return a answer before
     """
     def __init__(self, delay):
-        Thread.__init__(self)
+        super().__init__(daemon=True)
         self.delay = delay
 
     def run(self):
@@ -167,15 +174,13 @@ def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
 
 
 def generate_password():
+    """Resets (pi) user password generating a new random one.
+
+    :return: The new generated password
     """
-    Generate an unique code to secure raspberry pi
-    """
-    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
-    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    password = secrets.token_urlsafe(16)
     try:
-        shadow_password = crypt.crypt(password, crypt.mksalt())
-        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
-        subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        subprocess.run(['sudo', 'chpasswd'], input=f"pi:{password}", text=True, check=True)
         return password
     except subprocess.CalledProcessError as e:
         _logger.exception("Failed to generate password: %s", e.output)
@@ -188,9 +193,12 @@ def get_img_name():
 
 
 def get_ip():
+    """Get the local IP address of the IoT Box by creating
+    a dummy connection to the gateway or Google DNS.
+    """
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.connect(('8.8.8.8', 1))  # Google DNS
+        s.connect((get_gateway() or '8.8.8.8', 1))  # Google DNS
         return s.getsockname()[0]
     except OSError as e:
         _logger.warning("Could not get local IP address: %s", e)
@@ -219,6 +227,15 @@ def get_identifier():
         update_conf({'generated_identifier': identifier})
 
     return identifier
+
+
+def get_mac_address():
+    interfaces = netifaces.interfaces()
+    for interface in interfaces:
+        if netifaces.ifaddresses(interface).get(netifaces.AF_INET):
+            addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]['addr']
+            if addr != '00:00:00:00:00:00':
+                return addr
 
 
 def get_path_nginx():
@@ -503,10 +520,12 @@ def save_browser_state(url=None, orientation=None):
     :param url: The URL the browser is on (if None, the URL is not saved)
     :param orientation: The orientation of the screen (if None, the orientation is not saved)
     """
-    update_conf({
-        'browser_url': url,
-        'screen_orientation': orientation.name.lower() if orientation else None,
-    })
+    to_update = {
+        "browser_url": url,
+        "screen_orientation": orientation.name.lower() if orientation else None,
+    }
+    # Only update the values that are not None
+    update_conf({k: v for k, v in to_update.items() if v is not None})
 
 
 def load_browser_state():
@@ -628,3 +647,37 @@ def toggle_remote_connection(token=""):
         )
         return True
     return False
+
+
+def check_network(host=None):
+    host = host or get_gateway()
+    if not host:
+        return None
+
+    try:
+        host = socket.gethostbyname(host)
+    except socket.gaierror:
+        return "unreachable"
+    packet_loss, avg_latency = mtr(host)
+    thresholds = {"fast": 5, "normal": 20} if ip_address(host).is_private else {"fast": 50, "normal": 150}
+
+    if packet_loss is None or packet_loss >= 50 or avg_latency is None:
+        return "unreachable"
+    if avg_latency < thresholds["fast"] and packet_loss < 1:
+        return "fast"
+    if avg_latency < thresholds["normal"] and packet_loss < 5:
+        return "normal"
+    return "slow"
+
+
+def get_gateway():
+    """Get the router IP address (default gateway)
+
+    :return: The IP address of the default gateway or None if it can't be determined
+    """
+    gws = netifaces.gateways()
+    default = gws.get("default", {})
+    gw = default.get(netifaces.AF_INET)
+    if gw:
+        return gw[0]
+    return None

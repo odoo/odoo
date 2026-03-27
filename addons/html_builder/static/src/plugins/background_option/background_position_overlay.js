@@ -28,7 +28,7 @@ export class BackgroundPositionOverlay extends Component {
 
         this.iframe = this.props.editable.ownerDocument.defaultView.frameElement;
         this.builderOverlayContainerEl = document.querySelector(
-            "[data-oe-local-overlay-id='builder-overlay-container']:not(:empty)"
+            "[data-oe-local-overlay-id='builder-overlay-container']"
         );
         // If there is a Scroll Effect, a span.s_parallax_bg inside the section
         // contains the background. Otherwise it's the section itself.

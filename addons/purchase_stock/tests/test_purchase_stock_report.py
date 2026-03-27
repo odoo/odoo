@@ -343,9 +343,50 @@ class TestPurchaseStockReports(TestReportsCommon):
 
     def test_vendor_delay_report_without_backorder(self):
         """
+        PO with two lines:
+        - 10 units of product with category
+        - 10 units of product without category
+        Receive 6 units for each line without backorder
+        -> 60% received for each product.
+        The vendor delay report should include both products
+        even if one has no category.
+        """
+        product_no_categ = self.env['product.product'].create({
+            'name': 'Product without category',
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner
+        with po_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_qty = 10
+        with po_form.order_line.new() as line:
+            line.product_id = product_no_categ
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt_moves = receipt.move_ids
+        receipt_moves.quantity = 6
+        receipt_moves.picked = True
+        Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
+
+        data = self.env['vendor.delay.report'].formatted_read_group(
+            [('partner_id', '=', self.partner.id)],
+            ['product_id'],
+            ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
+        )
+        self.assertEqual(
+            [(rec['qty_on_time:sum'], rec['qty_total:sum'], rec['on_time_rate:sum']) for rec in data],
+            [(6, 10, 60), (6, 10, 60)]
+        )
+
+    def test_vendor_delay_report_with_duplicate_receipt_without_backorder(self):
+        """
         PO 10 units x P
         Receive 6 x P without backorder
-        -> 60% received
+        Duplicate picking with remaining 4 x P
+        -> 100% received
         """
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner
@@ -356,16 +397,19 @@ class TestPurchaseStockReports(TestReportsCommon):
         po.button_confirm()
 
         receipt01 = po.picking_ids
-        receipt01_move = receipt01.move_ids
-        receipt01_move.quantity = 6
-        receipt01_move.picked = True
-        Form.from_action(self.env, receipt01.button_validate()).save().process_cancel_backorder()
-
-        data = self.env['vendor.delay.report'].formatted_read_group(
+        receipt01.move_ids.quantity = 6
+        action = receipt01.button_validate()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
+        receipt02 = receipt01.copy()
+        receipt02.move_ids.write({
+            'product_uom_qty': 4,
+        })
+        receipt02.button_validate()
+        data = self.env['vendor.delay.report'].web_read_group(
             [('partner_id', '=', self.partner.id)],
             ['product_id'],
             ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
-        )[0]
-        self.assertEqual(data['qty_on_time:sum'], 6)
+        )['groups'][0]
         self.assertEqual(data['qty_total:sum'], 10)
-        self.assertEqual(data['on_time_rate:sum'], 60)
+        self.assertEqual(data['qty_on_time:sum'], 10)
+        self.assertEqual(data['on_time_rate:sum'], 100)

@@ -63,7 +63,7 @@ class HrJob(models.Model):
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many(
         "res.users",
-        domain="[('id', 'in', allowed_user_ids)]",
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
         string="Interviewers",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
@@ -113,6 +113,7 @@ class HrJob(models.Model):
               AND app.active
               AND app.job_id IN %(job_ids)s
               AND sta.hired_stage IS NOT TRUE
+              AND COALESCE(act.active, TRUE) = TRUE
             GROUP BY app.job_id
         """, {
             'today': fields.Date.context_today(self),
@@ -204,6 +205,7 @@ class HrJob(models.Model):
             for job, count in self.env['hr.employee'].sudo()._read_group(
                 domain=[
                     ('job_id', 'in', self.ids),
+                    ('company_id', 'in', self.env.companies.ids),
                 ],
                 groupby=['job_id'],
                 aggregates=['__count'],
@@ -277,7 +279,7 @@ class HrJob(models.Model):
             defaults.update({
                 'job_id': self.id,
                 'department_id': self.department_id.id,
-                'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id,
+                'company_id': self.department_id.company_id.id or self.company_id.id,
                 'user_id': self.user_id.id,
             })
         return values
@@ -408,6 +410,7 @@ class HrJob(models.Model):
             'res_model': res_model,
             'view_mode': 'list,kanban,form',
             'views': [(False, 'list'), (False, 'kanban'), (False, 'form')],
+            'domain': [('company_id', 'in', self.env.companies.ids)],
             'context': {
                 'default_job_id': self.id,
                 'search_default_group_job': 1,

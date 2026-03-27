@@ -109,10 +109,15 @@ class ProductPublicCategory(models.Model):
 
     @api.depends('product_tmpl_ids.is_published', 'child_id.has_published_products')
     def _compute_has_published_products(self):
+        grouped_product_templates = self.env['product.template']._read_group(
+            domain=[('public_categ_ids', 'in', self.ids), ('is_published', '=', True), ('active', '=', True)],
+            groupby=['public_categ_ids']
+        )
+        published_category_ids = {group[0].id for group in grouped_product_templates}
         for category in self:
+            has_published = category.id in published_category_ids
             category.has_published_products = (
-                any(category.mapped('product_tmpl_ids.is_published'))
-                or any(category.mapped('child_id.has_published_products'))
+                has_published or any(c.has_published_products for c in category.child_id)
             )
 
     # === CONSTRAINT METHODS === #
@@ -129,7 +134,7 @@ class ProductPublicCategory(models.Model):
         if operator != 'in':
             return NotImplemented
         published_categ_ids = self._search(
-            [('product_tmpl_ids.is_published', 'in', True)]
+            [('product_tmpl_ids', 'any', [('is_published', '=', True), ('active', '=', True)])]
         ).get_result_ids()
         # Note that if the `value` is False, the ORM will invert the domain below
         return [

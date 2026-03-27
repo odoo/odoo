@@ -17,7 +17,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
     async updateData(data) {
         const { start, end } = this.computeRange();
         await this.orm.call("hr.employee", "generate_work_entries", [
-            [this.meta.context.active_id],
+            [this.meta.context.default_employee_id],
             serializeDate(start),
             serializeDate(end),
         ]);
@@ -42,9 +42,13 @@ export class WorkEntryCalendarModel extends CalendarModel {
             }
         );
         if (userFavoritesWorkEntriesIds.length) {
+            const typeIds = userFavoritesWorkEntriesIds
+                .map((r) => r.work_entry_type_id?.[0])
+                .filter(Boolean);
+            const uniqueTypeIds = [...new Set(typeIds)];
             this.userFavoritesWorkEntries = await this.orm.read(
                 "hr.work.entry.type",
-                userFavoritesWorkEntriesIds.map((r) => r.work_entry_type_id[0]),
+                uniqueTypeIds,
                 ["display_name", "display_code", "color"]
             );
             this.userFavoritesWorkEntries = this.userFavoritesWorkEntries.sort((a, b) =>
@@ -102,7 +106,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
     async resetWorkEntries(dates, recordIds) {
         const cellsFormattedData = dates.map((date) => ({
             date,
-            employee_id: this.meta.context.active_id,
+            employee_id: this.meta.context.default_employee_id,
         }));
         await this.orm.call("hr.work.entry.regeneration.wizard", "regenerate_work_entries", [
             [],

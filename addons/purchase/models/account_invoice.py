@@ -122,13 +122,19 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'invoice_line_ids.product_id.purchase_line_warn_msg', 'invoice_line_ids.product_id.display_name')
     def _compute_purchase_warning_text(self):
+        if not self.env.user.has_group('purchase.group_warning_purchase'):
+            self.purchase_warning_text = ''
+            return
         for move in self:
             if move.move_type != 'in_invoice':
                 move.purchase_warning_text = ''
                 continue
             warnings = OrderedSet()
             if partner_msg := move.partner_id.purchase_warn_msg:
-                warnings.add(move.partner_id.name + ' - ' + partner_msg)
+                warnings.add((move.partner_id.name or move.partner_id.display_name) + ' - ' + partner_msg)
+            if partner_parent_msg := move.partner_id.parent_id.purchase_warn_msg:
+                parent = move.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + ' - ' + partner_parent_msg)
             for product in move.invoice_line_ids.product_id:
                 if product_msg := product.purchase_line_warn_msg:
                     warnings.add(product.display_name + ' - ' + product_msg)
@@ -142,7 +148,8 @@ class AccountMove(models.Model):
             'res_model': 'purchase.bill.line.match',
             'domain': [
                 ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
-                ('company_id', 'in', self.env.company.ids),
+                ('company_id', 'in', self.env.companies.ids),
+                ('company_id', 'child_of', self.company_id.ids),
                 ('account_move_id', 'in', [self.id, False]),
             ],
             'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
@@ -518,7 +525,7 @@ class AccountMoveLine(models.Model):
     is_downpayment = fields.Boolean()
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
-    purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
+    purchase_line_warn_msg = fields.Text(compute='_compute_purchase_line_warn_msg')
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
@@ -543,3 +550,9 @@ class AccountMoveLine(models.Model):
         if self.purchase_line_id and not self.analytic_distribution:
             vals |= self.purchase_line_id.analytic_distribution or {}
         return vals
+
+    @api.depends('product_id.purchase_line_warn_msg')
+    def _compute_purchase_line_warn_msg(self):
+        has_group = self.env.user.has_group('purchase.group_warning_purchase')
+        for line in self:
+            line.purchase_line_warn_msg = line.product_id.purchase_line_warn_msg if has_group else ""

@@ -91,7 +91,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         move.action_post()
 
         with self.assertRaises(UserError):
-            self.wizard.create_entries()
+            self.wizard.with_context(accrual_entry_date='2020-01-30').create_entries()
 
     def test_multi_currency_accrued_order(self):
         # 5 qty of each product billeable
@@ -173,15 +173,15 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         res = self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids
         self.assertRecordValues(res, [
             # reverse move lines
-            {'account_id': self.account_expense.id, 'debit': 5000.0, 'credit': 0.0},
-            {'account_id': self.alt_exp_account.id, 'debit': 1000.0, 'credit': 0.0},
-            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 6000.0},
+            {'account_id': self.account_expense.id, 'debit': 10000.0, 'credit': 0.0},
+            {'account_id': self.alt_exp_account.id, 'debit': 2000.0, 'credit': 0.0},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 12000.0},
             # move lines
-            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 5000.0},
-            {'account_id': self.alt_exp_account.id, 'debit': 0.0, 'credit': 1000.0},
-            {'account_id': self.account_revenue.id, 'debit': 6000.0, 'credit': 0.0},
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 10000.0},
+            {'account_id': self.alt_exp_account.id, 'debit': 0.0, 'credit': 2000.0},
+            {'account_id': self.account_revenue.id, 'debit': 12000.0, 'credit': 0.0},
         ])
-    
+
     def test_error_when_different_currencies_accrued(self):
         """
         Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
@@ -204,3 +204,34 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         ).new()
         with self.assertRaises(UserError, msg="An error should be raised if two different currencies are used for Accrued Expense Entry."):
             accrued_wizard._compute_move_vals()
+
+    def test_accrued_entries_with_discount(self):
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'product_uom_id': self.product_a.uom_id.id,
+                    'price_unit': 10.0,
+                    'tax_ids': False,
+                    'discount': 10,
+                }),
+            ],
+        })
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 10
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='purchase.order',
+            active_ids=purchase_order.ids,
+        ).create({
+            'account_id': self.account_revenue.id,
+        })
+        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 90.0},
+        ])

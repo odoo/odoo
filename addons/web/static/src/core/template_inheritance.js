@@ -3,6 +3,10 @@ const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
 let translationContext = null;
 
 const TCTX = "t-translation-context";
+
+/**
+ * @param {Node} node
+ */
 function getTranslationContext(node) {
     if (node.hasAttribute(TCTX)) {
         return node.getAttribute(TCTX);
@@ -11,6 +15,10 @@ function getTranslationContext(node) {
 }
 
 const contextByTextNode = new Map();
+
+/**
+ * @param {Node} node
+ */
 function setTranslationContext(node) {
     switch (node.nodeType) {
         case Node.TEXT_NODE:
@@ -34,6 +42,9 @@ export function applyContextToTextNode() {
     contextByTextNode.clear();
 }
 
+/**
+ * @param {Node} node
+ */
 export function deepClone(node) {
     const clone = node.cloneNode();
     if (node.nodeType === Node.TEXT_NODE) {

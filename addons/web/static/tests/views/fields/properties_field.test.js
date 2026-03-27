@@ -3,19 +3,23 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
-import { expect, getFixture, test } from "@odoo/hoot";
 import {
+    animationFrame,
     click,
     edit,
+    expect,
+    getFixture,
+    mockDate,
     press,
     queryAll,
     queryAllTexts,
     queryAllValues,
     queryAttribute,
     queryFirst,
+    runAllTimers,
+    test,
     waitFor,
-} from "@odoo/hoot-dom";
-import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { editTime, getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickCancel,
@@ -56,7 +60,7 @@ async function changeType(propertyType) {
         "tags",
         "many2one",
         "many2many",
-        "separator"
+        "separator",
     ];
     const propertyTypeIndex = TYPES.indexOf(propertyType);
     await click(".o_field_property_definition_type input");
@@ -269,13 +273,11 @@ class ResCurrency extends models.Model {
     name = fields.Char();
     symbol = fields.Char();
 
-    _records = Object.entries(serverState.currencies).map(
-        ([id, { name, symbol }]) => ({
-            id: Number(id) + 1,
-            name,
-            symbol,
-        })
-    );
+    _records = Object.entries(serverState.currencies).map(([id, { name, symbol }]) => ({
+        id: Number(id) + 1,
+        name,
+        symbol,
+    }));
 }
 
 defineModels([Partner, ResCompany, User, ResCurrency]);
@@ -1123,7 +1125,7 @@ test("properties: many2many", async () => {
  * modal should correspond to the selected model and should be updated dynamically.
  */
 test.tags("desktop");
-test("properties: many2one 'Search more...'", async () => {
+test("properties: many2one 'Search more...' +  internal link save keeps data", async () => {
     onRpc(({ method, model }) => {
         if (["has_access", "has_group"].includes(method)) {
             return true;
@@ -1137,6 +1139,8 @@ test("properties: many2one 'Search more...'", async () => {
                 { model: "partner", display_name: "Partner" },
                 { model: "res.users", display_name: "User" },
             ];
+        } else if (method === "get_formview_id") {
+            return false;
         }
     });
 
@@ -1164,6 +1168,14 @@ test("properties: many2one 'Search more...'", async () => {
             <field name="id"/>
             <field name="display_name"/>
         </list>`;
+    User._views[["form", false]] = /* xml */ `
+        <form>
+            <sheet>
+                <group>
+                    <field name="display_name"/>
+                </group>
+            </sheet>
+        </form>`;
     User._views[["list", false]] = /* xml */ `
         <list>
             <field name="id"/>
@@ -1237,6 +1249,21 @@ test("properties: many2one 'Search more...'", async () => {
     await animationFrame();
     // Checking the model loaded
     expect.verifySteps(["res.users"]);
+
+    // Select the first value
+    await click(".o_list_table tbody tr:first-child td[name='display_name']");
+    await animationFrame();
+
+    // Click on external button
+    await click(".o_properties_external_button");
+    await animationFrame();
+
+    // Click on Save & close button
+    await click(".modal .o_form_button_save");
+    await animationFrame();
+
+    // Check that value does not disappear
+    expect(".o_field_property_definition_value input").toHaveValue("Alice");
 });
 
 test("properties: date(time) property manipulations", async () => {
@@ -1468,9 +1495,7 @@ test("properties: kanban view", async () => {
     expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(1)").toHaveText(
         "char value\nsuffix"
     );
-    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(2)").toHaveText(
-        "C"
-    );
+    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(2)").toHaveText("C");
 
     // check first card
     expect(".o_kanban_record:nth-child(1) .o_card_property_field").toHaveCount(2);
@@ -2231,10 +2256,7 @@ test("properties: open section by default", async () => {
     await click("div[property-name='property_1'] .o_field_property_group_label");
     await animationFrame();
 
-    expect(getGroups()).toEqual([
-        [["SEPARATOR 1", "property_1"]],
-        [["SEPARATOR 3", "property_3"]],
-    ]);
+    expect(getGroups()).toEqual([[["SEPARATOR 1", "property_1"]], [["SEPARATOR 3", "property_3"]]]);
 });
 
 test.tags("desktop");
@@ -2276,12 +2298,14 @@ test("properties: save separator folded state", async () => {
     assertFolded([true, false, true, false]);
 
     await clickSave();
-    expect.verifySteps([[
-        ["property_1", true],
-        ["property_2", false],
-        ["property_3", true],
-        ["property_4", false],
-    ]]);
+    expect.verifySteps([
+        [
+            ["property_1", true],
+            ["property_2", false],
+            ["property_3", true],
+            ["property_4", false],
+        ],
+    ]);
 });
 
 /**
@@ -2941,7 +2965,12 @@ test("properties: monetary without currency_field", async () => {
 
     await click(".o_field_property_definition_type input");
     await animationFrame();
-    expect(`.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary) > div.text-muted`).toHaveAttribute("data-tooltip", "Not possible to create monetary field because there is no currency on current model.");
+    expect(
+        `.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary) > div.text-muted`
+    ).toHaveAttribute(
+        "data-tooltip",
+        "Not possible to create monetary field because there is no currency on current model."
+    );
 });
 
 test("properties: monetary with currency_id", async () => {
@@ -2975,16 +3004,22 @@ test("properties: monetary with currency_id", async () => {
 
     await click(".o_field_property_definition_type input");
     await animationFrame();
-    expect(`.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary) > div:not(.text-muted)`).toHaveCount(1);
+    expect(
+        `.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary) > div:not(.text-muted)`
+    ).toHaveCount(1);
 
-    await contains(`.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary)`).click();
+    await contains(
+        `.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary)`
+    ).click();
     expect(`.o_field_property_definition_currency_field select`).toHaveText("Currency");
     expect(`.o_field_property_definition_currency_field select`).toHaveValue("currency_id");
     expect(".o_field_property_definition_value .o_input > span:eq(0)").toHaveText("$");
     expect(`.o_field_property_definition_value input`).toHaveValue("0.00");
 
     await closePopover();
-    expect(".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(0)").toHaveText("$");
+    expect(
+        ".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(0)"
+    ).toHaveText("$");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
 });
 
@@ -3021,18 +3056,28 @@ test("properties: monetary with multiple currency field", async () => {
 
     await click(".o_field_property_definition_type input");
     await animationFrame();
-    expect(`.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary) > div:not(.text-muted)`).toHaveCount(1);
+    expect(
+        `.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary) > div:not(.text-muted)`
+    ).toHaveCount(1);
 
-    await contains(`.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary)`).click();
-    expect(`.o_field_property_definition_currency_field select`).toHaveText("Currency\nAnother currency");
+    await contains(
+        `.o_field_property_definition_type_menu .o-dropdown-item:contains(Monetary)`
+    ).click();
+    expect(`.o_field_property_definition_currency_field select`).toHaveText(
+        "Currency\nAnother currency"
+    );
     expect(`.o_field_property_definition_currency_field select`).toHaveValue("currency_id");
 
-    await contains(".o_field_property_definition_currency_field select").select("another_currency_id");
+    await contains(".o_field_property_definition_currency_field select").select(
+        "another_currency_id"
+    );
     expect(`.o_field_property_definition_currency_field select`).toHaveValue("another_currency_id");
     expect(".o_field_property_definition_value .o_input > span:eq(1)").toHaveText("€");
     expect(`.o_field_property_definition_value input`).toHaveValue("0.00");
 
     await closePopover();
-    expect(".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(1)").toHaveText("€");
+    expect(
+        ".o_property_field:nth-child(2) .o_property_field_value .o_input > span:eq(1)"
+    ).toHaveText("€");
     expect(`.o_property_field:nth-child(2) .o_property_field_value input`).toHaveValue("0.00");
 });

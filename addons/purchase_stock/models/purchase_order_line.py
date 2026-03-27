@@ -44,13 +44,17 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         moves = self.move_ids.filtered(lambda m: m.product_id == self.product_id)
         if self.env.context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self.env.context['accrual_entry_date'])
+            accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= accrual_date)
         return moves
 
     @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
     def _compute_qty_received(self):
+        super()._compute_qty_received()
+
+    def _prepare_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
-        super(PurchaseOrderLine, self - from_stock_lines)._compute_qty_received()
+        received_qties = super(PurchaseOrderLine, self - from_stock_lines)._prepare_qty_received()
         for line in self:
             if line.qty_received_method == 'stock_moves':
                 total = 0.0
@@ -72,7 +76,8 @@ class PurchaseOrderLine(models.Model):
                         else:
                             total += move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
                 line._track_qty_received(total)
-                line.qty_received = total
+                received_qties[line] = total
+        return received_qties
 
     @api.depends('product_uom_qty', 'date_planned')
     def _compute_forecasted_issue(self):
@@ -89,7 +94,8 @@ class PurchaseOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
-        lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+        if not self.env.context.get('bypass_move_update'):
+            lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return lines
 
     def write(self, vals):
@@ -233,7 +239,7 @@ class PurchaseOrderLine(models.Model):
     def _get_stock_move_price_unit(self):
         self.ensure_one()
         order = self.order_id
-        price_unit = self.price_unit
+        price_unit = self.price_unit_discounted
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.tax_ids:
             qty = self.product_qty or 1
@@ -250,8 +256,9 @@ class PurchaseOrderLine(models.Model):
             price_unit /= self.product_uom_id.factor
             price_unit *= self.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
+            conversion_date = self.env.context.get('conversion_date', self.date_order) or fields.Date.today()
             price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
+                price_unit, order.company_id.currency_id, self.company_id, conversion_date, round=False)
         return float_round(price_unit, precision_digits=price_unit_prec)
 
     def _get_qty_procurement(self):
@@ -342,6 +349,10 @@ class PurchaseOrderLine(models.Model):
         if po.partner_id.group_rfq == 'week' and po.partner_id.group_on != 'default':
             delta_days = (7 + int(po.partner_id.group_on) - res['date_planned'].isoweekday()) % 7
             res['date_planned'] = fields.Datetime.to_datetime(res['date_planned']) + relativedelta(days=delta_days)
+            if not po.date_planned or po.date_planned >= res['date_planned']:
+                # date_order was computed based on procurement date_planned. If the PO date_planned is
+                # shifted, we also need to shift the date_order.
+                po.date_order = fields.Datetime.to_datetime(po.date_order) + relativedelta(days=delta_days)
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['location_final_id'] = location_dest_id.id
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id

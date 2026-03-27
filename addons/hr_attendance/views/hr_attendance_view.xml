@@ -28,10 +28,10 @@
                 <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
                 <field name="in_latitude" string="Latitude (In)" optional="hidden"/>
                 <field name="in_longitude" string="Longitude (In)" optional="hidden"/>
-                <field name="in_location" string="Longitude (In)" optional="hidden"/>
+                <field name="in_location" string="Location (In)" optional="hidden"/>
                 <field name="out_latitude" string="Latitude (Out)" optional="hidden"/>
                 <field name="out_longitude" string="Longitude (Out)" optional="hidden"/>
-                <field name="out_location" string="Location" optional="hidden"/>
+                <field name="out_location" string="Location (Out)" optional="hidden"/>
                 <field name="create_uid" optional="hidden"/>
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
@@ -293,7 +293,7 @@
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[('check_in','&gt;=', '-3m')]"/>
                 <group>
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
-                    <filter string="Departement" name="departement" context="{'group_by': 'department_id'}"/>
+                    <filter string="Department" name="departement" context="{'group_by': 'department_id'}"/>
                     <filter string="Manager" name="manager" context="{'group_by': 'manager_id'}"/>
                     <filter string="Method" name="groupby_mode_in" context="{'group_by': 'in_mode'}"/>
                     <filter string="Date" name="groupby_name" context="{'group_by': 'check_in:month'}"/>
@@ -367,7 +367,7 @@
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
                 <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve'), ('overtime_hours', '!=', 0)]"/>
+                <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve')]"/>
                 <filter string="Approved" name="approved" domain="[('overtime_status','=', 'approved')]"/>
                 <filter string="Refused" name="refused" domain="[('overtime_status','=', 'refused')]"/>
                 <separator/>
@@ -493,6 +493,6 @@
 
     <menuitem id="menu_hr_attendance_configuration" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
 
-    <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" parent="menu_hr_attendance_configuration" sequence="100"/>
+    <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" parent="menu_hr_attendance_configuration" sequence="100" groups="hr.group_hr_user"/>
 
 </odoo>

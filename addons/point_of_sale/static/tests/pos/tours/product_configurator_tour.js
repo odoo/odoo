@@ -6,6 +6,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     steps: () =>
@@ -107,6 +108,10 @@ registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("Non Existing Product"),
+            ProductScreen.productIsDisplayed("Dynamic Product").map(negateStep),
+            ProductScreen.searchProduct("Dynamic Product"),
+            ProductScreen.productIsDisplayed("Dynamic Product"),
             ProductScreen.clickDisplayedProduct("Dynamic Product"),
             ProductConfigurator.pickRadio("Test 1"),
             Dialog.confirm(),
@@ -170,9 +175,21 @@ registry.category("web_tour.tours").add("test_cross_exclusion_attribute_values",
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product 1"),
             ProductConfigurator.pickRadio("attribute_1_value_1"),
+            [
+                {
+                    content: `check radio attribute with name attribute_2_value_1 is muted`,
+                    trigger: `.modal .attribute-name-cell:contains('attribute_2_value_1') span.text-muted`,
+                },
+            ],
             ProductConfigurator.pickRadio("attribute_2_value_1"),
             ProductConfigurator.isAddDisabled(),
             ProductConfigurator.pickRadio("attribute_2_value_2"),
+            [
+                {
+                    content: `check radio attribute with name attribute_1_value_2 is muted`,
+                    trigger: `.modal .attribute-name-cell:contains('attribute_1_value_2') span.text-muted`,
+                },
+            ],
             ProductConfigurator.pickRadio("attribute_1_value_2"),
             ProductConfigurator.isAddDisabled(),
             ProductConfigurator.pickRadio("attribute_1_value_1"),
@@ -181,6 +198,68 @@ registry.category("web_tour.tours").add("test_cross_exclusion_attribute_values",
             ProductConfigurator.pickRadio("attribute_1_value_2"),
             ProductConfigurator.pickRadio("attribute_2_value_1"),
             ProductConfigurator.isAddEnabled(),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_exclusion_attribute_values", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfigurator.pickColor("Red"),
+            ProductConfigurator.pickSelect("Metal"),
+            ProductConfigurator.isUnavailable("Other"),
+            ProductConfigurator.isUnavailable("Wool"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_custom_attribute_alone_displayed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Only Custom"),
+            ProductConfigurator.fillCustomAttribute("Filling"),
+            ProductConfigurator.selectedCustomAttribute("Filling"),
+            Dialog.confirm(),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_product_configurator_price", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Product"),
+            ProductConfigurator.priceIs("13.20"), // 10 (Small) + 2 (Red) + 1.2 (10% tax)
+            ProductConfigurator.pickRadio("Large"),
+            ProductConfigurator.priceIs("14.30"), // 10 + 1 (Large) + 2 (Red) + 1.3 (10% tax)
+            ProductConfigurator.pickRadio("Blue"),
+            ProductConfigurator.priceIs("15.40"), // 10 + 1 (Large) + 3 (Blue) + 1.4 (10% tax)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("15.40"),
+            ProductScreen.clickPriceList("Pricelist 2"),
+            ProductScreen.totalAmountIs("22.00"),
+            ProductScreen.clickDisplayedProduct("Configurable Product"),
+            ProductConfigurator.priceIs("22.00"), // 20 (pricelist 2) + 2 (10% tax)
+            ProductConfigurator.pickRadio("Blue"),
+            ProductConfigurator.priceIs("22.00"), // 20 (pricelist 2) + 2 (10% tax)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("44.00"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickFiscalPosition("Include to Exclude"),
+            ProductScreen.clickDisplayedProduct("Configurable Product"),
+            ProductConfigurator.priceIs("12.00"), // 10 (Small) + 2 (Red)
+            ProductConfigurator.pickRadio("Large"),
+            ProductConfigurator.priceIs("13.00"), // 10 + 1 (Large) + 2 (Red)
+            ProductConfigurator.pickRadio("Blue"),
+            ProductConfigurator.priceIs("14.00"), // 10 + 1 (Large) + 3 (Blue)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("14.00"),
             Chrome.endTour(),
         ].flat(),
 });

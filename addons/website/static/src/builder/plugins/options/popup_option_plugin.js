@@ -3,31 +3,38 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export const POPUP = SNIPPET_SPECIFIC;
 export const COOKIES_BAR = SNIPPET_SPECIFIC_END;
+
+export class PopupOption extends BaseOptionComponent {
+    static template = "website.PopupOption";
+    static selector = ".s_popup";
+    static exclude = "#website_cookies_bar";
+    static applyTo = ".modal";
+}
+
+export class PopupCookiesOption extends BaseOptionComponent {
+    static template = "website.PopupCookiesOption";
+    static selector = ".s_popup#website_cookies_bar";
+    static applyTo = ".modal";
+}
 
 class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
     static dependencies = ["anchor", "visibility", "history", "popupVisibilityPlugin"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
-            withSequence(POPUP, {
-                template: "website.PopupOption",
-                selector: ".s_popup",
-                exclude: "#website_cookies_bar",
-                applyTo: ".modal",
-            }),
-            withSequence(COOKIES_BAR, {
-                template: "website.PopupCookiesOption",
-                selector: ".s_popup#website_cookies_bar",
-                applyTo: ".modal",
-            }),
+            withSequence(POPUP, PopupOption),
+            withSequence(COOKIES_BAR, PopupCookiesOption),
         ],
         dropzone_selector: {
             selector: ".s_popup",
             exclude: "#website_cookies_bar",
+            excludeAncestor: ".s_popup, .s_table_of_content, .s_tabs, .s_tabs_images",
             dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
         },
         builder_actions: {
@@ -38,6 +45,13 @@ class PopupOptionPlugin extends Plugin {
             SetBackdropAction,
             CopyAnchorAction,
             SetPopupDelayAction,
+        },
+        empty_node_predicates: (el) => {
+            if (!el.matches?.(".s_popup")) {
+                return false;
+            }
+            const popupModalChildrenEls = [...(el.querySelector(".modal-content")?.children ?? [])];
+            return popupModalChildrenEls.every((child) => child.matches(".s_popup_close"));
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),

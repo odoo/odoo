@@ -8,13 +8,14 @@
 # Sarah Park, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-24 19:21+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2026-01-09 04:31+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/hr/ko/>\n"
 "Language: ko\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr
 #. odoo-python
@@ -126,8 +127,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\""
-"><small><b>내용 보기</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>내용 보기</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -135,8 +136,9 @@ msgstr ""
 msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
-msgstr "<b>축하합니다!</b> <a href=\"%s\">신입사원 교육과 관련된 계획</a>에 관해 "
-"추천드려도 될까요?"
+msgstr ""
+"<b>축하합니다!</b> <a href=\"%s\">신입사원 교육과 관련된 계획</a>에 관해 추천"
+"드려도 될까요?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -144,12 +146,18 @@ msgid ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
 "title=\"Company\"/>"
 msgstr ""
-"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"회사\" title=\"회사\""
-"/>"
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"회사\" title=\"회사"
+"\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\" "
+"invisible=\"login == work_email\"/>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
@@ -158,11 +166,21 @@ msgstr ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\"/>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
+"invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"Login\" invisible=\"login == work_email\"/>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
-msgstr "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"생일\"/>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"생일\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -206,7 +224,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
-msgstr "<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
+msgstr ""
+"<i class=\"fa fa-phone fa-fw me-1 text-primary\" title=\"Work Phone\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -306,13 +325,6 @@ msgstr "<small>온라인 학습</small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
-"<span class=\"col-8 text-uppercase fw-bolder small\"> Contract Overview </"
-"span>"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
 "invisible=\"is_trusted_bank_account\" class=\"text-muted\">Untrusted</span>\n"
@@ -395,7 +407,12 @@ msgstr "<span class=\"text-muted small\">응답 시간</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
-msgstr ""
+msgstr "<span invisible=\"not contract_date_start\">종료일</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -404,6 +421,11 @@ msgid ""
 "                                                (User is Inactive)\n"
 "                                            </span>"
 msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Contract Overview</span>"
+msgstr "<span>계약서 전체보기</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -423,125 +445,125 @@ msgstr "<span>보기</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>new employees</span>"
-msgstr ""
+msgstr "<span>신규 입사자</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Adaptability</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">적응력</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">행정 업무</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">자율성</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Be enthusiastic</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">열정적인 자세.</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Client Interaction</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">고객과의 상호 작용</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Collaboration</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">협업</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Compliance and Regulations</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">법규 및 규정</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Conflict Resolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">갈등 해결</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">고객 관계 관리</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Cybersecurity</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">사이버 보안</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Diversity and Inclusion</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">다양성과 포용성</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "<strong class=\"s_rating_title\">Innovation</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">혁신</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Leadership</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">리더십</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Learning</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">학습 의지</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Management</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">관리 능력</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">자기 계발</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Problem-Solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">문제 해결 능력</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Problem-solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">문제 해결 능력</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Skill Development</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">기술 계발</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
 msgid "<strong class=\"s_rating_title\">Talent Acquisition</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">인재 채용</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">전문 기술</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "<strong class=\"s_rating_title\">Technology Strategy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">기술적인 전략</strong>"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -561,16 +583,16 @@ msgid ""
 "                aligning the workforce with the organization's goals and "
 "objectives."
 msgstr ""
-"인사 관리자는 조직의 인적 자원을 총괄하고 모든 인사 관리 업무가 효율적으로 "
-"수행되도록 관리하는 역할을 하고 있습니다.\n"
+"인사 관리자는 조직의 인적 자원을 총괄하고 모든 인사 관리 업무가 효율적으로 수"
+"행되도록 관리하는 역할을 하고 있습니다.\n"
 "                  주요 업무로는 신규 인력에 대한 채용, 선발, 온보딩, 교육 뿐 "
 "아니라 직원 관계 관리, 성과 및 보상 관리 등이 있습니다.\n"
-"                  또한 인사 관리자는 노동 관련 법규 및 기업 내부 정책을 "
-"준수하고 바람직한 근무 환경을 조성하기 위해 노력합니다. 분쟁이 발생할 경우\n"
-"                  이를 해결하고, 직원 평가를 실시하며, 직원 몰입도 및 근속 "
-"장려를 위한 프로그램을 시행합니다.\n"
-"                  나아가 인사 관리자는 조직의 목표와 방향에 맞게 인적 자원 "
-"운용 계획을 조정하는 전략적 역할을 합니다."
+"                  또한 인사 관리자는 노동 관련 법규 및 기업 내부 정책을 준수"
+"하고 바람직한 근무 환경을 조성하기 위해 노력합니다. 분쟁이 발생할 경우\n"
+"                  이를 해결하고, 직원 평가를 실시하며, 직원 몰입도 및 근속 장"
+"려를 위한 프로그램을 시행합니다.\n"
+"                  나아가 인사 관리자는 조직의 목표와 방향에 맞게 인적 자원 운"
+"용 계획을 조정하는 전략적 역할을 합니다."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -619,7 +641,7 @@ msgstr "부재중"
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__acc_number
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_line_list
 msgid "Account Number"
-msgstr ""
+msgstr "계좌 번호"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -793,12 +815,12 @@ msgstr "할당"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
 msgid "Allowed Country State"
-msgstr ""
+msgstr "허용 국가 상태"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
 msgid "Allowed User"
-msgstr ""
+msgstr "허용된 사용자"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
@@ -809,13 +831,13 @@ msgstr "금액"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount_type
 msgid "Amount Type"
-msgstr ""
+msgstr "금액 유형"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An element name parent of the radio to observe updates"
-msgstr ""
+msgstr "업데이트 모니터링용 라디오 버튼의 상위 요소 이름"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_unique_date_version
@@ -828,7 +850,7 @@ msgstr "직원은 유효기간이 동일한 버전을 여러 개 활성화할 �
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "An object to link select options and element id to move"
-msgstr ""
+msgstr "선택 옵션 과 이동 요소 ID를 연결하는 객체입니다."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -897,22 +919,22 @@ msgid ""
 "satisfaction and productivity."
 msgstr ""
 "당사의 인사 담당 관리자로서 <b>모든 부서와 협력하여\n"
-"                                비즈니스 목표에 부합하는 인사 전략을 "
-"수립하고 실행하는 역할을 맡게\n"
+"                                비즈니스 목표에 부합하는 인사 전략을 수립하"
+"고 실행하는 역할을 맡게\n"
 "                                됩니다</b>. 경쟁력을 갖춘 혜택과 풍부한 승진 "
 "기회를 제공하는 성장하는 기업에 합류하여\n"
-"                                경험이 풍부한 전문가들과 함께 협력해 보세요."
-"\n"
+"                                경험이 풍부한 전문가들과 함께 협력해 보세"
+"요.\n"
 "                                <br>\n"
-"                                해당 직무는 채용, 직원 참여, 성과 관리를 "
-"중심으로 <b>전략적 기획과 운영</b>을 모두 수행합니다.\n"
+"                                해당 직무는 채용, 직원 참여, 성과 관리를 중심"
+"으로 <b>전략적 기획과 운영</b>을 모두 수행합니다.\n"
 "                                우리는 인재 확보, 교육 프로그램 개발, 그리고 "
 "유지 전략 실행에 강점을 가진\n"
 "                                주도적인 리더를 찾고 있습니다.\n"
 "                                성공적인 업무 수행을 위해서는 우수한 분석력, "
 "노동법에 대한 폭넓은 이해,\n"
-"                                그리고 직원 만족도와 생산성을 높이는 "
-"다양하고 포괄적인 조직 문화를\n"
+"                                그리고 직원 만족도와 생산성을 높이는 다양하"
+"고 포괄적인 조직 문화를\n"
 "                                조성하는 능력이 필수적입니다."
 
 #. module: hr
@@ -945,19 +967,19 @@ msgstr ""
 "당사의 컨설턴트로서 <b>다양한 부서와 협력하여 비즈니스 요구 사항을 분석하고\n"
 "                                맞춤형 전략을 수립하며, 솔루션을 효과적으로 "
 "실행하는 역할을\n"
-"                                맡게 됩니다</b>. 혁신적인 기업 환경에서 "
-"경쟁력 있는 복지 혜택과\n"
+"                                맡게 됩니다</b>. 혁신적인 기업 환경에서 경쟁"
+"력 있는 복지 혜택과\n"
 "                                성장 기회를 제공하며, 업계 최고의 전문가들과 "
 "함께할 수 있습니다. 우리는 측정 가능한 성과를 창출한\n"
 "                                경험이 풍부하고 역량 있는 컨설턴트를 찾고\n"
 "                                있습니다..\n"
 "                                <br>\n"
-"                                해당 직무에서는 <b>전략적 분석 능력과 "
-"창의적인 문제 해결 역량</b>이\n"
-"                                이 요구되며, 고객의 과제를 논리적으로 "
-"접근하고 깊이 있는 통찰력을 제공할 수 있어야 합니다.\n"
-"                                당사는 강한 실행력을 갖춘 자기 주도적인 "
-"전문가를 찾고 있으며,\n"
+"                                해당 직무에서는 <b>전략적 분석 능력과 창의적"
+"인 문제 해결 역량</b>이\n"
+"                                이 요구되며, 고객의 과제를 논리적으로 접근하"
+"고 깊이 있는 통찰력을 제공할 수 있어야 합니다.\n"
+"                                당사는 강한 실행력을 갖춘 자기 주도적인 전문"
+"가를 찾고 있으며,\n"
 "                                성공적인 업무 수행을 위해서는 우수한 분석력, "
 "인사이트를 실질적인 실행 방안으로 전환하는 역량,\n"
 "                                그리고 조직 내 다양한 이해관계자들과\n"
@@ -991,25 +1013,25 @@ msgid ""
 "quality results in a fast-paced environment."
 msgstr ""
 "당사의 개발자로서 여러분은 <b>제품 관리자, 디자이너, 엔지니어들과 협력\n"
-"                                하여 최신 소프트웨어 솔루션을 기획, 개발, "
-"배포하는 역할을 맡게 됩니다</b>.\n"
+"                                하여 최신 소프트웨어 솔루션을 기획, 개발, 배"
+"포하는 역할을 맡게 됩니다</b>.\n"
 "                                경쟁력 있는 혜택과 경력 성장 기회를 제공하는 "
 "빠르게 성장하는 기업에 합류하여\n"
 "                                업계 최고의 전문가들과 함께하세요.\n"
-"                                저희는 기술과 혁신에 대한 강한 열정을 가진 "
-"역량 있는 개발자를 찾고 있습니다.\n"
+"                                저희는 기술과 혁신에 대한 강한 열정을 가진 역"
+"량 있는 개발자를 찾고 있습니다.\n"
 "                                <br>\n"
-"                                해당 직무에서는 <b>효율적이고 유지 관리가 "
-"용이한 코드를 작성하고,\n"
+"                                해당 직무에서는 <b>효율적이고 유지 관리가 용"
+"이한 코드를 작성하고,\n"
 "                                코드 리뷰에 참여하며, 기술적 문제를 해결하는 "
 "일을 담당하게 됩니다</b>. \n"
-"                                <b>창의적인 문제 해결 능력과 세부적인 분석 "
-"능력</b>이 모두 요구되며, 효과적인 솔루션을 구현하는 동시에\n"
+"                                <b>창의적인 문제 해결 능력과 세부적인 분석 능"
+"력</b>이 모두 요구되며, 효과적인 솔루션을 구현하는 동시에\n"
 "                                혁신적인 사고가 필요합니다.\n"
-"                                우리는 강한 실행력을 갖춘 주도적인 인재를 "
-"찾고 있으며, 이 역할에서의 성공은 복잡한 문제를 해결하고\n"
-"                                 빠르게 변화하는 환경 속에서 높은 품질의 "
-"결과물을 지속적으로 제공하는 능력에 달려 있습니다."
+"                                우리는 강한 실행력을 갖춘 주도적인 인재를 찾"
+"고 있으며, 이 역할에서의 성공은 복잡한 문제를 해결하고\n"
+"                                 빠르게 변화하는 환경 속에서 높은 품질의 결과"
+"물을 지속적으로 제공하는 능력에 달려 있습니다."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -1030,15 +1052,15 @@ msgid ""
 "within the company based on their fit and\n"
 "                                performance."
 msgstr ""
-"당사의 연수생은<b>다양한 부서와 협력하여 혁신적인 제품 개발과 출시 지원을 "
-"하게 됩니다</b>.\n"
-"                                     성장하는 팀에 합류하여 풍부한 경험을 "
-"갖춘 전문가들과 함께 우수한 혜택과 귀중한 학습 기회를 제공합니다.\n"
+"당사의 연수생은<b>다양한 부서와 협력하여 혁신적인 제품 개발과 출시 지원을 하"
+"게 됩니다</b>.\n"
+"                                     성장하는 팀에 합류하여 풍부한 경험을 갖"
+"춘 전문가들과 함께 우수한 혜택과 귀중한 학습 기회를 제공합니다.\n"
 "                                     <br>\n"
-"                                     이 역할을 통해 <b>창의적이고 체계적</"
-"b>이며 틀에 얽매이지 않은 사고를 경험해 보세요.\n"
-"                                     강력한 해결 사고방식을 가진 주도적인 "
-"인재를 찾고 있습니다. 합격할 경우 업무 적합성과\n"
+"                                     이 역할을 통해 <b>창의적이고 체계적</b>"
+"이며 틀에 얽매이지 않은 사고를 경험해 보세요.\n"
+"                                     강력한 해결 사고방식을 가진 주도적인 인"
+"재를 찾고 있습니다. 합격할 경우 업무 적합성과\n"
 "                                     성과에 따라 회사 내에서 성장할 수 있는 "
 "기회를 드립니다."
 
@@ -1062,12 +1084,12 @@ msgstr ""
 "회사의 일원으로서 여러분은 <b>각 부서와 협력하여 혁신적인 제품 개발과\n"
 "                                배포를 주도하게 됩니다.</b> 성장을 거듭하고 "
 "있는 회사에서 뛰어난 역량을 갖춘 리더들과 함께 배우고\n"
-"                                발전할 기회를 제공합니다. 풍부한 경험과 "
-"역량으로 무장된 인재를 모십니다.                                <br><br>\n"
-"                                해당 직책은 <b>창의적이고 분석적인 사고 "
-"능력</b> 모두가 요구되는 자리이며, 혁신적인 자세를 필요로 합니다..\n"
-"                                적극적이고 \"할 수 있다\" 는 주도적 정신을 "
-"갖추고 있으며,\n"
+"                                발전할 기회를 제공합니다. 풍부한 경험과 역량"
+"으로 무장된 인재를 모십니다.                                <br><br>\n"
+"                                해당 직책은 <b>창의적이고 분석적인 사고 능력"
+"</b> 모두가 요구되는 자리이며, 혁신적인 자세를 필요로 합니다..\n"
+"                                적극적이고 \"할 수 있다\" 는 주도적 정신을 갖"
+"추고 있으며,\n"
 "                                탁월한 문제 해결 능력을 지닌 지원자 여러분을 "
 "기다리고 있습니다."
 
@@ -1106,35 +1128,35 @@ msgid ""
 "                                fostering collaboration across all "
 "departments."
 msgstr ""
-"당사는 빠르게 성장하는 기업으로, 최고기술책임자(CTO)로서 <b>함께할 인재를 "
-"모시고자 합니다. \n"
-"                                해당 직무에서는 제품, 마케팅, 운영팀과 "
-"긴밀히 협력하여 업계를 선도할 혁신적인 기술 솔루션을 개발하고\n"
-"                                출시하는 데 기여하게 됩니다. 당사는 경쟁력 "
-"있는 복지 혜택과 전문적인 성장 기회를 제공하며,\n"
-"                                업계 최고의 전문가들과 함께 일할 수 있는 "
-"기회를 누리실 수\n"
+"당사는 빠르게 성장하는 기업으로, 최고기술책임자(CTO)로서 <b>함께할 인재를 모"
+"시고자 합니다. \n"
+"                                해당 직무에서는 제품, 마케팅, 운영팀과 긴밀"
+"히 협력하여 업계를 선도할 혁신적인 기술 솔루션을 개발하고\n"
+"                                출시하는 데 기여하게 됩니다. 당사는 경쟁력 있"
+"는 복지 혜택과 전문적인 성장 기회를 제공하며,\n"
+"                                업계 최고의 전문가들과 함께 일할 수 있는 기회"
+"를 누리실 수\n"
 "                                있도록 지원합니다.\n"
 "                                <br>\n"
-"                                CTO로서 귀하는 <b>회사의 기술 전략 및 "
-"로드맵을 수립하고 실행하며,</b>\n"
-"                                이를 비즈니스 목표와 일치시키는 중요한 "
-"역할을 맡게 됩니다.  이 직무는 <b>창의성과 \n"
+"                                CTO로서 귀하는 <b>회사의 기술 전략 및 로드맵"
+"을 수립하고 실행하며,</b>\n"
+"                                이를 비즈니스 목표와 일치시키는 중요한 역할"
+"을 맡게 됩니다.  이 직무는 <b>창의성과 \n"
 "                                분석적 사고</b>가 균형을 이루어야 하며,\n"
 "                                혁신적인 솔루션을 개발하는 동시에 전략적이고 "
 "실질적인 접근 방식을 유지해야 합니다.\n"
-"                                 우리는 강한 실행력을 갖춘 리더를 찾고 "
-"있습니다. 도전에 적극적으로 대응하고 프로젝트를 성공적으로 이끌어 갈 수 있는 "
-"분을 원합니다.\n"
+"                                 우리는 강한 실행력을 갖춘 리더를 찾고 있습니"
+"다. 도전에 적극적으로 대응하고 프로젝트를 성공적으로 이끌어 갈 수 있는 분을 "
+"원합니다.\n"
 "                                <br>\n"
-"                                해당 직무에서 뛰어난 성과를 내기 위해서는 "
-"<b>소프트웨어 아키텍처,\n"
-"                                 클라우드 컴퓨팅, 데이터 보안</b>에 대한 "
-"폭넓은 경험과 더불어\n"
-"                                팀 리더십 및 애자일 프로젝트 관리에 대한 "
-"확고한 배경이 필요합니다.\n"
-"                                또한, 복잡한 기술적 개념을 비전문가에게 "
-"명확하게 전달하고, 모든 부서 간 협업을 촉진할 수 있는\n"
+"                                해당 직무에서 뛰어난 성과를 내기 위해서는 <b>"
+"소프트웨어 아키텍처,\n"
+"                                 클라우드 컴퓨팅, 데이터 보안</b>에 대한 폭넓"
+"은 경험과 더불어\n"
+"                                팀 리더십 및 애자일 프로젝트 관리에 대한 확고"
+"한 배경이 필요합니다.\n"
+"                                또한, 복잡한 기술적 개념을 비전문가에게 명확"
+"하게 전달하고, 모든 부서 간 협업을 촉진할 수 있는\n"
 "                                뛰어난 커뮤니케이션 역량이 필수적입니다."
 
 #. module: hr
@@ -1164,7 +1186,7 @@ msgstr "첨부 파일 수"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Attendance PIN"
-msgstr ""
+msgstr "근태 PIN"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1255,22 +1277,22 @@ msgstr "은행 계좌"
 #: code:addons/hr/models/hr_employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
 msgid "Bank Account Allocation"
-msgstr ""
+msgstr "은행 계좌 할당"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard_line
 msgid "Bank Account Allocation Line (Wizard)"
-msgstr ""
+msgstr "은행 계좌 지정 내역 (마법사)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard
 msgid "Bank Account Allocation Wizard"
-msgstr ""
+msgstr "은행 계좌 지정 마법사"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_bank_account_allocation_wizard
 msgid "Bank Account Allocations"
-msgstr ""
+msgstr "은행 계좌 할당"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
@@ -1352,7 +1374,7 @@ msgstr "생일"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Boolean display as radio field with translatable labels"
-msgstr ""
+msgstr "부울 값을 라디오 필드로 표시하며 번역 가능한 라벨을 지정합니다."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
@@ -1363,21 +1385,21 @@ msgstr "취소"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
+msgid "Cannot archive all the active versions of an employee."
 msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid ""
-"Cannot modify multiple records contract dates with different contracts at "
+"Cannot modify multiple versions contract dates with different contracts at "
 "once."
 msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
+msgid "Cannot unassign all the active versions of an employee."
 msgstr ""
 
 #. module: hr
@@ -1566,7 +1588,7 @@ msgstr "담당자 이름"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Contact Phone"
-msgstr ""
+msgstr "연락 번호"
 
 #. module: hr
 #. odoo-python
@@ -1575,6 +1597,8 @@ msgid "Contacts"
 msgstr "연락처"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1821,7 +1845,7 @@ msgstr "통화"
 #: model:ir.model.fields,help:hr.field_account_setup_bank_manual_config__currency_symbol
 #: model:ir.model.fields,help:hr.field_res_partner_bank__currency_symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "통화 기호입니다. 금액을 인쇄할 때 사용됩니다."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
@@ -1882,8 +1906,9 @@ msgstr "기본 퇴직 사유는 삭제할 수 없습니다."
 msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
-msgstr "표시할 수 있는 IP 주소를 지정합니다. 주소가 여러 개 있는 경우에는 쉼표로 "
-"구분합니다."
+msgstr ""
+"표시할 수 있는 IP 주소를 지정합니다. 주소가 여러 개 있는 경우에는 쉼표로 구분"
+"합니다."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1896,6 +1921,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"직원의 근무 일정을 설정합니다. 설정하지 않으면 해당 직원은 완전히 유연한 근"
+"무 시간을 갖게 됩니다."
 
 #. module: hr
 #. odoo-javascript
@@ -2055,6 +2082,7 @@ msgstr "메일 및 채팅 채널"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__display_name
@@ -2079,7 +2107,7 @@ msgstr "표시명"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/fields/many2one_avatar_employee_field/kanban_many2one_avatar_employee_field.js:0
 msgid "Display avatar name"
-msgstr "아바타 이름 표시"
+msgstr "아바타 표시명"
 
 #. module: hr
 #. odoo-python
@@ -2096,6 +2124,11 @@ msgstr "박사"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Document"
+msgstr "문서"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Documents"
 msgstr "문서"
 
 #. module: hr
@@ -2126,13 +2159,13 @@ msgid ""
 "drink, and much more."
 msgstr ""
 "각 직원은 본인의 업무 결과가 조직에 어떠한 영향을 미치는지 인지함으로써\n"
-"                            회사의 성공과 발전에 실질적인 기여를 할 수 "
-"있습니다.\n"
+"                            회사의 성공과 발전에 실질적인 기여를 할 수 있습니"
+"다.\n"
 "                            <br>\n"
-"                            또한 매주 스포츠 세션과 조직 단합 행사, 매월 "
-"진행되는 회식 등\n"
-"                            연중 수시로 진행되는 다양한 활동에 참여할 수 "
-"있습니다."
+"                            또한 매주 스포츠 세션과 조직 단합 행사, 매월 진행"
+"되는 회식 등\n"
+"                            연중 수시로 진행되는 다양한 활동에 참여할 수 있습"
+"니다."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -2156,19 +2189,19 @@ msgstr "교육"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Effective Date"
-msgstr ""
+msgstr "유효 날짜"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element association"
-msgstr ""
+msgstr "요소 연결"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Element to observe"
-msgstr ""
+msgstr "확인해야 하는 요소"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
@@ -2271,13 +2304,13 @@ msgstr "직원 속성"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
 msgid "Employee Records"
-msgstr ""
+msgstr "임직원 레코드"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
 msgid "Employee Salary Amount Is Percentage"
-msgstr ""
+msgstr "직원 급여 금액은 백분율로 되어 있습니다"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -2317,9 +2350,15 @@ msgid "Employee development is a core focus"
 msgstr "직원 개발이 가장 중요합니다."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee will be excluded from Pay Runs"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
 msgid "Employee's Bank Accounts"
-msgstr ""
+msgstr "직원 은행 계좌"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2379,6 +2418,12 @@ msgstr "직원 수"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
 msgstr "직원 태그"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr "직원 프로필"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
@@ -2514,7 +2559,7 @@ msgstr "만료된 계약"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Expires on"
-msgstr ""
+msgstr "만료일"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2522,7 +2567,8 @@ msgstr ""
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
-msgstr "제한된 사용 권한을 가진 외부 사용자. 데이터 공유 목적으로만 생성됩니다."
+msgstr ""
+"제한된 사용 권한을 가진 외부 사용자. 데이터 공유 목적으로만 생성됩니다."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2533,7 +2579,7 @@ msgstr "워크샵 및 이해관계자 회의 진행 경험"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "False association"
-msgstr ""
+msgstr "잘못된 연결"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2620,8 +2666,9 @@ msgstr "멋진 아이콘 폰트 예: fa-tasks"
 msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
-msgstr "%(channels)s의 경우, 부서에서 자동 구독을 하려면 channel_type을 '채널'로 "
-"설정해야 합니다."
+msgstr ""
+"%(channels)s의 경우, 부서에서 자동 구독을 하려면 channel_type을 '채널'로 설정"
+"해야 합니다."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -2653,6 +2700,7 @@ msgid "Full-Time"
 msgstr "풀타임"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
 msgstr "향후 활동"
@@ -2683,7 +2731,7 @@ msgstr "직원을 보관함으로 이동시킨 이유에 대해 설명을 추가
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Go to contact"
-msgstr ""
+msgstr "계약서로 가기"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2750,7 +2798,7 @@ msgstr "메시지가 있습니다"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
-msgstr ""
+msgstr "여러 개의 은행 계좌 보유 여부"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2767,7 +2815,7 @@ msgstr "채용 중"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Hiring Process"
-msgstr ""
+msgstr "채용 프로세스"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2840,6 +2888,7 @@ msgstr "인사 관리자"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
+#: model:ir.model.fields,field_description:hr.field_hr_mixin__id
 #: model:ir.model.fields,field_description:hr.field_hr_payroll_structure_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_version__id
 #: model:ir.model.fields,field_description:hr.field_hr_version_wizard__id
@@ -2984,6 +3033,8 @@ msgid "In-depth knowledge of labor laws"
 msgstr "노동법에 대한 전문 지식"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Indefinite"
 msgstr "무기한"
@@ -3066,12 +3117,12 @@ msgstr "시스템"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_trusted_bank_account
 msgid "Is Trusted Bank Account"
-msgstr ""
+msgstr "신뢰할 수 있는 은행 계좌 여부"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_user
 msgid "Is User"
-msgstr ""
+msgstr "사용자임"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3113,7 +3164,7 @@ msgstr "직무 영역"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Job Posting"
-msgstr ""
+msgstr "채용 공고"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
@@ -3121,6 +3172,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_version__job_title
 #: model:ir.model.fields,field_description:hr.field_res_users__job_title
 #: model:ir.model.fields,field_description:hr.field_resource_resource__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "Job Title"
 msgstr "직함"
 
@@ -3201,6 +3253,7 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Late Activities"
 msgstr "지연된 활동"
@@ -3252,13 +3305,13 @@ msgstr "하나 만들어 봅시다."
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean False value."
-msgstr ""
+msgstr "부울 값이 False 값인 요소와 연결합니다."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "Link an element with the boolean True value."
-msgstr ""
+msgstr "부울 값이 True 값인 요소와 연결합니다."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_wizard_view_form
@@ -3292,6 +3345,11 @@ msgid "Location Number"
 msgstr "위치 번호"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Login"
+msgstr "로그인 ID"
+
+#. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
 msgstr "장기 프로젝트"
@@ -3305,7 +3363,7 @@ msgstr "주요 첨부 파일"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Main Work Location"
-msgstr ""
+msgstr "기본 작업 위치"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3425,6 +3483,12 @@ msgid "Mobile Phone"
 msgstr "휴대폰"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
+msgid "More..."
+msgstr "더 보기"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3492,7 +3556,7 @@ msgstr "새로운 계약"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
 msgid "New Employee Record"
-msgstr ""
+msgstr "신규 직원 기록"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
@@ -3557,13 +3621,25 @@ msgid "No Template found"
 msgstr "서식을 찾을 수 없습니다"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
+msgid "No contract"
+msgstr "계약 없음"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr "무능한 관리자, 비효율적인 도구의 사용, 경직된 근로 시간 제도가 없습니다."
+msgstr ""
+"무능한 관리자, 비효율적인 도구의 사용, 경직된 근로 시간 제도가 없습니다."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "No user linked"
+msgstr "사용자 연결됨 없음"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3573,18 +3649,14 @@ msgstr "무능한 관리자, 비효율적인 도구의 사용, 경직된 근로 
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
-msgstr "엔터프라이즈 프로세스를 사용하여 시간 낭비를 최소화하며, 각 직책에 맞는 "
-"실질적인 책임과 자율성을 부여합니다."
+msgstr ""
+"엔터프라이즈 프로세스를 사용하여 시간 낭비를 최소화하며, 각 직책에 맞는 실질"
+"적인 책임과 자율성을 부여합니다."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
 msgstr "고용되지 않음"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not linked to an user"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -3694,10 +3766,10 @@ msgid ""
 "one in that loop is linked to a user.                        Please double-"
 "check that everyone reports to the correct manager."
 msgstr ""
-"죄송합니다! 팀 구조에 문제가 있는 것 같습니다.                        순환 "
-"보고 고리가 발견되었으며 해당 고리에 있는 사람 중 누구도 사용자와 연결되어 "
-"있지 않습니다.                        모든 사람이 담당 관리자에게 보고하는지 "
-"확인해 주세요."
+"죄송합니다! 팀 구조에 문제가 있는 것 같습니다.                        순환 보"
+"고 고리가 발견되었으며 해당 고리에 있는 사람 중 누구도 사용자와 연결되어 있"
+"지 않습니다.                        모든 사람이 담당 관리자에게 보고하는지 확"
+"인해 주세요."
 
 #. module: hr
 #. odoo-javascript
@@ -3797,7 +3869,7 @@ msgstr "소프트웨어 제품에 대한 열정"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_expiration_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__passport_expiration_date
 msgid "Passport Expiration Date"
-msgstr ""
+msgstr "여권 만료일"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -3809,7 +3881,7 @@ msgstr "여권 번호"
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Pay Category"
-msgstr ""
+msgstr "지급 카테고리"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -3853,7 +3925,7 @@ msgstr "개인"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Personal Information"
-msgstr ""
+msgstr "개인 정보"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3891,7 +3963,8 @@ msgstr "계획"
 msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for some HR "
 "plans."
-msgstr "계획 %(plan_names)s은 특정 인사 계획에만 지정되어 있으므로 부서를 사용할 수 "
+msgstr ""
+"계획 %(plan_names)s은 특정 인사 계획에만 지정되어 있으므로 부서를 사용할 수 "
 "없습니다."
 
 #. module: hr
@@ -3905,7 +3978,8 @@ msgstr "계획 부서 필터링 가능"
 msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
-msgstr "%(template_names)s 계획은 직원에 대한 계획에만 사용하므로 코치나 관리자 또는 "
+msgstr ""
+"%(template_names)s 계획은 직원에 대한 계획에만 사용하므로 코치나 관리자 또는 "
 "책임자에게는 적용할 수 없습니다."
 
 #. module: hr
@@ -3942,8 +4016,8 @@ msgstr ""
 "Mailgateway를 사용하여 문서에 메시지를 게시하는 정책.\n"
 "- 모든 사용자: 모든 사용자가 게시할 수 있습니다\n"
 "- 협력사: 인증된 협력사만 게시할 수 있습니다\n"
-"- 팔로워: 관련 문서의 팔로워 또는 팔로잉 중인 채널의 사용자만 게시할 수 "
-"있습니다\n"
+"- 팔로워: 관련 문서의 팔로워 또는 팔로잉 중인 채널의 사용자만 게시할 수 있습"
+"니다\n"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
@@ -3992,7 +4066,7 @@ msgstr "인턴십 또는 프로젝트 경력"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__primary_bank_account_id
 msgid "Primary Bank Account"
-msgstr ""
+msgstr "기본 은행 계좌"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -4144,7 +4218,7 @@ msgstr "R&D USA"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
 msgid "Radio followed by element"
-msgstr ""
+msgstr "라디오 이후에 있는 요소"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -4348,12 +4422,12 @@ msgstr "주민등록번호"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Salary Allocation"
-msgstr ""
+msgstr "급여 배분"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__salary_distribution
 msgid "Salary Distribution"
-msgstr ""
+msgstr "급여 분배"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -4404,8 +4478,8 @@ msgid ""
 "Select a contract template to auto-fill the contract form with predefined "
 "values. You can still edit the fields as needed after applying the template."
 msgstr ""
-"계약서 템플릿을 선택하면 미리 지정된 값으로 계약서 양식이 자동으로 "
-"입력됩니다. 템플릿을 적용한 후에도 필요에 따라 필드를 수정할 수 있습니다."
+"계약서 템플릿을 선택하면 미리 지정된 값으로 계약서 양식이 자동으로 입력됩니"
+"다. 템플릿을 적용한 후에도 필요에 따라 필드를 수정할 수 있습니다."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -4458,6 +4532,11 @@ msgstr "공유 사용자"
 #: model:ir.model.fields,field_description:hr.field_resource_resource__show_hr_icon_display
 msgid "Show Hr Icon Display"
 msgstr "시간 아이콘 표시 보기"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+msgid "Show all records whose next activity date is past"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
@@ -4596,8 +4675,8 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
-"부서별로 직원을 구성하여 경비, 출퇴근 기록, 휴가, 채용 등과 같은 영역에 "
-"대한\n"
+"부서별로 직원을 구성하여 경비, 출퇴근 기록, 휴가, 채용 등과 같은 영역에 대"
+"한\n"
 "                    인사이트를 얻으세요."
 
 #. module: hr
@@ -4671,8 +4750,9 @@ msgstr "임시"
 msgid ""
 "The Badge ID must be alphanumeric without any accents and no longer than 18 "
 "characters."
-msgstr "배지 ID는 영문과 숫자로만 구성되어야 하며, 악센트 부호가 없어야 하고, 18자 "
-"이내여야 합니다."
+msgstr ""
+"배지 ID는 영문과 숫자로만 구성되어야 하며, 악센트 부호가 없어야 하고, 18자 이"
+"내여야 합니다."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -4705,10 +4785,10 @@ msgid ""
 "plan. This mission requires strong\n"
 "                collaboration with Technical Service and Sales."
 msgstr ""
-"마케팅 매니저는 전 세계에서 자신이 담당하는 시장 부문에 대한 중장기 마케팅 "
-"전략에 대해 정의합니다.\n"
-"                영업팀과 협력하여 연간 예산을 편성하고 모니터링합니다. "
-"마케팅 계획에 따라 상품 및\n"
+"마케팅 매니저는 전 세계에서 자신이 담당하는 시장 부문에 대한 중장기 마케팅 전"
+"략에 대해 정의합니다.\n"
+"                영업팀과 협력하여 연간 예산을 편성하고 모니터링합니다. 마케"
+"팅 계획에 따라 상품 및\n"
 "                고객 포트폴리오를 정의합니다. 업무를 수행하기 위해서는 기술 "
 "서비스팀 및 \n"
 "                영업팀과 긴밀하게 협력해야 합니다."
@@ -4726,6 +4806,8 @@ msgid ""
 "job             position. The Recruiter is automatically added to all "
 "meetings with the Applicant."
 msgstr ""
+"채용 담당자는 해당 직무의 모든 지원자 채용에 대한 기본값으로 설정됩니다. 채"
+"용 담당자는 지원자와의 모든 미팅에 자동으로 추가됩니다."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_contract_start_date_defined
@@ -4770,6 +4852,12 @@ msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
 msgstr "불러오려는 “%s” 필드는 직원 공개 프로필에서 사용할 수 없습니다."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -4818,7 +4906,8 @@ msgstr "사용자는 직원을 생성하고 수정할 수 있습니다."
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
-msgstr "사용자는 통계 보고서뿐만 아니라 인사 관리 환경 설정에 접근할 수 있습니다."
+msgstr ""
+"사용자는 통계 보고서뿐만 아니라 인사 관리 환경 설정에 접근할 수 있습니다."
 
 #. module: hr
 #. odoo-python
@@ -4836,6 +4925,12 @@ msgstr "논문"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "이 직원은 이미 사용자로 등록되어 있습니다."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -4891,6 +4986,7 @@ msgstr ""
 "상실 등 ...)들을 방지하려면 새 회사에 다른 직원을 생성해야 합니다."
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
 msgstr "오늘 활동"
@@ -4931,12 +5027,12 @@ msgstr "교육"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "True association"
-msgstr ""
+msgstr "올바른 연결"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Trust Bank Account"
-msgstr ""
+msgstr "신탁 은행 계좌"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__trusted
@@ -4986,7 +5082,7 @@ msgstr "읽지 않은 메세지"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Untrust Bank Account"
-msgstr ""
+msgstr "신탁 해제 은행 계좌"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -5011,7 +5107,7 @@ msgstr "사용자"
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
 msgid "User Archive Notification"
-msgstr ""
+msgstr "사용자 보관함 이동 알림"
 
 #. module: hr
 #. odoo-python
@@ -5022,7 +5118,7 @@ msgstr "사용자 생성 알림"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
 msgid "User Employee"
-msgstr ""
+msgstr "직원 사용자"
 
 #. module: hr
 #. odoo-python
@@ -5039,7 +5135,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
 msgid "User's active"
-msgstr ""
+msgstr "사용자 활성화 여부"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -5087,7 +5183,7 @@ msgstr "버전 수"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Visa & Work Permit"
-msgstr ""
+msgstr "비자 및 취업 허가증"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -5127,10 +5223,10 @@ msgid ""
 "proven track record in delivering results are\n"
 "                essential."
 msgstr ""
-"비즈니스 성장을 촉진하는 전문적인 조언과 전략적 솔루션을 제공할 컨설턴트를 "
-"모집합니다.\n"
-"                강력한 분석 능력과 입증된 영향력 있는 결과 제공 실적을 "
-"보유한 이상적인 후보자를 기다리고 있습니다."
+"비즈니스 성장을 촉진하는 전문적인 조언과 전략적 솔루션을 제공할 컨설턴트를 모"
+"집합니다.\n"
+"                강력한 분석 능력과 입증된 영향력 있는 결과 제공 실적을 보유"
+"한 이상적인 후보자를 기다리고 있습니다."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -5140,8 +5236,8 @@ msgid ""
 "meet clients to explain the technical\n"
 "                possibilities that can meet their needs."
 msgstr ""
-"현재 저희 웹팀에서는 코딩 작업과 분석 수행을 원활하게 수행하거나 고객과 "
-"소통하여\n"
+"현재 저희 웹팀에서는 코딩 작업과 분석 수행을 원활하게 수행하거나 고객과 소통"
+"하여\n"
 "                고객의 요구사항에 부합하는 기술 솔루션을 설명할 수 있는\n"
 "                능력 있는 인재를 찾고 있습니다."
 
@@ -5186,7 +5282,8 @@ msgstr "해당 직책의 장점은 무엇입니까?"
 msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
-msgstr "직원이 활성화된 사용자 부서에 소속되었는지 또는 하위 부서에 소속되었는지 여부"
+msgstr ""
+"직원이 활성화된 사용자 부서에 소속되었는지 또는 하위 부서에 소속되었는지 여부"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee
@@ -5365,6 +5462,16 @@ msgstr "예"
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
+msgstr ""
+"'직원' (hr.employee) 레코드에 액세스할 수 없습니다.\n"
+"일반 공개용 직원 목록으로 이동합니다."
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid ""
 "You are not allowed to create an employee because the user does not have "
@@ -5377,7 +5484,7 @@ msgstr "사용자에게 %s에 대한 액세스 권한이 없으므로 직원을 
 msgid ""
 "You are receiving this message because you are the HR Responsible of this "
 "employee."
-msgstr ""
+msgstr "해당 직원의 인사 담당자이므로 이 메시지를 받으셨습니다."
 
 #. module: hr
 #. odoo-javascript
@@ -5451,9 +5558,9 @@ msgid ""
 "being involved into satisfaction surveys in order to have a better knowledge "
 "of how the support given is seen by the customers."
 msgstr ""
-"새 버전의 Odoo가 출시된 후 튜토리얼 도구 및 사전 판매 도구의 업데이트에 "
-"참여합니다. 실제로 소프트웨어의 새 버전은 기능, 인간 공학 뿐만 아니라 구성 "
-"측면에서도 상당한 개선을 이루었습니다. \n"
+"새 버전의 Odoo가 출시된 후 튜토리얼 도구 및 사전 판매 도구의 업데이트에 참여"
+"합니다. 실제로 소프트웨어의 새 버전은 기능, 인간 공학 뿐만 아니라 구성 측면에"
+"서도 상당한 개선을 이루었습니다. \n"
 "귀하는 기존 도구 (책, 강의 지원, Odoo 프레젠테이션 슬라이드, 상용 도구 등)의 "
 "사용법을 숙지하고\n"
 "새 버전의 소프트웨어에 맞게 이러한 도구를 업데이트하는 데 참여해야 하며\n"
@@ -5465,8 +5572,8 @@ msgstr ""
 "고객의 질문에 답변하는 webinar를 진행하는 일입니다.\n"
 "새로운 사례를 함께 처리하고,\n"
 "관련된 새로운 정책 수립에도 참여하며,\n"
-"마지막으로 고객 만족도 조사를 통하여 지원 관리자가 지원 서비스를 얼마나 "
-"적절히 제공했는지 더 잘 알 수 있도록 도와주는 역할도 함께 수행하게 됩니다."
+"마지막으로 고객 만족도 조사를 통하여 지원 관리자가 지원 서비스를 얼마나 적절"
+"히 제공했는지 더 잘 알 수 있도록 도와주는 역할도 함께 수행하게 됩니다."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_cto
@@ -5482,12 +5589,12 @@ msgid ""
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-"
 "Neuve and Namur)."
 msgstr ""
-"설계, 분석, 개발, 테스트, 프로젝트 관리, 지원/코칭 등 협력사와 고객에게 "
-"제공하는 컨설팅 서비스에 참여하게 됩니다. 대부분은 자율적으로 일하며, 일부 "
-"프로젝트의 경우만 소규모 분산 개발 팀을 조정하고 감독합니다. 또한 옵션으로 "
-"파트너와 고객을 위해 세션당 8~10명으로 구성된 Odoo 교육 세션을 진행합니다. "
-"전문 서비스 책임자에게 업무 내용을 보고하게 되며, 모든 개발자 및 컨설턴트와 "
-"긴밀히 협력해야 합니다.\n"
+"설계, 분석, 개발, 테스트, 프로젝트 관리, 지원/코칭 등 협력사와 고객에게 제공"
+"하는 컨설팅 서비스에 참여하게 됩니다. 대부분은 자율적으로 일하며, 일부 프로젝"
+"트의 경우만 소규모 분산 개발 팀을 조정하고 감독합니다. 또한 옵션으로 파트너"
+"와 고객을 위해 세션당 8~10명으로 구성된 Odoo 교육 세션을 진행합니다. 전문 서"
+"비스 책임자에게 업무 내용을 보고하게 되며, 모든 개발자 및 컨설턴트와 긴밀히 "
+"협력해야 합니다.\n"
 "\n"
 "근무지는 벨기에 그랑-로시에르(1367)에 위치합니다. (루뱅 라뇌브와 나무르 사이)"
 
@@ -5499,9 +5606,9 @@ msgid ""
 "user template's rights. Adding new users may increase your subscription "
 "cost. Do you wish to continue?"
 msgstr ""
-"새로운 사용자를 초대하려고 합니다. 기본 사용자 템플릿 권한으로 설정된 "
-"사용자가 %s명 생성될 예정입니다. 신규 사용자를 추가할 경우 구독 요금이 "
-"인상될 수 있습니다. 계속할까요?"
+"새로운 사용자를 초대하려고 합니다. 기본 사용자 템플릿 권한으로 설정된 사용자"
+"가 %s명 생성될 예정입니다. 신규 사용자를 추가할 경우 구독 요금이 인상될 수 있"
+"습니다. 계속할까요?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -5588,6 +5695,11 @@ msgstr "예: johndoe@example.com"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
 msgstr "예: myprivateemail@example.com"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_mixin
+msgid "hr.mixin"
+msgstr "hr.mixin"
 
 #. module: hr
 #. odoo-python

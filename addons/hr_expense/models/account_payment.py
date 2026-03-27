@@ -16,6 +16,11 @@ class AccountPayment(models.Model):
             payment.outstanding_account_id = payment.expense_ids._get_expense_account_destination()
         super(AccountPayment, self - expense_company_payments)._compute_outstanding_account_id()
 
+    def _compute_show_require_partner_bank(self):
+        expense_payments = self.filtered(lambda pay: pay.move_id.expense_ids)
+        super()._compute_show_require_partner_bank()
+        expense_payments.require_partner_bank_account = False
+
     def write(self, vals):
         trigger_fields = {
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference',
@@ -28,14 +33,7 @@ class AccountPayment(models.Model):
 
     def action_open_expense(self):
         self.ensure_one()
-        return {
-            'name': self.expense_ids.name,
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'views': [(False, 'form')],
-            'res_model': 'hr.expense',
-            'res_id': self.expense_ids.id,
-        }
+        return self.expense_ids._get_records_action(name=_("Expenses"))
 
     def _creation_message(self):
         # EXTENDS mail

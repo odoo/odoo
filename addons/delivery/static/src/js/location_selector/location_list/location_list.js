@@ -38,7 +38,7 @@ export class LocationList extends Component {
 
     setup() {
         onMounted(() => {
-            document.getElementById(`location-${this.props.selectedLocationId}`).focus();
+            document.getElementById(`location-${this.props.selectedLocationId}`)?.focus();
         });
 
         // Focus on the location on the list when clicking on the map marker.

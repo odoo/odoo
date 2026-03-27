@@ -3,7 +3,6 @@ import werkzeug
 
 from ast import literal_eval
 from collections import Counter
-from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -220,20 +219,12 @@ class WebsiteEventController(http.Controller):
         urls = lazy(event._get_event_resource_urls)
         return {
             'event': event,
-            'slots': event.event_slot_ids.filtered(
-                        lambda s: s.start_datetime > datetime.now()
-                        and any(
-                            availability is None or availability > 0
-                            for availability in event._get_seats_availability([
-                                (s, ticket) for ticket in event.event_ticket_ids or [False]
-                            ])
-                        )
-                    ).grouped('date'),
             'main_object': event,
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
             'iCal_url': lazy(lambda: urls.get('iCal_url')),
             'registration_error_code': post.get('registration_error_code'),
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
@@ -370,7 +361,10 @@ class WebsiteEventController(http.Controller):
                 registration_index, field_name = key_values
                 if field_name not in registration_fields:
                     continue
-                registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                # Only cast when needed, as it might crash here for custom inputs in overrides
+                if isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
+                    value = int(value) or False
+                registrations.setdefault(registration_index, dict())[field_name] = value
                 continue
 
             if len(key_values) != 3:
@@ -490,6 +484,7 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
             'slot': slot,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 

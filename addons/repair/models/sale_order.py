@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 
@@ -50,15 +50,18 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _compute_qty_delivered(self):
+    def _prepare_qty_delivered(self):
+        repair_delivered_qties = defaultdict(float)
         remaining_so_lines = self
         for so_line in self:
             move = so_line.move_ids.sudo().filtered(lambda m: m.repair_id and m.state == 'done')
             if len(move) != 1:
                 continue
             remaining_so_lines -= so_line
-            so_line.qty_delivered = move.quantity
-        return super(SaleOrderLine, remaining_so_lines)._compute_qty_delivered()
+            repair_delivered_qties[so_line] = move.quantity
+        delivered_qties = super(SaleOrderLine, remaining_so_lines)._prepare_qty_delivered()
+        delivered_qties.update(repair_delivered_qties)
+        return delivered_qties
 
     @api.model_create_multi
     def create(self, vals_list):

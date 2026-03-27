@@ -2,9 +2,8 @@
 <odoo>
 
     <template id="sale_order_portal_optional_product_quantity" name="Order Quantity">
-        <div t-if="line._can_be_edited_on_portal()">
+        <div t-if="line._can_be_edited_on_portal()" class="d-inline-flex">
             <div class="input-group js_quantity_container pull-right">
-
                 <span class="d-print-none input-group-text d-none d-md-inline-block">
                     <a
                         title="Remove one"
@@ -17,12 +16,11 @@
                         <span class="fa fa-minus"/>
                     </a>
                 </span>
-                <!-- TODO add uom in this case too -->
                 <input
                     type="text"
                     class="js_quantity form-control"
                     t-att-data-line-id="line.id"
-                    t-att-value="line.product_uom_qty or '0.0'"
+                    t-att-value="int(line.product_uom_qty) or '0'"
                 />
                 <span class="d-print-none input-group-text d-none d-md-inline-block">
                     <a
@@ -35,6 +33,9 @@
                         <span class="fa fa-plus"/>
                     </a>
                 </span>
+            </div>
+            <div class="ms-1 align-self-center">
+                <span t-field="line.product_uom_id"/>
             </div>
         </div>
         <div t-else="">

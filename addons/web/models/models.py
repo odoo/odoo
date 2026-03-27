@@ -446,7 +446,7 @@ class Base(models.AbstractModel):
             all_records = self.browse().union(*recordset_groups)
             record_mapped = dict(zip(
                 all_records._ids,
-                all_records.web_read(unfold_read_specification),
+                all_records.web_read(unfold_read_specification or {}),
                 strict=True,
             ))
 
@@ -561,7 +561,7 @@ class Base(models.AbstractModel):
             fold = group.pop('__fold', False)
 
             groupby_value = group[groupby_spec]
-            # For relational/date/datetime field
+            # For relational/date/datetime/property tags field
             raw_groupby_value = groupby_value[0] if isinstance(groupby_value, tuple) else groupby_value
 
             limit = unfold_read_default_limit
@@ -841,7 +841,7 @@ class Base(models.AbstractModel):
         ):
             # It doesn't respect the order with aggregates inside
             expand_groups = self._web_read_group_expand(domain, groups, groupby[0], aggregates, order)
-            if not limit or len(expand_groups) < limit:
+            if not limit or len(expand_groups) <= limit:
                 # Ditch the result of expand_groups because the limit is reached and to avoid
                 # returning inconsistent result inside length of web_read_group
                 groups = expand_groups
@@ -1265,7 +1265,7 @@ class Base(models.AbstractModel):
 
         if property_type == 'tags':
             tags = definition.get('tags') or []
-            tags = {tag[0]: tag for tag in tags}
+            tags = {tag[0]: tuple(tag) for tag in tags}
 
             def formatter_property_tags(value):
                 if not value:
@@ -1274,7 +1274,7 @@ class Base(models.AbstractModel):
                         AND([[(fullname, 'not in', tag)] for tag in tags]),
                     ]) if tags else []
 
-                # replace tag raw value with list of raw value, label and color
+                # replace tag raw value with tuple of raw value, label and color
                 return tags.get(value), [(fullname, 'in', value)]
 
             return formatter_property_tags
@@ -1345,19 +1345,21 @@ class Base(models.AbstractModel):
         """
         Return the values in the image of the provided domain by field_name.
 
-        :param model_domain: domain whose image is returned
-        :param extra_domain: extra domain to use when counting records
-            associated with field values
         :param field_name: the name of a field (type ``many2one`` or
             ``selection``)
-        :param enable_counters: whether to set the key ``'__count'`` in
-            image values
-        :param only_counters: whether to retrieve information on the
-            ``model_domain`` image or only counts based on
-            ``model_domain`` and ``extra_domain``. In the later case,
-            the counts are set whatever is enable_counters.
-        :param limit: maximal number of values to fetch
-        :param bool set_limit: whether to use the provided limit (if any)
+        :param kwargs: Keyword arguments:
+
+            * ``model_domain``: domain whose image is returned
+            * ``extra_domain``: extra domain to use when counting records
+              associated with field values
+            * ``enable_counters``: whether to set the key ``'__count'`` in
+              image values
+            * ``only_counters``: whether to retrieve information on the
+              ``model_domain`` image or only counts based on
+              ``model_domain`` and ``extra_domain``. In the later case,
+              the counts are set whatever is enable_counters.
+            * ``limit``: maximal number of values to fetch
+            * ``set_limit``: whether to use the provided limit (if any)
         :return: a dict of the form:
             ::
 
@@ -1532,14 +1534,16 @@ class Base(models.AbstractModel):
         Return the values of a field of type selection possibly enriched
         with counts of associated records in domain.
 
-        :param enable_counters: whether to set the key ``'__count'`` on
-            values returned. Default is ``False``.
-        :param expand: whether to return the full range of values for
-            the selection field or only the field image values. Default
-            is ``False``.
         :param field_name: the name of a field of type selection
-        :param model_domain: domain used to determine the field image
-            values and counts. Default is an empty list.
+        :param kwargs:
+
+            * model_domain: domain used to determine the field image
+              values and counts. Default is an empty list.
+            * enable_counters: whether to set the key ``'__count'`` on
+              values returned. Default is ``False``.
+            * expand: whether to return the full range of values for
+              the selection field or only the field image values. Default
+              is ``False``.
         :return: a list of dicts of the form
             ::
 
@@ -1585,26 +1589,26 @@ class Base(models.AbstractModel):
         :param field_name: the name of a field; of type many2one or selection.
         :param kwargs: additional features
 
-            :param category_domain: domain generated by categories.
-                Default is ``[]``.
-            :param comodel_domain: domain of field values (if relational).
-                Default is ``[]``.
-            :param enable_counters: whether to count records by value.
-                Default is ``False``.
-            :param expand: whether to return the full range of field values in
-                comodel_domain or only the field image values (possibly
-                filtered and/or completed with parents if hierarchize is set).
-                Default is ``False``.
-            :param filter_domain: domain generated by filters.
-                Default is ``[]``.
-            :param hierarchize: determines if the categories must be displayed
-                hierarchically (if possible). If set to true and
-                ``_parent_name`` is set on the comodel field, the information
-                necessary for the hierarchization will be returned.
-                Default is ``True``.
-            :param limit: integer, maximal number of values to fetch.
-                Default is ``None`` (no limit).
-            :param search_domain: base domain of search. Default is ``[]``.
+            * category_domain: domain generated by categories.
+              Default is ``[]``.
+            * comodel_domain: domain of field values (if relational).
+              Default is ``[]``.
+            * enable_counters: whether to count records by value.
+              Default is ``False``.
+            * expand: whether to return the full range of field values in
+              comodel_domain or only the field image values (possibly
+              filtered and/or completed with parents if hierarchize is set).
+              Default is ``False``.
+            * filter_domain: domain generated by filters.
+              Default is ``[]``.
+            * hierarchize: determines if the categories must be displayed
+              hierarchically (if possible). If set to true and
+              ``_parent_name`` is set on the comodel field, the information
+              necessary for the hierarchization will be returned.
+              Default is ``True``.
+            * limit: integer, maximal number of values to fetch.
+              Default is ``None`` (no limit).
+            * search_domain: base domain of search. Default is ``[]``.
 
         :return: ::
 

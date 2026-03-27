@@ -1,0 +1,5614 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:38+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, fuzzy
+msgid ""
+"\n"
+"\n"
+"Note: products that you don't have access to will not be shown above."
+msgstr ""
+"Eslatma: siz kirishga ruxsatingiz bo‘lmagan mahsulotlar yuqorida "
+"ko‘rsatilmaydi."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
+#, fuzzy
+msgid "# Product Variants"
+msgstr "# Mahsulot variantlari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__product_count
+#, fuzzy
+msgid "# Products"
+msgstr "# Mahsulotlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "$14.00"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "$15.00"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid ""
+"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
+"fee\n"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
+msgstr ""
+"%(base)s ga %(discount)s %% %(discount_type)s va %(surcharge)s qo‘shimcha "
+"to‘lov bilan. Misol: %(amount)s * %(discount_charge)s + %(price_surcharge)s "
+"→ %(total_amount)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid ""
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
+msgstr ""
+"%(item_name)s: tugash sanasi (%(end_date)s) boshlanish sanasidan (%"
+"(start_date)s) keyin bo‘lishi kerak"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
+msgstr "%(base)s %(extra)s ga %(percentage)s %% %(discount_type)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "%(percentage)s %% discount on %(pricelist)s"
+msgstr "%(pricelist)s ga %(percentage)s %% chegirma"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "%(percentage)s %% discount on sales price"
+msgstr "Sotuv narxiga %(percentage)s %% chegirma"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_category.py:0
+#: code:addons/product/models/product_pricelist.py:0
+#: code:addons/product/models/product_tag.py:0
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "%s (copy)"
+msgstr "%s (nusxa)"
+
+#. module: product
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x12_noprice
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
+#, fuzzy
+msgid "'Products Labels - %s' % (object.name)"
+msgstr "'%s mahsulot yorliqlari' % (object.name)"
+
+#. module: product
+#: model:ir.actions.report,print_report_name:product.report_product_packaging
+#, fuzzy
+msgid "'Products packaging - %s' % (object.uom_id.name)"
+msgstr "'%s mahsulot qadoqlari' % (object.uom_id.name)"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "(e.g: product description, ebook, legal notice, ...)."
+msgstr ""
+"(masalan: mahsulot tavsifi, elektron kitob, huquqiy bildirishnoma va "
+"boshqalar)."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "+ %(amount)s extra fee"
+msgstr "+ %(amount)s qo‘shimcha to‘lov"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "- %(amount)s rebate"
+msgstr "- %(amount)s chegirma"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, fuzzy
+msgid ""
+"- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+msgstr ""
+"- \"%(barcode)s\" shtrix-kodi allaqachon quyidagi mahsulot(lar)ga "
+"biriktirilgan: %(product_list)s"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__create_variant
+#, fuzzy
+msgid ""
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
+"        - Never: Variants are never created for the attribute.\n"
+"        Note: this cannot be changed once the attribute is used on a product."
+msgstr ""
+"- Darhol: Mahsulotga atribut va uning qiymatlari qo‘shilishi bilanoq barcha "
+"mumkin bo‘lgan variantlar yaratiladi.         - Dinamik tarzda: Har bir "
+"variant faqat sotuv buyurtmasiga uning tegishli atributlari va qiymatlari "
+"qo‘shilgandagina yaratiladi.         - Hech qachon: Atribut uchun variantlar "
+"hech qachon yaratilmaydi.         Eslatma: bu atribut mahsulotda "
+"ishlatilganidan so‘ng o‘zgartirilishi mumkin emas."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_month_1
+#, fuzzy
+msgid "1 month"
+msgstr "1 oy"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_year_1
+#, fuzzy
+msgid "1 year"
+msgstr "1 yil"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "10"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "10 Units"
+msgstr "10 dona"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_height_100
+msgid "100"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_120
+msgid "120"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "123456789012"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_140
+msgid "140"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_160
+msgid "160"
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_4_product_template
+#, fuzzy
+msgid "160x80cm, with large legs"
+msgstr "160x80 sm, katta oyoqli"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
+#, fuzzy
+msgid "2 x 7 with price"
+msgstr "2 x 7 narx bilan"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_year_2
+#, fuzzy
+msgid "2 years"
+msgstr "2 yil"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_2xl
+#, fuzzy
+msgid "2XL"
+msgstr "2XL"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_year_3
+#, fuzzy
+msgid "3 years"
+msgstr "3 yil"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_39
+msgid "39"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_3xl
+#, fuzzy
+msgid "3XL"
+msgstr "3XL"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
+#, fuzzy
+msgid "4 x 12"
+msgstr "4 x 12"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
+#, fuzzy
+msgid "4 x 12 with price"
+msgstr "4 x 12 narx bilan"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
+#, fuzzy
+msgid "4 x 7 with price"
+msgstr "4 x 7 narx bilan"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_40
+msgid "40"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_41
+msgid "41"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_42
+msgid "42"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_43
+msgid "43"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_height_45
+msgid "45"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_4xl
+#, fuzzy
+msgid "4XL"
+msgstr "4XL"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_5xl
+#, fuzzy
+msgid "5XL"
+msgstr "5XL"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_month_6
+#, fuzzy
+msgid "6 months"
+msgstr "6 oy"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_height_85
+msgid "85"
+msgstr ""
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+#, fuzzy
+msgid ""
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
+"o_translate_inline\">Contact Us</a>"
+msgstr ""
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\">Biz "
+"bilan bog‘laning</a>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "<b>Tip: want to round at 9.99?</b>"
+msgstr "<b>Maslahat: 9.99 ga yaxlitlamoqchimisiz?</b>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_category_form_view
+#, fuzzy
+msgid "<span class=\"o_stat_text\"> Products</span>"
+msgstr "<span class=\"o_stat_text\">Mahsulotlar</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Packaging Barcodes</span>"
+msgstr "<span class=\"o_stat_text\">Qadoq shtrix-kodlari</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Products</span>"
+msgstr "<span class=\"o_stat_text\">Mahsulotlar</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "<span>%</span>"
+msgstr "<span>%</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "<span>All general settings about this product are managed on</span>"
+msgstr ""
+"<span>Ushbu mahsulot haqidagi barcha umumiy sozlamalar boshqariladi</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "<span>on</span>"
+msgstr "<span>da</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+#, fuzzy
+msgid "<strong>Qty: </strong>"
+msgstr "<strong>Miqdor: </strong>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+#, fuzzy
+msgid ""
+"<strong>Warning</strong>: adding or deleting attributes\n"
+"                        will delete and recreate existing variants and lead\n"
+"                        to the loss of their possible customizations."
+msgstr ""
+"<strong>Ogohlantirish</strong>: atributlarni qo‘shish yoki o‘chirish mavjud "
+"variantlarni o‘chirib tashlaydi va qayta yaratadi hamda ularning mumkin "
+"bo‘lgan moslamalarini yo‘qotishga olib keladi."
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
+#, fuzzy
+msgid "A barcode can only be assigned to one packaging."
+msgstr "Shtrix-kod faqat bitta qadoqqa berilishi mumkin."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_combo.py:0
+#, fuzzy
+msgid "A combo choice can't contain duplicate products."
+msgstr "Kombo tanlovda bir xil mahsulotlar bo‘lishi mumkin emas."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_combo_item.py:0
+#, fuzzy
+msgid "A combo choice can't contain products of type \"combo\"."
+msgstr ""
+"Kombo tanlov tarkibida \"kombo\" turidagi mahsulotlar bo‘lmasligi kerak."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_combo.py:0
+#, fuzzy
+msgid "A combo choice must contain at least 1 product."
+msgstr "Kombo tanlov kamida 1 ta mahsulotni o‘z ichiga olishi shart."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "A combo product must contain at least 1 combo choice."
+msgstr "Kombo mahsulot kamida 1 ta kombo tanlovdan iborat bo‘lishi kerak."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__description_sale
+#: model:ir.model.fields,help:product.field_product_template__description_sale
+#, fuzzy
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
+msgstr ""
+"Mijozlaringizga yetkazmoqchi bo‘lgan mahsulot tavsifi. Bu tavsif har bir "
+"sotuv buyurtmasi, yetkazib berish buyurtmasi va mijoz hisob-fakturasi/kredit "
+"eslatmasiga nusxalanadi."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, fuzzy
+msgid "A packaging already uses the barcode"
+msgstr "Ushbu shtrix-kod allaqachon boshqa qadoqda ishlatilgan."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
+#, fuzzy
+msgid ""
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
+msgstr ""
+"Narx - bu mahsulotlar, mahsulot toifalari, sanalar va buyurtma qilingan "
+"miqdorlar asosida sotuv buyurtmalari qatorlarining narxini hisoblash uchun "
+"sotish narxlari yoki qoidalar to‘plami. Bu bir nechta narxlar, mavsumiy "
+"chegirmalar va boshqalarni boshqarish uchun mukammal vositadir."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_uom.py:0
+#, fuzzy
+msgid "A product already uses the barcode"
+msgstr "Ushbu shtrix-kod allaqachon boshqa mahsulotda ishlatilmoqda."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "A sellable combo product can only contain sellable products."
+msgstr ""
+"Sotiladigan kombo mahsulot faqat sotiladigan mahsulotlardan tashkil topishi "
+"kerak."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__access_token
+#, fuzzy
+msgid "Access Token"
+msgstr "Kirish tokeni"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "Acme Widget"
+msgstr "Acme vidjeti"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "Acme Widget - Blue"
+msgstr "Acme vidjeti - Ko‘k"
+
+#. module: product
+#: model:product.template,name:product.product_template_acoustic_bloc_screens
+#, fuzzy
+msgid "Acoustic Bloc Screens"
+msgstr "Akustik to‘siq ekranlari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_needaction
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction
+#: model:ir.model.fields,field_description:product.field_product_product__message_needaction
+#: model:ir.model.fields,field_description:product.field_product_template__message_needaction
+#, fuzzy
+msgid "Action Needed"
+msgstr "Harakat talab etiladi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__active
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__active
+#: model:ir.model.fields,field_description:product.field_product_document__active
+#: model:ir.model.fields,field_description:product.field_product_pricelist__active
+#: model:ir.model.fields,field_description:product.field_product_product__active
+#: model:ir.model.fields,field_description:product.field_product_template__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_active
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
+#, fuzzy
+msgid "Active"
+msgstr "Faol"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#, fuzzy
+msgid "Active Products"
+msgstr "Faol mahsulotlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
+#: model:ir.model.fields,field_description:product.field_product_product__activity_ids
+#: model:ir.model.fields,field_description:product.field_product_template__activity_ids
+#, fuzzy
+msgid "Activities"
+msgstr "Faoliyatlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_decoration
+#: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
+#: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
+#, fuzzy
+msgid "Activity Exception Decoration"
+msgstr "Faoliyat istisnosi bezagi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
+#: model:ir.model.fields,field_description:product.field_product_product__activity_state
+#: model:ir.model.fields,field_description:product.field_product_template__activity_state
+#, fuzzy
+msgid "Activity State"
+msgstr "Faoliyat holati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_icon
+#: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
+#, fuzzy
+msgid "Activity Type Icon"
+msgstr "Faoliyat turi belgisi"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+#, fuzzy
+msgid "Add"
+msgstr "Qo‘shish"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "Add Products"
+msgstr "Mahsulotlar qo‘shish"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#, fuzzy
+msgid "Add Products to pricelist report"
+msgstr "Mahsulotlarni narxlar ro‘yxati hisobotiga qo‘shish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Add a price"
+msgstr "Narx qo‘shish"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "Add a quantity"
+msgstr "Miqdor qo‘shish"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid ""
+"Add products using the \"Add Products\" button at the top right to\n"
+"                                include them in the report."
+msgstr ""
+"Mahsulotlarni hisobotga kiritish uchun yuqori o‘ng burchakdagi \"Mahsulotlar "
+"qo‘shish\" tugmasidan foydalaning."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute_value.py:0
+#, fuzzy
+msgid "Add to all products"
+msgstr "Barcha mahsulotlarga qo‘shish"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
+#, fuzzy
+msgid "Add to existing products"
+msgstr "Mavjud mahsulotlarga qo‘shish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#, fuzzy
+msgid "Add to products"
+msgstr "Mahsulotlarga qo‘shish"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_ids
+#: model:ir.model.fields,help:product.field_product_template__uom_ids
+#, fuzzy
+msgid "Additional packagings for this product which can be used for sales"
+msgstr ""
+"Ushbu mahsulot uchun sotishda foydalanish mumkin bo‘lgan qo‘shimcha qadoqlar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_adidas
+#, fuzzy
+msgid "Adidas"
+msgstr "Adidas"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
+#, fuzzy
+msgid "All"
+msgstr "Barchasi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "All Categories"
+msgstr "Barcha toifalar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
+#, fuzzy
+msgid "All Product Tag"
+msgstr "Barcha mahsulot teglari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__product_ids
+#, fuzzy
+msgid "All Product Variants using this Tag"
+msgstr "Ushbu teg yordamida barcha mahsulot variantlari"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
+#, fuzzy
+msgid "All Products"
+msgstr "Barcha mahsulotlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "All categories"
+msgstr "Barcha toifalar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
+#, fuzzy
+msgid "All countries"
+msgstr "Barcha mamlakatlar"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/controllers/product_document.py:0
+#, fuzzy
+msgid "All files uploaded"
+msgstr "Barcha fayllar yuklandi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "All products"
+msgstr "Barcha mahsulotlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+#, fuzzy
+msgid "All variants"
+msgstr "Barcha variantlar"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
+#, fuzzy
+msgid "Allow customers to set their own value"
+msgstr "Mijozlarga o‘z qiymatini belgilashga ruxsat berish"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_legs_aluminium
+#, fuzzy
+msgid "Aluminium"
+msgstr "Alyuminiy"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_apple
+#, fuzzy
+msgid "Apple"
+msgstr "Apple"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Applied On"
+msgstr "Qo‘llaniladi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
+#, fuzzy
+msgid "Apply On"
+msgstr "Qo‘llash"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Apply To"
+msgstr "Tatbiq etish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, fuzzy
+msgid "Apply on"
+msgstr "Qo‘llash"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Archived"
+msgstr "Arxivlangan"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_ariel
+#, fuzzy
+msgid "Ariel"
+msgstr "Ariel"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
+#, fuzzy
+msgid "Assigns the priority to the list of product vendor."
+msgstr "Mahsulot yetkazib beruvchilar ro‘yxatiga ustuvorlik beradi."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#, fuzzy
+msgid ""
+"At most %s quantities can be displayed simultaneously. Remove a selected "
+"quantity to add others."
+msgstr ""
+"Bir vaqtda ko‘pi bilan %s ta miqdorni ko‘rsatish mumkin. Boshqalarini "
+"qo‘shish uchun tanlangan miqdorni olib tashlang."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+#, fuzzy
+msgid "Attached To"
+msgstr "Biriktirilgan:"
+
+#. module: product
+#: model:ir.model,name:product.model_ir_attachment
+#, fuzzy
+msgid "Attachment"
+msgstr "Ilova"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_attachment_count
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_attachment_count
+#: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
+#: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
+#, fuzzy
+msgid "Attachment Count"
+msgstr "Ilovalar soni"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__local_url
+#, fuzzy
+msgid "Attachment URL"
+msgstr "Ilova URL manzili"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__attribute_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
+#, fuzzy
+msgid "Attribute"
+msgstr "Xususiyat"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
+#, fuzzy
+msgid "Attribute Line"
+msgstr "Xususiyat qatori"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
+#, fuzzy
+msgid "Attribute Name"
+msgstr "Xususiyat nomi"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute_value
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_product_template_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__attribute_value_id
+#, fuzzy
+msgid "Attribute Value"
+msgstr "Xususiyat qiymati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_value_list
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#, fuzzy
+msgid "Attribute Values"
+msgstr "Xususiyat qiymatlari"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.attribute_action
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Attributes"
+msgstr "Xususiyatlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+#, fuzzy
+msgid "Attributes & Variants"
+msgstr "Xususiyatlar va variantlar"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_controller.js:0
+#, fuzzy
+msgid "Back to Order"
+msgstr "Buyurtmaga qaytish"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_controller.js:0
+#, fuzzy
+msgid "Back to Quotation"
+msgstr "Taklifga qaytish"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__barcode
+#: model:ir.model.fields,field_description:product.field_product_template__barcode
+#: model:ir.model.fields,field_description:product.field_product_uom__barcode
+#, fuzzy
+msgid "Barcode"
+msgstr "Shtrix-kod"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, fuzzy
+msgid ""
+"Barcode(s) already assigned:\n"
+"\n"
+"%s"
+msgstr "Shtrix-kod(lar) allaqachon belgilangan: %s"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_uom_uom__product_uom_ids
+#, fuzzy
+msgid "Barcodes"
+msgstr "Shtrix-kodlar"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__base
+#, fuzzy
+msgid ""
+"Base price for computation.\n"
+"Sales Price: The base price will be the Sales Price.\n"
+"Cost Price: The base price will be the cost price.\n"
+"Other Pricelist: Computation of the base price based on another Pricelist."
+msgstr ""
+"Hisoblash uchun asosiy narx. Sotish narxi: Asosiy narx Sotish narxi bo‘ladi. "
+"Tannarx: Asosiy narx tannarx bo‘ladi. Boshqa narxlar ro‘yxati: Boshqa "
+"narxlar ro‘yxati asosida asosiy narxni hisoblash."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
+#, fuzzy
+msgid "Based on"
+msgstr "Asosida"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Based price"
+msgstr "Asosiy narx"
+
+#. module: product
+#: model:res.groups,name:product.group_product_pricelist
+#, fuzzy
+msgid "Basic Pricelists"
+msgstr "Asosiy narxlar ro‘yxati"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_beige
+#, fuzzy
+msgid "Beige"
+msgstr "Bej"
+
+#. module: product
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
+#, fuzzy
+msgid "Big table seats 10–12 for team discussions"
+msgstr "Jamoa muhokamalari uchun 10-12 kishilik katta stol"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_black
+#, fuzzy
+msgid "Black"
+msgstr "Qora"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_blue
+#, fuzzy
+msgid "Blue"
+msgstr "Ko‘k"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_7_product_template
+#, fuzzy
+msgid "Blue plastic bin for flexible office storage"
+msgstr "Moslashuvchan ofis jihozlari uchun ko‘k plastik quti"
+
+#. module: product
+#: model:product.attribute,name:product.pa_brand
+#, fuzzy
+msgid "Brand"
+msgstr "Brend"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_brown
+#, fuzzy
+msgid "Brown"
+msgstr "Jigarrang"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+#, fuzzy
+msgid "Bye-bye, record!"
+msgstr "Xayr, yozuv!"
+
+#. module: product
+#: model:product.template,name:product.product_product_10_product_template
+#, fuzzy
+msgid "Cabinet with Doors"
+msgstr "Eshikli shkaf"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
+#: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
+#, fuzzy
+msgid "Can Image 1024 be zoomed"
+msgstr "1024 rasmni kattalashtirish mumkinmi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
+#, fuzzy
+msgid "Can Variant Image 1024 be zoomed"
+msgstr "Variant 1024 rasmini kattalashtirish mumkinmi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
+#, fuzzy
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_canon
+#, fuzzy
+msgid "Canon"
+msgstr "Canon"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Categories"
+msgstr "Toifalar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__2_product_category
+#: model_terms:ir.ui.view,arch_db:product.product_category_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Category"
+msgstr "Toifa"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "Category: %s"
+msgstr "Toifa: %s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid ""
+"Changing the unit of measure for your product will apply a conversion 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"All existing records (Sales orders, Purchase orders, etc.) using this "
+"product will be updated by replacing the unit name."
+msgstr ""
+"Mahsulotingiz uchun o‘lchov birligini o‘zgartirish 1 %(old_uom_name)s = 1 %"
+"(new_uom_name)s konvertatsiyani qo‘llaydi. Ushbu mahsulotdan foydalanilgan "
+"barcha mavjud yozuvlar (Sotish buyurtmalari, Xarid buyurtmalari va "
+"boshqalar) birlik nomini almashtirish orqali yangilanadi."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__checksum
+#, fuzzy
+msgid "Checksum/SHA1"
+msgstr "Nazorat summasi/SHA1"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__child_id
+#, fuzzy
+msgid "Child Categories"
+msgstr "Ichki toifalar"
+
+#. module: product
+#: model:ir.model,name:product.model_product_label_layout
+#, fuzzy
+msgid "Choose the sheet layout to print the labels"
+msgstr "Yorliqlarni chop etish uchun varaq tartibini tanlang"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_cocacola
+#, fuzzy
+msgid "Coca-Cola"
+msgstr "Coca-Cola"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Codes"
+msgstr "Kodlar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_colgate
+#, fuzzy
+msgid "Colgate"
+msgstr "Colgate"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__html_color
+#: model:ir.model.fields,field_description:product.field_product_tag__color
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__color
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__color
+#: model:product.attribute,name:product.pa_color
+#, fuzzy
+msgid "Color"
+msgstr "Rang"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__color
+#: model:ir.model.fields,field_description:product.field_product_product__color
+#: model:ir.model.fields,field_description:product.field_product_template__color
+#, fuzzy
+msgid "Color Index"
+msgstr "Rang indeksi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__columns
+#, fuzzy
+msgid "Columns"
+msgstr "Ustunlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__combination_indices
+#, fuzzy
+msgid "Combination Indices"
+msgstr "Kombinatsiya indekslari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo_item__combo_id
+#: model:ir.model.fields.selection,name:product.selection__product_template__type__combo
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Combo"
+msgstr "Kombo"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
+#, fuzzy
+msgid "Combo Choice"
+msgstr "Kombo tanlovi"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_combo_action
+#: model:ir.model.fields,field_description:product.field_product_product__combo_ids
+#: model:ir.model.fields,field_description:product.field_product_template__combo_ids
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
+#, fuzzy
+msgid "Combo Choices"
+msgstr "Kombo tanlovlari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
+#, fuzzy
+msgid "Combo Item"
+msgstr "Kombo elementi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__base_price
+#, fuzzy
+msgid "Combo Price"
+msgstr "Kombo narxi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "Combo products can't have attributes."
+msgstr "Kombo mahsulotlarga xususiyatlar qo‘shib bo‘lmaydi."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid ""
+"Combos allow to choose one product amongst a selection of choices per "
+"category."
+msgstr ""
+"Kombolar har bir toifada tanlovlar orasidan bitta mahsulotni tanlash "
+"imkonini beradi."
+
+#. module: product
+#: model:product.template,description_sale:product.product_delivery_01_product_template
+#, fuzzy
+msgid "Comfortable yellow chair for daily work"
+msgstr "Kundalik ish uchun qulay sariq kreslo"
+
+#. module: product
+#: model:ir.model,name:product.model_res_company
+#, fuzzy
+msgid "Companies"
+msgstr "Kompaniyalar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__company_id
+#: model:ir.model.fields,field_description:product.field_product_combo_item__company_id
+#: model:ir.model.fields,field_description:product.field_product_document__company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__company_id
+#: model:ir.model.fields,field_description:product.field_product_product__company_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__company_id
+#: model:ir.model.fields,field_description:product.field_product_template__company_id
+#: model:ir.model.fields,field_description:product.field_product_uom__company_id
+#, fuzzy
+msgid "Company"
+msgstr "Kompaniya"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Company Settings"
+msgstr "Kompaniya sozlamalari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__complete_name
+#, fuzzy
+msgid "Complete Name"
+msgstr "To‘liq nom"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__compute_price
+#, fuzzy
+msgid "Compute Price"
+msgstr "Narxni hisoblash"
+
+#. module: product
+#: model:product.template,name:product.product_product_11_product_template
+#, fuzzy
+msgid "Conference Chair"
+msgstr "Konferensiya kreslosi"
+
+#. module: product
+#: model:ir.model,name:product.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Konfiguratsiya sozlamalari"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+#, fuzzy
+msgid "Configure"
+msgstr "Sozlash"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
+#, fuzzy
+msgid "Confirm"
+msgstr "Tasdiqlash"
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+#, fuzzy
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
+#, fuzzy
+msgid "Copies"
+msgstr "Nusxalar"
+
+#. module: product
+#: model:product.template,name:product.product_product_13_product_template
+#, fuzzy
+msgid "Corner Desk Left Sit"
+msgstr "Chap burchakli ish stoli"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+#, fuzzy
+msgid "Corner Desk Right Sit"
+msgstr "O‘ng burchakli ish stoli"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__standard_price
+#: model:ir.model.fields,field_description:product.field_product_template__standard_price
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__standard_price
+#, fuzzy
+msgid "Cost"
+msgstr "Tannarx"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
+#, fuzzy
+msgid "Cost Currency"
+msgstr "Tannarx valyutasi"
+
+#. module: product
+#: model:ir.model,name:product.model_res_country_group
+#, fuzzy
+msgid "Country Group"
+msgstr "Davlatlar guruhi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
+#, fuzzy
+msgid "Country Groups"
+msgstr "Davlatlar guruhlari"
+
+#. module: product
+#: model:res.groups,name:product.group_product_manager
+#, fuzzy
+msgid "Create"
+msgstr "Yaratish"
+
+#. module: product
+#: model:ir.model,website_form_label:product.model_res_partner
+#, fuzzy
+msgid "Create a Customer"
+msgstr "Mijoz yaratish"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
+#, fuzzy
+msgid "Create a new pricelist"
+msgstr "Yangi narxlar ro‘yxatini yaratish"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_template_action
+#: model_terms:ir.actions.act_window,help:product.product_template_action_all
+#, fuzzy
+msgid "Create a new product"
+msgstr "Yangi mahsulot yaratish"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_normal_action
+#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
+#: model_terms:ir.actions.act_window,help:product.product_variant_action
+#, fuzzy
+msgid "Create a new product variant"
+msgstr "Yangi mahsulot variantini yaratish"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
+msgid "Create a product"
+msgstr "Mahsulot yaratish"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:product.field_product_template__service_tracking
+#, fuzzy
+msgid "Create on Order"
+msgstr "Buyurtma asosida yaratish"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_category__create_uid
+#: model:ir.model.fields,field_description:product.field_product_combo__create_uid
+#: model:ir.model.fields,field_description:product.field_product_combo_item__create_uid
+#: model:ir.model.fields,field_description:product.field_product_document__create_uid
+#: model:ir.model.fields,field_description:product.field_product_label_layout__create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist__create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__create_uid
+#: model:ir.model.fields,field_description:product.field_product_product__create_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_uid
+#: model:ir.model.fields,field_description:product.field_product_tag__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_uom__create_uid
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_category__create_date
+#: model:ir.model.fields,field_description:product.field_product_combo__create_date
+#: model:ir.model.fields,field_description:product.field_product_combo_item__create_date
+#: model:ir.model.fields,field_description:product.field_product_document__create_date
+#: model:ir.model.fields,field_description:product.field_product_label_layout__create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist__create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__create_date
+#: model:ir.model.fields,field_description:product.field_product_product__create_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_date
+#: model:ir.model.fields,field_description:product.field_product_tag__create_date
+#: model:ir.model.fields,field_description:product.field_product_template__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_uom__create_date
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+#, fuzzy
+msgid "Creation"
+msgstr "Yaratish"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
+#, fuzzy
+msgid "Cubic Feet (ft³)"
+msgstr "Kub fut (ft³)"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
+#, fuzzy
+msgid "Cubic Meters (m³)"
+msgstr "Kub metr (m³)"
+
+#. module: product
+#: model:ir.model,name:product.model_res_currency
+#: model:ir.model.fields,field_description:product.field_product_combo__currency_id
+#: model:ir.model.fields,field_description:product.field_product_combo_item__currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__currency_id
+#: model:ir.model.fields,field_description:product.field_product_product__currency_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__currency_id
+#: model:ir.model.fields,field_description:product.field_product_template__currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__currency_id
+#, fuzzy
+msgid "Currency"
+msgstr "Valyuta"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_custom
+#: model:product.attribute.value,name:product.pav_legs_custom
+#: model:product.attribute.value,name:product.pav_length_custom
+#, fuzzy
+msgid "Custom"
+msgstr "Maxsus"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
+#, fuzzy
+msgid "Custom Value"
+msgstr "Maxsus qiymat"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__partner_ref
+#, fuzzy
+msgid "Customer Ref"
+msgstr "Mijoz havolasi"
+
+#. module: product
+#: model:product.template,name:product.product_product_4_product_template
+#, fuzzy
+msgid "Customizable Desk"
+msgstr "Moslanadigan ish stoli"
+
+#. module: product
+#: model:product.attribute,name:product.pa_customization
+#, fuzzy
+msgid "Customization"
+msgstr "Moslashtirish"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_cyan
+#, fuzzy
+msgid "Cyan"
+msgstr "Moviy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__db_datas
+#, fuzzy
+msgid "Database Data"
+msgstr "Ma'lumotlar bazasi ma'lumotlari"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/res_company.py:0
+#, fuzzy
+msgid "Default"
+msgstr "Standart"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
+#, fuzzy
+msgid "Default Extra Price"
+msgstr "Standart qo‘shimcha narx"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
+#, fuzzy
+msgid "Default Extra Price Changed"
+msgstr "Standart qo‘shimcha narx o‘zgartirildi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_id
+#: model:ir.model.fields,help:product.field_product_template__uom_id
+#, fuzzy
+msgid "Default unit of measure used for all stock operations."
+msgstr ""
+"Barcha ombor operatsiyalari uchun ishlatiladigan standart o‘lchov birligi."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_tag_action
+#, fuzzy
+msgid "Define a new tag"
+msgstr "Yangi teg qo‘shish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+#, fuzzy
+msgid "Define your volume unit of measure"
+msgstr "Hajm o‘lchov birligingizni belgilang"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+#, fuzzy
+msgid "Define your weight unit of measure"
+msgstr "Og‘irlik o‘lchov birligingizni belgilang"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#, fuzzy
+msgid "Delete"
+msgstr "O‘chirish"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_dell
+#, fuzzy
+msgid "Dell"
+msgstr "Dell"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__description
+#: model:ir.model.fields,field_description:product.field_product_product__description
+#: model:ir.model.fields,field_description:product.field_product_template__description
+#, fuzzy
+msgid "Description"
+msgstr "Ta'rif"
+
+#. module: product
+#: model:product.template,description_sale:product.product_order_01_product_template
+#, fuzzy
+msgid "Design and plan smart offices with ease"
+msgstr "Aqlli ofislarni osonlik bilan loyihalash va rejalashtirish"
+
+#. module: product
+#: model:product.template,name:product.product_product_3_product_template
+#, fuzzy
+msgid "Desk Combination"
+msgstr "Ish stoli to‘plami"
+
+#. module: product
+#: model:product.template,name:product.desk_organizer_product_template
+#, fuzzy
+msgid "Desk Organizer"
+msgstr "Ish stoli tashkillagichi"
+
+#. module: product
+#: model:product.template,name:product.desk_pad_product_template
+#, fuzzy
+msgid "Desk Pad"
+msgstr "Ish stoli taglik"
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+#, fuzzy
+msgid "Desk Stand with Screen"
+msgstr "Ekranli ish stoli taglik"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_3_product_template
+#, fuzzy
+msgid "Desk combination, black-brown: chair + desk + drawer"
+msgstr "Ish stoli to‘plami, qora-jigarrang: stul + stol + tortma"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__sequence
+#: model:ir.model.fields,help:product.field_product_attribute_value__sequence
+#, fuzzy
+msgid "Determine the display order"
+msgstr "Ko‘rsatish tartibini belgilash"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
+#, fuzzy
+msgid "Discard"
+msgstr "Bekor qilish"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Discount"
+msgstr "Chegirma"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__discount
+#, fuzzy
+msgid "Discount (%)"
+msgstr "Chegirma (%)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
+#, fuzzy
+msgid "Discounted Price"
+msgstr "Chegirmali narx"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
+#, fuzzy
+msgid "Display Applied On"
+msgstr "Qo‘llanilgan ko‘rsatkich"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_catalog_mixin__display_name
+#: model:ir.model.fields,field_description:product.field_product_category__display_name
+#: model:ir.model.fields,field_description:product.field_product_combo__display_name
+#: model:ir.model.fields,field_description:product.field_product_combo_item__display_name
+#: model:ir.model.fields,field_description:product.field_product_document__display_name
+#: model:ir.model.fields,field_description:product.field_product_label_layout__display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist__display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:product.field_product_product__display_name
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:product.field_product_tag__display_name
+#: model:ir.model.fields,field_description:product.field_product_template__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_uom__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12noprice__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__display_name
+#: model:ir.model.fields,field_description:product.field_res_company__display_name
+#: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:product.field_res_country_group__display_name
+#: model:ir.model.fields,field_description:product.field_res_currency__display_name
+#: model:ir.model.fields,field_description:product.field_res_partner__display_name
+#: model:ir.model.fields,field_description:product.field_uom_uom__display_name
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatish nomi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__display_type
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__display_type
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
+#, fuzzy
+msgid "Display Type"
+msgstr "Ko‘rsatish turi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#, fuzzy
+msgid "Document"
+msgstr "Hujjat"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#: model:ir.model.fields,field_description:product.field_product_product__product_document_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_document_ids
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Documents"
+msgstr "Hujjatlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_document_count
+#: model:ir.model.fields,field_description:product.field_product_template__product_document_count
+#, fuzzy
+msgid "Documents Count"
+msgstr "Hujjatlar soni"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
+#, fuzzy
+msgid "Documents of this variant"
+msgstr "Ushbu variantning hujjatlari"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_dove
+#, fuzzy
+msgid "Dove"
+msgstr "Kabutar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#, fuzzy
+msgid "Download"
+msgstr "Yuklab olish"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "Download examples"
+msgstr "Misollarni yuklab olish"
+
+#. module: product
+#: model:product.template,name:product.product_product_27_product_template
+#, fuzzy
+msgid "Drawer"
+msgstr "Tortma"
+
+#. module: product
+#: model:product.template,name:product.product_product_16_product_template
+#, fuzzy
+msgid "Drawer Black"
+msgstr "Qora tortma"
+
+#. module: product
+#: model_terms:product.template,description:product.product_product_27_product_template
+#, fuzzy
+msgid "Drawer with two routing possiblities"
+msgstr "Ikki yo‘nalishli tortma"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_drawers
+#, fuzzy
+msgid "Drawers"
+msgstr "Tortmalar"
+
+#. module: product
+#: model:product.attribute,name:product.pa_duration
+#, fuzzy
+msgid "Duration"
+msgstr "Davomiyligi"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
+#, fuzzy
+msgid "Dymo"
+msgstr "Dymo"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
+#, fuzzy
+msgid "Dynamically"
+msgstr "Dinamik ravishda"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_dyson
+#, fuzzy
+msgid "Dyson"
+msgstr "Dyson"
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
+#, fuzzy
+msgid "Each value should be defined only once per attribute per product."
+msgstr ""
+"Har bir qiymat har bir mahsulot xususiyati uchun faqat bir marta "
+"belgilanishi kerak."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+#, fuzzy
+msgid "Eco-friendly Wooden Chair"
+msgstr "Ekologik yog‘och stul"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#: model_terms:ir.ui.view,arch_db:product.product_view_kanban_catalog
+#, fuzzy
+msgid "Edit"
+msgstr "Tahrirlash"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_end
+#, fuzzy
+msgid "End Date"
+msgstr "Tugash sanasi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
+#, fuzzy
+msgid "End date for this vendor price"
+msgstr "Ushbu sotuvchi narxining tugash sanasi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
+#, fuzzy
+msgid ""
+"Ending datetime for the pricelist item validation\n"
+"The displayed value depends on the timezone set in your preferences."
+msgstr ""
+"Narxlar ro‘yxati elementi amal qilish muddatining tugash vaqti. Ko‘rsatilgan "
+"qiymat sozlamalaringizda belgilangan vaqt mintaqasiga bog‘liq."
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+#, fuzzy
+msgid "Ergonomic"
+msgstr "Ergonomik"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#, fuzzy
+msgid "Error exporting file. Please try again."
+msgstr ""
+"Faylni eksport qilishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
+#, fuzzy
+msgid "Exclude for"
+msgstr "Uchun istisno qilish"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__name
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price
+#, fuzzy
+msgid "Explicit rule name for this pricelist line."
+msgstr "Ushbu narxlar ro‘yxati satri uchun aniq qoida nomi."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
+#, fuzzy
+msgid "Extra Content"
+msgstr "Qo‘shimcha tarkib"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
+#, fuzzy
+msgid "Extra Fee"
+msgstr "Qo‘shimcha to‘lov"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Extra Info"
+msgstr "Qo‘shimcha ma'lumot"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
+#, fuzzy
+msgid "Extra Price"
+msgstr "Qo‘shimcha narx"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
+#, fuzzy
+msgid ""
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
+msgstr ""
+"Sotish narxida ushbu xususiyat qiymati bilan variant uchun qo‘shimcha narx. "
+"Masalan, 200 qo‘shimcha narx, 1000 + 200 = 1200."
+
+#. module: product
+#: model:product.attribute,name:product.pa_fabric
+#, fuzzy
+msgid "Fabric"
+msgstr "mato"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__is_favorite
+#: model:ir.model.fields,field_description:product.field_product_template__is_favorite
+#, fuzzy
+msgid "Favorite"
+msgstr "sevimli"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Favorites"
+msgstr "Sevimlilar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__datas
+#, fuzzy
+msgid "File Content (base64)"
+msgstr "Fayl tarkibi (base64)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__raw
+#, fuzzy
+msgid "File Content (raw)"
+msgstr "Fayl tarkibi (xom)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__file_size
+#, fuzzy
+msgid "File Size"
+msgstr "Fayl hajmi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_file_cabinets
+#, fuzzy
+msgid "File cabinets"
+msgstr "Fayl shkaflar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__fixed
+#, fuzzy
+msgid "Fixed Price"
+msgstr "Belgilangan narx"
+
+#. module: product
+#: model:product.template,name:product.product_product_20_product_template
+#, fuzzy
+msgid "Flipover"
+msgstr "Flipchart"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_follower_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_follower_ids
+#: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
+#, fuzzy
+msgid "Followers"
+msgstr "Obunachilar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_partner_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_partner_ids
+#: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
+#, fuzzy
+msgid "Followers (Partners)"
+msgstr "Obunachilar (Hamkorlar)"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+#, fuzzy
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome belgisi, masalan fa-tasks"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
+#, fuzzy
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
+"Expressed in the default unit of measure of the product."
+msgstr ""
+"Qoida amal qilishi uchun sotib olingan/sotilgan miqdor ushbu maydonchada "
+"ko‘rsatilgan minimal miqdordan katta yoki unga teng bo‘lishi kerak. "
+"Mahsulotning standart o‘lchov birligida ifodalanadi."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
+#, fuzzy
+msgid "Format"
+msgstr "Format"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
+#, fuzzy
+msgid "Formula"
+msgstr "Formula"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_03_product_template
+#, fuzzy
+msgid "Four Person Desk"
+msgstr "To‘rt kishilik ish stoli"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
+#, fuzzy
+msgid "Free text"
+msgstr "Erkin matn"
+
+#. module: product
+#: model:product.template,name:product.product_product_furniture_product_template
+#, fuzzy
+msgid "Furniture Assembly"
+msgstr "Mebellarni yig‘ish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Future Activities"
+msgstr "Kelajakdagi faoliyatlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "General Information"
+msgstr "Umumiy ma'lumot"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_gillette
+#, fuzzy
+msgid "Gillette"
+msgstr "Gillette"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__sequence
+#: model:ir.model.fields,help:product.field_product_template__sequence
+#, fuzzy
+msgid "Gives the sequence order when displaying a product list"
+msgstr "Mahsulot ro‘yxatini ko‘rsatishda ketma-ketlik tartibini belgilaydi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_glass
+#, fuzzy
+msgid "Glass"
+msgstr "Shisha"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_gold
+#, fuzzy
+msgid "Gold"
+msgstr "Oltin"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "Gold Member Pricelist"
+msgstr "Oltin a'zo narxlar ro‘yxati"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Goods"
+msgstr "Tovarlar"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__type
+#: model:ir.model.fields,help:product.field_product_template__type
+#, fuzzy
+msgid ""
+"Goods are tangible materials and merchandise you provide.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Tovarlar - bu siz taqdim etadigan moddiy materiallar va mahsulotlar. Xizmat "
+"esa siz ko‘rsatadigan nomoddiy mahsulotdir."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_gray
+#, fuzzy
+msgid "Gray"
+msgstr "Kulrang"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_green
+#, fuzzy
+msgid "Green"
+msgstr "Yashil"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_h_m
+#, fuzzy
+msgid "H&M"
+msgstr "H&M"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
+#, fuzzy
+msgid "HTML Color Index"
+msgstr "HTML rang indeksi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__has_message
+#: model:ir.model.fields,field_description:product.field_product_pricelist__has_message
+#: model:ir.model.fields,field_description:product.field_product_product__has_message
+#: model:ir.model.fields,field_description:product.field_product_template__has_message
+#, fuzzy
+msgid "Has Message"
+msgstr "Xabar mavjud"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__has_thumbnail
+#, fuzzy
+msgid "Has Thumbnail"
+msgstr "Eskiz mavjud"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_head_shoulders
+#, fuzzy
+msgid "Head & Shoulders"
+msgstr "Head & Shoulders"
+
+#. module: product
+#: model:product.attribute,name:product.pa_height
+#, fuzzy
+msgid "Height"
+msgstr "Balandlik"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__html_color
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
+#, fuzzy
+msgid ""
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
+msgstr ""
+"Bu yerda siz ma'lum bir HTML rang indeksini o‘rnatishingiz mumkin (masalan, "
+"#ff0000) agar atribut turi 'Rang‘ bo‘lsa, rangni ko‘rsatish uchun."
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_12_product_template
+#, fuzzy
+msgid "High-back office chair with great support"
+msgstr "Yuqori suyanchiqli, qulay tayanchi bor ofis stuli"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+#, fuzzy
+msgid "History"
+msgstr "Tarix"
+
+#. module: product
+#: model:product.template,name:product.expense_hotel_product_template
+#, fuzzy
+msgid "Hotel Accommodation"
+msgstr "Mehmonxonada yashash"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_ir_attachment__id
+#: model:ir.model.fields,field_description:product.field_product_attribute__id
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__id
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__id
+#: model:ir.model.fields,field_description:product.field_product_catalog_mixin__id
+#: model:ir.model.fields,field_description:product.field_product_category__id
+#: model:ir.model.fields,field_description:product.field_product_combo__id
+#: model:ir.model.fields,field_description:product.field_product_combo_item__id
+#: model:ir.model.fields,field_description:product.field_product_document__id
+#: model:ir.model.fields,field_description:product.field_product_label_layout__id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:product.field_product_product__id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:product.field_product_tag__id
+#: model:ir.model.fields,field_description:product.field_product_template__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
+#: model:ir.model.fields,field_description:product.field_product_uom__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12noprice__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x7__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel_dymo__id
+#: model:ir.model.fields,field_description:product.field_res_company__id
+#: model:ir.model.fields,field_description:product.field_res_config_settings__id
+#: model:ir.model.fields,field_description:product.field_res_country_group__id
+#: model:ir.model.fields,field_description:product.field_res_currency__id
+#: model:ir.model.fields,field_description:product.field_res_partner__id
+#: model:ir.model.fields,field_description:product.field_uom_uom__id
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_icon
+#: model:ir.model.fields,field_description:product.field_product_product__activity_exception_icon
+#: model:ir.model.fields,field_description:product.field_product_template__activity_exception_icon
+#, fuzzy
+msgid "Icon"
+msgstr "Belgi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_icon
+#: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
+#, fuzzy
+msgid "Icon to indicate an exception activity."
+msgstr "Istisno faoliyatini ko‘rsatuvchi belgi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_needaction
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction
+#: model:ir.model.fields,help:product.field_product_product__message_needaction
+#: model:ir.model.fields,help:product.field_product_template__message_needaction
+#, fuzzy
+msgid "If checked, new messages require your attention."
+msgstr "Agar belgilansa, yangi xabarlar e'tiboringizni talab qiladi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_has_error
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error
+#: model:ir.model.fields,help:product.field_product_product__message_has_error
+#: model:ir.model.fields,help:product.field_product_template__message_has_error
+#, fuzzy
+msgid "If checked, some messages have a delivery error."
+msgstr "Agar belgilansa, ba'zi xabarlarda yetkazib berish xatosi bor."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
+#, fuzzy
+msgid ""
+"If not set, the vendor price will apply to all variants of this product."
+msgstr ""
+"Agar belgilanmasa, sotuvchi narxi ushbu mahsulotning barcha variantlariga "
+"qo‘llaniladi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__active
+#, fuzzy
+msgid ""
+"If unchecked, it will allow you to hide the attribute without removing it."
+msgstr ""
+"Agar belgilanmasa, atributni o‘chirib tashlmasdan yashirish imkonini beradi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__active
+#, fuzzy
+msgid ""
+"If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr ""
+"Agar belgilanmasa, narxlar ro‘yxatini o‘chirib tashlamasdan yashirish "
+"imkonini beradi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__active
+#: model:ir.model.fields,help:product.field_product_template__active
+#, fuzzy
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr ""
+"Agar belgilanmasa, mahsulotni o‘chirib tashlamasdan yashirish imkonini "
+"beradi."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__image
+#: model:ir.model.fields,field_description:product.field_product_product__image_1920
+#: model:ir.model.fields,field_description:product.field_product_tag__image
+#: model:ir.model.fields,field_description:product.field_product_template__image_1920
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__image
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__image
+#, fuzzy
+msgid "Image"
+msgstr "Rasm"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_1024
+#: model:ir.model.fields,field_description:product.field_product_template__image_1024
+#, fuzzy
+msgid "Image 1024"
+msgstr "Rasm 1024"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_128
+#: model:ir.model.fields,field_description:product.field_product_template__image_128
+#, fuzzy
+msgid "Image 128"
+msgstr "128-rasm"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_256
+#: model:ir.model.fields,field_description:product.field_product_template__image_256
+#, fuzzy
+msgid "Image 256"
+msgstr "256-rasm"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_512
+#: model:ir.model.fields,field_description:product.field_product_template__image_512
+#, fuzzy
+msgid "Image 512"
+msgstr "512-rasm"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__image_height
+#, fuzzy
+msgid "Image Height"
+msgstr "Rasm balandligi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__image_src
+#, fuzzy
+msgid "Image Src"
+msgstr "Rasm manbasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__image_width
+#, fuzzy
+msgid "Image Width"
+msgstr "Rasm kengligi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#, fuzzy
+msgid "Image is a link"
+msgstr "Rasm havola"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#, fuzzy
+msgid "Import Template for Pricelists"
+msgstr "Narxlar ro‘yxati uchun import andozasi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "Import Template for Products"
+msgstr "Mahsulotlar uchun import andozasi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_supplierinfo.py:0
+#, fuzzy
+msgid "Import Template for Vendor Pricelists"
+msgstr "Sotuvchi narxlar ro‘yxati uchun import andozasi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_search
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
+#, fuzzy
+msgid "Inactive"
+msgstr "Faol emas"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__index_content
+#, fuzzy
+msgid "Indexed Content"
+msgstr "Indekslangan mazmun"
+
+#. module: product
+#: model:product.template,name:product.product_product_24_product_template
+#, fuzzy
+msgid "Individual Workplace"
+msgstr "Shaxsiy ish joyi"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
+#, fuzzy
+msgid "Instantly"
+msgstr "Darhol"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Internal Notes"
+msgstr "Ichki eslatmalar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__default_code
+#: model:ir.model.fields,field_description:product.field_product_template__default_code
+#, fuzzy
+msgid "Internal Reference"
+msgstr "Ichki ma'lumotnoma"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__barcode
+#, fuzzy
+msgid "International Article Number used for product identification."
+msgstr ""
+"Mahsulotni identifikatsiyalash uchun foydalaniladigan xalqaro artikul raqami."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+#, fuzzy
+msgid "Invalid Operation"
+msgstr "Noto‘g‘ri amal"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Inventory"
+msgstr "Tovar-moddiy boyliklar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
+#: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
+#, fuzzy
+msgid "Is Dynamically Created"
+msgstr "Dinamik tarzda yaratilgan"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_is_follower
+#: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
+#: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
+#, fuzzy
+msgid "Is Follower"
+msgstr "Kuzatuvchi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__is_in_selected_section_of_order
+#, fuzzy
+msgid "Is In Selected Section Of Order"
+msgstr "Buyurtmaning tanlangan qismida"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_pricelist_required
+#, fuzzy
+msgid "Is Pricelist Required"
+msgstr "Narxlar ro‘yxati talab etiladimi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
+#, fuzzy
+msgid "Is Product Variant"
+msgstr "Mahsulot varianti"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
+#: model:ir.model.fields,field_description:product.field_product_template__has_configurable_attributes
+#, fuzzy
+msgid "Is a configurable product"
+msgstr "Sozlanuvchi mahsulot"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
+#, fuzzy
+msgid "Is a product variant"
+msgstr "Mahsulot varianti"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__public
+#, fuzzy
+msgid "Is public document"
+msgstr "Ommaviy hujjat"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
+#, fuzzy
+msgid "Kilograms (kg)"
+msgstr "Kilogramm (kg)"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_loreal
+#, fuzzy
+msgid "L'Oréal"
+msgstr "L'Oréal"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_LG
+#, fuzzy
+msgid "LG"
+msgstr "LG"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "Labels cannot be printed for products of service type"
+msgstr ""
+"Xizmat ko‘rsatish turidagi mahsulotlar uchun yorliqlarni chop etib bo‘lmaydi"
+
+#. module: product
+#: model:product.template,name:product.product_product_6_product_template
+#, fuzzy
+msgid "Large Cabinet"
+msgstr "Katta shkaf"
+
+#. module: product
+#: model:product.template,name:product.product_product_8_product_template
+#, fuzzy
+msgid "Large Desk"
+msgstr "Katta yozuv stoli"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_02_product_template
+#, fuzzy
+msgid "Large Meeting Table"
+msgstr "Katta majlis stoli"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_category__write_uid
+#: model:ir.model.fields,field_description:product.field_product_combo__write_uid
+#: model:ir.model.fields,field_description:product.field_product_combo_item__write_uid
+#: model:ir.model.fields,field_description:product.field_product_document__write_uid
+#: model:ir.model.fields,field_description:product.field_product_label_layout__write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist__write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__write_uid
+#: model:ir.model.fields,field_description:product.field_product_product__write_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_uid
+#: model:ir.model.fields,field_description:product.field_product_tag__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_uom__write_uid
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilagan"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_category__write_date
+#: model:ir.model.fields,field_description:product.field_product_combo__write_date
+#: model:ir.model.fields,field_description:product.field_product_combo_item__write_date
+#: model:ir.model.fields,field_description:product.field_product_document__write_date
+#: model:ir.model.fields,field_description:product.field_product_label_layout__write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist__write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__write_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_date
+#: model:ir.model.fields,field_description:product.field_product_tag__write_date
+#: model:ir.model.fields,field_description:product.field_product_template__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_uom__write_date
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Late Activities"
+msgstr "Kechikkan faoliyatlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
+#, fuzzy
+msgid "Lead Time"
+msgstr "Yetkazib berish muddati"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__delay
+#, fuzzy
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"receipt of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+"Xarid buyurtmasini tasdiqlash va mahsulotlarni omboringizga qabul qilish "
+"o‘rtasidagi kunlik yetkazib berish muddati. Xarid buyurtmasini "
+"rejalashtirish avtomatik hisoblanishi uchun rejalashtiruvchi tomonidan "
+"foydalaniladi."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_leather
+#, fuzzy
+msgid "Leather"
+msgstr "Teri"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_13_product_template
+#, fuzzy
+msgid "Left-sided workspace with storage"
+msgstr "Saqlash joyi bor chap tomonli ish maydoni"
+
+#. module: product
+#: model:product.attribute,name:product.pa_legs
+#, fuzzy
+msgid "Legs"
+msgstr "Oyoqlar"
+
+#. module: product
+#: model:product.attribute,name:product.pa_length
+#, fuzzy
+msgid "Length"
+msgstr "Uzunlik"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_lenovo
+#, fuzzy
+msgid "Lenovo"
+msgstr "Lenovo"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_levis
+#, fuzzy
+msgid "Levi's"
+msgstr "Levi's"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_linen
+#, fuzzy
+msgid "Linen"
+msgstr "Zig‘ir mato"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__pav_attribute_line_ids
+#, fuzzy
+msgid "Lines"
+msgstr "Qatorlar"
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom
+#, fuzzy
+msgid "Link between products and their UoMs"
+msgstr "Mahsulotlar va ularning o‘lchov birliklari o‘rtasidagi bog‘lanish"
+
+#. module: product
+#: model:product.template,name:product.product_product_local_delivery_product_template
+#, fuzzy
+msgid "Local Delivery"
+msgstr "Mahalliy yetkazib berish"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+#, fuzzy
+msgid "Locally handmade"
+msgstr "Mahalliy qo‘lda yasalgan"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Logistics"
+msgstr "Logistika"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+#, fuzzy
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
+msgstr ""
+"Mavjud mebelga mos keladigan maxsus bambuk bo‘yoq izlayapsizmi? Narx taklifi "
+"uchun biz bilan bog‘laning."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
+#, fuzzy
+msgid ""
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
+msgstr ""
+"Ushbu xususiyat qiymatini mahsulotning boshqa qiymatlari yoki ixtiyoriy va "
+"qo‘shimcha mahsulotlarning ayrim xususiyat qiymatlari bilan mos kelmaydigan "
+"qilib belgilang."
+
+#. module: product
+#: model:res.groups,name:product.group_product_variant
+#, fuzzy
+msgid "Manage Product Variants"
+msgstr "Mahsulot turlarini boshqarish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Margins"
+msgstr "Chegaralar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Markup"
+msgstr "Ustama"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_maroon
+#, fuzzy
+msgid "Maroon"
+msgstr "To‘q qizil"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Max. Margin"
+msgstr "Maksimal foyda chegarasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
+#, fuzzy
+msgid "Max. Price Margin"
+msgstr "Maksimal narx chegarasi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_maybelline
+#, fuzzy
+msgid "Maybelline"
+msgstr "Maybelline"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__message
+#, fuzzy
+msgid "Message"
+msgstr "Xabar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_has_error
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_error
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_error
+#, fuzzy
+msgid "Message Delivery error"
+msgstr "Xabar yetkazib berishda xatolik"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_ids
+#: model:ir.model.fields,field_description:product.field_product_product__message_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_ids
+#, fuzzy
+msgid "Messages"
+msgstr "Xabarlar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_metal
+#, fuzzy
+msgid "Metal"
+msgstr "Metall"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__mimetype
+#, fuzzy
+msgid "Mime Type"
+msgstr "MIME turi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Min Qty"
+msgstr "Minimal miqdor"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Min. Margin"
+msgstr "Minimal foyda chegarasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_min_margin
+#, fuzzy
+msgid "Min. Price Margin"
+msgstr "Minimal narx chegarasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
+#, fuzzy
+msgid "Min. Quantity"
+msgstr "Minimal miqdor"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_8_product_template
+#, fuzzy
+msgid "Minimalist wooden desk for executive use"
+msgstr "Rahbarlar uchun minimalistik yog‘och stol"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
+#, fuzzy
+msgid "Mode"
+msgstr "Rejim"
+
+#. module: product
+#: model:product.template,name:product.monitor_stand_product_template
+#, fuzzy
+msgid "Monitor Stand"
+msgstr "Monitor tagligi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_montblanc
+#, fuzzy
+msgid "Montblanc"
+msgstr "Montblanc"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
+#, fuzzy
+msgid "Multi-checkbox"
+msgstr "Ko‘p tanlovli belgilash katakchasi"
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
+#, fuzzy
+msgid ""
+"Multi-checkbox display type is not compatible with the creation of variants"
+msgstr ""
+"Ko‘p tanlovli belgilash katakchasini ko‘rsatish turi mahsulot turlarini "
+"yaratishga mos kelmaydi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "My Activities"
+msgstr "Faoliyatlarim"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
+#, fuzzy
+msgid "My Activity Deadline"
+msgstr "Faoliyatim muddati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
+#: model:ir.model.fields,field_description:product.field_product_category__name
+#: model:ir.model.fields,field_description:product.field_product_combo__name
+#: model:ir.model.fields,field_description:product.field_product_document__name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
+#: model:ir.model.fields,field_description:product.field_product_product__name
+#: model:ir.model.fields,field_description:product.field_product_tag__name
+#: model:ir.model.fields,field_description:product.field_product_template__name
+#, fuzzy
+msgid "Name"
+msgstr "Nom"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_navy
+#, fuzzy
+msgid "Navy"
+msgstr "To‘q ko‘k"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nestle
+#, fuzzy
+msgid "Nestlé"
+msgstr "Nestlé"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
+#, fuzzy
+msgid "Never"
+msgstr "Hech qachon"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#, fuzzy
+msgid "New"
+msgstr "Yangi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_new_balance
+#, fuzzy
+msgid "New Balance"
+msgstr "New Balance"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_calendar_event_id
+#: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
+#, fuzzy
+msgid "Next Activity Calendar Event"
+msgstr "Keyingi taqvim tadbiri"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
+#, fuzzy
+msgid "Next Activity Deadline"
+msgstr "Keyingi faoliyat muddati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_summary
+#: model:ir.model.fields,field_description:product.field_product_product__activity_summary
+#: model:ir.model.fields,field_description:product.field_product_template__activity_summary
+#, fuzzy
+msgid "Next Activity Summary"
+msgstr "Keyingi faoliyat xulosasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_id
+#: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
+#, fuzzy
+msgid "Next Activity Type"
+msgstr "Keyingi faoliyat turi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nike
+#, fuzzy
+msgid "Nike"
+msgstr "Nike"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nikon
+#, fuzzy
+msgid "Nikon"
+msgstr "Nikon"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nivea
+#, fuzzy
+msgid "Nivea"
+msgstr "Nivea"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, fuzzy
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Chop etish uchun mahsulot yo‘q. Agar mahsulot arxivlangan bo‘lsa, yorlig‘ini "
+"chop etishdan oldin uni arxivdan chiqaring."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
+msgid "No products could be found."
+msgstr "Hech qanday mahsulot topilmadi."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "No products found in the report"
+msgstr "Hisobotda hech qanday mahsulot topilmadi"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
+#, fuzzy
+msgid "No vendor pricelist found"
+msgstr "Hech qanday sotuvchi narxlar ro‘yxati topilmadi"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_attribute_value_list.js:0
+#, fuzzy
+msgid "No, keep it"
+msgstr "Yo‘q, shundayligicha qoldiring"
+
+#. module: product
+#: model:product.template,description_sale:product.product_template_acoustic_bloc_screens
+#, fuzzy
+msgid "Noise-reducing panels for open spaces"
+msgstr "Ochiq joylar uchun shovqinni kamaytiruvchi panellar"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "Note:"
+msgstr "Eslatma:"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__service_tracking__no
+#, fuzzy
+msgid "Nothing"
+msgstr "Hech narsa"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
+#, fuzzy
+msgid "Number Related Products"
+msgstr "Aloqador mahsulotlar soni"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_needaction_counter
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_needaction_counter
+#: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
+#: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
+#, fuzzy
+msgid "Number of Actions"
+msgstr "Harakatlar soni"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__message_has_error_counter
+#: model:ir.model.fields,field_description:product.field_product_pricelist__message_has_error_counter
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
+#, fuzzy
+msgid "Number of errors"
+msgstr "Xatolar soni"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_needaction_counter
+#: model:ir.model.fields,help:product.field_product_pricelist__message_needaction_counter
+#: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
+#: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
+#, fuzzy
+msgid "Number of messages requiring action"
+msgstr "Amal talab qiladigan xabarlar soni"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_category__message_has_error_counter
+#: model:ir.model.fields,help:product.field_product_pricelist__message_has_error_counter
+#: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
+#: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
+#, fuzzy
+msgid "Number of messages with delivery error"
+msgstr "Yetkazib berishdagi xatolarga ega xabarlar soni"
+
+#. module: product
+#: model:product.template,name:product.product_delivery_01_product_template
+#, fuzzy
+msgid "Office Chair"
+msgstr "Idora stuli"
+
+#. module: product
+#: model:product.template,name:product.product_product_12_product_template
+#, fuzzy
+msgid "Office Chair Black"
+msgstr "Qora idora stuli"
+
+#. module: product
+#: model:product.template,name:product.office_combo_product_template
+#, fuzzy
+msgid "Office Combo"
+msgstr "Idora to‘plami"
+
+#. module: product
+#: model:product.template,name:product.product_order_01_product_template
+#, fuzzy
+msgid "Office Design Software"
+msgstr "Idora dizayni dasturi"
+
+#. module: product
+#: model:product.template,name:product.product_delivery_02_product_template
+#, fuzzy
+msgid "Office Lamp"
+msgstr "Idora lampasi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_olay
+#, fuzzy
+msgid "Olay"
+msgstr "Olay"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_olive
+#, fuzzy
+msgid "Olive"
+msgstr "Zaytun"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+#, fuzzy
+msgid ""
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
+msgstr ""
+"%(product)s mahsulotida %(value)s qiymatini %(attribute)s xususiyati bilan "
+"bog‘lay olmaysiz, chunki ular bir-biriga mos kelmaydi."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+#, fuzzy
+msgid ""
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
+msgstr ""
+"%(product)s mahsulotida %(attribute_src)s xususiyatini %(attribute_dest)s "
+"xususiyatiga o‘zgartira olmaysiz."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
+#: model:product.attribute,name:product.pa_options
+#, fuzzy
+msgid "Options"
+msgstr "Tanlovlar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_oral_b
+#, fuzzy
+msgid "Oral-B"
+msgstr "Oral-B"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_orange
+#, fuzzy
+msgid "Orange"
+msgstr "To‘q sariq"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__original_id
+#, fuzzy
+msgid "Original (unoptimized, unresized) attachment"
+msgstr "Asl (optimallashtirmagan, o‘lchamini o‘zgartirmagan) ilova"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo_item__lst_price
+#, fuzzy
+msgid "Original Price"
+msgstr "Asl narx"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__pricelist
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Other Pricelist"
+msgstr "Boshqa narxlar ro‘yxati"
+
+#. module: product
+#: model:product.template,name:product.product_template_dining_table
+#, fuzzy
+msgid "Outdoor dining table"
+msgstr "Tashqarida ovqatlanish stoli"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_overhead_shelves
+#, fuzzy
+msgid "Overhead shelves"
+msgstr "Tepadan o‘rnatiladigan tokchalar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+#, fuzzy
+msgid "Package Type A"
+msgstr "A turdagi qadoq"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/uom_uom.py:0
+#: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
+#, fuzzy
+msgid "Packaging Barcodes"
+msgstr "Qadoq shtrix-kodlari"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_packaging
+#, fuzzy
+msgid "Packaging Barcodes (PDF)"
+msgstr "Qadoq shtrix-kodlari (PDF)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_ids
+#: model:ir.model.fields,field_description:product.field_product_template__uom_ids
+#, fuzzy
+msgid "Packagings"
+msgstr "Qadoqlar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_panasonic
+#, fuzzy
+msgid "Panasonic"
+msgstr "Panasonic"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_pantene
+#, fuzzy
+msgid "Pantene"
+msgstr "Pantene"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__parent_id
+#, fuzzy
+msgid "Parent Category"
+msgstr "Ota kategoriya"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__parent_path
+#, fuzzy
+msgid "Parent Path"
+msgstr "Ota yo‘l"
+
+#. module: product
+#: model:product.template,name:product.product_product_9_product_template
+#, fuzzy
+msgid "Pedal Bin"
+msgstr "Pedalli chiqindi qutisi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_pepsi
+#, fuzzy
+msgid "Pepsi"
+msgstr "Pepsi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
+#, fuzzy
+msgid "Percentage Price"
+msgstr "Foizli narx"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_philips
+#, fuzzy
+msgid "Philips"
+msgstr "Philips"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
+#, fuzzy
+msgid "Pills"
+msgstr "Tabletalar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_pink
+#, fuzzy
+msgid "Pink"
+msgstr "Pushti"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#, fuzzy
+msgid "Please enter a positive whole number."
+msgstr "Iltimos, musbat butun son kiriting."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_document.py:0
+#, fuzzy
+msgid ""
+"Please enter a valid URL.\n"
+"Example: https://www.odoo.com\n"
+"\n"
+"Invalid URL: %s"
+msgstr ""
+"Iltimos, to‘g‘ri URL manzilni kiriting. Misol: https://www.odoo.com "
+"Noto‘g‘ri URL: %s"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#, fuzzy
+msgid "Please select some products first."
+msgstr "Iltimos, avval ba'zi mahsulotlarni tanlang."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "Please specify the category for which this rule should be applied"
+msgstr ""
+"Iltimos, ushbu qoida qo‘llanilishi kerak bo‘lgan kategoriyani belgilang"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "Please specify the product for which this rule should be applied"
+msgstr "Iltimos, ushbu qoida qo‘llanilishi kerak bo‘lgan mahsulotni belgilang"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid ""
+"Please specify the product variant for which this rule should be applied"
+msgstr ""
+"Iltimos, ushbu qoida qo‘llanilishi kerak bo‘lgan mahsulot variantini "
+"belgilang"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
+#, fuzzy
+msgid "Pounds (lb)"
+msgstr "Funt (lb)"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+#, fuzzy
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
+msgstr ""
+"Tugmani bosing va stolingiz bir necha soniya ichida o‘tirish balandligidan "
+"tik turish balandligigacha oson ko‘tarilishini kuzating."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, fuzzy
+msgid "Price"
+msgstr "Narx"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
+#, fuzzy
+msgid "Price Discount"
+msgstr "Narx chegirmasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
+#, fuzzy
+msgid "Price Rounding"
+msgstr "Narxni yaxlitlash"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_item_action
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#, fuzzy
+msgid "Price Rules"
+msgstr "Narx qoidalari"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Price Type"
+msgstr "Narx turi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__list_price
+#: model:ir.model.fields,help:product.field_product_template__list_price
+#, fuzzy
+msgid "Price at which the product is sold to customers."
+msgstr "Mahsulot xaridorlarga sotiladigan narx."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+#, fuzzy
+msgid "Price:"
+msgstr "Narx:"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#: model:ir.actions.report,name:product.action_report_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: model:ir.model.fields,field_description:product.field_product_label_layout__pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__pricelist_id
+#: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "Pricelist"
+msgstr "Narxlar ro‘yxati"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
+#: model:ir.model.fields,help:product.field_product_pricelist_item__display_applied_on
+#, fuzzy
+msgid "Pricelist Item applicable on selected option"
+msgstr "Tanlangan variantga qo‘llaniladigan narx ro‘yxati elementi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__name
+#, fuzzy
+msgid "Pricelist Name"
+msgstr "Narxlar ro‘yxati nomi"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#: model:ir.actions.server,name:product.action_product_price_list_report
+#: model:ir.actions.server,name:product.action_product_template_price_list_report
+#: model:ir.model,name:product.model_report_product_report_pricelist
+#, fuzzy
+msgid "Pricelist Report"
+msgstr "Narxlar ro‘yxati hisoboti"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#, fuzzy
+msgid "Pricelist Report Preview"
+msgstr "Narxlar ro‘yxati hisobotini ko‘rib chiqish"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Pricelist Rule"
+msgstr "Narxlar ro‘yxati qoidasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
+#: model:ir.model.fields,field_description:product.field_product_product__pricelist_rule_ids
+#: model:ir.model.fields,field_description:product.field_product_template__pricelist_rule_ids
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, fuzzy
+msgid "Pricelist Rules"
+msgstr "Narxlar ro‘yxati qoidalari"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
+#, fuzzy
+msgid "Pricelists"
+msgstr "Narxlar ro‘yxatlari"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Prices"
+msgstr "Narxlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Pricing"
+msgstr "Narxlash"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, fuzzy
+msgid "Print"
+msgstr "Chop etish"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_open_label_layout
+#: model:ir.actions.server,name:product.action_product_print_labels
+#: model:ir.actions.server,name:product.action_product_template_print_labels
+#, fuzzy
+msgid "Print Labels"
+msgstr "Yorliqlarni chop etish"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_24_product_template
+#, fuzzy
+msgid "Private pod with desk and chair"
+msgstr "Stol va stulga ega shaxsiy kabina"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/controllers/pricelist_report.py:0
+#: model:ir.model,name:product.model_product_template
+#: model:ir.model.fields,field_description:product.field_product_label_layout__product_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_id
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
+#: model:ir.model.fields,field_description:product.field_product_uom__product_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__1_product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__display_applied_on__1_product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_kanban_catalog
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Product"
+msgstr "Mahsulot"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
+#, fuzzy
+msgid "Product Attribute"
+msgstr "Mahsulot xususiyati"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute_custom_value
+#, fuzzy
+msgid "Product Attribute Custom Value"
+msgstr "Mahsulot xususiyatining maxsus qiymati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
+#, fuzzy
+msgid "Product Attribute Values"
+msgstr "Mahsulot xususiyati qiymatlari"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
+#, fuzzy
+msgid "Product Attribute and Values"
+msgstr "Mahsulot xususiyatlari va qiymatlari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
+#, fuzzy
+msgid "Product Attributes"
+msgstr "Mahsulot xususiyatlari"
+
+#. module: product
+#: model:ir.model,name:product.model_product_catalog_mixin
+#, fuzzy
+msgid "Product Catalog Mixin"
+msgstr "Mahsulot katalogi aralashmasi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_category_list_view
+#: model_terms:ir.ui.view,arch_db:product.product_category_search_view
+#, fuzzy
+msgid "Product Categories"
+msgstr "Mahsulot toifalari"
+
+#. module: product
+#: model:ir.model,name:product.model_product_category
+#: model:ir.model.fields,field_description:product.field_product_product__categ_id
+#: model:ir.model.fields,field_description:product.field_product_template__categ_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__2_product_category
+#: model_terms:ir.ui.view,arch_db:product.product_category_list_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Product Category"
+msgstr "Mahsulot toifasi"
+
+#. module: product
+#: model:ir.model,name:product.model_product_combo
+#, fuzzy
+msgid "Product Combo"
+msgstr "Mahsulot to‘plami"
+
+#. module: product
+#: model:ir.model,name:product.model_product_combo_item
+#, fuzzy
+msgid "Product Combo Item"
+msgstr "Mahsulot to‘plami elementi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
+#: model:ir.model.fields,field_description:product.field_update_product_attribute_value__product_count
+#, fuzzy
+msgid "Product Count"
+msgstr "Mahsulotlar soni"
+
+#. module: product
+#: model:ir.model,name:product.model_product_document
+#, fuzzy
+msgid "Product Document"
+msgstr "Mahsulot hujjati"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_dymo
+#, fuzzy
+msgid "Product Label (PDF)"
+msgstr "Mahsulot yorlig‘i (PDF)"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_2x7
+#, fuzzy
+msgid "Product Label 2x7 (PDF)"
+msgstr "Mahsulot yorlig‘i 2x7 (PDF)"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_4x12
+#, fuzzy
+msgid "Product Label 4x12 (PDF)"
+msgstr "Mahsulot yorlig‘i 4x12 (PDF)"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
+#, fuzzy
+msgid "Product Label 4x12 No Price (PDF)"
+msgstr "Mahsulot yorlig‘i 4x12 narxsiz (PDF)"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label_4x7
+#, fuzzy
+msgid "Product Label 4x7 (PDF)"
+msgstr "Mahsulot yorlig‘i 4x7 (PDF)"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
+#, fuzzy
+msgid "Product Label Report"
+msgstr "Mahsulot yorlig‘i hisoboti"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
+#, fuzzy
+msgid "Product Label Report 2x7"
+msgstr "Mahsulot yorlig‘i hisoboti 2x7"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
+#, fuzzy
+msgid "Product Label Report 4x12"
+msgstr "Mahsulot yorlig‘i hisoboti 4x12"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
+#, fuzzy
+msgid "Product Label Report 4x12 No Price"
+msgstr "Mahsulot yorlig‘i hisoboti 4x12 narxsiz"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
+#, fuzzy
+msgid "Product Label Report 4x7"
+msgstr "Mahsulot yorlig‘i hisoboti 4x7"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Product Name"
+msgstr "Mahsulot nomi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Product Properties"
+msgstr "Mahsulot xususiyatlari"
+
+#. module: product
+#: model:ir.model,name:product.model_product_tag
+#: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
+#, fuzzy
+msgid "Product Tag"
+msgstr "Mahsulot tegi"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_tag_action
+#: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
+#, fuzzy
+msgid "Product Tags"
+msgstr "Mahsulot teglari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
+#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Product Template"
+msgstr "Mahsulot shabloni"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_exclusion
+#, fuzzy
+msgid "Product Template Attribute Exclusion"
+msgstr "Mahsulot shabloni xususiyati istisno qilish"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_line
+#, fuzzy
+msgid "Product Template Attribute Line"
+msgstr "Mahsulot shabloni xususiyati satri"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_value
+#, fuzzy
+msgid "Product Template Attribute Value"
+msgstr "Mahsulot shabloni xususiyati qiymati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
+#: model_terms:ir.ui.view,arch_db:product.product_template_view_tree_tag
+#, fuzzy
+msgid "Product Templates"
+msgstr "Mahsulot shablonlari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
+#, fuzzy
+msgid "Product Tmpl"
+msgstr "Mahsulot shabloni"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
+#: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
+#, fuzzy
+msgid "Product Tooltip"
+msgstr "Mahsulot ma'lumot oynasi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__type
+#: model:ir.model.fields,field_description:product.field_product_template__type
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Product Type"
+msgstr "Mahsulot turi"
+
+#. module: product
+#: model:ir.model,name:product.model_uom_uom
+#, fuzzy
+msgid "Product Unit of Measure"
+msgstr "Mahsulot o‘lchov birligi"
+
+#. module: product
+#: model:ir.model,name:product.model_product_product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+#: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
+#, fuzzy
+msgid "Product Variant"
+msgstr "Mahsulot varianti"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+#, fuzzy
+msgid "Product Variant Values"
+msgstr "Mahsulot varianti qiymatlari"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
+#: model:ir.actions.act_window,name:product.product_variant_action
+#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_tree_tag
+#, fuzzy
+msgid "Product Variants"
+msgstr "Mahsulot variantlari"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/report/product_label_report.py:0
+#, fuzzy
+msgid "Product model not defined, Please contact your administrator."
+msgstr ""
+"Mahsulot modeli aniqlanmagan. Iltimos, administratoringizga murojaat qiling."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#: code:addons/product/models/product_catalog_mixin.py:0
+#: model:ir.actions.act_window,name:product.product_template_action
+#: model:ir.actions.act_window,name:product.product_template_action_all
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_ids
+#: model:res.groups.privilege,name:product.res_groups_privilege_product
+#: model_terms:ir.ui.view,arch_db:product.product_template_view_activity
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "Products"
+msgstr "Mahsulotlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
+#, fuzzy
+msgid "Products Price"
+msgstr "Mahsulot narxlari"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
+#, fuzzy
+msgid "Products Price List"
+msgstr "Mahsulotlar narx ro‘yxati"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#, fuzzy
+msgid "Products Price Rules Search"
+msgstr "Mahsulot narx qoidalari qidiruvі"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
+#, fuzzy
+msgid "Products Price Search"
+msgstr "Mahsulot narxini qidirish"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, fuzzy
+msgid "Products: %(category)s"
+msgstr "Mahsulotlar: %(category)s"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
+#, fuzzy
+msgid "Promotions, Coupons, Gift Card & Loyalty Program"
+msgstr "Aksiyalar, kuponlar, sovg‘a kartalari va sodiqlik dasturi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_properties
+#: model:ir.model.fields,field_description:product.field_product_template__product_properties
+#, fuzzy
+msgid "Properties"
+msgstr "Xususiyatlar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_puma
+#, fuzzy
+msgid "Puma"
+msgstr "Puma"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Purchase"
+msgstr "Xarid"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__description_purchase
+#: model:ir.model.fields,field_description:product.field_product_template__description_purchase
+#, fuzzy
+msgid "Purchase Description"
+msgstr "Xarid tavsifi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_purple
+#, fuzzy
+msgid "Purple"
+msgstr "Siyoh rang"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "Quantities"
+msgstr "Miqdorlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "Quantities (Price)"
+msgstr "Miqdorlar (Narx)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
+#, fuzzy
+msgid "Quantity"
+msgstr "Miqdor"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/controllers/pricelist_report.py:0
+#, fuzzy
+msgid "Quantity (%s UoM)"
+msgstr "Miqdor (%s o‘lchov birligi)"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#, fuzzy
+msgid "Quantity already present (%s)."
+msgstr "Miqdor allaqachon mavjud (%s)."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Quotation Description"
+msgstr "Taklif tavsifi"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
+#, fuzzy
+msgid "Radio"
+msgstr "Radio"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_rayban
+#, fuzzy
+msgid "Ray-Ban"
+msgstr "Ray-Ban"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "Recursive pricelist rules detected: %s"
+msgstr "Rekursiv narx ro‘yxati qoidalari aniqlandi: %s"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_red
+#, fuzzy
+msgid "Red"
+msgstr "Qizil"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_reebok
+#, fuzzy
+msgid "Reebok"
+msgstr "Reebok"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__code
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+#, fuzzy
+msgid "Reference"
+msgstr "Havola"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
+#, fuzzy
+msgid ""
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
+msgstr ""
+"Har bir mahsulot uchun yetkazib beruvchilaringiz so‘ragan narxlarni miqdor "
+"va davrga asoslanib ro‘yxatdan o‘tkazing."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
+#, fuzzy
+msgid "Related Products"
+msgstr "Bog‘liq mahsulotlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
+#, fuzzy
+msgid "Related Variants"
+msgstr "Bog‘liq variantlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__ir_attachment_id
+#, fuzzy
+msgid "Related attachment"
+msgstr "Bog‘liq ilova"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+#, fuzzy
+msgid "Remove"
+msgstr "Olib tashlash"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "Remove quantity"
+msgstr "Miqdorni olib tashlash"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_field
+#, fuzzy
+msgid "Resource Field"
+msgstr "Resurs maydoni"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_id
+#, fuzzy
+msgid "Resource ID"
+msgstr "Resurs identifikatori"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_model
+#, fuzzy
+msgid "Resource Model"
+msgstr "Resurs modeli"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__res_name
+#, fuzzy
+msgid "Resource Name"
+msgstr "Resurs nomi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__activity_user_id
+#: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
+#, fuzzy
+msgid "Responsible User"
+msgstr "Mas'ul foydalanuvchi"
+
+#. module: product
+#: model:product.template,name:product.expense_product_product_template
+#, fuzzy
+msgid "Restaurant Expenses"
+msgstr "Restoran xarajatlari"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_5_product_template
+#, fuzzy
+msgid "Right-aligned desk with storage"
+msgstr "O‘ng tomonga joylashtirilgan saqlash qutili ish stoli"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_rolex
+#, fuzzy
+msgid "Rolex"
+msgstr "Rolex"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Round off to"
+msgstr "Yaxlitlash"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__rows
+#, fuzzy
+msgid "Rows"
+msgstr "Qatorlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
+#, fuzzy
+msgid "Rule Tip"
+msgstr "Qoida maslahati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__sale_ok
+#: model:ir.model.fields,field_description:product.field_product_template__sale_ok
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Sales"
+msgstr "Sotuvlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__description_sale
+#: model:ir.model.fields,field_description:product.field_product_template__description_sale
+#, fuzzy
+msgid "Sales Description"
+msgstr "Sotuv tavsifi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__list_price
+#: model:ir.model.fields,field_description:product.field_product_template__list_price
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__list_price
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Sales Price"
+msgstr "Sotish narxi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, fuzzy
+msgid "Sales Prices"
+msgstr "Sotish narxlari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__lst_price
+#, fuzzy
+msgid "Sales Price"
+msgstr "Sotish narxi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_samsung
+#, fuzzy
+msgid "Samsung"
+msgstr "Samsung"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_name_and_description/product_name_and_description.js:0
+#, fuzzy
+msgid "Search a product"
+msgstr "Mahsulotni qidirish"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
+#, fuzzy
+msgid "Select"
+msgstr "Tanlash"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__sequence
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__sequence
+#: model:ir.model.fields,field_description:product.field_product_combo__sequence
+#: model:ir.model.fields,field_description:product.field_product_document__sequence
+#: model:ir.model.fields,field_description:product.field_product_pricelist__sequence
+#: model:ir.model.fields,field_description:product.field_product_product__sequence
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__sequence
+#: model:ir.model.fields,field_description:product.field_product_tag__sequence
+#: model:ir.model.fields,field_description:product.field_product_template__sequence
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__type__service
+#, fuzzy
+msgid "Service"
+msgstr "Xizmat"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Services"
+msgstr "Xizmatlar"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_round
+#, fuzzy
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
+msgstr ""
+"Narxni ushbu qiymatga karrali qilib belgilaydi. Yaxlitlash chegirmadan keyin "
+"va qo‘shimcha to‘lovdan oldin qo‘llaniladi. 9.99 bilan tugaydigan narxlarni "
+"olish uchun 10.00 gacha yaxlitlang va -0.01 qo‘shimcha belgilang"
+
+#. module: product
+#: model:product.attribute,name:product.pa_shoe_size
+#, fuzzy
+msgid "Shoes size"
+msgstr "Poyabzal o‘lchami"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "Show Name"
+msgstr "Nomni ko‘rsatish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Show all records whose next activity date is past"
+msgstr "Keyingi faoliyat sanasi o‘tib ketgan barcha yozuvlarni ko‘rsatish"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_silver
+#, fuzzy
+msgid "Silver"
+msgstr "Kumush"
+
+#. module: product
+#: model:product.attribute,name:product.pa_size
+#, fuzzy
+msgid "Size"
+msgstr "O‘lcham"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_9_product_template
+#, fuzzy
+msgid "Soft-close pedal bin for office use"
+msgstr "Ofis uchun yumshoq yopiladigan pedalli chiqindi qutisi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_sony
+#, fuzzy
+msgid "Sony"
+msgstr "Sony"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
+#, fuzzy
+msgid "Specific Property Product Pricelist"
+msgstr "Maxsus mulk mahsulotlari narxlar ro‘yxati"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
+#, fuzzy
+msgid ""
+"Specify a product category if this rule only applies to products belonging "
+"to this category or its children categories. Keep empty otherwise."
+msgstr ""
+"Agar bu qoida faqat ushbu toifaga yoki uning kichik toifalariga tegishli "
+"mahsulotlarga qo‘llanilsa, mahsulot toifasini ko‘rsating. Aks holda bo‘sh "
+"qoldiring."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
+#, fuzzy
+msgid ""
+"Specify a product if this rule only applies to one product. Keep empty "
+"otherwise."
+msgstr ""
+"Agar bu qoida faqat bitta mahsulotga tegishli bo‘lsa, mahsulotni ko‘rsating. "
+"Aks holda bo‘sh qoldiring."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
+#, fuzzy
+msgid ""
+"Specify a template if this rule only applies to one product template. Keep "
+"empty otherwise."
+msgstr ""
+"Agar bu qoida faqat bitta mahsulot andozasiga tegishli bo‘lsa, andozani "
+"ko‘rsating. Aks holda bo‘sh qoldiring."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
+#, fuzzy
+msgid ""
+"Specify the fixed amount to add or subtract (if negative) to the amount "
+"calculated with the discount."
+msgstr ""
+"Chegirma bilan hisoblangan summaga qo‘shish yoki ayirish (agar manfiy "
+"bo‘lsa) uchun belgilangan summani ko‘rsating."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
+#, fuzzy
+msgid "Specify the maximum amount of margin over the base price."
+msgstr "Asosiy narxdan yuqori bo‘lgan marjaning maksimal miqdorini ko‘rsating."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_min_margin
+#, fuzzy
+msgid "Specify the minimum amount of margin over the base price."
+msgstr "Asosiy narxdan yuqori bo‘lgan marjaning minimal miqdorini ko‘rsating."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_start
+#, fuzzy
+msgid "Start Date"
+msgstr "Boshlanish sanasi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
+#, fuzzy
+msgid "Start date for this vendor price"
+msgstr "Ushbu yetkazib beruvchi narxining boshlanish sanasi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
+#, fuzzy
+msgid ""
+"Starting datetime for the pricelist item validation\n"
+"The displayed value depends on the timezone set in your preferences."
+msgstr ""
+"Narxlar ro‘yxatidagi element amal qilishi boshlanadigan sana va vaqt. "
+"Ko‘rsatilgan qiymat sozlamalaringizda belgilangan vaqt mintaqasiga bog‘liq."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_state
+#: model:ir.model.fields,help:product.field_product_product__activity_state
+#: model:ir.model.fields,help:product.field_product_template__activity_state
+#, fuzzy
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Faoliyatlarga asoslangan holat. Kechikkan: Muddati allaqachon o‘tib ketgan. "
+"Bugungi: Faoliyat sanasi bugun. Rejalashtirilgan: Kelgusi faoliyatlar."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_legs_steel
+#, fuzzy
+msgid "Steel"
+msgstr "Po‘lat"
+
+#. module: product
+#: model:product.template,name:product.product_product_7_product_template
+#, fuzzy
+msgid "Storage Box"
+msgstr "Saqlash qutisi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__store_fname
+#, fuzzy
+msgid "Stored Filename"
+msgstr "Saqlangan fayl nomi"
+
+#. module: product
+#: model:ir.model,name:product.model_product_supplierinfo
+#, fuzzy
+msgid "Supplier Pricelist"
+msgstr "Yetkazib beruvchi narxlar ro‘yxati"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
+#, fuzzy
+msgid "Tag"
+msgstr "Teg"
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
+#, fuzzy
+msgid "Tag name already exists!"
+msgstr "Teg nomi allaqachon mavjud!"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
+#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
+#, fuzzy
+msgid "Tags"
+msgstr "Teglar"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_tag_action
+#, fuzzy
+msgid "Tags are used to search product for a given theme."
+msgstr "Teglar ma'lum bir mavzu bo‘yicha mahsulot qidirish uchun ishlatiladi."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_tan
+#, fuzzy
+msgid "Tan"
+msgstr "To‘q sariq"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_teal
+#, fuzzy
+msgid "Teal"
+msgstr "Moviy yashil"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
+#, fuzzy
+msgid "Template Values"
+msgstr "Andoza qiymatlari"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "The Internal Reference '%s' already exists."
+msgstr "'%s' ichki ma'lumotnoma allaqachon mavjud."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, fuzzy
+msgid "The Reference '%s' already exists."
+msgstr "'%s' ma'lumotnomasi allaqachon mavjud."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+#, fuzzy
+msgid ""
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
+msgstr ""
+"%(attribute)s atributi %(product)s mahsuloti uchun kamida bitta qiymatga ega "
+"bo‘lishi kerak."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
+#, fuzzy
+msgid ""
+"The attribute cannot be changed once the value is used on at least one "
+"product."
+msgstr ""
+"Qiymat kamida bitta mahsulotda ishlatilganidan keyin atributni o‘zgartirib "
+"bo‘lmaydi."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "The cost of a product can't be negative."
+msgstr "Mahsulotning tannarxi salbiy bo‘lishi mumkin emas."
+
+#. module: product
+#: model:product.template,description_sale:product.desk_organizer_product_template
+#, fuzzy
+msgid ""
+"The desk organiser is perfect for storing all kinds of small things and "
+"since the 5 boxes are loose, you can move and place them in the way that "
+"suits you and your things best."
+msgstr ""
+"Stol uchun tashkil etuvchi turli xil kichik narsalarni saqlash uchun juda "
+"qulay, va 5 ta quti alohida bo‘lgani uchun siz ularni o‘zingizga va "
+"narsalaringizga eng mos keladigan tarzda joylashtira olasiz."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__display_type
+#: model:ir.model.fields,help:product.field_product_attribute_value__display_type
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
+#, fuzzy
+msgid "The display type used in the Product Configurator."
+msgstr "Mahsulot konfiguratorida ishlatiladigan ko‘rsatish turi."
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+#, fuzzy
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
+msgstr ""
+"Minimal balandlik 65 sm, tik turib ishlash uchun maksimal balandlik holati "
+"125 sm."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "The minimum margin should be lower than the maximum margin."
+msgstr "Minimal chegara maksimal chegaradan past bo‘lishi kerak."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_combo__base_price
+#, fuzzy
+msgid ""
+"The minimum price among the products in this combo. This value will be used "
+"to prorate the price of this combo with respect to the other combos in a "
+"combo product. This heuristic ensures that whatever product the user chooses "
+"in a combo, it will always be the same price."
+msgstr ""
+"Ushbu kombinatsiyadagi mahsulotlar orasidagi eng past narx. Bu qiymat ushbu "
+"kombo narxini kombo mahsulotdagi boshqa kombolarga nisbatan taqsimlash uchun "
+"ishlatiladi. Bu hisob-kitob usuli foydalanuvchi kombinatsiyada qaysi "
+"mahsulotni tanlamasin, u doimo bir xil narxda bo‘lishini ta'minlaydi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_category__product_count
+#, fuzzy
+msgid ""
+"The number of products under this category (Does not consider the children "
+"categories)"
+msgstr "Ushbu turkumdagi mahsulotlar soni (Quyi turkumlar hisobga olinmaydi)"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid ""
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
+"the sales order. To do so, open the form view of attributes and change the "
+"mode of *Create Variants*."
+msgstr ""
+"Yaratilishi kerak bo‘lgan variantlar soni ruxsat etilgan chegaradan oshib "
+"ketdi. Siz har bir kombinatsiya uchun variantlarni yaratmasligingiz yoki "
+"ularni sotuv buyurtmasiga asosan yaratishingiz kerak. Buning uchun "
+"atributlarning shakl ko‘rinishini oching va \"Variantlarni yaratish\" "
+"rejimini o‘zgartiring."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__price
+#, fuzzy
+msgid "The price to purchase a product"
+msgstr "Mahsulotni xarid qilish narxi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "The product template is archived so no combination is possible."
+msgstr ""
+"Mahsulot andozasi arxivlangani sababli hech qanday kombinatsiya mumkin emas."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
+#, fuzzy
+msgid ""
+"The quantity to purchase from this vendor to benefit from the unit price. If "
+"a vendor unit is set, quantity should be specified in this unit, otherwise "
+"it should be specified in the default unit of the product."
+msgstr ""
+"Birlik narxidan foydalanish uchun ushbu sotuvchidan xarid qilinadigan "
+"miqdor. Agar sotuvchi birligi belgilangan bo‘lsa, miqdor ushbu birlikda "
+"ko‘rsatilishi, aks holda mahsulotning standart birligida ifodalanishi kerak."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "The rounding method must be strictly positive."
+msgstr "Yaxlitlash usuli qat'iy musbat son bo‘lishi shart."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_combo_item__lst_price
+#: model:ir.model.fields,help:product.field_product_product__lst_price
+#, fuzzy
+msgid ""
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
+msgstr ""
+"Sotish narxi mahsulot andozasidan boshqariladi. Qo‘shimcha atribut "
+"narxlarini o‘rnatish uchun \"Variantlarni sozlash\" tugmasini bosing."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_value.py:0
+#, fuzzy
+msgid ""
+"The value %(value)s is not defined for the attribute %(attribute)s on the "
+"product %(product)s."
+msgstr ""
+"%(value)s qiymati %(product)s mahsulotidagi %(attribute)s atributi uchun "
+"aniqlanmagan."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "There are no possible combination."
+msgstr "Mumkin bo‘lgan kombinatsiya mavjud emas."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "There are no remaining closest combination."
+msgstr "Qolgan eng yaqin kombinatsiya yo‘q."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "There are no remaining possible combination."
+msgstr "Qolgan mumkin bo‘lgan kombinatsiya mavjud emas."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Mahsulot atributlari, qiymatlari va istisnolarining bunday sozlanishi hech "
+"qanday mumkin bo‘lgan variantga olib kelmaydi. Agar maqsad shu bo‘lsa, "
+"mahsulotingizni to‘g‘ridan-to‘g‘ri arxivlang yoki o‘chiring."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__price_extra
+#, fuzzy
+msgid "This is the sum of the extra price of all attributes"
+msgstr "Bu barcha atributlarning qo‘shimcha narxlari yig‘indisidir"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "This note is added to sales orders and invoices."
+msgstr "Ushbu eslatma savdo buyurtmalari va hisob-fakturalarga qo‘shiladi."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "This note is only for internal purposes."
+msgstr "Bu eslatma faqat ichki maqsadlar uchun mo‘ljallangan."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr ""
+"Bu mahsulot kombo tarkibiga kirgani uchun uning turini \"kombo\"ga "
+"o‘zgartirib bo‘lmaydi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
+#, fuzzy
+msgid ""
+"This vendor's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Narx so‘rovini chop etishda ushbu sotuvchining mahsulot kodi ishlatiladi. "
+"Ichki kodni ishlatish uchun bo‘sh qoldiring."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
+#, fuzzy
+msgid ""
+"This vendor's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Narx so‘rovini chop etishda ushbu sotuvchining mahsulot nomi ishlatiladi. "
+"Ichki nomni ishlatish uchun bo‘sh qoldiring."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__thumbnail
+#, fuzzy
+msgid "Thumbnail"
+msgstr "Kichik rasm"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_tide
+#, fuzzy
+msgid "Tide"
+msgstr "Qalqish"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Today Activities"
+msgstr "Bugungi faoliyatlar"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_01_product_template
+#, fuzzy
+msgid "Two-Seat Sofa"
+msgstr "Ikki kishilik divan"
+
+#. module: product
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
+#, fuzzy
+msgid "Two-Seater Sofa with Oak Wood Frame"
+msgstr "Eman yog‘ochidan romli ikki kishilik divan"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__type
+#, fuzzy
+msgid "Type"
+msgstr "Tur"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_decoration
+#: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
+#: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
+#, fuzzy
+msgid "Type of the exception activity on record."
+msgstr "Qaydnomalardagi istisno faoliyat turi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/controllers/pricelist_report.py:0
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "UOM"
+msgstr "O‘lchov birligi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, fuzzy
+msgid "Unable to find report template for %s format"
+msgstr "%s formati uchun hisobot shabloni topilmadi"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_underarmour
+#, fuzzy
+msgid "Under Armour"
+msgstr "Under Armour"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_under_desk_pedestals
+#, fuzzy
+msgid "Under-desk pedestals"
+msgstr "Stol osti g‘aladonlari"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_uniqlo
+#, fuzzy
+msgid "Uniqlo"
+msgstr "Uniqlo"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_id
+#: model:ir.model.fields,field_description:product.field_product_uom__uom_id
+#, fuzzy
+msgid "Unit"
+msgstr "Birlik"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
+#, fuzzy
+msgid "Unit Barcode"
+msgstr "Birlik shtrix-kodi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
+#: model:ir.model.fields,field_description:product.field_product_product__uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__uom_name
+#, fuzzy
+msgid "Unit Name"
+msgstr "Birlik nomi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#, fuzzy
+msgid "Unit Price"
+msgstr "Birlik narxi"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_model.js:0
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+#, fuzzy
+msgid "Units"
+msgstr "Birliklar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+#, fuzzy
+msgid "Units of Measure"
+msgstr "O‘lchov birliklari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
+#, fuzzy
+msgid "Units of Measure & Packagings"
+msgstr "O‘lchov birliklari va qadoqlashlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#, fuzzy
+msgid "Update extra prices"
+msgstr "Qo‘shimcha narxlarni yangilash"
+
+#. module: product
+#: model:ir.model,name:product.model_update_product_attribute_value
+#, fuzzy
+msgid "Update product attribute value"
+msgstr "Mahsulot xususiyati qiymatini yangilash"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute_value.py:0
+#, fuzzy
+msgid "Update product extra prices"
+msgstr "Mahsulotning qo‘shimcha narxlarini yangilash"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
+#, fuzzy
+msgid "Update the extra price on existing products"
+msgstr "Mavjud mahsulotlarga qo‘shimcha narxni yangilash"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
+#, fuzzy
+msgid "Upload"
+msgstr "Yuklash"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "Upload files to your product"
+msgstr "Mahsulotingizga fayllarni yuklang"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Upsell & Cross-Sell"
+msgstr "Qo‘shimcha va kesishgan sotuvlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__url
+#, fuzzy
+msgid "Url"
+msgstr "URL"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
+#, fuzzy
+msgid ""
+"Use the discount rules and activate the discount settings in order to show "
+"discount to customer."
+msgstr ""
+"Mijozga chegirmani ko‘rsatish uchun chegirma qoidalaridan foydalaning va "
+"chegirma sozlamalarini faollashtiring"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid ""
+"Use this feature to store any files you would like to share with your "
+"customers"
+msgstr ""
+"Mijozlaringiz bilan baham ko‘rmoqchi bo‘lgan har qanday faylni saqlash uchun "
+"ushbu xususiyatdan foydalaning"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
+#, fuzzy
+msgid "Used for sales to the current partner"
+msgstr "Joriy hamkorga sotish uchun ishlatiladi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
+#, fuzzy
+msgid "Used on Products"
+msgstr "Mahsulotlarda qo‘llaniladi"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "Username"
+msgstr "Foydalanuvchi nomi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
+#, fuzzy
+msgid "Valid Product Attribute Lines"
+msgstr "Yaroqli mahsulot xususiyatlari qatorlari"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#, fuzzy
+msgid "Validity"
+msgstr "Amal qilish muddati"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "Validity Period"
+msgstr "Amal qilish davri"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__name
+#, fuzzy
+msgid "Value"
+msgstr "Qiymat"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
+#, fuzzy
+msgid "Value Count"
+msgstr "Qiymatlar soni"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__standard_price
+#: model:ir.model.fields,help:product.field_product_template__standard_price
+#, fuzzy
+msgid ""
+"Value of the product (automatically computed in AVCO).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
+"        Used to compute margins on sale orders."
+msgstr ""
+"Mahsulot qiymati (AVCO usulida avtomatik hisoblanadi).         Xarid qiymati "
+"noma'lum bo‘lganda mahsulotni baholash uchun ishlatiladi (masalan, "
+"zaxiralarni tuzatishda).         Sotuv buyurtmalari bo‘yicha foyda miqdorini "
+"hisoblash uchun qo‘llaniladi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_ids
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
+#, fuzzy
+msgid "Values"
+msgstr "Qiymatlar"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#, fuzzy
+msgid "Variant"
+msgstr "Variant"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
+#, fuzzy
+msgid "Variant Count"
+msgstr "Variantlar soni"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
+#, fuzzy
+msgid "Variant Creation"
+msgstr "Variant yaratish"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
+#, fuzzy
+msgid "Variant Image"
+msgstr "Variant rasmi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
+#, fuzzy
+msgid "Variant Image 1024"
+msgstr "Variant rasmi 1024"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
+#, fuzzy
+msgid "Variant Image 128"
+msgstr "Variant rasmi 128"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
+#, fuzzy
+msgid "Variant Image 256"
+msgstr "Variant rasmi 256"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
+#, fuzzy
+msgid "Variant Image 512"
+msgstr "Variant rasmi 512"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "Variant Information"
+msgstr "Variant haqida ma'lumot"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__price_extra
+#, fuzzy
+msgid "Variant Price Extra"
+msgstr "Variant qo‘shimcha narxi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
+#, fuzzy
+msgid "Variant Seller"
+msgstr "Variant sotuvchisi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
+#, fuzzy
+msgid "Variant Tags"
+msgstr "Variant teglari"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
+#: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
+#, fuzzy
+msgid "Variant Values"
+msgstr "Variant qiymatlari"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "Variant: %s"
+msgstr "Variant: %s"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+#, fuzzy
+msgid "Variants"
+msgstr "Variantlar"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_velvet
+#, fuzzy
+msgid "Velvet"
+msgstr "Baxmal"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#, fuzzy
+msgid "Vendor"
+msgstr "Yetkazib beruvchi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Vendor Bills"
+msgstr "Yetkazib beruvchi hisob-fakturalari"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#, fuzzy
+msgid "Vendor Information"
+msgstr "Yetkazib beruvchi haqida ma'lumot"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
+#, fuzzy
+msgid "Vendor Pricelists"
+msgstr "Yetkazib beruvchi narxlar ro‘yxati"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
+#, fuzzy
+msgid "Vendor Product Code"
+msgstr "Yetkazib beruvchi mahsulot kodi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
+#, fuzzy
+msgid "Vendor Product Name"
+msgstr "Yetkazib beruvchi mahsulot nomi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template__seller_ids
+#, fuzzy
+msgid "Vendors"
+msgstr "Yetkazib beruvchilar"
+
+#. module: product
+#: model:product.template,name:product.product_product_2_product_template
+#, fuzzy
+msgid "Virtual Home Staging"
+msgstr "Virtual uy jihozlash"
+
+#. module: product
+#: model:product.template,name:product.product_product_1_product_template
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, fuzzy
+msgid "Virtual Interior Design"
+msgstr "Virtual interyer dizayni"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "Visible to all"
+msgstr "Barchaga ko‘rinadigan"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__visible_to_customers
+#, fuzzy
+msgid "Visible to customers"
+msgstr "Xaridorlarga ko‘rinadigan"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_document__voice_ids
+#, fuzzy
+msgid "Voice"
+msgstr "Ovoz"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__volume
+#: model:ir.model.fields,field_description:product.field_product_template__volume
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+#, fuzzy
+msgid "Volume"
+msgstr "Hajm"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
+#, fuzzy
+msgid "Volume unit of measure"
+msgstr "Hajm o‘lchov birligi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
+#, fuzzy
+msgid "Volume unit of measure label"
+msgstr "Hajm o‘lchov birligi belgisi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#, fuzzy
+msgid "Warnings"
+msgstr "Ogohlantirishlar"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+#, fuzzy
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
+msgstr ""
+"Biz tafsilotlarga alohida e'tibor qaratamiz, shuning uchun ham bizning "
+"stollarimiz yuqori sifatga ega."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__weight
+#: model:ir.model.fields,field_description:product.field_product_template__weight
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+#, fuzzy
+msgid "Weight"
+msgstr "Og‘irlik"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
+#, fuzzy
+msgid "Weight unit of measure"
+msgstr "Og‘irlik o‘lchov birligi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
+#, fuzzy
+msgid "Weight unit of measure label"
+msgstr "Og‘irlik o‘lchov birligi belgisi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "What to expect ?"
+msgstr "Nimani kutish kerak?"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_tag__visible_to_customers
+#, fuzzy
+msgid "Whether the tag is displayed to customers."
+msgstr "Teg xaridorlarga ko‘rsatiladimi."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_whirlpool
+#, fuzzy
+msgid "Whirlpool"
+msgstr "Girdob"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_white
+#, fuzzy
+msgid "White"
+msgstr "Oq"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_wood
+#: model:product.attribute.value,name:product.pav_legs_wood
+#, fuzzy
+msgid "Wood"
+msgstr "Yog‘och"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__write_date
+#, fuzzy
+msgid "Write Date"
+msgstr "Yozilgan sana"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_xl
+#, fuzzy
+msgid "XL"
+msgstr "XL"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_xs
+#, fuzzy
+msgid "XS"
+msgstr "XS"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_yellow
+#, fuzzy
+msgid "Yellow"
+msgstr "Sariq"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/update_product_attribute_value.py:0
+#, fuzzy
+msgid ""
+"You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
+"products."
+msgstr ""
+"Siz %(product_count)s ta mahsulotga \"%(attribute_value)s\" qiymatini "
+"qo‘shmoqchisiz."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/update_product_attribute_value.py:0
+#, fuzzy
+msgid "You are about to update the extra price of %s products."
+msgstr "Siz %s ta mahsulotning qo‘shimcha narxini yangilash arafasidasiz."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/res_config_settings.py:0
+#, fuzzy
+msgid ""
+"You are deactivating the pricelist feature. Every active pricelist will be "
+"archived."
+msgstr ""
+"Siz narxlar ro‘yxati xususiyatini o‘chirmoqdasiz. Har bir faol narxlar "
+"ro‘yxati arxivlanadi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
+#, fuzzy
+msgid "You can apply a mark-up by setting a negative discount."
+msgstr "Manfiy chegirma o‘rnatish orqali ustama qo‘llashingiz mumkin."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
+#, fuzzy
+msgid "You can apply a mark-up on the cost"
+msgstr "Siz tannarxga ustama qo‘llashingiz mumkin"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
+#, fuzzy
+msgid ""
+"You can assign pricelists to your customers or select one when creating a "
+"new sales quotation."
+msgstr ""
+"Siz mijozlaringizga narxlar ro‘yxatini belgilashingiz yoki yangi savdo "
+"taklifini yaratishda ulardan birini tanlashingiz mumkin."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_document__type
+#, fuzzy
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"Siz kompyuteringizdan faylni yuklashingiz yoki faylingizga internet "
+"havolasini nusxalab/joylashtirishingiz mumkin."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__image
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__image
+#, fuzzy
+msgid ""
+"You can upload an image that will be used as the color of the attribute "
+"value."
+msgstr ""
+"Atribut qiymatining rangi sifatida ishlatiladigan rasmni yuklashingiz mumkin."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
+#, fuzzy
+msgid "You can't edit this product in the catalog."
+msgstr "Bu mahsulotni katalogda tahrirlay olmaysiz."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, fuzzy
+msgid ""
+"You cannot archive this attribute as there are still products linked to it"
+msgstr ""
+"Bu atributni arxivlay olmaysiz, chunki unga hali ham bog‘langan mahsulotlar "
+"mavjud"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, fuzzy
+msgid ""
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
+"%(products)s"
+msgstr ""
+"%(attribute)s atributining Variantlarni yaratish rejimini o‘zgartira "
+"olmaysiz, chunki u quyidagi mahsulotlarda ishlatiladi: %(products)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute_value.py:0
+#, fuzzy
+msgid ""
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
+msgstr ""
+"%(value)s qiymatining atributini o‘zgartira olmaysiz, chunki u quyidagi "
+"mahsulotlarda ishlatiladi: %(products)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_value.py:0
+#, fuzzy
+msgid ""
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
+msgstr ""
+"%(product)s mahsulotiga o‘rnatilgan %(value)s qiymatining mahsulotini "
+"o‘zgartira olmaysiz."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_value.py:0
+#, fuzzy
+msgid ""
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
+msgstr ""
+"%(product)s mahsulotiga o‘rnatilgan %(value)s qiymatini o‘zgartira olmaysiz."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_category.py:0
+#, fuzzy
+msgid "You cannot create recursive categories."
+msgstr "Rekursiv toifalarni yarata olmaysiz."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#, fuzzy
+msgid ""
+"You cannot delete pricelist(s):\n"
+"(%(pricelists)s)\n"
+"They are used within pricelist(s):\n"
+"%(other_pricelists)s"
+msgstr ""
+"Narxlar ro‘yxati(lar)ni o‘chira olmaysiz: (%(pricelists)s) Ular quyidagi "
+"narxlar ro‘yxati(lar)da ishlatiladi: %(other_pricelists)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, fuzzy
+msgid ""
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
+"%(products)s"
+msgstr ""
+"%(attribute)s atributini o‘chira olmaysiz, chunki u quyidagi mahsulotlarda "
+"ishlatiladi: %(products)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute_value.py:0
+#, fuzzy
+msgid ""
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
+"%(products)s\n"
+msgstr ""
+"%(value)s qiymatini o‘chira olmaysiz, chunki u quyidagi mahsulotlarda "
+"ishlatiladi: %(products)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+#, fuzzy
+msgid ""
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
+msgstr ""
+"%(attribute)s atributini %(product_src)s mahsulotidan %(product_dest)s "
+"mahsulotiga ko‘chirish mumkin emas."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_value.py:0
+#, fuzzy
+msgid ""
+"You cannot update related variants from the values. Please update related "
+"values from the variants."
+msgstr ""
+"Qiymatlardan bog‘liq variantlarni yangilay olmaysiz. Iltimos, variantlardan "
+"tegishli qiymatlarni yangilang."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"                            whether it's a storable product, a consumable or "
+"a service."
+msgstr ""
+"Siz sotadigan yoki xarid qiladigan har bir narsa uchun, u saqlanadigan "
+"mahsulot, iste'mol qilinadigan mahsulot yoki xizmat bo‘lishidan qat'i nazar, "
+"mahsulotni belgilashingiz kerak."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_normal_action
+#: model_terms:ir.actions.act_window,help:product.product_template_action
+#, fuzzy
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"                whether it's a storable product, a consumable or a service."
+msgstr ""
+"Siz sotadigan yoki xarid qiladigan har bir narsa uchun, u saqlanadigan "
+"mahsulot, iste'mol qilinadigan mahsulot yoki xizmat bo‘lishidan qat'i nazar, "
+"mahsulotni belgilashingiz kerak."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_variant_action
+#, fuzzy
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"                whether it's a storable product, a consumable or a service.\n"
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
+msgstr ""
+"Siz sotadigan yoki xarid qiladigan har bir narsa uchun, u saqlanadigan "
+"mahsulot, iste'mol qilinadigan mahsulot yoki xizmat bo‘lishidan qat'i nazar, "
+"mahsulotni belgilashingiz kerak. Mahsulot shakli sotish jarayonini "
+"soddalashtirish uchun ma'lumotlarni o‘z ichiga oladi: narx, "
+"taklifnomalardagi izohlar, buxgalteriya ma'lumotlari, xarid qilish usullari "
+"va boshqalar."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
+#, fuzzy
+msgid ""
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
+"                a consumable or a service you offer to customers.\n"
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
+msgstr ""
+"Siz sotadigan har bir narsa uchun, u jismoniy mahsulot, iste'mol qilinadigan "
+"mahsulot yoki mijozlarga taklif qiladigan xizmat bo‘lishidan qat'i nazar, "
+"mahsulotni belgilashingiz kerak. Mahsulot shakli sotish jarayonini "
+"soddalashtirish uchun ma'lumotlarni o‘z ichiga oladi: narx, "
+"taklifnomalardagi izohlar, buxgalteriya ma'lumotlari, xarid qilish usullari "
+"va boshqalar."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
+#, fuzzy
+msgid "You must leave at least one quantity."
+msgstr "Kamida bitta miqdorni qoldirishingiz shart."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, fuzzy
+msgid "You need to set a positive quantity."
+msgstr "Ijobiy miqdorni belgilashingiz kerak."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_zara
+#, fuzzy
+msgid "Zara"
+msgstr "Zara"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, fuzzy
+msgid "attribute_id"
+msgstr "atribut_id"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "csv"
+msgstr "csv"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
+#, fuzzy
+msgid "days"
+msgstr "kun"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "discount"
+msgstr "chegirma"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
+#, fuzzy
+msgid "e.g. 1234567890"
+msgstr "masalan, 1234567890"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
+#, fuzzy
+msgid "e.g. Burger Choice"
+msgstr "masalan, Burger tanlovi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "e.g. Cheese Burger"
+msgstr "masalan, Pishloqli burger"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_category_form_view
+#, fuzzy
+msgid "e.g. Lamps"
+msgstr "masalan, Chiroqlar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "e.g. Odoo Enterprise Subscription"
+msgstr "masalan, Odoo Enterprise obunasi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "e.g. Starter - Meal - Desert"
+msgstr "masalan, Boshlang‘ich - Asosiy taom - Desert"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, fuzzy
+msgid "e.g. USD Retailers"
+msgstr "masalan, AQSh dollari chakana sotuvchilari"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+#, fuzzy
+msgid "id"
+msgstr "id"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "markup"
+msgstr "ustama"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
+#, fuzzy
+msgid "on"
+msgstr "da"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "pdf"
+msgstr "pdf"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#, fuzzy
+msgid "per"
+msgstr "uchun"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, fuzzy
+msgid "product"
+msgstr "mahsulot"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
+msgid "product cost"
+msgstr "mahsulot tannarxi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "round off to 10.00 and set an extra at -0.01"
+msgstr "10.00 gacha yaxlitlang va -0.01 da qo‘shimcha qiymat o‘rnating"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
+msgid "sales price"
+msgstr "sotish narxi"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+#, fuzzy
+msgid "the product template."
+msgstr "mahsulot shabloni"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#, fuzzy
+msgid "to"
+msgstr "ga"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
+#, fuzzy
+msgid "xlsx"
+msgstr "xlsx"

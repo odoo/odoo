@@ -12,20 +12,6 @@
         <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
             <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
                 <CallPreview onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)"/>
-                <div class="d-flex flex-column flex-md-row gap-2 text-muted mt-3">
-                    <div class="w-100 text-uppercase">
-                        <i class="fa fa-microphone"></i> Microphone
-                        <DeviceSelect kind="'audioinput'"/>
-                    </div>
-                    <div class="w-100 text-uppercase">
-                        <i class="fa fa-volume-up"></i> Output
-                        <DeviceSelect kind="'audiooutput'"/>
-                    </div>
-                    <div class="w-100 text-uppercase">
-                        <i class="fa fa-camera"></i> Camera
-                        <DeviceSelect kind="'videoinput'"/>
-                    </div>
-                </div>
             </div>
             <div class="d-flex flex-column text-center justify-content-center">
                 <div class="d-flex flex-column gap-2" t-if="store.self_guest and !store.self_partner">

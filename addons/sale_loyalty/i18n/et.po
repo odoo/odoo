@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
+"POT-Creation-Date: 2026-03-20 18:36+0000\n"
 "PO-Revision-Date: 2025-09-11 14:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -130,6 +131,7 @@ msgid "Discount & Loyalty"
 msgstr ""
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__display_name
@@ -150,12 +152,6 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
 msgid "Expired Date:"
-msgstr ""
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Free Product - %(product)s"
 msgstr ""
 
 #. module: sale_loyalty
@@ -196,6 +192,7 @@ msgid "How much point this reward costs on the loyalty card."
 msgstr ""
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__id
@@ -234,6 +231,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_account_move_line
+msgid "Journal Item"
 msgstr ""
 
 #. module: sale_loyalty
@@ -295,8 +297,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid ""
-"No card found for this loyalty program and no points will be given with this"
-" order."
+"No card found for this loyalty program and no points will be given with this "
+"order."
 msgstr ""
 
 #. module: sale_loyalty

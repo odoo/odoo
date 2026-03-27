@@ -1,9 +1,11 @@
 from ast import literal_eval
+from urllib.parse import urlencode
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
-from odoo.tools import groupby
+from odoo.tools import email_normalize, email_normalize_all, groupby, urls
+from odoo.tools.misc import hash_sign
 from collections import defaultdict
 import logging
 import re
@@ -23,7 +25,12 @@ class AccountJournalGroup(models.Model):
         help="Define which company can select the multi-ledger in report filters. If none is provided, available for all companies",
         default=lambda self: self.env.company,
     )
-    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals")
+    excluded_journal_ids = fields.Many2many(
+        comodel_name='account.journal',
+        domain='company_id and [("company_id", "parent_of", company_id)] or []',
+        string="Excluded Journals",
+        context={'active_test': False},
+    )
     sequence = fields.Integer(default=10)
 
     _uniq_name = models.Constraint(
@@ -267,6 +274,7 @@ class AccountJournal(models.Model):
     )
     accounting_date = fields.Date(compute='_compute_accounting_date')
     display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
+    has_invalid_statements = fields.Boolean(compute='_compute_has_invalid_statements')
 
     show_fetch_in_einvoices_button = fields.Boolean(
         string="Show E-Invoice Buttons",
@@ -277,18 +285,25 @@ class AccountJournal(models.Model):
         compute='_compute_show_refresh_out_einvoices_status_button',
     )
 
-    incoming_einvoice_notification_email = fields.Char(
-        string="Invoice Notifications",
-        help="Receive an email for incoming electronic invoices.",
-        compute='_compute_incoming_einvoice_notification_email',
-        store=True,
-        readonly=False,
+    incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
+        string="Send Copy To",
+        help="Email addresses that will receive copy for sent and received invoices. Separate entries with ';'.",
     )
 
     _code_company_uniq = models.Constraint(
         'unique (company_id, code)',
         'Journal codes must be unique per company.',
     )
+
+    def _compute_has_invalid_statements(self):
+        journals_with_invalid_statements = self.env['account.bank.statement'].search([
+            ('journal_id', 'in', self.ids),
+            '|',
+            ('is_valid', '=', False),
+            ('is_complete', '=', False),
+        ]).journal_id
+        journals_with_invalid_statements.has_invalid_statements = True
+        (self - journals_with_invalid_statements).has_invalid_statements = False
 
     def _compute_display_alias_fields(self):
         self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)
@@ -449,11 +464,21 @@ class AccountJournal(models.Model):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
             if journal.type in ('bank', 'cash', 'credit'):
+                existing_method_lines = journal.inbound_payment_method_line_ids
                 default_methods = journal._default_inbound_payment_methods()
-                pay_method_line_ids_commands += [Command.create({
-                    'name': pay_method.name,
-                    'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
+                for pay_method in default_methods:
+                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method)[:1].payment_account_id
+                    pay_method_line_ids_commands += [
+                        Command.create({
+                            'name': pay_method.name,
+                            'payment_method_id': pay_method.id,
+                            'payment_account_id': (
+                                payment_account.id
+                                if not payment_account.currency_id or payment_account.currency_id == journal.currency_id
+                                else False
+                            ),
+                        })
+                    ]
             journal.inbound_payment_method_line_ids = pay_method_line_ids_commands
 
     @api.depends('type', 'currency_id')
@@ -461,11 +486,21 @@ class AccountJournal(models.Model):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
             if journal.type in ('bank', 'cash', 'credit'):
+                existing_method_lines = journal.outbound_payment_method_line_ids
                 default_methods = journal._default_outbound_payment_methods()
-                pay_method_line_ids_commands += [Command.create({
-                    'name': pay_method.name,
-                    'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
+                for pay_method in default_methods:
+                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method)[:1].payment_account_id
+                    pay_method_line_ids_commands += [
+                        Command.create({
+                            'name': pay_method.name,
+                            'payment_method_id': pay_method.id,
+                            'payment_account_id': (
+                                payment_account.id
+                                if not payment_account.currency_id or payment_account.currency_id == journal.currency_id
+                                else False
+                            ),
+                        })
+                    ]
             journal.outbound_payment_method_line_ids = pay_method_line_ids_commands
 
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
@@ -499,14 +534,6 @@ class AccountJournal(models.Model):
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
 
-    @api.depends('company_id', 'type')
-    def _compute_incoming_einvoice_notification_email(self):
-        for journal in self:
-            if journal.type == 'purchase':
-                journal.incoming_einvoice_notification_email = journal.incoming_einvoice_notification_email or journal.company_id.email
-            else:
-                journal.incoming_einvoice_notification_email = False
-
     @api.depends('type')
     def _compute_show_fetch_in_einvoices_button(self):
         # TO OVERRIDE
@@ -531,13 +558,16 @@ class AccountJournal(models.Model):
             journal.default_account_id = False
             journal.profit_account_id = False
             journal.loss_account_id = False
-            if journal.type == 'sale':
-                journal.default_account_id = journal.company_id.income_account_id
-            elif journal.type == 'purchase':
-                journal.default_account_id = journal.company_id.expense_account_id
+            company = journal.company_id
+            if journal.type == 'sale' and company.income_account_id.active:
+                journal.default_account_id = company.income_account_id
+            elif journal.type == 'purchase' and company.expense_account_id.active:
+                journal.default_account_id = company.expense_account_id
             elif journal.type in ('cash', 'bank'):
-                journal.profit_account_id = journal.company_id.default_cash_difference_income_account_id
-                journal.loss_account_id = journal.company_id.default_cash_difference_expense_account_id
+                if company.default_cash_difference_income_account_id.active:
+                    journal.profit_account_id = company.default_cash_difference_income_account_id
+                if company.default_cash_difference_expense_account_id.active:
+                    journal.loss_account_id = company.default_cash_difference_expense_account_id
 
         # codes are reset and recomputed whenever the
         # journal type changes through the form view
@@ -670,9 +700,13 @@ class AccountJournal(models.Model):
 
     @api.constrains('type', 'incoming_einvoice_notification_email')
     def _check_incoming_einvoice_notification_email(self):
+        # to remove in master
+        pass
+
+    @api.onchange('incoming_einvoice_notification_email')
+    def _onchange_incoming_einvoice_notification_email(self):
         for journal in self:
-            if not journal.type == 'purchase' and journal.incoming_einvoice_notification_email:
-                raise ValidationError(_("The incoming e-invoice notification email can only be set on purchase journals."))
+            journal.incoming_einvoice_notification_email = ', '.join(email_normalize_all(journal.incoming_einvoice_notification_email or ''))
 
     @api.depends('type')
     def _compute_refund_sequence(self):
@@ -786,7 +820,10 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-
+        if 'bank_acc_number' in vals or 'bank_account_id' in vals:
+            for bank in self.filtered(lambda r: r.type == 'bank').bank_account_id:
+                if bank._user_can_trust():
+                    bank.allow_out_payment = True
         return result
 
     def _alias_get_creation_values(self):
@@ -834,7 +871,7 @@ class AccountJournal(models.Model):
 
         domain = [('alias_name', '=', alias_name)]
         if alias_domain_name:
-            domain.append(('alias_domain', '=', alias_domain_name))
+            domain.extend(['|', ('alias_domain', '=', alias_domain_name), ('alias_domain_id', '=', False)])
 
         existing_alias = self.env['mail.alias'].search_count(domain, limit=1)
 
@@ -993,28 +1030,27 @@ class AccountJournal(models.Model):
 
         for journal, vals in zip(journals, vals_list):
             # Create the bank_account_id if necessary
-            if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
-                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+            if journal.type == 'bank':
+                if not journal.bank_account_id and vals.get('bank_acc_number'):
+                    journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+                if journal.bank_account_id and journal.bank_account_id._user_can_trust():
+                    journal.bank_account_id.allow_out_payment = True
 
         return journals
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()
-        res_partner_bank = self.env['res.partner.bank'].search([
-            ('sanitized_acc_number', '=', sanitize_account_number(acc_number)),
-            ('partner_id', '=', self.company_id.partner_id.id),
-        ], limit=1)
-        if res_partner_bank:
-            self.bank_account_id = res_partner_bank.id
-        else:
-            self.bank_account_id = self.env['res.partner.bank'].create({
-                'acc_number': acc_number,
+        self.bank_account_id = self.env['res.partner.bank']._find_or_create_bank_account(
+            account_number=acc_number,
+            partner=self.company_id.partner_id, allow_company_account_creation=True,
+            company=self.company_id,
+            extra_create_vals={
                 'bank_id': bank_id,
                 'currency_id': self.currency_id.id,
-                'partner_id': self.company_id.partner_id.id,
                 'journal_id': self,
-            }).id
+            }
+        )
 
     @api.depends('currency_id')
     def _compute_display_name(self):
@@ -1178,24 +1214,74 @@ class AccountJournal(models.Model):
         return order_reference
 
     # -------------------------------------------------------------------------
-    # E-Invoice Related Methods
+    # Notifications & E-Invoice Related Methods
     # -------------------------------------------------------------------------
+
+    def _get_journal_notification_unsubscribe_scope(self):
+        return 'account_journal_notification_unsubscribe'
+
+    def _unsubscribe_invoice_notification_email(self, email_to_remove):
+        self.ensure_one()
+        normalized_to_remove = email_normalize(email_to_remove, strict=False)
+        subscribed_emails = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        if not normalized_to_remove or normalized_to_remove not in subscribed_emails:
+            return False
+        remaining = subscribed_emails - {normalized_to_remove}
+        self.incoming_einvoice_notification_email = ', '.join(remaining or [])
+        return True
 
     def _notify_einvoices_received(self, moves):
         self.ensure_one()
-
-        if not moves or not self.incoming_einvoice_notification_email:
+        # legacy if module was not upgraded
+        new_mail_template = self.env.ref('account.mail_template_invoice_subscriber', raise_if_not_found=False)
+        if new_mail_template:
+            # if module was upgraded, this is handled in _notify_invoice_subscribers
             return
 
-        mail_template = self.env.ref('account.mail_template_einvoice_notification', raise_if_not_found=False)
-        if not mail_template:
+        emails = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        if not moves or not emails:
+            return
+
+        if not (mail_template := self.env.ref('account.mail_template_einvoice_notification', raise_if_not_found=False)):
             return
 
         mail_template.with_context(einvoices=moves).send_mail(self.id, force_send=True)
 
     def button_unsubscribe_from_invoice_notifications(self):
+        # deprecated, to remove in master
         self.ensure_one()
         self.incoming_einvoice_notification_email = False
+
+    def _notify_invoice_subscribers(self, invoice, mail_params=None):
+        self.ensure_one()
+        invoice.ensure_one()
+
+        recipients = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        if not recipients:
+            return
+
+        if not (template := self.env.ref('account.mail_template_invoice_subscriber', raise_if_not_found=False)):
+            # we add the template in stable, thus this might happen if the module was not upgraded
+            self._notify_einvoices_received(invoice)
+            return
+
+        base_url = self.get_base_url()
+        for recipient in recipients:
+            unsubscribe_token = hash_sign(
+                self.sudo().env,
+                scope=self._get_journal_notification_unsubscribe_scope(),
+                message_values={'email_to_unsubscribe': recipient, 'journal_id': self.id},
+            )
+            unsubscribe_url = urls.urljoin(base_url, f'/my/journal/{self.id}/unsubscribe?{urlencode({"token": unsubscribe_token})}')
+
+            template.with_context(unsubscribe_url=unsubscribe_url).send_mail(
+                invoice.id,
+                email_values={
+                    **(mail_params or {}),
+                    'email_to': recipient,
+                },
+                force_send=True,
+            )
 
     def button_fetch_in_einvoices(self):
         # TO OVERRIDE

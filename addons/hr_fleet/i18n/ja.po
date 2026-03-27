@@ -3,13 +3,14 @@
 # * hr_fleet
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2025-09-14 21:15+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-18 03:22+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "hr_fleet/ja/>\n"
 "Language: ja\n"
@@ -44,6 +45,11 @@ msgid "Assignment"
 msgstr "割当"
 
 #. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_ir_attachment
+msgid "Attachment"
+msgstr "添付"
+
+#. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
 msgid "Attachments"
@@ -57,9 +63,15 @@ msgstr "リンクされた車両を持つ従業員から住所を削除できま
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
-#: model:ir.model.fields,field_description:hr_fleet.field_res_users__employee_cars_count
 msgid "Cars"
 msgstr "車両"
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/employee.py:0
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Cars History"
+msgstr "車両履歴"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
@@ -72,9 +84,28 @@ msgid "Current Driver"
 msgstr "現在の運転手"
 
 #. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_attachment_kanban_inherit_hr
+msgid "Delete"
+msgstr "削除"
+
+#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
 msgid "Departure Wizard"
 msgstr "退職ウィザード"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__display_name
+msgid "Display Name"
+msgstr "表示名"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
@@ -135,6 +166,20 @@ msgid "Future Driver (Employee)"
 msgstr "今後の運転手(従業員)"
 
 #. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__id
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
 msgid "License Plate"
 msgstr "ライセンスプレート"
@@ -159,7 +204,7 @@ msgstr "車両の走行距離計ログ"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
 msgid "Public Employee"
-msgstr "公務員"
+msgstr "公開従業員"
 
 #. module: hr_fleet
 #. odoo-python
@@ -181,19 +226,18 @@ msgstr "車両用サービス"
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
-msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
+msgid ""
+"The vehicle of employee %(employee)s is not linked to a fleet manager, "
+"assigning to you."
 msgstr ""
+"従業員%(employee)sの車両がフリートマネージャに割り当てられていないため、あな"
+"たに割り当てられました。"
 
 #. module: hr_fleet
 #. odoo-javascript
 #: code:addons/hr_fleet/static/src/views/hr_fleet_kanban/hr_fleet_kanban_controller.xml:0
 msgid "Upload"
 msgstr "アップロード"
-
-#. module: hr_fleet
-#: model:ir.model,name:hr_fleet.model_res_users
-msgid "User"
-msgstr "ユーザ"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle
@@ -209,3 +253,6 @@ msgstr "車両契約"
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
 msgstr "車両 (私用)"
+
+#~ msgid "User"
+#~ msgstr "ユーザ"

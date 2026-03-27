@@ -220,6 +220,9 @@ class ResourceResource(models.Model):
         self.ensure_one()
         return not self.calendar_id
 
+    def _get_calendar_at(self, date_target, tz=False):
+        return {resource: resource.calendar_id for resource in self}
+
     def _is_flexible(self):
         """ An employee is considered flexible if the field flexible_hours is True on the calendar
             or the employee is not assigned any calendar, in which case is considered as Fully flexible.
@@ -293,7 +296,7 @@ class ResourceResource(models.Model):
         locale = babel_locale_parse(get_lang(self.env).code)
         week_start_date = weekstart(locale, start)
         week_end_date = weekend(locale, end)
-        end_week = weeknumber(locale, week_end_date)[1]
+        end_year, end_week = weeknumber(locale, week_end_date)
 
         min_start_date = week_start_date + relativedelta(hour=0, minute=0, second=0, microsecond=0)
         max_end_date = week_end_date + relativedelta(days=1, hour=0, minute=0, second=0, microsecond=0)
@@ -331,9 +334,14 @@ class ResourceResource(models.Model):
                 if day >= start_day and day <= end_day:
                     resource_hours_per_day[resource.id][day] = day_working_hours
 
-                week = weeknumber(babel_locale_parse(locale), day)
-                if week[1] <= end_week:
-                    resource_hours_per_week[resource.id][week] = min(resource.calendar_id.full_time_required_hours, day_working_hours + resource_hours_per_week[resource.id][week])
+                year_week = weeknumber(babel_locale_parse(locale), day)
+                year, week = year_week
+                if (year < end_year) or (year == end_year and week <= end_week):
+                    # cap weekly hours to the calendar's configured hours_per_week (not the
+                    # company default full_time_required_hours which does not respect
+                    # part-time schedules).
+                    cap = resource.calendar_id.hours_per_week or resource.calendar_id.full_time_required_hours
+                    resource_hours_per_week[resource.id][year_week] = min(cap, day_working_hours + resource_hours_per_week[resource.id][year_week])
 
         for calendar, resources in calendar_resources.items():
             domain = [('calendar_id', '=', False)] if not calendar else None

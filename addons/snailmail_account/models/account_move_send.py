@@ -48,10 +48,8 @@ class AccountMoveSend(models.AbstractModel):
         else:
             return super()._is_applicable_to_move(method, move, **move_data)
 
-    def _hook_if_success(self, moves_data):
+    def _hook_if_success(self, moves_data, from_cron=False):
         # EXTENDS 'account'
-        super()._hook_if_success(moves_data)
-
         to_send = {
             move: move_data
             for move, move_data in moves_data.items()
@@ -66,3 +64,4 @@ class AccountMoveSend(models.AbstractModel):
                 for move, move_data in to_send.items()
             ])\
             ._snailmail_print(immediate=False)
+        super()._hook_if_success(moves_data, from_cron)

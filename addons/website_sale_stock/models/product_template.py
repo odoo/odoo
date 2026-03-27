@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.tools import float_round
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
@@ -29,7 +30,7 @@ class ProductTemplate(models.Model):
         """
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
-        return self.product_variant_id._is_sold_out()
+        return not self.product_variant_id or self.product_variant_id._is_sold_out()
 
     def _website_show_quick_add(self):
         return (
@@ -65,10 +66,12 @@ class ProductTemplate(models.Model):
         })
         if product_or_template.is_product_variant:
             product_sudo = product_or_template.sudo()
-            free_qty = product_sudo.uom_id._compute_quantity(
+            computed_qty = product_sudo.uom_id._compute_quantity(
                 website._get_product_available_qty(product_sudo),
                 to_unit=uom,
+                round=False,
             )
+            free_qty = float_round(computed_qty, precision_digits=0, rounding_method='DOWN')
             has_stock_notification = (
                 product_sudo._has_stock_notification(self.env.user.partner_id)
                 or (

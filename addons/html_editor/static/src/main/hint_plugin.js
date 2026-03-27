@@ -1,15 +1,32 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
+import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
-import { selectElements } from "@html_editor/utils/dom_traversal";
+import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
+import { debounce } from "@web/core/utils/timing";
+
+/**
+ * @typedef {import("@html_editor/editor").EditorContext} EditorContext
+ * @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData
+ * @typedef {import("plugins").CSSSelector} CSSSelector
+ * @typedef {import("plugins").TranslatedString} TranslatedString
+ */
+
+/**
+ * @typedef {((
+ *   selectionData: SelectionData,
+ *   editable: EditorContext["editable"]
+ * ) => HTMLElement[] | NodeList)[]} hint_targets_providers
+ * @typedef {{ selector: CSSSelector; text: TranslatedString; }[]} hints
+ */
 
 export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        selectionchange_handlers: this.updateHints.bind(this),
+        selectionchange_handlers: this.triggerDebouncedUpdateHints.bind(this),
         external_history_step_handlers: () => {
             this.clearHints();
             this.updateHints();
@@ -35,6 +52,12 @@ export class HintPlugin extends Plugin {
 
     setup() {
         this.updateHints(this.editable);
+        const shouldDebounce = this.config.debounceHints !== false;
+        if (shouldDebounce) {
+            this.debouncedUpdateHints = debounce(this.updateHints.bind(this), 30);
+        } else {
+            this.debouncedUpdateHints = this.updateHints.bind(this);
+        }
     }
 
     destroy() {
@@ -45,6 +68,11 @@ export class HintPlugin extends Plugin {
     normalize() {
         this.clearHints();
         this.updateHints();
+    }
+
+    triggerDebouncedUpdateHints() {
+        this.clearHints();
+        this.debouncedUpdateHints();
     }
 
     /**
@@ -59,7 +87,13 @@ export class HintPlugin extends Plugin {
             for (const provideTargets of this.getResource("hint_targets_providers")) {
                 for (const target of provideTargets(selectionData, this.editable)) {
                     const nodeHint = hints.find((h) => target.matches(h.selector))?.text;
-                    if (target && nodeHint && isEmptyBlock(target) && !isProtected(target)) {
+                    if (
+                        target &&
+                        nodeHint &&
+                        isEmptyBlock(target) &&
+                        !isProtected(target) &&
+                        !descendants(target).some(isEditorTab)
+                    ) {
                         this.makeHint(target, nodeHint);
                     }
                 }

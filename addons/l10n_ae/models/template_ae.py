@@ -41,6 +41,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'uae_account_400001',
                 'income_account_id': 'uae_account_500001',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'uae_account_131100',
             },
         }
 
@@ -64,3 +66,27 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
+    @template('ae', 'account.fiscal.position')
+    def _get_ae_account_fiscal_position(self):
+        fiscal_position_xmlid = {
+            'AZ': 'account_fiscal_position_abu_dhabi',
+            'AJ': 'account_fiscal_position_ajman',
+            'DU': 'account_fiscal_position_dubai',
+            'FU': 'account_fiscal_position_fujairah',
+            'RK': 'account_fiscal_position_ras_al_khaima',
+            'SH': 'account_fiscal_position_sharjah',
+            'UQ': 'account_fiscal_position_umm_al_quwain',
+        }.get(self.env.company.state_id.code, 'account_fiscal_position_dubai')
+        return {
+            fiscal_position_xmlid: {
+                'sequence': 1,
+            }
+        }
+
+    @template('ae', 'account.account')
+    def _get_ae_account_account(self):
+        return {
+            'uae_account_131100': {
+                'account_stock_variation_id': 'uae_account_400001',
+            },
+        }

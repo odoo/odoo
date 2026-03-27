@@ -19,10 +19,13 @@ export class BaseHeader extends Interaction {
         _root: {
             "t-on-transitionend": () => this.adaptToHeaderChangeLoop(-1),
             "t-att-class": () => ({
-                "o_top_fixed_element": this.isVisible,
-                "o_header_affixed": this.cssAffixed,
-                "o_header_is_scrolled": this.isScrolled,
-                "o_header_no_transition": !this.transitionActive,
+                o_top_fixed_element: this.isVisible,
+                o_header_affixed: this.cssAffixed,
+                o_header_is_scrolled: this.isScrolled,
+                o_header_no_transition: !this.transitionActive,
+            }),
+            "t-att-style": () => ({
+                transform: this.transformValue,
             }),
         },
         ".offcanvas": {
@@ -55,6 +58,8 @@ export class BaseHeader extends Interaction {
         this.isScrolled = false;
         this.forcedScroll = 0;
 
+        this.transformValue = "";
+
         this.isOverlay = !!this.el.closest(".o_header_overlay, .o_header_overlay_theme");
 
         this.mainEl = this.el.parentElement.querySelector("main");
@@ -63,9 +68,11 @@ export class BaseHeader extends Interaction {
 
         this.scrollingElement = document.scrollingElement;
         const navbarEl = this.el.querySelector(".navbar");
-        const navBreakpoint = navbarEl ? Object.keys(SIZES).find((size) =>
-            navbarEl.classList.contains(`navbar-expand-${size.toLowerCase()}`)
-        ) : "LG";
+        const navBreakpoint = navbarEl
+            ? Object.keys(SIZES).find((size) =>
+                  navbarEl.classList.contains(`navbar-expand-${size.toLowerCase()}`)
+              )
+            : "LG";
         this.breakpointSize = SIZES[navBreakpoint];
 
         this.hasScrolled = false;
@@ -99,10 +106,7 @@ export class BaseHeader extends Interaction {
 
     onResize() {
         this.adjustScrollbar();
-        if (
-            document.body.classList.contains('overflow-hidden')
-            && !this.isSmall()
-        ) {
+        if (document.body.classList.contains("overflow-hidden") && !this.isSmall()) {
             const offCanvasEls = this.el.querySelectorAll(".offcanvas.show");
             for (const offCanvasEl of offCanvasEls) {
                 Offcanvas.getOrCreateInstance(offCanvasEl).hide();
@@ -113,8 +117,7 @@ export class BaseHeader extends Interaction {
             for (const collapseEl of collapseEls) {
                 Collapse.getOrCreateInstance(collapseEl).hide();
             }
-        }
-        else {
+        } else {
             this.adjustMainPadding();
         }
     }
@@ -134,7 +137,7 @@ export class BaseHeader extends Interaction {
         }
 
         if (this.closeDropdowns) {
-            this.el.querySelectorAll(".dropdown-toggle.show").forEach(dropdownToggleEl => {
+            this.el.querySelectorAll(".dropdown-toggle.show").forEach((dropdownToggleEl) => {
                 Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
             });
         }
@@ -167,7 +170,9 @@ export class BaseHeader extends Interaction {
             if (addCount !== 0) {
                 clearTimeout(this.changeLoopTimer);
                 this.changeLoopTimer = this.waitForTimeout(
-                    () => this.adaptToHeaderChangeLoop(- this.transitionCount), 500);
+                    () => this.adaptToHeaderChangeLoop(-this.transitionCount),
+                    500
+                );
             }
         } else {
             // When we detected all transitionend events, we need to stop the
@@ -183,13 +188,15 @@ export class BaseHeader extends Interaction {
 
     transformShow() {
         this.isVisible = true;
-        this.el.style.transform = this.atTop ? "" : `translate(0, -${this.forcedScroll + this.topGap}px)`;
+        this.transformValue = this.atTop
+            ? ""
+            : `translate(0, -${this.forcedScroll + this.topGap}px)`;
         this.adaptToHeaderChangeLoop(1);
     }
 
     transformHide() {
         this.isVisible = false;
-        this.el.style.transform = "translate(0, -100%)";
+        this.transformValue = "translate(0, -100%)";
         this.adaptToHeaderChangeLoop(1);
     }
 
@@ -200,18 +207,21 @@ export class BaseHeader extends Interaction {
     adjustPosition() {
         // When the url contains #aRandomSection, prevent the navbar to overlap
         // on the section, for this, we scroll as many px as the navbar height.
-        this.scrollingElement.scrollBy(0, - this.el.offsetHeight);
+        this.scrollingElement.scrollBy(0, -this.el.offsetHeight);
     }
 
     adjustScrollbar() {
-        compensateScrollbar(this.el, this.cssAffixed, false, 'right');
+        compensateScrollbar(this.el, this.cssAffixed, false, "right");
     }
 
     adjustMainPadding() {
         if (this.isOverlay) {
             return;
         }
-        this.mainEl.style.setProperty("padding-top", this.cssAffixed ? this.getHeaderHeight() + "px" : "");
+        this.mainEl.style.setProperty(
+            "padding-top",
+            this.cssAffixed ? this.getHeaderHeight() + "px" : ""
+        );
     }
 
     //--------------------------------------------------------------

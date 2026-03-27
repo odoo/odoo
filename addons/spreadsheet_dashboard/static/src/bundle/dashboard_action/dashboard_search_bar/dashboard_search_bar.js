@@ -23,7 +23,7 @@ export class DashboardSearchBar extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = { model: Object };
+    static props = { model: Object, toggler: Object };
 
     setup() {
         this.facets = [];
@@ -41,6 +41,7 @@ export class DashboardSearchBar extends Component {
             query: "",
             subItemsLimits: {},
         });
+        this.visibilityState = useState(this.props.toggler.state);
 
         this.items = useState([]);
         this.subItems = {};

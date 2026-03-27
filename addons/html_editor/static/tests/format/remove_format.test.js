@@ -7,6 +7,7 @@ import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
 import { unformat } from "../_helpers/format";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -551,24 +552,28 @@ test("should remove all the colors for the text separated by Shift+Enter when us
         contentAfter: `<div><h1>[ab<br>cd<br>ef]</h1></div>`,
     });
 });
-test("should remove all the colors for the text separated by Enter when using removeFormat button", async () => {
+test("should remove all the colors for the text separated by Enter when using removeFormat button (1)", async () => {
     await testEditor({
         contentBefore: `<div><h1><font style="background-color: red">[ab</font></h1><h1><font style="background-color: red">cd</font></h1><h1><font style="background-color: red">ef]</font></h1></div>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<div><h1>[ab</h1><h1>cd</h1><h1>ef]</h1></div>`,
     });
+});
+test("should remove all the colors for the text separated by Enter when using removeFormat button (2)", async () => {
     await testEditor({
         contentBefore: `<div><h1><font style="color: red">[ab</font></h1><h1><font style="color: red">cd</font></h1><h1><font style="color: red">ef]</font></h1></div>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<div><h1>[ab</h1><h1>cd</h1><h1>ef]</h1></div>`,
     });
 });
-test("should remove all the colors for the text separated by Enter with shortcut", async () => {
+test("should remove all the colors for the text separated by Enter with shortcut (1)", async () => {
     await testEditor({
         contentBefore: `<div><h1><font style="background-color: red">[ab</font></h1><h1><font style="background-color: red">cd</font></h1><h1><font style="background-color: red">ef]</font></h1></div>`,
         stepFunction: () => press(["control", "Space"]),
         contentAfter: `<div><h1>[ab</h1><h1>cd</h1><h1>ef]</h1></div>`,
     });
+});
+test("should remove all the colors for the text separated by Enter with shortcut (2)", async () => {
     await testEditor({
         contentBefore: `<div><h1><font style="color: red">[ab</font></h1><h1><font style="color: red">cd</font></h1><h1><font style="color: red">ef]</font></h1></div>`,
         stepFunction: () => press(["control", "Space"]),
@@ -739,12 +744,15 @@ test("should remove font-size style from multiple sized selected text", async ()
     });
 });
 
-test("should remove font size and color styles", async () => {
+test("should remove font size and color styles (1)", async () => {
     await testEditor({
         contentBefore: `<p><span class="display-1-fs"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<p>[abcdefg]</p>`,
     });
+});
+
+test("should remove font size and color styles (2)", async () => {
     await testEditor({
         contentBefore: `<p><span style="font-size: 10px;"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
@@ -817,6 +825,35 @@ test("should remove gradient color from span element", async () => {
             '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[ab]</span></p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<p>[ab]</p>",
+    });
+});
+
+test("should remove text color from empty element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]\u200b</p>`,
+    });
+});
+
+test("should remove text color from empty element in a single selected cell", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table o_selected_table"><tbody>
+                <tr><td class="o_selected_td"><p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p></td></tr>
+                <tr><td><p><br></p></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit: unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table"><tbody>
+                <tr><td class="o_selected_td"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]\u200b</p></td></tr>
+                <tr><td><p><br></p></td></tr>
+            </tbody></table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `),
     });
 });
 
@@ -972,7 +1009,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
         );
     });
 
@@ -982,7 +1019,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1006,6 +1043,7 @@ describe("Toolbar", () => {
         await removeFormatClick();
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr style="height: 100px;">
@@ -1018,6 +1056,7 @@ describe("Toolbar", () => {
                         </tr>
                     </tbody>
                 </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
     });
@@ -1065,17 +1104,21 @@ describe("list", () => {
 });
 
 describe("removeFormat must not remove non-style classes", () => {
-    test("does not remove non-color classes", async () => {
+    test("does not remove non-color classes (1)", async () => {
         await testEditor({
             contentBefore: '<p><font class="text-wrap">[test]</font></p>',
             stepFunction: (editor) => execCommand(editor, "removeFormat"),
             contentAfter: '<p><font class="text-wrap">[test]</font></p>',
         });
+    });
+    test("does not remove non-color classes (2)", async () => {
         await testEditor({
             contentBefore: '<p><font class="text-center">[test]</font></p>',
             stepFunction: (editor) => execCommand(editor, "removeFormat"),
             contentAfter: '<p><font class="text-center">[test]</font></p>',
         });
+    });
+    test("does not remove non-color classes (3)", async () => {
         await testEditor({
             contentBefore: '<p><font class="text-align">[test]</font></p>',
             stepFunction: (editor) => execCommand(editor, "removeFormat"),
@@ -1083,27 +1126,104 @@ describe("removeFormat must not remove non-style classes", () => {
         });
     });
 
-    test("removes all supported color classes", async () => {
-        const classes = [
-            "text-primary",
-            "text-secondary",
-            "text-success",
-            "text-danger",
-            "text-warning",
-            "text-info",
-            "text-light",
-            "text-muted",
-            "text-white",
-            "text-black",
-            "text-o-color-1",
-            "text-100",
-        ];
-        for (const cls of classes) {
+    const classes = [
+        "text-primary",
+        "text-secondary",
+        "text-success",
+        "text-danger",
+        "text-warning",
+        "text-info",
+        "text-light",
+        "text-muted",
+        "text-white",
+        "text-black",
+        "text-o-color-1",
+        "text-100",
+    ];
+    for (const cls of classes) {
+        test(`removes ${cls} color class`, async () => {
             await testEditor({
                 contentBefore: `<p><font class="${cls}">[test]</font></p>`,
                 stepFunction: (editor) => execCommand(editor, "removeFormat"),
                 contentAfter: "<p>[test]</p>",
             });
+        });
+    }
+});
+
+describe("Display classes", () => {
+    const tagDefaultClasses = {
+        h1: "h1",
+        h2: "h2",
+        h3: "h3",
+        h4: "h4",
+        h5: "h5",
+        h6: "h6",
+        p: "o_default_font_size",
+        div: "o_default_font_size",
+    };
+    for (const [tag, defaultClass] of Object.entries(tagDefaultClasses)) {
+        for (const fontClass of FONT_SIZE_CLASSES) {
+            test(`should remove style of display class (${fontClass}) from completely selected ${tag} element`, async () => {
+                await testEditor({
+                    contentBefore: `<${tag} class="${fontClass}">[abc]</${tag}>`,
+                    stepFunction: (editor) => execCommand(editor, "removeFormat"),
+                    contentAfter: `<${tag}>[abc]</${tag}>`,
+                });
+            });
+            test(`should remove style of display class (${fontClass}) from partially selected ${tag} element`, async () => {
+                await testEditor({
+                    contentBefore: `<${tag} class="${fontClass}">a[b]c</${tag}>`,
+                    stepFunction: (editor) => execCommand(editor, "removeFormat"),
+                    contentAfter: `<${tag} class="${fontClass}">a<span class="${defaultClass}">[b]</span>c</${tag}>`,
+                });
+            });
         }
+    }
+});
+
+describe("typography classes", () => {
+    test("remove format buttons should be disabled for style applied through typography classes", async () => {
+        await setupEditor(
+            unformat(`
+                <h1 class="display-1">[abc</h1>
+                <h2 class="display-2">def</h2>
+                <h3 class="display-3">ghi</h3>
+                <h4 class="display-4">jkl</h4>
+                <h5 class="lead">mno</h5>
+                <h6 class="h1">pqr</h6>
+                <p class="h2">stu</p>
+                <div class="h3">vwx]</div>
+            `)
+        );
+        await expandToolbar();
+        await expectElementCount(".o-we-toolbar", 1);
+        expect(".btn[name='remove_format']").toHaveCount(1); // remove format
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should be disabled
+    });
+    test("should not remove style if applied using typography classes", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <h1 class="display-1">[abc</h1>
+                <h2 class="display-2">def</h2>
+                <h3 class="display-3">ghi</h3>
+                <h4 class="display-4">jkl</h4>
+                <h5 class="lead">mno</h5>
+                <h6 class="h1">pqr</h6>
+                <p class="h2">stu</p>
+                <div class="h3">vwx]</div>
+            `),
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: unformat(`
+                <h1 class="display-1">[abc</h1>
+                <h2 class="display-2">def</h2>
+                <h3 class="display-3">ghi</h3>
+                <h4 class="display-4">jkl</h4>
+                <h5 class="lead">mno</h5>
+                <h6 class="h1">pqr</h6>
+                <p class="h2">stu</p>
+                <div class="h3">vwx]</div>
+            `),
+        });
     });
 });

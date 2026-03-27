@@ -74,7 +74,10 @@ class LinkTracker(models.Model):
     @api.depends('code')
     def _compute_short_url(self):
         for tracker in self:
-            tracker.short_url = tools.urls.urljoin(tracker.short_url_host or '', tracker.code or '')
+            try:
+                tracker.short_url = tools.urls.urljoin(tracker.short_url_host or '', tracker.code or '')
+            except ValueError:
+                raise UserError(self.env._("Please enter valid short URL code."))
 
     def _compute_short_url_host(self):
         for tracker in self:
@@ -118,7 +121,12 @@ class LinkTracker(models.Model):
                     attr = attr.name
                 if attr:
                     query[key] = attr
-            tracker.redirected_url = parsed.replace(query=urls.url_encode(query)).to_url()
+
+            query = urls.url_encode(query)
+            # '...' is detected as malicious by some nginx
+            # configuration, encoding it solve the issue
+            query = query.replace('...', '%2E%2E%2E')
+            tracker.redirected_url = parsed.replace(query=query).to_url()
 
     @api.model
     @api.depends('url')

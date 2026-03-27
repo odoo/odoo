@@ -35,6 +35,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'egy_account_400028',
                 'income_account_id': 'egy_account_500001',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'egy_account_132100',
             },
         }
 
@@ -55,5 +57,14 @@ class AccountChartTemplate(models.AbstractModel):
                 "type": "general",
                 "show_on_dashboard": True,
                 "sequence": 11,
+            },
+        }
+
+    @template('eg', 'account.account')
+    def _get_eg_account_account(self):
+        return {
+            'egy_account_132100': {
+                'account_stock_expense_id': 'egy_account_400080',
+                'account_stock_variation_id': 'egy_account_400036',
             },
         }

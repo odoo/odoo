@@ -2,7 +2,8 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { localization } from "@web/core/l10n/localization";
-import { isValidEmail } from "@point_of_sale/utils";
+import { useService } from "@web/core/utils/hooks";
+import { isValidPhone } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
@@ -10,6 +11,7 @@ export class PresetInfoPopup extends Component {
     static props = { callback: Function };
 
     setup() {
+        this.notification = useService("notification");
         this.selfOrder = useSelfOrder();
         this.state = useState({
             selectedSlot: null,
@@ -17,6 +19,7 @@ export class PresetInfoPopup extends Component {
             name: "",
             email: "",
             phone: "",
+            phoneError: "",
             street: "",
             countryId: this.selfOrder.config.company_id.country_id.id,
             stateId: this.selfOrder.config.company_id.country_id.state_ids[0]?.id || null,
@@ -30,10 +33,9 @@ export class PresetInfoPopup extends Component {
     }
 
     async setInformations() {
-        if (this.preset.needsPartner) {
-            const result = await rpc(`/pos-self-order/validate-partner`, {
+        if (this.preset.needsPartner || this.state.phone) {
+            const data = {
                 access_token: this.selfOrder.access_token,
-                partner_id: this.state.selectedPartnerId,
                 name: this.state.name,
                 email: this.state.email,
                 phone: this.state.phone,
@@ -42,7 +44,17 @@ export class PresetInfoPopup extends Component {
                 country_id: this.state.countryId,
                 state_id: this.state.stateId,
                 zip: this.state.zip,
+            };
+            const result = await rpc(`/pos-self-order/validate-partner`, {
+                access_token: this.selfOrder.access_token,
+                partner_id: this.state.selectedPartnerId,
+                ...data,
             });
+
+            // The endpoint doesn't return private informations
+            Object.assign(result["res.partner"][0], data);
+            this.selfOrder.data.synchronizeServerDataInIndexedDB(result);
+
             const partner = this.selfOrder.models.connectNewData(result);
             this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner["res.partner"][0].name}`;
             this.selfOrder.currentOrder.partner_id = partner["res.partner"][0];
@@ -103,24 +115,25 @@ export class PresetInfoPopup extends Component {
     }
 
     get validSelection() {
-        const partnerInfo =
-            this.state.name &&
-            this.state.phone &&
-            this.state.street &&
-            this.state.city &&
-            this.state.countryId &&
-            (this.state.stateId || !this.states.length) &&
-            this.state.zip;
-        return (
-            (!this.preset.needsSlot || DateTime.fromSQL(this.state.selectedSlot).isValid) &&
-            (!this.preset.needsName || this.state.name) &&
-            (!this.preset.needsEmail || isValidEmail(this.state.email)) &&
-            (!this.preset.needsPartner || partnerInfo)
-        );
+        return this.selfOrder.isValidSelection(this.state.selectedSlot, {
+            id: parseInt(this.state.selectedPartnerId),
+            name: this.state.name,
+            email: this.state.email,
+            phone: this.state.phone,
+            street: this.state.street,
+            city: this.state.city,
+            country_id: this.state.countryId,
+            state_id: this.state.stateId,
+            zip: this.state.zip,
+        });
     }
 
     formatDate(date) {
         const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
         return dateObj.toFormat(localization.dateFormat);
+    }
+
+    checkPhoneFormat() {
+        return !this.state.phone || isValidPhone(this.state.phone);
     }
 }

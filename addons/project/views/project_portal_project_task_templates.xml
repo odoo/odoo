@@ -164,13 +164,15 @@
         <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
             <attribute name="t-call">project.task_link_preview_portal_layout</attribute>
         </xpath>
-        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="title" t-value="task.name"/>
+        <xpath expr="//t[@t-call='project.task_link_preview_portal_layout']" position="before">
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
                     <t t-set="backend_url" t-value="'/odoo/action-project.action_view_my_task/%s' % (task.id)"/>
                 </t>
             </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="title" t-value="task.name"/>
 
             <div class="row o_project_portal_sidebar">
                 <t t-call="portal.portal_record_sidebar">

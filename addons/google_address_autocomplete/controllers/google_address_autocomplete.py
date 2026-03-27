@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from pprint import pformat
 
 import requests
 
-from odoo import http, _
+from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext
-
 
 _logger = logging.getLogger(__name__)
 
@@ -24,6 +24,7 @@ FIELDS_MAPPING = {
     'country': ['country'],
     'street_number': ['number'],
     'locality': ['city'],  # If locality exists, use it instead of the more general administrative area
+    'postal_town': ['city'],  # Used instead of locality in some countries
     'route': ['street'],
     'sublocality_level_1': ['street2'],
     'postal_code': ['zip'],
@@ -32,7 +33,7 @@ FIELDS_MAPPING = {
 }
 
 # If a google fields may correspond to multiple standard fields, the first occurrence in the list will overwrite following entries.
-FIELDS_PRIORITY = ['country', 'street_number', 'neighborhood', 'locality', 'route', 'postal_code',
+FIELDS_PRIORITY = ['country', 'street_number', 'locality', 'postal_town', 'route', 'postal_code',
                    'administrative_area_level_1', 'administrative_area_level_2']
 GOOGLE_PLACES_ENDPOINT = 'https://maps.googleapis.com/maps/api/place'
 TIMEOUT = 2.5
@@ -53,13 +54,30 @@ class AutoCompleteController(http.Controller):
                     country = request.env['res.country'].search([('code', '=', google_field['short_name'].upper())], limit=1)
                     standard_data[field_standard] = [country.id, country.name]
                 elif field_standard == 'state':
+                    if 'country' not in standard_data:
+                        _logger.warning(
+                            "Cannot assign state before country:\n%s", pformat(google_fields),
+                        )
+                        continue
                     state = request.env['res.country.state'].search(
-                        [('code', '=', google_field['short_name'].upper()),
-                         ('country_id', '=', standard_data['country'][0])])
+                        [
+                            ('country_id', '=', standard_data['country'][0]),
+                            '|',
+                            ('code', '=', google_field['short_name'].upper()),
+                            ('name', 'ilike', google_field['long_name']),
+                        ],
+                    )
                     if len(state) == 1:
                         standard_data[field_standard] = [state.id, state.name]
                 else:
                     standard_data[field_standard] = google_field['long_name']
+        city_name = standard_data.get('city')
+        country = standard_data.get('country')
+        country_id = country[0] if country else False
+        if city := self.env['res.partner']._get_res_city_by_name(city_name, country_id):
+            standard_data['city_id'] = [city.id, city.name]
+            if not standard_data.get('state') and city.state_id:  # Derive state from city if missing
+                standard_data['state'] = [city.state_id.id, city.state_id.name]
         return standard_data
 
     def _guess_number_from_input(self, source_input, standard_address):
@@ -148,9 +166,10 @@ class AutoCompleteController(http.Controller):
         except KeyError:
             return {'address': None}
 
-        # Keep only the first type from the list of types
+        # Keep only the first known type from the list of types
         for res in results:
-            res['type'] = res.pop('types')[0]
+            types = res.pop('types')
+            res['type'] = next(filter(FIELDS_MAPPING.get, types), types[0])
 
         # Sort the result by their priority.
         results.sort(key=lambda r: FIELDS_PRIORITY.index(r['type']) if r['type'] in FIELDS_PRIORITY else 100)

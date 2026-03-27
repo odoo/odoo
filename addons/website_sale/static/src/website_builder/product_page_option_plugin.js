@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
 import { ProductPageOption } from "./product_page_option";
 import { rpc } from "@web/core/network/rpc";
 import { isImageCorsProtected } from "@html_editor/utils/image";
@@ -9,18 +8,12 @@ import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/bu
 import { BuilderAction } from "@html_builder/core/builder_action";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
-export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
     static shared = ["forceCarouselRedraw"];
     resources = {
-        builder_options: {
-            OptionComponent: ProductPageOption,
-            selector: productPageSelector,
-            editableOnly: false,
-            title: _t("Product Page"),
-        },
+        builder_options: ProductPageOption,
         builder_actions: {
             ProductPageContainerWidthAction,
             ProductPageContainerOrderAction,
@@ -51,7 +44,7 @@ class ProductPageOptionPlugin extends Plugin {
                 el.textContent = el.getAttribute("placeholder");
             }
 
-            const mainEl = el.querySelector(productPageSelector);
+            const mainEl = el.querySelector(ProductPageOption.selector);
             if (!mainEl) {
                 return;
             }
@@ -80,13 +73,13 @@ class ProductPageOptionPlugin extends Plugin {
                 target_name: 'ProductsRibbonOption',
                 target_element: 'selector',
                 method: 'add',
-                value: productPageSelector,
+                value: ProductPageOption.selector,
             },
         ],
     };
 
     setup() {
-        const mainEl = this.document.querySelector(productPageSelector);
+        const mainEl = this.document.querySelector(ProductPageOption.selector);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
@@ -191,7 +184,7 @@ export class BaseProductPageAction extends BuilderAction {
     static id = "baseProductPage";
     setup() {
         this.reload = {};
-        const mainEl = this.document.querySelector(productPageSelector);
+        const mainEl = this.document.querySelector(ProductPageOption.selector);
         if (mainEl) {
             const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
             const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
@@ -246,7 +239,7 @@ export class BaseProductPageAction extends BuilderAction {
         imgEl.src = imageEl.src;
         await new Promise((resolve) => imgEl.addEventListener("load", resolve));
         const originalSize = Math.max(imgEl.width, imgEl.height);
-        const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
+        const smallerSizes = [1920, 1024, 512, 256, 128].filter((size) => size < originalSize);
         const extension = attachment.name.match(/\.(jpe?|pn)g$/i)?.[0] ?? ".jpeg";
         const webpName = attachment.name.replace(extension, ".webp");
         const format = extension.substr(1).toLowerCase().replace(/^jpg$/, "jpeg");
@@ -276,7 +269,7 @@ export class BaseProductPageAction extends BuilderAction {
                     {
                         name: webpName,
                         description: size === originalSize ? "" : `resize: ${size}`,
-                        datas: canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                        datas: canvas.toDataURL("image/webp").split(",")[1],
                         res_id: referenceId,
                         res_model: "ir.attachment",
                         mimetype: "image/webp",
@@ -295,7 +288,7 @@ export class BaseProductPageAction extends BuilderAction {
                     {
                         name: attachment.name,
                         description: `format: ${format}`,
-                        datas: canvas.toDataURL(mimetype, 0.75).split(",")[1],
+                        datas: canvas.toDataURL(mimetype).split(",")[1],
                         res_id: resizedId,
                         res_model: "ir.attachment",
                         mimetype: mimetype,
@@ -324,32 +317,62 @@ export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
 }
 export class ProductReplaceMainImageAction extends BaseProductPageAction {
     static id = "productReplaceMainImage";
-    static dependencies = [...super.dependencies, "media_website"];
+    static dependencies = [...super.dependencies, "media", "media_website"];
     setup() {
         super.setup();
         this.reload = false;
+        this.canTimeout = false;
     }
     apply({ editingElement: productDetailMainEl }) {
         // Emulate click on the main image of the carousel.
         const image = productDetailMainEl.querySelector(
             `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
         );
-        this.dependencies.media_website.replaceMedia(image);
+        this.dependencies.media.openMediaDialog({
+            multiImages: false,
+            visibleTabs: ["IMAGES"],
+            node: productDetailMainEl,
+            save: (imgEl, selectedMedia) => {
+                const attachment = selectedMedia[0];
+                if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
+                    image.src = attachment.image_src;
+                    return;
+                }
+                const originalSize = Math.max(imgEl.width, imgEl.height);
+                const ratio = Math.min(originalSize, 1920) / originalSize;
+                const canvas = document.createElement("canvas");
+                canvas.width = parseInt(imgEl.width * ratio);
+                canvas.height = parseInt(imgEl.height * ratio);
+                const ctx = canvas.getContext("2d")
+                ctx.fillStyle = "transparent";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(imgEl, 0, 0);
+                image.src = canvas.toDataURL("image/webp");
+                const { model, productProductID: productID, productTemplateID: templateID } = this;
+                const resID = parseInt(model === "product.product" ? productID : templateID);
+                this.services.orm.write(model, [resID], {
+                    image_1920: image.src.split(",")[1],
+                });
+            },
+        });
     }
 }
 
 export class ProductAddExtraImageAction extends BaseProductPageAction {
     static id = "productAddExtraImage";
     static dependencies = [...super.dependencies, "media"];
-    async apply({ editingElement: el }) {
-        // Prompts the user for images, then saves the new images.
+    setup() {
+        super.setup();
+        this.canTimeout = false;
+    }
+    async load({ editingElement: el }) {
         if (this.model === "product.template") {
             this.services.notification.add(
                 'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants',
                 { type: "info" }
             );
         }
-        await new Promise((resolve) => {
+        return new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
                 addFieldImage: true,
                 multiImages: true,
@@ -358,14 +381,20 @@ export class ProductAddExtraImageAction extends BaseProductPageAction {
                 // Kinda hack-ish but the regular save does not get the information we need
                 save: async (imgEls, selectedMedia, activeTab) => {
                     if (selectedMedia.length) {
-                        const type =
-                            activeTab === TABS["IMAGES"].id ? "image" : "video";
-                        await this.extraMediaSave(el, type, selectedMedia, imgEls);
+                        const type = activeTab === TABS["IMAGES"].id ? "image" : "video";
+                        resolve({ imgEls, selectedMedia, type });
                     }
                 },
             });
             onClose.then(resolve);
         });
+    }
+    async apply({ editingElement: el, loadResult }) {
+        if (!loadResult) {
+            return BuilderAction.cancelReload;
+        }
+        const { imgEls, selectedMedia, type } = loadResult;
+        await this.extraMediaSave(el, type, selectedMedia, imgEls);
     }
 }
 export class ProductRemoveAllExtraImagesAction extends BaseProductPageAction {

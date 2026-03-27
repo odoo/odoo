@@ -22,7 +22,7 @@ from lxml import etree
 from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools, _
-from odoo.exceptions import UserError, AccessError, RedirectWarning
+from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
 from odoo.fields import Domain
 from odoo.service import security
 from odoo.http import request, root
@@ -80,6 +80,7 @@ class WkhtmlInfo(typing.NamedTuple):
     dpi_zoom_ratio: bool
     bin: str
     version: str
+    is_patched_qt: bool
     wkhtmltoimage_bin: str
     wkhtmltoimage_version: tuple[str, ...] | None
 
@@ -89,6 +90,7 @@ def _wkhtml() -> WkhtmlInfo:
     state = 'install'
     bin_path = 'wkhtmltopdf'
     version = ''
+    is_patched_qt = False
     dpi_zoom_ratio = False
     try:
         bin_path = find_in_path('wkhtmltopdf')
@@ -101,6 +103,8 @@ def _wkhtml() -> WkhtmlInfo:
         _logger.info('Will use the Wkhtmltopdf binary at %s', bin_path)
         out, _err = process.communicate()
         version = out.decode('ascii')
+        if '(with patched qt)' in version:
+            is_patched_qt = True
         match = re.search(r'([0-9.]+)', version)
         if match:
             version = match.group(0)
@@ -144,6 +148,7 @@ def _wkhtml() -> WkhtmlInfo:
         dpi_zoom_ratio=dpi_zoom_ratio,
         bin=bin_path,
         version=version,
+        is_patched_qt=is_patched_qt,
         wkhtmltoimage_bin=image_bin_path,
         wkhtmltoimage_version=wkhtmltoimage_version,
     )
@@ -327,7 +332,7 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
                 command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
+            if specific_paperformat_args and 'data-report-margin-top' in specific_paperformat_args:
                 command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
             else:
                 command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
@@ -346,14 +351,14 @@ class IrActionsReport(models.Model):
                 if _wkhtml().dpi_zoom_ratio:
                     command_args.extend(['--zoom', str(96.0 / dpi)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
+            if specific_paperformat_args and 'data-report-header-spacing' in specific_paperformat_args:
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
             elif paperformat_id.header_spacing:
                 command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
             command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-bottom'):
+            if specific_paperformat_args and 'data-report-margin-bottom' in specific_paperformat_args:
                 command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
             else:
                 command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
@@ -457,15 +462,15 @@ class IrActionsReport(models.Model):
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
-    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg"):
+    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg") -> list[bytes | None]:
         """
-        :bodies str: valid html documents as strings
-        :param width int: width in pixels
-        :param height int: height in pixels
-        :param image_format union['jpg', 'png']: format of the image
-        :return list[bytes|None]:
+        :param str bodies: valid html documents as strings
+        :param int width: width in pixels
+        :param int height: height in pixels
+        :param image_format: format of the image
+        :type image_format: typing.Literal['jpg', 'png']
         """
-        if (modules.module.current_test or tools.config['test_enable']) and not self.env.context.get('force_image_rendering'):
+        if modules.module.current_test:
             return [None] * len(bodies)
         wkhtmltoimage_version = _wkhtml().wkhtmltoimage_version
         if not wkhtmltoimage_version or wkhtmltoimage_version < parse_version('0.12.0'):
@@ -572,15 +577,15 @@ class IrActionsReport(models.Model):
 
             if header:
                 head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
+                stack.callback(delete_file, head_file_path)
                 with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
                     head_file.write(header.encode())
-                stack.callback(delete_file, head_file_path)
                 files_command_args.extend(['--header-html', head_file_path])
             if footer:
                 foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
+                stack.callback(delete_file, foot_file_path)
                 with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
                     foot_file.write(footer.encode())
-                stack.callback(delete_file, foot_file_path)
                 files_command_args.extend(['--footer-html', foot_file_path])
 
             paths = []
@@ -588,6 +593,7 @@ class IrActionsReport(models.Model):
             for body_idx, body in enumerate(bodies):
                 prefix = f'report.body.tmp.{body_idx}.'
                 body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
+                stack.callback(delete_file, body_file_path)
                 with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
                     # HACK: wkhtmltopdf doesn't like big table at all and the
                     #       processing time become exponential with the number
@@ -603,11 +609,10 @@ class IrActionsReport(models.Model):
                         _split_table(tree, 500)
                         body_file.write(lxml.html.tostring(tree))
                 paths.append(body_file_path)
-                stack.callback(delete_file, body_file_path)
 
             pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
-            os.close(pdf_report_fd)
             stack.callback(delete_file, pdf_report_path)
+            os.close(pdf_report_fd)
 
             process = _run_wkhtmltopdf(command_args + files_command_args + paths + [pdf_report_path])
             err = process.stderr
@@ -617,8 +622,7 @@ class IrActionsReport(models.Model):
                     pass
                 case 1:
                     if body_idx:
-                        wk_version = _wkhtml().version
-                        if '(with patched qt)' not in wk_version:
+                        if not _wkhtml().is_patched_qt:
                             if modules.module.current_test:
                                 raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
                             raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
@@ -788,17 +792,23 @@ class IrActionsReport(models.Model):
         raise UserError(_("Odoo is unable to merge the generated PDFs."))
 
     @api.model
-    def _merge_pdfs(self, streams, handle_error=_handle_merge_pdfs_error):
+    def _merge_pdfs(self, streams, handle_error=None):
         writer = PdfFileWriter()
         for stream in streams:
             try:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError) as e:
-                handle_error(error=e, error_stream=stream)
+                if handle_error is None:
+                    self._handle_merge_pdfs_error(error=e, error_stream=stream)
+                else:
+                    handle_error(error=e, error_stream=stream)
         result_stream = io.BytesIO()
         streams.append(result_stream)
-        writer.write(result_stream)
+        try:
+            writer.write(result_stream)
+        except PdfReadError:
+            raise UserError(_("Odoo is unable to merge the generated PDFs."))
         return result_stream
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
@@ -959,11 +969,11 @@ class IrActionsReport(models.Model):
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream
-                    return collected_streams
                 else:
                     for res_id in res_ids_wo_stream:
                         individual_collected_stream = self._render_qweb_pdf_prepare_streams(report_ref=report_ref, data=data, res_ids=[res_id])
                         collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
+                return collected_streams
             collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams
@@ -1198,28 +1208,10 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _prepare_local_attachments(self, attachments):
-        attachments_with_data = self.env['ir.attachment']
         for attachment in attachments:
-            if not attachment._is_remote_source():
-                attachments_with_data |= attachment
-            elif (stream := attachment._to_http_stream()) and stream.url:
-                # call `_to_http_stream()` in case the attachment is an url or cloud storage attachment
+            if attachment._is_remote_source():
                 try:
-                    response = requests.get(stream.url, timeout=10)
-                    response.raise_for_status()
-                    attachment_data = response.content
-                    if not attachment_data:
-                        _logger.warning("Attachment %s at with URL %s retrieved successfully, but no content was found.", attachment.id, attachment.url)
-                        continue
-                    attachments_with_data |= self.env['ir.attachment'].new({
-                        'db_datas': attachment_data,
-                        'name': attachment.name,
-                        'mimetype': attachment.mimetype,
-                        'res_model': attachment.res_model,
-                        'res_id': attachment.res_id
-                    })
-                except requests.exceptions.RequestException as e:
-                    _logger.error("Request for attachment %s with URL %s failed: %s", attachment.id, attachment.url, e)
-            else:
-                _logger.error("Unexpected edge case: Is not being considered as a local or remote attachment, attachment ID:%s will be skipped.", attachment.id)
-        return attachments_with_data
+                    attachment._migrate_remote_to_local()
+                except (ValidationError, requests.exceptions.RequestException) as e:
+                    _logger.error("Failed to migrate attachment %s to local: %s", attachment.id, e)
+        return attachments.filtered(lambda a: not a._is_remote_source())

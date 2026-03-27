@@ -5,15 +5,9 @@ import { FooterCopyrightOption } from "@website/builder/plugins/options/footer_c
 class FooterCopyrightOptionPlugin extends Plugin {
     static id = "footerCopyrightOption";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            {
-                OptionComponent: FooterCopyrightOption,
-                selector: ".o_footer_copyright",
-                editableOnly: false,
-                groups: ["website.group_website_designer"],
-            },
-        ],
+        builder_options: [FooterCopyrightOption],
     };
 }
 

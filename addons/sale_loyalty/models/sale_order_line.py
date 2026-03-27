@@ -23,6 +23,10 @@ class SaleOrderLine(models.Model):
         reward = self.filtered('reward_id')
         super(SaleOrderLine, self - reward)._compute_name()
 
+    def _compute_discount(self):
+        rewards = self.filtered('reward_id')
+        return super(SaleOrderLine, self - rewards)._compute_discount()
+
     @api.depends('reward_id')
     def _compute_is_reward_line(self):
         for line in self:
@@ -65,6 +69,7 @@ class SaleOrderLine(models.Model):
         vals = {
             'points_cost': 0,
             'price_unit': 0,
+            'technical_price_unit': 0,
         }
         if complete:
             vals.update({
@@ -87,13 +92,16 @@ class SaleOrderLine(models.Model):
     def write(self, vals):
         cost_in_vals = 'points_cost' in vals
         if cost_in_vals:
-            previous_cost = {l: l.points_cost for l in self}
+            previous_vals = {line: (line.points_cost, line.coupon_id) for line in self}
         res = super().write(vals)
         if cost_in_vals:
             # Update our coupon points if the order is in a confirmed state
-            for line in self:
-                if previous_cost[line] != line.points_cost and line.state == 'sale':
-                    line.coupon_id.points += (previous_cost[line] - line.points_cost)
+            for line, (previous_cost, previous_coupon) in previous_vals.items():
+                if line.state != 'sale':
+                    continue
+                if line.points_cost != previous_cost or line.coupon_id != previous_coupon:
+                    previous_coupon.points += previous_cost
+                    line.coupon_id.points -= line.points_cost
         return res
 
     def unlink(self):

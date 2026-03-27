@@ -19,6 +19,20 @@ import { reactive } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+/**
+ * @typedef { Object } ThemeTabShared
+ * @property { ThemeTabPlugin['buildGray'] } buildGray
+ * @property { ThemeTabPlugin['getGrays'] } getGrays
+ * @property { ThemeTabPlugin['getGrayParams'] } getGrayParams
+ * @property { ThemeTabPlugin['setGrays'] } setGrays
+ * @property { ThemeTabPlugin['setGrayParams'] } setGrayParams
+ */
+
+/**
+ * @typedef {import("@html_builder/core/builder_options_plugin").BuilderOptionContainer[]} theme_options
+ */
 
 export const GRAY_PARAMS = {
     EXTRA_SATURATION: "gray-extra-saturation",
@@ -42,6 +56,7 @@ export class ThemeTabPlugin extends Plugin {
     grayParams = {};
     grays = reactive({});
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             CustomizeGrayAction,
@@ -53,54 +68,59 @@ export class ThemeTabPlugin extends Plugin {
         theme_options: [
             withSequence(
                 OPTION_POSITIONS.COLORS,
-                this.getThemeOptionBlock("theme-colors", _t("Colors"), {
-                    OptionComponent: ThemeColorsOption,
-                })
+                this.getThemeOptionBlock("theme-colors", _t("Colors"), ThemeColorsOption)
             ),
             withSequence(
                 OPTION_POSITIONS.SETTINGS,
-                this.getThemeOptionBlock("website-settings", _t("Website"), {
-                    template: "website.ThemeWebsiteSettingsOption",
-                })
+                this.getThemeOptionBlock(
+                    "website-settings",
+                    _t("Website"),
+                    class ThemeWebsiteSettingsOption extends BaseOptionComponent {
+                        static template = "website.ThemeWebsiteSettingsOption";
+                    }
+                )
             ),
             withSequence(
                 OPTION_POSITIONS.PARAGRAPH,
-                this.getThemeOptionBlock("theme-paragraph", _t("Paragraph"), {
-                    template: "website.ThemeParagraphOption",
-                })
+                this.getThemeOptionBlock(
+                    "theme-paragraph",
+                    _t("Paragraph"),
+                    class ThemeParagraphOption extends BaseOptionComponent {
+                        static template = "website.ThemeParagraphOption";
+                    }
+                )
             ),
             withSequence(
                 OPTION_POSITIONS.HEADINGS,
-                this.getThemeOptionBlock("theme-headings", _t("Headings"), {
-                    OptionComponent: ThemeHeadingsOption,
-                })
+                this.getThemeOptionBlock("theme-headings", _t("Headings"), ThemeHeadingsOption)
             ),
             withSequence(
                 OPTION_POSITIONS.BUTTON,
-                this.getThemeOptionBlock("theme-button", _t("Button"), {
-                    OptionComponent: ThemeButtonOption,
-                })
+                this.getThemeOptionBlock("theme-button", _t("Button"), ThemeButtonOption)
             ),
             withSequence(
                 OPTION_POSITIONS.LINK,
-                this.getThemeOptionBlock("theme-link", _t("Link"), {
-                    template: "website.ThemeLinkOption",
-                })
+                this.getThemeOptionBlock(
+                    "theme-link",
+                    _t("Link"),
+                    class ThemeLinkOption extends BaseOptionComponent {
+                        static template = "website.ThemeLinkOption";
+                    }
+                )
             ),
             withSequence(
                 OPTION_POSITIONS.INPUT,
-                this.getThemeOptionBlock("theme-input", _t("Input Fields"), {
-                    template: "website.ThemeInputOption",
-                })
+                this.getThemeOptionBlock(
+                    "theme-input",
+                    _t("Input Fields"),
+                    class ThemeInputOption extends BaseOptionComponent {
+                        static template = "website.ThemeInputOption";
+                    }
+                )
             ),
             withSequence(
                 OPTION_POSITIONS.ADVANCED,
-                this.getThemeOptionBlock("theme-advanced", _t("Advanced"), {
-                    OptionComponent: ThemeAdvancedOption,
-                    props: {
-                        grays: this.grays,
-                    },
-                })
+                this.getThemeOptionBlock("theme-advanced", _t("Advanced"), ThemeAdvancedOption)
             ),
         ],
     };
@@ -261,6 +281,7 @@ export class CustomizeGrayAction extends BuilderAction {
                 colorType: "gray",
             }
         );
+        setBuilderCSSVariables(getHtmlStyle(this.document));
     }
 }
 export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
@@ -297,6 +318,9 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
 
 export class EditCustomCodeAction extends BuilderAction {
     static id = "editCustomCode";
+    setup() {
+        this.canTimeout = false;
+    }
     apply() {
         this.services.dialog.add(EditHeadBodyDialog);
     }
@@ -305,6 +329,9 @@ export class EditCustomCodeAction extends BuilderAction {
 export class ConfigureApiKeyAction extends BuilderAction {
     static id = "configureApiKey";
     static dependencies = ["googleMapsOption"];
+    setup() {
+        this.canTimeout = false;
+    }
     apply() {
         this.dependencies.googleMapsOption.configureGMapsAPI("", true);
     }

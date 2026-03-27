@@ -26,6 +26,7 @@ function isGridItem(el) {
 export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
     static dependencies = ["selection", "builderOptions"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),

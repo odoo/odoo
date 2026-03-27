@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
+    revertPreview,
     useBuilderComponent,
     useDependencyDefinition,
     useDomState,
@@ -23,6 +24,7 @@ export class BuilderMany2One extends Component {
         allowUnselect: { type: Boolean, optional: true },
         defaultMessage: { type: String, optional: true },
         createAction: { type: String, optional: true },
+        nullText: { type: String, optional: true },
     };
     static defaultProps = {
         ...BuilderComponent.defaultProps,
@@ -50,16 +52,22 @@ export class BuilderMany2One extends Component {
             const selectedString = getValue(el);
             const selected = selectedString && JSON.parse(selectedString);
             if (selected && !("display_name" in selected && "name" in selected)) {
-                Object.assign(
-                    selected,
-                    (
+                let value;
+                if (!selected.id) {
+                    value = {
+                        display_name: this.props.nullText,
+                        name: this.props.nullText,
+                    };
+                } else {
+                    value = (
                         await this.cachedModel.ormRead(
                             this.props.model,
                             [selected.id],
                             ["display_name", "name"]
                         )
-                    )[0]
-                );
+                    )[0];
+                }
+                Object.assign(selected, value);
             }
 
             return { selected };
@@ -120,9 +128,7 @@ export class BuilderMany2One extends Component {
         });
     }
     revert() {
-        // The `next` will cancel the previous operation, which will revert
-        // the operation in case of a preview.
-        this.env.editor.shared.operation.next();
+        revertPreview(this.env.editor);
     }
     create(name) {
         const args = { editingElement: this.env.getEditingElement(), value: name };

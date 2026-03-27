@@ -27,7 +27,7 @@
                                         <div class="cash-move-amount fw-bolder"><t t-esc="getAmount(cm)"></t></div>
                                     </td>
                                     
-                                    <td class="text-end delete-row">
+                                    <td class="text-end delete-row" t-if="hasCashDeletePerm">
                                         <button t-on-click.stop="callbacks[cm.id].call" class="btn btn-link btn-lg text-danger">
                                             <i t-if="callbacks[cm.id].status != 'loading'" class="fa fa-trash" aria-hidden="true"/>
                                             <i t-else="" class="fa fa-spin fa-circle-o-notch" aria-hidden="true" />

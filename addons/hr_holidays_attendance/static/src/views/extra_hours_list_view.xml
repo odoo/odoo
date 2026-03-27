@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_attendance.ExtraHoursSummary">
+        <div t-if="this.shouldDisplay" class="px-3 py-2 alert alert-info">
+            <div style="max-width: 270px">
+                <p class="fw-bold text-decoration-underline">Balance</p>
+                <div class="d-flex justify-content-between">
+                    <span>Total Extra Hours Worked:</span>
+                    <span><t t-out="this.state.totalExtraHours"/></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Total Compensable Extra Hours:</span>
+                    <span><t t-out="this.state.compensableExtraHours"/></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Time Off Taken from Extra Hours:</span>
+                    <span><t t-out="this.state.totalOvertimeAdjustment"/></span>
+                </div>
+            </div>
+            <hr/>
+            <div style="max-width: 270px">
+                <div class="d-flex justify-content-between">
+                    <span>Remaining Extra Hours:</span>
+                    <span><t t-out="this.state.remainingExtraHours"/></span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="hr_attendance.ExtraHoursListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <ExtraHoursSummary/>
+        </xpath>
+    </t>
+</odoo>

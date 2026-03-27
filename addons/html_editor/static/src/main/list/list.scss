@@ -1,13 +1,12 @@
-li p {
-    margin-bottom: 0px;
-}
+[contenteditable="true"] {
+    li p {
+        margin-bottom: 0;
+    }
 
-.o_default_color {
-    color: $body-color;
-}
-
-.o_default_font_size {
-    font-size: $font-size-base;
+    // Invalidate `--heading-color` when under colored element in editable
+    :where([style*="color:"]) {
+        --heading-color: none;
+    }
 }
 
 // Checklist
@@ -15,7 +14,6 @@ ul.o_checklist {
     > li {
         list-style: none;
         position: relative;
-        margin-left: 20px;
 
         &:not(.oe-nested):before {
             content: '';

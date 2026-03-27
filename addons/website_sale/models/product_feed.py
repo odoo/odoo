@@ -223,11 +223,7 @@ class ProductFeed(models.Model):
         }
 
     def _get_feed_product_domain(self):
-        product_domain = Domain.AND([
-            Domain('is_published', '=', True),
-            Domain('type', 'in', ('consu', 'combo')),
-            self.website_id.website_domain(),
-        ])
+        product_domain = self.website_id._get_basic_feed_product_domain()
         if self.product_category_ids:
             product_domain &= Domain('public_categ_ids', 'child_of', self.product_category_ids.ids)
 

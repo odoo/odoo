@@ -71,6 +71,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         cls.tax0_no_sujeto_loc = ChartTemplate.ref('account_tax_template_s_iva_ns')
         cls.tax0_isp = ChartTemplate.ref('account_tax_template_s_iva0_isp')
         cls.tax0_exento = ChartTemplate.ref('account_tax_template_s_iva0')
+        cls.tax0_exento_export = ChartTemplate.ref('account_tax_template_s_iva0_g_e')
         # We create a 'no_sujeto' tax since there is currently no such tax in the standard chart
         cls.tax0_no_sujeto = cls.tax0_no_sujeto_loc.copy()
         cls.tax0_no_sujeto.l10n_es_type = 'no_sujeto'
@@ -94,7 +95,8 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
     def _json_file_to_dict(self, json_file):
         json_string = self._read_file(json_file, 'rb')
-        return json.loads(json_string)
+        res = json.loads(json_string)
+        return self.replace_ignore(res)
 
     def _mock_response(self, status_code, response_file, content_type='text/xml;charset=UTF-8'):
         response = mock.Mock(spec=requests.Response)
@@ -121,9 +123,11 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
         return mock.patch(request_function_path, mocked_get_zeep_operation)
 
-    def _mock_zeep_registration_operation(self, response_file_json):
+    def _mock_zeep_registration_operation(self, response_file_json, name=""):
         # Note: The real result is of type 'odoo.tools.zeep.client.SerialProxy'; here it is a dict
         zeep_response_dict = json.loads(self._read_file(response_file_json))
+        if name:
+            zeep_response_dict['RespuestaLinea'][0]['IDFactura']['NumSerieFactura'] = name
         return self._mock_get_zeep_operation(registration_return_value=lambda *args, **kwargs: zeep_response_dict)
 
     def _mock_zeep_registration_operation_certificate_issue(self):
@@ -191,3 +195,16 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         invoice.action_post()
 
         return invoice
+
+    def _mock_zeep_registration_operation_single_accept_no_wait(self):
+        # Note: The real result is of type 'odoo.tools.zeep.client.SerialProxy'; here it is a dict
+        zeep_response_dict = json.loads(self._read_file('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'))
+        self.env.company.sudo().l10n_es_edi_verifactu_next_batch_time = False  # to not get blocked by the wait time
+
+        def _mock_register_accept(*args, **kwargs):
+            document_id_factura = args[1][0]['RegistroAlta']['IDFactura']
+            response_id_factura = zeep_response_dict['RespuestaLinea'][0]['IDFactura']
+            response_id_factura.update(document_id_factura)
+            return zeep_response_dict
+
+        return self._mock_get_zeep_operation(registration_return_value=_mock_register_accept)

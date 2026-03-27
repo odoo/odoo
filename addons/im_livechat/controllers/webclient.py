@@ -21,6 +21,13 @@ class WebClient(WebclientController):
         super()._process_request_for_internal_user(store, name, params)
         if name == "im_livechat.channel":
             store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
+        if name == "/im_livechat/looking_for_help":
+            chats_looking_for_help = request.env["discuss.channel"].search(
+                [("livechat_status", "=", "need_help")], order="id ASC", limit=100
+            )
+            request.update_context(
+                channels=request.env.context["channels"] | chats_looking_for_help
+            )
         if name == "/im_livechat/session/data":
             channel_id = params.get("channel_id")
             if not channel_id:
@@ -30,6 +37,8 @@ class WebClient(WebclientController):
                 return
             fields_to_store = channel._get_livechat_session_fields_to_store()
             store.add(channel, fields=fields_to_store)
+        if name == "/im_livechat/fetch_self_expertise":
+            store.add(request.env.user, Store.Many("livechat_expertise_ids", ["name"]))
 
     @classmethod
     def _process_request_for_all(self, store: Store, name, params):

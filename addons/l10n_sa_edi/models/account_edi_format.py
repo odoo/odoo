@@ -280,10 +280,10 @@ class AccountEdiFormat(models.Model):
                 or not partner_id.l10n_sa_edi_additional_identification_number
             )
         ):
-            missing.append(_("""
-                Please set the Identification Scheme as National ID and Identification Number as the respective
-                number on the Customer, as the Tax Exemption Reason is set either as VATEX-SA-HEA or VATEX-SA-EDU
-            """))
+            missing.append(_(
+                "Please set the Identification Scheme as National ID and Identification Number as the respective "
+                "number on the Customer as the Tax Exemption Reason is set either as VATEX-SA-HEA or VATEX-SA-EDU"
+            ))
         if identification_scheme == 'TIN' and not partner_id.vat:
             missing.append(_("Please set the VAT Number as the Identification Scheme is Tax Identification Number"))
         return missing
@@ -386,7 +386,7 @@ class AccountEdiFormat(models.Model):
         company = invoice.company_id
 
         errors = super()._check_move_configuration(invoice)
-        if self.code != 'sa_zatca' or company.country_id.code != 'SA':
+        if self.code != 'sa_zatca' or company.country_id and company.country_id.code != 'SA':
             return errors
 
         if invoice.commercial_partner_id == invoice.company_id.partner_id.commercial_partner_id:
@@ -424,7 +424,7 @@ class AccountEdiFormat(models.Model):
                 )
             )
         if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
-            errors.append(_("- Please set the Invoice Date to be either less than or equal to today."))
+            errors.append(_("- Please set the Invoice Date to be either less than or equal to today as per the Asia/Riyadh time zone, since ZATCA does not allow future-dated invoicing."))
 
         if invoice.l10n_sa_show_reason and not invoice.l10n_sa_reason:
             errors.append(_("- Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit Note is specified."))
@@ -498,4 +498,6 @@ class AccountEdiFormat(models.Model):
                     'date': fields.Date.context_today(self),
                 },
             )
+            if "<pdfaid:conformance>B</pdfaid:conformance>" in content:
+                content.replace("<pdfaid:conformance>B</pdfaid:conformance>", "<pdfaid:conformance>A</pdfaid:conformance>")
             pdf_writer.add_file_metadata(content.encode())

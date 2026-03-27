@@ -7,19 +7,12 @@ patch(TicketScreen.prototype, {
     async onDoRefund() {
         await super.onDoRefund(...arguments);
         const order = this.getSelectedOrder();
-        const discountLine = order.getDiscountLine();
+        const discountLines = order.discountLines;
         const destinationOrder = this.pos.getOrder();
 
-        if (discountLine && destinationOrder && !destinationOrder.getDiscountLine()) {
-            const globalDiscount = -discountLine.price_subtotal_incl;
-            this.pos.models["pos.order.line"].create({
-                qty: 1,
-                price_unit:
-                    (globalDiscount * destinationOrder.taxTotals.total_amount) /
-                        (order.amount_total + globalDiscount) || 1,
-                product_id: this.pos.config.discount_product_id,
-                order_id: destinationOrder,
-            });
+        if (discountLines?.length && destinationOrder) {
+            const percentage = order.globalDiscountPc;
+            this.pos.applyDiscount(percentage, destinationOrder);
         }
     },
 

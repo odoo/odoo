@@ -24,14 +24,23 @@ class HrEmployee(models.Model):
 
     @api.model
     def _load_pos_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
+        # NOTE:
+        # hr.employee have a public fallback mechanism
+        # where users without read access may still receive records from
+        # the corresponding public model (hr.employee.public) so thats why we are bypassing
+        # the access right.
+        fields = self._load_pos_data_fields(config)
+        read_records = records.read(fields, load=False)
         manager_ids = records.filtered(lambda emp: config.group_pos_manager_id.id in emp.user_id.all_group_ids.ids).ids
 
         employees_barcode_pin = records.get_barcodes_and_pin_hashed()
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
 
         for employee in read_records:
-            if employee['id'] in manager_ids or employee['id'] in config.advanced_employee_ids.ids:
+            if employee['id'] in manager_ids:
+                role = 'manager'
+                employee['_user_role'] = 'admin'
+            elif employee['id'] in config.advanced_employee_ids.ids:
                 role = 'manager'
             elif employee['id'] in config.minimal_employee_ids.ids:
                 role = 'minimal'

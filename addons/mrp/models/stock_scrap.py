@@ -66,12 +66,20 @@ class StockScrap(models.Model):
             else:
                 return super()._onchange_serial_number()
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_is_kit:
+            self.bom_id = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id, bom_type='phantom')[self.product_id]
+        else:
+            self.bom_id = False
+
     @api.depends('move_ids', 'move_ids.move_line_ids.quantity', 'product_id')
     def _compute_scrap_qty(self):
         self.scrap_qty = 1
         for scrap in self:
             if not scrap.bom_id:
-                return super(StockScrap, scrap)._compute_scrap_qty()
+                super(StockScrap, scrap)._compute_scrap_qty()
+                continue
             if scrap.move_ids:
                 filters = {
                     'incoming_moves': lambda m: True,
@@ -81,6 +89,12 @@ class StockScrap(models.Model):
 
     def _should_check_available_qty(self):
         return super()._should_check_available_qty() or self.product_is_kit
+
+    def _create_scrap_move(self):
+        move = super()._create_scrap_move()
+        if self.product_id.is_kits:
+            move = move.with_context(is_scrap=True).action_explode()
+        return move
 
     def do_replenish(self, values=False):
         self.ensure_one()

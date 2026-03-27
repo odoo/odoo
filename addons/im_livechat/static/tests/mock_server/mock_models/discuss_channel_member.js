@@ -26,6 +26,7 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                     "active",
                     "avatar_128",
                     "country_id",
+                    "im_status",
                     "is_public",
                     "user_livechat_username",
                 ];
@@ -47,5 +48,8 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                 livechat_member_type: member.livechat_member_type,
             });
         }
+    }
+    get _to_store_defaults() {
+        return super._to_store_defaults.concat(["livechat_member_type"]);
     }
 }

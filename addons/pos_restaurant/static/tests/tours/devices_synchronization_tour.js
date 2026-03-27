@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             DeviceSynchronization.changeLineQuantity("Water", 44),
             ProductScreen.checkTotalAmount(99.0),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             Chrome.clickPlanButton(),
 
             // prpoduct_screen
@@ -61,18 +61,18 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             FloorScreen.orderCountSyncedInTableIs("4", 80),
             FloorScreen.clickTable("5"),
             ProductScreen.checkTotalAmount(6.6),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             ProductScreen.checkTotalAmount(176.0),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
 
             // product_screen

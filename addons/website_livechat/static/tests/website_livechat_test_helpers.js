@@ -10,8 +10,8 @@ export function defineWebsiteLivechatModels() {
 }
 
 export const websiteLivechatModels = {
-    ...livechatModels,
     ...websiteModels,
+    ...livechatModels,
     WebsiteVisitor,
     DiscussChannel,
 };

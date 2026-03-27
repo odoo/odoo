@@ -7,6 +7,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 class SnippetsPowerboxPlugin extends Plugin {
     static id = "alert";
     static dependencies = ["dom", "history"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         user_commands: [
             {
@@ -139,10 +140,7 @@ class SnippetsPowerboxPlugin extends Plugin {
     };
 
     insertSnippet(name) {
-        const snippet = this.config.snippetModel.getSnippetByName(
-            "snippet_content",
-            name
-        );
+        const snippet = this.config.snippetModel.getSnippetByName("snippet_content", name);
         const content = snippet.content.cloneNode(true);
         this.dependencies.dom.insert(content);
         this.dependencies.history.addStep();

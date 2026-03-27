@@ -31,7 +31,7 @@ class AccountMove(models.Model):
             'cost_lines': [(0, 0, {
                 'product_id': l.product_id.id,
                 'name': l.product_id.name,
-                'account_id': l.product_id.product_tmpl_id.get_product_accounts()['stock_valuation'].id,
+                'account_id': l.product_id.product_tmpl_id.get_product_accounts()['expense'].id,
                 'price_unit': sign * l.currency_id._convert(l.price_subtotal, l.company_currency_id, l.company_id, self.invoice_date or fields.Date.context_today(l)),
                 'split_method': l.product_id.split_method_landed_cost or 'equal',
             }) for l in landed_costs_lines],
@@ -41,11 +41,13 @@ class AccountMove(models.Model):
 
     def action_view_landed_costs(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
-        domain = [('id', 'in', self.landed_costs_ids.ids)]
-        context = dict(self.env.context, default_vendor_bill_id=self.id)
-        views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'list'), (False, 'form'), (False, 'kanban')]
-        return dict(action, domain=domain, context=context, views=views)
+
+        views = [(False, 'form')] if len(self.landed_costs_ids) == 1 else [
+            (self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'list'), (False, 'form'), (False, 'kanban')
+        ]
+        return self.landed_costs_ids.with_context(
+            default_vendor_bill_id=self.id
+        )._get_records_action(name=self.env._("Landed Costs"), views=views)
 
     def _update_order_line_info(self, product_id, quantity, **kwargs):
         price_unit = super()._update_order_line_info(product_id, quantity, **kwargs)
@@ -72,10 +74,3 @@ class AccountMoveLine(models.Model):
     def _onchange_is_landed_costs_line(self):
         if self.is_landed_costs_line and self.product_id and self.product_type != 'service':
             self.is_landed_costs_line = False
-
-    def _eligible_for_stock_account(self):
-        return super()._eligible_for_stock_account() or (
-            self.product_id.type == "service"
-            and self.product_id.landed_cost_ok
-            and self.product_id.valuation == "real_time"
-        )

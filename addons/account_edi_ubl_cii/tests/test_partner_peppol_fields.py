@@ -109,3 +109,13 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             self.assertEqual(partner_au._get_suggested_ubl_cii_edi_format(), 'cii')  # AU matches 2 formats but 'cii' has a lower sequence
             self.assertEqual(partner_nz._get_suggested_ubl_cii_edi_format(), 'peppol')
             self.assertFalse(partner_be._get_suggested_ubl_cii_edi_format())
+
+    def test_peppol_endpoint_sanitized_be_company_registry(self):
+        partner = self.env['res.partner'].create({
+            'name': "BE partner dots",
+            'country_id': self.env.ref('base.be').id,
+            'company_registry': '0123.456.789',
+            'vat': False
+        })
+        self.assertEqual(partner.peppol_eas, '0208')
+        self.assertEqual(partner.peppol_endpoint, '0123456789')

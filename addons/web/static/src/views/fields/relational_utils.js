@@ -101,13 +101,13 @@ export function useActiveActions({
         // We need to take care of tags "control" and "create" to set create stuff
         result.create = !readonly && evalAction("create");
         result.createEdit = !readonly && result.create && crudOptions.createEdit; // always a boolean
-        result.edit = crudOptions.edit;
+        result.edit = crudOptions.edit; // always a boolean
         result.delete = !readonly && evalAction("delete");
+        result.write = (isMany2Many || !readonly) && evalAction("write");
 
         if (isMany2Many) {
             result.link = !readonly && evalAction("link");
             result.unlink = !readonly && evalAction("unlink");
-            result.write = evalAction("write");
         }
 
         if (result.unlink || (!isMany2Many && result.delete)) {
@@ -123,7 +123,7 @@ export function useActiveActions({
     // Define eval functions
     const evals = {};
     for (const actionName of STANDARD_ACTIVE_ACTIONS) {
-        let evalFn = () => actionName !== "write";
+        let evalFn = () => true;
         if (!isNull(crudOptions[actionName])) {
             const action = crudOptions[actionName];
             evalFn = (evalContext) => Boolean(action && new Domain(action).contains(evalContext));
@@ -220,6 +220,7 @@ export class Many2XAutocomplete extends Component {
         searchMoreLimit: { type: Number, optional: true },
         searchThreshold: { type: Number, optional: true },
         setInputFloats: { type: Function, optional: true },
+        preventMemoization: { type: Boolean, optional: true },
         slots: { optional: true },
         specification: { type: Object, optional: true },
         update: Function,
@@ -357,6 +358,7 @@ export class Many2XAutocomplete extends Component {
         const domain = this.props.getDomain();
         const context = this.props.context;
         if (
+            !this.props.preventMemoization &&
             this.lastEmptySearch &&
             deepEqual(this.lastEmptySearch.domain, domain) &&
             deepEqual(this.lastEmptySearch.context, context) &&
@@ -575,8 +577,10 @@ export class Many2XAutocomplete extends Component {
                 },
             ];
         }
-
-        const title = _t("Search: %s", fieldString);
+        let title = _t("Search");
+        if (fieldString && fieldString.trim()) {
+            title = _t("Search: %s", fieldString);
+        }
         this.selectCreate({
             domain,
             context,
@@ -911,8 +915,12 @@ export function useOpenX2ManyRecord({
         let deleteButtonLabel = undefined;
         const isDuplicate = !!record;
 
-        const params = { activeFields, fields, readonly };
-        params.mode = params.readonly ? "readonly" : "edit";
+        const params = { activeFields, fields };
+        if (isMany2Many) {
+            params.mode = activeActions.write ? "edit" : "readonly";
+        } else {
+            params.mode = readonly || !activeActions.write ? "readonly" : "edit";
+        }
         if (record) {
             const { delete: canDelete, onDelete } = activeActions;
             deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(record) : null;

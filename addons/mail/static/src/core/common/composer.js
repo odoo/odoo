@@ -33,13 +33,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import {
-    createElementWithContent,
-    htmlJoin,
-    isHtmlEmpty,
-    isMarkup,
-    setElementContent,
-} from "@web/core/utils/html";
+import { htmlJoin, isHtmlEmpty, isMarkup, setElementContent } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
@@ -47,12 +41,29 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList } from "@mail/core/common/action_list";
-import { lastLeaf } from "@html_editor/utils/dom_traversal";
+import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { rightPos } from "@html_editor/utils/position";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
     SAVE: "save",
 };
+
+class FullComposerRecoveryPopover extends Component {
+    static props = ["composer", "onClickFullRecover", "onClickTextRecover", "close?"];
+    static template = "mail.FullComposerRecoveryPopover";
+
+    onClickFullRecover() {
+        this.props.onClickFullRecover();
+        this.props.close();
+    }
+
+    onClickTextRecover() {
+        this.props.onClickTextRecover();
+        this.props.close();
+    }
+}
 
 /**
  * @typedef {Object} Props
@@ -103,12 +114,14 @@ export class Composer extends Component {
 
     setup() {
         super.setup();
+        this.dialogService = useService("dialog");
         /** @type {import("@html_editor/editor").Editor} */
         this.editor = undefined;
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
         this.composerActions = useComposerActions({ composer: () => this.props.composer });
+        this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
             send_keybind: htmlJoin(
                 this.sendKeybinds.map((key) => markup`<samp>${key}</samp>`),
@@ -128,6 +141,13 @@ export class Composer extends Component {
         this.state = useState({
             active: true,
             isFullComposerOpen: false,
+        });
+        this.root = useRef("root");
+        this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
+            closeOnClickAway: false,
+            closeOnEscape: false,
+            position: "top-end",
+            popoverClass: "dropdown-menu bg-view overflow-visible o-rounded-bubble mx-1",
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
@@ -181,7 +201,7 @@ export class Composer extends Component {
                 },
                 () =>
                     this.props.allowUpload &&
-                    (!this.store.meetingViewOpened || this.env.inMeetingView)
+                    (!this.store.rtc.state.isFullscreen || this.env.inMeetingView)
             );
         }
         useChildSubEnv({ inComposer: true });
@@ -193,6 +213,7 @@ export class Composer extends Component {
                 }
                 if (focus && this.editor) {
                     this.editor.shared.selection.focusEditable();
+                    this.editor.shared.selection.selectAroundNonEditable();
                 }
             },
             () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
@@ -232,6 +253,32 @@ export class Composer extends Component {
             },
             () => [this.props.composer.forceCursorMove]
         );
+        useEffect(
+            (isFullComposerOpen, restoredFromFullComposer, fullComposerButtonEl) => {
+                if (isFullComposerOpen || !restoredFromFullComposer || !fullComposerButtonEl) {
+                    this.fullComposerRecoveryPopover.close();
+                    return;
+                }
+                if (this.fullComposerRecoveryPopover.isOpen) {
+                    return;
+                }
+                this.fullComposerRecoveryPopover.open(fullComposerButtonEl, {
+                    composer: this.props.composer,
+                    onClickFullRecover: () => {
+                        this.onClickFullComposer();
+                        this.props.composer.restoredFromFullComposer = false;
+                    },
+                    onClickTextRecover: () => {
+                        this.props.composer.restoredFromFullComposer = false;
+                    },
+                });
+            },
+            () => [
+                this.state.isFullComposerOpen,
+                this.props.composer.restoredFromFullComposer,
+                this.root.el?.querySelector("button[name='open-full-composer']"),
+            ]
+        );
         onMounted(() => {
             this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.composerText) {
@@ -253,10 +300,25 @@ export class Composer extends Component {
                 return;
             }
             setElementContent(this.editor.editable, composerHtml);
-            this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
+            this.setEditorCursorEnd();
             this.editor.shared.history.addStep();
         });
         void composerProxy.composerHtml; // start observing
+    }
+
+    setEditorCursorEnd() {
+        const lastNode = lastLeaf(this.editor?.editable);
+        if (!lastNode) {
+            return;
+        }
+        const nonEditableAncestor = closestElement(lastNode, (el) => !el.isContentEditable);
+        if (nonEditableAncestor && this.editor.editable.contains(nonEditableAncestor)) {
+            const [anchorNode, anchorOffset] = rightPos(nonEditableAncestor);
+            this.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
+        } else {
+            this.editor.shared.selection.setCursorEnd(lastNode);
+        }
+        this.editor.shared.selection.selectAroundNonEditable();
     }
 
     get areAllActionsDisabled() {
@@ -301,7 +363,7 @@ export class Composer extends Component {
             classList: ["o-mail-Composer-html"],
             onChange: () => this.onChangeWysiwygContent(),
             onEditorReady: () => {
-                this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
+                this.setEditorCursorEnd();
                 this.editor.shared.history.addStep();
             },
         };
@@ -318,38 +380,25 @@ export class Composer extends Component {
     }
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {
-        if (this.ui.isSmall) {
-            return _t(
-                "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s",
-                {
-                    open_button: markup`<button class='btn px-1 py-0' data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
-                    close_button: markup`</button>`,
-                    icon: markup`<i class='fa fa-times-circle pe-1' data-type="${EDIT_CLICK_TYPE.CANCEL}"></i>`,
-                    open_em: markup`<em data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
-                    close_em: markup`</em>`,
-                }
-            );
-        } else {
-            const tags = {
-                open_samp: markup`<samp>`,
-                close_samp: markup`</samp>`,
-                open_em: markup`<em>`,
-                close_em: markup`</em>`,
-                open_cancel: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
-                close_cancel: markup`</button>`,
-                open_save: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.SAVE}">`,
-                close_save: markup`</button>`,
-            };
-            return this.env.inChatter
-                ? _t(
-                      "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
-                      tags
-                  )
-                : _t(
-                      "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
-                      tags
-                  );
-        }
+        const tags = {
+            open_samp: markup`<samp>`,
+            close_samp: markup`</samp>`,
+            open_em: markup`<em>`,
+            close_em: markup`</em>`,
+            open_cancel: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
+            close_cancel: markup`</button>`,
+            open_save: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.SAVE}">`,
+            close_save: markup`</button>`,
+        };
+        return this.env.inChatter
+            ? _t(
+                  "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                  tags
+              )
+            : _t(
+                  "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                  tags
+              );
     }
 
     get SEND_TEXT() {
@@ -368,7 +417,7 @@ export class Composer extends Component {
     }
 
     get thread() {
-        return this.props.composer.replyToMessage?.thread ?? this.props.composer.thread ?? null;
+        return this.props.composer.targetThread;
     }
 
     get allowUpload() {
@@ -434,7 +483,8 @@ export class Composer extends Component {
                             };
                         } else {
                             return {
-                                label: suggestion.name,
+                                label: this.thread?.getPersonaName(suggestion) ?? suggestion.name,
+                                thread: this.thread,
                                 partner: suggestion,
                                 classList: "o-mail-Composer-suggestion",
                             };
@@ -446,9 +496,7 @@ export class Composer extends Component {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionThread",
                     options: suggestions.map((suggestion) => ({
-                        label: suggestion.parent_channel_id
-                            ? `${suggestion.parent_channel_id.displayName} > ${suggestion.displayName}`
-                            : suggestion.displayName,
+                        label: suggestion.fullNameWithParent,
                         thread: suggestion,
                         classList: "o-mail-Composer-suggestion",
                     })),
@@ -469,8 +517,9 @@ export class Composer extends Component {
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
                     options: suggestions.map((suggestion) => ({
                         cannedResponse: suggestion,
-                        source: suggestion.source,
                         label: suggestion.substitution,
+                        source: suggestion.source,
+                        title: suggestion.substitution,
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };
@@ -578,6 +627,7 @@ export class Composer extends Component {
     }
 
     async onClickFullComposer(ev) {
+        this.props.composer.restoredFromFullComposer = false;
         const allRecipients = [...this.thread.suggestedRecipients];
         if (this.props.type !== "note") {
             allRecipients.push(...this.thread.additionalRecipients);
@@ -609,18 +659,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
-        let signature = this.thread.effectiveSelf.main_user_id?.signature;
-        if (signature) {
-            const divElement = document.createElement("div");
-            divElement.setAttribute("data-o-mail-quote", "1");
-            divElement.append(
-                document.createElement("br"),
-                document.createTextNode("-- "),
-                document.createElement("br"),
-                ...createElementWithContent("div", signature).childNodes
-            );
-            signature = markup(divElement.outerHTML);
-        }
+        const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
             this.props.composer.emailAddSignature ? signature : ""
@@ -663,8 +702,10 @@ export class Composer extends Component {
                     this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
                         onAccidentalDiscard: (isEmpty) => {
                             if (!isEmpty) {
+                                this.state.isFullComposerOpen = true;
                                 this.saveContent();
                                 this.restoreContent();
+                                this.state.isFullComposerOpen = false;
                             }
                         },
                     });
@@ -715,16 +756,11 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const attachments = this.props.composer.attachments;
-        if (attachments.some(({ uploading }) => uploading)) {
+        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
-        } else if (
-            !isHtmlEmpty(this.props.composer.composerHtml) ||
-            attachments.length > 0 ||
-            (this.message && this.message.attachment_ids.length > 0)
-        ) {
+        } else if (this.canProcessMessage) {
             if (!this.state.active) {
                 return;
             }
@@ -737,6 +773,14 @@ export class Composer extends Component {
             this.state.active = true;
             this.ref.el?.focus();
         }
+    }
+
+    get canProcessMessage() {
+        return (
+            !isHtmlEmpty(this.props.composer.composerHtml) ||
+            this.props.composer.attachments.length > 0 ||
+            (this.message && this.message.attachment_ids.length > 0)
+        );
     }
 
     async sendMessage() {
@@ -812,7 +856,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.composerText || composer.message.attachment_ids.length > 0) {
+        if (!this.askDeleteFromEdit) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
@@ -821,16 +865,25 @@ export class Composer extends Component {
                 })
             );
         } else {
-            this.env.services.dialog.add(MessageConfirmDialog, {
-                message: composer.message,
-                onConfirm: () =>
-                    this.message.remove({
-                        removeFromThread: this.shouldHideFromMessageListOnDelete,
-                    }),
-                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
-            });
+            this.env.services.dialog.add(
+                MessageConfirmDialog,
+                {
+                    message: composer.message,
+                    onConfirm: () =>
+                        this.message.remove({
+                            removeFromThread: this.shouldHideFromMessageListOnDelete,
+                        }),
+                    prompt: _t("Are you sure you want to bid farewell to this message forever?"),
+                },
+                { context: this }
+            );
         }
         this.suggestion?.clearRawMentions();
+    }
+
+    get askDeleteFromEdit() {
+        const composer = toRaw(this.props.composer);
+        return !composer.composerText && composer.message.attachment_ids.length === 0;
     }
 
     onClickInsertCannedResponse(ev) {
@@ -912,29 +965,42 @@ export class Composer extends Component {
 
     saveContent() {
         const composer = toRaw(this.props.composer);
+        if (composer.restoredFromFullComposer && !this.state.isFullComposerOpen) {
+            return;
+        }
         const saveContentToLocalStorage = ({
             composerHtml,
             emailAddSignature,
             replyToMessageId,
+            fromFullComposer = composer.restoredFromFullComposer,
         }) => {
-            browser.localStorage.setItem(
-                composer.localId,
-                JSON.stringify({
-                    emailAddSignature,
-                    replyToMessageId,
-                    composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
-                })
-            );
+            if (isHtmlEmpty(composerHtml)) {
+                browser.localStorage.removeItem(composer.localId);
+            } else {
+                browser.localStorage.setItem(
+                    composer.localId,
+                    JSON.stringify({
+                        emailAddSignature,
+                        replyToMessageId,
+                        composerHtml: isMarkup(composerHtml)
+                            ? ["markup", composerHtml]
+                            : composerHtml,
+                        fromFullComposer,
+                    })
+                );
+            }
         };
         if (this.state.isFullComposerOpen) {
             this.fullComposerBus.trigger("SAVE_CONTENT", {
-                onSaveContent: saveContentToLocalStorage,
+                onSaveContent: (...args) =>
+                    saveContentToLocalStorage({ ...args[0], fromFullComposer: true }),
             });
         } else {
             saveContentToLocalStorage({
                 composerHtml: composer.composerHtml,
                 emailAddSignature: true,
                 replyToMessageId: composer.replyToMessage?.id,
+                fromFullComposer: false,
             });
         }
     }
@@ -951,6 +1017,9 @@ export class Composer extends Component {
             return;
         }
         if (!isHtmlEmpty(config.composerHtml)) {
+            if (composer.thread && composer.thread?.model !== "discuss.channel") {
+                composer.restoredFromFullComposer = config.fromFullComposer;
+            }
             composer.emailAddSignature = config.emailAddSignature;
             composer.composerHtml = config.composerHtml;
         }

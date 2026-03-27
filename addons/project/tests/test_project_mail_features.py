@@ -571,32 +571,44 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
     def test_mail_alais_assignees_from_recipient_list(self):
         # including all types of users in recipient list
         new_user = new_test_user(self.env, 'int_user')
-        incoming_to = (
+
+        # format: Name <some@email.com>
+        incoming_to_emails_with_name = (
+            f"\"{self.project_goats.name}\" <{self.project_goats.alias_name}@{self.project_goats.alias_domain_id.name}>"
+            f"\"{self.user_public.name}\" <{self.user_public.email}>,"
+            f"\"{self.user_projectmanager.name}\" <{self.user_projectmanager.email}>,"
+            f"\"{self.user_portal.name}\" <{self.user_portal.email}>,"
+            f"\"{self.user_projectuser.name}\" <{self.user_projectuser.email}>,"
+        )
+        # format: some@email.com
+        incoming_to_emails = (
             f"{self.project_goats.alias_name}@{self.project_goats.alias_domain_id.name},"
             f"{self.user_public.email},"
             f"{self.user_projectmanager.email},"
             f"{self.user_portal.email},"
             f"{self.user_projectuser.email},"
         )
-        with self.mock_mail_gateway():
-            task = self.format_and_process(
-                MAIL_TEMPLATE,
-                self.user_employee.email,
-                incoming_to,
-                cc=f"{new_user.email}",
-                subject='Test task assignees from email to address',
-                target_model='project.task',
-            )
-            self.flush_tracking()
-        self.assertTrue(task, "Task has not been created from a incoming email")
-        # only internal users are set as asssignees
-        self.assertEqual(task.user_ids, self.user_projectmanager + self.user_projectuser, "Assignees have not been set from the to address of the mail")
-        # public and portal users are ignored
-        self.assertNotIn(task.user_ids, self.user_public + self.user_portal, "Assignees should not be set for user other than internal users")
-        # sender should not be added as user in the task
-        self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
-        # internal users in cc of mail shoudl be added in email_cc field
-        self.assertEqual(task.email_cc, new_user.email, "The internal user in CC is not added into email_cc field")
+
+        for incoming_to in [incoming_to_emails_with_name, incoming_to_emails]:
+            with self.mock_mail_gateway():
+                task = self.format_and_process(
+                    MAIL_TEMPLATE,
+                    self.user_employee.email,
+                    incoming_to,
+                    cc=f"{new_user.email}",
+                    subject=f'Test task assignees from email to address with {incoming_to}',
+                    target_model='project.task',
+                )
+                self.flush_tracking()
+            self.assertTrue(task, "Task has not been created from a incoming email")
+            # only internal users are set as asssignees
+            self.assertEqual(task.user_ids, self.user_projectmanager + self.user_projectuser, "Assignees have not been set from the to address of the mail")
+            # public and portal users are ignored
+            self.assertNotIn(task.user_ids, self.user_public + self.user_portal, "Assignees should not be set for user other than internal users")
+            # sender should not be added as user in the task
+            self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
+            # internal users in cc of mail shoudl be added in email_cc field
+            self.assertEqual(task.email_cc, new_user.email, "The internal user in CC is not added into email_cc field")
 
     def test_task_creation_removes_email_signatures(self):
         """
@@ -659,3 +671,34 @@ Content-Type: text/html;
         self.assertIn("This is the main email content that should be kept", outlook_task.description)
         self.assertNotIn("John Smith", outlook_task.description, "The Outlook signature should have been removed.")
         self.assertNotIn("Software Developer", outlook_task.description, "The Outlook signature should have been removed.")
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_task_creation_from_mail(self):
+        """ This test checks a `default_` key passed in the context with an invalid field doesn't prevent the task
+            creation.
+
+            This is related to the `_ensure_fields_write` method checking field write access rights
+            for collaborator portals
+        """
+        server = self.env['fetchmail.server'].create({
+            'name': 'Test server',
+            'user': 'test@example.com',
+            'password': '',
+        })
+        task_id = self.env["mail.thread"].with_context(
+            default_fetchmail_server_id=server.id
+        ).message_process(
+            server.object_id.model,
+            self.format(
+                MAIL_TEMPLATE,
+                email_from="chell@gladys.portal",
+                to=f"project+pigs@{self.alias_domain}",
+                subject="In a cage",
+                msg_id="<on.antibiotics@example.com>",
+            ),
+            save_original=server.original,
+            strip_attachments=not server.attach,
+        )
+        task = self.env['project.task'].browse(task_id)
+        self.assertEqual(task.name, "In a cage")
+        self.assertEqual(task.project_id, self.project_pigs)

@@ -21,7 +21,7 @@ class PosOrder(models.Model):
 
     def _clean_payment_lines(self):
         self.ensure_one()
-        order_payments = self.env['pos.payment'].search(['&', ('pos_order_id', '=', self.id), ('online_account_payment_id', '=', False)])
+        order_payments = self.env['pos.payment'].search(['&', ('pos_order_id', '=', self.id), ('online_account_payment_id', '=', False), ('payment_method_id.is_online_payment', '=', True)])
         order_payments.unlink()
 
     def get_and_set_online_payments_data(self, next_online_payment_amount=False):
@@ -66,3 +66,13 @@ class PosOrder(models.Model):
         self.ensure_one()
         amount = self.next_online_payment_amount
         return amount if self._check_next_online_payment_amount(amount) else False
+
+    @api.model
+    def _process_order(self, order, existing_order):
+        draft = order.get('state') == 'draft'
+        pos_session = self.env['pos.session'].browse(order['session_id'])
+        online_payment_methods = pos_session.config_id.payment_method_ids.filtered('is_online_payment')
+        if draft and online_payment_methods:
+            # online payment lines should not be created in draft orders
+            order['payment_ids'] = [payment for payment in order.get('payment_ids', []) if payment[0] not in [0, 1] or (payment[2].get('payment_method_id') not in online_payment_methods.ids)]
+        return super()._process_order(order, existing_order)

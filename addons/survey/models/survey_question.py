@@ -449,15 +449,17 @@ class SurveyQuestion(models.Model):
 
     def validate_question(self, answer, comment=None):
         """ Validate question, depending on question type and parameters
-         for simple choice, text, date and number, answer is simply the answer of the question.
-         For other multiple choices questions, answer is a list of answers (the selected choices
-         or a list of selected answers per question -for matrix type-):
-            - Simple answer : answer = 'example' or 2 or question_answer_id or 2019/10/10
-            - Multiple choice : answer = [question_answer_id1, question_answer_id2, question_answer_id3]
-            - Matrix: answer = { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] }
+        for simple choice, text, date and number, answer is simply the answer of the question.
+        For other multiple choices questions, answer is a list of answers (the selected choices
+        or a list of selected answers per question -for matrix type-):
 
-         return dict {question.id (int): error (str)} -> empty dict if no validation error.
-         """
+        - Simple answer : ``answer = 'example'`` or ``2`` or ``question_answer_id`` or ``2019/10/10``
+        - Multiple choice : ``answer = [question_answer_id1, question_answer_id2, question_answer_id3]``
+        - Matrix: ``answer = { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] }``
+
+        :returns: A dict ``{question.id: error}``, or an empty dict if no validation error.
+        :rtype: dict[int, str]
+        """
         self.ensure_one()
         if isinstance(answer, str):
             answer = answer.strip()
@@ -533,12 +535,22 @@ class SurveyQuestion(models.Model):
         return {}
 
     def _validate_choice(self, answer, comment):
-        # Empty comment
-        if not self.survey_id.users_can_go_back \
-                and self.constr_mandatory \
-                and not answer \
-                and not (self.comments_allowed and self.comment_count_as_answer and comment):
+        """ Validates choice-based questions.
+        - Checks that mandatory questions have at least one answer.
+        - For 'simple_choice', ensures that exactly one answer is provided.
+        """
+        answers = answer if isinstance(answer, list) else ([answer] if answer else [])
+
+        valid_answers_count = len(answers)
+        if comment and self.comment_count_as_answer:
+            valid_answers_count += 1
+
+        if valid_answers_count == 0 and self.constr_mandatory and not self.survey_id.users_can_go_back:
             return {self.id: self.constr_error_msg or _('This question requires an answer.')}
+
+        if valid_answers_count > 1 and self.question_type == 'simple_choice':
+            return {self.id: _('For this question, you can only select one answer.')}
+
         return {}
 
     def _validate_matrix(self, answers):

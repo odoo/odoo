@@ -6,9 +6,9 @@
         <BuilderSelect>
             <t t-foreach="state.formats" t-as="format" t-key="format.id">
                 <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">
-                    <div class="w-100 d-flex justify-content-between overflow-hidden">
-                        <t t-out="format.label"/>
-                        <span class="badge text-bg-dark ms-2 me-1 top-0 align-self-center" t-out="format.mimetype.split('/')[1]"/>
+                    <div class="d-flex align-items-center overflow-hidden">
+                        <span class="text-truncate flex-grow-1 me-2" t-out="format.label"/>
+                        <span class="badge rounded-pill me-1 top-0 align-self-center flex-shrink-0" t-out="format.mimetype.split('/')[1]"/>
                     </div>
                 </BuilderSelectItem>
             </t>
@@ -18,7 +18,11 @@
         <BuilderRange
             action="'setImageQuality'"
             min="0"
-            max="100" />
+            max="100"
+            t-if="!state.compressionUnsupported" />
+        <span t-if="state.compressionUnsupported" class="fst-italic">
+            WebP compression not supported on this browser
+        </span>
     </BuilderRow>
 </t>
 

@@ -37,7 +37,10 @@ export class Attachment extends FileModelMixin(Record) {
             if (
                 this.isPdf &&
                 !this.has_thumbnail &&
-                (this.store.self.main_user_id?.share === false || this.ownership_token)
+                (this.ownership_token ||
+                    // If related to a record, must have write access to it
+                    ((!this.thread || this.thread.hasWriteAccess) &&
+                        this.store.self.main_user_id?.share === false))
             ) {
                 this.setPdfThumbnail();
             }
@@ -117,7 +120,7 @@ export class Attachment extends FileModelMixin(Record) {
                 assignDefined({}, { access_token: this.ownership_token })
             )
         );
-        if (isPdfValid !== undefined) {
+        if (isPdfValid) {
             rpc(
                 `/mail/attachment/update_thumbnail`,
                 assignDefined(

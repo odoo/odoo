@@ -27,7 +27,7 @@
             </div>
 
             <div class="o_self_footer container o_self_container d-flex justify-content-between align-items-center position-relative py-3">
-                <button class="btn btn-secondary btn-lg" t-if="state.selection || selectedPaymentMethod.is_online_payment || this.selfOrder.paymentError" t-on-click="() => this.router.back()">Back</button>
+                <button class="btn btn-secondary btn-lg" t-if="state.selection || selectedPaymentMethod.is_online_payment || this.selfOrder.paymentError" t-on-click="back">Back</button>
                 <button class="btn btn-primary btn-lg" t-if="!state.selection and selfOrder.paymentError" t-on-click="startPayment">Retry</button>
             </div>
 

@@ -39,7 +39,13 @@ const websiteSystrayRegistry = registry.category("website_systray");
 
 export class WebsiteBuilderClientAction extends Component {
     static template = "website.WebsiteBuilderClientAction";
-    static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor, CreatePageMessage };
+    static components = {
+        LazyComponent,
+        LocalOverlayContainer,
+        ResizablePanel,
+        ResourceEditor,
+        CreatePageMessage,
+    };
     static props = {
         ...standardActionServiceProps,
         editTranslations: { type: Boolean, optional: true },
@@ -67,10 +73,11 @@ export class WebsiteBuilderClientAction extends Component {
         this.title = useService("title");
         this.hotkeyService = useService("hotkey");
         this.websiteService.websiteRootInstance = undefined;
-        this.iframeFallbackUrl = '/website/iframefallback';
-        this.iframefallback = useRef('iframefallback');
+        this.iframeFallbackUrl = "/website/iframefallback";
+        this.iframefallback = useRef("iframefallback");
 
         this.websiteContent = useRef("iframe");
+        this.builderSidebarRef = useRef("builder_sidebar");
         this.cleanups = [];
 
         this.snippetsTemplate = "website.snippets";
@@ -153,7 +160,7 @@ export class WebsiteBuilderClientAction extends Component {
             }
         });
         onWillUnmount(() => {
-            for (let fn of this.cleanups) {
+            for (const fn of this.cleanups) {
                 fn();
             }
         });
@@ -185,7 +192,9 @@ export class WebsiteBuilderClientAction extends Component {
                     this.navBarTimeout = setTimeout(() => {
                         websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
                         websiteSystrayRegistry.trigger("EDIT-WEBSITE");
-                        document.querySelector(".o_builder_open .o_main_navbar").classList.add("d-none");
+                        document
+                            .querySelector(".o_builder_open .o_main_navbar")
+                            .classList.add("d-none");
                     }, 200);
                 } else {
                     document.querySelector(".o_main_navbar")?.classList.remove("d-none");
@@ -201,9 +210,9 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get websiteBuilderProps() {
-        const iframeLoaded = this.iframeLoaded.then((el) => {
-            return this.waitForIframeReady().then(() => el);
-        });
+        const iframeLoaded = this.iframeLoaded.then((el) =>
+            this.waitForIframeReady().then(() => el)
+        );
         const builderProps = {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             editableSelector: "#wrapwrap",
@@ -218,6 +227,15 @@ export class WebsiteBuilderClientAction extends Component {
                 initialTarget: this.target,
                 initialTab: this.initialTab || this.translation ? "customize" : "blocks",
                 builderSidebar: {
+                    withHiddenSidebar: async (cb) => {
+                        try {
+                            this.state.showSidebar = false;
+                            return await cb();
+                        } finally {
+                            this.state.showSidebar = true;
+                        }
+                    },
+                    // TODO: remove `toggle` in master
                     toggle: (show) => {
                         this.state.showSidebar = show ?? !this.state.showSidebar;
                     },
@@ -262,6 +280,9 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async onEditPage() {
+        if (!this.websiteContent.el) {
+            await this.iframeLoaded;
+        }
         this.websiteContext.showResourceEditor = false;
         this.blockIframe();
 
@@ -334,6 +355,10 @@ export class WebsiteBuilderClientAction extends Component {
         const currentTitle = iframe.contentDocument.title;
         history.replaceState(history.state, currentTitle, iframe.contentDocument.location.href);
         this.title.setParts({ action: currentTitle });
+        const frontendIconEl = iframe.contentDocument.querySelector("link[rel~='icon']");
+        if (frontendIconEl) {
+            document.querySelector("link[rel~='icon']").href = frontendIconEl.href;
+        }
     }
 
     onIframeLoad(ev) {
@@ -380,7 +405,8 @@ export class WebsiteBuilderClientAction extends Component {
             this.websiteService.context.showResourceEditor = false;
         }
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
-        if (this.translation) {
+        const url = new URL(this.websiteService.contentWindow.location.href);
+        if (url.searchParams.has("edit_translations")) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
 
@@ -498,7 +524,7 @@ export class WebsiteBuilderClientAction extends Component {
                         resolve();
                     }
                 });
-                observer.observe(doc.body, { attributes: true, attributeFilter: ['is-ready'] });
+                observer.observe(doc.body, { attributes: true, attributeFilter: ["is-ready"] });
             }
         });
     }
@@ -507,7 +533,9 @@ export class WebsiteBuilderClientAction extends Component {
         this.initialTab = param.initialTab;
         this.target = param.target || null;
         await this.reloadIframe(this.state.isEditing, param.url);
-        // trigger an new instance of the builder menu
+        // Disable the current instance of the builder and trigger a new
+        // instance of it with `t-key`
+        this.builderSidebarRef.el.firstElementChild.classList.add("o_builder_disabled");
         this.state.key++;
     }
 
@@ -603,9 +631,13 @@ export class WebsiteBuilderClientAction extends Component {
         this.iframeLoaded = new Promise((resolve) => {
             this.resolveIframeLoaded = () => {
                 this.hotkeyService.registerIframe(this.websiteContent.el);
-                this.websiteContent.el.contentWindow.addEventListener('beforeunload', this.onPageUnload.bind(this));
+                this.websiteContent.el.contentWindow.addEventListener(
+                    "beforeunload",
+                    this.onPageUnload.bind(this)
+                );
 
                 this.addListeners(this.websiteContent.el.contentDocument);
+                this.iframefallback.el?.contentDocument.documentElement.replaceChildren();
                 resolve(this.websiteContent.el);
             };
         });
@@ -617,7 +649,7 @@ export class WebsiteBuilderClientAction extends Component {
         const websiteDoc = this.websiteContent.el?.contentDocument;
         const fallBackDoc = this.iframefallback.el?.contentDocument;
         if (!this.state.isEditing && websiteDoc && fallBackDoc) {
-            fallBackDoc.body.replaceWith(websiteDoc.body.cloneNode(true));
+            fallBackDoc.documentElement.replaceWith(websiteDoc.documentElement.cloneNode(true));
             const currentScrollEl = getScrollingElement(websiteDoc);
             const scrollElement = getScrollingElement(fallBackDoc);
             scrollElement.scrollTop = currentScrollEl.scrollTop;
@@ -627,10 +659,12 @@ export class WebsiteBuilderClientAction extends Component {
 
     cleanIframeFallback() {
         // Remove autoplay in all iframes urls so videos are not
-        const iframesEl = this.iframefallback.el.contentDocument.querySelectorAll('iframe[src]:not([src=""])');
+        const iframesEl = this.iframefallback.el.contentDocument.querySelectorAll(
+            'iframe[src]:not([src=""])'
+        );
         for (const iframeEl of iframesEl) {
             const url = new URL(iframeEl.src);
-            url.searchParams.delete('autoplay');
+            url.searchParams.delete("autoplay");
             iframeEl.src = url.toString();
         }
     }
@@ -643,8 +677,10 @@ export class WebsiteBuilderClientAction extends Component {
 
     toggleIsMobile(isMobile) {
         this.websitePreviewRef.el.classList.toggle("o_is_mobile", isMobile);
-        this.websiteContent.el?.contentDocument.documentElement
-            .classList.toggle("o_is_mobile", isMobile);
+        this.websiteContent.el?.contentDocument.documentElement.classList.toggle(
+            "o_is_mobile",
+            isMobile
+        );
     }
 
     get aceEditorWidth() {
@@ -692,7 +728,7 @@ export class WebsiteBuilderClientAction extends Component {
      * @param {HTMLElement} target - document or iframe document
      */
     addListeners(target) {
-        const listener = ev => this.onKeydownRefresh(ev);
+        const listener = (ev) => this.onKeydownRefresh(ev);
         target.addEventListener("keydown", listener);
         this.cleanups.push(() => {
             target.removeEventListener("keydown", listener);

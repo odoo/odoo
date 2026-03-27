@@ -7,13 +7,16 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# Ho Pak Wai <wai@users.noreply.translate.odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2025-09-16 08:11+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 19:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/project/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -26,7 +29,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid " All internal users and invited portal users"
-msgstr ""
+msgstr " 所有內部使用者及獲邀請的門戶使用者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -279,6 +282,112 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                <t t-out=\"partner.name or ''\">Brandon Freeman</t> 你好！"
+"<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                你好！<br/><br/>\n"
+"            </t>\n"
+"            請抽少許時間，對我們處理「<strong t-out=\"object.name or ''\">工"
+"作規劃及財政預算</strong>」任務的表現評分。\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                該項任務是分派給 <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> 處理"
+"的。<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>享用我們的服務後，你的感受是：</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">（請選擇下列一個表情並按下）</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"滿意\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"滿意\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"中性\" src=\"/rating/static/"
+"src/img/rating_3.png\" title=\"中性\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"不滿意\" src=\"/rating/static/"
+"src/img/rating_1.png\" title=\"不滿意\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            感謝回應。你的寶貴意見，將協助我們持續改進。\n"
+"            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">註：本次客戶意見調查，是因應有關任務已踏入「<b t-"
+"out=\"object.stage_id.name or ''\">進行中</b>」階段，由系統自動發出。</"
+"span>\n"
+"            </t>\n"
+"            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">任務狀態為「<b t-out=\"object.stage_id.name or ''\">進行中"
+"</b>」期間，以上客戶意見調查會<b t-"
+"out=\"object.stage_id.rating_status_period or ''\">每星期</b>自動發出。</"
+"span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>順祝  安康</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</"
+"t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -302,21 +411,21 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t> "
-"你好！<br/>\n"
-"    很高興通知你，「<strong t-out=\"object.name or ''\""
-">翻新</strong>」專案已經成功完成！\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t> 你"
+"好！<br/>\n"
+"    很高興通知你，「<strong t-out=\"object.name or ''\">翻新</strong>」專案已"
+"經成功完成！\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style="
-"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
-"groups=\"project.group_project_stages\""
-">你收到這封電子郵件，是因為專案已移至「<b t-out="
-"\"object.stage_id.name or ''\">完成</b>」階段。</span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">你收到這封電子郵"
+"件，是因為專案已移至「<b t-out=\"object.stage_id.name or ''\">完成</b>」階"
+"段。</span>\n"
 "            "
 
 #. module: project
@@ -537,7 +646,7 @@ msgstr "<u>里程碑</u>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>獲利分析</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -1594,7 +1703,7 @@ msgstr "客戶網站入口網址"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Customer Rating"
-msgstr ""
+msgstr "客戶評分"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1903,6 +2012,7 @@ msgstr "捨棄"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
@@ -2114,7 +2224,7 @@ msgstr "財務"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
-msgstr ""
+msgstr "已摺疊"
 
 #. module: project
 #. odoo-javascript
@@ -2335,6 +2445,7 @@ msgstr "這個專案進展如何？"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr "識別號"
@@ -2478,8 +2589,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
-msgstr "無效欄位： "
+msgid "Invalid Display Name"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2657,6 +2768,12 @@ msgstr "稍後"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create your first <b>project</b>."
 msgstr "讓我們一起創建你的第一個<b>專案</b>。"
 
@@ -2700,7 +2817,7 @@ msgstr "讓我們等待您的客戶表現出來。"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__share_link
 msgid "Link"
-msgstr ""
+msgstr "連結"
 
 #. module: project
 #. odoo-javascript
@@ -3388,7 +3505,7 @@ msgstr "網站入口訪問網址"
 #. module: project
 #: model:ir.model,name:project.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "網站登入分享"
 
 #. module: project
 #. odoo-python
@@ -3588,7 +3705,7 @@ msgstr "專案任務"
 #. module: project
 #: model:ir.model,name:project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "專案範本建立精靈"
 
 #. module: project
 #. odoo-javascript
@@ -4752,12 +4869,6 @@ msgid "Tasks in Recurrence"
 msgstr "重複性任務"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
-msgstr ""
-
-#. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
 msgstr "Tasks.test"
@@ -4796,7 +4907,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Templates"
-msgstr ""
+msgstr "範本"
 
 #. module: project
 #. odoo-javascript
@@ -5428,6 +5539,11 @@ msgid "User"
 msgstr "使用者"
 
 #. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr "使用者設定"
+
+#. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User can user the your employees' schedule"
 msgstr "使用者可使用你員工的日程安排"
@@ -5947,6 +6063,9 @@ msgstr "👤 未指派"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid "Invalid fields: "
+#~ msgstr "無效欄位： "
 
 #~ msgid ""
 #~ "<div>\n"

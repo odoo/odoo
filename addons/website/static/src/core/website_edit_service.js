@@ -5,6 +5,8 @@ import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 import { setupIgnoreDOMMutations } from "@website/js/content/auto_hide_menu";
 import { omit } from "@web/core/utils/objects";
+import { Cache } from "@web/core/utils/cache";
+import { rpc } from "@web/core/network/rpc";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -46,7 +48,7 @@ export function buildEditableInteractions(builders) {
     return result;
 }
 
-registry.category("services").add("website_edit", {
+export const websiteEditService = {
     dependencies: ["public.interactions"],
     start(env, { ["public.interactions"]: publicInteractions }) {
         let editableInteractions = null;
@@ -54,6 +56,13 @@ registry.category("services").add("website_edit", {
         const patches = [];
         const historyCallbacks = {};
         const shared = {};
+        // A cached rpc to be used for edit/preview mode interactions
+        // (e.g., when dynamic snippets are loading content with the
+        // same config: filter, template, number of records,...).
+        const _rpcCall = async (params) => rpc(params.url, params);
+        const cache = new Cache(_rpcCall, JSON.stringify);
+        const clearRpcCache = () => cache.invalidate();
+        const rpcCache = async (params) => cache.read(params);
 
         const update = (target, mode) => {
             // editMode = true;
@@ -61,7 +70,7 @@ registry.category("services").add("website_edit", {
 
             // interactions are already started. we only restart them if the
             // public root is not just starting.
-
+            stopDisconnectedInteractions();
             publicInteractions.stopInteractions(target);
             if (mode === "edit") {
                 if (!editableInteractions) {
@@ -96,6 +105,14 @@ registry.category("services").add("website_edit", {
 
         const stopInteraction = (name) => {
             publicInteractions.stopInteractionByName(name);
+        };
+
+        const stopDisconnectedInteractions = () => {
+            for (const interaction of publicInteractions.interactions) {
+                if (!interaction.el.isConnected) {
+                    stop(interaction.el);
+                }
+            }
         };
 
         const isEditingTranslations = () =>
@@ -189,6 +206,9 @@ registry.category("services").add("website_edit", {
                         return NaN; // So that it is different from itself
                     },
                     shouldStop() {
+                        if (!this.el.isConnected) {
+                            return true;
+                        }
                         // Selector does not match anymore ?
                         const I = this.constructor;
                         let isMatch = this.el.matches(I.selector);
@@ -221,7 +241,9 @@ registry.category("services").add("website_edit", {
                 patch(publicInteractions.constructor.prototype, {
                     shouldStop(el, interaction) {
                         if (this.isRefreshing) {
-                            const mustBeRefreshed = super.shouldStop(el, interaction) || interaction.interaction.isImpactedBy(el);
+                            const mustBeRefreshed =
+                                super.shouldStop(el, interaction) ||
+                                interaction.interaction.isImpactedBy(el);
                             return mustBeRefreshed && interaction.interaction.shouldStop();
                         }
                         return super.shouldStop(el, interaction);
@@ -278,14 +300,16 @@ registry.category("services").add("website_edit", {
             uninstallPatches,
             applyAction,
             callShared,
+            rpcCache,
+            clearRpcCache,
         };
 
-        window.parent.document.addEventListener("edit_page", (ev) => {
+        const handleEditPage = (ev) => {
             stop(ev.detail.iframeDocument);
-        });
+        };
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
-        window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
+        const handlePluginLoaded = (ev) => {
             ev.currentTarget.dispatchEvent(
                 new CustomEvent("transfer_website_edit_service", {
                     detail: {
@@ -296,11 +320,28 @@ registry.category("services").add("website_edit", {
             Object.assign(shared, ev.shared);
             historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
             setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
+        };
+
+        window.parent.document.addEventListener("edit_page", handleEditPage);
+        window.parent.document.addEventListener(
+            "edit_interaction_plugin_loaded",
+            handlePluginLoaded
+        );
+
+        // Clean up parent document listeners when iframe unloads to prevent
+        // stale handlers from serving an outdated service to new plugins.
+        window.addEventListener("beforeunload", () => {
+            window.parent.document.removeEventListener("edit_page", handleEditPage);
+            window.parent.document.removeEventListener(
+                "edit_interaction_plugin_loaded",
+                handlePluginLoaded
+            );
         });
 
         return websiteEditService;
     },
-});
+};
+registry.category("services").add("website_edit", websiteEditService);
 
 // Patch PublicRoot.
 

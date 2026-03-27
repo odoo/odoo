@@ -1,9 +1,19 @@
-import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
-import { beforeEach, describe, test } from "@odoo/hoot";
-import { advanceTime, freezeTime } from "@odoo/hoot-dom";
-import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
-
 import { AWAY_DELAY } from "@mail/core/common/im_status_service";
+import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
+
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { advanceTime, freezeTime } from "@odoo/hoot-dom";
+
+import { registry } from "@web/core/registry";
+import {
+    asyncStep,
+    makeMockEnv,
+    mockService,
+    patchWithCleanup,
+    restoreRegistry,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 beforeEach(freezeTime);
@@ -100,4 +110,36 @@ test("update presence when user status changes to away", async () => {
     await waitForSteps([0]);
     await advanceTime(AWAY_DELAY);
     await waitForSteps([AWAY_DELAY]);
+});
+
+test("new tab update presence when user comes back from away", async () => {
+    // Tabs notify presence with a debounced update, and the status service skips
+    // duplicates. This test ensures a new tab that never sent presence still issues
+    // its first update (important when old tabs close and new ones replace them).
+    localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "offline" });
+    const tabEnv_1 = await makeMockEnv();
+    patchWithCleanup(tabEnv_1.services.bus_service, {
+        send: (type) => {
+            if (type === "update_presence") {
+                expect.step("update_presence");
+            }
+        },
+    });
+    tabEnv_1.services.bus_service.start();
+    await expect.waitForSteps(["update_presence"]);
+    restoreRegistry(registry);
+    const tabEnv_2 = await makeMockEnv(null, { makeNew: true });
+    patchWithCleanup(tabEnv_2.services.bus_service, {
+        send: (type) => {
+            if (type === "update_presence") {
+                expect.step("update_presence");
+            }
+        },
+    });
+    tabEnv_2.services.bus_service.start();
+    await expect.waitForSteps([]);
+    localStorage.setItem("presence.lastPresence", Date.now()); // Simulate user presence.
+    await expect.waitForSteps(["update_presence", "update_presence"]);
 });

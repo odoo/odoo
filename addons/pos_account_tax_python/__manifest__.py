@@ -13,6 +13,9 @@
         'web.assets_unit_tests': [
             'pos_account_tax_python/static/tests/unit/data/**/*'
         ],
+        'web.assets_tests': [
+            'pos_account_tax_python/static/tests/tours/**/*',
+        ],
     },
     'auto_install': True,
     'author': 'Odoo S.A.',

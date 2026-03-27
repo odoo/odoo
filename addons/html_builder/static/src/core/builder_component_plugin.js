@@ -22,10 +22,19 @@ import { Img } from "./img";
 import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
 
+/** @typedef {import("@odoo/owl").Component} Component */
+/**
+ * @typedef { Object } BuilderComponentShared
+ * @property { BuilderComponentPlugin['getComponents'] } getComponents
+ */
+
+/** @typedef {Component[]} builder_components */
+
 export class BuilderComponentPlugin extends Plugin {
     static id = "builderComponents";
     static shared = ["getComponents"];
 
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_components: {
             BuilderContext,

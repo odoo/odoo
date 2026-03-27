@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         # Post entries.
         res = super()._post(soft)
 
-        self.line_ids._get_stock_moves()._set_value()
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in or m.is_dropship)._set_value()
 
         return res
 
@@ -47,7 +47,8 @@ class AccountMove(models.Model):
         res = super().button_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
-        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+        with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
+            self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
     def button_cancel(self):
@@ -119,14 +120,14 @@ class AccountMove(models.Model):
                 # Compute accounting fields.
                 sign = -1 if move.move_type == 'out_refund' else 1
                 price_unit = line.with_context(anglo_saxon_price_ctx)._get_cogs_value()
-                amount_currency = sign * line.quantity * price_unit
+                amount_currency = sign * line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) * price_unit
 
                 if move.currency_id.is_zero(amount_currency) or float_is_zero(price_unit, precision_digits=price_unit_prec):
                     continue
 
                 # Add interim account line.
                 lines_vals_list.append({
-                    'name': line.name[:64],
+                    'name': line.name[:64] if line.name else '',
                     'move_id': move.id,
                     'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
@@ -142,7 +143,7 @@ class AccountMove(models.Model):
 
                 # Add expense account line.
                 lines_vals_list.append({
-                    'name': line.name[:64],
+                    'name': line.name[:64] if line.name else '',
                     'move_id': move.id,
                     'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
@@ -164,7 +165,10 @@ class AccountMove(models.Model):
         """
         return self.env.context
 
-    def _get_related_stock_moves(self):
+    def _stock_account_get_last_step_stock_moves(self):
+        """ To be overridden for customer invoices and vendor bills in order to
+        return the stock moves related to the invoices in self.
+        """
         return self.env['stock.move']
 
     def _get_invoiced_lot_values(self):

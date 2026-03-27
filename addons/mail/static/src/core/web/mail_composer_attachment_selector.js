@@ -7,7 +7,6 @@ import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { Component } from "@odoo/owl";
 import { FileUploader } from "@web/views/fields/file_handler";
 
-
 export class MailComposerAttachmentSelector extends Component {
     static template = "mail.MailComposerAttachmentSelector";
     static components = { FileUploader };
@@ -27,7 +26,10 @@ export class MailComposerAttachmentSelector extends Component {
         if (this.props.record.resModel === "mail.scheduled.message") {
             resIds = [this.props.record.data.res_id.resId];
         } else {
-            resIds = JSON.parse(this.props.record.data.res_ids);
+            // composer does not store res_ids past a certain limit, assume active_ids is used
+            resIds = this.props.record.data.res_ids
+                ? JSON.parse(this.props.record.data.res_ids)
+                : this.props.record.context.active_ids;
         }
         const thread = await this.mailStore.Thread.insert({
             model: this.props.record.data.model,
@@ -35,7 +37,9 @@ export class MailComposerAttachmentSelector extends Component {
         });
         const file = new File([dataUrlToBlob(data, type)], name, { type });
         const attachment = await this.attachmentUploadService.upload(thread, thread.composer, file);
-        await this.operations.saveRecord([attachment.id]);
+        if (attachment) {
+            await this.operations.saveRecord([attachment.id]);
+        }
     }
 }
 
@@ -43,4 +47,6 @@ export const mailComposerAttachmentSelector = {
     component: MailComposerAttachmentSelector,
 };
 
-registry.category("fields").add("mail_composer_attachment_selector", mailComposerAttachmentSelector);
+registry
+    .category("fields")
+    .add("mail_composer_attachment_selector", mailComposerAttachmentSelector);

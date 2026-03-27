@@ -326,14 +326,14 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move_form.date = fields.Date.from_string('2016-01-01')
 
         # New line that should get 400.0 as debit.
-        with move_form.journal_line_ids.new() as line_form:
+        with move_form.line_ids.new() as line_form:
             line_form.name = 'debit_line'
             line_form.account_id = self.company_data['default_account_revenue']
             line_form.currency_id = self.other_currency
             line_form.amount_currency = 1200.0
 
         # New line that should get 400.0 as credit.
-        with move_form.journal_line_ids.new() as line_form:
+        with move_form.line_ids.new() as line_form:
             line_form.name = 'credit_line'
             line_form.account_id = self.company_data['default_account_revenue']
             line_form.currency_id = self.other_currency
@@ -381,9 +381,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         )
         # You can change the balance manually without changing the currency amount
         with Form(move) as move_form:
-            with move_form.journal_line_ids.edit(0) as line_form:
+            with move_form.line_ids.edit(0) as line_form:
                 line_form.debit = 200
-            with move_form.journal_line_ids.edit(1) as line_form:
+            with move_form.line_ids.edit(1) as line_form:
                 line_form.credit = 200
 
         self.assertRecordValues(
@@ -434,7 +434,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
 
         # Create a new account.move.line with debit amount.
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'debit_line_1'
             debit_line.account_id = self.account
             debit_line.debit = 1000
@@ -442,7 +442,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             debit_line.tax_ids.add(self.included_percent_tax)
 
         # Create a third account.move.line with credit amount.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'credit_line_1'
             credit_line.account_id = self.account
             credit_line.credit = 1200
@@ -915,12 +915,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         # Create a new account.move.line with debit amount.
         income_account = self.company_data['default_account_revenue']
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'debit'
             debit_line.account_id = income_account
             debit_line.debit = 120
 
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'credit'
             credit_line.account_id = income_account
             credit_line.credit = 100
@@ -946,12 +946,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         move_form = Form(self.env['account.move'])
 
-        with move_form.journal_line_ids.new() as debit_line_form:
+        with move_form.line_ids.new() as debit_line_form:
             debit_line_form.name = 'debit'
             debit_line_form.account_id = test_account
             debit_line_form.debit = 115
 
-        with move_form.journal_line_ids.new() as credit_line_form:
+        with move_form.line_ids.new() as credit_line_form:
             credit_line_form.name = 'credit'
             credit_line_form.account_id = test_account
             credit_line_form.credit = 100
@@ -974,12 +974,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         move_form = Form(self.env['account.move'])
 
-        with move_form.journal_line_ids.new() as credit_line_form:
+        with move_form.line_ids.new() as credit_line_form:
             credit_line_form.name = 'credit'
             credit_line_form.account_id = test_account
             credit_line_form.credit = 115
 
-        with move_form.journal_line_ids.new() as debit_line_form:
+        with move_form.line_ids.new() as debit_line_form:
             debit_line_form.name = 'debit'
             debit_line_form.account_id = test_account
             debit_line_form.debit = 100
@@ -1081,9 +1081,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         tax_line = move.line_ids.filtered('tax_repartition_line_id')
         self.assertEqual(tax_line.debit, 721.44)
         with Form(move) as move_form:
-            with move_form.journal_line_ids.edit(2) as line_form:
+            with move_form.line_ids.edit(2) as line_form:
                 line_form.debit = 721.43
-            move_form.journal_line_ids.remove(3)
+            move_form.line_ids.remove(3)
         move = move_form.save()
         tax_line = move.line_ids.filtered('tax_repartition_line_id')
         self.assertEqual(tax_line.debit, 721.43)
@@ -1299,3 +1299,121 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move_duplicate = move.copy()
         self.assertTrue(move_duplicate)
         self.assertFalse(move_duplicate.partner_id)
+
+    def test_no_recompute_when_company_address_changes(self):
+        """
+        Ensure that changing the company partner address does NOT trigger
+        any recomputation on account.move or account.move.line fields
+        """
+        # Prepare patching
+        protected_models = ['account.move', 'account.move.line']
+        original_recompute = {model: self.env[model]._recompute_field for model in protected_models}
+        fields_recomputed = []
+
+        def mock_recompute(self, field, ids=None):
+            ids_to_compute = self.env.transaction.tocompute.get(field, ())
+            ids = ids_to_compute if ids is None else [id_ for id_ in ids if id_ in ids_to_compute]
+            if field.store and (
+                (self._name == 'account.move' and invoice.id in ids)
+                or (self._name == 'account.move.line' and set(invoice.line_ids.ids) & set(ids))
+            ):
+                fields_recomputed.append(str(field))
+            original_recompute[self._name](field, ids)
+
+        # Setup data
+        invoice = self.env['account.move'].create({
+            'move_type': 'entry',
+            'partner_id': self.partner_a.id,
+            'date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.other_currency.id,
+            'line_ids': [
+                Command.create(self.entry_line_vals_1),
+                Command.create(self.entry_line_vals_2),
+            ],
+        })
+        self.env.flush_all()
+
+        # Check
+        for model in protected_models:
+            self.patch(self.env.registry[model], '_recompute_field', mock_recompute)
+
+        invoice.company_id.partner_id.write({
+            'street': 'New Street',
+            'zip': '12345',
+            'country_id': invoice.company_id.partner_id.country_id.id,
+            'vat': '12345678',
+        })
+        self.env.flush_all()
+        self.assertEqual(fields_recomputed, [])
+
+    def test_post_invoice_fails_with_account_and_journal_company_inconsistency(self):
+        """
+        Ensure that an invoice cannot be posted when at least one line account
+        belongs to a different company than the journal.
+
+        The test verifies that:
+        - Using a journal from a branch company (child of the account's company) is allowed
+        - Using a journal from an unrelated company correctly raises a UserError
+        - Using a shared account between two companies works as expected
+        """
+        account = self.company_data['default_account_revenue']
+        move = self.env['account.move'].create({
+            'line_ids': [
+                Command.create({'name': 'debit_line', 'debit': 100.0, 'account_id': account.id}),
+                Command.create({'name': 'credit_line', 'credit': 100.0, 'account_id': account.id}),
+            ]
+        })
+
+        # Ensure branch company aren't considered as inconsistency
+        company_branch = self.env['res.company'].create({
+            'name': 'Company Branch',
+            'parent_id': self.env.company.id,
+        })
+        journal_branch = self.env['account.journal'].create({
+            'name': 'Company Branch Journal',
+            'type': 'general',
+            'code': 'CBrJ',
+            'company_id': company_branch.id,
+        })
+        move.write({'company_id': company_branch.id, 'journal_id': journal_branch.id})
+        move.action_post()
+        move.button_draft()
+
+        # Ensure posting fails when the account's company is different than the journal's company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        journal_b = self.env['account.journal'].create({
+            'name': 'Company B Journal',
+            'type': 'general',
+            'code': 'CBJ',
+            'company_id': company_b.id,
+        })
+        move.write({'name': '/', 'company_id': company_b.id, 'journal_id': journal_b.id})
+        with self.assertRaisesRegex(UserError, rf"The entry is using accounts \({account.display_name}\) from a different company\."):
+            move.action_post()
+
+        # Ensure posting works for accounts shared between the two companies
+        shared_account = self.env['account.account'].create([{
+            'name': 'Shared Account',
+            'company_ids': [Command.set((self.env.company | company_b).ids)],
+            'code_mapping_ids': [
+                Command.create({'company_id': self.env.company.id, 'code': '180001'}),
+                Command.create({'company_id': company_b.id, 'code': '180001'}),
+            ],
+        }])
+        move.line_ids.account_id = shared_account
+        move.action_post()
+
+    def test_journal_entry_analytic_distribution_search_is_set(self):
+        """ Verify searching on analytic_distribution with 'is set', 'is not set'."""
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan'})
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': "Test Account",
+            'plan_id': analytic_plan.id,
+        })
+        self.assertFalse(self.env['account.move.line'].search([('analytic_distribution', '!=', False)]))
+        self.test_move.line_ids[0]['analytic_distribution'] = {str(analytic_account.id): 100}
+        self.assertEqual(
+            self.env['account.move.line'].search([('analytic_distribution', '!=', False)]),
+            self.test_move.line_ids[0],
+            ""
+        )

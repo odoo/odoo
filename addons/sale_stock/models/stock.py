@@ -29,6 +29,8 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id and not move.description_picking_manual:
                 sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
+                if move.description_picking == move.product_id.display_name:
+                    move.description_picking = ''
                 move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + move.description_picking).strip()
 
     def _action_synch_order(self):
@@ -121,12 +123,43 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'product_id' in vals:
+            for move in self:
+                if move.sale_line_id and move.product_id != move.sale_line_id.product_id:
+                    move.sale_line_id = False
+        return res
+
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
         # to pass sale_line_id fom SO to MO in mto
         if self.sale_line_id:
             res['sale_line_id'] = self.sale_line_id.id
+            if self.sale_line_id.analytic_distribution:
+                res['analytic_distribution'] = self.sale_line_id.analytic_distribution
         return res
+
+    def _reassign_sale_lines(self, sale_order):
+        current_order = self.sale_line_id.order_id
+        if len(current_order) <= 1 and current_order != sale_order:
+            ids_to_reset = set()
+            if not sale_order:
+                ids_to_reset.update(self.ids)
+            else:
+                line_ids_by_product = dict(self.env['sale.order.line']._read_group(
+                    domain=[('order_id', '=', sale_order.id), ('product_id', 'in', self.product_id.ids)],
+                    aggregates=['id:array_agg'],
+                    groupby=['product_id']
+                ))
+                for move in self:
+                    if line_id := line_ids_by_product.get(move.product_id, [])[:1]:
+                        move.sale_line_id = line_id[0]
+                    else:
+                        ids_to_reset.add(move.id)
+
+            if ids_to_reset:
+                self.env['stock.move'].browse(ids_to_reset).sale_line_id = False
 
 
 class StockMoveLine(models.Model):
@@ -155,7 +188,8 @@ class StockPicking(models.Model):
         for picking in self:
             # picking and move should have a link to the SO to see the picking on the stat button.
             # This will filter the move chain to the delivery moves only.
-            picking.sale_id = picking.move_ids.sale_line_id.order_id
+            sales_order = picking.move_ids.sale_line_id.order_id
+            picking.sale_id = sales_order[0] if sales_order else False
 
     @api.depends('move_ids.sale_line_id')
     def _compute_move_type(self):
@@ -169,14 +203,21 @@ class StockPicking(models.Model):
                     picking.move_type = "one"
 
     def _set_sale_id(self):
-        if self.reference_ids and self.sale_id:
-            self.reference_ids.sale_ids = Command.link(self.sale_id)
+        if self.reference_ids:
+            if self.sale_id:
+                self.reference_ids.sale_ids = [Command.link(self.sale_id.id)]
+            else:
+                sale_order = self.move_ids.sale_line_id.order_id
+                if len(sale_order) == 1:
+                    self.reference_ids.sale_ids = [Command.unlink(sale_order.id)]
         else:
             if self.sale_id:
-                self.env['stock.reference'].create({
+                reference = self.env['stock.reference'].create({
                     'sale_ids': [Command.link(self.sale_id.id)],
                     'name': self.sale_id.name,
                 })
+                self._add_reference(reference)
+        self.move_ids._reassign_sale_lines(self.sale_id)
 
     def _auto_init(self):
         """
@@ -286,14 +327,21 @@ class StockLot(models.Model):
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
-        sale_orders = defaultdict(lambda: self.env['sale.order'])
-        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
-            move = move_line.move_id
-            if move.picking_id.location_dest_id.usage in ('customer', 'transit') and move.sale_line_id.order_id:
-                sale_orders[move_line.lot_id.id] |= move.sale_line_id.order_id
+        sale_orders = defaultdict(set)
+        move_lines = self.env['stock.move.line'].search([
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            ('move_id.sale_line_id.order_id', '!=', False),
+            ('move_id.picking_id.location_dest_id.usage', 'in', ('customer', 'transit')),
+        ])
+        for ml in move_lines:
+            so = ml.move_id.sale_line_id.order_id
+            if so.with_user(self.env.user).has_access('read'):
+                sale_orders[ml.lot_id.id].add(so.id)
         for lot in self:
-            lot.sale_order_ids = sale_orders[lot.id]
-            lot.sale_order_count = len(lot.sale_order_ids)
+            so_ids = sale_orders.get(lot.id, set())
+            lot.sale_order_ids = [Command.set(list(so_ids))]
+            lot.sale_order_count = len(so_ids)
 
     def action_view_so(self):
         self.ensure_one()

@@ -1,24 +1,26 @@
 import asyncio
 import json
 import logging
-import pprint
 from threading import Thread
 import time
-from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
+try:
+    from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
+    webrtc_client = True
+except ImportError:
+    webrtc_client = None
 
 from odoo.addons.iot_drivers import main
+from odoo.addons.iot_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
 
 
 class WebRtcClient(Thread):
-    daemon = True
-
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self.connections: set[RTCDataChannel] = set()
         self.chunked_message_in_progress: dict[RTCDataChannel, str] = {}
-        self.event_loop = asyncio.get_event_loop_policy().get_event_loop()
+        self.event_loop = asyncio.new_event_loop()
 
     def offer(self, request: dict):
         return asyncio.run_coroutine_threadsafe(
@@ -40,7 +42,7 @@ class WebRtcClient(Thread):
             self.connections.add(channel)
 
             @channel.on("message")
-            def on_message(message_str: str):
+            async def on_message(message_str: str):
                 # Handle chunked message
                 if self.chunked_message_in_progress.get(channel) is not None:
                     if message_str == "chunked_end":
@@ -55,14 +57,16 @@ class WebRtcClient(Thread):
                 # Handle regular message
                 message = json.loads(message_str)
                 message_type = message["message_type"]
-                _logger.info("Received message of type %s:\n%s", message_type, pprint.pformat(message))
+                _logger.info("Received message of type %s", message_type)
                 if message_type == "iot_action":
                     device_identifier = message["device_identifier"]
                     data = message["data"]
                     data["session_id"] = message["session_id"]
                     if device_identifier in main.iot_devices:
-                        _logger.info("device '%s' action started with: %s", device_identifier, pprint.pformat(data))
-                        main.iot_devices[device_identifier].action(data)
+                        start_operation_time = time.perf_counter()
+                        _logger.info("device '%s' action started", device_identifier)
+                        await self.event_loop.run_in_executor(None, lambda: main.iot_devices[device_identifier].action(data))
+                        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
                     else:
                         # Notify that the device is not connected
                         self.send({
@@ -71,6 +75,21 @@ class WebRtcClient(Thread):
                             'time': time.time(),
                             'status': 'disconnected',
                         })
+                elif message_type == "test_protocol":
+                    self.send({
+                        'owner': message['session_id'],
+                        'device_identifier': helpers.get_identifier(),
+                        'time': time.time(),
+                        'status': 'success',
+                    })
+                elif message_type == "restart_odoo":
+                    self.send({
+                        'owner': message['session_id'],
+                        'device_identifier': helpers.get_identifier(),
+                        'time': time.time(),
+                        'status': 'success',
+                    })
+                    await self.event_loop.run_in_executor(None, helpers.odoo_restart)
 
             @channel.on("close")
             def on_close():
@@ -96,5 +115,6 @@ class WebRtcClient(Thread):
         self.event_loop.run_forever()
 
 
-webrtc_client = WebRtcClient()
-webrtc_client.start()
+if webrtc_client:
+    webrtc_client = WebRtcClient()
+    webrtc_client.start()

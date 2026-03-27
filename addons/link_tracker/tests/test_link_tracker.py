@@ -261,3 +261,19 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '?debug=1'})
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#'})
         self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#model=project.task&id=3603607'})
+
+    def test_url_encoding(self):
+        """Test that the redirect URL is properly encoded."""
+        campaign = self.env['utm.campaign'].create({'name': 'campai.gn...'})
+        source = self.env['utm.source'].create({'name': 'source...'})
+        medium = self.env['utm.medium'].create({'name': 'medium'})
+        link = self.env['link.tracker'].create({
+            'url': 'http://example.com',
+            'title': 'Odoo',
+            'campaign_id': campaign.id,
+            'source_id': source.id,
+            'medium_id': medium.id,
+        })
+        self.assertIn('utm_campaign=campai.gn%2E%2E%2E', link.redirected_url)
+        self.assertIn('utm_source=source%2E%2E%2E', link.redirected_url)
+        self.assertIn('utm_medium=medium', link.redirected_url)

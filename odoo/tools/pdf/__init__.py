@@ -108,6 +108,16 @@ def _unwrapping_get(self, key, default=None):
 DictionaryObject.get = _unwrapping_get
 
 
+if hasattr(NameObject, 'renumber_table'):
+    # Make sure all the correct delimiters are included
+    # We will make this change only if pypdf has the renumber_table attribute
+    # https://github.com/py-pdf/pypdf/commit/8c542f331828c5839fda48442d89b8ac5d3984ac
+    NameObject.renumber_table.update({
+        **{chr(i): f"#{i:02X}".encode() for i in b"#()<>[]{}/%"},
+        **{chr(i): f"#{i:02X}".encode() for i in range(33)},
+    })
+
+
 if hasattr(PdfWriter, 'write_stream'):
     # >= 2.x has a utility `write` which can open a path, so `write_stream` could be called directly
     class BrandedFileWriter(PdfWriter):
@@ -155,13 +165,13 @@ def fill_form_fields_pdf(writer, form_fields):
     :return: a filled PDF datastring
     '''
 
+    pypdf_version = parse_version(pypdf.__version__)
+
     # This solves a known problem with PyPDF2, where with some pdf software, forms fields aren't
     # correctly filled until the user click on it, see: https://github.com/py-pdf/pypdf/issues/355
     if hasattr(writer, 'set_need_appearances_writer'):
         writer.set_need_appearances_writer()
-        is_upper_version_pypdf2 = True
     else:  # This method was renamed in PyPDF2 2.0
-        is_upper_version_pypdf2 = False
         catalog = writer._root_object
         # get the AcroForm tree
         if "/AcroForm" not in catalog:
@@ -170,12 +180,23 @@ def fill_form_fields_pdf(writer, form_fields):
             })
         writer._root_object["/AcroForm"][NameObject("/NeedAppearances")] = BooleanObject(True)
 
-    nbr_pages = len(writer.pages) if is_upper_version_pypdf2 else writer.getNumPages()
+    if pypdf_version >= parse_version('3.13.0'):
+        catalog = writer._root_object
+        if "/Fields" not in catalog.get('/AcroForm'):
+            catalog.update({
+                NameObject("/AcroForm"): writer._add_object(
+                    DictionaryObject({
+                        NameObject("/Fields"): ArrayObject()
+                    })
+                )
+            })
+
+    nbr_pages = len(writer.pages) if pypdf_version >= parse_version('1.28.0') else writer.getNumPages()
 
     for page_id in range(0, nbr_pages):
         page = writer.getPage(page_id)
 
-        if is_upper_version_pypdf2:
+        if pypdf_version >= parse_version('2.11.0'):
             writer.update_page_form_field_values(page, form_fields)
         else:
             # Known bug on previous versions of PyPDF2, fixed in 2.11
@@ -207,16 +228,21 @@ def rotate_pdf(pdf):
         return _buffer.getvalue()
 
 
-def to_pdf_stream(attachment) -> io.BytesIO:
+def to_pdf_stream(attachment) -> io.BytesIO | None:
     """Get the byte stream of the attachment as a PDF."""
+    if not attachment.raw:
+        _logger.warning("%s has no raw data.", attachment)
+        return None
+
+    if attachment_raw := attachment._get_pdf_raw():
+        return io.BytesIO(attachment_raw)
     stream = io.BytesIO(attachment.raw)
-    if attachment.mimetype == 'application/pdf':
-        return stream
-    elif attachment.mimetype.startswith('image'):
+    if attachment.mimetype.startswith('image'):
         output_stream = io.BytesIO()
         Image.open(stream).convert("RGB").save(output_stream, format="pdf")
         return output_stream
     _logger.warning("mimetype (%s) not recognized for %s", attachment.mimetype, attachment)
+    return None
 
 
 def extract_page(attachment, num_page=0) -> io.BytesIO | None:
@@ -383,8 +409,8 @@ class OdooPdfFileWriter(PdfFileWriter):
 
         adapted_subtype = subtype
         if REGEX_SUBTYPE_UNFORMATED.match(subtype):
-            # _pypdf2_2 does the formating when creating a NameObject
-            if SUBMOD == '._pypdf2_2':
+            # _pypdf2_2 and _pypdf does the formating when creating a NameObject
+            if SUBMOD in ('._pypdf2_2', '._pypdf'):
                 return '/' + subtype
             adapted_subtype = '/' + subtype.replace('/', '#2F')
 
@@ -488,16 +514,18 @@ class OdooPdfFileWriter(PdfFileWriter):
         """
         # Set the PDF version to 1.7 (as PDF/A-3 is based on version 1.7) and make it PDF/A compliant.
         # See https://github.com/veraPDF/veraPDF-validation-profiles/wiki/PDFA-Parts-2-and-3-rules#rule-612-1
+        self._header = b"%PDF-1.7"
 
         # " The file header shall begin at byte zero and shall consist of "%PDF-1.n" followed by a single EOL marker,
         # where 'n' is a single digit number between 0 (30h) and 7 (37h) "
         # " The aforementioned EOL marker shall be immediately followed by a % (25h) character followed by at least four
-        # bytes, each of whose encoded byte values shall have a decimal value greater than 127 "
-        self._header = b"%PDF-1.7"
-        if SUBMOD != '._pypdf2_2':
-            self._header += b"\n"
+        # bytes, each of whose encoded byte values shall have a decimal value greater than 127 ".
+        # PyPDF2 2.X+ already adds these 4 characters by default (so ._pypdf2_2 and ._pypdf don't need it).
+        # The injected character `\xc3\xa9` is equivalent to the character `é`.
+        # Therefore, on `_pypdf2_1`, the header will look like: `%PDF-1.7\n%éééé`,
+        # while on `_pypdf2_2` and `_pypdf`, it will look like: `%PDF-1.7\n%âãÏÓ`.
         if SUBMOD == '._pypdf2_1':
-            self._header += b"%\xDE\xAD\xBE\xEF"
+            self._header += b"\n%\xc3\xa9\xc3\xa9\xc3\xa9\xc3\xa9"
 
         # Add a document ID to the trailer. This is only needed when using encryption with regular PDF, but is required
         # when using PDF/A
@@ -571,6 +599,14 @@ class OdooPdfFileWriter(PdfFileWriter):
         outlines = self._root_object['/Outlines'].getObject()
         outlines[NameObject('/Count')] = NumberObject(1)
 
+        # [6.7.2.2-1] include a MarkInfo dictionary containing "Marked" with true value
+        mark_info = DictionaryObject({NameObject("/Marked"): BooleanObject(True)})
+        self._root_object[NameObject("/MarkInfo")] = mark_info
+
+        # [6.7.3.3-1] include minimal document structure in the catalog
+        struct_tree_root = DictionaryObject({NameObject("/Type"): NameObject("/StructTreeRoot")})
+        self._root_object[NameObject("/StructTreeRoot")] = struct_tree_root
+
         # Set odoo as producer
         self.addMetadata({
             '/Creator': "Odoo",
@@ -618,7 +654,7 @@ class OdooPdfFileWriter(PdfFileWriter):
                 DictionaryObject({
                     NameObject('/CheckSum'): createStringObject(md5(attachment['content']).hexdigest()),
                     NameObject('/ModDate'): createStringObject(datetime.now().strftime(DEFAULT_PDF_DATETIME_FORMAT)),
-                    NameObject('/Size'): NameObject(f"/{len(attachment['content'])}"),
+                    NameObject('/Size'): NumberObject(len(attachment['content'])),
                 }),
         })
         if attachment.get('subtype'):

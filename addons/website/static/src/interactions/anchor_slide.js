@@ -10,6 +10,18 @@ export class AnchorSlide extends Interaction {
         },
     };
 
+    setup() {
+        /**
+         * It expands the corresponding accordion item if the target element
+         * matches the hash.
+         */
+        const hash = window.location.hash.substring(1);
+        const anchorEl = hash ? document.getElementById(hash) : null;
+        if (anchorEl && anchorEl.classList.contains("accordion-item")) {
+            this.handleAccordionAnchor(anchorEl);
+        }
+    }
+
     /**
      * @param {HTMLElement} el the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
@@ -24,6 +36,18 @@ export class AnchorSlide extends Interaction {
 
     computeExtraOffset() {
         return 0;
+    }
+
+    /**
+     * Automatically opens the specific accordion item and closes the others.
+     *
+     * @param {HTMLElement} anchorEl - The accordion item element to handle.
+     */
+    handleAccordionAnchor(anchorEl) {
+        const accordionCollapseEl = anchorEl.querySelector(".accordion-collapse");
+        Collapse.getOrCreateInstance(accordionCollapseEl, {
+            toggle: false,
+        }).show();
     }
 
     /**
@@ -46,10 +70,14 @@ export class AnchorSlide extends Interaction {
         hash = "#" + CSS.escape(hash.substring(1));
         const anchorEl = this.el.ownerDocument.querySelector(hash);
         const scrollValue = anchorEl?.dataset.anchor;
-        if (!anchorEl || !scrollValue) {
+        // No need to scroll when target is _blank as it should open in new tab
+        if (!anchorEl || !scrollValue || this.el.target === "_blank") {
             return;
         }
 
+        if (anchorEl.classList.contains("accordion-item")) {
+            this.handleAccordionAnchor(anchorEl);
+        }
         const offcanvasEl = this.el.closest(".offcanvas.o_navbar_mobile");
         if (offcanvasEl && offcanvasEl.classList.contains("show")) {
             // Special case for anchors in offcanvas in mobile: we can't just
@@ -64,7 +92,7 @@ export class AnchorSlide extends Interaction {
                 "hidden.bs.offcanvas",
                 () => this.manageScroll(hash, anchorEl, scrollValue),
                 // the listener must be automatically removed when invoked
-                { once: true },
+                { once: true }
             );
         } else {
             ev.preventDefault();
@@ -92,6 +120,4 @@ export class AnchorSlide extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.anchor_slide", AnchorSlide);
+registry.category("public.interactions").add("website.anchor_slide", AnchorSlide);

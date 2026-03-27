@@ -526,3 +526,18 @@ class TestProjectBase(TestProjectCommon):
         self.assertFalse(project_copy.date, "The project's date fields shouldn't be copied on project duplication")
         self.assertFalse(project_copy.task_ids.date_deadline, "The task's date fields shouldn't be copied on project duplication")
         self.assertFalse(task.copy().date_deadline, "The task's date fields shouldn't be copied on task duplication")
+
+    def test_archived_subtask_not_copied_during_parent_task_duplication(self):
+        """Test that archived subtasks are not copied when duplicating a parent task."""
+        parent_task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id': self.project_pigs.id,
+            'child_ids': [
+                Command.create({
+                    'name': 'child task',
+                    'project_id': self.project_pigs.id,
+                }),
+            ],
+        })
+        parent_task.child_ids.active = False
+        self.assertFalse(parent_task.copy().child_ids, "Archived subtask should not be copied")

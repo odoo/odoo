@@ -198,7 +198,7 @@ class WebsiteMenu(models.Model):
     def _clean_url(self):
         # clean the url with heuristic
         url = self.url
-        if url and not self.url.startswith("/"):
+        if url and not url.startswith('/') and url not in ('#top', '#bottom'):
             if "@" in self.url:
                 if not self.url.startswith("mailto"):
                     url = "mailto:%s" % self.url
@@ -238,6 +238,11 @@ class WebsiteMenu(models.Model):
             menu_url = url_parse(self._clean_url())
             unslug_url = self.env['ir.http']._unslug_url
             if unslug_url(menu_url.path) == unslug_url(request_url.path):
+                # By default we compare the unslug version of the current URL
+                # with the menu URL but if the menu is linked to a page we don't
+                # consider it active if the paths don't match exactly.
+                if self.page_id and menu_url.path != request_url.path:
+                    return False
                 if not (
                     set(menu_url.decode_query().items(multi=True))
                     <= set(request_url.decode_query().items(multi=True))
@@ -306,12 +311,14 @@ class WebsiteMenu(models.Model):
             if '#' in menu['url']:
                 # Multiple case possible
                 # 1. `#` => menu container (dropdown, ..)
-                # 2. `#anchor` => anchor on current page
-                # 3. `/url#something` => valid internal URL
-                # 4. https://google.com#smth => valid external URL
+                # 2. `#top` or `#bottom` => special anchors valid for any page
+                # 3. `#anchor` => anchor on current page
+                # 4. `/url#something` => valid internal URL
+                # 5. https://google.com#smth => valid external URL
                 if menu_id.page_id:
                     menu_id.page_id = None
-                if request and menu['url'].startswith('#') and len(menu['url']) > 1:
+                if request and menu['url'].startswith('#') and len(menu['url']) > 1 and \
+                        menu['url'] not in ['#top', '#bottom']:
                     # Working on case 2.: prefix anchor with referer URL
                     referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
                     menu['url'] = referer_url + menu['url']

@@ -2,7 +2,7 @@ import { jsToPyLocale } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 
-registry.category("services").add("website_page", {
+export const websitePageService = {
     start() {
         const htmlEl = document.querySelector("html");
         // TODO this is duplicated in website_service.js at least... to share
@@ -17,8 +17,10 @@ registry.category("services").add("website_page", {
             },
             mainObject: {
                 model: match && match[1],
-                id: match && (match[2] | 0),
+                id: match && match[2] | 0,
             },
         };
     },
-});
+};
+
+registry.category("services").add("website_page", websitePageService);

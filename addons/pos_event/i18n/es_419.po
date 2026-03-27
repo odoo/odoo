@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-25 23:35+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-30 17:18+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/pos_event/es_419/>\n"
@@ -23,29 +23,36 @@ msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
-msgid " (%s seats available)"
-msgstr " (%s asientos disponibles)"
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid " for this slot"
+msgstr " para este espacio"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "--- Select ---"
 msgstr "--- Seleccione ---"
 
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.pos_order_form_view_inherit
-msgid "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Badges"
+msgid ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Badges"
 msgstr ""
 "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Imprimir "
 "identificaciones del evento"
 
 #. module: pos_event
 #: model_terms:ir.ui.view,arch_db:pos_event.pos_order_form_view_inherit
-msgid "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Tickets"
+msgid ""
+"<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Tickets"
 msgstr ""
 "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Imprimir boletos "
 "del evento"
+
+#. module: pos_event
+#: model_terms:ir.ui.view,arch_db:pos_event.event_registration_ticket_view_form
+msgid "<span class=\"o_stat_text\">PoS Order</span>"
+msgstr "<span class=\"o_stat_text\">Orden del PdV</span>"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
@@ -59,21 +66,38 @@ msgstr "Asistentes"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
 msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: pos_event
+#: model:ir.model.fields,field_description:pos_event.field_event_event__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_question__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_slot__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_session__display_name
+msgid "Display Name"
+msgstr "Mostrar nombre"
+
+#. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Error"
 msgstr "Error"
 
@@ -110,6 +134,11 @@ msgid "Event Registrations"
 msgstr "Registros al evento"
 
 #. module: pos_event
+#: model:ir.model,name:pos_event.model_event_slot
+msgid "Event Slot"
+msgstr "Espacio para eventos"
+
+#. module: pos_event
 #: model:ir.model,name:pos_event.model_event_event_ticket
 #: model:ir.model.fields,field_description:pos_event.field_pos_order_line__event_ticket_id
 msgid "Event Ticket"
@@ -128,15 +157,36 @@ msgstr "Eventos"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/screens/product_screen/product_screen.js:0
-msgid "From %s"
-msgstr "Del %s"
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
+msgid "Global questions"
+msgstr "Preguntas globales"
+
+#. module: pos_event
+#: model:ir.model.fields,field_description:pos_event.field_event_event__id
+#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:pos_event.field_event_question__id
+#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__id
+#: model:ir.model.fields,field_description:pos_event.field_event_registration__id
+#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__id
+#: model:ir.model.fields,field_description:pos_event.field_event_slot__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_session__id
+msgid "ID"
+msgstr "ID"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
-msgid "Global questions"
-msgstr "Preguntas globales"
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.xml:0
+msgid "No Slot Selected"
+msgstr "No hay ningún espacio seleccionado"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "No slots"
+msgstr "No hay espacios"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__image_1024
@@ -187,20 +237,40 @@ msgstr "Imprimir boleto en página completa"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
-msgid "Select tickets for %s"
-msgstr "Selecciona los boletos para %s"
+#: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.js:0
+msgid "Select a slot for %(event)s"
+msgstr "Seleccionar un espacio para %(event)s"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Select tickets for %(event)s"
+msgstr "Seleccionar boletos para %(event)s"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Select tickets for %(event)s (%(seats)s seats available%(suffix)s)"
+msgstr ""
+"Seleccionar boletos para %(event)s (%(seats)s lugares disponibles%(suffix)s)"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "Sold out"
+msgstr "Agotado"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid ""
 "The selected ticket (%s) is not available. Please select a different ticket."
 msgstr "El boleto seleccionado (%s) no está disponible, elija otro."
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Ticket #"
 msgstr "Boleto #"
 
@@ -212,33 +282,54 @@ msgstr "Error del boleto"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Tickets"
 msgstr "Boletos"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "Unlimited"
 msgstr "Sin límite"
 
 #. module: pos_event
 #. odoo-javascript
 #: code:addons/pos_event/static/src/app/models/pos_order_line.js:0
-msgid ""
-"You cannot change quantity for a line linked with an event registration"
+msgid "You cannot change quantity for a line linked with an event registration"
 msgstr ""
 "No puede cambiar la cantidad de una línea vinculada a un registro de evento"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "for"
 msgstr "para"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/generic_components/product_card/product_card.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "left"
 msgstr "restantes"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "slot"
+msgstr "espacio"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
+msgid "slots"
+msgstr "espacios"
+
+#~ msgid "From %s"
+#~ msgstr "Del %s"
+
+#~ msgid " (%s seats available)"
+#~ msgstr " (%s asientos disponibles)"
+
+#~ msgid "Select tickets for %s"
+#~ msgstr "Selecciona los boletos para %s"

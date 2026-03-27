@@ -1,6 +1,6 @@
 import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
+import { click } from "@odoo/hoot-dom";
 import {
     contains,
     dataURItoBlob,
@@ -9,7 +9,10 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -57,20 +60,16 @@ test("Add image as cover", async () => {
         original: { id: 1, image_src: "/web/image/hoot.png", mimetype: "image/png" },
     }));
 
-    onRpc(
-        "/web/image/hoot.png",
-        () => {
-            const base64Image =
-                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
-                "A".repeat(1000); // converted image won't be used if original is not larger
-            return dataURItoBlob(base64Image);
-        },
-        { pure: true }
-    );
+    onRpc("/web/image/hoot.png", () => {
+        const base64Image =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
+            "A".repeat(1000); // converted image won't be used if original is not larger
+        return dataURItoBlob(base64Image);
+    });
 
     const blogPostTitle = "Title of Test Post";
 
-    await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="o_record_cover_container" data-res-model="blog.post" data-res-id="3">
             <div class="o_record_cover_image"/>
             <h1 data-oe-model="blog.post" data-oe-id="3" data-oe-field="name">${blogPostTitle}</h1>
@@ -83,8 +82,7 @@ test("Add image as cover", async () => {
     // We use "click" instead of contains.click because contains wait for the image to be visible.
     // In this test we don't want to wait ~800ms for the image to be visible but we can still click on it
     await click(".o_existing_attachment_cell .o_button_area");
-    await animationFrame();
-    await waitFor(":iframe .o_record_cover_container.o_record_has_cover .o_record_cover_image");
+    await waitSidebarUpdated();
     expect(":iframe .o_record_cover_image").toHaveStyle({
         "background-image": /url\("data:image\/webp;base64,(.*)"\)/,
     });

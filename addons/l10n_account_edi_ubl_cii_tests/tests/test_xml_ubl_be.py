@@ -25,7 +25,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230', 'allow_out_payment': True})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -38,7 +38,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -90,6 +90,11 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'amount': 0,
             'type_tax_use': 'sale',
             'country_id': cls.env.ref('base.be').id,
+        })
+
+        cls.env['res.partner.bank'].sudo().create({
+            'acc_number': 'BE15001559627230',
+            'partner_id': cls.company_data['company'].partner_id.id,
         })
 
         cls.pay_term = cls.env['account.payment.term'].create({
@@ -232,52 +237,6 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         )
         self._test_encoding_in_attachment(invoice.ubl_cii_xml_id, 'ubl_bis3.xml')
 
-    def test_sending_to_public_admin(self):
-        """ A public administration has no VAT, but has an arbitrary number (see:
-        https://pch.gouvernement.lu/fr/peppol.html). Then, the `EndpointID` node should be filled with this arbitrary
-        number (use the field `peppol_endpoint`).
-        In addition, when the Seller has no VAT, the node PartyTaxScheme and PartyLegalEntity may contain the Seller
-        identifier or the Seller legal registration identifier.
-        """
-        def check_attachment(invoice, expected_file):
-            self._assert_invoice_attachment(
-                invoice.ubl_cii_xml_id,
-                xpaths=f'''
-                    <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
-                        <cbc:PaymentID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:PaymentID>
-                    </xpath>
-                    <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
-                        <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
-                    </xpath>
-                    <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
-                        <attribute name="mimeCode">application/pdf</attribute>
-                        <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
-                    </xpath>
-                ''',
-                expected_file_path=expected_file,
-            )
-        # Setup a public admin in Luxembourg without VAT
-        self.partner_2.write({
-            'vat': None,
-            'peppol_eas': '9938',
-            'peppol_endpoint': '00005000041',
-            'country_id': self.env.ref('base.lu').id,
-        })
-        invoice_vals = {
-            'move_type': 'out_invoice',
-            'invoice_line_ids': [{
-                'product_id': self.product_a.id,
-                'quantity': 2,
-                'price_unit': 100,
-                'tax_ids': [(6, 0, self.tax_21.ids)],
-            }],
-        }
-        invoice1 = self._generate_move(self.partner_1, self.partner_2, **invoice_vals)
-        check_attachment(invoice1, "from_odoo/bis3_out_invoice_public_admin_1.xml")
-        # Switch the partner's roles
-        invoice2 = self._generate_move(self.partner_2, self.partner_1, **invoice_vals)
-        check_attachment(invoice2, "from_odoo/bis3_out_invoice_public_admin_2.xml")
-
     ####################################################
     # Test import
     ####################################################
@@ -335,6 +294,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         acc_bank = self.env['res.partner.bank'].create({
             'acc_number': 'BE15001559627231',
             'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         invoice = self._generate_move(
@@ -375,6 +335,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
 
         # Import:
         created_bill = self.env['account.move'].create({'move_type': 'in_invoice'})
+        self.env['res.partner'].search([('vat', '=', 'BE0246697724'), ('id', '!=', self.company_data['company'].id)]).vat = False  # clean demo company to avoid picking it as a partner
         created_bill.message_post(attachment_ids=[attachment.id])
         self.assertTrue(created_bill)
 
@@ -397,6 +358,10 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_imported_invoice_from_file(filename='bis3_out_invoice_no_prices.xml', **kwargs)
 
     def test_import_invoice_xml_open_peppol_examples(self):
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'IBAN32423940',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
         # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples
         subfolder = 'tests/test_files/from_peppol-bis-invoice-3_doc'
         # source: Allowance-example.xml
@@ -430,6 +395,16 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'amount_tax': 331.25,
                 'invoice_lines': [{'price_subtotal': x} for x in (25, 2800, -1500)],
             },
+        )
+        # source: base-creditnote-correction.xml with ignored LineExtensionAmount
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_invoice_ignore_lineextensionamount.xml',
+            invoice_vals={
+                'amount_total': 1000,
+                'amount_tax': 0,
+                'invoice_lines': [{'price_subtotal': 1000}],
+            }
         )
         # source: vat-category-E.xml
         self._assert_imported_invoice_from_file(

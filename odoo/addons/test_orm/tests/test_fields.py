@@ -966,6 +966,34 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env.invalidate_all()
         self.assertEqual(record.created_id.value, 3)
 
+    def test_18_flush_precommit(self):
+        """ check that cr.flush() runs precommits as many times as needed. """
+        cr = self.env.cr
+        record = self.env['test_orm.compute.created'].create({'name': 'foo'})
+        # The hook triggers a compute of the value (stored-computed) field
+        # which triggers the hook again, limited to 4 calls.
+        # Choosing a number < 10 (which is the max number of iterations).
+        count = 4
+
+        def hook():
+            nonlocal count
+            if count <= 0:
+                return
+            count -= 1
+            record.name = 'x'
+
+        def compute_value(self):
+            self.value = 10 + count
+            self.env.cr.precommit.add(hook)
+
+        self.patch(self.registry[record._name], '_compute_value', compute_value)
+
+        # run the pre-commit hook
+        hook()
+        cr.flush()
+        self.assertEqual(count, 0, "Precommit not ran enough times")
+        self.assertEqual(record.value, 10, "Flush not triggered correctly")
+
     def test_20_float(self):
         """ test rounding of float fields """
         record = self.env['test_orm.mixed'].create({})
@@ -1109,6 +1137,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.name = False
         self.assertFalse(record.filtered_domain([('name', 'like', 'F')]))
         self.assertFalse(record.filtered_domain([('name', 'ilike', 'f')]))
+
+    def test_20_like_multiline(self):
+        """ test filtered_domain() on multiline fields. """
+        record = self.env['test_orm.mixed'].create({'comment1': 'Foo\nBar'})
+        self.assertTrue(record.filtered_domain([('comment1', 'like', 'Bar')]))
+        self.assertTrue(record.filtered_domain([('comment1', 'ilike', 'bar')]))
 
     def test_21_date(self):
         """ test date fields """
@@ -3196,6 +3230,29 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 self.assertIn(new_name, self.env['res.partner']._fields)
                 self.assertIn(new_name, self.env['res.users']._fields)
 
+    def test_100_rename_custom_field_inherited(self):
+        manual_origin = self.env["ir.model.fields"].create({
+            "name": "x_manual_hazel",
+            "model_id": self.env["ir.model"]._get("test_orm.related").id,
+            "ttype": "char",
+        })
+        self.assertEqual(manual_origin.state, "manual")
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", "x_manual_hazel")
+        self.assertTrue(manual_inherited.exists())
+        self.assertEqual(manual_inherited.state, "base")
+
+        with self.assertRaisesRegex(UserError, r'cannot be removed'):
+            manual_inherited.unlink()
+
+        manual_origin.name = 'x_manual_hazel_2'
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", 'x_manual_hazel')
+        self.assertFalse(manual_inherited)
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", 'x_manual_hazel_2')
+        self.assertTrue(manual_inherited.exists())
+
+        manual_origin.unlink()
+        self.assertFalse(manual_inherited.exists())
+
     def test_cache_key_invalidation(self):
         company0 = self.env.ref('base.main_company')
         company1 = self.env['res.company'].create({'name': 'A'})
@@ -3251,6 +3308,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.comment0, record_value)
         record.invalidate_recordset()
         self.assertEqual(record.comment0, record_value)
+
+    def test_related_column_type(self):
+        related_float_field = self.env['test_orm.related']._fields['foo_float_id']
+        self.assertEqual(related_float_field.column_type[1], 'numeric')
 
 
 class TestX2many(TransactionExpressionCase):
@@ -3945,10 +4006,11 @@ class TestMagicFields(TransactionCase):
         self.assertTrue(field.store)
 
 
-class TestParentStore(TransactionCase):
+class TestParentStore(TransactionCaseWithUserDemo):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # make a tree of categories:
         #   0
         #  /|\
@@ -3957,7 +4019,7 @@ class TestParentStore(TransactionCase):
         #   4 5 6
         #      /|\
         #     7 8 9
-        Cat = self.env['test_orm.category']
+        Cat = cls.env['test_orm.category']
         cat0 = Cat.create({'name': '0'})
         cat1 = Cat.create({'name': '1', 'parent': cat0.id})
         cat2 = Cat.create({'name': '2', 'parent': cat0.id})
@@ -3968,8 +4030,8 @@ class TestParentStore(TransactionCase):
         cat7 = Cat.create({'name': '7', 'parent': cat6.id})
         cat8 = Cat.create({'name': '8', 'parent': cat6.id})
         cat9 = Cat.create({'name': '9', 'parent': cat6.id})
-        self._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
-                                cat5, cat6, cat7, cat8, cat9)
+        cls._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
+                               cat5, cat6, cat7, cat8, cat9)
 
     def cats(self, *indexes):
         """ Return the given categories. """
@@ -4007,7 +4069,6 @@ class TestParentStore(TransactionCase):
 
     def test_base_compute(self):
         """ Check the tree structure after computation from scratch. """
-        self.cats()._parent_store_compute()
         self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
         self.assertChildOf(self.cats(1), self.cats(1))
         self.assertChildOf(self.cats(2), self.cats(2))
@@ -4123,10 +4184,45 @@ class TestParentStore(TransactionCase):
         self.assertEqual(self.cats(8).depth, 2)
         self.assertEqual(self.cats(9).depth, 2)
 
+        # warmup
+        self.cats().create({'name': 'warmup'})
         # add a new node: one query to INSERT, one query to UPDATE parent_path
         with self.assertQueryCount(2):
             cat = self.cats().create({'name': '10', 'parent': self.cats(6).id})
             self.assertEqual(cat.depth, 2)
+
+    def test_with_ir_rule_behavior(self):
+        self.env['ir.rule'].create({
+            'name': 'category rule',
+            'model_id': self.env['ir.model']._get('test_orm.category').id,
+            'domain_force': str([('id', 'in', self.cats(3).ids)]),
+        })
+
+        # Ensure that we don't have access to inaccessible records
+        self.assertEqual(
+            self.cats().with_user(self.user_demo).search([('id', 'child_of', self.cats(3).ids)]),
+            self.cats(3),
+        )
+        self.assertEqual(
+            self.cats().with_user(self.user_demo).search([('id', 'parent_of', self.cats(3).ids)]),
+            self.cats(3),
+        )
+
+        Dis = self.env['test_orm.discussion']
+        dis_0, dis_3, dis_5, dis_7 = Dis.create([
+            {'name': 'A', 'categories': self.cats(0)},
+            {'name': 'B', 'categories': self.cats(3)},
+            {'name': 'C', 'categories': self.cats(5)},
+            {'name': 'D', 'categories': self.cats(7)},
+        ])
+        self.assertEqual(
+            Dis.with_user(self.user_demo).search([('categories', 'child_of', self.cats(3).ids)]),
+            dis_3 + dis_5 + dis_7,
+        )
+        self.assertEqual(
+            Dis.with_user(self.user_demo).search([('categories', 'parent_of', self.cats(3).ids)]),
+            dis_0 + dis_3,
+        )
 
 
 class TestRequiredMany2one(TransactionCase):
@@ -4270,6 +4366,7 @@ class TestSelectionOndelete(TransactionCase):
     MODEL_REQUIRED = 'test_orm.model_selection_required'
     MODEL_NONSTORED = 'test_orm.model_selection_non_stored'
     MODEL_WRITE_OVERRIDE = 'test_orm.model_selection_required_for_write_override'
+    MODEL_COMPANY_DEPENDENT = 'test_orm.model_selection_company_dependent'
 
     def setUp(self):
         super().setUp()
@@ -4417,6 +4514,39 @@ class TestSelectionOndelete(TransactionCase):
 
         self._unlink_option(self.MODEL_WRITE_OVERRIDE, 'divinity')
         self.assertEqual(rec.my_selection, 'foo')
+
+    def test_ondelete_company_dependent_null_implicit_with_multicompany(self):
+        Model = self.env[self.MODEL_COMPANY_DEPENDENT]
+        company_2 = self.env['res.company'].create({'name': 'Test Company'})
+
+        # create records with the extended selection option
+        records = r1, r2, r3 = Model.create([
+            {'my_selection': 'manual'},
+            {'my_selection': 'auto'},
+            {'my_selection': 'semi_auto'},
+        ])
+
+        # set different values for company_2
+        r1.with_company(company_2).write({'my_selection': 'semi_auto'})
+        r2.with_company(company_2).write({'my_selection': 'semi_auto'})
+        r3.with_company(company_2).write({'my_selection': 'manual'})
+
+        # sanity checks before unlink
+        self.assertEqual(records.mapped("my_selection"), ["manual", "auto", "semi_auto"])
+        self.assertEqual(
+            records.with_company(company_2).mapped("my_selection"),
+            ["semi_auto", "semi_auto", "manual"],
+        )
+
+        # simulates a module uninstall
+        self._unlink_option(self.MODEL_COMPANY_DEPENDENT, 'semi_auto')
+
+        # test that values are removed from all the companies
+        self.assertEqual(records.mapped("my_selection"), ["manual", "auto", False])
+        self.assertEqual(
+            records.with_company(company_2).mapped("my_selection"),
+            [False, False, "manual"],
+        )
 
 
 @tagged('selection_ondelete_advanced')

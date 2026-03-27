@@ -89,6 +89,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             {
                 'acc_number': number,
                 'partner_id': self.env.user.company_id.partner_id.id,
+                'allow_out_payment': True,
             }
         )
 
@@ -120,20 +121,22 @@ class TestSwissQR(AccountTestInvoicingCommon):
             "0200\n"
             "1\n"
             "{iban}\n"
-            "K\n"
+            "S\n"
             "company_1_data\n"
-            "Route de Berne 88\n"
-            "2000 Neuchâtel\n"
-            "\n\n"
+            "Route de Berne\n"
+            "88\n"
+            "2000\n"
+            "Neuchâtel\n"
             "CH\n"
             "\n\n\n\n\n\n\n"
             "42.00\n"
             "CHF\n"
-            "K\n"
+            "S\n"
             "Partner\n"
-            "Route de Berne 41\n"
-            "1000 Lausanne\n"
-            "\n\n"
+            "Route de Berne\n"
+            "41\n"
+            "1000\n"
+            "Lausanne\n"
             "CH\n"
             "{ref_type}\n"
             "{struct_ref}\n"
@@ -189,6 +192,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         """
         if 'sale.order' not in self.env:
             self.skipTest('`sale` is not installed')
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
 
         payment_custom = self.env['ir.module.module']._get('payment_custom')
         if payment_custom.state != 'installed':

@@ -17,13 +17,16 @@
 # Robin Calvin, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# symbiotech <symbiotech3@gmail.com>, 2026.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-16 21:28+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-03-20 17:35+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/sms/sv/>"
 "\n"
 "Language: sv\n"
@@ -31,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -112,8 +115,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">Lägg till</span>\n"
-"                                <span class=\"o_stat_text\""
-">Kontextåtgärd</span>"
+"                                <span class=\"o_stat_text\">Kontextåtgärd</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -128,8 +131,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">Ta bort</span>\n"
-"                                <span class=\"o_stat_text\""
-">Kontextåtgärd</span>"
+"                                <span class=\"o_stat_text\">Kontextåtgärd</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -309,7 +312,7 @@ msgstr "Välj ditt avsändarnamn"
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Bolag"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -590,7 +593,7 @@ msgstr "Anger om SMS-komponeraren riktar sig till en enda specifik mottagare"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "Insert Field"
-msgstr ""
+msgstr "Infoga fält"
 
 #. module: sms
 #. odoo-javascript
@@ -617,7 +620,7 @@ msgid ""
 msgstr ""
 "Ogiltigt telefonnummer. Se till att du följer det internationella formatet, "
 "dvs. ett plustecken (+), sedan landskod, stadskod och lokalt telefonnummer. "
-"Till exempel: +1 +1 555-555-555"
+"Till exempel:  +1 555-555-555"
 
 #. module: sms
 #. odoo-python
@@ -791,6 +794,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Valfritt översättningsspråk (ISO-kod) att välja när ett e-postmeddelande "
+"skickas ut. Om det inte anges kommer huvudpartnerns språk att användas. "
+"Detta bör vanligtvis vara ett platshållaruttryck som anger lämpligt språk, "
+"t.ex. {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -1016,7 +1023,7 @@ msgstr "Guiden för verifieringskod för SMS-konto"
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leveransfel"
+msgstr "SMS kunde inte skickas"
 
 #. module: sms
 #. odoo-javascript
@@ -1231,7 +1238,7 @@ msgstr "Skickat"
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
 msgid "Server Action"
-msgstr "Serveraktivitet"
+msgstr "Serveråtgärd"
 
 #. module: sms
 #. odoo-javascript
@@ -1428,6 +1435,19 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
+"Typ av serveråtgärd. Följande värden är tillgängliga:\n"
+"- \"Update a Record\": uppdatera värdena i en post\n"
+"- \"Skapa aktivitet\": skapa en aktivitet (Diskutera)\n"
+"- \"Skicka e-post\": posta ett meddelande, en anteckning eller skicka ett e-"
+"postmeddelande (Diskutera)\n"
+"- \"Skicka SMS\": skicka SMS, logga in dem på dokument (SMS)- \"Lägg till/ta "
+"bort följare\": lägg till eller ta bort följare till en post (Diskutera)\n"
+"- \"Create Record\": skapa en ny post med nya värden\n"
+"- \"Execute Code\": ett block med Python-kod som kommer att köras\n"
+"- \"Send Webhook Notification\": skicka en POST-begäran till ett externt "
+"system, även känt som en Webhook\n"
+"- \"Multi Actions\": definiera en åtgärd som utlöser flera andra "
+"serveråtgärder\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid

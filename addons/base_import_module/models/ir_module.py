@@ -7,6 +7,7 @@ import lxml
 import os
 import pathlib
 import sys
+import traceback
 import zipfile
 from babel.messages import extract
 from collections import defaultdict
@@ -19,7 +20,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
-from odoo.tools import SQL, convert_file, exception_to_unicode
+from odoo.tools import SQL, convert_file
 from odoo.tools import file_open, file_path, file_open_temporary_directory, ormcache
 from odoo.tools.misc import OrderedSet, topological_sort
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
@@ -118,7 +119,7 @@ class IrModuleModule(models.Model):
             return False
         values = self.get_values_from_terp(terp)
         try:
-            icon_path = terp.manifest_cached.get('icon') or opj(terp.name, 'static/description/icon.png')
+            icon_path = terp.raw_value('icon') or opj(terp.name, 'static/description/icon.png')
             file_path(icon_path, env=self.env, check_exists=True)
             values['icon'] = '/' + icon_path
         except OSError:
@@ -126,6 +127,8 @@ class IrModuleModule(models.Model):
         values['latest_version'] = terp.version
         if self.env.context.get('data_module'):
             values['module_type'] = 'industries'
+        if with_demo:
+            values['demo'] = True
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
@@ -382,7 +385,7 @@ class IrModuleModule(models.Model):
                     except Exception as e:
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
-                            module=mod_name, error_message=exception_to_unicode(e),
+                            module=mod_name, error_message=traceback.format_exc(),
                         )) from e
         return "", module_names
 
@@ -407,10 +410,10 @@ class IrModuleModule(models.Model):
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         if _domain_asks_for_industries(domain):
             fields_name = list(specification.keys())
-            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset, limit=limit)
+            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset)
             return {
-                'length': len(modules_list),
-                'records': modules_list,
+                'length': len(modules_list) + offset,
+                'records': modules_list[:(limit or 80)],
             }
         else:
             return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
@@ -493,7 +496,7 @@ class IrModuleModule(models.Model):
         import requests  # noqa: PLC0415
         try:
             resp = requests.post(
-                f"{APPS_URL}/loempia/listindustrycategory",
+                f"{APPS_URL}/loempia/listindustrycategory/{major_version}",
                 json={'params': {}},
                 timeout=5.0,
             )

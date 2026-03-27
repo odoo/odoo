@@ -19,10 +19,8 @@ export class ViewHierarchy extends Component {
         this.hideGenericViewByWebsite = {};
 
         onWillStart(async () => {
-            ({
-                sibling_views: this.siblingViews,
-                hierarchy: this.state.viewTree,
-            } = await this.orm.call("ir.ui.view", "get_view_hierarchy", [this.viewId], {}));
+            ({ sibling_views: this.siblingViews, hierarchy: this.state.viewTree } =
+                await this.orm.call("ir.ui.view", "get_view_hierarchy", [this.viewId], {}));
 
             this.setupWebsiteNames();
             this.setupHideGenericViewByWebsite();

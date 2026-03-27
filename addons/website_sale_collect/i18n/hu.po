@@ -1,32 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale_collect
+# * website_sale_collect
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Tommy Gombar <tommy.gombar@kilafornia.net>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:04+0000\n"
-"PO-Revision-Date: 2025-09-11 14:04+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-01-14 22:54+0000\n"
+"Last-Translator: Tommy Gombar <tommy.gombar@kilafornia.net>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"website_sale_collect/hu/>\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order.py:0
-msgid "%(available_qty)s/%(cart_qty)s available at this location"
+msgid "%(available_qty)s/%(line_qty)s available at this location"
 msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
-" your products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
+"your products."
 msgstr ""
+"<i>Rendelése rögzítve lett.</i><br>Fizetés és átvétel az üzletben lehetséges."
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
@@ -38,7 +44,7 @@ msgstr ""
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Available"
-msgstr ""
+msgstr "Elérhető"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -55,23 +61,23 @@ msgstr ""
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Beállítások"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "Átvételi Cím Megadása"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/interactions/checkout.js:0
 msgid "Contact Details"
-msgstr ""
+msgstr "Elérhetőségi Adataim"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
 msgid "Custom Mode"
-msgstr ""
+msgstr "Egyéni mód"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -83,7 +89,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale_collect/models/res_config_settings.py:0
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Szállítás módja"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
@@ -123,14 +129,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Not available"
-msgstr ""
+msgstr "Nem elérhető"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Only"
-msgstr ""
+msgstr "Csak"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
@@ -146,30 +152,30 @@ msgstr ""
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "Fizetés átvételkor"
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
 #: model:payment.method,name:website_sale_collect.payment_method_pay_on_site
 msgid "Pay on site"
-msgstr ""
+msgstr "Fizetés átvételkor"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Fizetési szolgáltató"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Fizetési tranzakció"
 
 #. module: website_sale_collect
 #: model:delivery.carrier,name:website_sale_collect.carrier_pick_up_in_store
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "Átvétel az üzletben"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -180,12 +186,12 @@ msgstr ""
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__delivery_type
 msgid "Provider"
-msgstr ""
+msgstr "Szolgáltató"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -196,18 +202,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Restrictions may apply"
-msgstr ""
+msgstr "Feltételek esetenként változhatnak"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Vevői rendelés"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/interactions/checkout.js:0
 msgid "Same as contact details"
-msgstr ""
+msgstr "Egyezik a saját címemmel"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -218,7 +224,7 @@ msgstr ""
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_delivery_carrier
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Szállítási módok"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -269,30 +275,29 @@ msgstr ""
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Raktár"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_website
 msgid "Website"
-msgstr ""
+msgstr "Weboldal"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/payment.py:0
 msgid ""
-"You can only pay on site when selecting the pick up in store delivery "
-"method."
+"You can only pay on site when selecting the pick up in store delivery method."
 msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "A fizetés jóváhagyásra került."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,cancel_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "A fizetés visszavonásra került."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
@@ -304,7 +309,7 @@ msgstr ""
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "available"
-msgstr ""
+msgstr "elérhető"
 
 #. module: website_sale_collect
 #. odoo-python

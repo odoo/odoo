@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import { describe, expect, test } from "@odoo/hoot";
-import { mockSendBeacon, mockTouch, mockVibrate } from "@odoo/hoot-mock";
+import { describe, expect, mockSendBeacon, mockTouch, mockVibrate, test } from "@odoo/hoot";
 import { parseUrl } from "../local_helpers";
 
 /**

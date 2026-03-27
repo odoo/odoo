@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 from contextlib import contextmanager
 
 from odoo import Command, fields
+from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged
@@ -37,11 +37,13 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             'acc_number': "985632147",
             'partner_id': cls.env.company.partner_id.id,
             'acc_type': 'bank',
+            'allow_out_payment': True,
         })
         cls.comp_bank_account2 = cls.env['res.partner.bank'].create({
             'acc_number': "741258963",
             'partner_id': cls.env.company.partner_id.id,
             'acc_type': 'bank',
+            'allow_out_payment': True,
         })
 
         cls.pay_term_epd = cls.env['account.payment.term'].create([{
@@ -654,12 +656,12 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         }])
         invoice_1.action_post()
         register_payment_and_assert_state(invoice_1, 100.0, is_community=True)
-        self.assertTrue(invoice_1.matched_payment_ids.move_id)
+        self.assertTrue(invoice_1.reconciled_payment_ids.move_id)
 
         invoice_2 = invoice_1.copy()
         invoice_2.action_post()
         register_payment_and_assert_state(invoice_2, 100.0, is_community=False)
-        self.assertFalse(invoice_2.matched_payment_ids.move_id)
+        self.assertFalse(invoice_2.reconciled_payment_ids.move_id)
 
     def test_payment_confirmation_with_bank_outstanding_account(self):
         """ Ensures that when the outstanding account of the payment method is set to a bank,
@@ -879,3 +881,64 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             'amount_signed': -100,
             'amount_company_currency_signed': -50,
         }])
+
+    def test_payment_state_computation(self):
+        def create_invoice(post=False, kwargs=None):
+            move = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            })
+            if post:
+                move.action_post()
+            if kwargs is not None:
+                move.update({**kwargs})
+            return move
+
+        for post, payment_state, expected in [
+            (False, 'not_paid', 'draft'),
+            (False, 'partial', 'partial'),
+            (False, 'in_payment', 'in_payment'),
+            (False, 'paid', 'paid'),
+            (True, 'partial', 'partial'),
+            (True, 'in_payment', 'in_payment'),
+            (True, 'paid', 'paid'),
+            (True, 'reversed', 'reversed'),
+        ]:
+            invoice = create_invoice(post=post, kwargs={'payment_state': payment_state})
+            self.assertEqual(invoice.status_in_payment, expected)
+
+        for is_move_sent, expected in [
+            (True, 'sent'),
+            (False, 'posted'),
+        ]:
+            invoice = create_invoice(post=True, kwargs={'is_move_sent': is_move_sent})
+            self.assertEqual(invoice.status_in_payment, expected)
+
+    def test_payment_move_with_multiple_liquidity_lines(self):
+        payment = self.env['account.payment'].create({
+            'amount': 150.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment.action_post()
+        move = payment.move_id
+        move.button_draft()
+        liquidity_lines = payment._seek_for_lines()[0]
+        move.write({
+            'line_ids': [
+                Command.update(liquidity_lines.id, {'amount_currency': 100}),
+                Command.create({
+                    'account_id': liquidity_lines.account_id.id,
+                    'balance': 50.0,
+                    'amount_currency': 50.0,
+                    'currency_id': payment.currency_id.id,
+                }),
+            ],
+        })
+        move.action_post()
+        payment.action_draft()
+        with self.assertRaises(UserError):
+            payment.amount = 300.0

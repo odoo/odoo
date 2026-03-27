@@ -1,10 +1,19 @@
+import inspect
 import textwrap
 from datetime import datetime, timedelta
 from http import HTTPStatus
+from unittest.mock import patch
 
 from odoo.fields import Command
+from odoo.models import Model
 from odoo.tests import new_test_user, tagged
 
+from .dummy_methods import DummyMethods
+from odoo.addons.api_doc.controllers.api_doc import (
+    DocController,
+    is_public_method,
+    parse_signature,
+)
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -182,16 +191,42 @@ class TestDoc(HttpCaseWithUserDemo):
         self.assertEqual(cache_control, ['no-cache', 'private'])
         etag_demo = res.headers.get('ETag', '')
         self.assertTrue(etag_demo)
+        self.assertRegex(
+            res.headers.get('Content-Disposition', ''),
+            r'odoo-doc-index-\w+-%s\.json' % etag_demo.strip('"'),
+            "The document should have a unique name.",
+        )
 
         # request the document again, this time using the cache
-        res = self.url_open(
-            '/doc/index.json',
-            headers={'If-None-Match': etag_demo},
-            allow_redirects=False,
-        )
+        with patch.object(DocController, '_doc_index',
+              side_effect=DocController()._doc_index) as spy_doc_index:
+            res = self.url_open(
+                '/doc/index.json',
+                headers={'If-None-Match': etag_demo},
+                allow_redirects=False,
+            )
         res.raise_for_status()
         self.assertEqual(res.status_code, HTTPStatus.NOT_MODIFIED)
         self.assertFalse(res.content, "We should not have downloaded the document")
+        spy_doc_index.assert_not_called()
+
+        # request the document again, forcing no cache
+        with patch.object(DocController, '_doc_index',
+              side_effect=DocController()._doc_index) as spy_doc_index:
+            res = self.url_open(
+                '/doc/index.json',
+                headers={'If-None-Match': etag_demo,
+                         'Cache-Control': 'no-cache'},
+                allow_redirects=False,
+            )
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(res.content, "We should have downloaded the document")
+        cache_control = sorted(res.headers.get('Cache-Control', '').split(', '))
+        self.assertEqual(cache_control, ['no-store'])
+        self.assertRegex(res.headers.get('Content-Disposition', ''), r'\bodoo-doc-index\.json$',
+            "The document should not have a unique name.")
+        spy_doc_index.assert_called()
 
         # request the document again, this time as admin
         self.authenticate('admin', 'admin')
@@ -201,3 +236,53 @@ class TestDoc(HttpCaseWithUserDemo):
         etag_admin = res.headers.get('ETag', '')
         self.assertTrue(etag_admin)
         self.assertNotEqual(etag_demo, etag_admin)
+
+    def test_parse_signature(self):
+        def clean_doc(d):
+            return dict(d, doc=inspect.cleandoc(d.get('doc', '')).replace('\n', '').strip())
+
+        methods = inspect.getmembers(DummyMethods, predicate=inspect.isroutine)
+        for name, method in methods:
+            if name.startswith('__') or not hasattr(method, 'expected'):
+                continue
+            with self.subTest(method=name):
+                self.assertEqual(
+                    clean_doc(parse_signature(method).as_dict()),
+                    clean_doc(method.expected),
+                )
+
+    def test_ghost_model_robustness(self):
+        """
+        Ensure the documentation generator does not crash when encountering
+        a model in the database (state='base') that is missing from the registry.
+        """
+
+        ghost_model_name = 'ir.min.cron.mixin.test.ghost'
+        self.env['ir.model'].create({
+            'model': ghost_model_name,
+            'name': 'Ghost Model',
+            'state': 'base',
+        })
+
+        self.authenticate('demo', 'demo')
+        res = self.url_open('/doc/index.json')
+        res.raise_for_status()
+
+    def test_private_methods(self):
+        FakeCls = type('ModelDummyMethods', (DummyMethods, Model), {
+            '_name': 'model.dummy.methods',
+            '_register': False,
+            '__module__': 'odoo.addons.api_doc',
+        })
+        FakeModel = FakeCls(self.env, (), ())
+        assert is_public_method(FakeModel, 'one_arg')
+
+        for method_name in (
+            'class_method',
+            'static_method',
+            'private_method',
+            '_underscope_method',
+        ):
+            with self.subTest(method_name=method_name):
+                assert hasattr(FakeModel, method_name)
+                self.assertFalse(is_public_method(FakeModel, method_name))

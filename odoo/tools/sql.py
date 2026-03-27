@@ -206,10 +206,9 @@ def existing_tables(cr, tablenames):
     cr.execute(SQL("""
         SELECT c.relname
           FROM pg_class c
-          JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname IN %s
            AND c.relkind IN ('r', 'v', 'm')
-           AND n.nspname = current_schema
+           AND c.relnamespace = current_schema::regnamespace
     """, tuple(tablenames)))
     return [row[0] for row in cr.fetchall()]
 
@@ -236,9 +235,8 @@ def table_kind(cr, tablename: str) -> TableKind | None:
     cr.execute(SQL("""
         SELECT c.relkind, c.relpersistence
           FROM pg_class c
-          JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname = %s
-           AND n.nspname = current_schema
+           AND c.relnamespace = current_schema::regnamespace
     """, tablename))
     if not cr.rowcount:
         return None
@@ -307,7 +305,8 @@ def table_columns(cr, tablename):
     # might prevent a postgres user to read this field.
     cr.execute(SQL(
         ''' SELECT column_name, udt_name, character_maximum_length, is_nullable
-            FROM information_schema.columns WHERE table_name=%s ''',
+            FROM information_schema.columns WHERE table_name=%s
+            AND table_schema = current_schema ''',
         tablename,
     ))
     return {row['column_name']: row for row in cr.dictfetchall()}
@@ -317,7 +316,8 @@ def column_exists(cr, tablename, columnname):
     """ Return whether the given column exists. """
     cr.execute(SQL(
         """ SELECT 1 FROM information_schema.columns
-            WHERE table_name=%s AND column_name=%s """,
+            WHERE table_name=%s AND column_name=%s
+            AND table_schema = current_schema """,
         tablename, columnname,
     ))
     return cr.rowcount
@@ -408,6 +408,7 @@ def get_depending_views(cr, table, column):
         JOIN pg_attribute ON pg_depend.refobjid = pg_attribute.attrelid
             AND pg_depend.refobjsubid = pg_attribute.attnum
         WHERE dependent.relname = %s
+        AND dependent.relnamespace = current_schema::regnamespace
         AND pg_attribute.attnum > 0
         AND pg_attribute.attname = %s
         AND dependee.relkind in ('v', 'm')
@@ -442,6 +443,7 @@ def constraint_definition(cr, tablename, constraintname):
         JOIN pg_class t ON t.oid = c.conrelid
         LEFT JOIN pg_description d ON c.oid = d.objoid
         WHERE t.relname = %s AND conname = %s
+        AND t.relnamespace = current_schema::regnamespace
     """, tablename, constraintname))
     return cr.fetchone()[0] if cr.rowcount else None
 
@@ -497,6 +499,7 @@ def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondel
             AND a1.attname = %s
             AND c2.relname = %s
             AND a2.attname = %s
+            AND c1.relnamespace = current_schema::regnamespace
             AND fk.confdeltype = %s
         """,
         tablename1, columnname1, tablename2, columnname2, deltype,
@@ -518,7 +521,8 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
                AND array_lower(con.conkey, 1)=1 AND con.conkey[1]=a1.attnum
                AND array_lower(con.confkey, 1)=1 AND con.confkey[1]=a2.attnum
                AND a1.attrelid=c1.oid AND a2.attrelid=c2.oid
-               AND c1.relname=%s AND a1.attname=%s """,
+               AND c1.relname=%s AND a1.attname=%s
+               AND c1.relnamespace = current_schema::regnamespace """,
         tablename1, columnname1,
     ))
     found = False
@@ -535,7 +539,8 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
 
 def index_exists(cr, indexname):
     """ Return whether the given index exists. """
-    cr.execute(SQL("SELECT 1 FROM pg_indexes WHERE indexname=%s", indexname))
+    cr.execute(SQL("SELECT 1 FROM pg_indexes WHERE indexname=%s"
+                   " AND schemaname = current_schema", indexname))
     return cr.rowcount
 
 
@@ -551,6 +556,7 @@ def index_definition(cr, indexname):
         JOIN pg_indexes idx ON c.relname = idx.indexname
         LEFT JOIN pg_description d ON c.oid = d.objoid
         WHERE c.relname = %s AND c.relkind = 'i'
+          AND c.relnamespace = current_schema::regnamespace
     """, indexname))
     return cr.fetchone() if cr.rowcount else (None, None)
 

@@ -20,8 +20,7 @@ This addon provides an extensible, maintainable editor.
     'auto_install': True,
     'assets': {
         'web._assets_primary_variables': [
-            # TODO DUAU: change when file is back in html_builder
-            ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/builder.variables.scss'),
+            ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/html_editor.variables.scss'),
         ],
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog'),
@@ -30,6 +29,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/scss/html_editor.common.scss',
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
+            'html_editor/static/src/main/selection_placeholder_plugin.scss',
         ],
         'web.assets_backend': [
             ('include', 'html_editor.assets_editor'),
@@ -77,6 +77,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/others/embedded_component_utils.js',
             'html_editor/static/src/others/embedded_components/core/**/*',
             'html_editor/static/src/utils/**/*',
+            'html_editor/static/src/others/qweb_plugin.scss',
         ],
         "web.assets_web_dark": [
             'html_editor/static/src/**/*.dark.scss',
@@ -112,7 +113,12 @@ This addon provides an extensible, maintainable editor.
         ],
         'html_editor.assets_prism': [
             'web/static/lib/prismjs/prism.js',
+            'web/static/lib/prismjs/themes/default.css',
         ],
+        'html_editor.assets_prism_dark': [
+            'web/static/lib/prismjs/prism.js',
+            'web/static/lib/prismjs/themes/okaida.css',
+        ]
     },
     'license': 'LGPL-3'
 }

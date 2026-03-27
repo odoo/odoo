@@ -13,7 +13,7 @@ from lxml.builder import E
 from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger, view_validation, safe_eval
@@ -1892,6 +1892,7 @@ class TestTemplating(ViewCase):
         """)
         self.assertEqual(arch, expected)
 
+
 @tagged('post_install', '-at_install')
 class TestViews(ViewCase):
 
@@ -2218,6 +2219,35 @@ class TestViews(ViewCase):
                 'arch': '<template></template>',
                 'inherit_id': False,
             })
+
+    def test_attribute_node_with_no_name(self):
+        """Ensure that an attribute node with no name raises ValidationError"""
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'also_invalid_view',
+                'type': 'list',
+                'arch': '<attribute></attribute>',
+                'inherit_id': False,
+            })
+
+    def test_xml_editor_rejects_encoding_declaration(self):
+        """Must raise a UserError when encoding declaration is included."""
+        with self.assertRaises(UserError):
+            self.View.create({
+                'name': 'encoding_declaration_view',
+                'arch_base': "<?xml version='1.0' encoding='utf-8'?>",
+                'inherit_id': False,
+            })
+
+        view = self.assertValid("<form string='Test'></form>", name="test_xml_encoding_view")
+        for field in ("arch", "arch_base"):
+            with self.subTest(field=field):
+                original_value = view[field]
+
+                with self.assertRaises(UserError):
+                    view.write({field: "<?xml version='1.0' encoding='utf-8'?><form/>"})
+
+                self.assertXMLEqual(view[field], original_value)
 
     def test_context_in_view(self):
         arch = """
@@ -2684,6 +2714,28 @@ class TestViews(ViewCase):
         """
         self.assertValid(arch % 'base.group_no_one')
         self.assertWarning(arch % 'base.dummy')
+
+    def test_groups_field_removed(self):
+        view = self.View.create({
+            'name': 'valid view',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        (<field name="name" groups="base.group_portal"/>)
+                    </span>
+                </form>
+            """,
+        })
+        arch = self.View.get_views([(view.id, view.type)])['views']['form']['arch']
+
+        self.assertEqual(arch, """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        ()
+                    </span>
+                </form>
+            """.strip())
 
     def test_attrs_groups_behavior(self):
         view = self.View.create({
@@ -6080,3 +6132,20 @@ class ViewModifiers(ViewCase):
         self.assertFalse(tree.xpath('//div[@id="foo"]'))
         self.assertTrue(tree.xpath('//div[@id="bar"]'))
         self.assertFalse(tree.xpath('//div[@id="stuff"]'))
+
+    def test_create_inherit_view_with_xpath_without_expr(self):
+        """Test that creating inherited view containing <xpath> node without the 'expr' attribute."""
+
+        parent_view = self.env.ref('base.view_partner_form')
+        inherit_arch = """
+            <xpath position="replace">
+                <field name="name"/>
+            </xpath>
+        """
+
+        with self.assertRaises(ValidationError):
+            self.env['ir.ui.view'].create({
+                'name': 'test.xpath.without.expr',
+                'inherit_id': parent_view.id,
+                'arch': inherit_arch,
+            })

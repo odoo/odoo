@@ -84,10 +84,9 @@ class PaymentTransaction(models.Model):
         )._post_process()
 
         for done_tx in self.filtered(lambda tx: tx.state == 'done'):
-            confirmed_orders = done_tx._check_amount_and_confirm_order()
-            if done_tx.operation == 'validation':
-                continue
-            (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+            if done_tx.operation != 'validation':
+                confirmed_orders = done_tx._check_amount_and_confirm_order()
+                (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
             auto_invoice = str2bool(
                 self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
@@ -136,7 +135,10 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._log_message_on_linked_documents(message)
-        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
+        if self.env.uid == SUPERUSER_ID or self.env.context.get('payment_backend_action'):
+            author = self.env.user.partner_id
+        else:
+            author = self.partner_id
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
             order.message_post(body=message, author_id=author.id)
 

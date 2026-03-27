@@ -17,8 +17,11 @@ actions(Check in/Check out) performed by them.
     'website': 'https://www.odoo.com/app/employees',
     'depends': ['hr', 'barcodes', 'base_geolocalize'],
     'data': [
+        'data/hr_attendance_overtime_ruleset_data.xml',
+        'data/hr_attendance_overtime_rule_data.xml',
         'data/hr_attendance_data.xml',
         'security/hr_attendance_security.xml',
+        'security/hr_attendance_overtime_ruleset_security.xml',
         'security/ir.model.access.csv',
         'views/hr_attendance_view.xml',
         'views/hr_department_view.xml',
@@ -41,6 +44,9 @@ actions(Check in/Check out) performed by them.
         ],
         'web.qunit_suite_tests': [
             'hr_attendance/static/tests/hr_attendance_mock_server.js',
+        ],
+        'web.assets_unit_tests': [
+            'hr_attendance/static/tests/*.test.js',
         ],
         'hr_attendance.assets_public_attendance': [
             # Define attendance variables (takes priority)

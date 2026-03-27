@@ -12,7 +12,6 @@ import { Plugin } from "../plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import {
     BASE_CONTAINER_CLASS,
-    SUPPORTED_BASE_CONTAINER_NAMES,
     baseContainerGlobalSelector,
     createBaseContainer,
 } from "../utils/base_container";
@@ -25,6 +24,10 @@ import { childNodeIndex } from "@html_editor/utils/position";
  * @property { BaseContainerPlugin['createBaseContainer'] } createBaseContainer
  * @property { BaseContainerPlugin['getDefaultNodeName'] } getDefaultNodeName
  * @property { BaseContainerPlugin['isCandidateForBaseContainer'] } isCandidateForBaseContainer
+ */
+
+/**
+ * @typedef {((node: Node) => boolean)[]} invalid_for_base_container_predicates
  */
 
 export class BaseContainerPlugin extends Plugin {
@@ -47,6 +50,7 @@ export class BaseContainerPlugin extends Plugin {
      */
     isUnsplittablePredicate = (element) =>
         this.getResource("unsplittable_node_predicates").some((fn) => fn(element));
+    /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         // `baseContainer` normalization should occur after every other normalization
@@ -69,7 +73,7 @@ export class BaseContainerPlugin extends Plugin {
             (node) =>
                 !node ||
                 node.nodeType !== Node.ELEMENT_NODE ||
-                !SUPPORTED_BASE_CONTAINER_NAMES.includes(node.tagName) ||
+                !this.config.baseContainers.includes(node.tagName) ||
                 isProtected(node) ||
                 isProtecting(node) ||
                 isMediaElement(node),
@@ -107,7 +111,7 @@ export class BaseContainerPlugin extends Plugin {
         let anchorNode = node.parentElement;
         if (
             anchorNode === closestEditable(node) ||
-            !SUPPORTED_BASE_CONTAINER_NAMES.includes(anchorNode.nodeName) ||
+            !this.config.baseContainers.includes(anchorNode.nodeName) ||
             this.getResource("unremovable_node_predicates").some((p) => p(anchorNode))
         ) {
             return;
@@ -164,9 +168,10 @@ export class BaseContainerPlugin extends Plugin {
      * oe_unbreakable) => it stays unsplittable.
      */
     isCandidateForBaseContainerAllowUnsplittable(element) {
-        const predicates = new Set(this.getResource("invalid_for_base_container_predicates"));
-        predicates.delete(this.isUnsplittablePredicate);
-        for (const predicate of predicates) {
+        for (const predicate of this.getResource("invalid_for_base_container_predicates")) {
+            if (predicate === this.isUnsplittablePredicate) {
+                continue;
+            }
             if (predicate(element)) {
                 return false;
             }
@@ -182,9 +187,11 @@ export class BaseContainerPlugin extends Plugin {
      * compute childNodes multiple times in more complex operations.
      */
     shallowIsCandidateForBaseContainer(element) {
-        const predicates = new Set(this.getResource("invalid_for_base_container_predicates"));
-        predicates.delete(this.hasNonPhrasingContentPredicate);
+        const predicates = this.getResource("invalid_for_base_container_predicates");
         for (const predicate of predicates) {
+            if (predicate === this.hasNonPhrasingContentPredicate) {
+                continue;
+            }
             if (predicate(element)) {
                 return false;
             }
@@ -202,6 +209,9 @@ export class BaseContainerPlugin extends Plugin {
     }
 
     normalizeDivBaseContainers(element = this.editable) {
+        if (this.config.baseContainers && !this.config.baseContainers.includes("DIV")) {
+            return;
+        }
         const newBaseContainers = [];
         const divSelector = `div:not(.${BASE_CONTAINER_CLASS})`;
         const targets = [...element.querySelectorAll(divSelector)];

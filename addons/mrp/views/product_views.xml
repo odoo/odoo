@@ -74,6 +74,9 @@
                             name="products_in_mo"
                             domain="[('product_catalog_product_is_in_mo', '=', True)]"/>
                 </filter>
+                <filter name="services" position="attributes">
+                    <attribute name="invisible">context.get('product_catalog_order_model') == 'mrp.production'</attribute>
+                </filter>
             </field>
         </record>
 

@@ -109,10 +109,10 @@
                             <field name="manager_id" widget="many2one_avatar_user"/>
                             <field name="location"/>
                             <label string="Make Vehicle Available" for="plan_to_change_car" class="text-nowrap" invisible="vehicle_type != 'car'"/>
-                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" invisible="vehicle_type != 'car'" nolabel="1"
+                            <field name="plan_to_change_car" groups="fleet.fleet_group_user" invisible="vehicle_type != 'car'" nolabel="1"
                                 help="This will allow this vehicle to be selectable for the Salary Configurator" class="text-nowrap"/>
                             <label string="Make Vehicle Available" for="plan_to_change_bike" class="text-nowrap" invisible="vehicle_type != 'bike'"/>
-                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  invisible="vehicle_type != 'bike'" nolabel="1"
+                            <field name="plan_to_change_bike" groups="fleet.fleet_group_user"  invisible="vehicle_type != 'bike'" nolabel="1"
                                 help="This will allow this vehicle to be selectable for the Salary Configurator"/>
                         </group>
                     </group>
@@ -315,7 +315,7 @@
                             <footer class="pt-0 mt-0" t-if="!selection_mode">
                                 <div class="d-flex fs-6">
                                     <a t-if="record.contract_count.raw_value>0" type="object"
-                                        name="return_action_to_open" href="#" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
+                                        name="return_action_to_open" href="#" context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
                                         <field name="contract_count"/>
                                         Contract(s)
                                         <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
