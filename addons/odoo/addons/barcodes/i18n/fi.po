@@ -1,0 +1,410 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * barcodes
+#
+# Translators:
+# Retropikzel, 2024
+# Marko Happonen <marko.happonen@sprintit.fi>, 2024
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jessica Jakara, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-24 09:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/barcodes/"
+"fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
+msgstr " '*' ei ole kelvollinen Regex-viivakoodikuvio. Tarkoititko '.*'?"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
+msgstr ""
+"<i>Viivakoodit nimikkeistöissä</i> määritellään, miten viivakoodit "
+"tunnistetaan ja luokitellaan.\n"
+"                                Kun viivakoodi skannataan, se liitetään "
+"<i>ensimmäiseen</i> sääntöön, jolla on vastaava viivakoodi.\n"
+"                                Kuvion syntaksi on regexp-lauseke, ja "
+"viivakoodia vastataan seuraavasti\n"
+"                                jos regexp vastaa viivakoodin etuliitettä."
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
+msgstr ""
+"Viivakoodinimikkeistö määrittelee, miten kassa tunnistaa ja tulkitsee "
+"viivakoodit"
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Add a new barcode nomenclature"
+msgstr "Lisää uusi viivakoodinimikkeistö"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__alias
+msgid "Alias"
+msgstr "Alias"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__always
+msgid "Always"
+msgstr "Aina"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr "Tätä viivakoodinimikkeistön sääntöä koskeva sisäinen tunniste"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
+msgid "An internal identification of the barcode nomenclature"
+msgstr "Viivakoodin nimikkeistön sisäinen tunniste"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
+msgid "Any"
+msgstr "Mikä tahansa"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+msgid "Barcode"
+msgstr "Viivakoodi"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "Barcode Event Mixin"
+msgstr "Viivakoodi tapahtuman Mixin"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "Viivakoodi nimistö"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "Viivakoodi nimistö"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
+msgid "Barcode Pattern"
+msgstr "Viivakoodi malli"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "Viivakoodi sääntö"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Barcode Scanned"
+msgstr "Viivakoodi skannattu"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+msgid "Barcode: %(barcode)s"
+msgstr "Viivakoodi: %(barcode)s"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
+msgid "EAN-13"
+msgstr "EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
+msgid "EAN-13 to UPC-A"
+msgstr "EAN-13-koodista UPC-A-koodiksi"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
+msgid "EAN-8"
+msgstr "EAN-8"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "Koodaus"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-reititys"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_events_mixin.py:0
+msgid ""
+"In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
+"must be implemented"
+msgstr ""
+"Jotta voit käyttää barcodes.barcode_events_mixin, menettelytapa "
+"on_barcode_scanned tulee olla implementoitu"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
+msgid "Never"
+msgstr "Ei koskaan"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr "Nimikkeistö"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
+"                                zeroes."
+msgstr ""
+"Kuviot voivat myös määritellä, miten numeeriset arvot, kuten paino tai "
+"hinta, voidaan olla\n"
+"                                koodata viivakoodiin. Ne osoitetaan "
+"<code>{NNN}</code> jossa N:t\n"
+"                                määrittelevät, mihin numeron numerot "
+"koodataan. Liukulukuja on myös mahdollista käyttää kirjoittamalla\n"
+"                                desimaaleja, jotka on merkitty D-"
+"kirjaimilla. Esimerkiksi <code>{NNNDD}</code>. Näissä tapauksissa,\n"
+"                                tietueiden viivakoodikentän <i>on</i> "
+"näytettävä nämä numerot\n"
+"                                nollina."
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.js:0
+msgid "Please, Scan again!"
+msgstr "Skannaa uudelleen!"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
+msgid "Rule Name"
+msgstr "Säännön nimi"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
+msgid "Rules"
+msgstr "Säännöt"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "Pöydät"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+msgid "Tap to scan"
+msgstr "Skannaa"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
+msgid "The barcode matching pattern"
+msgstr "Viivakoodin vastaavuusmalli"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+"Viivakoodikuvio %(pattern)s ei johda kelvolliseen regexp-lausekkeeseen."
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
+msgid "The list of barcode rules"
+msgstr "Luettelo viivakoodisäännöistä"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
+msgid "The matched pattern will alias to this barcode"
+msgstr "Sovitettu kuvio on alias tälle viivakoodille"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"Viivakoodikuviossa %(pattern)s on syntaksivirhe: sääntö voi sisältää vain "
+"yhden aaltosuljeparin."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"Viivakoodikuviossa %(pattern)s on syntaksivirhe: suluissa voi olla vain N-"
+"kirjaimia, joita seuraa D-kirjain."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr "Viivakoodikuviossa %(pattern)s on syntaksivirhe: tyhjät sulkeet."
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Tätä sääntöä sovelletaan vain, jos viivakoodi on koodattu määritetyllä "
+"koodauksella"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"UPC-koodit voidaan muuntaa EAN-koodeiksi lisäämällä niiden eteen nolla. Tämä "
+"asetus määrittää, muunnetaanko UPC/EAN-viivakoodi automaattisesti tavalla "
+"tai toisella, kun yritetään sovittaa sääntöä toiseen koodaukseen."
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
+msgid "UPC-A"
+msgstr "Käytä UPC:tä"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
+msgid "UPC-A to EAN-13"
+msgstr "UPC-A:sta EAN-13:a"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "UPC/EAN-muunnos"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
+msgid "Unit Product"
+msgstr "Yksikkötuote"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+msgid "Unknown barcode command"
+msgstr "Tuntematon viivakoodikomento"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
+msgid "Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Järjestetään säännöt siten, että pienemmän sekvenssin omaavat säännöt "
+"täsmäävät ensin"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "Viimeksi skannatun viivakoodin arvo."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr "Et voi poistaa '%(name)s', koska se on viivakoodin oletusnimikkeistö."

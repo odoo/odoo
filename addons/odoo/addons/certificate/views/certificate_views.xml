@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="certificate_certificate_view_form" model="ir.ui.view">
+        <field name="name">certificate.certificate.form</field>
+        <field name="model">certificate.certificate</field>
+        <field name="arch" type="xml">
+            <form string="certificate form">
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="not loading_error">
+                        <field name="loading_error"/>
+                    </div>
+                    <group id="certificate_input">
+                        <field name="name" placeholder="e.g. New Certificate"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        <field name="content" widget="binary"/>
+                        <field name="pkcs12_password" password="True" />
+                        <field name="subject_common_name" invisible="not pem_certificate"/>
+                        <field name="private_key_id" invisible="not pem_certificate" options="{'no_quick_create': True}"/>
+                        <field name="public_key_id" invisible="not pem_certificate" options="{'no_quick_create': True}"/>
+                        <field name="scope" widget="radio" invisible="1"/> <!-- Should be overriden by modules adding options to this selection field -->
+                    </group>
+                    <group id="certificate_data">
+                        <label for="date_start" string="Validity"/>
+                        <div>
+                            <field name="date_start" interval="year" widget="remaining_days" class="oe_inline"/> - <field name="date_end" widget="remaining_days" class="oe_inline"/>
+                        </div>
+                        <field name="serial_number"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="certificate_certificate_view_list" model="ir.ui.view">
+        <field name="name">certificate.certificate.list</field>
+        <field name="model">certificate.certificate</field>
+        <field name="arch" type="xml">
+            <list string="certificate list">
+                <field name="name" string="Certificate"/>
+                <field name="subject_common_name" string="Subject Name"/>
+                <field name="is_valid" string="Validity"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="certificate_certificate_view_search" model="ir.ui.view">
+        <field name="name">certificate.certificate.search</field>
+        <field name="model">certificate.certificate</field>
+        <field name="arch" type="xml">
+            <search string="certificate search">
+                <field name="name"/>
+                <field name="scope"/>
+                <separator/>
+                <filter string="General" name="scope_general" domain="[('scope','=','general')]" help="General certificates"/>
+                <separator/>
+                <filter string="Valid" name="valid" domain="[('is_valid','=',True)]" help="Valid certificates"/>
+                <filter string="Invalid" name="not_valid" domain="[('is_valid','=',False)]" help="Not valid certificates"/>
+                <separator/>
+                <filter string="Archived" name="archived" domain="[('active','=',False)]" help="Archived certificates"/>
+            </search>
+        </field>
+    </record>
+</odoo>

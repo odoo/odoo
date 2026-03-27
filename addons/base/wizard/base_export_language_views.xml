@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_lang_export" model="ir.ui.view">
+            <field name="name">Export Translations</field>
+            <field name="model">base.language.export</field>
+            <field name="arch" type="xml">
+                <form string="Export Translations">
+                    <field name="name" invisible="1"/> <!-- The name is needed in the BinaryField component used to download the file -->
+                    <group invisible="state != 'choose'" string="Export Settings">
+                        <field name="lang"/>
+                        <field name="format"/>
+                        <field name="export_type"/>
+                        <field name="modules" widget="many2many_tags" options="{'no_create': True}" invisible="export_type == 'model'"/>
+                        <field name="model_id" options="{'no_create': True}" invisible="export_type == 'module'" required="export_type == 'model'"/>
+                        <field name="model_name" invisible="1"/> <!-- The model_name is needed for the option of the domain -->
+                        <field name="domain" widget="domain" options="{'model': 'model_name'}" invisible="export_type == 'module'"/>
+                    </group>
+                    <div invisible="state != 'get'">
+                        <h2>Export Complete</h2>
+                        <p>Here is the exported translation file: <field name="data" readonly="1" filename="name"/></p>
+                        <p>This file was generated using the universal <strong>Unicode/UTF-8</strong> file encoding, please be sure to view and edit
+                           using the same encoding.</p>
+                        <p>The next step depends on the file format:
+                            <ul>
+                            <li>CSV format: you may edit it directly with your favorite spreadsheet software,
+                                the rightmost column (value) contains the translations</li>
+                            <li>PO(T) format: you should edit it with a PO editor such as
+                                <a href="http://www.poedit.net/" target="_blank">POEdit</a>, or your preferred text editor</li>
+                            <li>TGZ format: bundles multiple PO(T) files as a single archive</li>
+                            </ul>
+                        </p>
+                        <p>For more details about translating Odoo in your language, please refer to the
+                           <a href="https://github.com/odoo/odoo/wiki/Translations" target="_blank">documentation</a>.</p>
+                    </div>
+                    <footer invisible="state != 'choose'">
+                        <button name="act_getfile" string="Export" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="x" string="Cancel" type="object" class="btn-secondary"/>
+                    </footer>
+                    <footer invisible="state != 'get'">
+                        <button special="cancel" data-hotkey="x" string="Close" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_lang_export" model="ir.actions.act_window">
+            <field name="name">Export Translation</field>
+            <field name="res_model">base.language.export</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_wizard_lang_export" id="menu_wizard_lang_export" parent="menu_translation_export"/>
+    </data>
+</odoo>

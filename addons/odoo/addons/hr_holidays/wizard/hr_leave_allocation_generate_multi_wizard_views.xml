@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_allocation_generate_multi_wizard_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.allocation.generate.multi.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate time off allocations for multiple employees">
+                <div id="title" class="oe_title">
+                    <h2>
+                        <field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/>
+                    </h2>
+                </div>
+                <group>
+                    <group>
+                        <field name="allocation_mode" string="Mode"/>
+                        <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_user"/>
+                        <field name="company_id" invisible="allocation_mode != 'company'"/>
+                        <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>
+                        <field name="category_id" invisible="allocation_mode != 'category'" required="allocation_mode == 'category'"/>
+                        <field name="holiday_status_id"/>
+                        <field name="allocation_type" widget="radio"/>
+                        <field name="request_unit" invisible="1"/>
+                        <field name="accrual_plan_id"
+                            invisible="allocation_type == 'regular'"
+                            required="allocation_type == 'accrual'"/>
+                        <div class="o_td_label" name="validity_label">
+                            <label for="date_from" string="Validity Period"
+                                invisible="allocation_type == 'accrual'"/>
+                            <label for="date_from" string="Start Date" invisible="allocation_type == 'regular'"/>
+                        </div>
+                        <div class="o_row" name="validity">
+                            <field name="date_from" nolabel="1"/>
+                            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="allocation_type == 'accrual'"/>
+                            <label class="mx-2" for="date_to" string="Run until" invisible="allocation_type == 'regular'"/>
+                            <field name="date_to" nolabel="1" placeholder="No Limit"/>
+                            <div id="no_limit_label" class="oe_read_only" invisible="date_to">No limit</div>
+                        </div>
+                        <div class="o_td_label">
+                            <label for="duration"/>
+                        </div>
+                        <div name="duration_display">
+                            <field name="duration" nolabel="1" style="width: 5rem;"/>
+                            <span class="ml8" invisible="request_unit == 'hour'">Days</span>
+                            <span class="ml8" invisible="request_unit != 'hour'">Hours</span>
+                        </div>
+                    </group>
+                </group>
+                <field name="notes" placeholder="Add a reason..." nolabel="1"/>
+                <footer>
+                    <button name="action_generate_allocations" type="object" class="btn-primary" string="Create Allocations" accesskey="c"/>
+                    <button special="cancel" string="Discard" close="1" accesskey="j" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_leave_allocation_generate_multi_wizard" model="ir.actions.act_window">
+        <field name="name">Multiple Requests</field>
+        <field name="res_model">hr.leave.allocation.generate.multi.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+    </record>
+</odoo>

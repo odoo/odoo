@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Employees" string="Employees" name="hr" groups="hr.group_hr_manager">
+                    <block title="Employees" name="employees_setting_container">
+                        <setting id="presence_control_setting" title="Presence of employees" string="Presence Display">
+                            <div class="content-group" name="hr_presence_options">
+                                <div class="d-flex">
+                                    <field name="module_hr_attendance" class="ml16"/>
+                                    <label for="module_hr_attendance" class="o_light_label"/>
+                                </div>
+                                <div class="d-flex">
+                                    <field name="hr_presence_control_login" class="ml16"/>
+                                    <label for="hr_presence_control_login" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="presence_reporting_setting" help="Presence reporting screen, email and IP address control." title="Advanced presence of employees">
+                            <field name="module_hr_presence"/>
+                            <div class="d-flex mt-1" invisible="not module_hr_presence">
+                                <field name="hr_presence_control_email" class="ml16"/>
+                                <label for="hr_presence_control_email" class="o_light_label"/>
+                            </div>
+                            <div class="d-flex" invisible="not module_hr_presence">
+                                <field name="hr_presence_control_ip" class="ml16"/>
+                                <label for="hr_presence_control_ip" class="o_light_label"/>
+                            </div>
+                        </setting>
+                        <setting id="presence_reporting_setting"
+                            help="Define the minimum number of sent emails to be displayed as Present."
+                            title="Advanced presence of employees" string="Presence Condition"
+                            invisible="not module_hr_presence or not hr_presence_control_email">
+                            <div class="d-flex">
+                                <span class="flex-shrink-0 ml8 me-2">Sent Emails</span>
+                                <field name="hr_presence_control_email_amount" class="ms-2 oe_inline"/>
+                            </div>
+                        </setting>
+                        <setting id="presence_reporting_setting"
+                            help="Define the allowed IP to be displayed as Present. In case of multiple addresses, separate them by a coma."
+                            title="Advanced presence of employees" string="Presence Condition"
+                            invisible="not module_hr_presence or not hr_presence_control_ip">
+                            <div class="d-flex">
+                                <span class="flex-shrink-0 ml8 me-2">IP Addresses</span>
+                                <field name="hr_presence_control_ip_list" class="ms-2 oe_inline"/>
+                            </div>
+                        </setting>
+                        <setting invisible="not module_hr_presence or not (hr_presence_control_ip or hr_presence_control_email) or (hr_presence_control_ip and hr_presence_control_email)"
+                            help="This setting block is utilized to manage the frontend design."/>
+                        <setting help="Enrich employee profiles with skills and resumes" id="enrich_employee_setting">
+                            <field name="module_hr_skills"/>
+                        </setting>
+                        <setting id="home_working_setting" help="Display remote work settings for each employee and dedicated reports. Presence icons will be updated with remote work location.">
+                            <field name="module_hr_homeworking"/>
+                        </setting>
+                    </block>
+                    <block title="Work Organization" name="work_organization_setting_container">
+                        <setting company_dependent="1" help="Set default company schedule to manage your employees working time" id="default_company_schedule_setting">
+                            <field name="resource_calendar_id" required="1" class="o_light_label"
+                                domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+                                context="{'default_company_id': company_id}"/>
+                        </setting>
+                    </block>
+                    <block title="Employee Update Rights" name="employee_rights_setting_container">
+                        <setting help="Allow employees to update their own data" title="Allow employees to update their own data.">
+                            <field name="hr_employee_self_edit"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'hr', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="hr_menu_configuration"
+        name="Settings"
+        parent="menu_human_resources_configuration"
+        sequence="0"
+        action="hr_config_settings_action"
+        groups="base.group_system"/>
+</odoo>

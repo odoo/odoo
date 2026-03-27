@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="account.GroupedListTemplate">
+        <t t-set="value" t-value="this.getValue()"/>
+        <table t-if="value.groups_vals.length" class="table table-sm o_list_table table table-sm table-hover table-striped o_list_table_grouped">
+            <thead><tr>
+                <t t-foreach="value.options.columns" t-as="col" t-key="col_index">
+                    <th t-out="col['label']" t-attf-class="{{col['class']}}"/>
+                </t>
+            </tr></thead>
+            <t t-foreach="value.groups_vals" t-as="group_vals" t-key="group_vals_index">
+                <ListGroup group_vals="group_vals" options="value.options"/>
+            </t>
+        </table>
+        <t t-if="value.options.discarded_number">
+            <span><t t-out="value.options.discarded_number"/> are not shown in the preview</span>
+        </t>
+    </t>
+
+    <tbody t-name="account.GroupedItemsTemplate">
+        <tr style="background-color: #dee2e6;">
+            <td t-attf-colspan="{{props.options.columns.length}}">
+                <t t-out="props.group_vals.group_name"/>
+            </td>
+        </tr>
+        <t t-foreach="props.group_vals.items_vals" t-as="item_vals" t-key="item_vals_index">
+            <ListItem item_vals="item_vals[2]" options="props.options"/>
+        </t>
+    </tbody>
+
+    <tr t-name="account.GroupedItemTemplate">
+        <t t-foreach="props.options.columns" t-as="col" t-key="col_index">
+            <td t-out="props.item_vals[col['field']]" t-attf-class="{{col['class']}}"/>
+        </t>
+    </tr>
+
+    <t t-name="account.OpenMoveTemplate">
+        <a href="#" t-out="widget.value"/>
+    </t>
+
+</templates>

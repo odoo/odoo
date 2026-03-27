@@ -28,11 +28,18 @@ export class SanitizePlugin extends Plugin {
      * @returns {HTMLElement} the element itself
      */
     sanitize(elem) {
-        return this.DOMPurify.sanitize(elem, {
+        for (const cb of this.getResource("before_sanitize_processors")) {
+            elem = cb(elem);
+        }
+        elem = this.DOMPurify.sanitize(elem, {
             IN_PLACE: true,
             ADD_TAGS: ["#document-fragment", "fake-el"],
             ADD_ATTR: ["contenteditable"],
         });
+        for (const cb of this.getResource("after_sanitize_processors")) {
+            elem = cb(elem);
+        }
+        return elem;
     }
 
     normalize(element) {

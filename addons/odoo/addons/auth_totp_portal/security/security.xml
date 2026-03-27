@@ -1,0 +1,12 @@
+<odoo>
+    <!-- add access for portal users (still restricted by global rule) -->
+    <record model="ir.model.access" id="access_auth_totp_portal_wizard">
+        <field name="name">auth_totp_portal wizard access rules</field>
+        <field name="model_id" ref="auth_totp.model_auth_totp_wizard"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="perm_read">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_create">1</field>
+        <field name="perm_unlink">1</field>
+    </record>
+</odoo>

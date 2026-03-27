@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Action to open migration cron job -->
+    <record id="action_cloud_storage_migration_cron" model="ir.actions.act_window">
+        <field name="name">Cloud Storage Migration Cron</field>
+        <field name="res_model">ir.cron</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="res_id" ref="cloud_storage_migration.ir_cron_manual_migrate_local_to_cloud_storage"/>
+    </record>
+
+    <record id="cloud_storage_migration_config_settings_view_form" model="ir.ui.view">
+        <field name="name">cloud_storage_migration_config_settings_view_form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="cloud_storage.cloud_storage_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='cloud_storage']/block" position="inside">
+                <setting help="Migrate local attachments to cloud storage"
+                         invisible="not cloud_storage_provider">
+                    <div class='o_form_label'>Cloud Storage Migration</div>
+                    <div>
+                        <button name="%(cloud_storage_migration.action_cloud_storage_migration_cron)d"
+                                string="Cron Job"
+                                type="action"
+                                class="btn-link ps-0"
+                                icon="fa-clock-o"/>
+                        <button name="action_open_cloud_storage_migration_configurations"
+                                string="Parameters"
+                                type="object"
+                                class="btn-link"
+                                icon="fa-cog"/>
+                        <field name="cloud_storage_migration_progress" widget="progressbar"/>
+                    </div>
+                    <button name="%(cloud_storage_migration.action_cloud_storage_migration_report)d" 
+                        string="Attachments Report"
+                        type="action"
+                        class="btn-link"
+                        icon="fa-bar-chart"/>
+                    <div>
+                        <label class="o_light_label mr8" for="cloud_storage_migration_message_model_ids"/>
+                        <field name="cloud_storage_migration_message_model_ids" widget="many2many_tags"/>
+                    </div>
+                    <div>
+                        <label class="o_light_label mr8" for="cloud_storage_migration_all_model_ids"/>
+                        <field name="cloud_storage_migration_all_model_ids" widget="many2many_tags"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

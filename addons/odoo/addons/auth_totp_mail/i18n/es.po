@@ -1,0 +1,190 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_totp_mail
+#
+# Translators:
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor "
+"authentication to protect your account.<br/><br/>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" "
+"style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Activate my two-factor Authentication\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Estimada/o <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> solicitó que active la autenticación "
+"de dos factores para proteger su cuenta.<br/><br/>\n"
+"        La autenticación de dos factores (“A2F”) es un sistema de doble "
+"autenticación.\n"
+"        El primer factor se hace con su contraseña y el segundo con un "
+"código que obtendrá de una aplicación móvil especializada.\n"
+"        Las aplicaciones más populares incluyen Authy, Google Authenticator "
+"o Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" "
+"style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Activar mi autenticación de dos factores\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
+msgid "<span>Consider</span>"
+msgstr "<span>Considere</span>"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid "A trusted device has just been added to your account: %(device_name)s"
+msgstr ""
+"Se acaba de añadir un dispositivo de confianza a su cuenta: %(device_name)s"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid ""
+"A trusted device has just been removed from your account: %(device_names)s"
+msgstr ""
+"Se acaba de eliminar un dispositivo de confianza de su cuenta: %"
+"(device_names)s"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Account Security"
+msgstr "Seguridad de la cuenta"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "Dispositivo de autenticación"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
+msgid "Invitation to activate two-factor authentication on your Odoo account"
+msgstr ""
+"Invitación a activar la autenticación de dos factores en su cuenta de Odoo"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid ""
+"Invitation to use two-factor authentication sent for the following user(s): "
+"%s"
+msgstr ""
+"Se envió la invitación a activar la autenticación de dos factores a los "
+"siguientes usuarios: %s"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
+msgid "Invite to use 2FA"
+msgstr "Invitar a usar la A2F"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
+msgid "Invite to use two-factor authentication"
+msgstr "Invitar a usar la autenticación de dos factores"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Name"
+msgstr "Nombre"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
+msgid "Open two-factor authentication configuration"
+msgstr "Abrir la configuración de la autenticación de dos factores"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security Update: 2FA Activated"
+msgstr "Actualización de seguridad: A2F activada"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security Update: 2FA Deactivated"
+msgstr "Actualización de seguridad: A2F desactivada "
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid "Security Update: Device Added"
+msgstr "Actualización de seguridad: dispositivo añadido"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+msgid "Security Update: Device Removed"
+msgstr "Actualización de seguridad: dispositivo eliminado"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
+msgid "Settings: 2Fa Invitation"
+msgstr "Configuración: invitación 2Fa"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Two-factor authentication has been activated on your account"
+msgstr "La autenticación de dos factores ha sido activada en su cuenta"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Two-factor authentication has been deactivated on your account"
+msgstr "La autenticación de dos factores ha sido desactivada en su cuenta"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_users
+msgid "User"
+msgstr "Usuario"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
+msgid "activating Two-factor Authentication"
+msgstr "activando la autenticación de dos factores"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_city_tree" model="ir.ui.view">
+            <field name="name">res.city.list</field>
+            <field name="model">res.city</field>
+            <field name="arch" type="xml">
+                <list string="City" editable="top">
+                    <field name="name"/>
+                    <field name="zipcode"/>
+                    <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="state_id" context="{'default_country_id': country_id}"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_city_filter" model="ir.ui.view">
+            <field name="model">res.city</field>
+            <field name="arch" type="xml">
+                <search string="Search City">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('zipcode','ilike',self)]"
+                           string="City"/>
+                    <separator/>
+                    <field name="country_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_res_city_tree" model="ir.actions.act_window">
+            <field name="name">Cities</field>
+            <field name="res_model">res.city</field>
+            <field name="view_mode">list</field>
+            <field name="help">
+                Display and manage the list of all cities that can be assigned to
+                your partner records. Note that an option can be set on each country separately
+                to enforce any address of it to have a city in this list.
+            </field>
+        </record>
+
+        <menuitem id="menu_res_city"
+            action="action_res_city_tree"
+            parent="contacts.menu_localisation"
+            sequence="2"/>
+
+    </data>
+</odoo>

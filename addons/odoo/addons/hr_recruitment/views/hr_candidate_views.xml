@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_candidate_view_form" model="ir.ui.view">
+        <field name="name">hr.candidate.view.form</field>
+        <field name="model">hr.candidate</field>
+        <field name="arch" type="xml">
+            <form string="Jobs - Recruitment Form" class="o_applicant_form">
+                <field name="company_id" invisible="1"/>
+                <field name="email_normalized" invisible="1"/>
+                <field name="partner_phone_sanitized" invisible="1"/>
+                <header>
+                    <button string="Create Employee" name="create_employee_from_candidate" type="object" data-hotkey="q" groups="hr.group_hr_user"
+                            class="o_create_employee" invisible="employee_id or not active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_employee"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-id-card-o"
+                                groups="hr.group_hr_user"
+                                invisible="not (employee_id or emp_is_active)">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="employee_name" readonly="1"/></span>
+                                <span class="o_stat_text">Employee</span>
+                            </div>
+                        </button>
+                        <button name="action_open_applications"
+                                class="oe_stat_button"
+                                icon="fa-pencil"
+                                type="object"
+                                context="{'active_test': False, 'default_candidate_id': id}"
+                                invisible="not application_count">
+                            <field name="application_count" widget="statinfo" string="Applications"/>
+                        </button>
+                        <button name="action_open_similar_candidates"
+                                class="oe_stat_button"
+                                icon="fa-users"
+                                type="object"
+                                context="{'active_test': False}"
+                                invisible="similar_candidates_count == 0">
+                            <field name="similar_candidates_count" widget="statinfo" string="Similar Candidates"/>
+                        </button>
+                        <button name="action_create_meeting" class="oe_stat_button" icon="fa-calendar" type="object" invisible="not id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text"><field name="meeting_display_text"/></span>
+                                <span class="o_stat_value"><field name="meeting_display_date" readonly="1"/></span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="row justify-content-between position-relative w-100 m-0 mb-2">
+                        <div class="oe_title mw-75 ps-0 pe-2">
+                            <h1 class="d-flex flex-row align-items-center">
+                                <div invisible="1" class="me-2">
+                                    <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                </div>
+                                <field name="partner_name" placeholder="Candidate's Name"
+                                    required="True" style="font-size: min(4vw, 2.6rem);"/>
+                            </h1>
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="partner_id" groups="base.group_no_one"/>
+                            <field name="email_from"/>
+                            <field name="partner_phone"/>
+                            <field name="linkedin_profile"/>
+                            <field name="type_id"/>
+                        </group>
+                        <group>
+                            <field name="user_id" string="Manager"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="availability"/>
+                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="employee_id" invisible="1"/>
+                            <field name="emp_is_active" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="candidate_properties" columns="2"/>
+                    <notebook/>
+                </sheet>
+                <div class="o_attachment_preview" groups="hr_recruitment.group_applicant_cv_display"/>
+                <chatter open_attachments="True" reload_on_attachment="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_candidate_view_tree" model="ir.ui.view">
+        <field name="name">hr.candidate.view.list</field>
+        <field name="model">hr.candidate</field>
+        <field name="arch" type="xml">
+            <list string="Candidates" multi_edit="1" sample="1">
+                <field name="partner_name" string="Name"/>
+                <field name="email_from"/>
+                <field name="partner_phone"/>
+                <field name="user_id" string="Manager" widget="many2one_avatar_user"/>
+                <field name="priority" widget="priority" optional="show"/>
+                <field name="availability" optional="show"/>
+                <field name="type_id" optional="hide"/>
+                <field name="linkedin_profile" optional="hide"/>
+                <field name="applications_count" optional="hide"/>
+                <field name="refused_applications_count" optional="hide"/>
+                <field name="accepted_applications_count" optional="hide"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_candidate_view_kanban" model="ir.ui.view" >
+        <field name="name">hr.candidate.view.kanban</field>
+        <field name="model">hr.candidate</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color" class="o_kanban_applicant o_search_matching_applicant" sample="1">
+                <field name="active"/>
+                <field name="color"/>
+                <field name="company_id"/>
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" name="action_create_meeting" type="object" class="dropdown-item">Schedule Interview</a>
+                        <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
+                        <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
+                    <t t-name="card">
+                        <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
+                        <field t-else="" class="fw-bold fs-5" name="partner_id"/>
+                        <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="candidate_properties" widget="properties"/>
+                        <footer>
+                            <field name="priority" widget="priority"/>
+                            <field class="ms-1 align-items-center" name="activity_ids" widget="kanban_activity"/>
+                            <div class="d-flex ms-auto align-items-center">
+                                <a name="action_open_attachments" type="object">
+                                    <i class='fa fa-paperclip' role="img" aria-label="Documents"/>
+                                    <field name="attachment_count"/>
+                                </a>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_candidate_view_calendar" model="ir.ui.view">
+        <field name="name">hr.candidate.view.calendar</field>
+        <field name="model">hr.candidate</field>
+        <field name="arch" type="xml">
+            <calendar 
+                string="Candidates"
+                mode="month"
+                date_start="activity_date_deadline"
+                color="user_id"
+                event_limit="5"
+                hide_time="true"
+                quick_create="0"
+            >
+                <field name="partner_name"/>
+                <field name="priority" widget="priority"/>
+                <field name="activity_summary"/>
+                <field name="user_id" filters="1" invisible="1"/>
+                <field name="candidate_properties"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_candidate_view_search" model="ir.ui.view">
+        <field name="name">hr.candidate.view.search</field>
+        <field name="model">hr.candidate</field>
+        <field name="arch" type="xml">
+            <search string="Candidates">
+                <field name="partner_name"/>
+                <field name="email_from"/>
+                <field name="user_id"/>
+                <field name="linkedin_profile"/>
+                <filter string="My Candidates" name="my_candidates" domain="[('user_id', '=', uid)]"/>
+                <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <filter string="Application in Progress" name="application_in_progress" domain="[('applicant_ids.application_status', '=', 'ongoing')]"/>
+                <filter string="Waiting" name="waiting" domain="[('applicant_ids', '=', False)]"/>
+                <filter string="Hired" name="hired" domain="[('applicant_ids.application_status', '=', 'hired')]"/>
+                <separator/>
+                <filter string="Directly Available" name="directly_available"
+                    domain="
+                [
+                    '&amp;',
+                        '|',
+                            ('availability', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                            ('availability', '=', False),
+                        '!',
+                            ('applicant_ids', 'any',
+                                [
+                                    '&amp;',
+                                        ('application_status', '=', 'hired'),
+                                    '|',
+                                        ('availability', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                        ('availability', '=', False),
+                                ]
+                            )
+                ]" />
+                <separator/>
+                <filter string="Creation Date" name="filter_create" date="create_date"/>
+                <separator/>
+                <filter string="Refused" name="refused" context="{'active_test': False}" domain="[('applicant_ids.application_status', '=', 'refused')]"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Manager" name="group_by_manager" domain="[]" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_candidate_send_mail" model="ir.actions.server">
+        <field name="name">Send Email</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_candidate"/>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_candidate"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_send_email()</field>
+    </record>
+
+    <record id="action_hr_candidate" model="ir.actions.act_window">
+        <field name="name">Candidates</field>
+        <field name="path">recruitment-candidates</field>
+        <field name="res_model">hr.candidate</field>
+        <field name="view_mode">kanban,list,form,calendar,activity</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No candidates yet
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_enrich
+#
+# Translators:
+# Wil Odoo, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid ""
+"<span> No company data found based on the email address or email address is "
+"one of an email provider. No credit was consumed. </span>"
+msgstr ""
+"<span> ไม่พบข้อมูลบริษัทตามที่อยู่อีเมล หรือที่อยู่อีเมลที่เป็นหนึ่งในผู้ให้บริการอีเมล "
+"ซึ่งไม่มีการใช้เครดิต </span>"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+msgid ""
+"<span>Enrichment could not be done because the email address does not look "
+"valid.</span>"
+msgstr "<span>ไม่สามารถเพิ่มได้เนื่องจากที่อยู่อีเมลไม่ถูกต้อง</span>"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "อนุญาตให้เพิ่มด้วยตนเอง"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "An error occurred during lead enrichment"
+msgstr "เกิดข้อผิดพลาดระหว่างการเพิ่มข้อมูลลูกค้าเป้าหมาย"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
+msgid "CRM: enrich leads (IAP)"
+msgstr "CRM: เพิ่มลูกค้าเป้าหมาย (IAP)"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "เพิ่ม"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich lead with company data"
+msgstr "อนุญาตให้เพิ่มด้วยตนเอง"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich opportunity with company data"
+msgstr "เพิ่มโอกาสด้วยข้อมูลบริษัท"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid "Enrichment done"
+msgstr "เพิ่มเรียบร้อย"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid "Lead Enrichment (based on email address)"
+msgstr "การเพิ่มลูกค้าเป้าหมาย (ตามที่อยู่อีเมล)"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Lead enriched based on email address"
+msgstr "เพิ่มลูกค้าเป้าหมายตามที่อยู่อีเมล"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "ลูกค้าเป้าหมาย / ผู้ที่มีโอกาสจะซื้อ"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Not enough credits for Lead Enrichment"
+msgstr "เครดิตไม่เพียงพอสำหรับการเพิ่มลูกค้าเป้าหมาย"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "The leads/opportunities have successfully been enriched"
+msgstr "ลูกค้าเป้าหมาย/ผู้ที่มีโอกาสจะซื้อ ได้รับการปรับปรุงให้สมบูรณ์แล้ว"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid ""
+"Whether IAP service for lead enrichment based on email has been performed on "
+"this lead."
+msgstr ""
+"บริการ IAP สำหรับเพิ่มลูกค้าเป้าหมายตามอีเมลได้รับการดำเนินการกับลูกค้าเป้าหมายนี้แล้วหรือไม่"

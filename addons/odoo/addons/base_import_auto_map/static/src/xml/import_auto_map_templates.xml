@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="base_import_auto_map.ImportDataContent" t-inherit="ImportDataContent" t-inherit-mode="extension">
+        <xpath expr="//SelectMenu" position="replace">
+            <t t-if="column.fieldInfo">
+                <span>
+                    <i class="fa fa-check-circle text-success me-2"></i>
+                    <t t-esc="column.fieldInfo.label"/>
+                </span>
+            </t>
+            <span t-else="" class="text-warning">Asignando automáticamente...</span>
+        </xpath>
+    </t>
+</templates>

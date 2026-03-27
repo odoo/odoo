@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_expense_sheet">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page o_content_pdf">
+                        <div class="oe_structure"></div>
+                        <h2>Expenses Report</h2>
+                        <h3><span t-out="o.name">Business Trip</span></h3>
+                        <div class="row o_header">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-3 fw-bold"><span>Employee:</span> </div>
+                                    <div class="col-9 text-muted"><span t-field="o.employee_id.name">Marc Demo</span></div>
+                                </div>
+                                <div class="row" t-if="o.accounting_date">
+                                    <div class="col-3 fw-bold"><span>Date:</span></div>
+                                    <div class="col-9 text-muted"><span t-field="o.accounting_date">2023-08-11</span></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row" t-if="o.user_id.name">
+                                    <div class="col-3 fw-bold"><span>Manager:</span></div>
+                                    <div class="col-9 text-muted"><span t-field="o.user_id">Mitchell Admin</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 fw-bold"><span>Paid by:</span></div>
+                                    <div class="col-9 text-muted"><span t-field="o.payment_mode">Credit Card</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="oe_structure"></div>
+
+                        <table class="o_has_total_table table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-start">Date</th>
+                                    <th class="text-start">Name</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">Quantity</th>
+                                    <th class="text-end">Taxes</th>
+                                    <t t-set="foreign_currencies" t-value="o.expense_line_ids.currency_id - o.company_currency_id"/>
+                                    <th t-if="foreign_currencies" class="text-end">Subtotal in currency</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.expense_line_ids" t-as="line">
+                                    <td class="text-start"><span t-field="line.date"></span></td>
+                                    <td t-att-class="'text-start' + (' o_overflow' if len(line.name) > 30 else '')">
+                                        <span t-field="line.name">Flight Ticket</span>
+                                    </td>
+                                    <td class="text-end"><span t-field="line.price_unit">$100.00</span></td>
+                                    <td class="text-end"><span t-field="line.quantity">1</span></td>
+                                    <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
+                                    <td t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                        <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
+                                    </td>
+                                    <td t-if="foreign_currencies" class="text-end">
+                                        <span t-field="line.total_amount_currency" t-options='{"widget": "monetary", "display_currency": line.currency_id}'>$120.00</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.total_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>$100.00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="oe_structure"></div>
+                        <div class="row justify-content-end o_total mt-n3">
+                            <div class="col-4">
+                                <div class="oe_structure"></div>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td>Untaxed Amount</td>
+                                            <td class="text-end"><span t-field="o.untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$500.00</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td class="text-end"><span t-field="o.total_tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$100.00</span></td>
+                                        </tr>
+                                        <tr class="fw-bold">
+                                            <td>Total</td>
+                                            <td class="text-end">
+                                                <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$600.00</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="oe_structure"></div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_expense_sheet_img">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="oe_structure"></div>
+                    <div t-if="attachment and attachment.mimetype != 'application/pdf'">
+                        <h3> <span t-out="attachment.res_name">Attachment Name</span> </h3>
+                        <img t-att-src="attachment.image_src" class="o_attachment_pdf"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_hr_expense_sheet" model="ir.actions.report">
+        <field name="name">Expenses Report</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_expense.report_expense_sheet</field>
+        <field name="report_file">hr_expense.report_expense_sheet</field>
+        <field name="print_report_name">'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))</field>
+        <field name="binding_model_id" ref="model_hr_expense_sheet"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_expense_sheet_img" model="ir.actions.report">
+        <field name="name">Expense Report Image</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_expense.report_expense_sheet_img</field>
+        <field name="report_file">hr_expense.report_expense_sheet_img</field>
+    </record>
+</odoo>

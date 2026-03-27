@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="crm_lead_view_tree_opportunity" model="ir.ui.view">
+        <field name="name">crm.lead.view.list.opportunity.inherit.iap.mine</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_generate_leads" type="object" class="o_button_generate_leads"
+                        string="Generate Leads" groups="sales_team.group_sale_manager" display="always"
+                        invisible="context.get('active_model', 'crm.lead') != 'crm.lead'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_tree_lead" model="ir.ui.view">
+        <field name="name">crm.lead.view.list.lead.inherit.iap.mine</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_leads" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_generate_leads" type="object" class="o_button_generate_leads"
+                            string="Generate Leads" groups="sales_team.group_sale_manager" display="always"
+                            invisible="context.get('active_model', 'crm.lead') != 'crm.lead'"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_crm_lead_kanban" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.inherit.iap.mine</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_lead_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <header>
+                    <button name="action_generate_leads" type="object" class="o_button_generate_leads" string="Generate Leads"
+                            groups="sales_team.group_sale_manager" display="always" invisible="context.get('active_model', 'crm.lead') != 'crm.lead'"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_case_kanban_view_leads" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.lead.inherit.iap.mine</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <header>
+                    <button name="action_generate_leads" type="object" class="o_button_generate_leads" string="Generate Leads"
+                            groups="sales_team.group_sale_manager" display="always" invisible="context.get('active_model', 'crm.lead') != 'crm.lead'"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

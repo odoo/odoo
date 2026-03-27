@@ -74,6 +74,9 @@ class MrpProduction(models.Model):
             if mo.with_company(mo.company_id).product_id.valuation != 'real_time':
                 continue
 
+            if mo.workorder_ids.time_ids.account_move_line_id:
+                continue
+
             product_accounts = mo.product_id.product_tmpl_id.get_product_accounts()
             labour_amounts = defaultdict(float)
             workorders = defaultdict(self.env['mrp.workorder'].browse)

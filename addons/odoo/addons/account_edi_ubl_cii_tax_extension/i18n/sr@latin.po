@@ -1,0 +1,695 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_edi_ubl_cii_tax_extension
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
+"PO-Revision-Date: 2025-11-21 06:40+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
+"odoo-18/account_edi_ubl_cii_tax_extension/sr_Latn/>\n"
+"Language: sr@latin\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__ae
+msgid "AE - Vat Reverse Charge"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__b
+msgid "B - Transferred (VAT), In Italy"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model,name:account_edi_ubl_cii_tax_extension.model_account_edi_common
+msgid ""
+"Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__e
+msgid "E - Exempt from Tax"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#. odoo-python
+#: code:addons/account_edi_ubl_cii_tax_extension/models/account_edi_common.py:0
+msgid "Exempt from tax"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__g
+msgid "G - Free export item, VAT not charged"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__k
+msgid "K - VAT exempt for EEA intra-community supply of goods and services"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__l
+msgid "L - Canary Islands general indirect tax"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__m
+msgid "M - Tax for production, services and importation in Ceuta and Melilla"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__o
+msgid "O - Services outside scope of tax"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__s
+msgid "S - Standard rate"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model,name:account_edi_ubl_cii_tax_extension.model_account_tax
+msgid "Tax"
+msgstr "Porez"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_category_code
+msgid "Tax Category Code"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid "Tax Exemption Reason Code"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_category_code
+msgid "The VAT category code used for electronic invoicing purposes."
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid ""
+"The reason why the amount is exempted from VAT or why no VAT is being "
+"charged, used for electronic invoicing purposes."
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
+msgid ""
+"VATEX-EU-132 - Exempt based on article 132 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1a
+msgid ""
+"VATEX-EU-132-1A - Exempt based on article 132, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1b
+msgid ""
+"VATEX-EU-132-1B - Exempt based on article 132, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1c
+msgid ""
+"VATEX-EU-132-1C - Exempt based on article 132, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1d
+msgid ""
+"VATEX-EU-132-1D - Exempt based on article 132, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1e
+msgid ""
+"VATEX-EU-132-1E - Exempt based on article 132, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1f
+msgid ""
+"VATEX-EU-132-1F - Exempt based on article 132, section 1 (f) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1g
+msgid ""
+"VATEX-EU-132-1G - Exempt based on article 132, section 1 (g) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1h
+msgid ""
+"VATEX-EU-132-1H - Exempt based on article 132, section 1 (h) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1i
+msgid ""
+"VATEX-EU-132-1I - Exempt based on article 132, section 1 (i) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1j
+msgid ""
+"VATEX-EU-132-1J - Exempt based on article 132, section 1 (j) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1k
+msgid ""
+"VATEX-EU-132-1K - Exempt based on article 132, section 1 (k) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1l
+msgid ""
+"VATEX-EU-132-1L - Exempt based on article 132, section 1 (l) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1m
+msgid ""
+"VATEX-EU-132-1M - Exempt based on article 132, section 1 (m) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1n
+msgid ""
+"VATEX-EU-132-1N - Exempt based on article 132, section 1 (n) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1o
+msgid ""
+"VATEX-EU-132-1O - Exempt based on article 132, section 1 (o) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1p
+msgid ""
+"VATEX-EU-132-1P - Exempt based on article 132, section 1 (p) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1q
+msgid ""
+"VATEX-EU-132-1Q - Exempt based on article 132, section 1 (q) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
+msgid ""
+"VATEX-EU-143 - Exempt based on article 143 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1a
+msgid ""
+"VATEX-EU-143-1A - Exempt based on article 143, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1b
+msgid ""
+"VATEX-EU-143-1B - Exempt based on article 143, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1c
+msgid ""
+"VATEX-EU-143-1C - Exempt based on article 143, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1d
+msgid ""
+"VATEX-EU-143-1D - Exempt based on article 143, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1e
+msgid ""
+"VATEX-EU-143-1E - Exempt based on article 143, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1f
+msgid ""
+"VATEX-EU-143-1F - Exempt based on article 143, section 1 (f) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1fa
+msgid ""
+"VATEX-EU-143-1FA - Exempt based on article 143, section 1 (fa) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1g
+msgid ""
+"VATEX-EU-143-1G - Exempt based on article 143, section 1 (g) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1h
+msgid ""
+"VATEX-EU-143-1H - Exempt based on article 143, section 1 (h) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1i
+msgid ""
+"VATEX-EU-143-1I - Exempt based on article 143, section 1 (i) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1j
+msgid ""
+"VATEX-EU-143-1J - Exempt based on article 143, section 1 (j) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1k
+msgid ""
+"VATEX-EU-143-1K - Exempt based on article 143, section 1 (k) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1l
+msgid ""
+"VATEX-EU-143-1L - Exempt based on article 143, section 1 (l) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-144
+msgid ""
+"VATEX-EU-144 - Exempt based on article 144 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-146-1e
+msgid ""
+"VATEX-EU-146-1E - Exempt based on article 146 section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148
+msgid ""
+"VATEX-EU-148 - Exempt based on article 148 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-a
+msgid ""
+"VATEX-EU-148-A - Exempt based on article 148, section (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-b
+msgid ""
+"VATEX-EU-148-B - Exempt based on article 148, section (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-c
+msgid ""
+"VATEX-EU-148-C - Exempt based on article 148, section (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-d
+msgid ""
+"VATEX-EU-148-D - Exempt based on article 148, section (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-e
+msgid ""
+"VATEX-EU-148-E - Exempt based on article 148, section (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-f
+msgid ""
+"VATEX-EU-148-F - Exempt based on article 148, section (f) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-g
+msgid ""
+"VATEX-EU-148-G - Exempt based on article 148, section (g) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151
+msgid ""
+"VATEX-EU-151 - Exempt based on article 151 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1a
+msgid ""
+"VATEX-EU-151-1A - Exempt based on article 151, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1aa
+msgid ""
+"VATEX-EU-151-1AA - Exempt based on article 151, section 1 (aa) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1b
+msgid ""
+"VATEX-EU-151-1B - Exempt based on article 151, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1c
+msgid ""
+"VATEX-EU-151-1C - Exempt based on article 151, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1d
+msgid ""
+"VATEX-EU-151-1D - Exempt based on article 151, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1e
+msgid ""
+"VATEX-EU-151-1E - Exempt based on article 151, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-153
+msgid ""
+"VATEX-EU-153 - Exempt based on article 153 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-159
+msgid ""
+"VATEX-EU-159 - Exempt based on article 159 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-309
+msgid ""
+"VATEX-EU-309 - Exempt based on article 309 of Council Directive 2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-79-c
+msgid ""
+"VATEX-EU-79-C - Exempt based on article 79, point c of Council Directive "
+"2006/112/EC"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_ae
+msgid "VATEX-EU-AE - Reverse charge"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_d
+msgid ""
+"VATEX-EU-D - Intra-Community acquisition from second hand means of transport"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_f
+msgid "VATEX-EU-F - Intra-Community acquisition of second hand goods"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_g
+msgid "VATEX-EU-G - Export outside the EU"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_i
+msgid "VATEX-EU-I - Intra-Community acquisition of works of art"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_ic
+msgid "VATEX-EU-IC - Intra-Community supply"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_j
+msgid ""
+"VATEX-EU-J - Intra-Community acquisition of collectors items and antiques"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_o
+msgid "VATEX-EU-O - Not subject to VAT"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-298sexdeciesa
+msgid ""
+"VATEX-FR-298SEXDECIESA - Exempt based on article 298 sexdecies A of the Code "
+"Général des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-ae
+msgid ""
+"VATEX-FR-AE - Exempt based on 2 of article 283 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-1
+msgid ""
+"VATEX-FR-CGI261-1 - Exempt based on 1 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-2
+msgid ""
+"VATEX-FR-CGI261-2 - Exempt based on 2 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-3
+msgid ""
+"VATEX-FR-CGI261-3 - Exempt based on 3 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-4
+msgid ""
+"VATEX-FR-CGI261-4 - Exempt based on 4 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-5
+msgid ""
+"VATEX-FR-CGI261-5 - Exempt based on 5 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-7
+msgid ""
+"VATEX-FR-CGI261-7 - Exempt based on 7 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-8
+msgid ""
+"VATEX-FR-CGI261-8 - Exempt based on 8 of article 261 of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261a
+msgid ""
+"VATEX-FR-CGI261A - Exempt based on article 261 A of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261b
+msgid ""
+"VATEX-FR-CGI261B - Exempt based on article 261 B of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-1
+msgid ""
+"VATEX-FR-CGI261C-1 - Exempt based on 1° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-2
+msgid ""
+"VATEX-FR-CGI261C-2 - Exempt based on 2° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-3
+msgid ""
+"VATEX-FR-CGI261C-3 - Exempt based on 3° of article 261 C of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-1
+msgid ""
+"VATEX-FR-CGI261D-1 - Exempt based on 1° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-1bis
+msgid ""
+"VATEX-FR-CGI261D-1BIS - Exempt based on 1°bis of article 261 D of the Code "
+"Général des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-2
+msgid ""
+"VATEX-FR-CGI261D-2 - Exempt based on 2° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-3
+msgid ""
+"VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-4
+msgid ""
+"VATEX-FR-CGI261D-4 - Exempt based on 4° of article 261 D of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261e-1
+msgid ""
+"VATEX-FR-CGI261E-1 - Exempt based on 1° of article 261 E of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261e-2
+msgid ""
+"VATEX-FR-CGI261E-2 - Exempt based on 2° of article 261 E of the Code Général "
+"des Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi275
+msgid ""
+"VATEX-FR-CGI275 - Exempt based on article 275 of the Code Général des Impôts "
+"(CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi277a
+msgid ""
+"VATEX-FR-CGI277A - Exempt based on article 277 A of the Code Général des "
+"Impôts (CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi295
+msgid ""
+"VATEX-FR-CGI295 - Exempt based on article 295 of the Code Général des Impôts "
+"(CGI ; General tax code)"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_fr-cnwvat
+msgid ""
+"VATEX-FR-CNWVAT - France domestic Credit Notes without VAT, due to supplier "
+"forfeit of VAT for discount"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_fr-franchise
+msgid "VATEX-FR-FRANCHISE - France domestic VAT franchise in base"
+msgstr ""
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__z
+msgid "Z - Zero rated goods"
+msgstr ""

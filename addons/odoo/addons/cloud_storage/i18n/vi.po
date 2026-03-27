@@ -1,0 +1,132 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* cloud_storage
+#
+# Translators:
+# Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_ir_attachment
+msgid "Attachment"
+msgstr "Tệp đính kèm"
+
+#. module: cloud_storage
+#: model:ir.model.fields.selection,name:cloud_storage.selection__ir_attachment__type__cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Cloud Storage"
+msgstr "Lưu trữ đám mây"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
+msgid "Cloud Storage Provider for new attachments"
+msgstr "Nhà cung cấp dịch vụ lưu trữ đám mây cho tệp đính kèm mới"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Cloud Storage Settings"
+msgstr "Cài đặt lưu trữ đám mây"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid "Cloud Storage is not enabled"
+msgstr "Lưu trữ đám mây chưa được bật"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/controllers/attachment.py:0
+msgid "Cloud storage configuration has been changed. Please refresh the page."
+msgstr "Cấu hình lưu trữ đám mây đã được thay đổi. Vui lòng làm mới trang."
+
+#. module: cloud_storage
+#. odoo-javascript
+#: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
+msgid "Cloud storage error"
+msgstr "Lỗi lưu trữ đám mây"
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cài đặt cấu hình"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid ""
+"Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_ir_http
+msgid "HTTP Routing"
+msgstr "Định tuyến HTTP"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
+msgid "Minimum File Size (bytes)"
+msgstr "Kích thước tệp tối thiểu (byte)"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
+msgstr ""
+"Kích thước tối thiểu (byte) của các tệp đính kèm được lưu trữ trên đám mây"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/res_config_settings.py:0
+msgid "Please configure the Cloud Storage before enabling it"
+msgstr "Vui lòng cấu hình Lưu trữ đám mây trước khi bật tính năng này"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Select the cloud storage provider to store new attachments."
+msgstr "Chọn nhà cung cấp dịch vụ lưu trữ đám mây cho tệp đính kèm mới."
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__type
+msgid "Type"
+msgstr "Loại"
+
+#. module: cloud_storage
+#. odoo-javascript
+#: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
+msgid "You are not allowed to upload file to the cloud storage"
+msgstr "Bạn không được phép tải tệp lên lưu trữ đám mây"
+
+#. module: cloud_storage
+#: model:ir.model.fields,help:cloud_storage.field_ir_attachment__type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"Bạn có thể tải tệp lên từ máy tính hoặc sao chép/dán liên kết internet vào "
+"tệp của bạn."
+
+#. module: cloud_storage
+#: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
+msgid ""
+"webclient can upload files larger than the minimum file size\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
+"        the cloud storage."
+msgstr ""
+"webclient có thể tải lên các tệp lớn hơn kích thước tệp tối thiểu\n"
+"        (tính bằng byte) dưới dạng tệp đính kèm url lên máy chủ và sau đó "
+"tải tệp lên\n"
+"        lưu trữ đám mây."

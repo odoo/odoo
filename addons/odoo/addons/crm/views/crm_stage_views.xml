@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_lead_stage_search" model="ir.ui.view">
+        <field name="name">Stage - Search</field>
+        <field name="model">crm.stage</field>
+        <field name="arch" type="xml">
+            <search string="Stage Search">
+                <field name="name"/>
+                <field name="sequence"/>
+                <field name="is_won"/>
+                <field name="team_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- STAGES LIST VIEW + MUTI_EDIT -->
+    <record id="crm_stage_tree" model="ir.ui.view">
+        <field name="name">crm.stage.list</field>
+        <field name="model">crm.stage</field>
+        <field name="arch" type="xml">
+            <list string="Stages" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" readonly="1"/>
+                <field name="is_won"/>
+                <field name="team_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="crm_stage_form" model="ir.ui.view">
+        <field name="name">crm.stage.form</field>
+        <field name="model">crm.stage</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Stage">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Negotiation"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="is_won"/>
+                            <field name="fold"/>
+                            <field name="team_id" options='{"no_open": True, "no_create": True}' invisible="team_count &lt;= 1" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                        </group>
+                        <field name="team_count" invisible="1"/>
+                    </group>
+                    <separator string="Requirements"/>
+                    <field name="requirements" nolabel="1" placeholder="Give your team the requirements to move an opportunity to this stage."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_stage_action" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">crm.stage</field>
+        <field name="view_id" ref="crm.crm_stage_tree"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Set a new stage in your opportunity pipeline
+          </p><p>
+            Stages allow salespersons to easily track how a specific opportunity
+            is positioned in the sales cycle.
+          </p>
+        </field>
+    </record>
+
+</odoo>

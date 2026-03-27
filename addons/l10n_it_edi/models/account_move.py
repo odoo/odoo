@@ -475,6 +475,32 @@ class AccountMove(models.Model):
 
         return base_line
 
+    def _l10n_it_edi_get_oss_line_values(self, aml, base_line, vat_tax, n7_tax, n22_tax):
+        base_line['tax_ids'] = n7_tax
+        tax_amount = (base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))) * (vat_tax.amount / 100.0)
+
+        oss_description = self.env._(
+            "VAT %(vat_code)s %(tax_amount)s collected via OSS",
+            vat_code=vat_tax.country_id.code,
+            tax_amount=vat_tax.amount
+        )
+
+        vat_line = base_line.copy()
+        vat_line.update({
+            'id': f"{base_line.get('id', aml.id)}_vat",
+            'name': oss_description,
+            'tax_ids': n22_tax,
+            'price_unit': tax_amount,
+            'quantity': base_line['quantity'],
+            'discount': 0.0,
+            'record': aml.new({
+                'name': oss_description,
+                'move_id': aml.move_id.id,
+            }),
+        })
+
+        return [base_line, vat_line]
+
     def _l10n_it_edi_get_values(self, pdf_values=None):
         self.ensure_one()
 
@@ -490,7 +516,18 @@ class AccountMove(models.Model):
 
         # Base lines.
         base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' or x.display_type == 'rounding')
-        base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
+
+        n7_tax = self.env['account.chart.template'].ref('00ex7', raise_if_not_found=False)
+        n22_tax = self.env['account.chart.template'].ref('00ex', raise_if_not_found=False)
+        base_lines = []
+        for aml in base_amls:
+            base_line = self._prepare_product_base_line_for_taxes_computation(aml)
+            vat_tax = aml.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0)[:1]
+            is_oss = vat_tax and 'OSS' in vat_tax.invoice_repartition_line_ids.tag_ids.mapped('name')
+            if is_oss and n7_tax and n22_tax:
+                base_lines += self._l10n_it_edi_get_oss_line_values(aml, base_line, vat_tax, n7_tax, n22_tax)
+            else:
+                base_lines.append(base_line)
         tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
 
@@ -670,9 +707,9 @@ class AccountMove(models.Model):
             Example: a consultant goes to the restaurant and wants the invoice instead of the receipt,
             to be able to deduct the expense from his Taxes. The Italian State allows the restaurant
             to issue a Simplified Invoice with the VAT number only, to speed up times, instead of
-            requiring the address and other informations about the buyer.
-            Only invoices under the threshold of 400 Euroes are allowed, to avoid this tool
-            be abused for bigger transactions, that would enable less transparency to tax institutions.
+            requiring the address and other information about the buyer.
+            The maximum threshold is 400 Euro, except for the forfettario tax regime (RF19), which can
+            issue simplified invoices without the amount limit.
         """
         self.ensure_one()
         template_reference = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', raise_if_not_found=False)
@@ -684,7 +721,7 @@ class AccountMove(models.Model):
             and list(buyer._l10n_it_edi_export_check(checks).keys()) == ['l10n_it_edi_partner_address_missing']
             and (not buyer.country_id or buyer.country_id.code == 'IT')
             and (buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())))
-            and self.amount_total <= 400
+            and (self.company_id.l10n_it_tax_system == 'RF19' or self.amount_total <= 400)
         )
 
     def _l10n_it_edi_is_professional_fees(self):

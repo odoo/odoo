@@ -1,0 +1,128 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* cloud_storage
+#
+# Translators:
+# Bole <bole@dajmi5.com>, 2024
+# Tina Milas, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Tina Milas, 2024\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_ir_attachment
+msgid "Attachment"
+msgstr "Prilog"
+
+#. module: cloud_storage
+#: model:ir.model.fields.selection,name:cloud_storage.selection__ir_attachment__type__cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Cloud Storage"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
+msgid "Cloud Storage Provider for new attachments"
+msgstr ""
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Cloud Storage Settings"
+msgstr ""
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid "Cloud Storage is not enabled"
+msgstr ""
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/controllers/attachment.py:0
+msgid "Cloud storage configuration has been changed. Please refresh the page."
+msgstr ""
+
+#. module: cloud_storage
+#. odoo-javascript
+#: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
+msgid "Cloud storage error"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguracijske postavke"
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/ir_attachment.py:0
+msgid ""
+"Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model,name:cloud_storage.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP usmjeravanje"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
+msgid "Minimum File Size (bytes)"
+msgstr ""
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
+msgstr ""
+
+#. module: cloud_storage
+#. odoo-python
+#: code:addons/cloud_storage/models/res_config_settings.py:0
+msgid "Please configure the Cloud Storage before enabling it"
+msgstr ""
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Select the cloud storage provider to store new attachments."
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__type
+msgid "Type"
+msgstr "Vrsta"
+
+#. module: cloud_storage
+#. odoo-javascript
+#: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
+msgid "You are not allowed to upload file to the cloud storage"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model.fields,help:cloud_storage.field_ir_attachment__type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"Možete učitati datoteku sa svog računala ili copy/paste internet link u "
+"svoju datoteku"
+
+#. module: cloud_storage
+#: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
+msgid ""
+"webclient can upload files larger than the minimum file size\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
+"        the cloud storage."
+msgstr ""

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.FormViewDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons">
+        <xpath expr="//button[contains(@class, 'o_form_button_save')]" position="replace">
+            <button class="btn btn-primary o_form_button_save" t-if="!['validate1', 'validate', 'refuse'].includes(this.record.data.state)" t-on-click="saveButtonClicked" data-hotkey="q">Save</button>
+        </xpath>
+
+        <xpath expr="//button[contains(@class, 'o_form_button_cancel')]" position="attributes">
+            <attribute name="class" separator=" " remove="btn-secondary"/>
+            <attribute name="t-attf-class" separator=" " add="{{ ['validate1', 'validate', 'refuse'].includes(this.record.data.state) ? 'btn-primary' : 'btn-secondary' }}"/>
+        </xpath>
+
+        <xpath expr="//button[contains(@class, 'o_form_button_cancel')]" position="after">
+            <button class="btn btn-secondary"
+                    t-if="canCancel"
+                    t-on-click="cancelRecord"
+                    data-hotkey="x">Cancel</button>
+            <button class="btn btn-secondary"
+                    t-if="canDelete"
+                    t-on-click="deleteRecord"
+                    data-hotkey="x">Delete</button>
+        </xpath>
+        <xpath expr="//div" position="inside">
+            <div class="ms-auto d-flex gap-1">
+                <button class="btn btn-secondary" t-if="canValidate" t-on-click="() => this.onClick('action_validate')" data-hotkey="v">Validate</button>
+                <button class="btn btn-secondary" t-if="canApprove" t-on-click="() => this.onClick('action_approve')" data-hotkey="g">Approve</button>
+                <button class="btn btn-secondary" t-if="canRefuse" t-on-click="() => this.onClick('action_refuse')" data-hotkey="z">Refuse</button>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_registration_action_from_lead" model="ir.actions.act_window">
+        <field name="name">Event registrations</field>
+        <field name="res_model">event.registration</field>
+        <field name="view_mode">list,kanban,form,calendar,graph</field>
+        <field name="domain">[('lead_ids', '=', active_id)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No registration found
+            </p>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.view.form.inherit.event.crm</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_schedule_meeting']" position="after">
+                <field name="registration_ids" invisible="1"/>
+                <button name="%(event_registration_action_from_lead)d" type="action" class="oe_stat_button" icon="fa-ticket"
+                    invisible="registration_count == 0" groups="event.group_event_user">
+                    <div class="o_stat_info">
+                        <field name="registration_count"/>
+                        <span class="o_stat_text"> Attendees</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_action_from_registration" model="ir.actions.act_window">
+        <field name="name">Leads</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
+        <field name="domain">[('registration_ids', 'in', active_id)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No leads found
+            </p>
+        </field>
+    </record>
+
+    <record id="crm_lead_action_from_event" model="ir.actions.act_window">
+        <field name="name">Leads</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
+        <field name="domain">[('event_id', '=', active_id)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No leads found
+            </p>
+        </field>
+    </record>
+</odoo>

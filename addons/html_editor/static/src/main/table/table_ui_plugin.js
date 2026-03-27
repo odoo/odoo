@@ -155,6 +155,7 @@ export class TableUIPlugin extends Plugin {
             registry.category(this.config.localOverlayContainers.key).add(this.rowMenuOverlayKey, {
                 Component: TableMenu,
                 props: {
+                    document: this.document,
                     type: "row",
                     target: td,
                     dropdownState: this.createDropdownState(this.closeColumnMenu.bind(this)),
@@ -170,6 +171,7 @@ export class TableUIPlugin extends Plugin {
                 .add(this.columnMenuOverlayKey, {
                     Component: TableMenu,
                     props: {
+                        document: this.document,
                         type: "column",
                         target: td,
                         dropdownState: this.createDropdownState(this.closeRowMenu.bind(this)),

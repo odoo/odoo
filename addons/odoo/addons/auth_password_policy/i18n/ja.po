@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_password_policy
+#
+# Translators:
+# Wil Odoo, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
+msgid "Minimum Password Length"
+msgstr "最小パスワード長"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr "パスワードの最小文字数, 設定が不要の場合0に設定"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_field.js:0
+msgid "Password"
+msgstr "パスワード"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
+msgid ""
+"Required: %s\n"
+"\n"
+"Hint: to increase password strength, increase length, use multiple words, "
+"and use non-letter characters."
+msgstr ""
+"必須： %s\n"
+"\n"
+"ヒント：パスワードの強度を上げるために、長くする、複数の単語を使う、文字以外"
+"の文字を使用して下さい。"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_users
+msgid "User"
+msgstr "ユーザ"
+
+#. module: auth_password_policy
+#. odoo-python
+#: code:addons/auth_password_policy/models/res_users.py:0
+msgid ""
+"Your password must contain at least %(minimal_length)d characters and only "
+"has %(current_count)d."
+msgstr ""
+"パスワードは少なくとも %(minimal_length)d 文字必要ですが、 %(current_count)d"
+"しかありません。"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
+msgid "at least %s character classes"
+msgstr "最低%s以上の文字クラス"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
+msgid "at least %s characters"
+msgstr "最低 %s 文字以上"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
+msgid "at least %s words"
+msgstr "最低 %s 語以上"

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.view.search</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <filter name="at_work" position="after">
+                <filter name="absent" string="Absent" domain="[('hr_presence_state_display', '=', 'absent')]"/>
+                <filter name="out_of_working_hours" string="Out of Working Hours" domain="[('hr_presence_state_display', '=', 'out_of_working_hour')]"/>
+            </filter>
+            <filter name="group_start" position="before">
+                <filter name="group_hr_presence_state" string="Presence/Absence" domain="[]" context="{'group_by':'hr_presence_state_display'}" groups="hr.group_hr_manager"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_tree" model="ir.ui.view">
+        <field name="name">hr.employee.view.tree</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <field name="work_email" position="after">
+                <field name="hr_presence_state_display" string="Presence" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_hr_employee_presence_present" model="ir.actions.server">
+        <field name="name">Set Present</field>
+        <field name="value">presence_group_1</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_set_present()
+        </field>
+    </record>
+
+    <record id="action_hr_employee_presence_absent" model="ir.actions.server">
+        <field name="name">Set Absent</field>
+        <field name="value">presence_group_1</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_set_absent()
+        </field>
+    </record>
+
+    <record id="action_hr_employee_presence_log" model="ir.actions.server">
+        <field name="name">Add a log note</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="value">presence_group_2</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_send_log()
+        </field>
+    </record>
+
+    <record id="action_hr_employee_presence_sms" model="ir.actions.server">
+        <field name="name">Send a SMS</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="value">presence_group_2</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_send_sms()
+        </field>
+    </record>
+
+    <record id="action_hr_employee_presence_time_off" model="ir.actions.server">
+        <field name="name">Create a Time Off</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="value">presence_group_2</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_open_leave_request()
+        </field>
+    </record>
+
+</odoo>

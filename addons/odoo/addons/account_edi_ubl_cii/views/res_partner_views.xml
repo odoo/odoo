@@ -1,0 +1,21 @@
+<odoo>
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='invoice_send_settings']" position="inside">
+                <label for="peppol_eas" string="Peppol Address" invisible="1"/> <!-- TODO remove in master -->
+                <div id="peppol_address" class="row" invisible="1"/> <!-- TODO remove in master -->
+                <field name="available_peppol_eas" invisible="1"/>
+                <field name="peppol_eas"
+                       placeholder="Peppol ID"
+                       nolabel="1"
+                       widget="filterable_selection"
+                       options="{'whitelist_fname': 'available_peppol_eas'}"
+                       class="o_field_peppol_eas_selection"/>
+                <field name="peppol_endpoint" nolabel="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -148,16 +148,14 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
     # EXPORT: New (dict_to_xml) helpers
     # -------------------------------------------------------------------------
 
-    def _ubl_add_values_tax_currency_code(self, vals):
+    def _ubl_add_tax_currency_code_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_company_currency(vals)
+        self._ubl_add_tax_currency_code_node_company_currency(vals)
 
-    def _add_invoice_header_nodes(self, document_node, vals):
+    def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:CustomizationID'] = {
-            '_text': 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
-        }
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
 
     def _ubl_get_partner_address_node(self, vals, partner):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -179,17 +177,20 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         super()._ubl_add_accounting_supplier_party_tax_scheme_nodes(vals)
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
+        company_id = None
 
         if not _has_vat(commercial_partner.vat):
             if commercial_partner.company_registry:
-                vals['party_node']['cac:PartyTaxScheme'] = [{
-                    'cbc:CompanyID': {'_text': commercial_partner.company_registry},
-                    'cac:TaxScheme': {
-                        'cbc:ID': {'_text': 'VAT' if commercial_partner.company_registry[:2].isalpha() else 'NOT_EU_VAT'},
-                    },
-                }]
-            else:
-                vals['party_node']['cac:PartyTaxScheme'] = []
+                company_id = commercial_partner.company_registry
+        else:
+            company_id = commercial_partner.vat
+
+        vals['party_node']['cac:PartyTaxScheme'] = [{
+            'cbc:CompanyID': {'_text': company_id},
+            'cac:TaxScheme': {
+                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
+            },
+        }] if company_id else []
 
     def _ubl_add_accounting_supplier_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -214,14 +215,19 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         super()._ubl_add_accounting_customer_party_tax_scheme_nodes(vals)
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
+        company_id = None
 
         if not _has_vat(commercial_partner.vat):
-            vals['party_node']['cac:PartyTaxScheme'] = [{
-                'cbc:CompanyID': {'_text': DEFAULT_VAT},
-                'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'VAT' if commercial_partner.company_registry[:2].isalpha() else 'NOT_EU_VAT'},
-                },
-            }]
+            company_id = DEFAULT_VAT
+        else:
+            company_id = commercial_partner.vat
+
+        vals['party_node']['cac:PartyTaxScheme'] = [{
+            'cbc:CompanyID': {'_text': company_id},
+            'cac:TaxScheme': {
+                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
+            },
+        }] if company_id else []
 
     def _ubl_add_accounting_customer_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

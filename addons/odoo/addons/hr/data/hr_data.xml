@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="dep_administration" model="hr.department">
+          <field name="name">Administration</field>
+        </record>
+
+        <record id="employee_admin" model="hr.employee" forcecreate="0">
+            <field name="name" eval="obj(ref('base.partner_admin')).name" model="res.partner"/>
+            <field name="department_id" ref="dep_administration"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="address_id" ref="base.main_partner"/>
+            <field name="private_email">admin@example.com</field>
+            <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
+        </record>
+
+        <record id="onboarding_plan" model="mail.activity.plan">
+            <field name="name">Onboarding</field>
+            <field name="res_model">hr.employee</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="onboarding_setup_it_materials" model="mail.activity.plan.template">
+            <field name="sequence">10</field>
+            <field name="summary">Setup IT Materials</field>
+            <field name="responsible_type">manager</field>
+            <field name="plan_id" ref="onboarding_plan"/>
+        </record>
+
+        <record id="onboarding_plan_training" model="mail.activity.plan.template">
+            <field name="sequence">20</field>
+            <field name="summary">Plan Training</field>
+            <field name="responsible_type">manager</field>
+            <field name="plan_id" ref="onboarding_plan"/>
+        </record>
+
+        <record id="onboarding_training" model="mail.activity.plan.template">
+            <field name="sequence">30</field>
+            <field name="summary">Training</field>
+            <field name="responsible_type">employee</field>
+            <field name="plan_id" ref="onboarding_plan"/>
+        </record>
+
+        <record id="offboarding_plan" model="mail.activity.plan">
+            <field name="name">Offboarding</field>
+            <field name="res_model">hr.employee</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="offboarding_setup_compute_out_delais" model="mail.activity.plan.template">
+            <field name="sequence">10</field>
+            <field name="summary">Organize knowledge transfer inside the team</field>
+            <field name="responsible_type">manager</field>
+            <field name="plan_id" ref="offboarding_plan"/>
+        </record>
+
+        <record id="offboarding_take_back_hr_materials" model="mail.activity.plan.template">
+            <field name="sequence">20</field>
+            <field name="summary">Take Back HR Materials</field>
+            <field name="responsible_type">manager</field>
+            <field name="plan_id" ref="offboarding_plan"/>
+        </record>
+
+        <!-- Departure Reasons -->
+        <record id="departure_fired" model="hr.departure.reason">
+            <field name="sequence">0</field>
+            <field name="name">Fired</field>
+            <field name="reason_code">342</field>
+        </record>
+
+        <record id="departure_resigned" model="hr.departure.reason">
+            <field name="sequence">1</field>
+            <field name="name">Resigned</field>
+            <field name="reason_code">343</field>
+        </record>
+
+        <record id="departure_retired" model="hr.departure.reason">
+            <field name="sequence">2</field>
+            <field name="name">Retired</field>
+            <field name="reason_code">340</field>
+        </record>
+
+        <record id="contract_type_permanent" model="hr.contract.type">
+            <field name="name">Permanent</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="contract_type_temporary" model="hr.contract.type">
+            <field name="name">Temporary</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="contract_type_seasonal" model="hr.contract.type">
+            <field name="name">Seasonal</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="contract_type_full_time" model="hr.contract.type">
+            <field name="name">Full-Time</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="contract_type_part_time" model="hr.contract.type">
+            <field name="name">Part-Time</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="contract_type_part_time" model="hr.contract.type">
+            <field name="name">Intern</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="contract_type_student" model="hr.contract.type">
+            <field name="name">Student</field>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="contract_type_apprenticeship" model="hr.contract.type">
+            <field name="name">Apprenticeship</field>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="contract_type_thesis" model="hr.contract.type">
+            <field name="name">Thesis</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="contract_type_statutaire" model="hr.contract.type">
+            <field name="name">Statutory</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="contract_type_employee" model="hr.contract.type">
+            <field name="name">Employee</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <!-- Work permit expires Soon -->
+        <record id="ir_cron_data_check_work_permit_validity" model="ir.cron">
+            <field name="name">HR Employee: check work permit validity</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_work_permit_validity()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="home_work_location" model="hr.work.location">
+            <field name="name">Home</field>
+            <field name="location_type">home</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
+
+        <record id="home_work_office" model="hr.work.location">
+            <field name="name">Office</field>
+            <field name="location_type">office</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
+
+        <record id="home_work_other" model="hr.work.location">
+            <field name="name">Other</field>
+            <field name="location_type">other</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
+    </data>
+</odoo>

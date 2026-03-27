@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.PivotView" t-inherit="web.PivotView">
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp">
+                <HrActionHelper
+                    noContentTitle.translate="No Data"
+                    noContentParagraph.translate="This report gives you an overview of your employees based on the measures of your choice."
+                />
+            </t>
+        </t>
+    </t>
+</odoo>

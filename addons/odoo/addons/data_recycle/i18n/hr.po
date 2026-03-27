@@ -1,0 +1,384 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * data_recycle
+#
+# Translators:
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2024
+# Tina Milas, 2024
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# Luka Carević <luka@uvid.hr>, 2025
+# Karlo Mikešić <karlo@uvid.hr>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"PO-Revision-Date: 2025-08-12 22:21+0000\n"
+"Last-Translator: Karlo Mikešić <karlo@uvid.hr>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/"
+"data_recycle/hr/>\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid ""
+"' recycling rule.<br/>\n"
+"You can validate those changes"
+msgstr ""
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+msgid "**Record Deleted**"
+msgstr "**Zapisa obrisano**"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Svakih</span>"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__active
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
+msgid "Archive"
+msgstr "Arhiviraj"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
+msgid "Automatic"
+msgstr "Automatski"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__company_id
+msgid "Company"
+msgstr "Tvrtka"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config
+msgid "Configuration"
+msgstr "Postavke"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr "Konfigurirajte pravila za prepoznavanje zapisa za čišćenje"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_root
+msgid "Data Cleaning"
+msgstr "Čišćenje podataka"
+
+#. module: data_recycle
+#: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
+msgid "Data Recycle: Clean Records"
+msgstr ""
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+msgid "Data to Recycle"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__days
+msgid "Days"
+msgstr "Dana"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__unlink
+msgid "Delete"
+msgstr "Obriši"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta
+msgid "Delta"
+msgstr "Delta"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
+msgid "Delta Unit"
+msgstr "Delta jedinica"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Discard"
+msgstr "Odbaci"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Discarded"
+msgstr "Odbačeni"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record_notification
+msgid "Field Recycle Records"
+msgstr "Zapisi o čišćenju polja"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__domain
+msgid "Filter"
+msgstr "Filtar"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__id
+msgid "ID"
+msgstr "ID"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
+msgid "Include Archived"
+msgstr "Uključi arhivirane"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
+msgid "Last Notification"
+msgstr "Posljednja obavijest"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_uid
+msgid "Last Updated by"
+msgstr "Promijenio"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_date
+msgid "Last Updated on"
+msgstr "Promijenjeno"
+
+#. module: data_recycle
+#: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "List of users to notify when there are new records to recycle"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__manual
+msgid "Manual"
+msgstr "Ručno"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_id
+msgid "Model"
+msgstr "Model"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_name
+msgid "Model Name"
+msgstr "Naziv modela"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__months
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__months
+msgid "Months"
+msgstr "Mjeseci"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "No cleaning suggestions"
+msgstr "Nema prijedloga za čišćenje"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency
+msgid "Notify"
+msgstr "Obavijesti"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Razdoblje učestalosti obavijesti"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Obavijestite korisnike"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_id
+msgid "Record ID"
+msgstr "ID zapisa"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__name
+msgid "Record Name"
+msgstr "Naziv zapisa"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Records"
+msgstr "Zapisi"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__records_to_recycle_count
+msgid "Records To Recycle"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_action
+msgid "Recycle Action"
+msgstr "Radnja recikliranja"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_mode
+msgid "Recycle Mode"
+msgstr "Način recikliranja"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__recycle_model_id
+msgid "Recycle Model"
+msgstr "Model reciklaže"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_record_ids
+msgid "Recycle Record"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_recycle_record
+msgid "Recycle Records"
+msgstr "Reciklirajte zapise"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Recycle Rule"
+msgstr "Pravilo čišćenja"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Recycle Rules"
+msgstr "Pravilo čišćenja"
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_model
+msgid "Recycling Model"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_record
+msgid "Recycling Record"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
+msgid "Recyle Records Rules"
+msgstr "Pravila za recikliranje zapisa"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
+msgid "Rules"
+msgstr "Pravila"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Run Now"
+msgstr "Pokreni sad"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Select a model to configure recycling actions"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.constraint,message:data_recycle.constraint_data_recycle_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr ""
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+msgid "This model doesn't manage archived records. Only deletion is possible."
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
+msgid "Time Field"
+msgstr "Polje za vrijeme"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+msgid "Undefined Name"
+msgstr ""
+
+#. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+msgid "Unselect"
+msgstr ""
+
+#. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Validate"
+msgstr "Odobri"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "We've identified"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__weeks
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__weeks
+msgid "Weeks"
+msgstr "Tjedni"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__years
+msgid "Years"
+msgstr "Godine"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "here"
+msgstr "ovdje"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "records to clean with the '"
+msgstr "zapisi za čišnjenje sa"

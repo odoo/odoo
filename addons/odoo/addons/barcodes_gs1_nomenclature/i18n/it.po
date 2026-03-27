@@ -1,0 +1,286 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * barcodes_gs1_nomenclature
+#
+# Translators:
+# Wil Odoo, 2024
+# Marianna Ciofani, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-01 12:44+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/"
+"barcodes_gs1_nomenclature/it/>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)s'"
+msgstr ""
+"È stato trovato un modello di nomenclatura del codice a barre GS1 "
+"corrispondente. Tuttavia, il codice a barre non è stato convertito in una "
+"data valida: '%(error_message)s'"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
+msgid "Alpha-Numeric Name"
+msgstr "Nome alfanumerico"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid ""
+"Alternative regex delimiter for the FNC1. The separator must not match the "
+"begin/end of any related rules pattern."
+msgstr ""
+"Delimitatore regex alternativo per FNC1. Il separatore non deve "
+"corrispondere all'inizio/fine di qualsiasi modello di regola correlato."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
+msgid "Associated Uom"
+msgstr "UdM associata"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
+msgid "Barcode Nomenclature"
+msgstr "Nomenclatura codice a barre"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Regola codice a barre"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__use_date
+msgid "Best before Date"
+msgstr "Data di preferibile consumo"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__date
+msgid "Date"
+msgstr "Data"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid "Decimal"
+msgstr "Decimale"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
+msgid "Destination location"
+msgstr "Ubicazione di destinazione"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "Codifica"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__expiration_date
+msgid "Expiration Date"
+msgstr "Data di scadenza"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid "FNC1 Separator"
+msgstr "Separatore FNC1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid "GS1 Content Type"
+msgstr "Tipo di contenuto GS1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
+msgid "GS1-128"
+msgstr "GS1-128"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_ir_http
+msgid "HTTP Routing"
+msgstr "Instradamento HTTP"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid ""
+"If True, use the last digit of AI to determine where the first decimal is"
+msgstr ""
+"Se vero, utilizza l'ultima cifra dell'AI per determinare dove si trova il "
+"primo decimale"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "Invalid barcode: can't be formated as date"
+msgstr "Codice a barre non valido: non può essere formattato come data"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "Invalid barcode: the check digit is incorrect"
+msgstr "Codice a barre non valido: la cifra di controllo non è corretta"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid "Is GS1 Nomenclature"
+msgstr "La nomenclatura GS1 è"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
+msgid "Location"
+msgstr "Ubicazione"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
+msgid "Lot"
+msgstr "Lotto"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
+msgid "Measure"
+msgstr "Misura"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
+msgid "Numeric Identifier"
+msgstr "Identificatore numerico"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
+msgid "Pack Date"
+msgstr "Data imballaggio"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
+msgid "Package"
+msgstr "Collo"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
+msgid "Package Type"
+msgstr "Tipologia collo"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity
+msgid "Quantity"
+msgstr "Quantità"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
+msgstr "L'alternativa al separatore FNC1 non è un Regex valido: %(error)s"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid ""
+"The GS1 content type defines what kind of data the rule will process the "
+"barcode as:        * Date: the barcode will be converted into a Odoo "
+"datetime;        * Measure: the barcode's value is related to a specific "
+"UoM;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
+msgstr ""
+"Il tipo di contenuto GS1 definisce in quale tipo di dati verrà elaborato il "
+"codice a barre dalla regola:        *Data: il codice a barre verrà "
+"convertito in un valore datetime Odoo;        *Misura: il valore del codice "
+"a barre è legato ad una specifica UdM;        *Identificatore numerico: "
+"codice a barre a lunghezza fissa che segue una codifica specifica;        "
+"*Nome alfanumerico: codice a barre dalla lunghezza variabile."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+msgid ""
+"The rule pattern \"%s\" is not valid, it needs two groups:\n"
+"\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
+"\t- A second one to catch the value."
+msgstr ""
+"Il modello di regola \"%s\" non è valido, ha bisogno di due gruppi:\n"
+"\t- Un primo per l'identificatore dell'applicazione (di solito da 2 a 4 "
+"cifre);\n"
+"\t- Un secondo per catturare il valore."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
+msgstr "Il modello di regola \"%(rule)s\" non è un Regex valido: %(error)s"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"There is something wrong with the barcode rule \"%s\" pattern.\n"
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
+msgstr ""
+"C'è qualcosa che non va con il modello di regola del codice a barre \"%s\".\n"
+"Se la regola utilizza decimali, verifica che non sia possibile ottenere "
+"qualcosa di diverso da una cifra come ultimo carattere per l'Identificatore "
+"di applicazione.\n"
+"Verifica anche che i possibili valori abbinati possano essere solo cifre, "
+"altrimenti il valore non può essere espresso come misura."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid ""
+"This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
+"accepted is this kind of nomenclature."
+msgstr ""
+"Questa nomenclatura usa la specifica GS1, solo le regole di codifica GS1-128 "
+"sono accettate in questo tipo di nomenclatura."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "This barcode can't be parsed by any barcode rules."
+msgstr ""
+"Questo codice a barre non può essere analizzato da nessuna regola di codice "
+"a barre."
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "This barcode can't be partially or fully parsed."
+msgstr ""
+"Questo codice a barre non può essere analizzato parzialmente o completamente."
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Questa regola viene applicata solo se il codice rispetta la codifica "
+"specificata"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type
+msgid "Type"
+msgstr "Tipologia"
+
+#~ msgid ""
+#~ "A GS1 barcode nomenclature pattern was matched. However, the barcode "
+#~ "failed to be converted to a valid date: '%(error_message)'"
+#~ msgstr ""
+#~ "È stato trovato un modello di nomenclatura del codice a barre GS1 "
+#~ "corrispondente. Tuttavia, il codice a barre non è stato convertito in una "
+#~ "data valida: '%(error_message)'"

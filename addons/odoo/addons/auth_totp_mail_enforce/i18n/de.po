@@ -1,0 +1,296 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_totp_mail_enforce
+#
+# Translators:
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid ""
+".\n"
+"                <br/>"
+msgstr ""
+".\n"
+"                <br/>"
+
+#. module: auth_totp_mail_enforce
+#: model:mail.template,body_html:auth_totp_mail_enforce.mail_template_totp_mail_code
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"    <p>Someone is trying to log in into your account with a new device.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">N/A</t>\n"
+"        <li>Location: <t t-out=\"ctx.get('location') or not_available\"/></"
+"li>\n"
+"        <li>Device: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"        <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></"
+"li>\n"
+"        <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"    </ul>\n"
+"    <p>If this is you, please enter the following code to complete the login:"
+"</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px "
+"solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; "
+"border-radius: 5px;\"/>\n"
+"    </div>\n"
+"    <small>Please note that this code expires in <t t-out=\"expiration\"/>.</"
+"small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        If you did NOT initiate this log-in,\n"
+"        you should immediately change your password to ensure account "
+"security.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        We also strongly recommend enabling the two-factor authentication "
+"using an authenticator app to help secure your account.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"            Activate my two-factor authentication\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Hallo <t t-out=\"object.partner_id.name or ''\"/>,<br/><br/>\n"
+"    <p>jemand versucht, sich mit einem neuen Gerät in Ihrem Konto anzumelden."
+"</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">k. A.</t>\n"
+"        <li>Ort: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"        <li>Gerät: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"        <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></"
+"li>\n"
+"        <li>IP-Adresse: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"    </ul>\n"
+"    <p>Wenn Sie das sind, geben Sie bitte den folgenden Code ein, um die "
+"Anmeldung abzuschließen:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px "
+"solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; "
+"border-radius: 5px;\"/>\n"
+"    </div>\n"
+"    <small>Dieser Code läuft ab in <t t-out=\"expiration\"/>.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Wenn Sie diese Anmeldung NICHT initiiert haben,\n"
+"sollten Sie sofort Ihr Passwort ändern, um die Sicherheit Ihres Kontos zu "
+"gewährleisten.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        Wir empfehlen außerdem dringend, die Zwei-Faktor-Authentifizierung "
+"mit einer Authentifizierungsapp zu aktivieren, um Ihr Konto zu sichern.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+" Meine Zwei-Faktor-Authentifizierung aktivieren\n"
+"        </a>\n"
+"    </p>\n"
+"</div>           "
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                To login, enter below the six-digit authentication code just "
+"sent via email to"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Um sich anzumelden, geben Sie unten den sechsstelligen "
+"Authentifizierungscode ein, der soeben per E-Mail versandt wurde an"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
+msgid "All users"
+msgstr "Alle Benutzer"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+msgid "Cannot send email: user %s has no email address."
+msgstr ""
+"E-Mail kann nicht verschickt werden: Benutzer %s hat keine E-Mail-Adresse."
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
+msgid "Code Checking"
+msgstr "Code-Prüfung"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__employee_required
+msgid "Employees only"
+msgstr "Nur Mitarbeiter"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.res_config_settings_view_form
+msgid ""
+"Enforce the two-factor authentication by email for employees or for all "
+"users (including portal users) if they didn't enable any other two-factor "
+"authentication method."
+msgstr ""
+"Erzwingen Sie die Zwei-Faktor-Authentifizierung per E-Mail für Mitarbeiter "
+"oder für alle Benutzer (einschließlich Portalbenutzer), wenn sie keine "
+"andere Zwei-Faktor-Authentifizierungsmethode aktiviert haben."
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
+msgid "Enforce two-factor authentication"
+msgstr "Zwei-Faktor-Authentifizierung erzwingen"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__ip
+msgid "Ip"
+msgstr "Ip"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid "Learn More"
+msgstr "Mehr erfahren"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__limit_type
+msgid "Limit Type"
+msgstr "Art des Limits"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid "Re-send email"
+msgstr "E-Mail erneut versenden"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__scope
+msgid "Scope"
+msgstr "Bereich"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__send_email
+msgid "Send Email"
+msgstr "E-Mail versenden"
+
+#. module: auth_totp_mail_enforce
+#: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
+msgid "Settings: 2Fa New Login"
+msgstr "Einstellungen: Neue Anmeldung mit 2FA"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
+msgid "TOTP rate limit logs"
+msgstr "TOTP-Quotenbegrenzungsprotokolle"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
+msgid "Two-factor authentication enforcing policy"
+msgstr "Richtlinien zur Erzwingung der Zwei-Faktor-Authentifizierung"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model,name:auth_totp_mail_enforce.model_res_users
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__user_id
+msgid "User"
+msgstr "Benutzer"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr ""
+"Verifizierung fehlgeschlagen, bitte überprüfen Sie den 6-stelligen Code "
+"erneut"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid ""
+"We strongly recommend enabling the two-factor authentication using an "
+"authenticator app to help secure your account.\n"
+"                <br/>"
+msgstr ""
+"Wir empfehlen dringend, die Zwei-Faktor-Authentifizierung mit einer "
+"Authentifizierungsapp zu aktivieren, um Ihr Konto zu schützen.\n"
+"                <br/>"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+msgid "You reached the limit of authentication mails sent for your account"
+msgstr ""
+"Sie haben das Limit für die Anzahl der gesendeten Authentifizierungsmails "
+"für Ihr Konto erreicht"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+msgid "You reached the limit of code verifications for your account"
+msgstr "Sie haben das Limit der Codeüberprüfungen für Ihr Konto erreicht"
+
+#. module: auth_totp_mail_enforce
+#: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
+msgid "Your two-factor authentication code"
+msgstr "Ihr Zwei-Faktor-Authentifizierungscode"

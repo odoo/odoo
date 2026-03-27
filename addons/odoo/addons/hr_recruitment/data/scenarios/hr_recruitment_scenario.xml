@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--            -->
+        <!-- Department -->
+        <!--            -->
+        <record id="dep_management" model="hr.department">
+            <field name="name">Management</field>
+            <field name="color" eval="1" />
+        </record>
+
+        <record id="dep_rd" model="hr.department">
+            <field name="name">Research and development</field>
+            <field name="color" eval="2" />
+        </record>
+
+        <record id="dep_marketing" model="hr.department">
+            <field name="name">Marketing manager</field>
+            <field name="parent_id" ref="dep_management" />
+            <field name="color" eval="3" />
+        </record>
+
+        <!--                -->
+        <!-- Applicant tags -->
+        <!--                -->
+        <record id="tag_applicant_demo" model="hr.applicant.category">
+            <field name="name">Demo</field>
+        </record>
+
+        <!--      -->
+        <!-- Jobs -->
+        <!--      -->
+        <record id="job_marketing" model="hr.job">
+            <field name="name">Marketing and Community Manager</field>
+            <field name="department_id" ref="dep_marketing" />
+            <field name="no_of_recruitment">2</field>
+            <field name="description">
+                The Marketing Manager outlines the medium to long-term marketing strategies for
+                global
+                market segments they oversee.
+                They work closely with Sales to create and manage the yearly budget.
+                Additionally, they shape the product and customer portfolio aligned with the
+                marketing
+                strategy.
+                Success in this role hinges on effective teamwork with Technical Services and Sales
+                teams.
+
+            </field>
+        </record>
+
+        <record id="job_full_stack_dev" model="hr.job">
+            <field name="name">Full Stack Developer</field>
+            <field name="department_id" ref="dep_rd" />
+            <field name="no_of_recruitment">3</field>
+            <field name="description">
+                We are seeking a Full Stack Developer to join our dynamic team, bringing expertise
+                in
+                both front-end and back-end technologies.
+                The ideal candidate will have a proven track record in developing scalable web
+                applications, ensuring robust functionality,
+                and delivering engaging user experiences. With a strong foundation in HTML, CSS,
+                JavaScript, and server-side languages,
+                alongside a keen eye for UI/UX design, this role offers the opportunity to play a
+                pivotal part in shaping our
+                digital presence and driving our organization's growth.
+            </field>
+        </record>
+
+        <!--            -->
+        <!-- Applicants -->
+        <!--            -->
+        <record id="scenario_candidate_helen" model="hr.candidate">
+            <field name="email_from">helenlee@exampe.email.com</field>
+            <field name="partner_name">Helen Lee</field>
+            <field name="type_id" ref="degree_bac5" />
+            <field name="categ_ids"
+                eval="[Command.set([ref('tag_applicant_sales'), ref('tag_applicant_manager'), ref('tag_applicant_demo')])]" />
+            <field name="availability"
+                eval="DateTime.today()" />
+        </record>
+        <record id="scenario_applicant_macm_helen" model="hr.applicant">
+            <field name="candidate_id" ref="scenario_candidate_helen" />
+            <field name="priority">2</field>
+            <field name="linkedin_profile">www.example.linkedin.com/in/helen.lee</field>
+            <field name="job_id" ref="job_marketing" />
+            <field name="user_id" ref="base.user_admin" />
+            <field name="medium_id" ref="utm.utm_medium_direct" />
+            <field name="department_id" ref="dep_marketing" />
+            <field name="salary_expected">3100</field>
+            <field name="salary_proposed">3100</field>
+            <field name="stage_id" ref="stage_job5" />
+
+            <field name="create_date" eval="DateTime.today() - relativedelta(days=20)" />
+            <field name="write_date" eval="DateTime.today() - relativedelta(days=20)" />
+        </record>
+
+        <record id="scenario_candidate_enrique" model="hr.candidate">
+            <field name="email_from">enrique.jones152@gmail.example.com</field>
+            <field name="partner_name">Enrique Jones</field>
+            <field name="type_id" ref="degree_bachelor" />
+            <field name="categ_ids"
+                eval="[Command.set([ref('tag_applicant_sales'), ref('tag_applicant_demo')])]" />
+            <field name="availability"
+                eval="DateTime.today() + relativedelta(days=10)" />
+        </record>
+        <record id="scenario_applicant_macm_enrique" model="hr.applicant">
+            <field name="candidate_id" ref="scenario_candidate_enrique" />
+            <field name="priority">2</field>
+            <field name="linkedin_profile">www.example.linkedin.com/in/enrique.jones</field>
+            <field name="job_id" ref="job_marketing" />
+            <field name="user_id" ref="base.user_admin" />
+            <field name="medium_id" ref="utm.utm_medium_direct" />
+            <field name="department_id" ref="dep_marketing" />
+            <field name="salary_expected">2900</field>
+            <field name="stage_id" ref="stage_job3" />
+
+            <field name="create_date" eval="DateTime.today() - relativedelta(months=2)" />
+            <field name="date_last_stage_update"
+                eval="DateTime.today() - relativedelta(days=1)" />
+        </record>
+
+        <record id="scenario_candidate_hannah" model="hr.candidate">
+            <field name="email_from">hannah.glover@exampe.email.com</field>
+            <field name="partner_name">Hannah Glover</field>
+            <field name="type_id" ref="degree_licenced" />
+            <field name="categ_ids"
+                eval="[Command.set([ref('tag_applicant_it'), ref('tag_applicant_manager'), ref('tag_applicant_demo')])]" />
+            <field name="availability"
+                eval="DateTime.today() + relativedelta(months=1)" />
+        </record>
+        <record id="scenario_applicant_fsd_hannah" model="hr.applicant">
+            <field name="candidate_id" ref="scenario_candidate_hannah" />
+            <field name="priority">3</field>
+            <field name="linkedin_profile">www.example.linkedin.com/in/hannah.glover</field>
+            <field name="job_id" ref="job_full_stack_dev" />
+            <field name="user_id" ref="base.user_admin" />
+            <field name="medium_id" ref="utm.utm_medium_direct" />
+
+            <field name="department_id" ref="dep_rd" />
+            <field name="salary_expected">3800</field>
+            <field name="stage_id" ref="stage_job1" />
+
+            <field name="create_date" eval="DateTime.today() - relativedelta(days=5)" />
+            <field name="date_last_stage_update"
+                eval="DateTime.today() - relativedelta(days=5)" />
+        </record>
+
+        <record id="scenario_candidate_simon" model="hr.candidate">
+            <field name="email_from">simon.jones@exampe.email.com</field>
+            <field name="partner_name">Simon Jones</field>
+            <field name="type_id" ref="degree_graduate" />
+            <field name="categ_ids"
+                eval="[Command.set([ref('tag_applicant_demo')])]" />
+            <field name="availability"
+                eval="DateTime.today()" />
+        </record>
+        <record id="scenario_applicant_fsd_simon" model="hr.applicant">
+            <field name="candidate_id" ref="scenario_candidate_simon" />
+            <field name="priority">0</field>
+            <field name="linkedin_profile">www.example.linkedin.com/in/simon.jones</field>
+            <field name="job_id" ref="job_full_stack_dev" />
+            <field name="user_id" ref="base.user_admin" />
+            <field name="medium_id" ref="utm.utm_medium_direct" />
+            <field name="department_id" ref="dep_rd" />
+            <field name="salary_expected">3000</field>
+            <field name="stage_id" ref="stage_job1" />
+            <field name="active">False</field>
+            <field name="application_status">refused</field>
+            <field name="refuse_reason_id" ref="refuse_reason_1"></field>
+
+            <field name="create_date"
+                eval="DateTime.today() - relativedelta(days=1)" />
+            <field name="date_last_stage_update"
+                eval="DateTime.today() - relativedelta(days=3)" />
+        </record>
+
+        <record id="scenario_candidate_maria" model="hr.candidate">
+            <field name="email_from">maria.rodriguez@example.email.com</field>
+            <field name="partner_name">Maria Rodriguez</field>
+            <field name="type_id" ref="degree_graduate" />
+            <field name="categ_ids"
+                eval="[Command.set([ref('tag_applicant_demo')])]" />
+            <field name="availability"
+                eval="(DateTime.today()).strftime('%Y-%m-%d')" />
+        </record>
+        <record id="scenario_applicant_fsd_maria" model="hr.applicant">
+            <field name="candidate_id" ref="scenario_candidate_maria" />
+            <field name="priority">0</field>
+            <field name="linkedin_profile">www.example.linkedin.com/in/maria.rodriguez</field>
+            <field name="job_id" ref="job_full_stack_dev" />
+            <field name="user_id" ref="base.user_admin" />
+            <field name="medium_id" ref="utm.utm_medium_direct" />
+            <field name="department_id" ref="dep_rd" />
+            <field name="stage_id" ref="stage_job0" />
+            <field name="applicant_notes">
+                I had a discussion with Maria during the last networking event we organized. I was
+                impressed by her enthusiasm for the company and I suggested to her that she should
+                apply. Hopefully she is a good fit for the company🤞.
+            </field>
+
+            <field name="create_date" eval="DateTime.today()" />
+            <field name="date_last_stage_update"
+                eval="DateTime.today()" />
+        </record>
+
+        <!--         -->
+        <!-- Résumés -->
+        <!--         -->
+        <record id="scenario_applicant_macm_enrique_cv" model="ir.attachment">
+            <field name="name">Enrique_Jones_CV.pdf</field>
+            <field name="datas" type="base64"
+                file="hr_recruitment/static/applicant_cvs/Enrique_Jones_CV.pdf"></field>
+            <field name="res_model">hr.candidate</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
+        </record>
+
+        <!-- Set the main attachment to avoid automatic sending to the OCR-->
+        <record id="scenario_applicant_macm_enrique" model="hr.applicant">
+            <field name="message_main_attachment_id" ref="hr_recruitment.scenario_applicant_macm_enrique_cv" />
+        </record>
+
+        <!--             -->
+        <!-- Activities  -->
+        <!--             -->
+        <record id="scenario_applicant_macm_enrique_activity" model="mail.activity">
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
+            <field name="res_model_id" ref="model_hr_applicant" />
+            <field name="activity_type_id" ref="mail.mail_activity_data_email" />
+            <field name="date_deadline"
+                eval="DateTime.today() + relativedelta(days=1)" />
+            <field name="summary">Send an email with a contract propsal.</field>
+            <field name="create_uid" ref="base.user_admin" />
+            <field name="user_id" ref="base.user_admin" />
+        </record>
+
+        <record id="scenario_applicant_fsd_hannah_activity" model="mail.activity">
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_hannah" />
+            <field name="res_model_id" ref="model_hr_applicant" />
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo" />
+            <field name="date_deadline"
+                eval="DateTime.today()" />
+            <field name="summary">Reach out to schedule the first interview.</field>
+            <field name="create_uid" ref="base.user_admin" />
+            <field name="user_id" ref="base.user_admin" />
+        </record>
+
+        <record id="scenario_applicant_fsd_maria_activity" model="mail.activity">
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_maria" />
+            <field name="res_model_id" ref="model_hr_applicant" />
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo" />
+            <field name="date_deadline"
+                eval="DateTime.today() + relativedelta(days=5)" />
+            <field name="summary">Evaluate Maria's application</field>
+            <field name="create_uid" ref="base.user_admin" />
+            <field name="user_id" ref="base.user_admin" />
+        </record>
+
+        <!--          -->
+        <!-- Messages -->
+        <!--          -->
+
+        <!-- APPLICANT HELEN -->
+        <!-- it's missing the initial email that acknowledges the application (subject: your Job
+    Application) -->
+        <record id="scenario_applicant_macm_helen_mm_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=17)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_helen_mtv_1" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">New</field>
+            <field name="new_value_char">Initial Qualification</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_1" />
+        </record>
+
+        <record id="msg_scenario_applicant_macm_helen_mm_c_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="body" type="html">
+                <p>Dear colleagues,</p>
+                <p>
+                    This candidate look very promising, I will schedule an interview with her soon
+                </p>
+                <p>Kind regards,</p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(days=17)" />
+        </record>
+
+        <record id="scenario_applicant_macm_helen_mm_2" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=15)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_helen_mtv_2" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">Initial Qualification</field>
+            <field name="new_value_char">First Interview</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_2" />
+        </record>
+
+        <record id="msg_scenario_applicant_macm_helen_mm_c_2" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="body" type="html">
+                <p>Dear colleagues,</p>
+                <p>
+                    I had the first interview with this candidate and was thoroughly impressed
+                </p>
+                <p>Kind regards,</p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(days=14)" />
+        </record>
+
+        <record id="scenario_applicant_macm_helen_mm_3" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=10)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_helen_mtv_3" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">First Interview</field>
+            <field name="new_value_char">Second Interview</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_3" />
+        </record>
+
+        <record id="msg_scenario_applicant_macm_helen_mm_c_3" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="body" type="html">
+                <p>Dear colleagues,</p>
+                <p>
+                    I conducted the second interview and somehow managed to be even more impressed.
+                    I think this candidate is a perfect fit for the company. We should offer her a
+                    position with the salary she is expecting.
+                </p>
+                <p>Kind regards,</p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(days=9)" />
+        </record>
+
+        <record id="scenario_applicant_macm_helen_mm_4" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=7)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_helen_mtv_4" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">Second Interview</field>
+            <field name="new_value_char">Contract Proposal</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job3')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job4')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_4" />
+        </record>
+
+        <record id="msg_scenario_applicant_macm_helen_mm_c_4" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="body" type="html">
+                <p>Dear colleagues,</p>
+                <p>
+                    I sent her a contract proposal, hopefully she will accept it.
+                </p>
+                <p>Kind regards,</p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(days=7)" />
+        </record>
+
+        <record id="scenario_applicant_macm_helen_mm_5" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=2)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_helen_mtv_5" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">Contract Proposal</field>
+            <field name="new_value_char">Contract Signed</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job4')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job5')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_helen_mm_5" />
+        </record>
+
+        <!-- APPLICANT ENRIQUE -->
+        <!-- it's missing the initial email that acknowledges the application (subject: your Job
+    Application) -->
+        <record id="scenario_applicant_macm_enrique_mm_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=17)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_enrique_mtv_1" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">New</field>
+            <field name="new_value_char">Initial Qualification</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_enrique_mm_1" />
+        </record>
+
+        <record id="msg_scenario_applicant_macm_enrique_mm_c_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_macm_enrique" />
+            <field name="body" type="html">
+                <p>Dear colleagues,</p>
+                <p>
+                    Please review Enrique's application materials carefully. He has a strong
+                    background
+                    in sales and a proven track record. His experience aligns well with our current
+                    needs.
+                </p>
+                <p>Kind regards,</p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=17)" />
+        </record>
+
+        <record id="scenario_applicant_macm_enrique_mm_2" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=10)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_enrique_mtv_2" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">Initial Qualification</field>
+            <field name="new_value_char">First Interview</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_enrique_mm_2" />
+        </record>
+
+        <record id="msg_scenario_applicant_macm_enrique_mm_c_2" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_macm_enrique" />
+            <field name="body" type="html">
+                <p>Dear colleagues,</p>
+                <p>
+                    The first interview went smoothly. He demonstrated excellent problem-solving
+                    skills
+                    and a deep understanding of our industry. Let's discuss how we can proceed based
+                    on
+                    his performance
+                </p>
+                <p>Kind regards,</p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(months=1, days=9)" />
+        </record>
+
+        <record id="scenario_applicant_macm_enrique_mm_3" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=20)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_macm_enrique_mtv_3" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">First Interview</field>
+            <field name="new_value_char">Second Interview</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')" />
+            <field name="mail_message_id" ref="scenario_applicant_macm_enrique_mm_3" />
+        </record>
+
+        <record id="msg_scenario_applicant_macm_enrique_mm_c_3" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_macm_enrique" />
+            <field name="body" type="html">
+                <p>Dear colleagues,</p>
+                <p>
+                    After the second interview, it's clear that Enrique would be a valuable addition
+                    to
+                    our team. His insights during the discussion were impressive, and he showed
+                    great
+                    enthusiasm for the role. I suggest we propose him a contract with the salary he
+                    indicated he wanted.
+                </p>
+                <p>Kind regards,</p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(days=15)" />
+        </record>
+
+        <!-- APPLICANT HANNAH GLOVER -->
+        <!-- it's missing the initial email that acknowledges the application (subject: your Job
+    Application) -->
+        <record id="scenario_applicant_fsd_hannah_mm_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_hannah" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=17)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_fsd_hannah_mtv_1" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">New</field>
+            <field name="new_value_char">Initial Qualification</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
+            <field name="mail_message_id" ref="scenario_applicant_fsd_hannah_mm_1" />
+        </record>
+
+        <record id="scenario_applicant_fsd_hannah_mm_c_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_fsd_hannah" />
+            <field name="body" type="html">
+                <p>Dear team,</p>
+                <p>
+                    I wanted to share my initial impressions of Hannah Glover after reading through
+                    her
+                    CV and portfolio website. Her portfolio and experience have truly caught my
+                    attention, showcasing a deep understanding of both front-end and back-end
+                    technologies. I'm particularly impressed by her ability to solve complex
+                    problems
+                    and her enthusiasm for learning new technologies. I believe she would be a
+                    valuable
+                    addition to our team. We should schedule an interview with her ASAP!
+                </p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(days=2)" />
+        </record>
+
+        <!-- APPLICANT SIMON JONES -->
+        <!-- it's missing the initial email that acknowledges the application (subject: your Job
+    Application) -->
+        <record id="scenario_applicant_fsd_simon_mm_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_simon" />
+            <field name="message_type">notification</field>
+            <field name="date" eval="DateTime.today() - relativedelta(days=17)" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="subtype_id" ref="hr_recruitment.mt_applicant_stage_changed" />
+        </record>
+        <record id="scenario_applicant_fsd_simon_mtv_1" model="mail.tracking.value">
+            <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+            <field name="old_value_char">New</field>
+            <field name="new_value_char">Initial Qualification</field>
+            <field name="old_value_integer" eval="ref('hr_recruitment.stage_job0')" />
+            <field name="new_value_integer" eval="ref('hr_recruitment.stage_job1')" />
+            <field name="mail_message_id" ref="scenario_applicant_fsd_simon_mm_1" />
+        </record>
+
+        <record id="scenario_applicant_fsd_simon_mm_c_1" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="scenario_applicant_fsd_simon" />
+            <field name="body" type="html">
+                <p>
+                    After reviewing Simon's application, it appears that his skill set is not
+                    sufficiently advanced, and he has minimal experience. Should we place him on our
+                    reserve list, if by any chance we require a junior developer in the near future?
+                </p>
+            </field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_note" />
+            <field name="author_id" ref="base.partner_admin" />
+            <field name="date" eval="DateTime.today() - relativedelta(days=2)" />
+        </record>
+        <!-- It's missing the refusal email -->
+
+    </data>
+</odoo>

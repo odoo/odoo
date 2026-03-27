@@ -1,0 +1,1095 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_contract
+#
+# Translators:
+# Gautam Hingrajiya, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Ronald Kung, 2025
+# Manav Shah, 2025
+# Ujjawal Pathak, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-12 12:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
+"hr_contract/hi/>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
+msgid "# Contracts"
+msgstr "# कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
+msgid "# Contracts using it"
+msgstr "# इसे इस्तेमाल करने वाले कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/report/hr_contract_history.py:0
+msgid "%s's Contracts History"
+msgstr "%s के कॉन्ट्रैक्ट का इतिहास"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "/ month"
+msgstr "/ महीना"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
+"                                    In Contract Since\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
+"                                    इस तारीख से कॉन्ट्रैक्ट में\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
+"title=\"In Contract Since\"> In Contract Since</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
+"title=\"In Contract Since\"> इस तारीख से कॉन्ट्रैक्ट में</span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
+msgid ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    Contract\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
+"                                    Contracts\n"
+"                                </span>"
+msgstr ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    कॉन्ट्रैक्ट\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
+"                                    कॉन्ट्रैक्ट\n"
+"                                </span>"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        Contracts\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; "
+"1\" class=\"o_stat_text\">\n"
+"                                        Contract\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "<span>Days</span>"
+msgstr "<span>दिन</span>"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"According to Employee's Working Permit Expiration Date, this contract has "
+"been put in red on the %s. Please advise and correct."
+msgstr ""
+"कर्मचारी के वर्किंग परमिट के खत्म होने की तारीख की वजह से, यह कॉन्ट्रैक्ट %s पर लाल दिख "
+"रहा है. कृपया सलाह दें और ठीक करें।"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"According to the contract's end date, this contract has been put in red on "
+"the %s. Please advise and correct."
+msgstr ""
+"कॉन्ट्रैक्ट की आखिरी तारीख की वजह से, यह %s पर लाल दिख रहा है. कृपया सलाह दें और ठीक "
+"करें।"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
+msgid "Action Needed"
+msgstr "कार्रवाई की ज़रूरत है"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
+msgid "Active"
+msgstr "सक्रिय"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active_employee
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__active_employee
+msgid "Active Employee"
+msgstr "ऐक्टिव एम्प्लॉय"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Active Employees"
+msgstr "ऐक्टिव कर्मचारी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_ids
+msgid "Activities"
+msgstr "गतिविधियाँ"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "ऐक्टिविटी एक्सेप्शन डेकोरेशन"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__activity_state
+msgid "Activity State"
+msgstr "ऐक्टिविटी स्टेट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "ऐक्टिविटी टाइप आइकॉन"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "ऐक्टिविटी शेड्यूल प्लान विज़ॉर्ड"
+
+#. module: hr_contract
+#: model:res.groups,name:hr_contract.group_hr_contract_manager
+msgid "Administrator"
+msgstr "एडमिन"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"An employee can only have one contract at the same time. (Excluding Draft "
+"and Cancelled contracts).\n"
+"\n"
+"Employee: %(employee_name)s"
+msgstr ""
+"एक कर्मचारी के पास एक ही समय में सिर्फ़ एक कॉन्ट्रैक्ट हो सकता है. (ड्राफ़्ट और रद्द किए गए "
+"कॉन्ट्रैक्ट को छोड़कर).\n"
+"\n"
+"कर्मचारी: %(employee_name)s"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Archived"
+msgstr "संग्रहीत किया गया"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr "अटैचमेंट काउंट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__bank_account_id
+msgid "Bank Account"
+msgstr "बैंक खाता"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "सामान्य कर्मचारी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
+msgid "Calendar Mismatch"
+msgstr "कैलेंडर में अंतर"
+
+#. module: hr_contract
+#. odoo-javascript
+#: code:addons/hr_contract/static/src/widgets/tooltip_warning_widget.js:0
+msgid ""
+"Calendar Mismatch: The employee's calendar does not match this contract's "
+"calendar. This could lead to unexpected behaviors."
+msgstr ""
+"कैलेंडर में अंतर: कर्मचारी का कैलेंडर, कॉन्ट्रैक्ट के कैलेंडर से मेल नहीं खाता. इससे समस्या हो सकती "
+"है।"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__cancel
+msgid "Cancelled"
+msgstr "निरस्त"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_company
+msgid "Companies"
+msgstr "कंपनियां"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_id
+msgid "Company"
+msgstr "संस्था"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__vehicle
+msgid "Company Vehicle"
+msgstr "कंपनी की गाड़ी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_country_id
+msgid "Company country"
+msgstr "कंपनी का देश"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_config_settings
+msgid "Config Settings"
+msgstr "कॉन्फ़िगरेशन सेटिंग"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Contract"
+msgstr "कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid ""
+"Contract %(contract)s: start date (%(start)s) must be earlier than contract "
+"end date (%(end)s)."
+msgstr ""
+"कॉन्ट्रैक्ट %(contract)s: शुरू होने की तारीख (%(start)s) कॉन्ट्रैक्ट के खत्म होने की तारीख "
+"(%(end)s) से पहले की होनी चाहिए।"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contracts_count
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
+msgid "Contract Count"
+msgstr "कॉन्ट्रैक्ट की संख्या"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
+msgid "Contract End Date"
+msgstr "कॉन्ट्रैक्ट के खत्म होने की तारीख"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Contract Expiration Notice Period"
+msgstr "कॉन्ट्रैक्ट खत्म होने से पहले सूचना देने की अवधि"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
+msgid "Contract Expiry Notice Period"
+msgstr "कॉन्ट्रैक्ट खत्म होने से पहले सूचना देने की अवधि"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract History"
+msgstr "कॉन्ट्रैक्ट का इतिहास"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Contract Name"
+msgstr "कॉन्ट्रैक्ट का नाम"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Reference"
+msgstr "कॉन्ट्रैक्ट का रेफ़रेंस"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Start Date"
+msgstr "कॉन्ट्रैक्ट शुरू होने की तारीख"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
+msgid "Contract Type"
+msgstr "कॉन्ट्रैक्ट टाइप"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_wage
+msgid "Contract Wage"
+msgstr "कॉन्ट्रैक्ट वेज"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
+msgid "Contract Warning"
+msgstr "कॉन्ट्रैक्ट वार्निंग"
+
+#. module: hr_contract
+#: model:mail.message.subtype,description:hr_contract.mt_contract_pending
+#: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
+msgid "Contract about to expire"
+msgstr "कॉन्ट्रैक्ट खत्म होने वाला है"
+
+#. module: hr_contract
+#: model:mail.message.subtype,description:hr_contract.mt_contract_close
+msgid "Contract expired"
+msgstr "कॉन्ट्रैक्ट खत्म हो गया"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract_history
+msgid "Contract history"
+msgstr "कॉन्ट्रैक्ट का इतिहास"
+
+#. module: hr_contract
+#: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
+msgid "Contract to Renew"
+msgstr "रिन्यू करने के लिए कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_form_action
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_ids
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
+#: model:ir.ui.menu,name:hr_contract.menu_hr_employee_contracts
+#: model:ir.ui.menu,name:hr_contract.menu_human_resources_configuration_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
+msgid "Contracts"
+msgstr "कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Contracts to Review"
+msgstr "समीक्षा किए जाने वाले कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Contracts to review"
+msgstr "समीक्षा किए जाने वाले कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__under_contract_state
+msgid "Contractual Status"
+msgstr "कॉन्ट्रैक्ट की स्थिति"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__country_id
+msgid "Country"
+msgstr "देश"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__country_code
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__country_code
+msgid "Country Code"
+msgstr "देश का कोड"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Create"
+msgstr "बनाएँ"
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Create a new contract"
+msgstr "नया कॉन्ट्रैक्ट बनाएं"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_uid
+msgid "Created by"
+msgstr "द्वारा निर्मित"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__currency_id
+msgid "Currency"
+msgstr "करेंसी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Current Contract"
+msgstr "मौजूदा कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Current Contracts"
+msgstr "मौजूदा कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
+msgid "Current contract of the employee"
+msgstr "कर्मचारी का मौजूदा कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Currently Under Contract"
+msgstr "फ़िलहाल कॉन्ट्रैक्ट में है"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
+msgid "Default Working Hours"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Delete"
+msgstr "हटाएं"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__department_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__department_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Department"
+msgstr "विभाग"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "डिपॉर्चर विज़ॉर्ड"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
+msgid ""
+"Departure date can't be earlier than the start date of current contract."
+msgstr "जाने की तारीख मौजूदा कॉन्ट्रैक्ट की शुरू होने की तारीख से पहले नहीं हो सकती।"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Details"
+msgstr "विवरण"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले नाम"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Edit Contract"
+msgstr "कॉन्ट्रैक्ट में बदलाव करें"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Employee"
+msgstr "कर्मचारी"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "कर्मचारी का कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
+msgid "Employee Contracts"
+msgstr "एम्प्लॉय कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Employee Information"
+msgstr "कर्मचारी की जानकारी"
+
+#. module: hr_contract
+#: model:res.groups,name:hr_contract.group_hr_contract_employee_manager
+msgid "Employee Manager"
+msgstr "कर्मचारी का मैनेजर"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
+msgid "Employee bank account to pay salaries"
+msgstr "वेतन देने के लिए कर्मचारी का बैंक खाता"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__wage
+msgid "Employee's monthly gross wage."
+msgstr "कर्मचारी की महीने की कुल सैलरी।"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
+msgid "Employees"
+msgstr "कर्मचारी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_end
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "End Date"
+msgstr "समाप्ति तिथि"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
+msgid "End date of the contract (if it's a fixed-term contract)."
+msgstr "कॉन्ट्रैक्ट के खत्म होने की तारीख (अगर यह तय समय का कॉन्ट्रैक्ट है)।"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr "ट्रायल पीरियड खत्म होने की तारीख (अगर कोई है)।"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
+msgid "End of Trial Period"
+msgstr "ट्रायल पीरियड खत्म होने की तारीख"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__close
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__close
+#: model:mail.message.subtype,name:hr_contract.mt_contract_close
+msgid "Expired"
+msgstr "खत्म हो चुका"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__first_contract_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__first_contract_date
+msgid "First Contract Date"
+msgstr "कॉन्ट्रैक्ट के लिए पहली तारीख"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
+msgid "Followers"
+msgstr "फ़ॉलोवर"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "फ़ॉलोवर (पार्टनर)"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "फॉन्ट के बेहतरीन आइकॉन जैसे, फा-टॉस्क"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "From"
+msgstr "के द्वारा"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid "Fully Flexible"
+msgstr "पूरी तरह से फ्लेक्सिबल"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "फ्यूचर ऐक्टिविटी"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Group By"
+msgstr "इन्होंने ग्रुप किया"
+
+#. module: hr_contract
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
+msgid "HR Contract: update state"
+msgstr "एचआर कॉन्ट्रैक्ट: स्थिति अपडेट करें"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__hr_responsible_id
+msgid "HR Responsible"
+msgstr "एचआर रिस्पॉन्सिबल"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
+msgid "Has Message"
+msgstr "मैसेज है"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_hired
+msgid "Hire Date"
+msgstr "भर्ती की तारीख"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_icon
+msgid "Icon"
+msgstr "आइकॉन"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "एक छोटा निशान जो बताता है कि कुछ अलग या असामान्य हुआ है."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "अगर यह बॉक्स चेक है, तो नए मैसेज देखने ज़रूरी हैं."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "अगर बॉक्स पर टिक है, तो कुछ मैसेज भेजने में गलती हुई है."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__active_employee
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"अगर सक्रिय फ़ील्ड को 'गलत' पर सेट किया जाता है, तो यह आपको रिसोर्स रिकॉर्ड को हटाए "
+"बिना छिपाने की अनुमति देगा।"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
+msgid "Is Currently Under Contract"
+msgstr "वर्तमान में कॉन्ट्रैक्ट के तहत है"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
+msgid "Is Follower"
+msgstr "फ़ॉलोवर है"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__job_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Job Position"
+msgstr "जॉब पोज़िशन"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__kanban_state
+msgid "Kanban State"
+msgstr "कानबान स्टेट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "लेट एक्टिविटी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__legal_name
+msgid "Legal Name"
+msgstr "कानूनी नाम"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_ir_ui_menu
+msgid "Menu"
+msgstr "मेन्यू"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
+msgid "Message Delivery error"
+msgstr "मैसेज डिलीवरी में गड़बड़ी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
+msgid "Messages"
+msgstr "संदेश"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Monthly Wage"
+msgstr "महीने की सैलरी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "मेरी गतिविधि की डेडलाइन"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__draft
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__draft
+msgid "New"
+msgstr "नया"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "अगली गतिविधि कैलेंडर इवेंट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "अगली गतिविधि की डेडलाइन"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "अगली गतिविधी की जानकारी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "अगली गतिविधि का प्रकार"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "No Contracts"
+msgstr "कोई कॉन्ट्रैक्ट नहीं"
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.hr_contract_history_view_list_action
+msgid "No data to display"
+msgstr "दिखाने के लिए कोई डेटा मौजूद नहीं है"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
+msgid "Not Under Contract"
+msgstr "कॉन्ट्रैक्ट के तहत नहीं है"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Notes"
+msgstr "टिप्पणियाँ"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "कार्रवाई की संख्या"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the contract end date that a contract expiration "
+"warning is triggered."
+msgstr ""
+"कॉन्ट्रैक्ट के खत्म होने की तारीख से पहले के दिनों की संख्या, जिस पर कॉन्ट्रैक्ट खत्म होने की "
+"चेतावनी शुरू होती है।"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid ""
+"Number of days prior to the work permit expiration date that a warning is "
+"triggered."
+msgstr ""
+"वर्क परमिट की खत्म होने की तारीख से पहले के दिनों की संख्या, जिस पर चेतावनी शुरू होती है।"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
+msgid "Number of errors"
+msgstr "गलतियों की संख्या"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "ऐसे मैसेज की संख्या जिनपर कार्रवाई करना ज़रूरी है"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "ऐसे मैसेज की संख्या जिनमें डिलीवरी की गड़बड़ी है"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__normal
+msgid "Ongoing"
+msgstr "ऑनगोइंग"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
+msgid "Open Contract"
+msgstr "ओपन कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
+msgid "Person responsible for validating the employee's contracts."
+msgstr "कर्मचारी के कॉन्ट्रैक्ट को मान्य करने के लिए ज़िम्मेदार व्यक्ति।"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_employee_public
+msgid "Public Employee"
+msgstr "सार्वजनिक कर्मचारी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__rating_ids
+msgid "Ratings"
+msgstr "रेटिंग"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__done
+msgid "Ready"
+msgstr "तैयार"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Reference Working Time"
+msgstr "रेफ़रेंस वर्किंग टाइम"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "संसाधन की छुट्टी की जानकारी"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "रिसोर्स वर्किंग टाइम"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_resource
+msgid "Resources"
+msgstr "संसाधन"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_user_id
+msgid "Responsible User"
+msgstr "जिम्मेदार उपयोगकर्ता"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__open
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__open
+msgid "Running"
+msgstr "फैलना"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Running Contracts"
+msgstr "चल रहे कॉन्ट्रैक्ट"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "एसएमएस डिलीवरी में गड़बड़ी"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Salary Information"
+msgstr "सैलरी की जानकारी"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__name
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Salary Structure Type"
+msgstr "सैलरी स्ट्रक्चर टाइप"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Search Contract"
+msgstr "कॉन्ट्रैक्ट खोजें"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+msgid "Search Reference Contracts"
+msgstr "रेफ़रेंस कॉन्ट्रैक्ट खोजें"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set Contract End Date"
+msgstr "कॉन्ट्रैक्ट के खत्म होने की तारीख सेट करें"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_departure_wizard__set_date_end
+msgid "Set the end date on the current contract."
+msgstr "मौजूदा कॉन्ट्रैक्ट के खत्म होने की तारीख सेट करें।"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr "उन सभी रिकॉर्ड को दिखाएं जिनकी अगली कार्रवाई की तारीख आज से पहले है"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_start
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Start Date"
+msgstr "प्रारंभ दिनांक"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__state
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Status"
+msgstr "स्थिति"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_state
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"ऐक्टिविटी के हिसाब से स्टेटस\n"
+"ओवरड्यू: जिस काम की आखिरी तारीख निकल गई हो\n"
+"टुडे: जो काम आज करना है\n"
+"प्लान्ड: जो काम भविष्य में करने हैं."
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__state
+msgid "Status of the contract"
+msgstr "कॉन्ट्रैक्ट की स्थिति"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__country_code
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_history__country_code
+#: model:ir.model.fields,help:hr_contract.field_hr_payroll_structure_type__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"यह आईएसओ देश का दो अक्षर वाला कोड है. \n"
+"इसे आप जल्दी कुछ ढूंढने के लिए इस्तेमाल कर सकते हैं"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid "The contract of %s is about to expire."
+msgstr "%s का कॉन्ट्रैक्ट जल्द ही खत्म होने वाला है।"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+msgid "The default working hours are set in configuration."
+msgstr "डिफ़ॉल्ट कामकाजी घंटे कॉन्फ़िगरेशन में सेट किए गए हैं।"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+msgid "The work permit of %s is about to expire."
+msgstr "%s का वर्क परमिट जल्द ही खत्म होने वाला है।"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "To"
+msgstr "से"
+
+#. module: hr_contract
+#: model:mail.message.subtype,name:hr_contract.mt_contract_pending
+msgid "To Renew"
+msgstr "रिन्यू करने के लिए"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Today Activities"
+msgstr "आज की गतिविधियां"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Type in notes about this contract..."
+msgstr "इस कॉन्ट्रैक्ट के बारे में नोट्स टाइप करें..।"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "रिकॉर्ड में जो अलग तरह की गतिविधि हुई है, वह किस तरह की है."
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
+msgid "Under Contract"
+msgstr "कॉन्ट्रैक्ट के तहत है"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_users
+msgid "User"
+msgstr "उपयोगकर्ता"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
+msgid "Visa No"
+msgstr "वीज़ा नंबर"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__wage
+msgid "Wage"
+msgstr "वेतन"
+
+#. module: hr_contract
+#: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
+msgid "Warning"
+msgstr "चेतावनी"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "वेबसाइट मैसेज"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
+msgid "Work Permit Expiration Notice Period"
+msgstr "वर्क परमिट खत्म होने की सूचना अवधि"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
+msgid "Work Permit Expiry Notice Period"
+msgstr "वर्क परमिट खत्म होने की सूचना अवधि"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
+msgid "Work Permit No"
+msgstr "वर्क परमिट नंबर"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__resource_calendar_id
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Working Schedule"
+msgstr "वर्किंग शेड्यूल"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+msgid "You cannot delete an employee with a running contract."
+msgstr "आप चालू कॉन्ट्रैक्ट वाले कर्मचारी को हटा नहीं सकते।"

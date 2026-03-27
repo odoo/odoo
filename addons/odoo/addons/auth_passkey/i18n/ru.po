@@ -1,0 +1,245 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_passkey
+#
+# Translators:
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2025
+# Anastasiia Koroleva, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login
+msgid "- or -"
+msgstr "- или -"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
+msgid "<strong>Use your passkey to authenticate</strong>"
+msgstr "<strong>Используйте ключ доступа для аутентификации</strong>"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid "Add Passkey"
+msgstr "Добавить ключ доступа"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_res_users_identitycheck__auth_method
+msgid "Auth Method"
+msgstr "Метод аутентификации"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_res_users__auth_passkey_key_ids
+msgid "Auth Passkey Key"
+msgstr "Ключи доступа для аутентификации"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_create_view_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_rename
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_create_view_form
+msgid "Create"
+msgstr "Создать"
+
+#. module: auth_passkey
+#. odoo-python
+#: code:addons/auth_passkey/models/res_users.py:0
+msgid "Create Passkey"
+msgstr "Создать ключ доступа"
+
+#. module: auth_passkey
+#: model:ir.actions.act_window,name:auth_passkey.action_auth_passkey_key_create
+msgid "Create Passkey Wizard"
+msgstr "Мастер создания ключа доступа"
+
+#. module: auth_passkey
+#: model:ir.model,name:auth_passkey.model_auth_passkey_key_create
+msgid "Create a Passkey"
+msgstr "Создание ключа доступа"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__create_uid
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__create_uid
+msgid "Created by"
+msgstr "Создано:"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__create_date
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__create_date
+msgid "Created on"
+msgstr "Дата создания:"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid "Created:"
+msgstr "Создано:"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__credential_identifier
+msgid "Credential Identifier"
+msgstr "Идентификатор учетных данных"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid "Delete"
+msgstr "Удалить"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__display_name
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__id
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_passkey
+#. odoo-python
+#: code:addons/auth_passkey/models/res_users_identitycheck.py:0
+msgid ""
+"Incorrect Passkey. Please provide a valid passkey or use a different "
+"authentication method."
+msgstr ""
+"Неверный ключ доступа. Пожалуйста, укажите действующий ключ доступа или "
+"используйте другой метод аутентификации."
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__write_uid
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление:"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__write_date
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__write_date
+msgid "Last Updated on"
+msgstr "Дата последнего обновления:"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid "Last used:"
+msgstr "Последнее использование:"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login
+msgid "Log in with Passkey"
+msgstr "Войти с ключом доступа"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__name
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__name
+msgid "Name"
+msgstr "Имя"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
+msgid "Or choose a different method:"
+msgstr "Или выберите другой метод:"
+
+#. module: auth_passkey
+#: model:ir.model,name:auth_passkey.model_auth_passkey_key
+#: model:ir.model.fields.selection,name:auth_passkey.selection__res_users_identitycheck__auth_method__webauthn
+msgid "Passkey"
+msgstr "Ключ доступа"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid "Passkeys"
+msgstr "Ключи доступа"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid ""
+"Passkeys are a replacement for your username and password, offering a more "
+"secure way of logging in."
+msgstr ""
+"Ключи доступа заменяют имя пользователя и пароль, обеспечивая более "
+"безопасный способ входа."
+
+#. module: auth_passkey
+#: model:ir.model,name:auth_passkey.model_res_users_identitycheck
+msgid "Password Check Wizard"
+msgstr "Мастер проверки паролей"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__public_key
+msgid "Public Key"
+msgstr "Открытый ключ"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid "Rename"
+msgstr "Переименовать"
+
+#. module: auth_passkey
+#. odoo-python
+#: code:addons/auth_passkey/models/auth_passkey_key.py:0
+msgid "Rename Passkey"
+msgstr "Переименовать ключ доступа"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_rename
+msgid "Save"
+msgstr "Сохранить"
+
+#. module: auth_passkey
+#. odoo-python
+#: code:addons/auth_passkey/models/res_users_identitycheck.py:0
+msgid "Security Control"
+msgstr "Контроль безопасности"
+
+#. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__sign_count
+msgid "Sign Count"
+msgstr "Количество подписей"
+
+#. module: auth_passkey
+#: model:ir.model.constraint,message:auth_passkey.constraint_auth_passkey_key_unique_identifier
+msgid "The credential identifier should be unique."
+msgstr "Идентификатор учетных данных должен быть уникальным."
+
+#. module: auth_passkey
+#. odoo-python
+#: code:addons/auth_passkey/models/res_users.py:0
+msgid "Unknown passkey"
+msgstr "Неизвестный ключ доступа"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
+msgid "Use Passkey"
+msgstr "Использовать ключ доступа"
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
+msgid "Use password"
+msgstr "Использовать пароль"
+
+#. module: auth_passkey
+#: model:ir.model,name:auth_passkey.model_res_users
+msgid "User"
+msgstr "Пользователь"

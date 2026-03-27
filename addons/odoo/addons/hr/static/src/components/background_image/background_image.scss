@@ -1,0 +1,21 @@
+div.o_field_widget.o_field_background_image {
+    display: inline-block;
+
+    @include media-breakpoint-down(md) {
+        height: calc(100% + var(--KanbanRecord-padding-v)* 2);
+        margin-top: calc(var(--KanbanRecord-padding-v)* -1);
+        margin-bottom: calc(var(--KanbanRecord-padding-v)* -1);
+        margin-left: calc(var(--KanbanRecord-padding-h)* -1);
+    }
+
+    > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}

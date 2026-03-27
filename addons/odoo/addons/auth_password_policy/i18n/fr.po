@@ -1,0 +1,92 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_password_policy
+#
+# Translators:
+# Wil Odoo, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
+msgid "Minimum Password Length"
+msgstr "Longueur minimale du mot de passe"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr ""
+"Nombre minimum de caractères que les mots de passe doivent contenir, définir "
+"à 0 pour le désactiver."
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_field.js:0
+msgid "Password"
+msgstr "Mot de passe"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
+msgid ""
+"Required: %s\n"
+"\n"
+"Hint: to increase password strength, increase length, use multiple words, "
+"and use non-letter characters."
+msgstr ""
+"Requis : %s\n"
+"\n"
+"Astuce : pour augmenter la force du mot de passe, augmentez sa longueur, "
+"utilisez plusieurs mots et utilisez des caractères autres que des lettres."
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_users
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: auth_password_policy
+#. odoo-python
+#: code:addons/auth_password_policy/models/res_users.py:0
+msgid ""
+"Your password must contain at least %(minimal_length)d characters and only "
+"has %(current_count)d."
+msgstr ""
+"Votre mot de passe doit contenir au moins %(minimal_length)d caractères et "
+"dispose de seulement %(current_count)d."
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
+msgid "at least %s character classes"
+msgstr "au moins %s classes de caractères"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
+msgid "at least %s characters"
+msgstr "au moins %s caractères"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
+msgid "at least %s words"
+msgstr "au moins %s mots"

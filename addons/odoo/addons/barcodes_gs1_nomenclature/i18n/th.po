@@ -1,0 +1,257 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* barcodes_gs1_nomenclature
+#
+# Translators:
+# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)s'"
+msgstr ""
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
+msgid "Alpha-Numeric Name"
+msgstr "ชื่อตัวเลขอัลฟ่า"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid ""
+"Alternative regex delimiter for the FNC1. The separator must not match the "
+"begin/end of any related rules pattern."
+msgstr ""
+"ตัวคั่น regex ทางเลือกสำหรับ FNC1 ตัวคั่นต้องไม่ตรงกับจุดเริ่มต้น/จุดสิ้นสุดของรูปแบบกฎที่เกี่ยวข้อง"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
+msgid "Associated Uom"
+msgstr "หน่วยวัดที่เกี่ยวข้อง"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
+msgid "Barcode Nomenclature"
+msgstr "การตีความบาร์โค้ด"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "กฎของบาร์โค้ด"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__use_date
+msgid "Best before Date"
+msgstr "ดีที่สุดก่อนวันที่"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__date
+msgid "Date"
+msgstr "วันที่"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid "Decimal"
+msgstr "ทศนิยม"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
+msgid "Destination location"
+msgstr "ตำแหน่งปลายทาง"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "การเข้ารหัส"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__expiration_date
+msgid "Expiration Date"
+msgstr "วันหมดอายุ"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
+msgid "FNC1 Separator"
+msgstr "ตัวแบ่ง FNC1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid "GS1 Content Type"
+msgstr "ประเภทเนื้อหา GS1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
+msgid "GS1-128"
+msgstr "GS1-128"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model,name:barcodes_gs1_nomenclature.model_ir_http
+msgid "HTTP Routing"
+msgstr "การกำหนด HTTP"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
+msgid ""
+"If True, use the last digit of AI to determine where the first decimal is"
+msgstr "ถ้าเป็น True ให้ใช้หลักสุดท้ายของ AI เพื่อกำหนดว่าทศนิยมตัวแรกอยู่ที่ใด"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "Invalid barcode: can't be formated as date"
+msgstr "บาร์โค้ดไม่ถูกต้อง: ไม่สามารถจัดรูปแบบเป็นวันที่"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "Invalid barcode: the check digit is incorrect"
+msgstr "บาร์โค้ดไม่ถูกต้อง: เลขที่ตรวจสอบไม่ถูกต้อง"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid "Is GS1 Nomenclature"
+msgstr "เป็นการตีความบาร์โค้ด GS1"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
+msgid "Location"
+msgstr "สถานที่"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
+msgid "Lot"
+msgstr "ล็อต"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
+msgid "Measure"
+msgstr "ตัวชี้วัด"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
+msgid "Numeric Identifier"
+msgstr "ตัวระบุหมายเลข"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
+msgid "Pack Date"
+msgstr "วันที่แพ็ค"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
+msgid "Package"
+msgstr "แพ็คเกจ"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
+msgid "Package Type"
+msgstr "ประเภทแพ็คเกจ"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity
+msgid "Quantity"
+msgstr "ปริมาณ"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
+msgstr "ทางเลือกตัวคั่น FNC1 ไม่ใช่ Regex ที่ถูกต้อง: %(error)s"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
+msgid ""
+"The GS1 content type defines what kind of data the rule will process the "
+"barcode as:        * Date: the barcode will be converted into a Odoo "
+"datetime;        * Measure: the barcode's value is related to a specific "
+"UoM;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
+msgstr ""
+"ประเภทเนื้อหา GS1 กำหนดประเภทของข้อมูลที่กฎจะประมวลผลบาร์โค้ดเป็น: * วันที่: "
+"บาร์โค้ดจะถูกแปลงเป็นวันที่และเวลาของ Odoo; * การวัด: "
+"ค่าของบาร์โค้ดเกี่ยวข้องกับหน่วยวัดเฉพาะ * ตัวระบุตัวเลข: "
+"บาร์โค้ดความยาวคงที่ตามการเข้ารหัสเฉพาะ * ชื่อตัวเลขอัลฟ่า: ตวามยาวตัวแปรบาร์โค้ด"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+msgid ""
+"The rule pattern \"%s\" is not valid, it needs two groups:\n"
+"\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
+"\t- A second one to catch the value."
+msgstr ""
+"รูปแบบกฎ\"%s\"ไม่ถูกต้อง จำเป็นต้องมีสองกลุ่ม:\n"
+"\t- กลุ่มแรกสำหรับ ตัวระบุแอปพลิเคชัน (โดยปกติคือ 2 ถึง 4 หลัก)\n"
+"\t- กลุ่มที่สองจับค่า"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
+msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
+msgstr "รูปแบบกฎ '%(rule)s' ไม่ใช่ Regex ที่ถูกต้อง: %(error)s"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"There is something wrong with the barcode rule \"%s\" pattern.\n"
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
+msgstr ""
+"มีบางอย่างผิดปกติกับรูปแบบของกฎบาร์โค้ด \"%s\" \n"
+"หากกฎนี้ใช้ทศนิยม "
+"ให้ตรวจสอบว่าไม่สามารถรับตัวเลขอื่นเป็นตัวอักษรตัวสุดท้ายสำหรับตัวระบุแอปพลิเคชันได้\n"
+"ตรวจสอบด้วยว่าค่าที่ตรงกันที่เป็นไปได้ต้องเป็นตัวเลขเท่านั้น ไม่เช่นนั้น "
+"จะไม่สามารถแปลงค่าเป็นหน่วยวัดได้"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
+msgid ""
+"This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
+"accepted is this kind of nomenclature."
+msgstr "ระบบการตีความนี้ใช้ข้อกำหนด GS1 ซึ่งยอมรับกฎการเข้ารหัส GS1-128 เท่านั้น"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "This barcode can't be parsed by any barcode rules."
+msgstr "บาร์โค้ดนี้ไม่สามารถแยกวิเคราะห์ตามกฎบาร์โค้ดได้"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-javascript
+#: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
+msgid "This barcode can't be partially or fully parsed."
+msgstr "บาร์โค้ดนี้ไม่สามารถแยกวิเคราะห์บางส่วนหรือทั้งหมดได้"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr "กฎนี้จะใช้ได้เฉพาะเมื่อบาร์โค้ดถูกเข้ารหัสด้วยการเข้ารหัสที่ระบุ"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type
+msgid "Type"
+msgstr "ประเภท"

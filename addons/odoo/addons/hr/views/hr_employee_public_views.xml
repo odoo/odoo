@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_employee_public_view_search" model="ir.ui.view">
+            <field name="name">hr.employee.search</field>
+            <field name="model">hr.employee.public</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
+                    <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
+                    <field name="job_title"/>
+                    <separator/>
+                    <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
+                    <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
+                    <separator/>
+                    <filter name="newly_hired" string="Newly Hired" domain="[('newly_hired', '=', True)]"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                    </group>
+                </search>
+             </field>
+        </record>
+
+        <record id="hr_employee_public_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.public.form</field>
+            <field name="model">hr.employee.public</field>
+            <field name="arch" type="xml">
+                <form string="Employee" create="0" write="0" js_class="hr_employee_form">
+                    <field name="image_128" invisible="1" />
+                    <header/>
+                    <sheet>
+                        <field name="user_id" invisible="1"/>
+                        <field name="user_partner_id" invisible="1"/>
+                        <field name="active" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <!-- Used by other modules-->
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">
+                            <div class="oe_title ps-0 pe-2">
+                                <label for="name" string="Employee Name"/>
+                                <h1 class="d-flex flex-row">
+                                    <span class="me-2" invisible="not context.get('chat_icon')">
+                                        <widget name="hr_employee_chat"/>
+                                    </span>
+                                    <field name="name" placeholder="e.g. John Doe" required="True"
+                                        style="font-size: min(4vw, 2.6rem);"/>
+                                </h1>
+                                <h2>
+                                    <field name="job_title" placeholder="Job Title" />
+                                </h2>
+                            </div>
+                            <div class="o_employee_avatar m-0 p-0">
+                                <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                                <field name="show_hr_icon_display" invisible="1" />
+                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="mobile_phone" widget="phone"/>
+                                <field name="work_phone" widget="phone"/>
+                                <field name="work_email" widget="email"/>
+                            </group>
+                            <group>
+                                <field name="department_id" context="{'open_employees_kanban': 1}"/>
+                                <field name="job_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="parent_id" widget="many2one_avatar_user"/>
+                                <field name="coach_id" widget="many2one_avatar_user"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="public" string="Work Information">
+                                <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main" class="flex-grow-1">
+                                        <group string="Location" name="location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"highlight_first_line": True}'/>
+                                            <field name="work_location_id"/>
+                                        </group>
+                                        <group name="managers" string="Approvers" invisible="1">
+                                            <!-- overridden in other modules -->
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_employee_public_view_tree" model="ir.ui.view">
+            <field name="name">hr.employee.list</field>
+            <field name="model">hr.employee.public</field>
+            <field name="arch" type="xml">
+                <list string="Employees" sample="1" expand="context.get('expand', False)">
+                    <field name="name"/>
+                    <field name="work_phone" class="o_force_ltr"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
+                    <field name="job_title"/>
+                    <field name="parent_id" widget="many2one_avatar_user"/>
+                    <field name="coach_id" widget="many2one_avatar_user" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="hr_employee_public_view_kanban" model="ir.ui.view">
+            <field name="name">hr.employee.kanban</field>
+            <field name="model">hr.employee.public</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" sample="1">
+                    <field name="show_hr_icon_display"/>
+                    <field name="image_128" />
+                    <templates>
+                        <t t-name="card" class="flex-row">
+                            <aside class="o_kanban_aside_full">
+                                <t t-if="!record.image_1024.raw_value">
+                                    <field name="avatar_128" class="d-block position-relative"
+                                        widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                                </t>
+                                <t t-else="">
+                                    <field name="image_1024" class="d-block position-relative" preview_image="image_128"
+                                        widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
+                                </t>
+                            </aside>
+                            <main class="ms-2">
+                                <div>
+                                    <field class="fw-bolder" name="name" placeholder="Employee's Name"/>
+                                    <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
+                                        <field name="hr_icon_display" class="o_employee_availability align-items-center" widget="hr_presence_status" />
+                                    </div>
+                                </div>
+                                <field t-if="record.job_title.raw_value" name="job_title"/>
+                                <div t-if="record.work_email.raw_value" class="o_text_overflow">
+                                    <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
+                                    <field name="work_email"/>
+                                </div>
+                                <div class="d-flex">
+                                    <div t-if="record.work_phone.raw_value">
+                                        <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
+                                        <field name="work_phone"/>
+                                    </div>
+                                    <field name="user_id" widget="many2one_avatar_user" readonly="1" class="ms-auto"/>
+                                </div>
+                            </main>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="hr_employee_public_action" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee.public</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+            <field name="context">{'chat_icon': True}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="hr_employee_public_view_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new employee
+              </p><p>
+                Quickly find all the information you need for your employees such as contact data, job position, availability, etc.
+              </p>
+            </field>
+        </record>
+
+        <record id="act_hr_employee_public_kanban_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="hr.hr_employee_public_action"/>
+        </record>
+
+        <record id="act_hr_employee_public_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">list</field>
+            <field name="act_window_id" ref="hr.hr_employee_public_action"/>
+        </record>
+
+        <record id="act_hr_employee_public_form_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="hr.hr_employee_public_action"/>
+        </record>
+
+    </data>
+</odoo>

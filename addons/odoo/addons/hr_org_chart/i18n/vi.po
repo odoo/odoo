@@ -1,0 +1,202 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_org_chart
+#
+# Translators:
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr "<span class=\"o_stat_text\">Sơ đồ tổ chức</span>"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid "Add a new employee"
+msgstr "Thêm nhân viên mới"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Người dùng cơ bản"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr "Màu của phòng ban"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Direct Subordinates Count"
+msgstr "Số cấp dưới trực tiếp"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Direct and indirect subordinates"
+msgstr "Direct and indirect subordinates"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Direct subordinates"
+msgstr "Cấp dưới trực tiếp"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee
+msgid "Employee"
+msgstr "Nhân viên"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr "Nhân viên"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "In order to get an organigram, set a manager and save the record."
+msgstr ""
+"Để hiển thị sơ đồ tổ chức, hãy thiết lập một người quản lý và lưu lại bản "
+"ghi này."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid ""
+"In the Organigram you will have a clear overview of the hierarchy of "
+"employees."
+msgstr ""
+"Trong Sơ đồ tổ chức, bạn sẽ có cái nhìn tổng quan rõ ràng về hệ thống phân "
+"cấp nhân viên."
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
+msgid "Indirect Subordinates Count"
+msgstr "Indirect Subordinates Count"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Indirect subordinates"
+msgstr "Cấp dưới gián tiếp"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
+msgid "Is Subordinate"
+msgstr "Là cấp dưới"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "More managers"
+msgstr "Thêm người quản lý"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid "No Data"
+msgstr "Không có dữ liệu"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "No hierarchy position."
+msgstr "Không có cây tổ chức"
+
+#. module: hr_org_chart
+#. odoo-python
+#: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
+msgid "Operation not supported"
+msgstr "Hoạt động không được hỗ trợ"
+
+#. module: hr_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+msgid "Org Chart"
+msgstr "Sơ đồ tổ chức"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid "Organization Chart"
+msgstr "Sơ đồ Tổ chức"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Nhân viên chung"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"Quickly find all the information you need for your employees such as contact "
+"data, job position, availability, etc."
+msgstr ""
+"Nhanh chóng tìm thấy tất cả thông tin về nhân viên mà bạn cần như dữ liệu "
+"liên hệ, Vị trí công việc, ngày sẵn sàng làm việc,..."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Redirect"
+msgstr "Chuyển hướng"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "See All"
+msgstr "Xem tất cả"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Subordinates"
+msgstr "Nhân viên cấp dưới"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
+msgid "Team"
+msgstr "Bộ phận"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "This employee has no manager or subordinate."
+msgstr "Nhân viên này không có quản lý cấp trên hay nhân viên cấp dưới."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Total"
+msgstr "Tổng"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+msgid "people"
+msgstr "người"

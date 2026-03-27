@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+
+       <!-- hr.expense and hr.expense.sheet -->
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="attributes">
+            <!-- Ensure that dropdown items show vertically and not side-by-side -->
+            <attribute name="class" remove="d-flex" separator=" "/>
+            <attribute name="class" add="d-block d-xl-flex" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
+            <!-- If Create Report is shown and window isSmall, 'New' button is added to the 'control-panel-additional-actions' slot (dropdown in mobile) -->
+            <t t-if="!model.root.editedRecord and activeActions.create and props.showButtons and env.isSmall and displayCreateReport()">
+                <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
+                    New
+                </button>
+            </t>
+            <button t-if="displayCreateReport()" class="btn btn-secondary" t-on-click="() => this.action_show_expenses_to_submit()">
+                Create Report
+            </button>
+            <button t-if="displaySubmit()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_submit_sheet')">
+                Submit
+            </button>
+            <button t-if="displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_approve_expense_sheets')">
+                Approve Report
+            </button>
+            <button t-if="displayPost()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_sheet_move_post')">
+                Post Entries
+            </button>
+            <button t-if="displayPayment()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_register_payment')">
+                Pay
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
+            <button t-if="!isExpenseSheet and !env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+                Upload
+            </button>
+            <button t-if="!isExpenseSheet and env.isSmall" type="button" t-att-class="'o_button_upload_expense btn btn-primary' + (!displayCreateReport() ? ' me-1' : '')" t-on-click.prevent="uploadDocument">
+                Scan
+            </button>
+        </xpath>
+
+        <!-- 'New' button isn't in the control-panel-create-button slot if window isSmall and Create Report button is shown -->
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="attributes">
+            <attribute name="t-if">!env.isSmall or (env.isSmall and !displayCreateReport())</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="uploadDocument.bind">uploadDocument</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <div t-if="dragState.showDragZone" class="o_dropzone">
+                <i class="fa fa-upload fa-10x"></i>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
+            <attribute name="class" add="hr_expense h-auto o_forbidden_tooltip_parent" separator=" "/>
+        </xpath>
+    </t>
+
+
+    <t t-name="hr_expense.DashboardListRenderer" t-inherit="hr_expense.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <ExpenseDashboard/>
+        </xpath>
+    </t>
+</templates>

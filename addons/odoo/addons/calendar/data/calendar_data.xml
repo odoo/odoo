@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record id="alarm_notif_1" model="calendar.alarm">
+            <field name="name">Notification - 15 Minutes</field>
+            <field name="duration" eval="15" />
+            <field name="interval">minutes</field>
+            <field name="alarm_type">notification</field>
+        </record>
+        <record id="alarm_notif_2" model="calendar.alarm">
+            <field name="name">Notification - 30 Minutes</field>
+            <field name="duration" eval="30" />
+            <field name="interval">minutes</field>
+            <field name="alarm_type">notification</field>
+        </record>
+        <record id="alarm_notif_3" model="calendar.alarm">
+            <field name="name">Notification - 1 Hours</field>
+            <field name="duration" eval="1" />
+            <field name="interval">hours</field>
+            <field name="alarm_type">notification</field>
+        </record>
+        <record id="alarm_notif_4" model="calendar.alarm">
+            <field name="name">Notification - 2 Hours</field>
+            <field name="duration" eval="2" />
+            <field name="interval">hours</field>
+            <field name="alarm_type">notification</field>
+        </record>
+        <record id="alarm_notif_5" model="calendar.alarm">
+            <field name="name">Notification - 1 Days</field>
+            <field name="duration" eval="1" />
+            <field name="interval">days</field>
+            <field name="alarm_type">notification</field>
+        </record>
+        <record id="alarm_mail_1" model="calendar.alarm">
+            <field name="name">Email - 3 Hours</field>
+            <field name="duration" eval="3" />
+            <field name="interval">hours</field>
+            <field name="alarm_type">email</field>
+            <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
+        </record>
+        <record id="alarm_mail_2" model="calendar.alarm">
+            <field name="name">Email - 6 Hours</field>
+            <field name="duration" eval="6" />
+            <field name="interval">hours</field>
+            <field name="alarm_type">email</field>
+            <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
+        </record>
+    </data>
+</odoo>

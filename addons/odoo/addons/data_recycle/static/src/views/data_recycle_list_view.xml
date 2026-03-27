@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="DataRecycle.buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <t t-if="nbSelected">
+                <button type="button" class="btn btn-primary o_data_recycle_validate_button" t-on-click="onValidateClick">
+                    Validate
+                </button>
+                <button type="button" class="btn btn-secondary o_data_recycle_unselect_button" t-on-click="onUnselectClick">
+                    Unselect
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>
