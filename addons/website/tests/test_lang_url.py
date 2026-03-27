@@ -266,3 +266,15 @@ class TestTranslateUrl(TestLangUrl):
         self.assertEqual(self.website.homepage_url, page_name_fr)
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'set_homepage_property_of_a_page', login='admin')
         self.assertEqual(self.website.homepage_url, False)
+
+
+@tagged('-at_install', 'post_install')
+class TestAddLanguageAndTranslateUrl(HttpCase):
+    def test_add_language_and_translate_url(self):
+        self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'add_language_and_translate_url', login='admin')

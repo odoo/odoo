@@ -2,52 +2,18 @@ import {
     clickOnEditAndWaitEditModeInTranslatedPage,
     clickOnSave,
     insertSnippet,
-    goToTheme,
     registerWebsitePreviewTour,
+    addLanguage,
 } from "@website/js/tours/tour_utils";
 import { editorsWeakMap, setSelection } from "@html_editor/../tests/tours/helpers/editor";
 
 function installParseltongueAndOpenLangDropdown() {
     return [
-        ...goToTheme(),
-        {
-            content: "click on Add a language",
-            trigger: "button[data-action-id='addLanguage']",
-            run: "click",
-        },
-        {
-            content: "confirm leave editor",
-            trigger: ".modal-dialog button.btn-primary",
-            run: "click",
-        },
-        {
-            content: "type Parseltongue",
-            trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-            run: "edit Parseltongue",
-        },
-        {
-            content: "select Parseltongue",
-            trigger: ".dropdown-item:contains(Parseltongue)",
-            run: "click",
-        },
-        {
-            trigger:
-                '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
-        },
-        {
-            content: "load Parseltongue",
-            trigger: ".modal-footer .btn-primary",
-            run: "click",
-        },
+        ...addLanguage("Parseltongue", "pa-GB"),
         {
             content: "click language dropdown (2)",
             trigger: ":iframe .js_language_selector .dropdown-toggle",
-            timeout: 60000,
             run: "click",
-        },
-        {
-            content: "Check that the language of the page is Parseltongue",
-            trigger: ':iframe html[lang*="pa-GB"]',
         },
     ];
 }
