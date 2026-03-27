@@ -28,6 +28,7 @@ class WooCommerceBackend(models.Model):
     _order = 'name'
 
     _channel_type = 'woocommerce'
+    _check_company_auto = True
 
     # ── WooCommerce Credentials ───────────────────────────────────────────────
 
@@ -85,6 +86,12 @@ class WooCommerceBackend(models.Model):
         comodel_name='crm.team',
         string='Default Sales Team',
         help='Sales team to assign to imported WooCommerce orders.',
+        check_company=True,
+    )
+    warehouse_id = fields.Many2one(
+        comodel_name='stock.warehouse',
+        string='Default Warehouse',
+        help='Warehouse used for stock levels and order fulfillment.',
         check_company=True,
     )
     default_product_categ_id = fields.Many2one(
@@ -197,6 +204,32 @@ class WooCommerceBackend(models.Model):
             })
             log.fail(error_msg, increment_retry=False)
             raise UserError(f'Connection failed: {error_msg}') from exc
+
+    # ── Wizard Launchers ──────────────────────────────────────────────────────
+
+    def action_open_sync_wizard(self):
+        """Open the manual sync wizard pre-populated with this backend."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Sync WooCommerce Now',
+            'res_model': 'woocommerce.sync.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_backend_id': self.id},
+        }
+
+    def action_open_retry_wizard(self):
+        """Open the retry-errors wizard pre-populated with this backend."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Retry Failed Syncs',
+            'res_model': 'woocommerce.sync.retry.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_backend_id': self.id},
+        }
 
     # ── Product Sync ──────────────────────────────────────────────────────────
 

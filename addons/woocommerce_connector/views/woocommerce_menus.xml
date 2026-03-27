@@ -30,6 +30,21 @@
               sequence="30"
               groups="woocommerce_connector.group_woocommerce_user"/>
 
+    <!-- Operations shortcuts -->
+    <menuitem id="menu_woo_sync_now"
+              name="Sync Now…"
+              parent="menu_woocommerce_root"
+              action="action_woo_sync_wizard"
+              sequence="50"
+              groups="woocommerce_connector.group_woocommerce_manager"/>
+
+    <menuitem id="menu_woo_retry_errors"
+              name="Retry Errors…"
+              parent="menu_woocommerce_root"
+              action="action_woo_retry_wizard"
+              sequence="60"
+              groups="woocommerce_connector.group_woocommerce_manager"/>
+
     <!-- Configuration -->
     <menuitem id="menu_woo_backends"
               name="WooCommerce Stores"

@@ -43,6 +43,7 @@ Odoo → WooCommerce:
         'product',
         'sale',
         'sale_management',
+        'sales_team',
         'stock',
         'contacts',
         'mail',
@@ -53,6 +54,7 @@ Odoo → WooCommerce:
         'data/ir_cron_data.xml',
         'views/woocommerce_backend_views.xml',
         'views/woocommerce_binding_views.xml',
+        'views/woocommerce_wizard_views.xml',
         'views/woocommerce_menus.xml',
     ],
     'external_dependencies': {

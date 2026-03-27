@@ -3,6 +3,7 @@ from . import woocommerce_product_binding
 from . import woocommerce_order_binding
 from . import woocommerce_customer_binding
 from . import woocommerce_inventory_sync
+from . import stock_move
 from . import product_template
 from . import sale_order
 from . import res_partner

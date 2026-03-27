@@ -36,11 +36,11 @@
                     <button name="action_test_connection" string="Test Connection"
                             type="object" class="btn-primary"
                             groups="woocommerce_connector.group_woocommerce_manager"/>
-                    <button name="action_sync_products" string="Sync Products Now"
+                    <button name="action_open_sync_wizard" string="Sync Now…"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'connected')]}"
                             groups="woocommerce_connector.group_woocommerce_manager"/>
-                    <button name="action_sync_orders" string="Sync Orders Now"
+                    <button name="action_open_retry_wizard" string="Retry Errors…"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'connected')]}"
                             groups="woocommerce_connector.group_woocommerce_manager"/>

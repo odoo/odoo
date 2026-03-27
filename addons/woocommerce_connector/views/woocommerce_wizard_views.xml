@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         Manual Sync Wizard
+    ══════════════════════════════════════════════════════════════════════ -->
+
+    <record id="view_woo_sync_wizard_form" model="ir.ui.view">
+        <field name="name">woocommerce.sync.wizard.form</field>
+        <field name="model">woocommerce.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Manual Sync">
+                <sheet>
+                    <!-- Draft: configure -->
+                    <group attrs="{'invisible': [('state', '!=', 'draft')]}">
+                        <group string="Backend">
+                            <field name="backend_id"/>
+                        </group>
+                        <group string="What to Sync">
+                            <field name="sync_products"/>
+                            <field name="sync_customers"/>
+                            <field name="sync_orders"/>
+                            <field name="export_inventory"/>
+                        </group>
+                        <group string="Options">
+                            <field name="force_full_sync"/>
+                            <field name="orders_from_date"
+                                   attrs="{'invisible': [('sync_orders', '=', False)]}"/>
+                        </group>
+                        <div class="alert alert-warning" role="alert"
+                             attrs="{'invisible': [('force_full_sync', '=', False)]}">
+                            <strong>Full re-sync enabled.</strong> All records will be
+                            re-fetched from WooCommerce, ignoring previous sync timestamps.
+                            This may take several minutes for large stores.
+                        </div>
+                    </group>
+
+                    <!-- Done: results -->
+                    <group attrs="{'invisible': [('state', '!=', 'done')]}">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Sync complete.</strong>
+                        </div>
+                        <field name="result_summary" nolabel="1" readonly="1"/>
+                    </group>
+
+                    <field name="state" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_run_sync" string="Run Sync Now"
+                            type="object" class="btn-primary"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_close" string="Close"
+                            type="object" class="btn-secondary"
+                            attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_woo_sync_wizard" model="ir.actions.act_window">
+        <field name="name">Sync WooCommerce Now</field>
+        <field name="res_model">woocommerce.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         Retry Wizard
+    ══════════════════════════════════════════════════════════════════════ -->
+
+    <record id="view_woo_retry_wizard_form" model="ir.ui.view">
+        <field name="name">woocommerce.sync.retry.wizard.form</field>
+        <field name="model">woocommerce.sync.retry.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Retry Failed Syncs">
+                <sheet>
+                    <group attrs="{'invisible': [('state', '!=', 'draft')]}">
+                        <group string="Scope">
+                            <field name="backend_id"/>
+                            <field name="object_type"/>
+                            <field name="error_count" readonly="1"/>
+                        </group>
+                        <div class="alert alert-info" role="alert"
+                             attrs="{'invisible': [('error_count', '=', 0)]}">
+                            <strong><field name="error_count" readonly="1" nolabel="1"/> failed record(s)</strong>
+                            will be re-fetched from WooCommerce and re-imported.
+                        </div>
+                        <div class="alert alert-success" role="alert"
+                             attrs="{'invisible': [('error_count', '!=', 0)]}">
+                            No failed sync records found for this selection.
+                        </div>
+                    </group>
+
+                    <group attrs="{'invisible': [('state', '!=', 'done')]}">
+                        <field name="result_summary" nolabel="1" readonly="1"/>
+                    </group>
+
+                    <field name="state" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_retry" string="Retry Now"
+                            type="object" class="btn-primary"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_close" string="Close"
+                            type="object" class="btn-secondary"
+                            attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_woo_retry_wizard" model="ir.actions.act_window">
+        <field name="name">Retry Failed Syncs</field>
+        <field name="res_model">woocommerce.sync.retry.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
