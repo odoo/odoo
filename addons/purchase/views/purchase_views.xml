@@ -253,8 +253,7 @@
                                         <field name="receipt_status" widget="badge" invisible="state != 'purchase'"
                                             decoration-success="receipt_status == 'full'"
                                             decoration-info="receipt_status == 'partial'"
-                                            decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"
-                                            decoration-muted="receipt_status == 'pending' and date_planned and date_planned &gt;= context_today().strftime('%Y-%m-%d')"/>
+                                            decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"/>
                                     </div>
                                 </div>
                         </group>
@@ -689,8 +688,7 @@
                     <field name="receipt_status" optional="hide" widget="badge"
                         decoration-success="receipt_status=='full'"
                         decoration-info="receipt_status == 'partial'"
-                        decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"
-                        decoration-muted="receipt_status == 'pending' and date_planned and date_planned &gt;= context_today().strftime('%Y-%m-%d')"/>
+                        decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"/>
                     <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show" readonly="1"/>
                 </list>
