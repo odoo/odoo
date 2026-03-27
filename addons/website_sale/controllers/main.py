@@ -448,8 +448,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         categs_domain = (
             Domain("parent_id", "=", False) & Domain("not_in_shop", "=", False) & website_domain
         )
-        if not self.env.user._is_internal():
-            categs_domain &= Domain("has_published_products", "=", True)
         if search:
             search_categories = Category.search(
                 Domain("product_tmpl_ids", "in", search_product.ids) & website_domain
@@ -469,10 +467,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 category_entries = (not search and parent.child_id) or parent.child_id.filtered(
                     lambda c: c.id in search_categories.ids
                 )
+            if not search and not request.env.user._is_internal():
+                # We know the user has access to `categs` and `search_categories` because they come
+                # from a regular `search`, but we have not checked access to `category`'s children,
+                # nor its siblings or itself.
+                category_entries = category_entries.filtered("has_published_products")
         else:
             category_entries = categs
-        if not request.env.user._is_internal():
-            category_entries = category_entries.filtered("has_published_products")
 
         # products for current pager
 
@@ -497,7 +498,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         pavs_per_attribute = {}
         if products:
             search_term = fuzzy_search_term if fuzzy_search_term else search
-            product_query = request.env['product.template']._search(
+            product_query = request.env["product.template"]._search(
                 self._get_shop_domain(search_term, category, attribute_value_dict)
             )
             grouped_pavs = request.env["product.attribute.value"]._read_group(

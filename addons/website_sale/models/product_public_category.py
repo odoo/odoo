@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.tools.sql import SQL
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website_sale.const import SHOP_PATH
@@ -61,7 +62,6 @@ class ProductPublicCategory(models.Model):
         compute="_compute_has_published_products",
         search="_search_has_published_products",
         compute_sudo=True,
-        recursive=True,
     )
 
     website_description = fields.Html(
@@ -138,35 +138,37 @@ class ProductPublicCategory(models.Model):
                     category
                 )
 
-    @api.depends("product_tmpl_ids.is_published", "child_id.has_published_products")
+    @api.depends_context("company", "website_id")
     def _compute_has_published_products(self):
-        grouped_product_templates = self.env["product.template"]._read_group(
-            domain=[
-                ("public_categ_ids", "in", self.ids),
-                ("is_published", "=", True),
-                ("active", "=", True),
-            ],
-            groupby=["public_categ_ids"],
+        has_published_products = self.search(
+            # See also :meth:`_search_has_published_products`
+            Domain([("has_published_products", "=", True), ("id", "in", self.ids)]),
+            order="id",
         )
-        published_category_ids = {group[0].id for group in grouped_product_templates}
-        for category in self:
-            has_published = category.id in published_category_ids
-            category.has_published_products = has_published or any(
-                c.has_published_products for c in category.child_id
-            )
+        has_published_products.has_published_products = True
+        (self - has_published_products).has_published_products = False
 
     # === SEARCH METHODS === #
 
     @api.model
-    def _search_has_published_products(self, operator, _value):
-        if operator != "in":
+    def _search_has_published_products(self, operator, value):
+        if not (operator == "in" and True in value):
             return NotImplemented
-        published_categ_ids = self.search_fetch(
-            [("product_tmpl_ids", "any", [("is_published", "=", True), ("active", "=", True)])],
-            ["parent_path"],
-        ).ids
-        # Note that if the `value` is False, the ORM will invert the domain below
-        return ["|", ("id", "in", published_categ_ids), ("id", "parent_of", published_categ_ids)]
+
+        published_products_domain = (
+            Domain([("active", "=", True), ("is_published", "=", True)])
+            & self.env["website"].sale_product_domain()
+        )
+        # Bypass access rules in the subquery to avoid adding `has_published_products = True` twice.
+        subquery = self._search(
+            Domain("product_tmpl_ids", "any", published_products_domain), bypass_access=True
+        )
+        parents_and_self_have_published_products = SQL(
+            "SELECT unnest(string_to_array(left(c.parent_path, -1), '/'))::integer FROM %s c",
+            subquery.subselect(subquery.table.parent_path),
+        )
+
+        return Domain("id", "any", parents_and_self_have_published_products)
 
     # === BUSINESS METHODS === #
 
