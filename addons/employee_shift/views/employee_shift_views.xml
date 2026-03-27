@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_employee_shift_tree" model="ir.ui.view">
+    <field name="name">employee.shift.list</field>
+    <field name="model">employee.shift</field>
+    <field name="arch" type="xml">
+      <list string="Shifts">
+        <field name="name"/>
+        <field name="start_datetime"/>
+        <field name="end_datetime"/>
+        <field name="employee_ids"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_employee_shift_form" model="ir.ui.view">
+    <field name="name">employee.shift.form</field>
+    <field name="model">employee.shift</field>
+    <field name="arch" type="xml">
+      <form string="Employee Shift">
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="employee_ids" widget="many2many_tags"/>
+            <field name="start_datetime"/>
+            <field name="end_datetime"/>
+            <field name="color" widget="color"/>
+            <button name="action_open_week_wizard" type="object" string="Create for Range" class="btn-secondary"/>
+          </group>
+          <notebook>
+            <page string="Discussion">
+              <field name="message_follower_ids"/>
+              <field name="message_ids"/>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_employee_shift_calendar" model="ir.ui.view">
+    <field name="name">employee.shift.calendar</field>
+    <field name="model">employee.shift</field>
+    <field name="arch" type="xml">
+      <calendar string="Employee Shifts" date_start="start_datetime" date_stop="end_datetime" color="color">
+        <field name="display_name"/>
+        <field name="employee_ids"/>
+      </calendar>
+    </field>
+  </record>
+
+  <record id="action_employee_shifts" model="ir.actions.act_window">
+    <field name="name">Shifts</field>
+    <field name="res_model">employee.shift</field>
+    <field name="view_mode">list,form,calendar</field>
+    <field name="view_id" ref="view_employee_shift_tree"/>
+  </record>
+
+  <menuitem id="menu_employee_shift_root" name="Employee Shift" sequence="30"/>
+  <menuitem id="menu_employee_shift" name="Shifts" parent="menu_employee_shift_root" action="action_employee_shifts"/>
+
+  <record id="action_employee_my_shifts" model="ir.actions.act_window">
+    <field name="name">My Shifts</field>
+    <field name="res_model">employee.shift</field>
+    <field name="view_mode">list,calendar</field>
+    <field name="domain">[('employee_ids.user_id','=',uid)]</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">Create your shifts here.</p>
+    </field>
+  </record>
+
+  <menuitem id="menu_employee_my_shifts" name="My Shifts" parent="menu_employee_shift_root" action="action_employee_my_shifts"/>
+
+  <!-- Wizard form view -->
+  <record id="view_shift_week_wizard_form" model="ir.ui.view">
+    <field name="name">shift.week.wizard.form</field>
+    <field name="model">shift.week.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Create Shifts for Date Range">
+        <sheet>
+          <group>
+            <field name="shift_id" invisible="1"/>
+            <field name="start_date"/>
+            <field name="end_date"/>
+          </group>
+          <footer>
+            <button string="Apply" type="object" name="apply_create" class="btn-primary"/>
+            <button string="Cancel" class="btn-secondary" special="cancel"/>
+          </footer>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_shift_week_wizard" model="ir.actions.act_window">
+    <field name="name">Create Shifts for Range</field>
+    <field name="res_model">shift.week.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_shift_week_wizard_form"/>
+    <field name="target">new</field>
+  </record>
+</odoo>
