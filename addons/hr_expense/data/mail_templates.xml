@@ -51,7 +51,6 @@
                                 </table>
                             </div>
                             <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
-<<<<<<< HEAD
                             <p>Hi <t t-out="manager_name"/>,</p>
                             <p>A new expense is waiting for your approval in Odoo.</p>
                             <p>You currently have <strong t-out="expenses_count"/> <strong>expenses</strong> pending approval, from:</p>
@@ -64,13 +63,6 @@
                             <t t-if="user.signature">
                                 <div>--<br/><t t-out="user.signature"/></div>
                             </t>
-=======
-                            <p>Dear <t t-out="manager_name"/>,</p>
-                            <p>New expenses are waiting for your approval. You can Review them by following this link.</p>
-                            <br/>
-                            <a t-att-href="url" style="padding: 8px 12px; font-size: 12px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border: 0px solid {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px">View expenses</a>
-                            <br/><br/>
->>>>>>> a9b52daf3511 (Fix the colors of email buttons to use company settings)
                             <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
                             <table style="width: 100%;">
                                 <tr>
