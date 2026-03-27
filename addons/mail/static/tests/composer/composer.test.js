@@ -1627,9 +1627,9 @@ test("html composer: basic rendering", async () => {
         document,
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
-    await htmlInsertText(editor, "Test ");
+    await htmlInsertText(editor, " Test");
     composerService.setTextComposer();
-    await contains("textarea.o-mail-Composer-input", { value: "Test Hello World!" });
+    await contains("textarea.o-mail-Composer-input", { value: "Hello World! Test" });
     await contains(".o-mail-Composer-html.odoo-editor-editable", { count: 0 });
 });
 
