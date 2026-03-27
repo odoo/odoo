@@ -95,6 +95,7 @@ __all__ = [
     'split_every',
     'str2bool',
     'street_split',
+    'thread_time',
     'topological_sort',
     'unique',
     'verify_hash_signed',
@@ -116,6 +117,7 @@ NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
 # ensure we have a non patched time for query times when using freezegun
 real_time = time.time.__call__  # type: ignore
+thread_time = time.thread_time
 
 
 class Sentinel(enum.Enum):
@@ -845,20 +847,23 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
         if not thread_idents or threadId in thread_idents:
             thread_info = threads_info.get(threadId, {})
             query_time = thread_info.get('query_time')
-            perf_t0 = thread_info.get('perf_t0')
-            remaining_time = None
-            if query_time is not None and perf_t0:
-                remaining_time = '%.3f' % (real_time() - perf_t0 - query_time)
+            perf_u0, perf_w0 = thread_info.get('perf_t0', (0, 0))
+            user_time, wall_time = None, None
+            if query_time is not None and perf_w0:
+                user_time = '%.3f' % (thread_time() - perf_u0)
+                wall_time = '%.3f' % (real_time() - perf_w0)
                 query_time = '%.3f' % query_time
             # qc:query_count qt:query_time pt:python_time (aka remaining time)
-            code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s) (qc:%s qt:%s pt:%s)" %
+            code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s) (qc:%s qt:%s ut:%s, wt:%s)" %
                         (thread_info.get('repr', threadId),
                          thread_info.get('dbname', 'n/a'),
                          thread_info.get('uid', 'n/a'),
                          thread_info.get('url', 'n/a'),
                          thread_info.get('query_count', 'n/a'),
                          query_time or 'n/a',
-                         remaining_time or 'n/a'))
+                         user_time or 'n/a',
+                         wall_time or 'n/a',
+                         ))
 
             env = find_env(stack)
             if env:

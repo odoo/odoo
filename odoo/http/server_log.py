@@ -24,7 +24,7 @@ from odoo.netsvc import (
     ColoredFormatter,
 )
 from odoo.tools import frozendict
-from odoo.tools.misc import real_time
+from odoo.tools.misc import real_time, thread_time
 
 from .requestlib import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE
 
@@ -33,7 +33,7 @@ __all__ = (
     'reset_thread_info',
 )
 
-_HTTP_FORMAT = '%(remote_addr)s %(ident)s %(http_auth)s [%(date)s] "%(http_request_line)s" %(http_response_status)s %(http_response_body)s %(query_count)s %(query_time)s %(remaining_time)s %(cursor_mode)s'
+_HTTP_FORMAT = '%(remote_addr)s %(ident)s %(http_auth)s [%(date)s] "%(http_request_line)s" %(http_response_status)s %(http_response_body)s %(query_count)s %(query_time)s %(user_time)s %(wall_time)s %(cursor_mode)s'
 _HTTP_FORMAT_HEADERS = _HTTP_FORMAT + "\n%(http_headers)s"
 
 # All the fallback values for _HTTP_FORMAT(_HEADERS)?
@@ -47,7 +47,8 @@ _HTTP_EXTRA = frozendict({
     'http_response_body': '-',
     'query_count': 0,
     'query_time': 0.0,
-    'remaining_time': 0.0,  # total time - query time
+    'user_time': 0.0,
+    'wall_time': 0.0,
     'cursor_mode': '-',
     'http_headers': (),
 })
@@ -65,7 +66,7 @@ _NO_BODY_STATUS = {
 
 
 def reset_thread_info():
-    t0 = real_time()
+    t0 = (thread_time(), real_time())
     current_thread = threading.current_thread()
     current_thread.query_count = 0
     current_thread.query_time = 0
@@ -88,12 +89,15 @@ def http_log(
 
     now = time.time()
     real_now = real_time()
+    thread_now = thread_time()
     current_thread = threading.current_thread()
+    t0_user, t0_wall = current_thread.perf_t0
     extra = dict(
         _HTTP_EXTRA,
         query_count=current_thread.query_count,
         query_time=current_thread.query_time,
-        remaining_time=real_now - current_thread.perf_t0 - current_thread.query_time,
+        wall_time=real_now - t0_wall,
+        user_time=thread_now - t0_user,
         date=format_date_time(now),
     )
     if th_cursor_mode := current_thread.cursor_mode:
@@ -134,7 +138,8 @@ def http_log(
     if _has_color():
         extra['query_count'] = _colorize_query_count(extra['query_count'])
         extra['query_time'] = _colorize_query_time(extra['query_time'])
-        extra['remaining_time'] = _colorize_remaining_time(extra['remaining_time'])
+        extra['user_time'] = _colorize_user_time(extra['user_time'])
+        extra['wall_time'] = _colorize_wall_time(extra['wall_time'])
         if extra['http_response_status'] != '-':
             extra['http_request_line'] = _colorize_request_line(
                 extra['http_request_line'], extra['http_response_status'])
@@ -144,7 +149,8 @@ def http_log(
         extra['ident'] = _colorize_ident(extra['ident'])
     else:
         extra['query_time'] = round(extra['query_time'], 3)
-        extra['remaining_time'] = round(extra['remaining_time'], 3)
+        extra['user_time'] = round(extra['user_time'], 3)
+        extra['wall_time'] = round(extra['wall_time'], 3)
 
     if extra['http_headers'] and _logger_headers.isEnabledFor(logging.DEBUG):
         extra['http_headers'] = pprint.pformat(list(extra['http_headers']))
@@ -202,7 +208,8 @@ def _colorize_range(value: float, format: str, low: float, high: float) -> str:
 
 _colorize_query_count = functools.partial(_colorize_range, format='%d', low=100, high=1000)
 _colorize_query_time = functools.partial(_colorize_range, format='%.3f', low=.1, high=3)
-_colorize_remaining_time = functools.partial(_colorize_range, format='%.3f', low=1, high=5)
+_colorize_user_time = functools.partial(_colorize_range, format='%.3f', low=1, high=5)
+_colorize_wall_time = functools.partial(_colorize_range, format='%.3f', low=2, high=5)
 
 
 def _colorize_body_length(body_length: int | typing.Literal['-', 'stream']) -> str:
