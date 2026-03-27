@@ -1247,15 +1247,6 @@ class TestOrmAttachmentHost(models.Model):
     )
 
 
-class DecimalPrecisionTest(models.Model):
-    _name = 'decimal.precision.test'
-    _description = 'Decimal Precision Test'
-
-    float = fields.Float()
-    float_2 = fields.Float(digits=(16, 2))
-    float_4 = fields.Float(digits=(16, 4))
-
-
 class TestOrmModel_A(models.Model):
     _name = 'test_orm.model_a'
     _description = 'Model A'
