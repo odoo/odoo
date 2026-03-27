@@ -291,15 +291,15 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        query_count = 51  # To increase this number you must ask the permission to al
+        query_count = 45  # To increase this number you must ask the permission to al
         queries = {
             'orm_signaling_registry': 1,
             'website': 2,
             'res_company': 2,
             'product_pricelist': 4,
-            'product_template': 5,
+            'product_template': 3,
             'product_tag': 1,
-            'product_public_category': 6,
+            'product_public_category': 2,
             'product_product': 1,
             'product_template_attribute_line': 3,
             'res_users': 1,
@@ -334,8 +334,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             queries['account_tax_repartition_line'] = 2
 
         if self._has_demo_data():
-            query_count += 5
-            queries['product_template'] += 1
+            query_count += 4
             queries['product_product'] += 2
             queries['ir_attachment'] += 1
             queries['product_ribbon'] += 1
