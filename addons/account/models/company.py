@@ -728,6 +728,10 @@ class ResCompany(models.Model):
         locks.sort()
         return locks
 
+    def _check_existing_companies_needs_l10n(self):
+        res = super()._check_existing_companies_needs_l10n()
+        return res or not self.root_id._existing_accounting() and self.chart_template == 'generic_coa'
+
     def write(self, vals):
         self._validate_locks(vals)
 
@@ -968,7 +972,7 @@ class ResCompany(models.Model):
             env = self.env
             env.flush_all()
             env.transaction.reset()
-            for company in self.filtered(lambda c: c.country_id and not c.chart_template):
+            for company in self.filtered(lambda c: c.country_id and (not c.chart_template or (not c.root_id._existing_accounting() and c.chart_template == 'generic_coa'))):
                 template_code = company.parent_id.chart_template or self.env['account.chart.template']._guess_chart_template(company.country_id)
                 if template_code != 'generic_coa':
                     @self.env.cr.precommit.add
