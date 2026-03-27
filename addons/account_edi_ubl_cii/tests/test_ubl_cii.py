@@ -6,6 +6,7 @@ from unittest import SkipTest
 from unittest.mock import patch
 
 from odoo import fields, Command
+from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
@@ -52,6 +53,23 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         return self.env['account.journal'] \
             .with_context(default_journal_id=journal.id) \
             ._create_document_from_attachment(attachment.id)
+
+    def create_field(self, model_name, field_name, field_datatype):
+        def field_exists(model_name, field_name, field_datatype):
+            return bool(
+                self.env['ir.model.fields'].sudo()
+                    .search([('model', '=', model_name), ('name', '=', field_name), ('ttype', '=', field_datatype)], limit=1)
+            )
+        IrModelFields = self.env['ir.model.fields'].with_context(studio=True)
+        model = self.env['ir.model'].search([('model', '=', model_name)])
+        # This field may already exist if created by another test.
+        # If that wasn't the case, we recreate it.
+        if not field_exists(model_name, field_name, field_datatype):
+            IrModelFields.create([{
+                'ttype': field_datatype,
+                'model_id': model.id,
+                'name': field_name,
+            }])
 
     def test_export_import_product(self):
         products = self.env['product.product'].create([{
@@ -980,6 +998,155 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         partner_bank.active = True
         self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number])
         self.assertEqual(invoice.partner_bank_id, partner_bank)
+
+    def test_import_purchase_document_skip_optional_field_when_not_created(self):
+        """Test that we skip an optional field when it's not created using Studio"""
+        for doc_type, line_tag in [('bill', 'InvoiceLine'), ('credit_note', 'CreditNoteLine')]:
+            file_path = f"{self.test_module}/tests/test_files/bis3_{doc_type}_example_with_additional_ubl_fields.xml"
+            with file_open(file_path, 'rb') as file:
+                xml_attachment = self.env['ir.attachment'].create({
+                    'mimetype': 'application/xml',
+                    'name': 'test_invoice.xml',
+                    'raw': file.read(),
+                })
+
+            xml_tree = etree.fromstring(xml_attachment.raw)
+            ns = {
+                'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+                'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            }
+            tax_point_date = xml_tree.find('.//cbc:TaxPointDate', ns)
+            self.assertTrue(tax_point_date.text)
+
+            order_line_reference_id = xml_tree.find(f'.//cac:{line_tag}/cac:OrderLineReference/cbc:LineID', ns)
+            self.assertTrue(order_line_reference_id.text)
+
+            # We create the optional field in the invoice model to not raise an AttributeError
+            optional_invoice_field_name = 'x_studio_peppol_tax_point_date'  # could be used in both invoice & credit note
+            optional_invoice_field_datatype = (PEPPOL_INVOICE_OPTIONAL_FIELDS | PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS)[optional_invoice_field_name]['datatype']
+            self.create_field('account.move', optional_invoice_field_name, optional_invoice_field_datatype)
+            self.assertIn(optional_invoice_field_name, self.env['account.move']._fields)
+
+            # We create the optional field in the invoice line model to not raise an AttributeError
+            optional_invoice_line_field_name = 'x_studio_peppol_order_line_reference_id'  # could be used in both invoice & credit note
+            optional_invoice_line_field_datatype = (PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS | PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS)[optional_invoice_line_field_name]['datatype']
+            self.create_field('account.move.line', optional_invoice_line_field_name, optional_invoice_line_field_datatype)
+            self.assertIn(optional_invoice_line_field_name, self.env['account.move.line']._fields)
+
+            # Let's assume the field wasn't created using Studio.
+            with patch('odoo.addons.account_edi_ubl_cii.models.account_edi_common.AccountEdiCommon._check_field_exists', return_value=False):
+                move = self.import_attachment(xml_attachment)
+
+            self.assertFalse(move[optional_invoice_field_name])
+            self.assertFalse(move.invoice_line_ids[optional_invoice_line_field_name])
+
+    def test_import_bill_with_optional_fields(self):
+        """Test that optional invoice and invoice lines custom fields are imported correctly"""
+        file_path = f"{self.test_module}/tests/test_files/bis3_bill_example_with_additional_ubl_fields.xml"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        ns = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', ns)
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', ns)
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', ns)
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', ns)
+        project_reference_id = xml_tree.find('.//cac:ProjectReference/cbc:ID', ns)
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', ns)
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', ns)
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', ns)
+        order_line_reference_id = xml_tree.find('.//cac:InvoiceLine/cac:OrderLineReference/cbc:LineID', ns)
+        buyers_item_id = xml_tree.find('.//cac:InvoiceLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', ns)
+
+        invoice_fields = {
+            'x_studio_peppol_tax_point_date': tax_point_date.text,
+            'x_studio_peppol_contract_document_reference_id': contract_document_reference_id.text,
+            'x_studio_peppol_despatch_document_reference_id': despatch_document_reference_id.text,
+            'x_studio_peppol_accounting_cost': accounting_cost.text,
+            'x_studio_peppol_order_reference_id': project_reference_id.text,
+            'x_studio_peppol_invoice_period_start_date': invoice_period_start_date.text,
+            'x_studio_peppol_invoice_period_end_date': invoice_period_end_date.text,
+            'x_studio_peppol_project_reference_id': order_reference_id.text,
+        }
+        line_fields = {
+            'x_studio_peppol_order_line_reference_id': order_line_reference_id.text,
+            'x_studio_peppol_buyers_item_id': buyers_item_id.text,
+        }
+
+        for invoice_field_name in invoice_fields:
+            invoice_field_datatype = PEPPOL_INVOICE_OPTIONAL_FIELDS[invoice_field_name]['datatype']
+            self.create_field('account.move', invoice_field_name, invoice_field_datatype)
+
+        for line_field_name in line_fields:
+            line_field_datatype = PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS[line_field_name]['datatype']
+            self.create_field('account.move.line', line_field_name, line_field_datatype)
+
+        bill = self.import_attachment(xml_attachment)
+        for invoice_field, invoice_value in invoice_fields.items():
+            self.assertEqual(str(bill[invoice_field]), invoice_value)
+        for line_field, line_value in line_fields.items():
+            self.assertEqual(str(bill.invoice_line_ids[line_field]), line_value)
+
+    def test_import_credit_note_with_optional_fields(self):
+        """Test that optional credit note and credit note lines custom fields are imported correctly"""
+        file_path = f"{self.test_module}/tests/test_files/bis3_credit_note_example_with_additional_ubl_fields.xml"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_credit_note.xml',
+                'raw': file.read(),
+            })
+
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        ns = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', ns)
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', ns)
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', ns)
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', ns)
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', ns)
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', ns)
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', ns)
+        order_line_reference_id = xml_tree.find('.//cac:CreditNoteLine/cac:OrderLineReference/cbc:LineID', ns)
+        buyers_item_id = xml_tree.find('.//cac:CreditNoteLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', ns)
+
+        invoice_fields = {
+            'x_studio_peppol_tax_point_date': tax_point_date.text,
+            'x_studio_peppol_contract_document_reference_id': contract_document_reference_id.text,
+            'x_studio_peppol_despatch_document_reference_id': despatch_document_reference_id.text,
+            'x_studio_peppol_accounting_cost': accounting_cost.text,
+            'x_studio_peppol_order_reference_id': order_reference_id.text,
+            'x_studio_peppol_invoice_period_start_date': invoice_period_start_date.text,
+            'x_studio_peppol_invoice_period_end_date': invoice_period_end_date.text,
+        }
+        line_fields = {
+            'x_studio_peppol_order_line_reference_id': order_line_reference_id.text,
+            'x_studio_peppol_buyers_item_id': buyers_item_id.text,
+        }
+
+        for invoice_field_name in invoice_fields:
+            invoice_field_datatype = PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS[invoice_field_name]['datatype']
+            self.create_field('account.move', invoice_field_name, invoice_field_datatype)
+
+        for line_field_name in line_fields:
+            line_field_datatype = PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS[line_field_name]['datatype']
+            self.create_field('account.move.line', line_field_name, line_field_datatype)
+
+        credit_note = self.import_attachment(xml_attachment)
+        for invoice_field, invoice_value in invoice_fields.items():
+            self.assertEqual(str(credit_note[invoice_field]), invoice_value)
+        for line_field, line_value in line_fields.items():
+            self.assertEqual(str(credit_note.invoice_line_ids[line_field]), line_value)
 
     def test_payment_terms_immediate_in_cii_xml(self):
         self.partner_a.ubl_cii_format = 'facturx'

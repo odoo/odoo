@@ -4,6 +4,7 @@ from lxml import etree
 
 from odoo import models, _
 from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
 UBL_NAMESPACES = {
     'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
@@ -835,6 +836,47 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'zip_code': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:PostalZone', tree),
         }
 
+    def _import_retrieve_additional_fields_vals(self, invoice, tree):
+        move_type = invoice.move_type
+        if move_type == 'in_invoice':
+            invoice_fields = PEPPOL_INVOICE_OPTIONAL_FIELDS
+            line_fields = PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS
+        elif move_type == 'in_refund':
+            invoice_fields = PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS
+            line_fields = PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
+
+        vals = {
+            'account.move': [],
+            'account.move.line': [],
+        }
+        # Header
+        for field_name, config in invoice_fields.items():
+            node_value = self._find_value(
+                './/' + '/'.join(config.get('path')),
+                tree
+            )
+            if not node_value:
+                continue
+            vals['account.move'].append({
+                'field_name': field_name,
+                'field_datatype': config.get('datatype'),
+                'field_value': node_value,
+            })
+        # Lines
+        for field_name, config in line_fields.items():
+            node_value = self._find_value(
+                './/' + '/'.join(config.get('path')),
+                tree
+            )
+            if not node_value:
+                continue
+            vals['account.move.line'].append({
+                'field_name': field_name,
+                'field_datatype': config.get('datatype'),
+                'field_value': node_value,
+            })
+        return vals
+
     def _import_fill_invoice_form(self, invoice, tree, qty_factor):
         logs = []
 
@@ -970,6 +1012,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         payable_rounding_node = tree.find('./{*}LegalMonetaryTotal/{*}PayableRoundingAmount')
         logs += self._import_rounding_amount(invoice, payable_rounding_node, qty_factor)
+
+        # ==== Additional fields ====
+        if invoice.is_purchase_document():
+            additional_fields_vals = self._import_retrieve_additional_fields_vals(invoice, tree)
+            self._import_additional_fields(invoice, additional_fields_vals)
 
         return logs
 

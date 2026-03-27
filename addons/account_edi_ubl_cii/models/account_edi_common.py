@@ -5,6 +5,7 @@ from odoo.tools import float_compare, float_is_zero, float_repr, find_xml_value,
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.zeep import Client
+from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import get_field_label
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -418,6 +419,67 @@ class AccountEdiCommon(models.AbstractModel):
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
 
         return True
+
+    def _check_field_exists(self, model_name, field_name, field_datatype):
+        return bool(
+            self.env['ir.model.fields'].sudo()
+                .search([('model', '=', model_name), ('name', '=', field_name), ('ttype', '=', field_datatype)], limit=1)
+        )
+
+    def _import_additional_fields(self, invoice, vals):
+        """
+        Import additional (non-standard) Peppol fields into an invoice.
+
+        The input `vals` is grouped by model (e.g. 'account.move', 'account.move.line')
+        and contains field definitions (name, datatype, value).
+
+        Only existing fields are written (they must be pre-created, via Studio).
+        Missing fields are ignored and reported in the invoice chatter.
+
+        :param invoice: account.move record
+        :param vals: dict of field definitions by model
+        :return: None
+        """
+        vals_to_write = {}
+        missing_fields = {}
+        for model_name, fields in vals.items():
+            for field in fields:
+                field_name = field['field_name']
+                if not self._check_field_exists(model_name, field_name, field['field_datatype']):
+                    missing_fields.setdefault(model_name, []).append(field_name)
+                    continue
+
+                vals_to_write.setdefault(model_name, {}).update({
+                    field_name: field['field_value']
+                })
+
+        for model_name, fields in vals_to_write.items():
+            record = invoice if model_name == 'account.move' else invoice.invoice_line_ids
+            record.write(fields)
+
+        # Show the missing fields in the chatter.
+        for model_name, fields in missing_fields.items():
+            missing_additional_fields_html = Markup().join(
+                Markup("<li>%s</li>") % get_field_label(field_name)
+                for field_name in fields
+            )
+            documentation_link = Markup(
+                "<a href='https://www.odoo.com/documentation/master/applications/finance/accounting/customer_invoices/electronic_invoicing.html#add-extra-fields' target='_blank'>%s</a>"
+            ) % _('Peppol additional fields')
+
+            error_msg = Markup().join([
+                Markup("<b>[%s]</b> %s") % (
+                    _('INVOICE LINE') if model_name == 'account.move.line' else _('INVOICE'),
+                    _('Some Peppol fields were found in the XML but could not be created on the invoice:')
+                ),
+                Markup("<ul>%s</ul>") % missing_additional_fields_html,
+                Markup("<p>%s</p>") % _("Maybe consider creating them via Studio, or check if they have the correct datatype."),
+                Markup("<p>%s %s</p>") % (
+                    _('For more details, see the documentation:'),
+                    documentation_link
+                ),
+            ])
+            invoice.message_post(body=error_msg)
 
     def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False, street=False, street2=False, city=False, zip_code=False):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
