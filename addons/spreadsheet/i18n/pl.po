@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-01-14 17:56+0000\n"
+"PO-Revision-Date: 2026-03-28 21:00+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-2/"
 "spreadsheet/pl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -32,7 +32,7 @@ msgid ""
 " A string, possible empty, or a reference to a valid string. If empty, the "
 "text will be simply concatenated."
 msgstr ""
-"Ciąg znaków, możliwe, że pusty, lub odniesienie do prawidłowego ciągu "
+" Ciąg znaków, możliwe, że pusty, lub odniesienie do prawidłowego ciągu "
 "znaków. Jeśli pusty, tekst zostanie po prostu połączony."
 
 #. module: spreadsheet
@@ -117,7 +117,7 @@ msgstr "%(minute_number)s'"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(newPivotName)s (Pivot #%(formulaId)s)"
-msgstr "%(newPivotName)s (Pivot #%(formulaId)s)"
+msgstr "%(newPivotName)s (Tabela przestawna #%(formulaId)s)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -621,7 +621,7 @@ msgstr "Wartość bezwzględna liczby."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
 msgid "Access Error"
-msgstr ""
+msgstr "Błąd dostępu"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2105,7 +2105,7 @@ msgstr "Porównuje dwie wartości liczbowe, zwracając 1, jeśli są równe."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Compute from totals"
-msgstr ""
+msgstr "Oblicz z sum"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3834,6 +3834,8 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
+"Funkcja [[FUNCTION_NAME]] oczekuje wartości liczbowych dla %s, ale otrzymała "
+"wartość logiczną."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3841,6 +3843,8 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
 msgstr ""
+"Funkcja [[FUNCTION_NAME]] oczekuje wartości liczbowych dla %s, ale otrzymała "
+"ciąg znaków."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3849,6 +3853,8 @@ msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
 "value."
 msgstr ""
+"Funkcja [[FUNCTION_NAME]] oczekuje wartości liczbowych dla %s, ale otrzymała "
+"pustą wartość."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8297,6 +8303,7 @@ msgid ""
 "The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
 "matrices."
 msgstr ""
+"Pierwszy i drugi argument [[FUNCTION_NAME]] muszą być macierzami niepustymi."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8595,7 +8602,7 @@ msgstr "Wartość future_value (%s) musi być ściśle dodatnia."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The header row of a table can't be moved."
-msgstr ""
+msgstr "Wiersza nagłówkowego tabeli nie można przesuwać."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11477,7 +11484,7 @@ msgstr "Zmiana wartości z wartości klucza"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value for parameter %s is missing in [[FUNCTION_NAME]]."
-msgstr ""
+msgstr "W [[FUNCTION_NAME]] brakuje wartości parametru %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12067,6 +12074,7 @@ msgstr "Nie możesz tworzyć nakładających się na siebie tabeli."
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Nie masz uprawnień do eksportowania danych. Skontaktuj się z administratorem."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12099,6 +12107,8 @@ msgid ""
 "[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
 "empty matrix."
 msgstr ""
+"[[FUNCTION_NAME]] oczekuje, że podane wartości %(argName)s będą niepustą "
+"macierzą."
 
 #. module: spreadsheet
 #. odoo-javascript
