@@ -76,7 +76,6 @@
             'project/static/src/js/tours/project.js',
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
-            'project/static/src/scss/project_update_controller.scss',
             'project/static/src/scss/project_widgets.scss',
             'project/static/src/xml/**/*',
             'project/static/src/webclient/**/*',
