@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="homepage" inherit_id="website.homepage" name="SEMSA Homepage">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="oe_structure oe_empty semsa-homepage">
+                <section id="inicio" class="semsa-shell">
+                    <header class="semsa-topbar">
+                        <a href="#inicio" class="semsa-brand">
+                            <img
+                                src="/theme_semsa/static/src/img/brasao-borba.svg"
+                                alt="Brasao do Municipio de Borba"
+                                class="semsa-brand__crest"
+                            />
+                            <div class="semsa-brand__text">
+                                <span class="semsa-kicker">SEMSA</span>
+                                <strong>Municipio de Borba</strong>
+                                <small>Saude, cidadania e servicos publicos</small>
+                            </div>
+                        </a>
+                        <nav class="semsa-nav" aria-label="Navegacao principal">
+                            <a href="#inicio">Inicio</a>
+                            <a href="#cidade">A Cidade</a>
+                            <a href="#servicos">Servicos</a>
+                            <a href="#turismo">Turismo</a>
+                            <a href="#noticias">Noticias</a>
+                            <a href="#contato">Contato</a>
+                        </nav>
+                    </header>
+
+                    <div class="semsa-hero-grid">
+                        <aside class="semsa-identity-card">
+                            <div class="semsa-identity-card__paper">
+                                <img
+                                    src="/theme_semsa/static/src/img/brasao-borba.svg"
+                                    alt="Brasao de Borba"
+                                    class="semsa-identity-card__crest"
+                                />
+                                <div id="cidade" class="semsa-story-card">
+                                    <div class="semsa-story-card__thumb semsa-thumb semsa-thumb--harbor"/>
+                                    <div class="semsa-story-card__body">
+                                        <span class="semsa-eyebrow">Conheca Borba</span>
+                                        <h2>O coracao do Madeira com fe, cultura e acolhimento.</h2>
+                                        <p>
+                                            Situada as margens do rio Madeira, Borba combina patrimonio,
+                                            natureza e servicos publicos com uma identidade amazonica
+                                            forte e calor humano.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <section class="semsa-hero-card">
+                            <div class="semsa-hero-art">
+                                <img
+                                    src="/theme_semsa/static/src/img/hero-painting.svg"
+                                    alt="Ilustracao artistica da orla, basilica e paisagem de Borba"
+                                />
+                                <div class="semsa-hero-overlay">
+                                    <span class="semsa-eyebrow">Bem-vindo a Borba</span>
+                                    <h1>A cidade de Sao Antonio com identidade amazonica e presenca institucional forte.</h1>
+                                    <p>
+                                        Um portal publico com visual proprio, linguagem cultural e acesso rapido
+                                        aos servicos municipais mais importantes.
+                                    </p>
+                                    <div class="semsa-hero-actions">
+                                        <a href="#servicos" class="btn btn-primary semsa-btn-main">Conheca os servicos</a>
+                                        <a href="/contactus" class="btn btn-secondary semsa-btn-secondary">Fale com a SEMSA</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <section id="servicos" class="semsa-section">
+                        <div class="semsa-section__heading">
+                            <span class="semsa-eyebrow">Servicos Municipais</span>
+                            <h2>Acesso rapido aos principais eixos da gestao publica.</h2>
+                        </div>
+                        <div class="semsa-services-grid">
+                            <article class="semsa-service-card">
+                                <i class="fa fa-heartbeat" aria-hidden="true"/>
+                                <h3>Saude</h3>
+                                <p>Informacoes de atendimento, programas, campanhas e orientacoes publicas.</p>
+                            </article>
+                            <article class="semsa-service-card">
+                                <i class="fa fa-graduation-cap" aria-hidden="true"/>
+                                <h3>Educacao</h3>
+                                <p>Noticias, matriculas, rede municipal e iniciativas para estudantes e familias.</p>
+                            </article>
+                            <article class="semsa-service-card">
+                                <i class="fa fa-building-o" aria-hidden="true"/>
+                                <h3>Infraestrutura</h3>
+                                <p>Obras, melhorias urbanas, mobilidade e acompanhamento de entregas publicas.</p>
+                            </article>
+                            <article class="semsa-service-card">
+                                <i class="fa fa-search" aria-hidden="true"/>
+                                <h3>Transparencia</h3>
+                                <p>Consulta de informacoes institucionais, publicacoes e canais de controle social.</p>
+                            </article>
+                            <article class="semsa-service-card">
+                                <i class="fa fa-map-signs" aria-hidden="true"/>
+                                <h3>Turismo</h3>
+                                <p>Roteiros, pontos de interesse e experiencias ligadas ao territorio borbense.</p>
+                            </article>
+                            <article class="semsa-service-card">
+                                <i class="fa fa-bullhorn" aria-hidden="true"/>
+                                <h3>Atendimento</h3>
+                                <p>Canais digitais para contato, solicitacoes, orientacoes e escuta institucional.</p>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section id="turismo" class="semsa-section semsa-section--gallery">
+                        <div class="semsa-section__heading">
+                            <span class="semsa-eyebrow">Turismo e Eventos</span>
+                            <h2>Uma paisagem cultural viva, entre agua, patrimonio e celebracao.</h2>
+                        </div>
+                        <div class="semsa-gallery-grid">
+                            <article class="semsa-gallery-card semsa-gallery-card--large">
+                                <div class="semsa-thumb semsa-thumb--basilica"/>
+                                <div class="semsa-gallery-card__content">
+                                    <h3>Basilica de Sao Antonio</h3>
+                                    <p>Icone espiritual e arquitetonico do municipio, presente na memoria visual da cidade.</p>
+                                </div>
+                            </article>
+                            <article class="semsa-gallery-card">
+                                <div class="semsa-thumb semsa-thumb--orla"/>
+                                <div class="semsa-gallery-card__content">
+                                    <h3>Orla do Rio Madeira</h3>
+                                    <p>Paisagem ribeirinha, circulacao de embarcacoes e vida publica a beira do rio.</p>
+                                </div>
+                            </article>
+                            <article class="semsa-gallery-card">
+                                <div class="semsa-thumb semsa-thumb--pesca"/>
+                                <div class="semsa-gallery-card__content">
+                                    <h3>Pesca Esportiva</h3>
+                                    <p>Natureza exuberante, navegacao e experiencias ligadas a economia local.</p>
+                                </div>
+                            </article>
+                            <article class="semsa-gallery-card">
+                                <div class="semsa-thumb semsa-thumb--festa"/>
+                                <div class="semsa-gallery-card__content">
+                                    <h3>Festa de Santo Antonio</h3>
+                                    <p>Calendario cultural com forte participacao popular, fe e identidade borbense.</p>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section id="noticias" class="semsa-section">
+                        <div class="semsa-section__heading">
+                            <span class="semsa-eyebrow">Ultimas Noticias</span>
+                            <h2>Espaco editorial pronto para o CMS do site.</h2>
+                        </div>
+                        <div class="semsa-news-grid">
+                            <article class="semsa-news-card">
+                                <span class="semsa-news-card__date">11-01-2026</span>
+                                <h3>Basilica de Sao Antonio recebe nova programacao cultural.</h3>
+                                <p>Atualizacao editorial de exemplo para destacar eventos, comunicados e a agenda do municipio.</p>
+                            </article>
+                            <article class="semsa-news-card">
+                                <span class="semsa-news-card__date">12-01-2026</span>
+                                <h3>Orla do Rio Madeira ganha novas acoes de acolhimento ao visitante.</h3>
+                                <p>Bloco preparado para futuras noticias reais publicadas diretamente no CMS do website.</p>
+                            </article>
+                            <article class="semsa-news-card">
+                                <span class="semsa-news-card__date">13-01-2026</span>
+                                <h3>Festa de Santo Antonio fortalece turismo, cultura e economia local.</h3>
+                                <p>Cards editoriais com tipografia limpa e contraste alto para leitura em qualquer dispositivo.</p>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section id="contato" class="semsa-footer-panel">
+                        <div class="semsa-footer-panel__brand">
+                            <img
+                                src="/theme_semsa/static/src/img/brasao-borba.svg"
+                                alt="Brasao de Borba reduzido"
+                            />
+                            <div>
+                                <span class="semsa-eyebrow">Contato</span>
+                                <h2>Prefeitura e SEMSA de Borba</h2>
+                                <p>Praca Sao Antonio, 100 - Centro - Borba - AM</p>
+                                <p>(93) 95568-2965</p>
+                            </div>
+                        </div>
+                        <div class="semsa-footer-panel__links">
+                            <div>
+                                <h3>Links uteis</h3>
+                                <a href="#servicos">Servicos</a>
+                                <a href="#noticias">Noticias</a>
+                                <a href="/contactus">Fale conosco</a>
+                            </div>
+                            <div>
+                                <h3>Destaques</h3>
+                                <a href="#cidade">Conheca Borba</a>
+                                <a href="#turismo">Turismo</a>
+                                <a href="#inicio">Voltar ao topo</a>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </div>
+        </xpath>
+    </template>
+</odoo>

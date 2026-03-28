@@ -1,0 +1,575 @@
+:root {
+    --semsa-ink: #123261;
+    --semsa-blue: #1f69b1;
+    --semsa-sky: #8fcdf0;
+    --semsa-green: #1e6b42;
+    --semsa-gold: #d6a61e;
+    --semsa-orange: #dd6f1f;
+    --semsa-cream: #f6efdf;
+    --semsa-paper: #fbf7eb;
+    --semsa-shadow: 0 24px 60px rgba(18, 50, 97, 0.12);
+    --semsa-card-shadow: 0 16px 30px rgba(18, 50, 97, 0.08);
+    --semsa-radius-lg: 28px;
+    --semsa-radius-md: 22px;
+    --semsa-radius-sm: 18px;
+}
+
+#wrapwrap.homepage > header,
+#wrapwrap.homepage > footer {
+    display: none !important;
+}
+
+#wrapwrap.homepage {
+    background:
+        radial-gradient(circle at 12% 12%, rgba(214, 166, 30, 0.07), transparent 22%),
+        radial-gradient(circle at 90% 18%, rgba(31, 105, 177, 0.08), transparent 20%),
+        radial-gradient(circle at 24% 82%, rgba(30, 107, 66, 0.06), transparent 18%),
+        linear-gradient(180deg, #fffaf0 0%, var(--semsa-cream) 100%);
+    color: var(--semsa-ink);
+    overflow-x: clip;
+}
+
+#wrapwrap.homepage #wrap {
+    background-image:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0)),
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.6), transparent 18%),
+        radial-gradient(circle at 70% 75%, rgba(214, 166, 30, 0.06), transparent 16%);
+}
+
+.semsa-homepage {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.semsa-homepage h1,
+.semsa-homepage h2,
+.semsa-homepage h3,
+.semsa-homepage .semsa-nav a {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    letter-spacing: 0.02em;
+}
+
+.semsa-shell {
+    width: min(1380px, calc(100vw - 48px));
+    margin: 0 auto;
+    padding: 24px 0 48px;
+}
+
+.semsa-topbar {
+    position: sticky;
+    top: 16px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    background: rgba(251, 247, 235, 0.92);
+    border: 1px solid rgba(18, 50, 97, 0.08);
+    border-radius: 999px;
+    box-shadow: var(--semsa-card-shadow);
+    backdrop-filter: blur(8px);
+}
+
+.semsa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+}
+
+.semsa-brand:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.semsa-brand__crest {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 auto;
+}
+
+.semsa-brand__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.05;
+}
+
+.semsa-brand__text strong {
+    font-size: 1.25rem;
+}
+
+.semsa-brand__text small {
+    color: rgba(18, 50, 97, 0.72);
+    font-size: 0.82rem;
+}
+
+.semsa-kicker,
+.semsa-eyebrow {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--semsa-blue);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.semsa-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.semsa-nav a {
+    color: var(--semsa-ink);
+    font-size: 1rem;
+    padding: 10px 14px;
+    border-radius: 999px;
+    text-decoration: none;
+}
+
+.semsa-nav a:hover,
+.semsa-nav a:focus {
+    background: rgba(31, 105, 177, 0.08);
+    color: var(--semsa-blue);
+    text-decoration: none;
+}
+
+.semsa-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.96fr) minmax(0, 1.64fr);
+    gap: 28px;
+    align-items: stretch;
+}
+
+.semsa-identity-card,
+.semsa-hero-card,
+.semsa-section,
+.semsa-footer-panel {
+    position: relative;
+}
+
+.semsa-identity-card__paper,
+.semsa-hero-card,
+.semsa-section,
+.semsa-footer-panel {
+    background: rgba(251, 247, 235, 0.74);
+    border: 1px solid rgba(18, 50, 97, 0.08);
+    border-radius: var(--semsa-radius-lg);
+    box-shadow: var(--semsa-shadow);
+}
+
+.semsa-identity-card__paper {
+    height: 100%;
+    padding: 34px 28px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.2)),
+        rgba(251, 247, 235, 0.76);
+}
+
+.semsa-identity-card__crest {
+    width: min(100%, 280px);
+    display: block;
+    margin: 0 auto 28px;
+    filter: drop-shadow(0 12px 24px rgba(18, 50, 97, 0.14));
+}
+
+.semsa-story-card {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+}
+
+.semsa-story-card__body h2 {
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    line-height: 0.98;
+    margin: 0 0 10px;
+}
+
+.semsa-story-card__body p {
+    margin: 0;
+    color: rgba(18, 50, 97, 0.86);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.semsa-hero-card {
+    overflow: hidden;
+}
+
+.semsa-hero-art {
+    position: relative;
+    min-height: 100%;
+}
+
+.semsa-hero-art img {
+    width: 100%;
+    height: 100%;
+    min-height: 620px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.semsa-hero-overlay {
+    position: absolute;
+    inset: auto 36px 36px auto;
+    width: min(100%, 560px);
+    padding: 28px 30px;
+    color: white;
+    border-radius: var(--semsa-radius-md);
+    background:
+        linear-gradient(180deg, rgba(9, 24, 55, 0.32), rgba(9, 24, 55, 0.72)),
+        rgba(9, 24, 55, 0.42);
+    box-shadow: 0 18px 40px rgba(9, 24, 55, 0.32);
+    backdrop-filter: blur(10px);
+}
+
+.semsa-hero-overlay .semsa-eyebrow {
+    color: #ffe39d;
+}
+
+.semsa-hero-overlay h1 {
+    margin: 0 0 14px;
+    font-size: clamp(2.5rem, 4vw, 4.6rem);
+    line-height: 0.95;
+    text-wrap: balance;
+}
+
+.semsa-hero-overlay p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.semsa-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.semsa-btn-main,
+.semsa-btn-secondary {
+    border-radius: 999px !important;
+    padding: 12px 22px !important;
+    font-weight: 700;
+    border-width: 0 !important;
+}
+
+.semsa-btn-main {
+    background: linear-gradient(135deg, var(--semsa-gold), var(--semsa-orange)) !important;
+    color: #10294c !important;
+}
+
+.semsa-btn-secondary {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+}
+
+.semsa-section {
+    padding: 34px 30px;
+    margin-top: 28px;
+}
+
+.semsa-section__heading {
+    max-width: 760px;
+    margin-bottom: 24px;
+}
+
+.semsa-section__heading h2 {
+    margin: 0;
+    font-size: clamp(2rem, 3.2vw, 3.2rem);
+    line-height: 0.98;
+}
+
+.semsa-services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.semsa-service-card {
+    padding: 24px 22px;
+    background: rgba(255, 255, 255, 0.48);
+    border: 1px solid rgba(18, 50, 97, 0.08);
+    border-radius: var(--semsa-radius-md);
+    box-shadow: var(--semsa-card-shadow);
+}
+
+.semsa-service-card i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, rgba(31, 105, 177, 0.14), rgba(214, 166, 30, 0.18));
+    border-radius: 16px;
+    color: var(--semsa-blue);
+    font-size: 1.55rem;
+}
+
+.semsa-service-card h3,
+.semsa-gallery-card__content h3,
+.semsa-news-card h3,
+.semsa-footer-panel h2,
+.semsa-footer-panel h3 {
+    margin: 0 0 10px;
+    line-height: 1;
+}
+
+.semsa-service-card h3 {
+    font-size: 1.45rem;
+}
+
+.semsa-service-card p,
+.semsa-gallery-card__content p,
+.semsa-news-card p,
+.semsa-footer-panel p,
+.semsa-footer-panel a {
+    color: rgba(18, 50, 97, 0.84);
+    line-height: 1.55;
+}
+
+.semsa-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.semsa-gallery-card {
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(18, 50, 97, 0.08);
+    border-radius: var(--semsa-radius-md);
+    box-shadow: var(--semsa-card-shadow);
+}
+
+.semsa-gallery-card--large {
+    grid-column: span 2;
+}
+
+.semsa-thumb {
+    position: relative;
+    overflow: hidden;
+    background-image:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.26)),
+        url("/theme_semsa/static/src/img/hero-painting.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.semsa-story-card__thumb {
+    height: 110px;
+    border-radius: 18px;
+    box-shadow: var(--semsa-card-shadow);
+}
+
+.semsa-gallery-card .semsa-thumb {
+    height: 210px;
+}
+
+.semsa-gallery-card--large .semsa-thumb {
+    height: 280px;
+}
+
+.semsa-thumb--harbor {
+    background-position: 26% 56%;
+}
+
+.semsa-thumb--basilica {
+    background-position: 63% 34%;
+}
+
+.semsa-thumb--orla {
+    background-position: center 75%;
+}
+
+.semsa-thumb--pesca {
+    background-position: 82% 86%;
+}
+
+.semsa-thumb--festa {
+    background-image:
+        linear-gradient(180deg, rgba(20, 30, 54, 0.08), rgba(20, 30, 54, 0.68)),
+        radial-gradient(circle at 20% 15%, rgba(255, 210, 74, 0.24), transparent 20%),
+        radial-gradient(circle at 78% 28%, rgba(221, 111, 31, 0.32), transparent 18%),
+        linear-gradient(135deg, #264f8a 0%, #1b2844 100%);
+}
+
+.semsa-gallery-card__content,
+.semsa-news-card {
+    padding: 18px 20px 20px;
+}
+
+.semsa-gallery-card__content h3 {
+    font-size: 1.52rem;
+}
+
+.semsa-news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.semsa-news-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(18, 50, 97, 0.08);
+    border-radius: var(--semsa-radius-md);
+    box-shadow: var(--semsa-card-shadow);
+}
+
+.semsa-news-card__date {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: var(--semsa-orange);
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.semsa-footer-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 24px;
+    padding: 30px;
+    margin-top: 28px;
+    background:
+        linear-gradient(135deg, rgba(18, 50, 97, 0.96), rgba(16, 41, 76, 0.92));
+}
+
+.semsa-footer-panel,
+.semsa-footer-panel p,
+.semsa-footer-panel h2,
+.semsa-footer-panel h3,
+.semsa-footer-panel a {
+    color: white;
+}
+
+.semsa-footer-panel p,
+.semsa-footer-panel a {
+    color: rgba(255, 255, 255, 0.84);
+    margin: 0 0 8px;
+}
+
+.semsa-footer-panel a {
+    display: block;
+    text-decoration: none;
+}
+
+.semsa-footer-panel a:hover {
+    color: #ffe39d;
+    text-decoration: none;
+}
+
+.semsa-footer-panel__brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.semsa-footer-panel__brand img {
+    width: 96px;
+    height: 96px;
+    flex: 0 0 auto;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.26));
+}
+
+.semsa-footer-panel__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.semsa-footer-panel .semsa-eyebrow {
+    color: #ffe39d;
+}
+
+@media (max-width: 1199.98px) {
+    .semsa-shell {
+        width: min(100vw - 28px, 1200px);
+    }
+
+    .semsa-hero-grid,
+    .semsa-footer-panel,
+    .semsa-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .semsa-gallery-card--large {
+        grid-column: auto;
+    }
+
+    .semsa-services-grid,
+    .semsa-news-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .semsa-shell {
+        width: min(100vw - 18px, 100%);
+        padding-top: 16px;
+    }
+
+    .semsa-topbar {
+        position: relative;
+        top: 0;
+        border-radius: 28px;
+        padding: 18px;
+    }
+
+    .semsa-topbar,
+    .semsa-story-card,
+    .semsa-footer-panel__brand,
+    .semsa-footer-panel__links {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .semsa-nav {
+        justify-content: flex-start;
+    }
+
+    .semsa-nav a {
+        padding: 8px 12px;
+        font-size: 0.95rem;
+    }
+
+    .semsa-identity-card__paper,
+    .semsa-section,
+    .semsa-footer-panel {
+        padding: 24px 18px;
+    }
+
+    .semsa-hero-overlay {
+        inset: auto 16px 16px 16px;
+        width: auto;
+        padding: 20px 18px;
+    }
+
+    .semsa-hero-art img {
+        min-height: 460px;
+    }
+
+    .semsa-services-grid,
+    .semsa-news-grid,
+    .semsa-footer-panel__links {
+        grid-template-columns: 1fr;
+    }
+
+    .semsa-gallery-card .semsa-thumb,
+    .semsa-gallery-card--large .semsa-thumb {
+        height: 220px;
+    }
+}
