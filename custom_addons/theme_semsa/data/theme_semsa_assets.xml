@@ -6,5 +6,19 @@
             <path>theme_semsa/static/src/scss/theme_semsa.scss</path>
             <field name="sequence" eval="110"/>
         </asset>
+        <record id="theme_semsa_builder_compat_global" model="ir.asset">
+            <field name="name">SEMSA Theme Website Builder Compatibility</field>
+            <field name="bundle">website.website_builder_assets</field>
+            <field name="path">theme_semsa/static/src/js/builder_compat.js</field>
+            <field name="sequence" eval="980"/>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="theme_semsa_iframe_compat_global" model="ir.asset">
+            <field name="name">SEMSA Theme Website Iframe Compatibility</field>
+            <field name="bundle">website.assets_inside_builder_iframe</field>
+            <field name="path">theme_semsa/static/src/js/iframe_service_compat.js</field>
+            <field name="sequence" eval="980"/>
+            <field name="active" eval="True"/>
+        </record>
     </data>
 </odoo>

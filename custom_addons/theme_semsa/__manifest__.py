@@ -10,14 +10,6 @@
     "website": "https://kodoo.online",
     "license": "LGPL-3",
     "depends": ["website"],
-    "assets": {
-        "website.website_builder_assets": [
-            "theme_semsa/static/src/js/builder_compat.js",
-        ],
-        "website.assets_inside_builder_iframe": [
-            "theme_semsa/static/src/js/iframe_service_compat.js",
-        ],
-    },
     "data": [
         "data/theme_semsa_assets.xml",
         "views/theme_semsa_templates.xml",
