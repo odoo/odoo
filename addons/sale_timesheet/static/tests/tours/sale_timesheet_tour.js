@@ -310,11 +310,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 // "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."
 {
     trigger: '.o_back_button',
-    content: 'Go back to the kanban view and the project update will be added on that view',
+    content: 'Go back to the list view and the project update will be added on that view',
     run: "click",
 }, {
-    trigger: '.o_updates_controller',
-    content: 'Check the kanban view of project update is rendered to be sure the user leaves the form view and the project update is created',
+    trigger: '.o_list_view',
+    content: 'Check the list view of project update is rendered to be sure the user leaves the form view and the project update is created',
 },
 ...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
