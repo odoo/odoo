@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover our new collection,<br/>shop our bestsellers today!
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Unveil the latest, shop the best!<br/><br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Shop now
+    </xpath>
+</template>
+
+</odoo>

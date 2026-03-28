@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_comparisons" inherit_id="website.s_comparisons">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 o_colored_level" separator=" "/>
+    </xpath>
+    <!-- Box #1 -->
+    <xpath expr="//div[hasclass('row')]//div" position="attributes">
+        <attribute name="class" add="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]//div/div" position="attributes">
+        <attribute name="class" add="shadow" separator=" "/>
+    </xpath>
+    <!-- Box #2 -->
+    <xpath expr="//div[hasclass('row')]//div[2]/div" position="attributes">
+        <attribute name="class" add="shadow" separator=" "/>
+    </xpath>
+    <!-- Box #3 -->
+    <xpath expr="//div[hasclass('row')]//div[3]" position="attributes">
+        <attribute name="class" add="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]//div[3]/div" position="attributes">
+        <attribute name="class" add="shadow" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

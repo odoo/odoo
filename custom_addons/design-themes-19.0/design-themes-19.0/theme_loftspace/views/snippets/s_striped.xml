@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped" inherit_id="website.s_striped">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb0" remove="pb96" separator=" "/>
+    </xpath>
+    <!-- Section -->
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="o_grid_mode" separator=" "/>
+       <attribute name="data-row-count">14</attribute>
+    </xpath>
+    <!-- Remove the title -->
+    <xpath expr="//h2" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+
+    <xpath expr="//div[hasclass('row')]/div" position="attributes">
+        <attribute name="class" add="o_grid_item o_grid_item_image g-col-lg-8 g-height-12" remove="pt24 pb24" separator=" "/>
+        <attribute name="style" add="grid-area: 3 / 1 / 15 / 9; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px;" separator=";"/>
+    </xpath>
+</template>
+
+</odoo>

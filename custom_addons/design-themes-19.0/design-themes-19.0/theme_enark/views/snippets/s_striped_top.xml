@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_top" inherit_id="website.s_striped_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" add="h3-fs" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        Experience the Future of<br/>Innovation in Every<br/>Interaction
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="attributes">
+        <attribute name="class" add="btn-secondary" remove="btn-primary" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

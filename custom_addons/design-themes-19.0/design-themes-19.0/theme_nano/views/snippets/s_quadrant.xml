@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Creative Agency
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Partner with our creative agency for cutting-edge design and IT services. We bring your vision to life with innovative solutions tailored to your needs.<br/><br/> Let's create something extraordinary together.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Contact Us
+    </xpath>
+</template>
+
+</odoo>

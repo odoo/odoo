@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt72 pb128" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]/h2" position="replace" mode="inner">
+        Customer benefits
+    </xpath>
+    <xpath expr="//div[hasclass('container')]/p" position="replace" mode="inner">
+        Enjoy these added advantages with every purchase
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//div[hasclass('row')]/div[1]" position="replace">
+        <div class="col-lg-3">
+            <div class="s_hr pt-4 pb32">
+                <hr class="w-100 mx-auto"/>
+            </div>
+            <i class="s_features_icon fa fa-send d-block fa-3x mx-auto mb-3" role="img"/>
+            <div class="overflow-hidden">
+                <h3 class="h5-fs" style="text-align: center;">Free Shipping</h3>
+                <p style="text-align: center;">Free shipping over $100</p>
+            </div>
+        </div>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//div[hasclass('row')]/div[2]" position="replace">
+        <div class="col-lg-3">
+            <div class="s_hr pt-4 pb32">
+                <hr class="w-100 mx-auto"/>
+            </div>
+            <i class="s_features_icon fa fa-truck d-block fa-3x mx-auto mb-3" role="img"/>
+            <div class="overflow-hidden">
+                <h3 class="h5-fs" style="text-align: center;">Fast Delivery</h3>
+                <p style="text-align: center;">Get your furniture delivered quickly.</p>
+            </div>
+        </div>
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="//div[hasclass('row')]/div[3]" position="replace">
+        <div class="col-lg-3">
+            <div class="s_hr pt-4 pb32">
+                <hr class="w-100 mx-auto"/>
+            </div>
+            <i class="s_features_icon fa fa-map-marker d-block fa-3x mx-auto mb-3" role="img"/>
+            <div class="overflow-hidden">
+                <h3 class="h5-fs" style="text-align: center;">Order Tracking</h3>
+                <p style="text-align: center;">Track your order in real-time, anytime.</p>
+            </div>
+        </div>
+    </xpath>
+    <!-- Column #04 -->
+    <xpath expr="//div[hasclass('row')]/div[3]" position="after">
+        <div class="col-lg-3">
+            <div class="s_hr pt-4 pb32">
+                <hr class="w-100 mx-auto"/>
+            </div>
+            <i class="s_features_icon fa fa-life-bouy d-block fa-3x mx-auto mb-3" role="img"/>
+            <div class="overflow-hidden">
+                <h3 class="h5-fs" style="text-align: center;">24/7 Support</h3>
+                <p style="text-align: center;">We're here to help you, day and night.</p>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

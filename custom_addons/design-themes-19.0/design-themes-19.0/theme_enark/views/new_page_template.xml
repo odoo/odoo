@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- About -->
+
+<template id="new_page_template_sections_about_personal" inherit_id="website.new_page_template_sections_about_personal">
+    <xpath expr="//t[@t-snippet-call='website.new_page_template_about_personal_s_call_to_action_about']" position="attributes">
+        <attribute name="t-snippet-call">website.new_page_template_about_personal_s_call_to_action</attribute>
+    </xpath>
+</template>
+
+<!-- Landing -->
+
+<template id="new_page_template_sections_landing_1" inherit_id="website.new_page_template_sections_landing_1">
+    <xpath expr="//t[@t-snippet-call='website.new_page_template_landing_1_s_call_to_action_digital']" position="attributes">
+        <attribute name="t-snippet-call">website.new_page_template_landing_1_s_call_to_action</attribute>
+    </xpath>
+</template>
+
+<template id="new_page_template_sections_landing_2" inherit_id="website.new_page_template_sections_landing_2">
+    <xpath expr="//t[@t-snippet-call='website.new_page_template_landing_2_s_call_to_action']" position="attributes">
+        <attribute name="t-snippet-call">website.new_page_template_landing_s_call_to_action</attribute>
+    </xpath>
+</template>
+
+<template id="new_page_template_sections_landing_3" inherit_id="website.new_page_template_sections_landing_3">
+    <xpath expr="//t[@t-snippet-call='website.new_page_template_landing_3_s_call_to_action']" position="attributes">
+        <attribute name="t-snippet-call">website.new_page_template_landing_s_call_to_action</attribute>
+    </xpath>
+</template>
+
+<!-- Services -->
+
+<template id="new_page_template_sections_services_2" inherit_id="website.new_page_template_sections_services_2">
+    <xpath expr="//t[@t-snippet-call='website.new_page_template_services_2_s_call_to_action_digital']" position="attributes">
+        <attribute name="t-snippet-call">website.new_page_template_services_2_s_call_to_action</attribute>
+    </xpath>
+</template>
+
+<!-- General customizations -->
+
+<!-- Snippet customization Basic Pages -->
+
+<template id="new_page_template_basic_2_s_text_block_h1" inherit_id="website.new_page_template_basic_2_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization About Pages -->
+
+<template id="new_page_template_about_full_s_numbers" inherit_id="website.new_page_template_about_full_s_numbers">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1 o_cc3" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_full_s_text_image" inherit_id="website.new_page_template_about_full_s_text_image">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt56 pb56" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_personal_s_numbers" inherit_id="website.new_page_template_about_personal_s_numbers">
+    <xpath expr="//section" position="attributes">
+        <!-- pt0 is defined by both theme and new page template -->
+        <attribute name="class" add="pt0" remove="o_cc1 pt0" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Landing Pages -->
+
+<template id="new_page_template_landing_s_text_image" inherit_id="website.new_page_template_landing_s_text_image">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt56 pb56" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_5_s_banner" inherit_id="website.new_page_template_landing_5_s_banner">
+    <xpath expr="//section" position="attributes">
+        <!-- Defined by both theme and new page template -->
+        <attribute name="class" add="o_full_screen_height" remove="o_full_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Gallery Pages -->
+
+<!-- Snippet customization Services Pages -->
+
+<template id="new_page_template_services_s_text_image" inherit_id="website.new_page_template_services_s_text_image">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt56 pb56" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_services_1_s_text_block_h1" inherit_id="website.new_page_template_services_1_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Pricing Pages -->
+
+<!-- Snippet customization Team Pages -->
+
+<template id="new_page_template_team_s_text_image" inherit_id="website.new_page_template_team_s_text_image">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt56 pb56" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_1_s_text_block_h1" inherit_id="website.new_page_template_team_1_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb0" remove="pb40" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Card #1 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <!-- Card #2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <!-- Card #3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+</template>
+
+</odoo>

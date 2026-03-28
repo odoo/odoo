@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5 pt64 pb64" remove="o_cc2 pt32 pb32" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="attributes">
+        <attribute name="class" add="container-fluid" remove="container" separator=" "/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//*[hasclass('card-title')]" position="replace" mode="inner">
+        Handcrafted
+    </xpath>
+    <xpath expr="//*[hasclass('card-text')]" position="replace" mode="inner">
+        People should love the things they own. Things should be built to last.
+    </xpath>
+    <xpath expr="//*[hasclass('card-body')]" position="after">
+        <div class="card-footer">
+            <a href="#" class="btn btn-secondary">Details</a>
+        </div>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="(//*[hasclass('card-title')])[2]" position="replace" mode="inner">
+        Tailored
+    </xpath>
+    <xpath expr="(//*[hasclass('card-text')])[2]" position="replace" mode="inner">
+        Made in Santa's Workshop. High quality fabric &amp; exclusive designs.
+    </xpath>
+    <xpath expr="(//*[hasclass('card-body')])[2]" position="after">
+        <div class="card-footer">
+            <a href="#" class="btn btn-secondary">Details</a>
+        </div>
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="(//*[hasclass('card-title')])[3]" position="replace" mode="inner">
+        Innovative
+    </xpath>
+    <xpath expr="(//*[hasclass('card-text')])[3]" position="replace" mode="inner">
+        Transforming traditional crafts — with a shot of modern savvy!
+    </xpath>
+    <xpath expr="(//*[hasclass('card-body')])[3]" position="after">
+        <div class="card-footer">
+            <a href="#" class="btn btn-secondary">Details</a>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

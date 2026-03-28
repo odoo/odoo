@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_center_top" inherit_id="website.s_striped_center_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Capture Your Love Story Beautifully
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Let us help you capture the magic of your special day with stunning photography and personalized wedding services.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        View Our Portfolio
+    </xpath>
+    <!-- Figcaption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Moments crafted with love
+    </xpath>
+</template>
+
+</odoo>

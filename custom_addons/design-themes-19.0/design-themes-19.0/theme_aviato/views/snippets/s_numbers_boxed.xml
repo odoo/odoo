@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers_boxed" inherit_id="website.s_numbers_boxed">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Blobs/06_001", "flip":[], "showOnMobile":true}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Blobs_06_001"/>
+    </xpath>
+    <!-- Grid Item -->
+    <xpath expr="//div[hasclass('o_grid_item')][2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')][2]//h3" position="replace" mode="inner">
+        30+
+    </xpath>
+    <!-- Grid Item 2 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]//h3" position="replace" mode="inner">
+        45%
+    </xpath>
+    <!-- Grid Item 3 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]//h3" position="replace" mode="inner">
+        8+
+    </xpath>
+</template>
+
+</odoo>

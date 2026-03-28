@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <function name="button_confirm" model="purchase.order">
+        <value eval="[
+            ref('purchase_order_1'),
+            ref('purchase_order_2'),
+            ref('purchase_order_3'),
+            ref('purchase_order_4'),
+        ]"
+       />
+    </function>
+
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_13')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_4').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_13')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_4').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 60 , 'lot_id': ref('stock_lot_18'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_18').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_4').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 40 ,'lot_id': ref('stock_lot_19'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_19').name}"/>
+    </function>
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_20')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_3').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_20')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_3').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 20 , 'lot_id': ref('stock_lot_16'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_16').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_20')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_3').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_15'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_15').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_19')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_3').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'lot_id': ref('stock_lot_17'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_17').name}"/>
+    </function>
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_16')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_3').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_16')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_3').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_14'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_14').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_16')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_3').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_13'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_13').name}"/>
+    </function>
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_14')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_14')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 20 , 'lot_id': ref('stock_lot_8'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_8').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_14')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_7'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_7').name}"/>
+    </function>
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_15')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_15')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 20 , 'lot_id': ref('stock_lot_9'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_9').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_15')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 10 , 'lot_id': ref('stock_lot_10'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_10').name}"/>
+    </function>
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_17')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_17')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 10 , 'lot_id': ref('stock_lot_12'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_12').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_17')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_2').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_11'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_11').name}"/>
+    </function>
+
+
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_13')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_13')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 40 , 'lot_id': ref('stock_lot_2'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_2').name}"/>
+    </function>
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_13')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[1].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_13')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[2].id"/>
+        <value model="stock.lot" eval="{'quantity': 20 , 'lot_id': ref('stock_lot_3'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_3').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_13')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_1'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_1').name}"/>
+    </function>
+
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_18')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[0].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_18')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[1].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_5'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_5').name}"/>
+    </function>
+    <function name="copy" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_18')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[1].id"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+            ('product_id', '=', ref('product_product_18')),
+            ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[2].id"/>
+        <value model="stock.lot" eval="{'quantity': 40 , 'lot_id': ref('stock_lot_6'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_6').name}"/>
+    </function>
+    <function name="write" model="stock.move.line">
+        <value model="stock.move.line" eval="obj().search([
+        ('product_id', '=', ref('product_product_18')),
+        ('picking_id', '=', obj().env.ref('pharmacy_retail.purchase_order_1').picking_ids.id)])[0].id"/>
+        <value model="stock.lot" eval="{'quantity': 30 , 'lot_id': ref('stock_lot_4'), 'lot_name': obj().env.ref('pharmacy_retail.stock_lot_4').name}"/>
+    </function>
+
+    <function name="button_validate" model="stock.picking" context="{'skip_sms': True}">
+        <value model="stock.picking" eval="
+        (
+            obj().env.ref('pharmacy_retail.purchase_order_1') +
+            obj().env.ref('pharmacy_retail.purchase_order_2') +
+            obj().env.ref('pharmacy_retail.purchase_order_3') +
+            obj().env.ref('pharmacy_retail.purchase_order_4')
+        ).reference_ids.picking_ids.ids"/>
+    </function>
+
+    <function name="action_create_invoice" model="purchase.order" eval="[[ref('purchase_order_1')]]"/>
+    <function name="action_create_invoice" model="purchase.order" eval="[[ref('purchase_order_2')]]"/>
+    <function name="action_create_invoice" model="purchase.order" eval="[[ref('purchase_order_3')]]"/>
+    <function name="action_create_invoice" model="purchase.order" eval="[[ref('purchase_order_4')]]"/>
+</odoo>

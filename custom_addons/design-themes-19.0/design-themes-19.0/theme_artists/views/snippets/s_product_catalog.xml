@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" inherit_id="website.s_product_catalog">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt0 pb40" remove="pb64 pt64" separator=" "/>
+        <attribute name="style"/>
+    </xpath>
+    <!-- Title container -->
+    <xpath expr="//h2" position="replace">
+        <h2 style="text-align: left !important;">Upcoming Exhibitions</h2>
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace">
+        <p class="lead" style="text-align: left !important;">Artistic journey around the world</p>
+    </xpath>
+    <!-- Remove filter -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace"/>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('col-lg-6')]/h3[hasclass('h4-fs')]" position="replace"/>
+    <!-- List -->
+    <xpath expr="//div[hasclass('col-lg-6')]/ul[hasclass('list-unstyled')]" position="replace">
+        <ul class="list-unstyled my-3">
+            <t t-call="website.s_product_catalog_dish">
+                <t t-set="name">New York</t>
+                <t t-set="price">02.08.2025</t>
+                <t t-set="description">The Museum of Modern Art (MoMA)</t>
+            </t>
+            <t t-call="website.s_product_catalog_dish">
+                <t t-set="name">Paris</t>
+                <t t-set="price">09.09.2025</t>
+                <t t-set="description">Digital Art Paris</t>
+            </t>
+            <t t-call="website.s_product_catalog_dish">
+                <t t-set="name">Brussels</t>
+                <t t-set="price">12.11.2025</t>
+                <t t-set="description">Royal Museums of Fine Arts of Belgium</t>
+            </t>
+        </ul>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]/h3[hasclass('h4-fs')]" position="replace"/>
+    <!-- List -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]/ul[hasclass('list-unstyled')]" position="replace">
+        <ul class="list-unstyled my-3">
+            <t t-call="website.s_product_catalog_dish">
+                <t t-set="name">Amsterdam</t>
+                <t t-set="price">02.08.2025</t>
+                <t t-set="description">Comput'Art</t>
+            </t>
+            <t t-call="website.s_product_catalog_dish">
+                <t t-set="name">Berlin</t>
+                <t t-set="price">12.12.2025</t>
+                <t t-set="description">Berlin Art Week</t>
+            </t>
+            <t t-call="website.s_product_catalog_dish">
+                <t t-set="name">London</t>
+                <t t-set="price">03.01.2026</t>
+                <t t-set="description">Abstract Vision</t>
+            </t>
+        </ul>
+    </xpath>
+</template>
+
+</odoo>

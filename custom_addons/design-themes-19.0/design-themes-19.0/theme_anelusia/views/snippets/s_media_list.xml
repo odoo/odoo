@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64 o_cc5" remove="pt32 pb32 o_cc2" separator=" "/>
+    </xpath>
+
+    <!-- Media #01 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]/div" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media #01 - Img wrapper -->
+    <xpath expr="//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Media #01 - Img -->
+    <xpath expr="//div[hasclass('s_media_list_img_wrapper')]//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_1/html_builder/composition/composition_square_1.svg?c1=o-color-4&amp;c2=o-color-2</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_square_1</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_1.svg</attribute>
+        <attribute name="data-shape-colors">o-color-4;o-color-2;;;</attribute>
+    </xpath>
+    <!-- Media #01 - Body -->
+    <xpath expr="//div[hasclass('s_media_list_body')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Media #01 - Title -->
+    <xpath expr="//div[hasclass('s_media_list_item')]//h3" position="replace" mode="inner">
+        World's top Hidden gems
+    </xpath>
+    <!-- Media #01 - Paragraph -->
+    <xpath expr="//div[hasclass('s_media_list_item')]//p" position="replace" mode="inner">
+        Go off beaten track and discover unexpected and curious places. Here’s our ultimate guide to the best-kept secret spots that you simply must visit!
+    </xpath>
+
+    <!-- Media #02 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]/div" position="attributes">
+        <attribute name="class" add="flex-row-reverse" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media #02 - Img wrapper -->
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Media #02 - Img -->
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[2]//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_2/html_builder/composition/composition_square_3.svg?c1=o-color-1&amp;c5=o-color-2</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_square_3</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_2.svg</attribute>
+        <attribute name="data-shape-colors">o-color-1;;;;o-color-2</attribute>
+    </xpath>
+    <!-- Media #02 - Body -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Media #02 - Title -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]//h3" position="replace" mode="inner">
+        Summer Essentials
+    </xpath>
+    <!-- Media #02 - Paragraph -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]//p" position="replace" mode="inner">
+        The right summer essentials can make the difference between a good time and a stand-out great time. Discover our selection for everyday wear during the warm summer months.
+    </xpath>
+    <!-- Media #02 - Add a button -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]//p" position="after">
+        <a href="#" class="btn btn-primary">Read more</a>
+    </xpath>
+
+    <!-- Remove Media #03 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]" position="replace"/>
+</template>
+
+</odoo>

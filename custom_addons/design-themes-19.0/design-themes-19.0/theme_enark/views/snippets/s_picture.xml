@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_picture" inherit_id="website.s_picture">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt80" remove="pt64" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Creating places that enhance the human experience.
+    </xpath>
+    <!-- Caption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        We always put people and nature at the center of our projects.
+    </xpath>
+</template>
+
+</odoo>

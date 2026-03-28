@@ -1,0 +1,20 @@
+$s-discount-box-border-radius: 0px;
+$s-discount-coupon-color: blue; // gamma FIXME
+$s-discount-amount-size: 70px;
+
+@mixin s-discount-descr-hook {
+    background-color: o-color('beta');
+    color: o-color('alpha');
+}
+@mixin s-discount-box-hook {
+    color: map-get($grays, '700');
+
+    .s_discount_open-code {
+        color: o-color('gamma');
+    }
+}
+@mixin s-discount-brand-hook {
+    h3 {
+        color: o-color('gamma');
+    }
+}

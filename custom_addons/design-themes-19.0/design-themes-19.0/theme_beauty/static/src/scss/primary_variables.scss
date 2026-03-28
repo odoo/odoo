@@ -1,0 +1,119 @@
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (48 / 16);
+$o-theme-h3-font-size-multiplier: (36 / 16);
+$o-theme-h4-font-size-multiplier: (28 / 16);
+$o-theme-h5-font-size-multiplier: (24 / 16);
+$o-theme-h6-font-size-multiplier: (21 / 16);
+
+$o-theme-font-configs: (
+    'Heebo': (
+        'family': ('Heebo', sans-serif),
+        'url': 'Heebo:300,300i,400,400i,700,700i',
+    ),
+    'Rajdhani': (
+        'family': ('Rajdhani', sans-serif),
+        'url': 'Rajdhani:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Ubuntu': (
+        'family': ('Ubuntu', sans-serif),
+        'url': 'Ubuntu:300,300i,400,400i,700,700i',
+    ),
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:300,300i,400,400i,700,700i',
+    ),
+    'Questrial': (
+        'family': ('Questrial', sans-serif),
+        'url': 'Questrial:300,300i,400,400i,700,700i',
+    ),
+    'Mulish': (
+        'family': ('Mulish', sans-serif),
+        'url': 'Mulish:300,300i,400,400i,700,700i',
+    ),
+    'DM Serif Display': (
+        'family': ('DM Serif Display', serif),
+        'url': 'DM+Serif+Display:400,400i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'default-light-3',
+
+        'header-font-size': (18 / 16) * 1rem,
+
+        'font': 'Questrial',
+        'headings-font': 'DM Serif Display',
+
+        'header-template': 'default',
+
+        // Buttons
+        'btn-padding-y':                    .45rem,
+        'btn-padding-x':                    1.35rem,
+        'btn-padding-y-sm':                 .3rem,
+        'btn-padding-x-sm':                 .9rem,
+        'btn-padding-y-lg':                 .6rem,
+        'btn-padding-x-lg':                 1.8rem,
+        'btn-border-radius':                10rem,
+        'btn-border-radius-sm':             10rem,
+        'btn-border-radius-lg':             10rem,
+    ),
+);
+
+$default-light-3: map-get($o-color-palettes, 'default-light-3');
+$default-light-3: map-merge($default-light-3, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-light-3': $default-light-3));
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'beauty-1',
+    2: 'beauty-2',
+    3: 'beauty-3',
+    4: 'beauty-4',
+    5: 'beauty-5',
+    6: 'beauty-6',
+    7: 'generic-1',
+    8: 'generic-2',
+    9: 'generic-3',
+    10: 'generic-4',
+    11: 'generic-5',
+    12: 'generic-6',
+    13: 'generic-7',
+    14: 'generic-8',
+    15: 'generic-9',
+    16: 'generic-10',
+    17: 'generic-11',
+    18: 'generic-12',
+    19: 'generic-13',
+    20: 'generic-14',
+    21: 'generic-15',
+    22: 'generic-16',
+    23: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/09', (1: 3, 5: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/13_001', (1: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/20', (2: 1));

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Custom Design Pieces
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Comprehensive Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Collections
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We offer personalized furniture designs that match your style and space, ensuring each piece fits perfectly into your home.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our team is here to assist you from selection to delivery, ensuring a seamless experience and satisfaction with every purchase.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Discover unique, high-quality furniture collections that combine craftsmanship with timeless design, adding elegance to any room.
+    </xpath>
+</template>
+
+</odoo>

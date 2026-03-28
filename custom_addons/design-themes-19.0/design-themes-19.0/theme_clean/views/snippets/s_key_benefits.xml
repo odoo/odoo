@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Customized Legal Strategies
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Ongoing Client Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Legal Resources
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We develop tailored legal strategies that align with your specific needs, ensuring effective and precise solutions.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our team provides continuous support throughout your legal journey, guiding you through every step with clarity and care.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Access specialized resources and expert insights that strengthen your case and keep you informed on all legal matters.
+    </xpath>
+</template>
+
+</odoo>

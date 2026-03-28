@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_frame" inherit_id="website.s_image_frame">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/13','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_13"/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+</template>
+
+</odoo>

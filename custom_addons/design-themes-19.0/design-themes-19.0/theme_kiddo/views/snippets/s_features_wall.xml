@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features_wall" inherit_id="website.s_features_wall">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/05"}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Floats_05 o_we_animated"/>
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')]//h3" position="replace" mode="inner">
+        Engaging Learning Activities
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')]//p" position="replace" mode="inner">
+        Foster early development with interactive and educational activities designed to stimulate curiosity and creativity in young children.
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')][4]//h3" position="replace" mode="inner">
+        Safe &amp; Nurturing Environment
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')][4]//p" position="replace" mode="inner">
+        Ensure your child’s well-being in a secure, caring setting with experienced staff dedicated to providing personalized attention and support.
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')][6]//h3" position="replace" mode="inner">
+        Flexible Scheduling Options
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')][6]//p" position="replace" mode="inner">
+        Enjoy convenient and adaptable care schedules to fit your family’s needs, from full-day to part-time and drop-in services.
+    </xpath>
+</template>
+
+</odoo>

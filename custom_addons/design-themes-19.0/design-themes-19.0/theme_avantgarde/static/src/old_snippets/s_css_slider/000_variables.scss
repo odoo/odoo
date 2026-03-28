@@ -1,0 +1,22 @@
+$s-css-slider-info-bg-color: "var(--body)";
+$s-css-slider-info-text-color: "var(--text)";
+
+@mixin s-css-slider-navigation-hook {
+    span {
+        text-indent: 100%;
+        background: url("../img/ui/s_showcase_slider-arrow.svg") no-repeat center center;
+        &:before {
+            content: none;
+        }
+    }
+    &:first-of-type {
+        span {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+@mixin s-css-slider-close-hook {
+    background: url("../img/ui/s_showcase_slider-close.svg") no-repeat center center;
+    text-indent: 100%;
+}

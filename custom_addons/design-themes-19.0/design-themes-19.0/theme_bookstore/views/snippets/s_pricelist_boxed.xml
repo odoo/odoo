@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Airy/13_002','colors':{'c5':'o-color-1','c3':'o-color-4'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Airy_13_002 o_we_animated"  style="background-image: url('/html_editor/shape/html_builder/Airy/13_002.svg?c5=o-color-1&amp;c3=o-color-4');"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-8')]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc1 rounded" separator=" "/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Explore Our Book Collection
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Dive into our carefully curated selection of books, perfect for readers of all tastes and interests.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Fiction
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Non-Fiction
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        The Great Gatsby
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        $10.99
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        A classic novel by F. Scott Fitzgerald, set in the Roaring Twenties, exploring themes of wealth, love, and the American Dream.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        To Kill a Mockingbird
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        $12.50
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Harper Lee's Pulitzer Prize-winning novel, a profound story about racial injustice and moral growth in the American South.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        1984
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        $14.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        George Orwell's dystopian novel depicting a totalitarian society under constant surveillance, and the fight for freedom.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        Sapiens: A Brief History of Humankind
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        $18.99
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Yuval Noah Harari's compelling narrative of humanity's history, exploring how Homo sapiens came to dominate the Earth.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Becoming
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        $16.50
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Michelle Obama's inspiring memoir, sharing her personal journey from childhood to her role as First Lady of the United States.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Educated
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        $13.99
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Tara Westover's memoir of growing up in a strict and abusive household in rural Idaho and her quest for education and self-discovery.
+    </xpath>
+</template>
+
+</odoo>

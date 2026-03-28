@@ -1,0 +1,53 @@
+$s-banner-parallax-height: 100vh;
+$s-banner-parallax-padding: 0px;
+$s-banner-parallax-img-height: 350px;
+$s-banner-parallax-text-shadow: none;
+$s-banner-parallax-text-color: auto;
+$s-banner-parallax-bg-position: none !important;
+$s-banner-parallax-h1-size: 50px;
+
+@mixin s-banner-parallax-hero-bg-hook {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+};
+@mixin s-banner-parallax-row-hook {
+    vertical-align: top;
+    padding: 0;
+    .hero-bg:before {
+        content: "";
+        width: 0px;
+        height: 0px;
+        border-top: 80vh solid rgba(0, 0, 0, 0);
+        border-bottom: 0px solid rgba(0, 0, 0, 0);
+        border-left: 50vw solid o-color('gamma');
+        position: absolute;
+        bottom: -85vh;
+        left: -2px;
+        opacity: 0.8;
+        @include media-breakpoint-down(md) {
+            display: none;
+        }
+    }
+    .hero-bg:after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        border-top: 80vh solid rgba(0, 0, 0, 0);
+        border-bottom: 0px solid rgba(0, 0, 0, 0);
+        border-right: 50vw solid o-color('gamma');
+        position: absolute;
+        bottom: -85vh;
+        right: -2px;
+        opacity: 0.8;
+        @include media-breakpoint-down(md) {
+            display: none;
+        }
+    }
+};
+@mixin s-banner-parallax-height-hook {
+    @include media-breakpoint-down(lg) {
+        height: 100vh !important;
+    }
+};

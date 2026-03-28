@@ -1,0 +1,25 @@
+#wrapwrap .s_color_blocks_4 {
+    .row {
+        display: flex;
+        flex-flow: row wrap;
+
+        // Fix for safari browser as it 'supports' flex but not with the right
+        // behavior
+        &::before, &::after {
+            width: 0;
+        }
+    }
+    [class*="col-lg-"] {
+        padding: 64px 20px;
+    }
+    @include media-breakpoint-down(lg) {
+        [class*="col-lg-"] {
+            flex: 1 1 100%;
+        }
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}

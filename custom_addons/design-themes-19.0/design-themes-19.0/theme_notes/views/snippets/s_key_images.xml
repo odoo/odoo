@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_images" inherit_id="website.s_key_images">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/11_001","colors":{"c5":"o-color-1"},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_11_001" style="background-image: url('/html_editor/shape/html_builder/Wavy/11_001.svg?c5=o-color-1');"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Join the Celebration at Our Festival
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Experience Music, Art, and Fun for All Ages
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="replace" mode="inner">
+        Live performances by top artists and bands
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="replace" mode="inner">
+        A diverse selection of food and drink options
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="replace" mode="inner">
+        Art installations and interactive exhibits
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="replace" mode="inner">
+        Fun activities and games for the whole family
+    </xpath>
+</template>
+
+</odoo>

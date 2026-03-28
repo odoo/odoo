@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_sidegrid" inherit_id="website.s_sidegrid">
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.library_image_13</attribute>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/web/image/website.s_banner_default_image</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        A little place of paradise
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        The countryside nursery since 2002.<br/>A truly unique service in a highly secure and tranquil setting.
+    </xpath>
+</template>
+
+</odoo>

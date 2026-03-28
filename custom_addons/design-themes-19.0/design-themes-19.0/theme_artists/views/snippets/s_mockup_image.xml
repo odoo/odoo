@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mockup_image" inherit_id="website.s_mockup_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+</odoo>

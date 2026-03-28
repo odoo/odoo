@@ -1,0 +1,91 @@
+
+#wrapwrap .s_products_carousel {
+
+    .carousel-inner {
+        height: $s-products-carousel-carousel-height;
+        .carousel-item {
+            height: 100%
+        }
+    }
+
+    .carousel-indicators {
+        visibility: $s-products-carousel-indicators-visible;
+        bottom: $s-products-carousel-indicators-position;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        cursor: pointer;
+        opacity: 1;
+        width: 70px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .container-fluid {
+        padding: 0;
+        overflow: hidden;
+
+        .product-widget {
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+
+            @media screen and (max-width: 360px) {
+                height: auto;
+            }
+        }
+
+        .widget{
+            display: inline-block;
+            overflow: hidden;
+
+            @media screen and (max-width: 360px) {
+                transform: none;
+                padding-bottom: 10px;
+            }
+
+            img {
+                max-height: 120px;
+                &:hover {
+                    opacity: 0.7;
+                }
+            }
+        }
+
+        .hero-bg {
+            padding: $s-products-carousel-hero-bg-padding;
+            color: o-color('alpha');
+            text-align: center;
+
+            @include media-breakpoint-down(md) {
+                padding-top: 20px;
+                text-align: center;
+            }
+
+            @media screen and (max-width: 360px) {
+                padding: 0;
+            }
+
+            h2 {
+                font-size: 85px;
+                text-shadow: 1px 1px 11px rgba(0, 0, 0, 0.86);
+
+                @include media-breakpoint-down(md) {
+                    font-size: 65px;
+                }
+                @media screen and (max-width: 360px) {
+                    font-size: 35px;
+                }
+            }
+        }
+    }
+}

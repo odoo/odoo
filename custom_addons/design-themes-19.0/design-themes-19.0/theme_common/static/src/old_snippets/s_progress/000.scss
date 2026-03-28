@@ -1,0 +1,73 @@
+#wrapwrap .s_progress:not(data-vcss) {
+    > div > .row > div {
+        border-left-width: 1px;
+        border-left-style: solid;
+        @include media-breakpoint-down(md) {
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-left-width: 0;
+        }
+
+        &:first-child {
+            border-left-width: 0;
+        }
+
+        &:last-child .process {
+            color: rgba(0, 0, 0, 0);
+        }
+    }
+
+    .fa {
+        font-size: 60px;
+    }
+    .icon-container {
+        max-width: 250px;
+    }
+    .progress-iconset {
+        padding: 10px;
+        text-align: center;
+        min-height: 230px;
+        @include media-breakpoint-down(md) {
+            min-height: 50px;
+        }
+
+        &:after, &:before {
+            content: " ";
+            display: block;
+            width: 50%;
+            height: 50px;
+            border-right: 1px solid silver;
+            margin: 10px 0;
+        }
+        &:before {
+            display: none;
+        }
+    }
+    .progress-content ~ .progress-iconset {
+        &:after {
+            display: none;
+        }
+        &:before {
+            display: block;
+        }
+    }
+    .process {
+        font-size: 25px;
+        height: 25px;
+        text-align: right;
+        width: 100%;
+        @include media-breakpoint-down(md) {
+            display: none;
+        }
+    }
+    .progress-content {
+        padding: 10px 25px;
+        min-height: 230px;
+        @include media-breakpoint-down(md) {
+            min-height: 50px;
+        }
+        h1 {
+            margin-top: 0;
+        }
+    }
+}

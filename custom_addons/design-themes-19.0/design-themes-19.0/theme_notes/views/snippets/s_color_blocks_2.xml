@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container-fluid')]" position="attributes">
+        <attribute name="class" add="container" remove="container-fluid" separator=" "/>
+    </xpath>
+    <!-- Column #1 -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" remove="o_cc o_cc4" separator=" "/>
+    </xpath>
+    <!-- Column #2 -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]" position="attributes">
+        <attribute name="class" remove="o_cc o_cc5" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

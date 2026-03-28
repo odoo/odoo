@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_center_top" inherit_id="website.s_striped_center_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        A World of Knowledge Awaits
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Immerse yourself in a rich collection of books, magazines, and media that inspire learning, imagination, and creativity.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Browse the Collection
+    </xpath>
+    <!-- Figcaption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Knowledge curated with care
+    </xpath>
+</template>
+
+</odoo>

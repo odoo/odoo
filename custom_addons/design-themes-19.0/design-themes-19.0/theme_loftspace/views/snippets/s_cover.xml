@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Bringing life to your interior
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Discover our unique pieces of furniture selected for you.
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="after">
+        <p><br/></p>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[@t-att-href='cta_btn_href']/t" position="replace" mode="inner">
+        Discover More
+    </xpath>
+    <xpath expr="//a[@t-att-href='cta_btn_href']" position="attributes">
+        <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" "/>
+    </xpath>
+    <xpath expr="//a[@href='/contactus']" position="replace"/>
+</template>
+
+</odoo>

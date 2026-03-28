@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc2" separator=" "/>
+    </xpath>
+
+    <!-- Item #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media list body -->
+    <xpath expr="//div[hasclass('s_media_list_body')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Image wrapper -->
+    <xpath expr="//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+
+    <!-- Item #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media list body -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Img wrapper -->
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+
+    <!-- Item #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media list body -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Img wrapper -->
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[3]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

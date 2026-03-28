@@ -1,0 +1,21 @@
+@mixin s-showcase-slider-navigation-hook {
+    span {
+        text-indent: 100%;
+        background: url("../img/ui/s_showcase_slider-arrow.svg") no-repeat center center;
+        &:before { content: none; }
+    }
+    &:first-of-type {
+        span { transform: rotate(180deg); }
+    }
+}
+
+@mixin s-showcase-slider-close-hook {
+    background: url("../img/ui/s_showcase_slider-close.svg") no-repeat center center;
+    text-indent: 100%;
+}
+
+@mixin s-showcase-slider-slider-hover-hook {
+    &::after {
+        background: rgba(0, 0, 0, 0.4) url("../img/ui/s_showcase_slider-zoom.svg") no-repeat center center;
+    }
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Curated Menus
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Attentive Service
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Events
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        Enjoy thoughtfully crafted dishes that highlight seasonal ingredients and local flavors, offering a unique dining experience.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our team is here to provide warm, personalized service, ensuring that every visit is comfortable and memorable.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Take part in special events and tasting nights that showcase new dishes, local wines, and culinary creativity.
+    </xpath>
+</template>
+
+</odoo>

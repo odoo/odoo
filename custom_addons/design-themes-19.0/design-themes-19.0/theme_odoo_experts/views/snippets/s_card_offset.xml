@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_card_offset" inherit_id="website.s_card_offset">
+    <!-- Grid items -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="style" add="--grid-item-padding-y: 48px;" remove="--grid-item-padding-y: 40px;" separator=";"/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_carousel_default_image_3</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Strategic Business &amp; IT Advisory
+    </xpath>
+    <!-- Paragraph 1 -->
+    <xpath expr="(//p[hasclass('lead')])[1]" position="replace" mode="inner">
+        Elevate your business with our expert advisory services in corporate strategy and IT solutions. We provide the insights and tools you need to succeed in a competitive market.
+    </xpath>
+    <!-- Paragraph 2 -->
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Navigate your business with confidence.
+    </xpath>
+</template>
+
+</odoo>

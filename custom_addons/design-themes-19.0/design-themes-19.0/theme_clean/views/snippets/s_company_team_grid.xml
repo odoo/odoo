@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_grid" inherit_id="website.s_company_team_grid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Team #01 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Team #02 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Team #03 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Team #04 -->
+    <xpath expr="(//div[hasclass('card')])[4]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Team #05 -->
+    <xpath expr="(//div[hasclass('card')])[5]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Team #06 -->
+    <xpath expr="(//div[hasclass('card')])[6]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

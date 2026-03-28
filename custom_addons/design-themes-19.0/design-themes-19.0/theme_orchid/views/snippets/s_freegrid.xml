@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_freegrid" inherit_id="website.s_freegrid">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Bringing the Beauty of Nature to Your Space
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Enhance your surroundings with our exquisite floral arrangements and garden designs. We offer a variety of options that bring the serenity and beauty of nature into your home or workspace.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Explore Our Gardens
+    </xpath>
+</template>
+
+<template id="configurator_s_freegrid" inherit_id="website.configurator_s_freegrid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Blobs/03','colors':{'c2':'o-color-2'},'flip':['x'],'showOnMobile':true,'shapeAnimationSpeed':'0'}</attribute>
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+     <!-- Section Shape -->
+    <xpath expr="//section//div" position="before">
+        <div class="o_we_shape o_html_builder_Blobs_03 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder%2FBlobs%2F03.svg?c2=o-color-2&amp;flip=x'); background-position: 50% 0%;"/>
+    </xpath>
+</template>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_masonry_block_default_template" inherit_id="website.s_masonry_block_default_template">
+    <!-- Image -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-4" separator=" "/>
+    </xpath>
+    <!-- Little block #1 -->
+    <!-- Main div -->
+    <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-4" separator=" "/>
+        <attribute name="style" remove="background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-2) 100%);" separator=";"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('col-lg-4')]/h2" position="replace" mode="inner">
+        Science fiction
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('col-lg-4')]/p" position="replace" mode="inner">
+        Discover unknown universes
+    </xpath>
+
+    <!-- Little block #2 -->
+    <!-- Main div -->
+    <xpath expr="//div[hasclass('col-lg-4')][2]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-4" separator=" "/>
+        <attribute name="style" remove="background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-1) 100%);" separator=";"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('col-lg-4')][2]/h2" position="replace" mode="inner">
+        Biographies
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Meet great people
+    </xpath>
+
+    <!-- Little block #3 -->
+    <!-- Main div -->
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-4" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('col-lg-3')]/h2" position="replace" mode="inner">
+        Horror
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('col-lg-3')]/p" position="replace" mode="inner">
+        Enjoy your fears
+    </xpath>
+
+    <!-- Little block #4 -->
+    <!-- Main div -->
+    <xpath expr="//div[hasclass('col-lg-3')][2]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-4" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('col-lg-3')][2]/h2" position="replace" mode="inner">
+        Romance
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('col-lg-3')][2]/p" position="replace" mode="inner">
+        Read the best love stories
+    </xpath>
+</template>
+
+</odoo>

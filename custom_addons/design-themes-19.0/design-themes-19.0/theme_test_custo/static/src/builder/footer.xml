@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- Theme Footer - Option -->
+<t t-name="theme_test_custo.FooterTemplateOption" t-inherit="website.FooterTemplateOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderSelect[@action=&quot;'websiteConfigFooter'&quot;]" position="inside">
+        <BuilderSelectItem title.translate="Custom Theme"
+                actionParam="{ view: 'theme_test_custo.template_footer_custom', vars: { 'footer-template': 'custom-theme' } }"
+        >
+            <Img src="'/theme_test_custo/static/src/img/template_footer_opt.svg'" class="'theme_test_custo_footer'"/>
+        </BuilderSelectItem>
+    </xpath>
+</t>
+
+</templates>

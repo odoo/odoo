@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_hexagonal" inherit_id="website.s_image_hexagonal">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc4" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        A place of paradise for flower lovers
+    </xpath>
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_masonry_block_default_image_1/html_builder/composition/composition_square_1.svg</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_square_1</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_cover_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

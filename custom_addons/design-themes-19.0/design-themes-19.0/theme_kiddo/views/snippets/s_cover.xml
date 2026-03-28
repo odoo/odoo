@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height o_cc1" remove="bg-black-50 o_cc5" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/14"}</attribute>
+    </xpath>
+
+    <!-- Filter -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="attributes">
+        <attribute name="class" add="bg-white-75" remove="bg-black-50" separator=" "/>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_14"/>
+    </xpath>
+
+    <!-- Heading -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Kiddo Nursery
+    </xpath>
+
+    <!-- Text -->
+    <xpath expr="//p" position="replace" mode="inner">
+        The countryside nursery since 2002.<br/>
+        A truly unique service in a highly secure and tranquil setting.
+    </xpath>
+
+    <!-- Separator -->
+    <xpath expr="//p" position="before">
+        <div data-snippet="s_hr" data-name="Separator" class="s_hr pt24 pb32">
+            <hr class="w-25 mx-auto" style="border-top: 8px dotted var(--o-color-2) !important;"/>
+        </div>
+    </xpath>
+
+    <!-- Paragraph -->
+    <xpath expr="//p[last()]" position="before">
+        <p class="lead" style="text-align: center;">
+            <br/>
+        </p>
+    </xpath>
+
+    <!-- Button -->
+    <xpath expr="//a[@t-att-href='cta_btn_href'][1]" position="attributes">
+        <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" "/>
+    </xpath>
+    <xpath expr="//a[@href='/contactus']" position="replace"/>
+</template>
+
+</odoo>

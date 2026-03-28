@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Theme Footer - Layout -->
+<template id="template_footer_custom" inherit_id="website.layout" name="Test Theme Custom Footer Template">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-name="Text">
+                <div class="container-fluid px-lg-5">
+                    <div class="row">
+                        <div class="col-lg-1 offset-lg-2 pt24 pb24">
+                            <img src="/web/image/theme_test_custo.logo" class="img-fluid rounded-circle" alt=""/>
+                        </div>
+                        <div class="col-lg-6 pt24 pb24 text-center">
+                            <h5 class="mb-4">Useful Links</h5>
+                            <ul class="list-unstyled">
+                                <t t-set="animal_menu" t-value="request.env.ref('theme_test_custo.main_menu_animals')"/>
+                                <li t-foreach="request.env['website.menu'].search([('theme_template_id', '=', animal_menu.id), ('website_id', '=', request.website.id)]).child_id" t-as="menu">
+                                    <a t-att-href="menu.url" t-out="menu.name"/>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-1 pt24 pb24">
+                            <img src="/web/image/theme_test_custo.logo" class="img-fluid rounded-circle" alt=""/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

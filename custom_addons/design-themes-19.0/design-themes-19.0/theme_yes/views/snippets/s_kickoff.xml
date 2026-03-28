@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_kickoff" inherit_id="website.s_kickoff">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/05",'colors':{'c5':'o-color-3'},"flip":[]}</attribute>
+        <attribute name="style" add="background-image:url(/web/image/website.s_kickoff_default_image)" separator=";"/>
+        <attribute name="class" add="pt0 pb0 oe_img_bg o_bg_img_center o_full_screen_height" remove="s_parallax s_parallax_is_fixed pt232 pb88" separator=" "/>
+    </xpath>
+        <!-- Remove Parallax + shape -->
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Connections_05" style="background-image: url('/html_editor/shape/html_builder/Connections/05.svg?c5=o-color-3');"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="attributes">
+        <attribute name="class" add="bg-black-25" remove="bg-black-50" separator=" "/>
+    </xpath>
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="style" add="text-align: center;" separator=";"/>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace"/>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace">
+        <h1 class="display-1" style="text-align: center;">Creating the perfect day<br/>just as you imagined</h1>
+    </xpath>
+    <xpath expr="//h1" position="after">
+        <a t-att-href="cta_btn_href" class="btn btn-lg btn-secondary">Get Started</a>
+    </xpath>
+</template>
+
+</odoo>

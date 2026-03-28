@@ -1,0 +1,99 @@
+
+#wrapwrap .s_discount_box {
+    background: white;
+    padding: 30px 0;
+    border-radius: $s-discount-box-border-radius;
+    position: relative;
+    box-shadow: 0px 0px 5px 0px rgba(map-get($grays, '700'), 0.5);
+    word-wrap: break-word;
+
+    &:before {
+        content: " ";
+        height: 20px;
+        width: 20px;
+        background: white;
+        border-radius: 20px;
+        position: absolute;
+        left: 50%;
+        top: 20px;
+        margin-left: -10px;
+    }
+
+    @include s-discount-box-hook;
+}
+
+#wrapwrap .s_discount_brand {
+    text-transform: uppercase;
+    letter-spacing: $s-discount-brand-letter-spacing;
+    padding: 10px 15px;
+    margin-top: 10px;
+    text-align: center;
+    min-height: 100px;
+    @include s-discount-brand-hook;
+}
+
+#wrapwrap .s_discount_amount {
+    min-height: 100px;
+    position: relative;
+    font-size: $s-discount-amount-size;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px 15px;
+    text-shadow: 1px 1px 2px 0px white;
+    color: white;
+
+    &:after {
+        content: " ";
+        border-right: 20px solid rgba(0, 0, 0, 0);
+        border-left: 20px solid rgba(0, 0, 0, 0);
+        position: absolute;
+        bottom: -20px;
+        left: 20%;
+    }
+
+}
+
+#wrapwrap .s_discount_type {
+    font-size: 20px;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#wrapwrap .s_discount_descr {
+    text-align: center;
+    font-size: 13px;
+    color: map-get($grays, '800');
+    margin-top: 10px;
+    padding: 20px 25px;
+    @include s-discount-descr-hook;
+}
+
+#wrapwrap .s_discount_ends {
+    padding: 0 25px;
+    margin-bottom: 10px;
+}
+
+#wrapwrap .s_discount_coupon {
+    min-height: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 20px 15px;
+
+    a {
+        color: $s-discount-coupon-color;
+    }
+}
+
+#wrapwrap .s_discount_code {
+    letter-spacing: 1px;
+    border-radius: 4px;
+    margin-top: 10px;
+    background: #f0f0f0;
+    color: map-get($grays, '800');
+    .code {
+        padding: 10px 15px;
+    }
+}

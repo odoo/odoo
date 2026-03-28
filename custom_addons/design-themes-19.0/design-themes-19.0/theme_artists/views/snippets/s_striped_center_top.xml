@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_center_top" inherit_id="website.s_striped_center_top">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20','colors':{'c5': 'o-color-1'},'flip':[], 'showOnMobile':true}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="style">background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-1');</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Unleash Your Creative
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Dive into a world of creativity where art meets innovation, and find inspiration through galleries, exhibitions, and unique artistic expressions.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Explore Now
+    </xpath>
+    <!-- Figcaption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Art that speaks to your soul
+    </xpath>
+</template>
+
+</odoo>

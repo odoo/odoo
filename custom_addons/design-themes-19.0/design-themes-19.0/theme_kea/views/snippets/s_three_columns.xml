@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Column 1 -->
+    <xpath expr="//figure" position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Gaming
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        VR takes immersive gaming to another level. From deep environmental interactions to puzzle solving.
+    </xpath>
+    <!-- Column 2 -->
+    <xpath expr="(//figure)[2]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Design
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        From design concept to the showroom, create and manage workflows with better collaboration.
+    </xpath>
+    <!-- Column 3 -->
+    <xpath expr="(//figure)[3]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <xpath expr="(//h2)[3]" position="replace" mode="inner">
+        Training
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        From high-risk safety simulations and maintenance procedures to soft skills like public speaking.
+    </xpath>
+</template>
+
+</odoo>

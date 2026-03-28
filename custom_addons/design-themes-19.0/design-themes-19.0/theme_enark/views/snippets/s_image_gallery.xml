@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_gallery" inherit_id="website.s_image_gallery">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height pt0 pb0" remove="pb24 pt24" separator=" "/>
+    </xpath>
+</template>
+
+<template id="s_images_wall" inherit_id="website.s_images_wall">
+    <!-- Container -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3 pt0 pb0 o_spc-none" remove="pb24 pt24 o_spc-small" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" add="container-fluid" remove="container" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[5]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[6]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

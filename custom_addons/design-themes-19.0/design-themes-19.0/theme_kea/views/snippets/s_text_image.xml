@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_kea/s_text_image.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Title & Paragraph -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        <font style="background-image: linear-gradient(135deg, var(--o-color-1) 0%, var(--o-color-2) 100%);" class="text-gradient">Full immersion</font>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Write one or two paragraphs describing your product or services. To be successful your content needs to be useful to your readers.
+    </xpath>
+</template>
+
+<template id="configurator_s_text_image" inherit_id="website.configurator_s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pb232" remove="pb80" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/22_001","colors":{"c5":"o-color-2"},"flip":["x"]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_22_001" style="background-image: url('/html_editor/shape/html_builder/Wavy/22_001.svg?c5=o-color-2&amp;flip=x'); background-position: 50% 100%;"/>
+    </xpath>
+</template>
+
+</odoo>

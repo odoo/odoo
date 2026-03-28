@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_attributes_vertical" inherit_id="website.s_attributes_vertical">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+    </xpath>
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/website/s_attributes_1.svg?c1=o-color-2&amp;c4=o-color-4&amp;c5=o-color-5</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/html_editor/shape/website/s_attributes_3.svg?c1=o-color-2&amp;c4=o-color-4&amp;c5=o-color-5</attribute>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/html_editor/shape/website/s_attributes_4.svg?c1=o-color-2&amp;c2=o-color-2&amp;c4=o-color-4&amp;c5=o-color-5</attribute>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt256 pb48 parallax s_parallax_is_fixed" remove="pt96 pb96" separator=" "/>
+        <attribute name="data-scroll-background-ratio">1</attribute>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+    </xpath>
+    <!-- Row - remove grid mode -->
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="class" remove="o_grid_mode" separator=" "/>
+        <attribute name="data-row-count"/>
+    </xpath>
+    <!-- Remove grid images -->
+    <xpath expr="//div[hasclass('o_grid_item_image')]" position="replace"/>
+    <xpath expr="//div[hasclass('o_grid_item_image')]" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-5')][2]" position="replace"/>
+    <!-- Column -->
+    <xpath expr="//*[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="col-lg-8 pt48 pb32 px-5 o_cc o_cc1 rounded" remove="o_grid_item g-height-10 g-col-lg-5 col-lg-5" separator=" "/>
+        <attribute name="style">box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        <b>Software innovation</b><br/> at its best.
+    </xpath>
+    <!-- Text -->
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" remove="display-1" separator=" "/>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Harness the power of disruptive technologies to increase<br/> your day-to-day business operations.</p>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-8')]//p[2]" position="attributes">
+        <attribute name="class" add="mb-0" separator=" "/>
+    </xpath>
+    <!-- Buttons -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Our Solutions
+    </xpath>
+    <xpath expr="//a" position="attributes">
+        <attribute name="class" remove="btn-lg" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

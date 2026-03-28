@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references_social" inherit_id="website.s_references_social">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        <font style="background-image: linear-gradient(135deg, var(--o-color-1) 0%, var(--o-color-2) 100%);" class="text-gradient">Our top brands</font>
+    </xpath>
+    <!-- Subtitle -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Every style for everybody.
+    </xpath>
+    <!-- Partners -->
+    <xpath expr="//div[hasclass('row')]/div/p" position="replace" mode="inner">
+        Redefining elegance since 2009
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/p" position="replace" mode="inner">
+        Disrupting fashion since 2013
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/p" position="replace" mode="inner">
+        Shaping your style since 2015
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[4]/p" position="replace" mode="inner">
+        Transforming trends since 2018
+    </xpath>
+</template>
+
+</odoo>

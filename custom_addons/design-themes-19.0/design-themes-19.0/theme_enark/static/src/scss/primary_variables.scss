@@ -1,0 +1,195 @@
+
+// Not used anymore by the editor: files and records kept for back-compatibility.
+// Check also in theme.scss and theme_common's mixins.scss.
+
+$o-theme-bg-img-01: url("/theme_enark/static/src/img/backgrounds/bg_img_01.webp");
+$o-theme-bg-img-02: url("/theme_enark/static/src/img/backgrounds/bg_img_02.webp");
+$o-theme-bg-img-03: url("/theme_enark/static/src/img/backgrounds/bg_img_03.webp");
+$o-theme-bg-img-04: url("/theme_enark/static/src/img/backgrounds/bg_img_04.webp");
+$o-theme-bg-img-05: url("/theme_enark/static/src/img/backgrounds/bg_img_05.webp");
+$o-theme-bg-img-06: url("/theme_enark/static/src/img/backgrounds/bg_img_06.webp");
+$o-theme-bg-img-07: url("/theme_enark/static/src/img/backgrounds/bg_img_07.webp");
+$o-theme-bg-img-08: url("/theme_enark/static/src/img/backgrounds/bg_img_08.webp");
+$o-theme-bg-img-09: url("/theme_enark/static/src/img/backgrounds/bg_img_09.webp");
+$o-theme-bg-img-10: url("/theme_enark/static/src/img/backgrounds/bg_img_10.webp");
+$o-theme-bg-img-11: url("/theme_enark/static/src/img/backgrounds/bg_img_11.webp");
+$o-theme-bg-img-12: url("/theme_enark/static/src/img/backgrounds/bg_img_12.webp");
+
+$o-theme-bg-pattern-01: url("/theme_enark/static/src/img/backgrounds/bg_pattern_01.webp");
+$o-theme-bg-pattern-02: url("/theme_enark/static/src/img/backgrounds/bg_pattern_02.webp");
+$o-theme-bg-pattern-03: url("/theme_enark/static/src/img/backgrounds/bg_pattern_03.webp");
+$o-theme-bg-pattern-04: url("/theme_enark/static/src/img/backgrounds/bg_pattern_04.webp");
+$o-theme-bg-pattern-05: url("/theme_enark/static/src/img/backgrounds/bg_pattern_05.webp");
+$o-theme-bg-pattern-06: url("/theme_enark/static/src/img/backgrounds/bg_pattern_06.webp");
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Theme colors
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'enark-1': (
+            'alpha': #9ea5ab,
+            'beta': #b5c0c9,
+            'gamma': #778089,
+            'delta': #566b7f,
+            'epsilon': #28354d,
+        ),
+        'enark-2': (
+            'alpha': #2b6990,
+            'beta': #9ea5ab,
+            'gamma': #1fb1b0,
+            'delta': #324465,
+            'epsilon': #28354d,
+        ),
+        'enark-3': (
+            'alpha': #5a8eaf,
+            'beta': #2b6990,
+            'gamma': #566b7f,
+            'delta': #324465,
+            'epsilon': #28354d,
+        ),
+        'enark-4': (
+            'alpha': #1fb1b0,
+            'beta': #566b7f,
+            'gamma': #1b7f7e,
+            'delta': darken(#1b7f7e, 30%),
+            'epsilon': darken(#1b7f7e, 50%),
+        ),
+        'enark-5': (
+            'alpha': #5a8eaf,
+            'beta': #2b6990,
+            'gamma': #1fb1b0,
+            'delta': #324465,
+            'epsilon': #28354d,
+        ),
+        'enark-6': (
+            'alpha': lighten(#000, 45%),
+            'beta': lighten(#000, 80%),
+            'gamma': lighten(#000, 70%),
+            'delta': lighten(#000, 35%),
+            'epsilon': lighten(#000, 20%),
+        ),
+    )
+);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (48 / 16);
+$o-theme-h6-font-size-multiplier: (18 / 16);
+
+$o-theme-font-configs: (
+    'Ubuntu': (
+        'family': ('Ubuntu', sans-serif),
+        'url': 'Ubuntu:300,300i,400,400i,700,700i',
+    ),
+    'BebasNeue': (
+        'family': ('BebasNeue', sans-serif),
+        'url': 'Bebas+Neue:400,700',
+    ),
+    'Maven Pro': (
+        'family': ('Maven Pro', sans-serif),
+        'url': 'Maven+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Mulish': (
+        'family': ('Mulish', sans-serif),
+        'url': 'Mulish:300,300i,400,400i,700,700i',
+    ),
+    'Abel': (
+        'family': ('Abel', sans-serif),
+        'url': 'Abel:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Alegreya Sans SC': (
+        'family': ('Alegreya Sans SC', sans-serif),
+        'url': 'Alegreya+Sans+SC:300,300i,400,400i,700,700i',
+    ),
+    'Bitter': (
+        'family': ('Bitter', serif),
+        'url': 'Bitter:300,300i,400,400i,700,700i',
+    ),
+    'Quattrocento': (
+        'family': ('Quattrocento', serif),
+        'url': 'Quattrocento:300,300i,400,400i,700,700i',
+    ),
+    'PT Sans': (
+        'family': ('PT Sans', sans-serif),
+        'url': 'PT+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Vollkorn': (
+        'family': ('Vollkorn', serif),
+        'url': 'Vollkorn:300,300i,400,400i,700,700i',
+    ),
+    'Inter': (
+        'family': ('Inter', sans-serif),
+        'url': 'Inter:300,300i,400,400i,700,700i',
+    ),
+    'Oxygen': (
+        'family': ('Oxygen', sans-serif),
+        'url': 'Oxygen:300,400,700',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name':  'default-light-12',
+        'header-font-size':     1rem,
+        'font':                 'Inter',
+        'headings-font':        'Oxygen',
+        'footer-template':      'descriptive',
+        'header-links-style':   'flat',
+        'btn-primary-flat':     true,
+        'btn-secondary-flat':   true,
+        'btn-border-radius':    0,
+        'input-border-radius':  0,
+    ),
+);
+
+$default-light-12: map-get($o-color-palettes, 'default-light-12');
+$default-light-12: map-merge($default-light-12, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-light-12': $default-light-12));
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'enark-1',
+    2: 'enark-2',
+    3: 'enark-3',
+    4: 'enark-4',
+    5: 'enark-5',
+    6: 'generic-1',
+    7: 'generic-2',
+    8: 'generic-3',
+    9: 'generic-4',
+    10: 'generic-5',
+    11: 'generic-6',
+    12: 'generic-7',
+    13: 'generic-8',
+    14: 'generic-9',
+    15: 'generic-10',
+    16: 'generic-11',
+    17: 'generic-12',
+    18: 'generic-13',
+    19: 'generic-14',
+    20: 'generic-15',
+    21: 'generic-16',
+    22: 'generic-17',
+);
+
+$o-theme-color-palettes-compatibility-indexes: (
+    1: 'enark-1',
+    2: 'enark-2',
+    3: 'enark-3',
+    4: 'enark-4',
+    5: 'enark-5',
+    6: 'enark-6',
+);

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_opening_hours" inherit_id="website.s_opening_hours">
+    <xpath expr="//div[hasclass('o_grid_item')][2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')][3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')][4]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

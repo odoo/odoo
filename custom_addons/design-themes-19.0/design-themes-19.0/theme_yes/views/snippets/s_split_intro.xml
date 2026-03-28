@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Craft your<br/>dream wedding
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Let us turn your vision into a stunning reality. As your dedicated wedding planner, we handle every detail with care and creativity, from venue selection to final touches. Whether you envision an intimate ceremony or a grand celebration, we ensure your special day is seamless, beautiful, and unforgettable.<br/><br/>
+    </xpath>
+</template>
+
+</odoo>

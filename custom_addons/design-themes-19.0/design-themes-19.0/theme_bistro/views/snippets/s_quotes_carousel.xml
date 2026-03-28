@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <!-- Carousel -->
+    <xpath expr="//*[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" add="s_carousel_default oe_img_bg o_bg_img_center" remove="s_carousel_boxed carousel-dark o_cc o_cc2" separator=" "/>
+        <attribute name="style">background-image: url('/web/image/website.s_quotes_carousel_demo_image_1');</attribute>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/16','colors':{'c5':'o-color-1'},'flip':['x'],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-indicators')]" position="attributes">
+        <attribute name="class" remove="s_carousel_indicators_dots" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_16" style="background-image: url('/html_editor/shape/html_builder/Bold/16.svg?c5=o-color-1&amp;flip=x');"/>
+    </xpath>
+    <xpath expr="//blockquote" position="attributes">
+        <attribute name="class" add="s_blockquote_default" remove="s_blockquote_with_icon" separator=" "/>
+    </xpath>
+    <xpath expr="(//blockquote)[2]" position="attributes">
+        <attribute name="class" add="s_blockquote_default" remove="s_blockquote_with_icon" separator=" "/>
+    </xpath>
+    <xpath expr="(//blockquote)[3]" position="attributes">
+        <attribute name="class" add="s_blockquote_default" remove="s_blockquote_with_icon" separator=" "/>
+    </xpath>
+    <!-- Slide #01 -->
+    <xpath expr="//*[hasclass('carousel-item')][1]" position="attributes">
+        <attribute name="class" add="pt120 pb120" remove="pt80 pb80" separator=" "/>
+        <attribute name="style">background-image: none;</attribute>
+    </xpath>
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        Cosy and friendly, good atmosphere and super food. Especially the spiced fruit crumble.
+    </xpath>
+    <!-- Slide #02 -->
+    <xpath expr="//*[hasclass('carousel-item')][2]" position="attributes">
+        <attribute name="class" add="pt120 pb120" remove="pt80 pb80" separator=" "/>
+        <attribute name="style">background-image: none;</attribute>
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        This place is perfect for groups or a casual date night.
+    </xpath>
+    <!-- Slide #03 -->
+    <xpath expr="//*[hasclass('carousel-item')][3]" position="attributes">
+        <attribute name="class" add="pt120 pb120" remove="pt80 pb80" separator=" "/>
+        <attribute name="style">background-image: none;</attribute>
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        A truly exquisite dining experience. I highly recommend the Mustard Sauce, out of this world.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_hexagonal" inherit_id="website.s_image_hexagonal">
+    <!-- Box -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="style" add="--grid-item-padding-x: 32px;" separator=";"/>
+    </xpath>
+    <!-- Images -->
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_cover_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

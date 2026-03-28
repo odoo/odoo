@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel" inherit_id="website.s_carousel">
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc5" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace">
+        <div class="o_we_bg_filter bg-white-25"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('container')])[3]" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+</template>
+
+</odoo>

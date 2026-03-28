@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" add="o_cc o_cc2" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Rainy/06','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Rainy_06"/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Essential School Supplies
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Equip your child with all the necessary supplies for a successful school year. Each item is selected to ensure both comfort and functionality.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;School Supplies
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Provided by the School
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Backpack
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        $35.00
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        Durable backpack with adjustable straps and multiple compartments for organizing school essentials.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Lunchbox
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        $15.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Insulated lunchbox with a secure closure and easy-to-clean interior, perfect for keeping meals fresh.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Water Bottle
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        $10.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        Reusable water bottle with a spill-proof lid and easy-grip design, ideal for staying hydrated throughout the day.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        Crayons and Markers Set
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        $12.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Colorful set of crayons and markers for creative drawing and coloring activities in the classroom.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Notebook
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        $8.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Spiral-bound notebook with lined pages, perfect for taking notes and practicing writing skills.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Pencil Case
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        $7.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Compact pencil case with compartments for pens, pencils, and other small stationery items.
+    </xpath>
+</template>
+
+</odoo>

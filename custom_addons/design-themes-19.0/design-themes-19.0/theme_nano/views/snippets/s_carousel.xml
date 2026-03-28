@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel" inherit_id="website.s_carousel">
+    <!-- Carousel -->
+    <xpath expr="//*[hasclass('s_carousel')]" position="attributes">
+        <attribute name="class" add="carousel-fade bg-o-color-4" separator=" "/>
+    </xpath>
+    <!-- Slide #01 -->
+    <xpath expr="//*[hasclass('carousel-content')][1]" position="attributes">
+        <attribute name="class" add="col-lg-8 offset-lg-2 bg-black-50 text-center pt48 pb40" remove="col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Slide #02 -->
+    <xpath expr="//*[hasclass('s_hr')][1]" position="replace"/>
+    <!-- Slide #03 -->
+    <xpath expr="//*[hasclass('carousel-item')][3]" position="replace"/>
+    <xpath expr="//*[@data-bs-slide-to='2']" position="replace"/>
+</template>
+
+</odoo>

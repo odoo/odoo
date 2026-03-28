@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_title" inherit_id="website.s_image_title">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="parallax" separator=" "/>
+        <attribute name="style"/>
+        <attribute name="data-scroll-background-ratio">-3</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="before">
+        <span class="s_parallax_bg oe_img_bg o_bg_img_center" style="background-image: url('/web/image/website.s_image_title_default_image') !important;"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        A Deep Dive into Flavor and Innovation
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Transform your dining experience with our new menu, where classic dishes meet modern creativity. Elevate your palate with flavors that blend tradition and innovation seamlessly.
+    </xpath>
+</template>
+
+</odoo>

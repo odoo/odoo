@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb72 pt96 oe_img_bg o_bg_img_center" remove="pt64 pb64" separator=" "/>
+        <attribute name="style">background-image: url('/web/image/website.s_call_to_action_default_image'); background-position: 50% 34%;</attribute>
+    </xpath>
+    <!-- Shape & filter -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Live the Miraillet <br/>Festival experience
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Join us and make this weekend unforgettable!
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Get your ticket
+    </xpath>
+</template>
+
+</odoo>

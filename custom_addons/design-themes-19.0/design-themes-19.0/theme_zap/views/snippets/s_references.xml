@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references" inherit_id="website.s_references">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our References
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        We're excited to have the opportunity to collaborate with these outstanding companies!
+    </xpath>
+    <!-- Link -->
+    <xpath expr="//a" position="replace"/>
+    <!-- Column #01 -->
+    <xpath expr="//div[hasclass('col-lg-2')][1]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 rounded pt48 pb48 border" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="border-width: 4px !important; border-color: var(--o-color-1) !important;" separator=";"/>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//div[hasclass('col-lg-2')][2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 rounded pt48 pb48 border" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="border-width: 4px !important; border-color: var(--o-color-1) !important;" separator=";"/>
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="//div[hasclass('col-lg-2')][3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 rounded pt48 pb48 border" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="border-width: 4px !important; border-color: var(--o-color-1) !important;" separator=";"/>
+    </xpath>
+    <!-- Column #04 -->
+    <xpath expr="//div[hasclass('col-lg-2')][4]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 rounded pt48 pb48 border" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="border-width: 4px !important; border-color: var(--o-color-1) !important;" separator=";"/>
+    </xpath>
+    <!-- Column #05 -->
+    <xpath expr="//div[hasclass('col-lg-2')][5]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 rounded pt48 pb48 border" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="border-width: 4px !important; border-color: var(--o-color-1) !important;" separator=";"/>
+    </xpath>
+    <!-- Column #06 -->
+    <xpath expr="//div[hasclass('col-lg-2')][6]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 rounded pt48 pb48 border" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="border-width: 4px !important; border-color: var(--o-color-1) !important;" separator=";"/>
+    </xpath>
+</template>
+
+</odoo>

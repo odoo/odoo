@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc2" separator=" "/>
+        <attribute name="style">background-image: linear-gradient(60deg, var(--o-color-5) 0%, var(--o-color-1) 100%);</attribute>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/12','colors':{'c5':'o-color-4'}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_12" style="background-image: url('/html_editor/shape/html_builder/Connections/12.svg?c5=o-color-4');"/>
+    </xpath>
+    <!-- Column 1 -->
+    <xpath expr="//*[hasclass('card-title')]" position="replace" mode="inner">
+        Accomodations
+    </xpath>
+    <!-- Column 2 -->
+    <xpath expr="(//*[hasclass('card-title')])[2]" position="replace" mode="inner">
+        Car Rental
+    </xpath>
+    <!-- Column 3 -->
+    <xpath expr="(//*[hasclass('card-title')])[3]" position="replace" mode="inner">
+        Make up &amp;amp; Hair
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_discovery" inherit_id="website.s_discovery">
+   <xpath expr="//section" position="attributes">
+      <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+      <attribute name="data-oe-shape-data">{'shape':'html_builder/Containers/06','colors':{'c5':'o-color-4'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+   </xpath>
+   <xpath expr="//div[hasclass('container')]" position="before">
+      <div class="o_we_shape o_html_builder_Containers_06 o_we_animated" style="background-image: url('/html_editor/shape/html_builder/Containers/06.svg?c5=o-color-4');"/>
+   </xpath>
+   <xpath expr="//h1" position="replace">
+      <h2 class="display-4-fs" style="text-align: center;"><span style="font-weight: normal;">Discover our solutions</span></h2>
+   </xpath>
+</template>
+
+</odoo>

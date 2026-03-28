@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_freegrid" inherit_id="website.s_freegrid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20','flip':['y'],'showOnMobile':true,'shapeAnimationSpeed':'0'}</attribute>
+        <attribute name="class" add="pt128" remove="pt64" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_mode')]" position="attributes">
+        <attribute name="data-row-count">17</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container-fluid')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_20 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-5&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+    <xpath expr="//div[hasclass('container-fluid')]" position="attributes">
+        <attribute name="class" add="container" remove="container-fluid" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[7]" position="attributes">
+        <attribute name="class" add="g-height-6" remove="g-height-5" separator=" "/>
+        <attribute name="style">z-index: 7; grid-area: 12 / 1 / 18 / 8; --grid-item-padding-y: 16px; --grid-item-padding-x: 0px;</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[8]" position="attributes">
+        <attribute name="style">z-index: 8; grid-area: 12 / 10 / 14 / 13; --grid-item-padding-y: 16px; --grid-item-padding-x: 0px;"</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace">
+        <h1 class="display-4">Architectural Excellence for Corporate Success</h1>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Our architectural solutions combine design excellence with business acumen, creating spaces that inspire and support your corporate goals. Transform your workspace with our expertise.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Start a Project
+    </xpath>
+</template>
+
+</odoo>

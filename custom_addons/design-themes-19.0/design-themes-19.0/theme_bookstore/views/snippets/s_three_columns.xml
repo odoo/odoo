@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Column #1 -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        A Belgian Story
+    </xpath>
+    <xpath expr="//p[hasclass('card-text')]" position="replace" mode="inner">
+        Discover the history of Belgium in this well-documented book with many illustrations and testimonials.
+    </xpath>
+    <!-- Column #2 -->
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        At the Mars conquest
+    </xpath>
+    <xpath expr="(//p[hasclass('card-text')])[2]" position="replace" mode="inner">
+        Learn about the difficulties encountered by NASA engineers in sending the first men to Mars.
+    </xpath>
+    <!-- Column #3 -->
+    <xpath expr="(//h2)[3]" position="replace" mode="inner">
+        Re-edition
+    </xpath>
+    <xpath expr="(//p[hasclass('card-text')])[3]" position="replace" mode="inner">
+        The first re-edition of this Latin dictionary, from 1460. Printed originally on the Gutenberg press.
+    </xpath>
+</template>
+
+</odoo>

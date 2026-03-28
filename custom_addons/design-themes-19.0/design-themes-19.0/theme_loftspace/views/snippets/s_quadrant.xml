@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Home Interiors
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Create the perfect living space with our expertly designed furniture and home interiors. Combining comfort and style, our collections are made to transform your home.<br/><br/> Find your inspiration here.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        View Collection
+    </xpath>
+</template>
+
+</odoo>

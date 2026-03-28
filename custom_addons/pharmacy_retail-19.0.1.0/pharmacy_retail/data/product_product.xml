@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="product_product_13" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_13"/>
+        <field name="product_template_attribute_value_ids" eval="[(6, 0, [ref('product_template_attribute_value_1'), ref('product_template_attribute_value_2')])]"/>
+        <field name="standard_price">50.0</field>
+    </record>
+    <record id="product_product_14" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_14"/>
+        <field name="product_template_attribute_value_ids" eval="[(6, 0, [ref('product_template_attribute_value_5'), ref('product_template_attribute_value_6')])]"/>
+        <field name="standard_price">16.0</field>
+    </record>
+    <record id="product_product_15" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_15"/>
+        <field name="product_template_attribute_value_ids" eval="[(6, 0, [ref('product_template_attribute_value_9'), ref('product_template_attribute_value_10')])]"/>
+        <field name="standard_price">30.0</field>
+    </record>
+    <record id="product_product_16" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_16"/>
+        <field name="product_template_attribute_value_ids" eval="[(6, 0, [ref('product_template_attribute_value_11'), ref('product_template_attribute_value_12')])]"/>
+        <field name="standard_price">40.0</field>
+    </record>
+    <record id="product_product_17" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_17"/>
+        <field name="product_template_attribute_value_ids" eval="[(6, 0, [ref('product_template_attribute_value_7'), ref('product_template_attribute_value_8')])]"/>
+        <field name="standard_price">50.0</field>
+    </record>
+    <record id="product_product_18" model="product.product">
+        <field name="product_tmpl_id" ref="product_template_18"/>
+        <field name="product_template_attribute_value_ids" eval="[(6, 0, [ref('product_template_attribute_value_3'), ref('product_template_attribute_value_4')])]"/>
+        <field name="standard_price">100.0</field>
+    </record>
+    <record id="product_product_19" model="product.product">
+        <field name="name">Himalaya Baby Powder 100 g</field>
+        <field name="categ_id" ref="product_category_5"/>
+        <field name="is_storable">True</field>
+        <field name="tracking">lot</field>
+        <field name="alert_time">30</field>
+        <field name="list_price">85.0</field>
+        <field name="expiration_time">600</field>
+        <field name="use_expiration_date" eval="True"/>
+        <field name="removal_time">30</field>
+        <field name="use_time">40</field>
+        <field name="available_in_pos" eval="True"/>
+        <field name="x_manufacturer" ref="res_partner_16"/>
+        <field name="image_1920" type="base64" file="pharmacy_retail/static/src/binary/product_template/19-image_1920"/>
+        <field name="sale_line_warn_msg">If you Buy 2 Qty then 1 Qty will be free. (Buy 2 Get 1 Free Offer)</field>
+        <field name="product_tag_ids" eval="[(6, 0, [ref('product_tag_1'), ref('product_tag_2')])]"/>
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_5')])]"/>
+        <field name="standard_price">30.0</field>
+    </record>
+    <record id="product_product_20" model="product.product">
+        <field name="name">Himalaya Baby Cream - Extra Soft &amp; Gentle, Paraben Free, 100 ml Tube</field>
+        <field name="categ_id" ref="product_category_5"/>
+        <field name="is_storable">True</field>
+        <field name="tracking">lot</field>
+        <field name="alert_time">30</field>
+        <field name="list_price">160.0</field>
+        <field name="expiration_time">365</field>
+        <field name="use_expiration_date" eval="True"/>
+        <field name="removal_time">49</field>
+        <field name="use_time">30</field>
+        <field name="available_in_pos" eval="True"/>
+        <field name="x_manufacturer" ref="res_partner_16"/>
+        <field name="image_1920" type="base64" file="pharmacy_retail/static/src/binary/product_template/20-image_1920"/>
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_5')])]"/>
+        <field name="standard_price">80.0</field>
+    </record>
+</odoo>

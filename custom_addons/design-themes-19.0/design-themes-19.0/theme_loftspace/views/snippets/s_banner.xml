@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" remove="pt96 pb96" separator=" "/>
+    </xpath>
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" add="container-fluid" remove="container" separator=" "/>
+    </xpath>
+    <!-- Row -->
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="data-row-count">20</attribute>
+    </xpath>
+
+    <!-- First item -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[1]" position="attributes">
+        <attribute name="style" add="grid-area: 8 / 2 / 14 / 12; z-index: 3;" remove="grid-area: 1 / 1 / 11 / 6;z-index: 1" separator=";"/>
+        <attribute name="class" add="col-lg-10 g-col-lg-10 g-height-6" remove="col-lg-5 g-col-lg-5 g-height-10" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace">
+        <h1 class="display-1" style="text-align: center;">Generation<br/>Furniture Co.</h1>
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+    <xpath expr="//a[hasclass('btn')]" position="replace"/>
+
+    <!-- Second item -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="style" add="--grid-item-padding-x: 0px; --grid-item-padding-y: 0px; grid-area: 1 / 1 / 16 / 6;" remove="grid-area: 1 / 8 / 11 / 12;" separator=";"/>
+        <attribute name="class" add="col-lg-5 g-col-lg-5 g-height-15" remove="col-lg-4 g-col-lg-4 g-height-10" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+
+    <!-- Third item -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]" position="attributes">
+        <attribute name="style" add="--grid-item-padding-x: 0px; --grid-item-padding-y: 0px; grid-area: 8 / 9 / 21 / 13; z-index: 2;" remove="grid-area: 2 / 11 / 7 / 13;z-index: 3;" separator=";"/>
+        <attribute name="class" add="col-lg-4 g-col-lg-4 g-height-13" remove="col-lg-2 g-col-lg-2 g-height-5" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]//img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+
+    <!-- Blockquote -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]" position="replace"/>
+</template>
+
+</odoo>

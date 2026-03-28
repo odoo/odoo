@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- About -->
+
+<template id="new_page_template_sections_about_personal" inherit_id="website.new_page_template_sections_about_personal">
+    <xpath expr="//t[@t-snippet-call='website.new_page_template_about_personal_s_call_to_action_about']" position="attributes">
+        <attribute name="t-snippet-call">website.new_page_template_about_personal_s_call_to_action</attribute>
+    </xpath>
+</template>
+
+<!-- General customizations -->
+
+<!-- Snippet customization Basic Pages -->
+
+<!-- Snippet customization About Pages -->
+
+<template id="new_page_template_about_s_banner" inherit_id="website.new_page_template_about_s_banner">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/20","colors":{"c5": "o-color-4"},"flip":[]}</attribute>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_20" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_s_cover" inherit_id="website.new_page_template_about_s_cover">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_full_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_s_text_block_h1" inherit_id="website.new_page_template_about_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_full_s_image_text" inherit_id="website.new_page_template_about_full_s_image_text">
+    <xpath expr="//section" position="attributes">
+        <!-- o_colored_level is defined by both theme and new page template -->
+        <attribute name="class" add="o_colored_level" remove="o_colored_level pt48 pb56" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_full_s_numbers" inherit_id="website.new_page_template_about_full_s_numbers">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc3" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_map_s_text_block_h1" inherit_id="website.new_page_template_about_map_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_personal_s_numbers" inherit_id="website.new_page_template_about_personal_s_numbers">
+    <xpath expr="//section" position="attributes">
+        <!-- o_colored_level is defined by both theme and new page template -->
+        <attribute name="class" add="pt64" remove="o_cc3 o_colored_level pt0" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_personal_s_text_block_h2" inherit_id="website.new_page_template_about_personal_s_text_block_h2">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc3" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Landing Pages -->
+
+<template id="new_page_template_landing_1_s_banner" inherit_id="website.new_page_template_landing_1_s_banner">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/20","colors":{"c5": "o-color-4"},"flip":[]}</attribute>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_20" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_2_s_cover" inherit_id="website.new_page_template_landing_2_s_cover">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_full_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Gallery Pages -->
+
+<template id="new_page_template_gallery_s_banner" inherit_id="website.new_page_template_gallery_s_banner">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/20","colors":{"c5": "o-color-4"},"flip":[]}</attribute>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_20" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_gallery_s_cover" inherit_id="website.new_page_template_gallery_s_cover">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_full_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_gallery_s_image_text_2nd" inherit_id="website.new_page_template_gallery_s_image_text_2nd">
+    <xpath expr="//section" position="attributes">
+        <!-- o_colored_level is defined by both theme and new page template -->
+        <attribute name="class" add="o_colored_level" remove="o_colored_level pt48 pb56" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Services Pages -->
+
+<!-- Snippet customization Pricing Pages -->
+
+<template id="new_page_template_pricing_s_cover" inherit_id="website.new_page_template_pricing_s_cover">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_full_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_pricing_s_image_text_2nd" inherit_id="website.new_page_template_pricing_s_image_text_2nd">
+    <xpath expr="//section" position="attributes">
+        <!-- o_colored_level is defined by both theme and new page template -->
+        <attribute name="class" add="o_colored_level" remove="o_colored_level pt48 pb56" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Team Pages -->
+
+<template id="new_page_template_team_s_text_block_h1" inherit_id="website.new_page_template_team_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_2_s_text_block_h1" inherit_id="website.new_page_template_team_2_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

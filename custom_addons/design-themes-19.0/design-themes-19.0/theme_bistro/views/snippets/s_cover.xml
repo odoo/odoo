@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Parallax -->
+    <xpath expr="//*[hasclass('s_parallax_bg')]" position="attributes">
+        <attribute name="style" add="background-position: 50% 100%;" remove="background-position: 50% 75%;" separator=";"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Seasonal<br/> Flavors
+    </xpath>
+    <xpath expr="//h1" position="before">
+        <i class="fa fa-5x fa-leaf text-o-color-3 mx-auto my-4"/>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Daily fresh products combined with our professional yet convivial service<br/> to create a true gastronomic experience.
+    </xpath>
+    <xpath expr="//p" position="after">
+        <p class="lead" style="text-align: center;"><br/></p>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a//t" position="replace" mode="inner">
+        Our Menu
+    </xpath>
+</template>
+
+<template id="configurator_s_cover" inherit_id="website.configurator_s_cover">
+    <!-- Shape option -->
+    <xpath expr="section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/18","colors":{"c5": "o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_18" style="background-image: url('/html_editor/shape/html_builder/Connections/18.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+</odoo>

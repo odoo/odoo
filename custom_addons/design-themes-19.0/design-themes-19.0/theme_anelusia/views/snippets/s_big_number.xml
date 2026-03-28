@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_big_number" inherit_id="website.s_big_number">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Blobs/06_001"}</attribute>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Blobs_06_001"/>
+    </xpath>
+
+    <!-- Text -->
+    <xpath expr="//h2/span" position="replace" mode="inner">
+        <font class="text-gradient" style="background-image: linear-gradient(15deg, var(--o-color-1) 25%, var(--o-color-5) 100%);">
+            100+
+        </font>
+    </xpath>
+    <xpath expr="//p/span" position="replace" mode="inner">
+        happy customers
+    </xpath>
+</template>
+
+</odoo>

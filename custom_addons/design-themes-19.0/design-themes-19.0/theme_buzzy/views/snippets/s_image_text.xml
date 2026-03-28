@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        A new open world
+    </xpath>
+    <xpath expr="//h2" position="after">
+        <p><br/></p>
+    </xpath>
+    <!-- Img -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="style">padding: 32px !important;</attribute>
+        <!-- Enable SVG dynamic color functionality -->
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_image_text.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        Working at the office is good, but working where we want without distraction is better. With our Cloud service accessing to your data has never been so easy.
+    </xpath>
+    <xpath expr="//p[3]" position="replace" mode="inner">
+        Get what you want, where and when you want.
+    </xpath>
+</template>
+
+</odoo>

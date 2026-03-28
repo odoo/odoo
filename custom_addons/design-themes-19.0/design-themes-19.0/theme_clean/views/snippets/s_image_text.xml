@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 pt48 pb72" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Add space after title -->
+    <xpath expr="//h2" position="after">
+        <p><br/></p>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_image_text_default_image/html_builder/pattern/pattern_labyrinth.svg?c1=o-color-3&amp;c2=o-color-5&amp;c4=o-color-1</attribute>
+        <attribute name="data-shape">html_builder/pattern/pattern_labyrinth</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">image_content_20.svg</attribute>
+        <attribute name="data-shape-colors">o-color-3;o-color-5;;o-color-1;</attribute>
+    </xpath>
+</template>
+
+</odoo>

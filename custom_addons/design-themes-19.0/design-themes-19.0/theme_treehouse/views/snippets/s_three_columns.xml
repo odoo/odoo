@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt80 pb80" remove="pt32 pb32 o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="(//*[hasclass('card-title')])[1]" position="replace" mode="inner">
+        Recycling water
+    </xpath>
+    <xpath expr="(//*[hasclass('card-text')])[1]" position="replace" mode="inner">
+        Recycling water for reuse applications instead of using freshwater supplies can be a water-saving measure.
+    </xpath>
+    <xpath expr="(//*[hasclass('card-body')])[1]" position="after">
+        <div class="card-footer">
+            <a href="#" class="card-link">Read more</a>
+        </div>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="(//*[hasclass('card-title')])[2]" position="replace" mode="inner">
+        Habitat Model
+    </xpath>
+    <xpath expr="(//*[hasclass('card-text')])[2]" position="replace" mode="inner">
+        Habitats with a minimum footprint on the planet and a maximum positive impact on the local community.
+    </xpath>
+    <xpath expr="(//*[hasclass('card-body')])[2]" position="after">
+        <div class="card-footer">
+            <a href="#" class="card-link">Read more</a>
+        </div>
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="(//*[hasclass('card-title')])[3]" position="replace" mode="inner">
+        Organic Garden
+    </xpath>
+    <xpath expr="(//*[hasclass('card-text')])[3]" position="replace" mode="inner">
+        Learn how to use organic gardening methods to grow the freshest food in your fruit and vegetable garden.
+    </xpath>
+    <xpath expr="(//*[hasclass('card-body')])[3]" position="after">
+        <div class="card-footer">
+            <a href="#" class="card-link">Read more</a>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

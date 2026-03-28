@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features_wall" inherit_id="website.s_features_wall">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt96 pb96" remove="pt56 pb56" separator=" "/>
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our other services
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        We also offer these additional services, always with the same passion and care that define everything we do.
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')]//h3" position="replace" mode="inner">
+        Curated Book Selections
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')]//p" position="replace" mode="inner">
+        Discover a handpicked collection of books across genres, featuring bestsellers, classics, and hidden gems for every reader.
+    </xpath>
+    <xpath expr="(//img)[1]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')][4]//h3" position="replace" mode="inner">
+        Cozy Reading Nooks
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')][4]//p" position="replace" mode="inner">
+        Enjoy a relaxing atmosphere with comfortable seating and quiet spaces perfect for browsing and reading your new favorites.
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')][6]//h3" position="replace" mode="inner">
+        Literary Events and Signings
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')][6]//p" position="replace" mode="inner">
+        Attend author events, book signings, and literary discussions that connect you with the vibrant world of books and writers.
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

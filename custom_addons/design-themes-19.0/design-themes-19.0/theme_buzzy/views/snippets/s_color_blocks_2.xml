@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Left block -->
+    <xpath expr="//div[hasclass('row')]//div" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/11_001","flip":["y","x"]}</attribute>
+    </xpath>
+    <!-- Left block - Shape -->
+    <xpath expr="//div[hasclass('row')]//div//h2" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_11_001" style="background-image: url('/html_editor/shape/html_builder/Wavy/11_001.svg?c5=o-color-5&amp;flip=xy'); background-position: 50% 0%;"/>
+    </xpath>
+    <!-- Right block -->
+    <xpath expr="//div[hasclass('row')]//div[2]" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/11_001","colors":{"c5":"o-color-1"},"flip":[]}</attribute>
+    </xpath>
+    <!-- Right block - Shape -->
+    <xpath expr="//div[hasclass('row')]//div[2]//h2" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_11_001" style="background-image: url('/html_editor/shape/html_builder/Wavy/11_001.svg?c5=o-color-1');"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_tabs" inherit_id="website.s_tabs">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pt64 pb64" remove="pt48 pb48" separator=" "/>
+    </xpath>
+    <!-- Card -->
+    <xpath expr="//*[hasclass('s_tabs_main')]" position="attributes">
+        <attribute name="class" add="card" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('s_tabs_nav')]" position="attributes">
+        <attribute name="class" add="card-header o_cc o_cc4 border-0 px-0" remove="mb-3" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('nav')]" position="attributes">
+        <attribute name="class" add="nav-tabs card-header-tabs mx-0 px-2 border-bottom" remove="nav-underline" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('s_tabs_content')]" position="attributes">
+        <attribute name="class" add="p-3" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

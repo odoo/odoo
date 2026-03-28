@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Business Advisory
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Optimize your business strategy with our expert advisory services. We provide the insights and support your need to navigate the corporate world with confidence.<br/><br/> Let’s achieve your business goals together.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Get Advice
+    </xpath>
+</template>
+
+</odoo>

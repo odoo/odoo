@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_picture" inherit_id="website.s_picture">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt88 pb88 o_cc o_cc5" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <xpath expr="//section/div" position="attributes">
+        <attribute name="class" add="container" remove="o_container_small" separator=" "></attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Explore World's Hidden Gems
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Set off on an unforgettable adventure to the world's most breathtaking locations, thoughtfully curated just for you.
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="style">width: 100%;</attribute>
+    </xpath>
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Old Harry Rocks, Isle of Purbeck
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_popup_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

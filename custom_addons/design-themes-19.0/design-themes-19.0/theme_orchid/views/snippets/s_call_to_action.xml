@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb88 pt88" remove="pb64 pt64" separator=" "/>
+    </xpath>
+    <!-- Title & paragraph -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        There are always flowers <br/>for those who want to see them.
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+</template>
+
+</odoo>

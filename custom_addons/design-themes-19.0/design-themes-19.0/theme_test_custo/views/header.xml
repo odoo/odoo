@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Theme Header - Layout -->
+<template id="template_header_custom" inherit_id="website.layout" name="Test Theme Custom Header Template">
+    <xpath expr="//header//nav" position="replace">
+        <nav data-name="Navbar" class="navbar navbar-expand-lg">
+            <div class="container">
+                <t t-call="website.placeholder_header_brand"/>
+                <t t-call="website.navbar_nav">
+                    <!-- Menu -->
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu">
+                            <t t-set="item_class" t-valuef="nav-item"/>
+                            <t t-set="link_class" t-valuef="nav-link"/>
+                        </t>
+                    </t>
+                    <!-- Sign In -->
+                    <t t-call="portal.placeholder_user_sign_in">
+                        <t t-set="_item_class" t-valuef="nav-item"/>
+                        <t t-set="_link_class" t-valuef="nav-link text-900"/>
+                    </t>
+                    <!-- User Dropdown -->
+                    <t t-call="portal.user_dropdown">
+                        <t t-set="_user_name" t-value="true"/>
+                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-auto"/>
+                        <t t-set="_link_class" t-valuef="nav-link text-900"/>
+                    </t>
+                </t>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
+</odoo>

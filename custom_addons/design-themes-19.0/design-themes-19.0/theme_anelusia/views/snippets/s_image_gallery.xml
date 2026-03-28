@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_images_wall" inherit_id="website.s_images_wall">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt0 pb0 o_cc o_cc5 o_spc-none" remove="pt24 pb24 o_spc-small" separator=" "/>
+    </xpath>
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" add="container-fluid" remove="container" separator=" "/>
+    </xpath>
+</template>
+
+<template id="s_image_gallery" inherit_id="website.s_image_gallery">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt80 pb80" remove="pt24 pb24" separator=" "/>
+    </xpath>
+    <!-- Item #2 - Img -->
+    <xpath expr="//div[hasclass('carousel-item')][2]/img" position="attributes">
+        <attribute name="src">/web/image/website.library_image_16</attribute>
+    </xpath>
+    <!-- Item #2 - Indicator -->
+    <xpath expr="//div[hasclass('carousel-indicators')]//button[3]" position="attributes">
+        <attribute name="style">background-image: url(/web/image/website.library_image_16)</attribute>
+    </xpath>
+</template>
+
+</odoo>

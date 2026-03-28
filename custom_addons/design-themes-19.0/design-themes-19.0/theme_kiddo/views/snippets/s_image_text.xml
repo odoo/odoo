@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pb64 pt64" remove="pb80 pt80" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/13","flip":["x"]}</attribute>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_13" style="background-image: url('/html_editor/shape/html_builder/Floats/13.svg?c1=o-color-1&amp;c2=o-color-2&amp;c5=o-color-5&amp;flip=x'); background-position: 50% 50%;"/>
+    </xpath>
+
+    <!-- Title & Paragraphs -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Activities
+    </xpath>
+    <xpath expr="//h2" position="after">
+        <div class="s_hr pb32 pt8" data-snippet="s_hr" data-name="Separator">
+            <hr class="w-50 me-auto" style="border-top: 4px dotted var(--o-color-2) !important;"/>
+        </div>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Our team is composed of experienced nursery nurses.
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        They will propose to your children educational activities, playful, varied and adapted to the stage of development.
+    </xpath>
+    <xpath expr="//p[2]" position="after">
+        <p><br/></p>
+    </xpath>
+
+    <!-- Img -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_image_text_default_image/html_builder/geometric_round/geo_round_square_2.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric_round/geo_round_square_2</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_image_text.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

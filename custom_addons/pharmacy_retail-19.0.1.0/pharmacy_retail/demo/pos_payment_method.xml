@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="pos_payment_method_1" model="pos.payment.method">
+        <field name="name">Credit Card</field>
+        <field name="is_online_payment" eval="1"/>
+        <field name="online_payment_provider_ids" eval="[
+            (6, 0, [
+                ref('payment.payment_provider_demo'),
+            ])
+        ]"/>
+    </record>
+</odoo>

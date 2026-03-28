@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt80 pb48" remove="pt64 pb64" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Rainy/08_001"}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Rainy_08_001"/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//div[hasclass('row')]/*[1]" position="attributes">
+        <attribute name="class" add="col-lg-12" remove="col-lg-9" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+        <h2 class="h3-fs" style="text-align: center;">Help us protect and preserve for future generations</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead" style="text-align: center;">Join us and make the planet a better place.</p>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//div[hasclass('row')]/*[2]" position="attributes">
+        <attribute name="class" add="col-lg-12" remove="col-lg-3" separator=" "/>
+    </xpath>
+    <xpath expr="(//p)[2]" position="attributes">
+        <attribute name="style">text-align: center;</attribute>
+    </xpath>
+</template>
+
+</odoo>

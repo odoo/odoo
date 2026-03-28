@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team" inherit_id="website.s_company_team">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt72 pb0" remove="pt48 pb48" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Meet our travel agents
+    </xpath>
+
+    <xpath expr="//div[hasclass('col-lg-9')]//p" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-9')]//p[1]" position="replace" mode="inner">
+        Tony is dedicated to crafting personalized travel experiences, ensuring every client's journey is tailored to their unique preferences.
+    </xpath>
+
+    <xpath expr="(//div[hasclass('col-lg-9')])[2]//p" position="replace"/>
+    <xpath expr="(//div[hasclass('col-lg-9')])[2]//p[1]" position="replace" mode="inner">
+        Mich ensures the smooth execution of all travel plans, leveraging his industry expertise to guarantee a seamless client experience.
+    </xpath>
+
+    <xpath expr="(//div[hasclass('col-lg-9')])[3]//p" position="replace"/>
+    <xpath expr="(//div[hasclass('col-lg-9')])[3]//p[1]" position="replace" mode="inner">
+        Aline designs bespoke travel itineraries, collaborating with a global network of experts to deliver unique experiences tailored to each client's needs.
+    </xpath>
+
+    <xpath expr="(//div[hasclass('col-lg-9')])[4]//p" position="replace"/>
+    <xpath expr="(//div[hasclass('col-lg-9')])[4]//p[1]" position="replace" mode="inner">
+        Iris is responsible for creating cost-effective travel packages, ensuring clients can enjoy their adventures without compromising on quality.
+    </xpath> 
+
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,131 @@
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-font-configs: (
+    'Handlee': (
+        'family': ('Handlee', cursive),
+        'url': 'Handlee:300,300i,400,400i,700,700i',
+    ),
+    'Gruppo': (
+        'family': ('Gruppo', cursive),
+        'url': 'Gruppo:300,300i,400,400i,700,700i',
+    ),
+    'Droid Sans': (
+        'family': ('Droid Sans', sans-serif),
+    ),
+    'Bowlby One SC': (
+        'family': ('Bowlby One SC', cursive),
+        'url': 'Bowlby+One+SC:300,300i,400,400i,700,700i',
+    ),
+    'Lobster': (
+        'family': ('Lobster', cursive),
+        'url': 'Lobster:300,300i,400,400i,700,700i',
+    ),
+    'Nunito': (
+        'family': ('Nunito', sans-serif),
+        'url': 'Nunito:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Amatic SC': (
+        'family': ('Amatic SC', cursive),
+        'url': 'Amatic+SC:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans Condensed': (
+        'family': ('Open Sans Condensed', sans-serif),
+        'url': 'Open+Sans+Condensed:300,300i,400,400i,700,700i',
+    ),
+    'Oswald': (
+        'family': ('Oswald', sans-serif),
+        'url': 'Oswald:300,300i,400,400i,700,700i',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Permanent Marker': (
+        'family': ('Permanent Marker', cursive),
+        'url': 'Permanent+Marker:300,300i,400,400i,700,700i',
+    ),
+    'Pacifico': (
+        'family': ('Pacifico', cursive),
+        'url': 'Pacifico:300,300i,400,400i,700,700i',
+    ),
+    'Playfair Display': (
+        'family': ('Playfair Display', serif),
+        'url': 'Playfair+Display:300,300i,400,400i,700,700i',
+    ),
+    'Playfair Display SC': (
+        'family': ('Playfair Display SC', serif),
+        'url': 'Playfair+Display+SC:300,300i,400,400i,700,700i',
+    ),
+    'IBM Plex Sans': (
+        'family': ('IBM Plex Sans', sans-serif),
+        'url': 'IBM+Plex+Sans:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'default-28',
+        // Font
+        'font': 'Roboto',
+        'headings-font': 'IBM Plex Sans',
+
+        // Buttons
+        'btn-border-radius': 0px,
+        'btn-border-radius-sm': 0px,
+        'btn-border-radius-lg': 0px,
+        'btn-padding-y-lg': 0.75rem,
+        'btn-padding-x-lg': 1.75rem,
+        'btn-ripple': true,
+    ),
+);
+
+$default-28: map-get($o-color-palettes, 'default-28');
+$default-28: map-merge($default-28, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-28': $default-28));
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'real-estate-1',
+    2: 'real-estate-2',
+    3: 'real-estate-3',
+    4: 'real-estate-4',
+    5: 'generic-1',
+    6: 'generic-2',
+    7: 'generic-3',
+    8: 'generic-4',
+    9: 'generic-5',
+    10: 'generic-6',
+    11: 'generic-7',
+    12: 'generic-8',
+    13: 'generic-9',
+    14: 'generic-10',
+    15: 'generic-11',
+    16: 'generic-12',
+    17: 'generic-13',
+    18: 'generic-14',
+    19: 'generic-15',
+    20: 'generic-16',
+    21: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/18', (1: 3));
+
+/* Keep for compatibility */
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/14', (4: 4));

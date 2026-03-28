@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_showcase" inherit_id="website.s_showcase">
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_showcase.svg?c1=o-color-2</attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Features <span class="o_text_highlight o_translate_inline o_text_highlight_scribble_3 o_text_highlight_fill">showcase</span>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-6')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-5 offset-lg-1" remove="col-lg-6" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

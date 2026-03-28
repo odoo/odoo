@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_basic" inherit_id="website.s_company_team_basic">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Meet the Team
+    </xpath>
+
+    <!-- Person 1 -->
+    <xpath expr="//h3" position="replace" mode="inner">
+        Tony Fred, Floral Director
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        Tony leads the creative vision for the shop.
+    </xpath>
+    <!-- Person 2 -->
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Mich Stark, Operations Manager
+    </xpath>
+    <xpath expr="(//p[hasclass('o_small-fs')])[2]" position="replace" mode="inner">
+        Mich makes sure everything runs smoothly.
+    </xpath>
+    <!-- Person 3 -->
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Aline Turner, Bouquet Designer
+    </xpath>
+    <xpath expr="(//p[hasclass('o_small-fs')])[3]" position="replace" mode="inner">
+        Aline is the mastermind behind our bespoke floral arrangements.
+    </xpath>
+    <!-- Person 4 -->
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Iris Joe, Customer Relations
+    </xpath>
+    <xpath expr="(//p[hasclass('o_small-fs')])[4]" position="replace" mode="inner">
+        Iris ensures that each customer has a delightful experience.
+    </xpath>
+</template>
+
+</odoo>

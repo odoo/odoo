@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team" inherit_id="website.s_company_team">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc4 pt80 pb80" remove="pb48 pt48" separator=" "/>
+    </xpath>
+    <!-- Titles -->
+    <xpath expr="(//div[hasclass('col-lg-9')])[1]/h3" position="replace" mode="inner">
+        Tony
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-9')])[2]/h3" position="replace" mode="inner">
+        Mich
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-9')])[3]/h3" position="replace" mode="inner">
+        Aline
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-9')])[4]/h3" position="replace" mode="inner">
+        Iris
+    </xpath>
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" add="img-thumbnail" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" add="img-thumbnail" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="class" add="img-thumbnail" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="class" add="img-thumbnail" separator=" "/>
+    </xpath>
+</template>
+
+<template id="configurator_s_company_team" inherit_id="website.configurator_s_company_team">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/02","colors":{"c5":"o-color-4"},"flip":["y"]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_02" style="background-image: url('/html_editor/shape/html_builder/Connections/02.svg?c5=o-color-4&amp;flip=y');"/>
+    </xpath>
+</template>
+
+</odoo>

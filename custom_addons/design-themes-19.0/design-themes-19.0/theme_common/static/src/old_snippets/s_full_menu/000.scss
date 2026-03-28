@@ -1,0 +1,46 @@
+#wrapwrap .s_full_menu {
+    overflow: hidden;
+    .container-fluid {
+        h2 {
+            text-align: center;
+        }
+        h4 {
+            font-size: 20px;
+        }
+        .menu-container > .s_full_menu_content {
+            border-left: 3px solid map-get($grays, '200');
+            .row {
+                .s_full_menu_content_description {
+                    border-bottom: 1px solid map-get($grays, '200');
+                    padding-bottom: 15px;
+                    line-height: 1;
+                    span {
+                        text-transform: uppercase;
+                        list-style: none;
+                    }
+                    @media screen and (max-width: 1024px) { // FIXME
+                        font-size: 12px;
+                    }
+                    @media screen and (max-width: 360px) { // FIXME
+                        top: 0px;
+                    }
+                }
+                img {
+                    max-width: 200px;
+                }
+            }
+        }
+    }
+    .price {
+        font-size: 2vw;
+        @media screen and (max-width: 360px) { // FIXME
+            font-size: 6.5vw;
+        }
+    }
+    .slash {
+        font-size: 2vw;
+        @media screen and (max-width: 360px) { // FIXME
+            font-size: 6.5vw;
+        }
+    }
+}

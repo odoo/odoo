@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_list" inherit_id="website.s_product_list">
+    <!-- Item #1 -->
+    <xpath expr="//div[hasclass('col-lg-2')]//h3/a" position="replace" mode="inner">
+        Social Strategy
+    </xpath>
+    <!-- Item #2 -->
+    <xpath expr="//div[hasclass('col-lg-2')][2]//h3/a" position="replace" mode="inner">
+        Executive Strategy
+    </xpath>
+    <!-- Item #3 -->
+    <xpath expr="//div[hasclass('col-lg-2')][3]//h3/a" position="replace" mode="inner">
+        Corporate Finance
+    </xpath>
+    <!-- Item #4 -->
+    <xpath expr="//div[hasclass('col-lg-2')][4]//h3/a" position="replace" mode="inner">
+        Growth &amp; Innovation
+    </xpath>
+    <!-- Item #5 -->
+    <xpath expr="//div[hasclass('col-lg-2')][5]//h3/a" position="replace" mode="inner">
+        Digital Strategy
+    </xpath>
+    <!-- Item #6 -->
+    <xpath expr="//div[hasclass('col-lg-2')][6]//h3/a" position="replace" mode="inner">
+        Business Strategy
+    </xpath>
+</template>
+
+</odoo>

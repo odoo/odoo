@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20','colors':{'c5':'o-color-1'},'flip':['y'],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Connections_20" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-1&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+</template>
+
+</odoo>

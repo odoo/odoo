@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Column #1 -->
+    <!-- Img -->
+    <xpath expr="//figure" position="attributes">
+        <attribute name="class" remove="ratio ratio-16x9" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('card')]//img" position="attributes">
+        <attribute name="style">padding: 32px !important;</attribute>
+        <!-- Enable SVG dynamic color functionality -->
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_three_columns-01.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('card')]//h2" position="replace" mode="inner">
+        Built to <br/>your effigy
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('card')]//p" position="replace" mode="inner">
+        You will always find the ideal choice adapted to your needs. From the basic website based on our attractive templates to the tailor-made website reflecting your company's values.
+    </xpath>
+
+    <!-- Column #2 -->
+    <!-- Img -->
+    <xpath expr="(//figure)[2]"  position="attributes">
+        <attribute name="class" remove="ratio ratio-16x9" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('card')])[2]//img" position="attributes">
+        <attribute name="style">padding: 32px !important;</attribute>
+        <!-- Enable SVG dynamic color functionality -->
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_three_columns-02.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="(//div[hasclass('card')])[2]//h2" position="replace" mode="inner">
+        Editable from <br/>A to Z
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="(//div[hasclass('card')])[2]//p" position="replace" mode="inner">
+        Feel free to edit your content the way like you want. You don't need to know any technical and complex computer language. You will helped by our intuitive tools.
+    </xpath>
+
+    <!-- Column #3 -->
+    <!-- Img -->
+    <xpath expr="(//figure)[3]"  position="attributes">
+        <attribute name="class" remove="ratio ratio-16x9" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('card')])[3]//img" position="attributes">
+        <attribute name="style">padding: 32px !important;</attribute>
+        <!-- Enable SVG dynamic color functionality -->
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_three_columns-03.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="(//div[hasclass('card')])[3]//h2" position="replace" mode="inner">
+        All data <br/>in your hands
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="(//div[hasclass('card')])[3]//p" position="replace" mode="inner">
+        Don't miss any data anymore and get all reports you need when and where you want. Analyze them easily with our friendly interface and grow your activity.
+    </xpath>
+</template>
+
+<template id="configurator_s_three_columns" inherit_id="website.configurator_s_three_columns">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Airy/12_002","colors":{"c5":"o-color-1","c3":"o-color-3"},"flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Airy_12_002" style="background-image: url('/html_editor/shape/html_builder/Airy/12_002.svg?c5=o-color-1&amp;c3=o-color-3');"/>
+    </xpath>
+</template>
+
+</odoo>

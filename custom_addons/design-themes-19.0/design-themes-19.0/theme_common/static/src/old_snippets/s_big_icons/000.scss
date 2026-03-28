@@ -1,0 +1,42 @@
+.s_big_icons {
+    text-align: center;
+    @include s-big-icon-circle-height-hook;
+    //fix -- without this in mobile view the circles go to the top and so they hide the h2 and h3 above it.
+    .col-lg-12 {
+        float: none;
+    }
+}
+
+.s_big_icons_box {
+    text-align: center;
+    width: 150px;
+    margin: 0 auto;
+    .fa {
+        color: #fff;
+        font-size: 40px;
+        @include s-big-icon-circle-fa-hook;
+    }
+}
+
+.s_big_icons_icon {
+    width: $s-big-icon-circle-icon-size;
+    height: $s-big-icon-circle-icon-size;
+    text-align: center;
+    padding: 40px 0;
+    transition: all 0.3s ease-in-out;
+    border-radius: 80px;
+    margin: 0px auto;
+    h5 {
+        margin-top: 48px;
+    }
+}
+
+.s_big_icons_box:hover .s_big_icons_icon {
+    transition: all 0.3s ease-in-out;
+    background-color: o-color('gamma');
+}
+
+.s_big_icons_box:hover .s_big_icons_content h4 {
+    transition: all 0.3s ease-in-out;
+    color: o-color('gamma');
+}

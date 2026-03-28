@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt128 pb128 o_cc4" remove="pt64 pb64 o_cc5" separator=" "/>
+    </xpath>
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('col-lg-9')]" position="attributes">
+        <attribute name="class" add="col-lg-12 text-center" remove="col-lg-9" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="col-lg-12" remove="col-lg-3" separator=" "/>
+    </xpath>
+    <!-- Title & paragraph -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Would you like more information <br/>about a product?
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+    <!-- Button -->
+    <xpath expr="//div[hasclass('col-lg-12')]/p" position="attributes">
+        <attribute name="style" add="text-align: center;" remove="text-align: right;" separator=";"/>
+    </xpath>
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="mb-2" separator=" "/>
+    </xpath>
+    <!-- Add secondary button -->
+    <xpath expr="//a[hasclass('btn')]" position="before">
+        <a href="#" class="btn btn-secondary btn-lg me-2 mb-2 o_translate_inline">Our services</a>
+    </xpath>
+</template>
+
+</odoo>

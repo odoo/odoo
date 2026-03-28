@@ -1,0 +1,26 @@
+.s_images_carousel {
+    height: 400px;
+    &.carousel {
+        @include media-breakpoint-down(lg) {
+            height: auto !important;
+        }
+        .carousel-inner,
+        .carousel-item {
+            height: 100%;
+        }
+    }
+    @include media-breakpoint-up(lg) {
+        img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+    }
+    .carousel-caption {
+        background-color: #fff;
+        color: $body-color;
+        padding: 5px 0;
+        bottom: 55px;
+    }
+}

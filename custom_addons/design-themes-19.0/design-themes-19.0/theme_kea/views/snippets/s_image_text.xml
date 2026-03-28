@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_kea/s_image_text.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        <font style="background-image: linear-gradient(135deg, var(--o-color-1) 0%, var(--o-color-2) 100%);" class="text-gradient">Enter in a new world</font>
+    </xpath>
+</template>
+
+<template id="configurator_s_image_text" inherit_id="website.configurator_s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pt232" remove="pt80" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/22_001","colors":{"c5":"o-color-2"},"flip":["y"]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_22_001" style="background-image: url('/html_editor/shape/html_builder/Wavy/22_001.svg?c5=o-color-2&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+</template>
+
+</odoo>

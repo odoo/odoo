@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references" inherit_id="website.s_references">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt0 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Remove title, subtitle and button -->
+    <xpath expr="//h2" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="o_grid_mode" separator=" "/>
+        <attribute name="data-row-count">2</attribute>
+        <attribute name="style" add="column-gap: 24px;"/>
+    </xpath>
+
+    <!-- Items -->
+    <xpath expr="//div[hasclass('col-lg-2')]" position="attributes">
+        <attribute name="class" add="o_grid_item g-col-lg-2 g-height-2 o_grid_item_image o_cc o_cc2" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="grid-area: 1 / 1 / 3 / 3; z-index: 1;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-2')])[2]" position="attributes">
+        <attribute name="class" add="o_grid_item g-col-lg-2 g-height-2 o_grid_item_image o_cc o_cc2" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="grid-area: 1 / 3 / 3 / 5; z-index: 2;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-2')])[3]" position="attributes">
+        <attribute name="class" add="o_grid_item g-col-lg-2 g-height-2 o_grid_item_image o_cc o_cc2" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="grid-area: 1 / 5 / 3 / 7; z-index: 3;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-2')])[4]" position="attributes">
+        <attribute name="class" add="o_grid_item g-col-lg-2 g-height-2 o_grid_item_image o_cc o_cc2" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="grid-area: 1 / 7 / 3 / 9; z-index: 4;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-2')])[5]" position="attributes">
+        <attribute name="class" add="o_grid_item g-col-lg-2 g-height-2 o_grid_item_image o_cc o_cc2" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="grid-area: 1 / 9 / 3 / 11; z-index: 5;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-2')])[6]" position="attributes">
+        <attribute name="class" add="o_grid_item g-col-lg-2 g-height-2 o_grid_item_image o_cc o_cc2" remove="pt16 pb16" separator=" "/>
+        <attribute name="style" add="grid-area: 1 / 11 / 3 / 13; z-index: 6;" separator=";"/>
+    </xpath>
+</template>
+
+</odoo>

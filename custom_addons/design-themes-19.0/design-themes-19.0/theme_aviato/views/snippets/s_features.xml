@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt48 pb56" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <!-- Titles -->
+    <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace" mode="inner">
+        Hotel Booking
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/h3" position="replace" mode="inner">
+        Flight Booking
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/h3" position="replace" mode="inner">
+        Ticket Booking
+    </xpath>
+    <!-- Icons -->
+    <xpath expr="//div[hasclass('row')]/div[1]/i" position="attributes">
+        <attribute name="class" add="fa-hotel" remove="fa-paper-plane-o" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/i" position="attributes">
+        <attribute name="class" add="fa-plane" remove="fa-credit-card" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/i" position="attributes">
+        <attribute name="class" add="fa-ticket" remove="fa-flag-o" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

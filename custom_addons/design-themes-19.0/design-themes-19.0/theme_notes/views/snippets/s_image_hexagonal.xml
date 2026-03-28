@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_hexagonal" inherit_id="website.s_image_hexagonal">
+    <!-- Section -->
+    <xpath expr="section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Join the<br/>celebration
+    </xpath>
+    <!-- Images -->
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_cover_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

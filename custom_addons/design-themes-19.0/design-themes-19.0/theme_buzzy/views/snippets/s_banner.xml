@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+   <xpath expr="//section" position="attributes">
+      <attribute name="class" add="pb48" remove="pb96" separator=" "/>
+   </xpath>
+   <xpath expr="//div[hasclass('row')]" position="attributes">
+      <attribute name="class" remove="o_grid_mode" separator=" "/>
+      <attribute name="data-row-count"/>
+   </xpath>
+   <xpath expr="//div[hasclass('row')]//div" position="attributes">
+      <attribute name="class">col-lg-4</attribute>
+      <attribute name="style"/>
+   </xpath>
+   <xpath expr="//div[hasclass('row')]//div[2]" position="attributes">
+      <attribute name="class">col-lg-6 offset-lg-2</attribute>
+      <attribute name="style"/>
+   </xpath>
+   <xpath expr="//h1" position="replace" mode="inner">
+      Unleash your <strong><span class="o_text_highlight o_translate_inline o_text_highlight_scribble_3 o_text_highlight_fill">potential</span>.</strong>
+   </xpath>
+   <xpath expr="//div[hasclass('row')]//div[2]//img" position="attributes">
+      <attribute name="src">/html_editor/shape/theme_buzzy/s_banner_2.svg?c1=o-color-2</attribute>
+   </xpath>
+   <xpath expr="//div[hasclass('row')]//div[3]" position="replace"/>
+   <xpath expr="//div[hasclass('row')]//div[3]" position="replace"/>
+</template>
+
+</odoo>

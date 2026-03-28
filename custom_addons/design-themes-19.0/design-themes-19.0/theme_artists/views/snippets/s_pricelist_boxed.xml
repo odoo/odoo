@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" add="o_cc o_cc5" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Wavy/27','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_27 o_we_animated"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our Gallery
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Explore our curated selection of artistic masterpieces. Each piece is thoughtfully crafted to inspire and captivate.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Modern Art
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Classic Art
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Abstract Harmony
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        $1,200.00
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        A vibrant abstract painting that blends bold colors and dynamic shapes, creating a sense of harmony and movement.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Sunset Serenade
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        $1,450.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Capturing the serene beauty of a sunset, this painting uses warm tones and soft brushstrokes to evoke a sense of peace.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Midnight Dreamscape
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        $1,350.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        An imaginative dreamscape in deep blues and purples, this piece invites viewers to explore a world of night-time fantasy.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        Renaissance Revival
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        $1,500.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        A classical piece inspired by Renaissance techniques, featuring intricate details and a rich color palette.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        The Garden of Serenity
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        $1,300.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        A tranquil garden scene that blends soft greens and pastel flowers, creating a peaceful and calming atmosphere.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Urban Reflection
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        $1,600.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        This modern piece captures the energy of city life, using sharp lines and reflective surfaces to portray an urban landscape.
+    </xpath>
+</template>
+
+</odoo>

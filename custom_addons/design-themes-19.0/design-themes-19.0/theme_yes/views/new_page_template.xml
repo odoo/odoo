@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- About -->
+
+<template id="new_page_template_sections_about_personal" inherit_id="website.new_page_template_sections_about_personal">
+    <xpath expr="//t[@t-snippet-call='website.new_page_template_about_personal_s_call_to_action_about']" position="attributes">
+        <attribute name="t-snippet-call">website.new_page_template_about_personal_s_call_to_action</attribute>
+    </xpath>
+</template>
+
+<!-- General customizations -->
+
+<template id="new_page_template_s_image_gallery" inherit_id="website.new_page_template_s_image_gallery">
+    <!-- Remove shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Remove shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+<template id="new_page_template_s_media_list" inherit_id="website.new_page_template_s_media_list">
+    <!-- Remove shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Remove shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+<template id="new_page_template_s_three_columns" inherit_id="website.new_page_template_s_three_columns">
+    <!-- Remove shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Remove shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+<template id="new_page_template_s_three_columns_2nd" inherit_id="website.new_page_template_s_three_columns_2nd">
+    <!-- Remove shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Remove shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+<template id="new_page_template_s_three_columns_menu" inherit_id="website.new_page_template_s_three_columns_menu">
+    <!-- Remove shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Remove shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+<!-- Snippet customization Basic Pages -->
+
+<template id="new_page_template_basic_2_s_text_block_h1" inherit_id="website.new_page_template_basic_2_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization About Pages -->
+
+<template id="new_page_template_about_s_banner" inherit_id="website.new_page_template_about_s_banner">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_s_company_team" inherit_id="website.new_page_template_about_s_company_team">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06 bg-o-color-3" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_s_cover" inherit_id="website.new_page_template_about_s_cover">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_full_screen_height" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-3"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-3');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_full_1_s_text_block_h1" inherit_id="website.new_page_template_about_full_1_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_full_1_s_text_block_h2" inherit_id="website.new_page_template_about_full_1_s_text_block_h2">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_full_s_numbers" inherit_id="website.new_page_template_about_full_s_numbers">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc3" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_mini_s_cover" inherit_id="website.new_page_template_about_mini_s_cover">
+    <xpath expr="//section" position="attributes">
+        <!-- Defined in both theme and new page template -->
+        <attribute name="class" add="o_half_screen_height" remove="pt40 pb40 o_half_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_mini_s_text_block_2nd" inherit_id="website.new_page_template_about_mini_s_text_block_2nd">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_mini_s_text_block_h2" inherit_id="website.new_page_template_about_mini_s_text_block_h2">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Landing Pages -->
+
+<template id="new_page_template_landing_s_text_image" inherit_id="website.new_page_template_landing_s_text_image">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_0_s_cover" inherit_id="website.new_page_template_landing_0_s_cover">
+    <xpath expr="//section" position="attributes">
+        <!-- pb256 is defined by both theme and new page template -->
+        <attribute name="class" add="pb256" remove="pt208 pb256" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_1_s_banner" inherit_id="website.new_page_template_landing_1_s_banner">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-3"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-3');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_2_s_cover" inherit_id="website.new_page_template_landing_2_s_cover">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_half_screen_height" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-3"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-3');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_2_s_text_block_h2" inherit_id="website.new_page_template_landing_2_s_text_block_h2">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2" add="o_cc5" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_3_s_text_block_h2" inherit_id="website.new_page_template_landing_3_s_text_block_h2">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2" add="o_cc5" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_4_s_cover" inherit_id="website.new_page_template_landing_4_s_cover">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_half_screen_height" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Gallery Pages -->
+
+<template id="new_page_template_gallery_s_banner" inherit_id="website.new_page_template_gallery_s_banner">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-3"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-3');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_gallery_s_cover" inherit_id="website.new_page_template_gallery_s_cover">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_half_screen_height" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_gallery_s_text_block_2nd" inherit_id="website.new_page_template_gallery_s_text_block_2nd">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Services Pages -->
+
+<!-- Snippet customization Pricing Pages -->
+
+<template id="new_page_template_pricing_s_cover" inherit_id="website.new_page_template_pricing_s_cover">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_half_screen_height" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_pricing_3_s_carousel" inherit_id="website.new_page_template_pricing_3_s_carousel">
+    <xpath expr="//*[hasclass('carousel-item')][3]" position="attributes">
+        <attribute name="class" add="pt128 pb128" remove="pt152 pb152" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippet customization Team Pages -->
+
+<template id="new_page_template_team_s_company_team" inherit_id="website.new_page_template_team_s_company_team">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/06","colors":{"c5":"o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06 bg-o-color-3" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_s_images_wall" inherit_id="website.new_page_template_team_s_images_wall">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+<template id="new_page_template_team_s_text_block_h1" inherit_id="website.new_page_template_team_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_0_s_text_block_h1" inherit_id="website.new_page_template_team_0_s_text_block_h1">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb0" remove="pb40" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_0_s_three_columns" inherit_id="website.new_page_template_team_0_s_three_columns">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc5" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

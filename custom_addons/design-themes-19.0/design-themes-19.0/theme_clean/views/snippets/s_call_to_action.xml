@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt80 o_cc2" remove="pt64 o_cc5" separator=" "/>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('col-lg-9')]" position="attributes">
+        <attribute name="class" add="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        <b>50,000 people</b>, run Clean to grow their financial wealth.
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Join them and make the right money move.
+    </xpath>
+</template>
+
+</odoo>

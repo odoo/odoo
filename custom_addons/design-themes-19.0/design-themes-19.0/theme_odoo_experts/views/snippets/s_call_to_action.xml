@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb56 pt56" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//div[hasclass('col-lg-9')]" position="attributes">
+        <attribute name="class" add="col-lg-12" remove="col-lg-9" separator=" "/>
+    </xpath>
+    <!-- Right column -->
+    <xpath expr="//div[hasclass('col-lg-3')]/p" position="attributes">
+        <attribute name="style">text-align: center</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="col-lg-12" remove="col-lg-3" separator=" "/>
+    </xpath>
+    <!-- Title & Paragraph -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        <h2 class="h3-fs" style="text-align: center;">50,000+ clients trust us <br/>to protect their assets</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p style="text-align: center;">Contact us for a personalized meeting</p>
+    </xpath>
+</template>
+
+</odoo>

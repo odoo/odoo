@@ -1,0 +1,79 @@
+//------------------------------------------------------------------------------//
+// TODO ideally this should be done in primary variables if it was possible.
+//------------------------------------------------------------------------------//
+
+@if o-website-value('font') == 'Abel' {
+    $o-theme-font-size-lg-multiplier:       (1.25 / 1.125);
+    $o-theme-font-size-sm-multiplier:       (1 / 1.125);
+}
+@else if o-website-value('font') == 'Dosis' {
+    $o-theme-font-size-lg-multiplier:       (1.25 / 1.125);
+}
+@else if o-website-value('font') == 'Laila' {
+    $o-theme-font-weight-normal:            300;
+    $o-theme-font-weight-bold:              600;
+}
+@else if o-website-value('font') == 'Poppins' {
+    $o-theme-font-weight-bold:              600;
+}
+
+//------------------------------------------------------------------------------//
+// Bootstrap
+//------------------------------------------------------------------------------//
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-shadows:                            true;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer:                                    1.25rem !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$border-radius:                             .375rem !default;
+$border-radius-lg:                          .5rem !default;
+$border-radius-sm:                          .25rem !default;
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-size-lg:                              o-website-value('font-size-base') * $o-theme-font-size-lg-multiplier !default;
+$font-size-sm:                              o-website-value('font-size-base') * $o-theme-font-size-sm-multiplier !default;
+
+$font-weight-light:                         $o-theme-font-weight-light !default;
+$font-weight-normal:                        $o-theme-font-weight-normal !default;
+$font-weight-bold:                          $o-theme-font-weight-bold !default;
+
+$headings-font-weight:                      $o-theme-headings-font-weight !default;
+
+$blockquote-font-size:                      o-website-value('font-size-base') !default;
+
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
+
+$input-btn-focus-width:                     0 !default;
+$input-focus-border-color:                  o-color('primary') !default;
+
+$btn-font-weight:                           400 !default;
+$btn-box-shadow:                            none !default;
+
+$input-color:                               o-color('o-cc1-text') !default;
+$input-placeholder-color:                   o-color('500') !default;
+
+// Cards
+
+$card-spacer-y:                             1rem !default;
+$card-spacer-x:                             1.75rem !default;
+$card-border-width:                         0 !default;
+$card-border-radius:                        $border-radius-lg !default;

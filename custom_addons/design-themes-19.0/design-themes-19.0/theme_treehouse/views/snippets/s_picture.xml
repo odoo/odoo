@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_picture" inherit_id="website.s_picture">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Working Together
+    </xpath>
+    <!-- Image + Shape -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_picture_default_image/html_builder/special/special_filter.svg</attribute>
+        <attribute name="data-file-name">01.svg</attribute>
+        <attribute name="data-shape">html_builder/special/special_filter</attribute>
+        <attribute name="data-shape-colors">;#046380;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

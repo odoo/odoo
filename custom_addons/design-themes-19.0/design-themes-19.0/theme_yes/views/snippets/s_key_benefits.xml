@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Bespoke Wedding Plans
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Full-Service Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Vendor Access
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We create personalized wedding plans that reflect your vision and style, ensuring every detail is crafted to perfection for your special day.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our team provides comprehensive support from initial consultation to the big day, handling every aspect to ensure a smooth and stress-free experience.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Gain access to a curated list of top-tier vendors and unique venues, offering exclusive options that enhance the elegance and individuality of your wedding.
+    </xpath>
+</template>
+
+</odoo>

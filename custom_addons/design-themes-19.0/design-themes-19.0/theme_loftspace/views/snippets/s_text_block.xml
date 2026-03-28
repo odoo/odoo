@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="configurator_s_text_block" inherit_id="website.configurator_s_text_block" name="Loftspace s_text_block">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt112" remove="pt40" separator=" "/>
+    </xpath>
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container')]" position="replace">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-2 pb16">
+                    <p class="o_small">&#9135; &amp;nbsp;OUR PHILOSOPHY</p>
+                </div>
+                <div class="col-lg-10 offset-lg-2 pb16">
+                    <h2>Design innovation<br/>meeting function</h2>
+                </div>
+                <!-- Column #01 -->
+                <div class="col-lg-4 offset-lg-2">
+                    <p>
+                        Design Innovation meets function in our family-run furniture company, where every creation blends cutting-edge style with practical usability. Our commitment is to deliver designs that enhance your living spaces with both beauty and practicality. Each piece reflects our dedication to craftsmanship and functionality, making your home more elegant and functional.
+                    </p>
+                </div>
+                <!-- Column #02 -->
+                <div class="col-lg-4 offset-lg-1">
+                    <p>
+                        With a rich family heritage in furniture making, we bring together innovative design and everyday functionality. Our focus is on crafting pieces that not only look stunning but also serve practical purposes. Each item is thoughtfully designed to meet your needs while adding a touch of elegance to your home.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

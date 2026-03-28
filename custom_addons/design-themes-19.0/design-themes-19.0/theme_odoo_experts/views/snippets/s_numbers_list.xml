@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers_list" inherit_id="website.s_numbers_list">
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-5" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace">
+        <p class="o_small">SOME NUMBERS</p>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace">
+        <h2 class="h3-fs">Over the last decade, we've help many businesses to grow.</h2>
+    </xpath>
+    <!-- KPI's -->
+    <xpath expr="//div[hasclass('col-lg-3')]" position="replace">
+        <div class="col-12 col-lg-4 offset-lg-2">
+            <p>
+                <span class="h2-fs">200+</span><br/>
+                Successful Projects
+            </p>
+            <div class="s_hr pt16 pb40" data-snippet="s_hr" data-name="Separator">
+                <hr class="w-100 mx-auto"/>
+            </div>
+            <p>
+                <span class="h2-fs">$95%</span><br/>
+                Client Retention Rate
+            </p>
+            <div class="s_hr pt16 pb40" data-snippet="s_hr" data-name="Separator">
+                <hr class="w-100 mx-auto"/>
+            </div>
+            <p>
+                <span class="h2-fs">$50M</span><br/>
+                Revenue Generated for Clients
+            </p>
+            <div class="s_hr pt16 pb40" data-snippet="s_hr" data-name="Separator">
+                <hr class="w-100 mx-auto"/>
+            </div>
+        </div>
+    </xpath>
+    <!-- Remove 2nd KPI's column -->
+    <xpath expr="//div[hasclass('col-lg-3')]" position="replace"/>
+</template>
+
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2 pt152 pb152 o_colored_level" remove="pt64 pb64 o_cc5" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/14"}</attribute>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_14"/>
+    </xpath>
+
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('col-lg-9')]" position="replace">
+        <div class="col-lg-10 offset-lg-1 pt48 pb24">
+            <h2 class="h3-fs" style="text-align: center;">2,000 parents<br/> brought their kid to our nursery.</h2>
+            <p style="text-align: center;">Entrust us with your children and go to work with peace of mind</p>
+            <p><br/></p>
+            <p style="text-align: center;"><a t-att-href="cta_btn_href" class="btn btn-primary btn-lg o_translate_inline"><t t-out="cta_btn_text">Contact us</t></a></p>
+        </div>
+    </xpath>
+
+    <!-- Remove last column with button -->
+    <xpath expr="//div[hasclass('col-lg-3')]" position="replace"/>
+</template>
+
+</odoo>

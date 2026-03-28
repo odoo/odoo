@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" inherit_id="website.s_product_catalog">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3 parallax s_parallax_is_fixed" separator=" "/>
+        <attribute name="data-scroll-background-ratio">1</attribute>
+        <attribute name="style"/>
+    </xpath>
+    <!-- Filter & Parallax -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace">
+        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_product_catalog_default_image');"/>
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+</template>
+
+</odoo>

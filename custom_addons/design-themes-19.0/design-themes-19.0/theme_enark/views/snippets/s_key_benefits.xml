@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Custom Design Solutions
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        End-to-End Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Innovative Architecture
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We create tailored architectural designs that reflect your vision and meet the unique needs of your project.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our team provides comprehensive support from concept to completion, ensuring every detail of your project is expertly managed.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Experience cutting-edge designs that blend creativity with functionality, pushing the boundaries of modern architecture.
+    </xpath>
+</template>
+
+</odoo>

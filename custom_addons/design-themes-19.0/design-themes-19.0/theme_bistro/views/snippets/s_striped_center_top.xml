@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_center_top" inherit_id="website.s_striped_center_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Taste the Difference
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Savor the finest culinary delights at our bistro, where exceptional food meets an unforgettable dining experience.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Reserve Your Table
+    </xpath>
+    <!-- Figcaption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Crafted with flavors of passion
+    </xpath>
+</template>
+
+</odoo>

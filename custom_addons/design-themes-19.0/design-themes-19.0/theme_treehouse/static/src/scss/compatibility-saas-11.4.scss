@@ -1,0 +1,139 @@
+#wrapwrap {
+
+    // Carousel
+    .carousel-control .fa {
+        border-radius: 50%;
+        padding-top: 2px;
+        &:hover {
+            color: o-color('alpha') !important;
+        }
+    }
+
+    // Banner Carousel
+    .s_banner_2.carousel {
+        .carousel-box-content {
+            border-radius: $border-radius;
+        }
+        .carousel-control {
+            width: 10%;
+            @include carousel-control(0, 20px, 3px);
+            @include fa-size-generator(15px);
+            .fa {
+                top: auto;
+                bottom: 30px;
+            }
+        }
+        .carousel-indicators {
+            background-color: #fff;
+            height: 35px;
+            line-height: 38px;
+            width: auto;
+            left: 50%;
+            right: auto;
+            bottom: 20px;
+            margin-right: -50%;
+            margin-left: 0;
+            transform: translate(-50%, 0);
+            padding: 0 40px;
+            border-radius: $border-radius-lg;
+        }
+    }
+
+    // 3-Columns Carousel
+    .s_three_columns .carousel-control {
+        width: auto;
+        min-width: 35px;
+        @include carousel-control(15px, 0, 2px);
+        @include fa-size-generator(15px);
+        .fa {
+            top: auto;
+            bottom: 15px;
+        }
+    }
+
+    // Border-radius
+    .panel-group .panel,
+    .s_medias_list .row,
+    .s_text_block_image_fw [class*="col-lg-"],
+    .s_well {
+        border-radius: $border-radius;
+    }
+
+    // Team Profile
+    .profile-body {
+        @include border-top-radius($border-radius);
+    }
+
+    // Label
+    .label {
+        padding: 6px 10px;
+        i {
+            opacity: 0.5;
+        }
+    }
+
+    // Images + Captions
+    .s_images_captions_fw p {
+        border-bottom-right-radius: $border-radius;
+    }
+
+    // Panel
+    .s_panel {
+        &.panel {
+            background-color: inherit;
+        }
+        .panel-heading {
+            border: 0;
+            .fa {
+                margin-right: 12px;
+            }
+        }
+    }
+    .panel {
+        box-shadow: none;
+    }
+
+    // Well
+    .s_well {
+        box-shadow: none;
+        .card-text {
+            overflow: hidden;
+        }
+        ol, p, ul {
+            width: 100%;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    // Big Message
+    .s_big_message {
+        margin: 0;
+        padding: 20px 0 40px;
+    }
+
+    // Comparisons
+    .s_comparisons {
+        .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+            background-color: map-get($theme-colors, 'primary');
+            border-color: map-get($theme-colors, 'primary');
+        }
+        .panel-body h2 small {
+            color: map-get($grays, '900');
+        }
+    }
+
+    // Jumbotron
+    .jumbotron {
+        margin: 0;
+        p {
+            font-weight: $font-weight-base;
+        }
+    }
+
+    // Features
+    .s_features {
+        @include fa-size-generator(20);
+    }
+}

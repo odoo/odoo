@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Media List Item #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]//div[hasclass('row')]" position="attributes">
+        <attribute name="style">border-radius: 3px !important; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" remove="col-lg-4" add="col-lg-6" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_body')]" position="attributes">
+        <attribute name="class" remove="col-lg-8" add="col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Media List Item #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse" separator=" "/>
+        <attribute name="style">border-radius: 3px !important; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[2]" position="attributes">
+        <attribute name="class" remove="col-lg-4" add="col-lg-6" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]" position="attributes">
+        <attribute name="class" remove="col-lg-8" add="col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Media List Item #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]//div[hasclass('row')]" position="attributes">
+        <attribute name="style">border-radius: 3px !important; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[3]" position="attributes">
+        <attribute name="class" remove="col-lg-4" add="col-lg-6" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]" position="attributes">
+        <attribute name="class" remove="col-lg-8" add="col-lg-6" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

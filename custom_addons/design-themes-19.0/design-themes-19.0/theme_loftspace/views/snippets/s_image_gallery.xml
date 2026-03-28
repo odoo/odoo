@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_gallery" inherit_id="website.s_image_gallery">
+    <!-- Container -->
+    <xpath expr="//div[hasclass('o_container_small')]" position="attributes">
+        <attribute name="class" add="container" remove="o_container_small" separator=" "/>
+    </xpath>
+</template>
+
+<template id="s_images_wall" inherit_id="website.s_images_wall">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt96 pb96" remove="pt24 pb24" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

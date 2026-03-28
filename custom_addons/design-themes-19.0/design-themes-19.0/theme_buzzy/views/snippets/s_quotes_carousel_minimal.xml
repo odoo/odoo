@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel_minimal" inherit_id="website.s_quotes_carousel_minimal">
+    <xpath expr="//div[hasclass('carousel')]" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Blocks/04','colors':{'c1':'#637bbe','c2':'#8eb9c7','c3':'#f6f0ea','c5':'#637bbe'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_shape o_html_builder_Blocks_04"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text_box" inherit_id="website.s_image_text_box">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape': 'html_builder/Connections/08','colors':{'c5':'o-color-1'}}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="style">background-image: url('/html_editor/shape/html_builder/Connections/08.svg?c5=o-color-1');</attribute>
+    </xpath>
+    <!-- Text box -->
+    <xpath expr="//div[hasclass('o_grid_item')][2]" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

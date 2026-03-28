@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Custom Tech Solutions
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        24/7 Technical Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Cutting-Edge Innovations
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We develop tailored technology solutions that address your unique challenges, driving innovation and efficiency.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our dedicated support team is available around the clock to ensure your systems run smoothly and any issues are quickly resolved.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Stay ahead with our latest advancements and technologies designed to give you a competitive edge in the ever-evolving tech landscape.
+    </xpath>
+</template>
+
+</odoo>

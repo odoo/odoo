@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_title" inherit_id="website.s_title">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="replace" mode="inner">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <h2>Meet our team</h2>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="configurator_s_title" inherit_id="website.configurator_s_title">
+    <xpath expr="//h2" position="replace">
+        <h2 class="display-3-fs" style="text-align: center">We are two passionate<br/>with years of experience</h2>
+    </xpath>
+</template>
+
+</odoo>

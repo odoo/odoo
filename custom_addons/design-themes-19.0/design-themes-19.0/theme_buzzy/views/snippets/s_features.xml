@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Rainy/09_001","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Rainy_09_001"/>
+    </xpath>
+    <!-- Feature #1 - Icon -->
+    <xpath expr="//div[hasclass('row')]//div[1]//i" position="attributes">
+        <attribute name="class" add="bg-o-color-1" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+    <!-- Feature #2 - Icon -->
+    <xpath expr="//div[hasclass('row')]//div[2]//i" position="attributes">
+        <attribute name="class" add="bg-o-color-1" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+    <!-- Feature #3 - Icon -->
+    <xpath expr="//div[hasclass('row')]//div[3]//i" position="attributes">
+        <attribute name="class" add="bg-o-color-1" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

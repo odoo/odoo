@@ -1,0 +1,39 @@
+#wrapwrap .s_menu_three_columns {
+    .three-column {
+        width: 100%;
+        position: relative;
+        z-index: 800;
+        .big-menu {
+            height: 150px;
+            position: relative;
+            padding: 0;
+            @include media-breakpoint-down(md) {
+                height: 100px;
+            }
+            @media only screen and (max-width : 360px) { // FIXME
+                height: 80px;
+            }
+            a {
+                text-decoration: none;
+                display: block;
+                &:hover, &:focus {
+                    text-decoration: none;
+                    background-color: $white;
+                    transition: all 200ms ease;
+                }
+            }
+            h2 {
+                line-height: 150px;
+                margin-top: 0;
+                @include media-breakpoint-down(md) {
+                    line-height: 100px;
+                    line-height: 100px;
+                }
+                @media only screen and (max-width : 360px) { // FIXME
+                    height: 80px;
+                    line-height: 80px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pt0" remove="pt80" separator=" "/>
+    </xpath>
+    <!-- Card -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc4" separator=" "/>
+        <attribute name="style" add="border-radius: 0px !important;" separator=";"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Still hesitating ?<br/>Contact us, it's free
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Book an appointment and see how we can unlock your potential<br/><br/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/theme_enark/static/src/img/snippets/library_image_02.webp</attribute>
+        <attribute name="class" remove="rounded-end" separator=" "/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Book now
+    </xpath>
+</template>
+
+</odoo>

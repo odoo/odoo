@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_cover" inherit_id="website.s_text_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc5" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        The next<br/> summer<br/> collection
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        <br/>Color trends are already waiting to spring into action for the  next summer.<br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Discover it
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_title" inherit_id="website.s_title">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt40" add="pt80" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        We create the perfect <br/>tailored solution for you
+    </xpath>
+    <xpath expr="//h2" position="attributes">
+        <attribute name="class" remove="display-3-fs" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

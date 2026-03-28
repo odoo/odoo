@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt96 pb96" remove="pt32 pb32 bg-200" separator=" "/>
+    </xpath>
+    <!-- Column #1 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="style">box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <!-- Column #1 - Title -->
+    <xpath expr="//div[hasclass('card-body')]//h2" position="replace" mode="inner">
+        Unique Items
+    </xpath>
+    <!-- Column #1 - Paragraph -->
+    <xpath expr="//div[hasclass('card-body')]//p" position="replace" mode="inner">
+        To buy unique pieces is to buy a piece of the artist: His passion put in the execution of the object, his hours of reflexion, his dexterity... It is a committed, ethical act, which encourages a responsible and direct economy.
+    </xpath>
+    <!-- Column #2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="style">box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <!-- Column #2 - Title -->
+    <xpath expr="(//div[hasclass('card-body')])[2]//h2" position="replace" mode="inner">
+        Tailored advice
+    </xpath>
+    <!-- Column #2 - Paragraph -->
+    <xpath expr="(//div[hasclass('card-body')])[2]//p" position="replace" mode="inner">
+        Whether it is to help you see clearly in a project, to confirm a choice or when you have no idea about the layout of your interior, our advisers are there to accompany you throughout your project.
+    </xpath>
+    <!-- Column #3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="style">box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <!-- Column #3 - Title -->
+    <xpath expr="(//div[hasclass('card-body')])[3]//h2" position="replace" mode="inner">
+        For the whole Family
+    </xpath>
+    <!-- Column #3 - Paragraph -->
+    <xpath expr="(//div[hasclass('card-body')])[3]//p" position="replace" mode="inner">
+        Every week our shop receive new products. Some are only on sale for a limited period of time.
+    </xpath>
+</template>
+
+</odoo>

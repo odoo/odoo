@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+     <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" add="oe_img_bg o_bg_img_center" remove="carousel-dark" separator=" "/>
+        <attribute name="style">background-image: url('/web/image/website.s_quotes_carousel_demo_image_6'); background-position: 50% 65%;</attribute>
+    </xpath>
+    <!-- Filter -->
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_bg_filter bg-black-75"/>
+    </xpath>
+    <!-- Carousel -->
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" remove="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- Carousel item #1 -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <!-- Carousel item #2 -->
+    <xpath expr="//div[hasclass('carousel-item')][2]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <!-- Carousel item #3 -->
+    <xpath expr="//div[hasclass('carousel-item')][3]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+</template>
+
+</odoo>

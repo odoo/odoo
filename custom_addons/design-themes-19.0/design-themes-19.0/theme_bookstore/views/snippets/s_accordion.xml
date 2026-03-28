@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_accordion" inherit_id="website.s_accordion">
+    <!-- Accordion -->
+    <xpath expr="//div[contains(@t-attf-class, 'accordion')]/div" position="attributes">
+        <attribute name="t-attf-class" add="s_accordion_highlight" separator=" "/>
+    </xpath>
+    <!-- Question 1 -->
+    <xpath expr="(//div[hasclass('accordion-item')])[1]//span" position="replace" mode="inner">
+        What is your return policy?
+    </xpath>
+    <xpath expr="(//div[hasclass('accordion-item')])[1]//p" position="replace" mode="inner">
+        We accept returns within 30 days of purchase, provided the book is in its original condition and accompanied by the receipt. Refunds will be issued in the original form of payment. Please note that certain items, like discounted or final sale items, may not be eligible for return.
+    </xpath>
+    <!-- Question 2 -->
+    <xpath expr="(//div[hasclass('accordion-item')])[2]//span" position="replace" mode="inner">
+        Do you offer gift cards?
+    </xpath>
+    <xpath expr="(//div[hasclass('accordion-item')])[2]//p" position="replace" mode="inner">
+        Yes, we offer both physical and digital gift cards in various amounts. Physical gift cards can be purchased in-store or online and shipped to the recipient, while digital gift cards are sent instantly via email. Both types can be used for online and in-store purchases.
+    </xpath>
+    <!-- Question 3 -->
+    <xpath expr="(//div[hasclass('accordion-item')])[3]//span" position="replace" mode="inner">
+        Can I request a book that's out of stock?
+    </xpath>
+    <xpath expr="(//div[hasclass('accordion-item')])[3]//p" position="replace" mode="inner">
+        Absolutely! If a book is out of stock, you can place a special order through our website or by visiting the store. We'll notify you once the book is back in stock, and you can choose to pick it up in-store or have it shipped to your address. Special orders typically take 1-2 weeks to fulfill, depending on availability.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- General Components, Layout -->
+
+<!-- ==== Headers ===== -->
+<template id="header_shadow" inherit_id="website.template_header_default" name="Paptic Header Shadow">
+    <xpath expr="//t[@t-set='_navbar_classes']" position="attributes">
+        <attribute name="t-valuef" remove="shadow-sm" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Snippets -->
+
+<!-- ==== Cover ===== -->
+<template id="s_cover" inherit_id="website.s_cover" name="Paptic s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1 pt80 pb56" remove="o_cc5 pt232 pb232" separator=" "/>
+    </xpath>
+
+    <!-- Remove image -->
+    <xpath expr="//span[hasclass('oe_img_bg')]" position="replace"/>
+
+    <!-- Remove color filter -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace"/>
+
+    <xpath expr="//h1" position="replace">
+        <h1 class="display-3-fs">Plan, build, deliver insane value</h1>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead" style="text-align: left;"><br/>Offering tailored strategies to drive growth and success.</p>
+    </xpath>
+
+    <xpath expr="//p[2]" position="replace">
+        <p>
+            <br/>
+            <a href="#" class="btn btn-lg btn-primary o_translate_inline">Our solutions</a>
+        </p>
+    </xpath>
+
+    <!-- Create Structure -->
+    <xpath expr="//div[hasclass('container')]" position="inside">
+        <div class="row">
+            <div class="o_colored_level col-lg-5 pt32"/>
+            <div class="o_colored_level col-lg-6 offset-lg-1">
+                <img class="img img-fluid" src="/html_editor/shape/theme_paptic/s_cover.svg?c1=o-color-1&amp;c2=o-color-2"/>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-5')]" position="inside">
+        <xpath expr="//div[hasclass('container')]/h1" position="move"/>
+        <xpath expr="//div[hasclass('container')]/p"  position="move"/>
+        <xpath expr="//div[hasclass('container')]/p"  position="move"/>
+    </xpath>
+</template>
+
+<!-- ==== Image-Text ===== -->
+<template id="s_image_text" inherit_id="website.s_image_text" name="Paptic s_image_text">
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_paptic/s_image_text.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+
+    <xpath expr="//h2" position="replace">
+        <h2>Top quality code</h2>
+    </xpath>
+
+    <xpath expr="//p" position="replace" mode="inner">
+        <p><br/>Our code is built for performance, scalability, and reliability. With meticulous attention to detail, we create clean, maintainable, and efficient solutions that power your business forward.</p>
+    </xpath>
+
+    <xpath expr="//a" position="replace"/>
+</template>
+
+<!-- ==== Text-Image ===== -->
+<template id="s_text_image" inherit_id="website.s_text_image" name="Paptic s_text_image">
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_paptic/s_text_image.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+        <h2>Communication is key!</h2>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <p><br/>Clear, consistent communication drives success. We prioritize open dialogue, ensuring alignment with your goals and seamless collaboration throughout every project.</p>
+    </xpath>
+    <xpath expr="//a" position="replace"/>
+</template>
+
+<!-- ==== Showcase ===== -->
+<template id="s_showcase" inherit_id="website.s_showcase" name="Paptic s_showcase">
+    <xpath expr="//i[hasclass('s_showcase_icon')]" position="attributes">
+        <attribute name="class" add="bg-o-color-1" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+    <xpath expr="(//i[hasclass('s_showcase_icon')])[2]" position="attributes">
+        <attribute name="class" add="bg-o-color-1" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+    <xpath expr="(//i[hasclass('s_showcase_icon')])[3]" position="attributes">
+        <attribute name="class" add="bg-o-color-1" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ==== Title ===== -->
+<template id="s_title" inherit_id="website.s_title" name="Paptic s_title">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt96 pb80" remove="pt40 pb40" separator=" "/>
+    </xpath>
+     <xpath expr="//h2" position="replace" mode="inner">
+        Unique experiences.
+    </xpath>
+</template>
+
+<!-- ======== QUOTES ======== -->
+ <template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel" name="Paptic s_quotes_carousel">
+    <!-- Remove preset color -->
+    <xpath expr="//section/div" position="attributes">
+        <attribute name="class" remove="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- Assign slide3 as 'active' and move it in first position -->
+    <xpath expr="//div[hasclass('carousel-inner')]/div" position="attributes">
+        <attribute name="class" remove="active" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]/div[3]" position="attributes">
+        <attribute name="class" add="active" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]/div" position="before">
+        <xpath expr="//div[hasclass('carousel-inner')]/div[3]" position="move"/>
+    </xpath>
+
+    <!-- Refine slide 3 (ex slide 2) background position -->
+    <xpath expr="//div[hasclass('carousel-inner')]/div[3]" position="attributes">
+        <attribute name="style" add="background-position: 0% 17.3252%;" remove=" background-position: 50% 50%" separator=";"/>
+    </xpath>
+</template>
+
+<!-- ==== Motto ===== -->
+<template id="s_motto" inherit_id="website.s_motto" name="Paptic s_motto">
+    <!-- Shape -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/09','showOnMobile':false, 'animated': true}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="class" remove="o_html_builder_Floats_07" add="o_html_builder_Floats_09" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== CAROUSEL ======== -->
+ <template id="s_carousel" inherit_id="website.s_carousel" name="Paptic s_carousel">
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc5" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('container')])[2]" position="before">
+        <div class="o_we_bg_filter bg-white-75"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('container')])[3]" position="before">
+        <div class="o_we_bg_filter bg-white-75"/>
+    </xpath>
+</template>
+
+<!-- ======== CAROUSEL INTRO ======== -->
+<template id="s_carousel_intro" inherit_id="website.s_carousel_intro" name="s_carousel_intro s_carousel">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel')]" position="attributes">
+        <attribute name="class" remove="carousel-dark" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Leading the future with innovation
+    </xpath>
+</template>
+
+<!-- ==== References ===== -->
+<template id="s_references" inherit_id="website.s_references" name="Paptic s_references">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+</template>
+
+<!-- ==== Three Columns ===== -->
+<template id="s_three_columns" inherit_id="website.s_three_columns" name="Paptic s_three_columns">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt32 pb32 o_cc2" add="pt120 pb120 o_cc3" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]" position="before">
+        <h2 style="text-align: center;">Success Stories</h2>
+        <p>&#160;</p>
+    </xpath>
+
+    <!-- Card #1 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <!-- Card #1 - Title & text -->
+    <xpath expr="//h2[hasclass('card-title')]" position="replace" mode="inner">
+        HeyNosf Inc. Digital Transformation
+    </xpath>
+    <xpath expr="//p[hasclass('card-text')]" position="replace" mode="inner">
+        HeyNosf Inc. is a communication agency that was founded in 2006, by Jean-Louis Dewinter. He always had a strong interest in languages and decided to create a company reflecting his own interests.
+    </xpath>
+    <!-- Card #1 - Image -->
+    <xpath expr="(//figure)[1]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <xpath expr="//img[hasclass('card-img-top')]" position="attributes">
+        <attribute name="style">padding: 8px !important;</attribute>
+    </xpath>
+
+    <!-- Card #2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <!-- Card #2 - Title & text -->
+    <xpath expr="(//h2[hasclass('card-title')])[2]" position="replace" mode="inner">
+        Fallanzy Integration Explained
+    </xpath>
+    <xpath expr="(//p[hasclass('card-text')])[2]" position="replace" mode="inner">
+        Fallanzy has been active in the workspace design and ergonomics consulting business for over 20 years. Discover how we answered to the challenges of this company.
+    </xpath>
+    <!-- Card #2 - Image -->
+    <xpath expr="(//figure)[2]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <xpath expr="(//img[hasclass('card-img-top')])[2]" position="attributes">
+        <attribute name="style">padding: 8px !important;</attribute>
+    </xpath>
+
+    <!-- Card #3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <!-- Card #3 - Title & text -->
+    <xpath expr="(//h2[hasclass('card-title')])[3]" position="replace" mode="inner">
+        Hotels Improvement Study
+    </xpath>
+    <xpath expr="(//p[hasclass('card-text')])[3]" position="replace" mode="inner">
+        Our solution is suitable for Hotels as well. We help management to optimize their time and employee to be more efficient and more productive. Discover our study.
+    </xpath>
+    <!-- Card #3 - Image -->
+    <xpath expr="(//figure)[3]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <xpath expr="(//img[hasclass('card-img-top')])[3]" position="attributes">
+        <attribute name="style">padding: 8px !important;</attribute>
+    </xpath>
+</template>
+
+<!-- ==== Picture ===== -->
+<template id="s_picture" inherit_id="website.s_picture" name="Paptic s_picture">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt72 o_cc1" remove="pt64" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_paptic/s_picture.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+</template>
+
+<!-- ==== Image Punchy ===== -->
+<template id="s_image_punchy" inherit_id="website.s_image_punchy">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2" add="o_cc4" separator=" "/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_parallax_default_image</attribute>
+    </xpath>
+</template>
+
+<!-- ==== Call to action ===== -->
+<template id="s_call_to_action" inherit_id="website.s_call_to_action" name="Paptic s_call_to_action">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt120 pb120 o_cc1" remove="pt64 pb64 o_cc5" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        50,000+ companies run Paptic to grow their businesses.
+    </xpath>
+</template>
+
+<!-- ==== CTA Box ===== -->
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Card -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="class" add="flex-lg-row" remove="flex-lg-row-reverse" separator=" "/>
+        <attribute name="style" add="border-radius: 24px !important; -card-img-size-h: 33.33333%;" separator=";"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Join our tech team for innovation<br/>and growth!
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Join our dynamic tech team focused on innovation and growth.<br/><br/>
+    </xpath>
+    <!-- Figure -->
+    <xpath expr="//figure" position="attributes">
+        <attribute name="class" remove="ratio ratio-1x1" separator=" "/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_paptic/s_cta_box.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+        <attribute name="style">padding: 40px;</attribute>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Contact us
+    </xpath>
+</template>
+
+<!-- ==== Numbers ===== -->
+<template id="s_numbers" inherit_id="website.s_numbers" name="Paptic s_numbers">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Blobs/06_001","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Blobs_06_001"/>
+    </xpath>
+</template>
+
+<!-- ==== Big Boxes ===== -->
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2" name="Paptic s_color_blocks_2">
+    <!-- Left column -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="o_cc3 text-center" remove="o_cc4" separator=" "/>
+    </xpath>
+    <!-- Right column -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]" position="attributes">
+        <attribute name="class" add="o_cc3 text-center" remove="o_cc5" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ==== Features ===== -->
+<template id="s_features" inherit_id="website.s_features" name="Paptic s_features">
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" add="container-fluid" remove="container" separator=" "/>
+    </xpath>
+    <!-- Column #1 -->
+    <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- Column #2 -->
+    <xpath expr="//div[hasclass('col-lg-4')][2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- Column #3 -->
+    <xpath expr="//div[hasclass('col-lg-4')][3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== Features Wall ======== -->
+<template id="s_features_wall" inherit_id="website.s_features_wall">
+    <!-- Card 1 Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_three_columns_default_image_1</attribute>
+    </xpath>
+    <!-- Card 2 Image-->
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_three_columns_default_image_3</attribute>
+    </xpath>
+</template>
+
+<!-- ==== Media List ===== -->
+<template id="s_media_list" inherit_id="website.s_media_list" name="Paptic s_media_list">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3 pt80 pb80" remove="o_cc2 pt32 pb32" separator=" "/>
+    </xpath>
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" add="o_container_small" remove="container" separator=" "/>
+    </xpath>
+    <!-- Item #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]/div" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Item #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]/div" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Item #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]/div" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ==== Pricelist ===== -->
+<template id="s_product_catalog" inherit_id="website.s_product_catalog" name="Paptic s_product_catalog">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+    </xpath>
+    <!-- Filter -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="attributes">
+        <attribute name="class" remove="bg-white-85" add="bg-black-85" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== FREE GRID ======== -->
+<template id="s_freegrid" inherit_id="website.s_freegrid">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Expert Consultancy in Tech and Design
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Optimize your business with our consultancy services in technology and design. We provide strategic advice and innovative solutions to help you stay ahead in the digital age.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Unlock Your Potential
+    </xpath>
+</template>
+
+<!-- ======== UNVEIL ======== -->
+<template id="s_unveil" inherit_id="website.s_unveil">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Accelerate your success
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Fuel your business growth with cutting-edge technology and collaborative spaces.
+    </xpath>
+</template>
+
+<!-- ======== QUADRANT ======== -->
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        IT Consultancy
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Unlock your business potential with our IT consultancy services. We offer strategic advice and cutting-edge solutions to keep you ahead in the tech world.<br/><br/> Let us guide your digital transformation.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Get Started
+    </xpath>
+</template>
+
+<!-- ==== Accordion Image ===== -->
+<template id="s_accordion_image" inherit_id="website.s_accordion_image" name="Paptic s_accordion_image">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== KEY BENEFITS ======== -->
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Bespoke Solutions
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Dedicated Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Insights
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We provide tailored consulting strategies that address your unique challenges and objectives, ensuring effective and practical outcomes.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our consultants offer ongoing support and expert advice, guiding you through each phase of your project with personalized attention.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Access cutting-edge insights and industry expertise that give you a strategic advantage and enhance your decision-making process.
+    </xpath>
+</template>
+
+<!-- ==== Pricelist Boxed ===== -->
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed" name="Paptic s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" add="o_cc o_cc2" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/01_001','colors':{'c5':'o-color-2'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_01_001" style="background-image: url('/html_editor/shape/html_builder/Bold/01_001.svg?c5=o-color-2');"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-8')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our Corporate Services
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Enhance your business operations with our comprehensive suite of professional services, tailored to meet your corporate needs.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Consulting Services
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Technology Solutions
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Business Strategy Consulting
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        Starting at $2,500
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        Expert advice on business planning, market analysis, and competitive strategy to help your company achieve its goals.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Financial Advisory Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        Starting at $3,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Comprehensive financial planning, including risk assessment, investment strategy, and tax optimization for your business.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Human Resources Management
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        Starting at $1,800
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        Customized HR solutions, including talent acquisition, employee training, and performance management to boost productivity.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        IT Support Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        Starting at $2,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Reliable IT support, network management, and cybersecurity solutions to safeguard your business operations and data integrity.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Cloud Computing Solutions
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        Starting at $2,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Scalable cloud services to enhance your business’s flexibility and data accessibility, supporting remote work and collaboration.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Digital Marketing Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        Starting at $1,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Strategic online marketing, SEO optimization, and social media management to boost your brand visibility and customer engagement.
+    </xpath>
+</template>
+
+<!-- ==== Striped Center Top ===== -->
+<template id="s_striped_center_top" inherit_id="website.s_striped_center_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Expert Consultancy for Digital Success
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Leverage our expertise in design and technology to drive innovation and digital transformation in your business.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Get Expert Advice
+    </xpath>
+    <!-- Figcaption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Expertise that transforms ideas
+    </xpath>
+</template>
+
+<!-- ==== Image Title ===== -->
+<template id="s_image_title" inherit_id="website.s_image_title" name="Paptic s_image_title">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc5 oe_img_bg" separator=" "/>
+        <attribute name="style"/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/13','colors':{'c5':'o-color-4'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_13" style="background-image: url('/html_editor/shape/html_builder/Bold/13.svg?c5=o-color-4');"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace"/>
+</template>
+
+<!-- ==== KEY IMAGES ===== -->
+<template id="s_key_images" inherit_id="website.s_key_images" name="Paptic s_key_images">
+    <xpath expr="//h2" position="replace" mode="inner">
+        Driving Success Through Innovation
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Empowering Businesses to Reach New Heights
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="replace" mode="inner">
+        Customized solutions for your business needs
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="replace" mode="inner">
+        Expert advice to navigate complex challenges
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="replace" mode="inner">
+        Proven strategies for sustainable growth
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="replace" mode="inner">
+        Partner with us to unlock your potential
+    </xpath>
+</template>
+
+<!-- ======== IMAGE FRAME ======== -->
+<template id="s_image_frame" inherit_id="website.s_image_frame">
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_carousel_default_image_3</attribute>
+    </xpath>
+</template>
+
+<!-- ======== CARD OFFSET ======== -->
+<template id="s_card_offset" inherit_id="website.s_card_offset">
+    <!-- Grid items -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="style" add="--grid-item-padding-y: 64px;" remove="--grid-item-padding-y: 40px;" separator=";"/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_carousel_default_image_3</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Expert Consultancy in Tech &amp; Design
+    </xpath>
+    <!-- Paragraph 1 -->
+    <xpath expr="(//p[hasclass('lead')])[1]" position="replace" mode="inner">
+        Optimize your business with our consultancy services in technology and design. We provide strategic advice and innovative solutions to help you stay ahead in the digital age.
+    </xpath>
+    <!-- Paragraph 2 -->
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Unlock your business potential.
+    </xpath>
+</template>
+
+<!-- ==== Big Number ===== -->
+<template id="s_big_number" inherit_id="website.s_big_number">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/18"}</attribute>
+        <attribute name="class" add="o_cc4" remove="o_cc5" separator=" "/>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Wavy_18"/>
+    </xpath>
+
+    <!-- Text -->
+    <xpath expr="//h2/span" position="attributes">
+        <attribute name="style" add="font-size: 9.375rem;" remove="font-size: 10.75rem;" separator=";"/>
+    </xpath>
+    <xpath expr="//h2/span" position="replace" mode="inner">
+        85%
+    </xpath>
+    <xpath expr="//p/span" position="replace" mode="inner">
+        customers satisfaction
+    </xpath>
+</template>
+
+<!-- ===== WAVY GRID ======== -->
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+<!-- ==== Cards Grid ===== -->
+<template id="s_cards_grid" inherit_id="website.s_cards_grid">
+    <!-- Card 1 -->
+    <xpath expr="(//div[hasclass('s_card')])[1]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//div[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//div[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <!-- Card 4 -->
+    <xpath expr="(//div[hasclass('s_card')])[4]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+</template>
+
+<!-- ==== EMPOWERMENT ===== -->
+<template id="s_empowerment" inherit_id="website.s_empowerment">
+    <!-- Badge content -->
+    <xpath expr="//span[hasclass('s_cta_badge')]" position="replace" mode="inner">
+        <i class="fa fa-fw fa-info-circle o_not-animable" role="img"/>&#160;&#160;Strategic insights&#160;&#160;&#160;&#160;
+        <a href="#">Explore our case studies&#160;&#160; <i class="fa fa-long-arrow-right" role="img"/></a>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Elevate your business<br/>with expert consultancy services
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Offering tailored strategies to drive growth and success.<br/><br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')][1]" position="replace" mode="inner">
+        Our solutions
+    </xpath>
+    <!-- Second Button -->
+    <xpath expr="//a[hasclass('btn')][2]" position="replace" mode="inner">
+        Book a call
+    </xpath>
+</template>
+
+<!-- ==== FORM COVER ===== -->
+<template id="s_website_form_cover" inherit_id="website.s_website_form_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+    <!-- Form -->
+    <xpath expr="(//div[hasclass('col-lg-6')])[2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ==== Masonry Block ===== -->
+<template id="s_masonry_block_images_template" inherit_id="website.s_masonry_block_images_template">
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="data-row-count">11</attribute>
+    </xpath>
+    <!-- Block 1 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[1]" position="attributes">
+        <attribute name="class" remove="oe_img_bg o_bg_img_center o_cc5 g-height-10 shadow" add="o_cc2 g-height-11" separator=" "/>
+        <attribute name="style">z-index: 1; grid-area: 1 / 1 / 12 / 7; --grid-item-padding-y: 48px; --grid-item-padding-x: 48px;</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[1]/div[hasclass('o_we_bg_filter')]" position="replace"/>
+    <xpath expr="(//div[hasclass('o_grid_item')])[1]/p" position="after">
+        <img class="img img-fluid" src="/html_editor/shape/theme_paptic/s_masonry_block_1.svg?c1=o-color-1&amp;c2=o-color-2"/>
+    </xpath>
+    <!-- Block 2 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="class" remove="oe_img_bg o_bg_img_center o_cc5 g-height-10 shadow" add="o_cc2 g-height-11" separator=" "/>
+        <attribute name="style">z-index: 2; grid-area: 1 / 7 / 12 / 13; --grid-item-padding-y: 48px; --grid-item-padding-x: 48px;</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]/div[hasclass('o_we_bg_filter')]" position="replace"/>
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]/p" position="after">
+        <img class="img img-fluid" src="/html_editor/shape/theme_paptic/s_masonry_block_2.svg?c1=o-color-1&amp;c2=o-color-2"/>
+    </xpath>
+</template>
+
+<!-- ==== Numbers Boxed ===== -->
+<template id="s_numbers_boxed" inherit_id="website.s_numbers_boxed">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc5" separator=" "/>
+    </xpath>
+    <!-- Grid Item -->
+    <xpath expr="//div[hasclass('o_grid_item')][2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')][2]//h3" position="replace" mode="inner">
+        30+
+    </xpath>
+    <!-- Grid Item 2 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]//h3" position="replace" mode="inner">
+        45%
+    </xpath>
+    <!-- Grid Item 3 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]//h3" position="replace" mode="inner">
+        8+
+    </xpath>
+</template>
+
+<!-- ==== NUMBERS FRAMED ===== -->
+<template id="s_numbers_framed" inherit_id="website.s_numbers_framed">
+    <!-- KPI's -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

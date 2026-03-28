@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_framed_intro" inherit_id="website.s_framed_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Working beauty from the inside out
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_three_columns_default_image_1</attribute>
+    </xpath>
+</template>
+
+</odoo>

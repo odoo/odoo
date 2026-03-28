@@ -1,0 +1,62 @@
+
+@mixin carousel-indicators($bottom, $bottom-sm) {
+    bottom: $bottom;
+    li {
+        width: 12px;
+        height: 12px;
+        border-color: map-get($grays, '900');
+        margin: 0;
+        &:hover {
+            border-color: o-color('alpha');
+        }
+        &.active {
+            background-color: o-color('alpha');
+            border-color: o-color('alpha');
+            margin: 0;
+        }
+    }
+    @include media-breakpoint-down(lg) {
+        bottom: $bottom-sm;
+    }
+}
+
+$s-banner-2-background-position: 50% 50%;
+$s-banner-2-content-margin: 0;
+
+$s-banner-3-carosel-control-color: rgba(0, 0, 0, 0);
+$s-banner-3-carosel-control-height: 100%;
+$s-banner-3-padding: 130px;
+$s-banner-3-fa-color: o-color('gamma');
+$s-banner-3-carousel-height: 500px;
+$s-banner-3-text-shadow: 1px 1px 11px rgba(0, 0, 0, 0.86);
+$s-banner-3-hero-bg-color: o-color('alpha');
+$s-banner-3-indicators-visible: hidden;
+$s-banner-3-h1-size: 80px;
+$s-banner-3-h2-size: 40px;
+$s-banner-3-h1-mobile-font-size: 50px;
+
+@mixin s-banner-3-col-center-hook {};
+@mixin s-banner-3-row-hook {};
+@mixin s-banner-3-carousel-control-hook {};
+@mixin s-banner-3-carousel-control-right-hook {};
+@mixin s-banner-3-carousel-control-left-hook {};
+
+$s-text-big-picture-padding: 50px 0;
+$s-text-big-picture-text-align: left;
+
+@mixin s-text-big-picture-hero-hook {};
+@mixin s-big-picture-text-hero-hook {};
+
+$s-big-picture-text-padding: 50px 0;
+$s-big-picture-text-align: left;
+
+@mixin s-big-picture-text-hero-hook {};
+@mixin s-big-picture-row-hook {};
+
+$s-cubes-big-cube-min-height: 600px;
+
+$s-products-carousel-carousel-control-color: rgba(0, 0, 0, 0);
+$s-products-carousel-carousel-icon-color: o-color('gamma') !default;
+
+$s-timeline-company-color: null;
+$s-timeline-color: if(variable-exists(color-wind), $color-wind, #F7F7F7);

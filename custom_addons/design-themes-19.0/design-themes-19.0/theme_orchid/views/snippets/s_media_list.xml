@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Item #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]" position="attributes">
+        <attribute name="class" add="pb24" remove="pb16" separator=" "/>
+    </xpath>
+
+    <!-- Item #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]" position="attributes">
+        <attribute name="class" add="pb24" remove="pb16" separator=" "/>
+    </xpath>
+
+    <!-- Item #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]" position="attributes">
+        <attribute name="class" add="pb24" remove="pb16" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

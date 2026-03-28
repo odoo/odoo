@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Discover your<br/>next great read
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Step into a world of stories at our bookstore. From timeless classics to the latest bestsellers, we offer a curated selection of books to inspire and entertain. Whether you're an avid reader or just browsing, our cozy atmosphere and knowledgeable staff will help you find the perfect book to spark your imagination.<br/><br/>
+    </xpath>
+</template>
+
+</odoo>

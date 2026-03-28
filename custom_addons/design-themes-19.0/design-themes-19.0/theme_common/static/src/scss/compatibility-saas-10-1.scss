@@ -1,0 +1,17 @@
+// This file is for compatibility since saas-10 web_editor refactoring.
+// As a fix to work properly in the editor, some classes have been renamed.
+// To allow a smooth transition, old classes alias are created here.
+
+@mixin bg-compatibility-mixin($bg, $color) {
+    background-color: $bg;
+    color: $color;
+    .text-muted {
+        color: rgba($color, 0.4);
+    }
+}
+
+.black { @include bg-compatibility-mixin($black, map-get($grays, '600')); }
+.darkgray { @include bg-compatibility-mixin(map-get($grays, '800'), $white); }
+.gray { @include bg-compatibility-mixin(map-get($grays, '700'), $white); }
+.lightgray { @include bg-compatibility-mixin(map-get($grays, '200'), map-get($grays, '700')); }
+.white { @include bg-compatibility-mixin($white, map-get($grays, '700')); }

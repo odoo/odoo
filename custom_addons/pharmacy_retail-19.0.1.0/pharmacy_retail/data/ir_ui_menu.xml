@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="contacts.res_partner_menu_config" model="ir.ui.menu" forcecreate="0">
+        <field name="sequence">4</field>
+    </record>
+    <record id="contacts_doctor_menu_pharma" model="ir.ui.menu">
+        <field name="name">Doctors</field>
+        <field name="parent_id" ref="contacts.menu_contacts"/>
+        <field name="action" ref="actions_doctor_partner_pharma"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="manufacturer_pharma" model="ir.ui.menu">
+        <field name="name">Manufacturers</field>
+        <field name="parent_id" ref="contacts.menu_contacts"/>
+        <field name="action" ref="actions_manufacturer_pharma"/>
+        <field name="sequence">3</field>
+    </record>
+</odoo>

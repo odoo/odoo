@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+    <xpath expr="//p[hasclass('lead')]" position="attributes">
+        <attribute name="style">text-align: center;"</attribute>
+    </xpath>
+    <xpath expr="//h2" position="attributes">
+        <attribute name="style" add="text-align: center;" separator=";"/>
+        <attribute name="class">display-4-fs</attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        <span style="font-weight: normal;">Discover our</span><br/><span style="font-weight: normal;">main <span class="o_text_highlight o_translate_inline o_text_highlight_bold_2 o_text_highlight_fill">three benefits</span></span>
+    </xpath>
+    <xpath expr="(//span[hasclass('display-3-fs')])[2]" position="attributes">
+        <attribute name="class" add="text-o-color-2" remove="text-o-color-1" separator=" "/>
+    </xpath>
+    <xpath expr="(//span[hasclass('display-3-fs')])[3]" position="attributes">
+        <attribute name="class" add="text-o-color-5" remove="text-o-color-1" separator=" "/>
+    </xpath>
+
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Strategic Solutions
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Dedicated Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Partnerships
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We offer tailored strategies that align with your business goals, driving growth and maximizing efficiency.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our team provides continuous support, ensuring your projects run smoothly and challenges are addressed promptly.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Benefit from unique collaborations and partnerships that give your business a competitive edge in the market.
+    </xpath>
+</template>
+
+</odoo>

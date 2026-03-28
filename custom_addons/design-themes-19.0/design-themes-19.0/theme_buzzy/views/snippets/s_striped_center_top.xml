@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_center_top" inherit_id="website.s_striped_center_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Innovative Solutions for Your Business
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Drive success with our cutting-edge corporate services, blending technology and creative design to deliver impactful results.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Get Started
+    </xpath>
+    <!-- Figcaption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Solutions crafted with precision
+    </xpath>
+</template>
+
+</odoo>

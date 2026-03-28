@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64 o_cc1" remove="pt32 pb32 o_cc2" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/12","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_12"/>
+    </xpath>
+    <!-- Row #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]" position="attributes">
+        <attribute name="class" add="col-lg-8" remove="col-lg-12" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_item')])//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse shadow rounded" separator=" "/>
+    </xpath>
+    <!-- Row #1 - Text -->
+    <xpath expr="//div[hasclass('s_media_list_body')]" position="replace">
+        <div class="col-lg-9 s_media_list_body">
+            <h3 class="card-title"><span style="font-size: 36px;">Engagement ceremonies</span></h3>
+            <p class="card-text">We’ll help you mark the engagement milestone with an unforgettable ceremony.</p>
+            <a href="#" class="btn btn-outline-primary">Start planning your engagement</a>
+        </div>
+    </xpath>
+    <!-- Row #1 - Image -->
+    <xpath expr="(//div[hasclass('s_media_list_item')])//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" add="col-lg-3" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Row #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]" position="attributes">
+        <attribute name="class" add="pt24 pb24 col-lg-8 offset-lg-2" remove="pt16 pb16 col-lg-12" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_item')])[2]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse shadow rounded o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Row #2 - Text -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]" position="replace">
+        <div class="col-lg-9 s_media_list_body">
+            <h3 class="card-title"><span style="font-size: 36px;">Wedding Receptions</span></h3>
+            <p class="card-text">As a full service experience, we monitor all aspects of your wedding from planning to execution.</p>
+            <a href="#" class="btn btn-primary">Start planning your wedding</a>
+        </div>
+    </xpath>
+    <!-- Row #2 - Image -->
+    <xpath expr="(//div[hasclass('s_media_list_item')])[2]//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" add="col-lg-3" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Row #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]" position="attributes">
+        <attribute name="class" add="col-lg-8 offset-lg-4" remove="col-lg-12" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_item')])[3]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse shadow rounded" separator=" "/>
+    </xpath>
+    <!-- Row #3 - Text -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]" position="replace">
+        <div class="col-lg-9 s_media_list_body">
+            <h3 class="card-title"><span style="font-size: 36px;">Vow renewals</span></h3>
+            <p class="card-text">The heartfelt exchange of wedding vows is often the most memorable part of a marriage ceremony.</p>
+            <a href="#" class="btn btn-outline-primary">See how others renewed their vows</a>
+        </div>
+    </xpath>
+    <!-- Row #3 - Image -->
+    <xpath expr="(//div[hasclass('s_media_list_item')])[3]//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" add="col-lg-3" remove="col-lg-4" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

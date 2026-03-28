@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel_minimal" inherit_id="website.s_quotes_carousel_minimal">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel')]" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" remove="carousel-dark" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Blobs/17','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_shape o_html_builder_Blobs_17" style="background-image: url('/html_editor/shape/html_builder/Blobs/17.svg?c5=o-color-1');"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//p[hasclass('s_blockquote_quote')]" position="replace" mode="inner">
+        " Their creativity transformed our vision. Unique and truly inspiring. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        " A visionary partner for growth. <br/>Innovative, skilled, and always pushing creative boundaries. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        " Outstanding artistry and service! <br/>They consistently exceed our creative expectations. "
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="app_mail_compose_message_form" model="ir.ui.view">
+        <field name="name">app.mail.compose.message.form</field>
+        <field name="model">mail.compose.message</field>
+        <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='action_send_mail']" position="before">
+                <field name="show_send_without_mail" invisible="1"/>
+                <button string="Set Send Only" name="action_send_without_mail" type="object" class="btn-primary" data-hotkey="a"
+                        title="No mail sent, Only set the status to Sent."
+                        context="{'mark_order_as_sent': '1'}"
+                        invisible="not show_send_without_mail"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

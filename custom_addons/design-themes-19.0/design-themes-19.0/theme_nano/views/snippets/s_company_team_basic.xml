@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_basic" inherit_id="website.s_company_team_basic">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our talented crew
+    </xpath>
+    <xpath expr="//h2" position="after">
+        <p class="lead" style="text-align: center;">Meet the masterminds behind our agency. With them, your project is in good hands for sure.</p>
+    </xpath>
+
+    <!-- Profile #1 -->
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="pt40" remove="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[1]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Evan Ray
+    </xpath>
+    <xpath expr="(//p[hasclass('o_small-fs')])[1]" position="replace" mode="inner">
+        Creative Director
+    </xpath>
+    <!-- Profile #2 -->
+    <xpath expr="//div[hasclass('col-lg-3')][2]" position="attributes">
+        <attribute name="class" add="pt40" remove="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Ben Cole
+    </xpath>
+    <xpath expr="(//p[hasclass('o_small-fs')])[2]" position="replace" mode="inner">
+        Account Manager
+    </xpath>
+    <!-- Profile #3 -->
+    <xpath expr="//div[hasclass('col-lg-3')][3]" position="attributes">
+        <attribute name="class" add="pt40" remove="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Jane Ford
+    </xpath>
+    <xpath expr="(//p[hasclass('o_small-fs')])[3]" position="replace" mode="inner">
+        Media Strategist
+    </xpath>
+    <!-- Profile #4 -->
+    <xpath expr="//div[hasclass('col-lg-3')][4]" position="attributes">
+        <attribute name="class" add="pt40" remove="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="class" add="rounded" remove="rounded-circle" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Mia Lee
+    </xpath>
+    <xpath expr="(//p[hasclass('o_small-fs')])[4]" position="replace" mode="inner">
+        Marketing Analyst
+    </xpath>
+</template>
+
+</odoo>

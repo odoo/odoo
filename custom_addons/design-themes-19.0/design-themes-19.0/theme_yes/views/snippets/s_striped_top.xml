@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_top" inherit_id="website.s_striped_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+       Elegant Wedding Planning for Your Perfect Day
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Let us plan your perfect day
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_picture_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

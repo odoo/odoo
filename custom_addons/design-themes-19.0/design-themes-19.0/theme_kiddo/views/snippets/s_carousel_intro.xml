@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_intro" inherit_id="website.s_carousel_intro">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Texts -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Nurturing young minds through play
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Experiences designed just for kids
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Discover joyful learning
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Foster creativity and curiosity with our engaging activities and caring environment, perfect for your child's first steps.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Enrich your child's early years with our fun programs and dedicated teachers.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[3]" position="replace" mode="inner">
+        Explore more and find a nurturing space for your child’s growth, designed to inspire and support their early development.
+    </xpath>
+</template>
+
+</odoo>

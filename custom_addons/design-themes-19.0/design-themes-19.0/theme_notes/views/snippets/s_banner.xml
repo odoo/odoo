@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/08","flip":["x","y"]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_08" style="background-image: url('/html_editor/shape/html_builder/Floats/08.svg?c1=o-color-1&amp;c2=o-color-2&amp;c3=o-color-3&amp;c5=o-color-1&amp;flip=xy'); background-position: 100% 100%;"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Enjoy the atmosphere
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pt80 pb80" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//*[hasclass('row')]/*[1]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 pt32 pb32 rounded text-center" separator=" "/>
+        <attribute name="style" add="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div[hasclass('s_hr')]" position="replace"/>
+    <xpath expr="//i" position="replace">
+        <i class="s_features_icon d-block mx-auto fa fa-2x fa-lock bg-o-color-1 mb-3 rounded-circle" role="img"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace" mode="inner">
+        Security
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/p" position="replace" mode="inner">
+        We keep you safe <br/>in the cloud.
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//*[hasclass('row')]/*[2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 pt32 pb32 rounded text-center" separator=" "/>
+        <attribute name="style" add="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div[hasclass('s_hr')]" position="replace"/>
+    <xpath expr="(//i)[2]" position="replace">
+        <i class="s_features_icon d-block mx-auto fa fa-2x fa-file-text bg-o-color-1 mb-3 rounded-circle" role="img"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/h3" position="replace" mode="inner">
+        Support
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/p" position="replace" mode="inner">
+        All types of files <br/>are allowed.
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="//*[hasclass('row')]/*[3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 pt32 pb32 rounded text-center" separator=" "/>
+        <attribute name="style" add="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div[hasclass('s_hr')]" position="replace"/>
+    <xpath expr="(//i)[3]" position="replace">
+        <i class="s_features_icon d-block mx-auto fa fa-2x fa-leaf bg-o-color-1 mb-3 rounded-circle" role="img"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/h3" position="replace" mode="inner">
+        Eco-Friendly
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/p" position="replace" mode="inner">
+        All our data centers <br/>are emission-free.
+    </xpath>
+</template>
+
+</odoo>

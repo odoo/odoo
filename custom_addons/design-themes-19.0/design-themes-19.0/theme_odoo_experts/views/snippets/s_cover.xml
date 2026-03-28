@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height" separator=" "/>
+    </xpath>
+    <!-- Filter -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace">
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" add="o_container_small" remove="container" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        We care <br/>about results
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        <br/>
+        Guided by expertise gained over 20 years of achieving success for clients, we practice with passion and strategic focus on the future.
+    </xpath>
+</template>
+
+</odoo>

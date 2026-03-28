@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Card -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc4" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+       Help us<br/>shape the future
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Join our NGO and help us to make the world a better place<br/><br/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/theme_treehouse/static/src/img/backgrounds/02.webp</attribute>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Join us
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" remove="carousel-dark" separator=" "/>
+    </xpath>
+    <!-- Carousel item #1 - filter -->
+    <xpath expr="//blockquote" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+    <!-- Carousel item #2 - filter -->
+    <xpath expr="(//blockquote)[2]" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+    <!-- Carousel item #3 - filter -->
+    <xpath expr="(//blockquote)[3]" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+</template>
+
+</odoo>

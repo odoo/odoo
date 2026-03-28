@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_picture" inherit_id="website.s_picture">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level o_cc4 pt96" remove="pt64" separator=" "/>
+    </xpath>
+
+    <!-- Heading -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Letting each child explore and grow at their own pace
+    </xpath>
+
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Through stimulating and fun activities, our aim<br/>
+        is to promote all areas of a childs' development.
+    </xpath>
+
+    <!-- Caption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Our qualified staff ensure that each childs' needs are always recognised and fulfilled.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt120 pb120 o_cc4" remove="pt32 pb32 o_cc2" separator=" "/>
+    </xpath>
+
+    <!-- Row #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]" position="attributes">
+        <attribute name="class" add="col-lg-8" remove="col-lg-12" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse shadow rounded" separator=" "/>
+    </xpath>
+    <!-- Row #1 - Title & paragraph -->
+    <xpath expr="//div[hasclass('s_media_list_body')]//h3" position="replace" mode="inner">
+        <span class="text-o-color-1">1.</span> Litigation
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_body')]//p" position="replace" mode="inner">
+        Litigation is our core-business. Our lawyers have been involved in many high-profile cases for 20 years.
+    </xpath>
+    <!-- Row #1 - Remove the button -->
+    <xpath expr="//div[hasclass('s_media_list_body')]//a" position="replace"/>
+
+    <!-- Row #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]" position="attributes">
+        <attribute name="class" add="pt24 pb24 col-lg-8 offset-lg-2" remove="pt16 pb16 col-lg-12" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')][2]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse shadow rounded o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Row #2 - Title & paragraph -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]//h3" position="replace" mode="inner">
+        <span class="text-o-color-1">2.</span> Arbitration
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]//p" position="replace" mode="inner">
+        Over the past years, our lawyers have gained significant experience in arbitration, both as counsel as well as arbitrators.
+    </xpath>
+
+    <!-- Row #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]" position="attributes">
+        <attribute name="class" add="col-lg-8 offset-lg-4" remove="col-lg-12" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')][3]//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse shadow rounded" separator=" "/>
+    </xpath>
+    <!-- Row #3 - Title & paragraph -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//h3" position="replace" mode="inner">
+        <span class="text-o-color-1">3.</span> Mediation
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//p" position="replace" mode="inner">
+        In mediation, the parties find a solution for their conflict, with the assistance of a mediator who has no decision-making power.
+    </xpath>
+    <!-- Row #3 - Remove the button -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//a" position="replace"/>
+</template>
+
+</odoo>

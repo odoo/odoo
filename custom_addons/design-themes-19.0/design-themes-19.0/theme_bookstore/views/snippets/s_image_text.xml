@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pt112 pb112" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Once upon a time...
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>
+        Discover the history of Belgium in this well-documented book with many illustrations and testimonials.
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        Learn about the difficulties encountered by NASA engineers in sending the first men to Mars.
+    </xpath>
+</template>
+
+</odoo>

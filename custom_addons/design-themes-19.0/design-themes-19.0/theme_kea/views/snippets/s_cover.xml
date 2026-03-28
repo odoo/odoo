@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="oe_img_bg o_full_screen_height" remove="parallax s_parallax_is_fixed" separator=" "/>
+        <attribute name="data-scroll-background-ratio">0</attribute>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/02','colors':{'c1':'o-color-1','c2':'o-color-1','c3':'o-color-5','c4':'o-color-1','c5':'o-color-5'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+        <attribute name="style">background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="after">
+        <div class="o_we_shape o_html_builder_Floats_02" style="background-image: url('/html_editor/shape/html_builder/Floats/02.svg?c1=o-color-1&amp;c2=o-color-1&amp;c3=o-color-5&amp;c4=o-color-1&amp;c5=o-color-5');"/>
+    </xpath>
+    <!-- Disable Parallax -->
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        The Revolution <br/> in Virtual Reality
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace">
+        <p class="lead"><br/></p>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace"/>
+    <xpath expr="//a[hasclass('btn')]" position="replace">
+        <a href="#0" class="btn btn-primary btn-lg o_translate_inline">Discover more</a>
+    </xpath>
+</template>
+
+</odoo>

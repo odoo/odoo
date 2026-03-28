@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_comparisons" inherit_id="website.s_comparisons">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+    </xpath>
+    <!-- Left card -->
+    <xpath expr="//div[hasclass('row')]//div" position="attributes">
+        <attribute name="class" add="pt16" separator=" "/>
+    </xpath>
+    <!-- Right card -->
+    <xpath expr="//div[hasclass('row')]//div[3]" position="attributes">
+        <attribute name="class" add="pt16" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

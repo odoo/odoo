@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped" inherit_id="website.s_striped">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20','colors':{'c5': 'o-color-1'},'flip':[], 'showOnMobile':true}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="style">background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-1');</attribute>
+    </xpath>
+</template>
+
+</odoo>

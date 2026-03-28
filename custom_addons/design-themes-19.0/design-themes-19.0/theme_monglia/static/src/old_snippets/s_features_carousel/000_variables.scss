@@ -1,0 +1,13 @@
+$s-features-carousel-border-width: 0;
+$s-features-carousel-indicators-visible: visible;
+@mixin s-features-carousel-inner-hook {
+    .carousel-inner .row {
+        margin: 40px 70px;
+        @include media-breakpoint-down(md) {
+            margin: 0;
+        }
+    }
+}
+@mixin s-features-carousel-mask-hook {
+    border: 1px solid map-get($grays, '200');
+}

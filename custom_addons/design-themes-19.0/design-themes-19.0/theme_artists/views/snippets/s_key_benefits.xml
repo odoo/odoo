@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt56 pb56" remove="pt48 pb48" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape': 'html_builder/Connections/14','colors':{'c5':'o-color-1'}}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="style">background-image: url('/html_editor/shape/html_builder/Connections/14.svg?c5=o-color-1');</attribute>
+    </xpath>
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Bespoke Art Creations
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Dedicated Artist Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Artworks
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We craft personalized artworks that capture your vision and style, delivering unique pieces that reflect your individuality.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Receive ongoing guidance and assistance throughout your project, ensuring that your artistic needs and preferences are fully realized.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Explore one-of-a-kind pieces and limited editions that showcase exceptional creativity and offer a distinctive touch to your collection.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cards_soft" inherit_id="website.s_cards_soft">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5 pt56 pb48" remove="o_cc1 pt48 pb32" separator=" "/>
+    </xpath>
+    <!-- Cards -->
+    <xpath expr="//div[hasclass('s_card')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pb96 pt96" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Wrapper -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">        
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="padding:24px; border-width: 1px !important; border-color: rgb(70, 77, 83) !important; border-radius: 4px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="col-lg-5" remove="col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">        
+        Building Castle in Cloud
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" />
+    <xpath expr="//p[1]" position="replace" mode="inner">        
+        When designing an architectural concept, we take into account the nine criteria that Zumthor considers to be important in creating an architectural atmosphere.
+    </xpath>
+    <xpath expr="//p[2]" position="replace" />        
+</template>
+
+</odoo>

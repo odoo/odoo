@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="view_example" name="Example">
+    <t t-set="additional_title" t-valuef="Example"/>
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure">
+
+            <!-- Image Shape -->
+            <section class="s_text_image pt80 pb80">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 pt16 pb16">
+                            <h2>A Section Subtitle</h2>
+                            <p>Write one or two paragraphs describing your product or services. To be successful your content needs to be useful to your readers.</p>
+                            <p>Start with the customer - find out what they want and give it to them.</p>
+                            <p><a href="#" class="btn btn-primary">Learn more</a></p>
+                        </div>
+                        <div class="col-lg-6 pt16 pb16">
+                            <img src="/html_editor/image_shape/website.s_text_image_default_image/theme_test_custo/blob/01.svg" class="img img-fluid mx-auto" alt="" data-format-mimetype="image/webp" data-file-name="01.svg" data-shape="theme_test_custo/blob/01" data-shape-colors=";;;;"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Background Shape -->
+            <section class="s_text_block pt80 pb200" data-name="Text" data-oe-shape-data="{'shape': 'theme_test_custo/curves/01','flip':[]}">
+                <div class="o_we_shape o_theme_test_custo_curves_01"/>
+                <div class="s_allow_columns container">
+                    <p>Great stories have a <b>personality</b>. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                </div>
+            </section>
+
+        </div>
+    </t>
+</template>
+
+<record id="page_example" model="theme.website.page">
+    <field name="view_id" ref="view_example"/>
+    <field name="is_published" eval="True"/>
+    <field name="url">/example</field>
+</record>
+
+</odoo>

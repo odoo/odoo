@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_intro" inherit_id="website.s_carousel_intro">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel')]" position="attributes">
+        <attribute name="class" remove="carousel-dark" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')][2]//div[hasclass('o_grid_item')][2]" position="attributes">
+        <attribute name="class" add="g-height-3" remove="g-height-2" separator=" "/>
+        <attribute name="style" add="grid-area: 6 / 7 / 9 / 11;" remove="grid-area: 7 / 7 / 9 / 11;" separator=";"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Crafting comfort and style for your home
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Furniture solution
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Discover your perfect pieces
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Transform your space with our stylish furniture that combines quality craftsmanship with modern design, perfect for any home.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Elevate your interiors with our exclusive collections and expert design advice, offering a blend of comfort and elegance.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[3]" position="replace" mode="inner">
+        Explore more and find furniture that matches your style, crafted to enhance your living space and reflect your taste.
+    </xpath>
+</template>
+
+</odoo>

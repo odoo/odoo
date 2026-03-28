@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="apply_coupon_code" model="sale.loyalty.coupon.wizard">
+        <field name="order_id" ref="sale_order_3"/>
+        <field name="coupon_code" model="loyalty.card" eval="obj().search([
+            ('program_id', '=', ref('loyalty_program_pharma_3')),
+        ], limit=1).code"/>
+    </record>
+
+    <function model="sale.loyalty.coupon.wizard" name="action_apply">
+        <value eval="[ref('apply_coupon_code')]"/>
+    </function>
+
+    <record id="apply_selected_reward" model="sale.loyalty.reward.wizard">
+        <field name="selected_reward_id" ref="loyalty_reward_pharma_3"/>
+        <field name="order_id" ref="sale_order_3"/>
+    </record>
+
+    <function model="sale.loyalty.reward.wizard" name="action_apply">
+        <value eval="[ref('apply_selected_reward')]"/>
+    </function>
+</odoo>

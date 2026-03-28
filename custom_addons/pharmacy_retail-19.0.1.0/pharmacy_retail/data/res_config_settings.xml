@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="res_config_settings_enable" model="res.config.settings">
+
+        <!-- Sales -->
+        <field name="group_product_pricelist" eval="1"/>
+        <field name="group_warning_sale" eval="1"/>
+        
+        <!-- Purchase -->
+        <field name="group_warning_purchase" eval="1"/>
+
+        <!-- Inventory -->
+        <field name="group_warning_stock" eval="1"/>
+        <field name="group_stock_multi_locations" eval="1"/>
+        <field name="group_stock_adv_location" eval="1"/>
+        <field name="group_lot_on_delivery_slip" eval="1"/>
+        <field name="group_expiry_date_on_delivery_slip" eval="1"/>
+        <field name="group_lot_on_invoice" eval="1"/>
+
+        <!-- Accounting -->
+        <field name="display_invoice_amount_total_words" eval="1"/>
+        <field name="use_invoice_terms" eval="1"/>
+        <field name="terms_type">html</field>
+        <field name="account_use_credit_limit" eval="1"/>
+        <field name="account_default_credit_limit">1000</field>
+
+        <!-- POS -->
+        <field name="pos_use_pricelist" eval="1"/>
+        <field name="pos_restrict_price_control" eval="1"/>
+        <field name="pos_is_header_or_footer" eval="1"/>
+        <field name="point_of_sale_use_ticket_qr_code" eval="1"/>
+        <field name="pos_iface_print_auto" eval="1"/>
+
+    </record>
+
+    <function name="execute" model="res.config.settings">
+        <value eval="[ref('res_config_settings_enable')]"/>
+    </function>
+</odoo>

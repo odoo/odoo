@@ -1,0 +1,24 @@
+$s-big-icon-circle-color: blue; // FIXME epsilon
+$s-big-icon-circle-icon-size: 150px;
+$s-big-icon-circle-text-color: $-gray-700;
+@mixin s-big-icon-circle-height-hook {
+    padding-top: 0;
+    @include media-breakpoint-down(md) {
+        height: 100%;
+    }
+    .row {
+        @include media-breakpoint-down(md) {
+            height: 100%;
+        }
+    }
+    .col-lg-12 {
+        height: 35%;
+    }
+}
+@mixin s-big-icon-circle-fa-hook {
+    height: 150px;
+    line-height: 70px;
+    @include media-breakpoint-down(md) {
+        height: 80px;
+    }
+}

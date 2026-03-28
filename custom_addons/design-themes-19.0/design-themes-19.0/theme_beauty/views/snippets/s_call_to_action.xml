@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt128 pb128" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('col-lg-9')]" position="attributes">
+        <attribute name="class" add="col-lg-12 text-center" remove="col-lg-9" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="col-lg-12" remove="col-lg-3" separator=" "/>
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//h2" position="replace">
+        <h2>Beauty without <br/>expression is boring</h2>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Join us and enjoy the pleasure of caring for yourself.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="(//div[hasclass('col-lg-12')])[2]/p" position="attributes">
+        <attribute name="style" add="text-align: center;" remove="text-align: right;" separator=";"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_showcase" inherit_id="website.s_showcase">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt128 pb128 o_cc o_cc5" remove="pt48 pb48" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        We also sell prime quality second hand books
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Prime quality second-hand books, carefully selected for value and charm. Timeless stories at great prices.
+    </xpath>
+    <!-- Features -->
+    <xpath expr="//h3" position="replace" mode="inner">
+        Timeless Reads
+    </xpath>
+    <xpath expr="//div[hasclass('col-12')][2]//p" position="replace" mode="inner">
+        Explore beloved stories from every era. Find cherished classics to enjoy again and again.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Affordable Classics
+    </xpath>
+    <xpath expr="//div[hasclass('col-12')][3]//p" position="replace" mode="inner">
+        Own literary masterpieces without breaking the bank. Your favorite classic books at budget-friendly prices.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Hidden Treasures
+    </xpath>
+    <xpath expr="//div[hasclass('col-12')][4]//p" position="replace" mode="inner">
+        Discover rare and unique books waiting to be found. Unearth hidden gems in our collection.
+    </xpath>
+    <!-- Link -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Discover the books
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_three_columns_default_image_1</attribute>
+    </xpath>
+</template>
+
+</odoo>

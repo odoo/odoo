@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" inherit_id="website.s_product_catalog">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pb112 pt112" remove="pb64 pt64" separator=" "/>
+    </xpath>
+    <!-- Filter -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace">
+        <div class="o_we_bg_filter" style="background-color: rgba(47, 47, 47, 0.7) !important;"/>
+    </xpath>
+</template>
+
+</odoo>

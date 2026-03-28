@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Case 1: Create a new navbar menu -->
+<record id="menu_example_1" model="theme.website.menu">
+    <field name="name">Example 1</field>
+    <field name="sequence" type="int">20</field>
+</record>
+
+<!-- Case 2: Create child menu below a theme.website.menu -->
+<record id="menu_example_1_item_1" model="theme.website.menu">
+    <field name="name">Item 1</field>
+    <field name="url">/example</field>
+    <field name="parent_id" ref="menu_example_1"/>
+    <field name="sequence" type="int">21</field>
+</record>
+<record id="menu_example_1_item_2" model="theme.website.menu">
+    <field name="name">Item 2</field>
+    <field name="url">/example/item-2</field>
+    <field name="parent_id" ref="menu_example_1"/>
+    <field name="sequence" type="int">22</field>
+</record>
+<record id="menu_example_1_item_3" model="theme.website.menu">
+    <field name="name">Item 3</field>
+    <field name="url">/example/item-3</field>
+    <field name="parent_id" ref="menu_example_1"/>
+    <field name="sequence" type="int">23</field>
+</record>
+
+<!-- Case 3: Create a mega menu -->
+<record id="menu_products" model="theme.website.menu">
+    <field name="name">Mega Menu</field>
+    <field name="url">/mega-menu</field>
+    <field name="sequence" type="int">30</field>
+    <field name="mega_menu_content" type="html">
+        <section class="o_cc o_cc2 pt32 pb32">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <i class="fa fa-cube"/>
+                        <p>Text</p>
+                    </div>
+                    <div class="col-lg-3">
+                        <i class="fa fa-cube"/>
+                        <p>Text</p>
+                    </div>
+                    <div class="col-lg-3">
+                        <i class="fa fa-cube"/>
+                        <p>Text</p>
+                    </div>
+                    <div class="col-lg-3">
+                        <i class="fa fa-cube"/>
+                        <p>Text</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </field>
+</record>
+
+<!-- Case 4: Create a new whole menu hierarchy (to be put elsewhere) -->
+<record id="main_menu_animals" model="theme.website.menu">
+    <field name="name">Main Menu Animals</field>
+    <field name="use_main_menu_as_parent" eval="False"/>
+</record>
+<record id="menu_dogs" model="theme.website.menu">
+    <field name="name">Dogs</field>
+    <field name="url">/dogs</field>
+    <field name="parent_id" ref="main_menu_animals"/>
+    <field name="sequence" type="int">10</field>
+</record>
+<record id="menu_cats" model="theme.website.menu">
+    <field name="name">Cats</field>
+    <field name="url">/cats</field>
+    <field name="parent_id" ref="main_menu_animals"/>
+    <field name="sequence" type="int">20</field>
+</record>
+
+</odoo>

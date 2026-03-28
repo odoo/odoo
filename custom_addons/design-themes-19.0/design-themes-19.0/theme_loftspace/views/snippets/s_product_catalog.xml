@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" inherit_id="website.s_product_catalog">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt112 pb112" remove="pt64 pb64" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/09","flip":[]}</attribute>
+    </xpath>
+    <!-- Filter & shape -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace">
+        <div class="o_we_bg_filter bg-black-50"/>
+        <div class="o_we_shape o_html_builder_Floats_09"/>
+    </xpath>
+</template>
+
+</odoo>

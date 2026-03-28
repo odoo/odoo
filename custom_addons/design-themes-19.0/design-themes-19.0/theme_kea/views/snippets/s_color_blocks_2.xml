@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Box #1 -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="oe_img_bg o_bg_img_center pt256 pb256" separator=" " />
+        <attribute name="style">background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 0%;</attribute>
+    </xpath>
+    <xpath expr="//h2" position="before">
+        <div class="o_we_bg_filter bg-black-50"></div>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc4" separator=" " />
+        <attribute name="style" add="text-align: center !important;" separator=";"/>
+    </xpath>
+    <!-- Box #1 - Title -->
+    <xpath expr="//div[hasclass('col-lg-6')]//h2" position="attributes">
+        <attribute name="style" add="text-align: center !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')]//h2" position="replace" mode="inner">
+        Multiplayer
+    </xpath>
+    <!-- Box #1 - Text -->
+    <xpath expr="//div[hasclass('col-lg-6')]//p" position="attributes">
+        <attribute name="style" add="text-align: center !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')]//p" position="replace" mode="inner">
+        Conquer leaderboards, crush workouts, create with friends and more. Get lost in a growing library of VR classics and all-new experiences.
+    </xpath>
+    <!-- Box #2 -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]" position="attributes">
+        <attribute name="class" add="oe_img_bg o_bg_img_center pt256 pb256" remove="" separator=" "/>
+        <attribute name="style">background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 0%; text-align: center !important;</attribute>
+    </xpath>
+    <xpath expr="(//h2)[2]" position="before">
+        <div class="o_we_bg_filter bg-black-50"></div>
+    </xpath>
+    <!-- Box #2 - Title -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]//h2" position="attributes">
+        <attribute name="style" add="text-align: center !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][2]//h2" position="replace" mode="inner">
+        Freedom
+    </xpath>
+    <!-- Box #2 - Text -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]//p" position="attributes">
+        <attribute name="style" add="text-align: center !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][2]//p" position="replace" mode="inner">
+        No matter who you are, with a growing library of games and experiences there is no limit to where you can go and what you can do in virtual reality.
+    </xpath>
+</template>
+
+</odoo>

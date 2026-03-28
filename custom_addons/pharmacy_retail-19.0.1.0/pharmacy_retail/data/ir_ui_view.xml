@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="account_move_form_customization_pharma" model="ir.ui.view">
+        <field name="name">account.move.form.customization.pharma</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="type">form</field>
+        <field name="mode">extension</field>
+        <field name="active" eval="True"/>
+        <field name="priority">160</field>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='partner_id']" position="attributes">
+                <attribute name="string">Patient Name</attribute>
+            </xpath>
+            <field name="delivery_date" position="after">
+                <field name="x_doctor_name" domain='[("x_is_a_doctor", "=", True)]'/>
+            </field>
+        </field>
+    </record>
+    <record id="product_template_product_form_customization_pharma_2" model="ir.ui.view">
+        <field name="name">product.template.product.form.customization.pharma</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="type">form</field>
+        <field name="mode">extension</field>
+        <field name="active" eval="True"/>
+        <field name="priority">160</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_policy']" position="after">
+                <field name="x_manufacturer" domain='[("x_is_a_manufacturer", "=", True)]'/>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="string">Alias Name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_tag_ids']" position="attributes">
+                <attribute name="string">Generic Name</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_company_form_customization_pharma" model="ir.ui.view">
+        <field name="name">res.company.form.customization.pharma</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="type">form</field>
+        <field name="mode">extension</field>
+        <field name="active" eval="True"/>
+        <field name="priority">10000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website']" position="after">
+                <field name="x_drug_license_number"/>
+                <field name="x_drug_license_date"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_partner_form_customization_pharma" model="ir.ui.view">
+        <field name="name">res.partner.form.customization.pharma</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="type">form</field>
+        <field name="mode">extension</field>
+        <field name="active" eval="True"/>
+        <field name="priority">360</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group" position="inside">  <!-- vat field is unstable -->
+                <field name="x_drug_license_number" invisible="not x_is_a_manufacturer"/>
+                <field name="x_drug_license_date" invisible="not x_is_a_manufacturer"  options='{"warn_future":false}'/>
+                <field name="x_registration_number" invisible="not x_is_a_doctor"/>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="x_is_a_doctor"/>
+                <field name="x_is_a_manufacturer"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="sale_order_tree_customization_pharma" model="ir.ui.view">
+        <field name="name">sale.order.tree.customization.pharma</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="mode">extension</field>
+        <field name="active" eval="True"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Patient Name</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="sale_order_form_customization_pharma" model="ir.ui.view">
+        <field name="name">sale.order.form.customization.pharma</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="type">form</field>
+        <field name="mode">extension</field>
+        <field name="active" eval="True"/>
+        <field name="priority">160</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Patient Name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='validity_date']" position="before">
+                <field name="x_doctor" domain='[("x_is_a_doctor", "=", True)]'/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

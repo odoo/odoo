@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="app_sequence_view_tree" model="ir.ui.view">
+        <field name="name">app.ir.sequence.tree</field>
+        <field name="model">ir.sequence</field>
+        <field name="inherit_id" ref="base.sequence_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="code" position="before">
+                <field name="id" optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

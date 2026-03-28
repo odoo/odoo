@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pt80 pb144" remove="pt96 pb96" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape": "html_builder/Connections/06", "colors": {"c5": "o-color-4"}, "flip": [], "showOnMobile": false, "shapeAnimationSpeed": "0"}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-4');"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace">
+        <h1 class="display-3">Let's <br/>travel the world</h1>
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        <br/>Enjoy breathtaking views of nature. Relax and embrace your dreams.<br/><br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Explore Now
+    </xpath>
+    <!-- Card -->
+    <xpath expr="//p[hasclass('s_blockquote_quote')]" position="replace" mode="inner">
+        An unforgettable experience! Every destination was stunning, and the service was exceptional.
+    </xpath>
+    <xpath expr="//div[hasclass('s_blockquote_author')]//span//span" position="replace" mode="inner">
+        Explored Peru in 2024
+    </xpath>
+
+</template>
+
+</odoo>

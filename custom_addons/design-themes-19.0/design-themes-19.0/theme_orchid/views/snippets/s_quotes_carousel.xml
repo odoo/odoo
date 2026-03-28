@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <!-- Quotes carousel -->
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Quote 1 -->
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[1]" position="replace" mode="inner">
+        A wide range of high quality products and a warm welcome! I recommend this shop 200%!
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="pt200 pb200" remove="pt80 pb80" separator=" "/>
+        <!-- Remove background image -->
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//i[hasclass('s_blockquote_icon')])[1]" position="attributes">
+        <attribute name="class" add="bg-o-color-5" remove="bg-o-color-1" separator=" "/>
+    </xpath>
+
+    <!-- Quote 2 -->
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        Very nice, colorful shop with many choices in the heart of a very pretty town.
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')][2]" position="attributes">
+        <attribute name="class" add="pt200 pb200" remove="pt80 pb80" separator=" "/>
+        <!-- Remove background image -->
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//i[hasclass('s_blockquote_icon')])[2]" position="attributes">
+        <attribute name="class" add="bg-o-color-5" remove="bg-o-color-1" separator=" "/>
+    </xpath>
+
+    <!-- Quote 3 -->
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        A small shop with a very large selection of roses. Nice prices and above all a very professional and friendly welcome.
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')][3]" position="attributes">
+        <attribute name="class" add="pt200 pb200" remove="pt80 pb80" separator=" "/>
+        <!-- Remove background image -->
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//i[hasclass('s_blockquote_icon')])[3]" position="attributes">
+        <attribute name="class" add="bg-o-color-5" remove="bg-o-color-1" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

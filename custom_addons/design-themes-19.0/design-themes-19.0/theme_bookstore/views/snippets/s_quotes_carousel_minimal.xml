@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel_minimal" inherit_id="website.s_quotes_carousel_minimal">
+    <xpath expr="//p[hasclass('s_blockquote_quote')]" position="replace" mode="inner">
+        " Their selection is outstanding. Rare finds and bestsellers all in one place. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        " A haven for book lovers. <br/>Warm, inviting atmosphere with knowledgeable staff. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        " Exceptional service and variety! <br/>They always have the perfect recommendation. "
+    </xpath>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+</template>
+
+</odoo>

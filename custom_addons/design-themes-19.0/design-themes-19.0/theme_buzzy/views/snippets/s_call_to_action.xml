@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt88 pb48" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <!-- Left Column -->
+    <xpath expr="//div[hasclass('row')]//div" position="attributes">
+        <attribute name="class" add="col-lg-8" remove="col-lg-9" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Start to build your robust activity with these powerful tools
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//div[hasclass('row')]//p" position="replace" mode="inner">
+        Make your company a better place.
+    </xpath>
+    <!-- Right Column -->
+    <xpath expr="//div[hasclass('row')]//div[2]" position="attributes">
+        <attribute name="class" add="col-lg-4" remove="col-lg-3" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

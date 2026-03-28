@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_shape_image" inherit_id="website.s_shape_image">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Travel services
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        We offer customized travel packages tailored to your preferences. From booking flights and accommodations to organizing tours, our goal is to provide a seamless and enjoyable travel experience.
+    </xpath>
+    <xpath expr="//p[2]" position="replace"/>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Join the Experience
+    </xpath>
+</template>
+
+</odoo>

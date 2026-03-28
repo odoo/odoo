@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel_minimal" inherit_id="website.s_quotes_carousel_minimal">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel')]" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Airy/06_001','colors':{'c5':'o-color-3'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_shape o_html_builder_Airy_06_001" style="background-image: url('/html_editor/shape/html_builder/Airy/06_001.svg?c5=o-color-3');"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//p[hasclass('s_blockquote_quote')]" position="replace" mode="inner">
+        " Their arrangements are stunning. Fresh, creative, and always beautifully crafted. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        " A top choice for floral needs. <br/>Elegant designs, excellent service, and lasting beauty. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        " Exceptional flowers and service! <br/>They make every occasion special and memorable. "
+    </xpath>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+</template>
+
+</odoo>

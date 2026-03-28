@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel_minimal" inherit_id="website.s_quotes_carousel_minimal">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel')]" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Airy/13_002','colors':{'c5':'o-color-3','c3':'o-color-3'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_shape o_html_builder_Airy_13_002 o_we_animated" style="background-image: url('/html_editor/shape/html_builder/Airy/13_002.svg?c5=o-color-3&amp;c3=o-color-3');"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//p[hasclass('s_blockquote_quote')]" position="replace" mode="inner">
+        " The rock concert was electrifying. <br/>High-energy, incredible performances, and unforgettable vibes. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        " A must-see for rock fans. <br/>Powerful music, great atmosphere, and a night to remember. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        " Outstanding show and sound! <br/>They delivered an epic performance that rocked the house. "
+    </xpath>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+</template>
+
+</odoo>

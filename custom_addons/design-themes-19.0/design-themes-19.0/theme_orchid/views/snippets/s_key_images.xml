@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_images" inherit_id="website.s_key_images">
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover Our Most Loved Arrangements
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Celebrate with Our Best-Selling Bouquets, perfect for every occasion.
+    </xpath>
+
+    <!-- Col 1 -->
+    <xpath expr="//div[hasclass('col-lg-3')]//p" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h1-fs" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="before">
+        <h3 class="h4-fs">Sunset Serenade</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="replace" mode="inner">
+        Vibrant hues of orange and red capture the warmth and beauty of a summer evening.
+    </xpath>
+
+    <!-- Col 2 -->
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h1-fs" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="before">
+        <h3 class="h4-fs">Elegant Simplicity</h3>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="replace" mode="inner">
+        Minimalist white florals in a sleek vase, embodying sophistication and grace.
+    </xpath>
+
+    <!-- Col 3 -->
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h1-fs" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="before">
+        <h3 class="h4-fs">Petal Poetry</h3>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="replace" mode="inner">
+        Light pink blossoms with golden leaves, bringing a touch of springtime charm to any space.
+    </xpath>
+
+    <!-- Col 4 -->
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h1-fs" separator=" "/>
+    </xpath>
+     <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="before">
+        <h3 class="h4-fs">Blushing Harmony</h3>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="replace" mode="inner">
+        A delicate blend of soft pink roses and baby's breath, perfect for expressing love and gratitude.
+    </xpath>
+</template>
+
+<template id="configurator_s_key_images" inherit_id="website.configurator_s_key_images">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pb96 pt96" remove="pb72 pt72" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

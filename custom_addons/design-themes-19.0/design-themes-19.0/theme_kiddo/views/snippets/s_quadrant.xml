@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Toys &amp; Fun
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Ignite your child's imagination with our range of toys and games. Designed for creativity and fun, our products bring joy to kids of all ages.<br/><br/> Explore the magic of playtime.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Shop Now
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references" inherit_id="website.s_references">
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Together, we collaborate with leading organizations committed to protecting the environment and building a greener future.
+    </xpath>
+    <!-- Link -->
+    <xpath expr="//a" position="replace" mode="inner">
+        More details <i class="fa fa-long-arrow-right ms-2"/>
+    </xpath>
+</template>
+
+</odoo>

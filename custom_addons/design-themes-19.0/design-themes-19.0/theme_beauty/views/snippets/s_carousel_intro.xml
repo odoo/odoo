@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_intro" inherit_id="website.s_carousel_intro">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Unveiling your natural beauty
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Skincare solutions crafted for you
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Discover your glow
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Enhance your radiance and confidence with our carefully curated products that bring out your natural beauty, every day.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Refresh your routine with our exclusive formulas and expert tips.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[3]" position="replace" mode="inner">
+        Explore more and find beauty products that align with your unique skin needs, crafted for a flawless finish.
+    </xpath>
+</template>
+
+</odoo>

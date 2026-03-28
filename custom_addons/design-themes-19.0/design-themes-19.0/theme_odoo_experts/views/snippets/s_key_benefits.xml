@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Personalized Guidance
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Ongoing Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Insights
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        Receive tailored advice and strategies designed to meet your specific goals and needs, ensuring effective and actionable solutions.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our advisory team offers continuous support and updates, providing you with reliable assistance whenever you need it.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Gain access to specialized knowledge and unique insights that give you a competitive edge and inform your decision-making.
+    </xpath>
+</template>
+
+</odoo>

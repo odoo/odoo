@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt72 pb72" remove="pt32 pb32" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/04","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_04"/>
+    </xpath>
+    <!-- Card #1 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <xpath expr="(//figure)[1]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <!-- Card #2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="style">border-width: 0px !important; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <xpath expr="(//figure)[2]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+    <!-- Card #3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="style">border-width: 0px !important; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.05) !important;</attribute>
+    </xpath>
+    <xpath expr="(//figure)[3]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="ratio-1x1" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

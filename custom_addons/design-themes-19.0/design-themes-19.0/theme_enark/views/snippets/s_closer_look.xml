@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_closer_look" inherit_id="website.s_closer_look">
+    <!-- Button -->
+    <xpath expr="(//a)[2]" position="attributes">
+        <attribute name="class" remove="btn-outline-primary" add="btn-link" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

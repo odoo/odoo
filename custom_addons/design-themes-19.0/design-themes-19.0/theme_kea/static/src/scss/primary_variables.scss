@@ -1,0 +1,185 @@
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Theme colors
+
+// The system for this theme is particular to support somehow the old version.
+// The alpha color is always white but primary is using beta (instead of alpha)
+// and secondary is using alpha (white) (instead of beta). In the old system,
+// this only applied to buttons though but we extended that to all components.
+// Success, info, warning and error buttons are also customized with epsilon,
+// gamma, delta and ... black colors (see theme.scss).
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'kea-1': (
+            alpha: #ffffff,
+            beta: #dcdcdc,
+            gamma: #9c9b9b,
+            delta: #333333,
+            epsilon: #e4677f,
+        ),
+        'kea-2': (
+            alpha: #c7d0d5,
+            beta: #93b1c6,
+            gamma: #ffffff,
+            delta: #556672,
+            epsilon: #ff7148,
+        ),
+        'kea-3': (
+            alpha: #ebe3e0,
+            beta: #e3d6c6,
+            gamma: #ffffff,
+            delta: #333333,
+            epsilon: #f9a646,
+        ),
+        'kea-4': (
+            alpha: #7ec2aa,
+            beta: #4ca8a1,
+            gamma: #ffffff,
+            delta: #556672,
+            epsilon: #f9a646,
+        ),
+        'kea-5': (
+            alpha: #7f909a,
+            beta: #ed6639,
+            gamma: #ffffff,
+            delta: #333333,
+            epsilon: #385b9f,
+        ),
+        'kea-6': (
+            alpha: #fcdf15,
+            beta: #0b99bc,
+            gamma: #ffffff,
+            delta: #3c3c3c,
+            epsilon: #d40e52,
+        ),
+    )
+);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (48 / 16);
+$o-theme-h3-font-size-multiplier: (36 / 16);
+$o-theme-h6-font-size-multiplier: (18 / 16);
+
+$headings-font-weight:700;
+
+$o-theme-font-configs: (
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:300,300i,400,400i,700,700i',
+    ),
+    'Rajdhani': (
+        'family': ('Rajdhani', sans-serif),
+        'url': 'Rajdhani:300,300i,400,400i,700,700i',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Ubuntu': (
+        'family': ('Ubuntu', sans-serif),
+        'url': 'Ubuntu:300,300i,400,400i,700,700i',
+    ),
+    'Lato': (
+        'family': ('Lato', sans-serif),
+        'url': 'Lato:300,300i,400,400i,700,700i',
+    ),
+    'Playfair Display': (
+        'family': ('Playfair Display', serif),
+        'url': 'Playfair+Display:300,300i,400,400i,700,700i',
+    ),
+    'Lora': (
+        'family': ('Lora', serif),
+        'url': 'Lora:300,300i,400,400i,700,700i',
+    ),
+    'Barlow Condensed': (
+        'family': ('Barlow Condensed', sans-serif),
+        'url': 'Barlow+Condensed:300,300i,400,400i,700,700i',
+    ),
+);
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'bewise-2',
+        // Fonts
+        'font': 'Roboto',
+        'headings-font': 'Poppins',
+        'navbar-font': 'Poppins',
+        'buttons-font': 'Poppins',
+        // Links / Buttons
+        'link-underline': 'never',
+        'btn-padding-y': .5rem,
+        'btn-padding-x': 1rem,
+        'btn-padding-y-lg': .75rem,
+        'btn-padding-x-lg': 1.5rem,
+        'btn-border-radius': 10rem,
+        'btn-border-radius-lg': 10rem,
+        // Footer
+        'footer-template': 'minimalist',
+        'footer-effect': 'slideout_slide_hover',
+        'footer-scrolltop': true,
+    ),
+);
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'bewise-2');
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'kea-1',
+    2: 'kea-2',
+    3: 'kea-3',
+    4: 'kea-4',
+    5: 'generic-1',
+    6: 'generic-2',
+    7: 'generic-3',
+    8: 'generic-4',
+    9: 'generic-5',
+    10: 'generic-6',
+    11: 'generic-7',
+    12: 'generic-8',
+    13: 'generic-9',
+    14: 'generic-10',
+    15: 'generic-11',
+    16: 'generic-12',
+    17: 'generic-13',
+    18: 'generic-14',
+    19: 'generic-15',
+    20: 'generic-16',
+    21: 'generic-17',
+);
+
+$o-theme-color-palettes-compatibility-indexes: (
+    1: 'kea-1',
+    2: 'kea-2',
+    3: 'kea-3',
+    4: 'kea-4',
+    5: 'kea-5',
+    6: 'kea-6',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/22', (3: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/02', (1: 4, 2: 3, 3: 2, 4: 3, 5: 5));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Wavy/22', 'second', (3: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/03', (1: 4, 2: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/01', (1: 4, 2: 3, 3: 3, 4: 1, 5: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/14_001', (3: 1, 4: 1));
+
+// Keep for compatibility
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/03', (3: 5));
+$o-bg-shapes: add-header-shape-colors-mapping('html_builder', 'Origins/07_001', (3: 'menu'));
+$o-bg-shapes: add-header-shape-colors-mapping('html_builder', 'Origins/07_002', (3: 'menu', 4: rgba(255, 255, 255, 0)));
+$o-bg-shapes: add-footer-shape-colors-mapping('html_builder', 'Origins/14', (4: 'footer'));
+$o-bg-shapes: add-footer-shape-colors-mapping('html_builder', 'Origins/14_001', (3: 'footer', 4: rgba(255, 255, 255, 0)));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/02_001', (4: 5, 5: rgba(255, 255, 255, 0)));

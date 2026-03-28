@@ -1,0 +1,9 @@
+// TODO Maybe we should handle light/dark variation in standard in such a way no
+// extra classes are created (border-alpha-light, btn-epsilon-dark, ...)
+$-palettes: $o-theme-color-palettes;
+$o-theme-color-palettes: ();
+$-variations: ('lighter': 10%, 'light': 5%, 'dark': -5%, 'darker': -10%);
+@each $key, $-palette in $-palettes {
+    $o-theme-color-palettes: map-merge($o-theme-color-palettes, ($key: o-theme-common-add-color-variations($-palette, $-palette, $-variations)));
+}
+$o-user-theme-color-palette: o-theme-common-add-color-variations($o-user-theme-color-palette, $o-user-theme-color-palette, $-variations);

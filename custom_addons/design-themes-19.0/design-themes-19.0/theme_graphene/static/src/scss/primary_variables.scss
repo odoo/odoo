@@ -1,0 +1,149 @@
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Theme colors
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'graphene-1': (
+            'alpha': #85AFA8,
+            'beta': #7E566B,
+            'gamma': #85909A,
+            'delta': #969397,
+            'epsilon': #422335,
+
+            'success': #1b8433,
+            'warning': #e4b013,
+        ),
+        'graphene-2': (
+            'alpha': #54787D,
+            'beta': #6B9997,
+            'gamma': #615145,
+            'delta': #C6CCA5,
+            'epsilon': #412342,
+
+            'success': #5CB85C,
+            'info': #4D68A3,
+            'warning': #DDC66B,
+            'danger': #D86060,
+        ),
+        'graphene-3': (
+            'alpha': #456F74,
+            'beta': #EB5937,
+            'gamma': #403D3C,
+            'delta': #1C1919,
+            'epsilon': #D3CBBD,
+
+            'success': #31B05E,
+            'info': #4D68A3,
+            'warning': #EACF41,
+            'danger': #CB3E3E,
+        ),
+        'graphene-4': (
+            'alpha': #23C59E,
+            'beta': #FF5B5B,
+            'gamma': #FFE9C7,
+            'delta': #545445,
+            'epsilon': #2D2D36,
+
+            'success': #5CB85C,
+        ),
+    )
+);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (48 / 16);
+$o-theme-h3-font-size-multiplier: (36 / 16);
+$o-theme-h4-font-size-multiplier: (28 / 16);
+$o-theme-h5-font-size-multiplier: (24 / 16);
+$o-theme-h6-font-size-multiplier: (20 / 16);
+
+$o-theme-font-configs: (
+    'Assistant': (
+        'family': ('Assistant', sans-serif),
+        'url': 'Assistant:300,300i,400,400i,700,700i',
+    ),
+    'Abel': (
+        'family': ('Abel', sans-serif),
+        'url': 'Abel:300,300i,400,400i,700,700i',
+    ),
+    'Cinzel': (
+        'family': ('Cinzel', serif),
+        'url': 'Cinzel:300,300i,400,400i,700,700i',
+    ),
+    'Old Standard TT': (
+        'family': ('Old Standard TT', serif),
+        'url': 'Old+Standard+TT:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+);
+
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'base-1',
+
+        'font': 'Source Sans Pro',
+        'headings-font': 'Assistant',
+
+        'btn-ripple': true,
+        'header-template': 'stretch',
+        'footer-template': 'centered',
+
+        'btn-font-size-lg': 1rem,
+        'btn-padding-y-lg': .6rem,
+        'btn-padding-x-lg': 2.2rem,
+        'btn-border-radius': 2px,
+        'btn-border-radius-sm': 2px,
+        'btn-border-radius-lg': 4px,
+    ),
+);
+
+$base-1: map-get($o-color-palettes, 'base-1');
+$base-1: map-merge($base-1, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('base-1': $base-1));
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'graphene-1',
+    2: 'graphene-2',
+    3: 'graphene-3',
+    4: 'graphene-4',
+    5: 'generic-1',
+    6: 'generic-2',
+    7: 'generic-3',
+    8: 'generic-4',
+    9: 'generic-5',
+    10: 'generic-6',
+    11: 'generic-7',
+    12: 'generic-8',
+    13: 'generic-9',
+    14: 'generic-10',
+    15: 'generic-11',
+    16: 'generic-12',
+    17: 'generic-13',
+    18: 'generic-14',
+    19: 'generic-15',
+    20: 'generic-16',
+    21: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/02_001', (4: 2, 5: rgba(0, 0, 0, 0)));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Origins/02_001', 'second', (4: 2, 5: rgba(0, 0, 0, 0)));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/06_001', (3: 2));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Zigs/01_001', (2: 4));

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt80 pb80" remove="pt32 pb32" separator=" "/>
+    </xpath>
+
+    <!-- Column 1 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="style" add="--card-img-ratio-align: 20%;" separator=";"/>
+    </xpath>
+    <!-- Column 1 - Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Local Producers
+    </xpath>
+    <!-- Column 1 - Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        As we use local growers, our flowers last longer and smell better. Just like the event you want to celebrate with flowers!
+    </xpath>
+    <!-- Column 1 - Img -->
+    <xpath expr="//figure" position="attributes">
+       <attribute name="class" add="ratio-1x1 o_card_img_adjust_v" remove="ratio-16x9" separator=" "/>
+    </xpath>
+
+    <!-- Column 2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="style" add="--card-img-ratio-align: 20%;" separator=";"/>
+    </xpath>
+    <!-- Column 2 - Title -->
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Bio Flowers
+    </xpath>
+    <!-- Column 2 - Paragraph -->
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Don't offer pesticides to your beloved one! By choosing our flowers, we guarantee you organic flowers.
+    </xpath>
+    <!-- Column 2 - Img -->
+    <xpath expr="(//figure)[2]" position="attributes">
+       <attribute name="class" add="ratio-1x1 o_card_img_adjust_v" remove="ratio-16x9" separator=" "/>
+    </xpath>
+
+    <!-- Column 3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="style" add="--card-img-ratio-align: 20%;" separator=";"/>
+    </xpath>
+    <!-- Column 3 - Title -->
+    <xpath expr="(//h2)[3]" position="replace" mode="inner">
+        Eco-Friendly Packaging
+    </xpath>
+    <!-- Column 3 - Paragraph -->
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        We use 100% recycled materials. We believe the best gifts should also do good for the planet.
+    </xpath>
+    <!-- Column 3 - Img -->
+    <xpath expr="(//figure)[3]" position="attributes">
+       <attribute name="class" add="ratio-1x1 o_card_img_adjust_v" remove="ratio-16x9" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--        注意，同权限内的，可以形成树。故额外设置不能放到原来的 privilege，但可以放同cate-->
+        <!--        module_category_hidden 是较通用的-->
+        <record id="res_groups_privilege_ui" model="res.groups.privilege">
+            <field name="name">Ui for odooAi</field>
+            <field name="sequence">11</field>
+            <!--            <field name="category_id" ref="base.module_category_hidden"/>-->
+        </record>
+        <record id="res_groups_privilege_sale" model="res.groups.privilege">
+            <field name="name">Sale Extra</field>
+            <field name="sequence">12</field>
+        </record>
+        <record id="res_groups_privilege_service" model="res.groups.privilege">
+            <field name="name">Service Extra</field>
+            <field name="sequence">12</field>
+        </record>
+        <record id="res_groups_privilege_account" model="res.groups.privilege">
+            <field name="name">Accounting Extra</field>
+            <field name="sequence">103</field>
+        </record>
+        <record id="res_groups_privilege_inventory" model="res.groups.privilege">
+            <field name="name">Inventory Extra</field>
+            <field name="sequence">104</field>
+        </record>
+        <record id="res_groups_privilege_manufacturing" model="res.groups.privilege">
+            <field name="name">Manufacturing Extra</field>
+            <field name="sequence">105</field>
+        </record>
+        <record id="res_groups_privilege_hr" model="res.groups.privilege">
+            <field name="name">Employees Extra</field>
+            <field name="sequence">106</field>
+        </record>
+        <record id="res_groups_privilege_productivity" model="res.groups.privilege">
+            <field name="name">Productivity Extra</field>
+            <field name="sequence">107</field>
+        </record>
+    </data>
+</odoo>

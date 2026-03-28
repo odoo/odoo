@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="pos_config_pharmacy" model="pos.config">
+        <field name="payment_method_ids" eval="[(6, 0, [ref('pos_payment_method_1')])]"/>
+    </record>
+    <function name="_create_journal_and_payment_methods" model="pos.config" eval="[ref('pos_config_pharmacy')]"/>
+</odoo>

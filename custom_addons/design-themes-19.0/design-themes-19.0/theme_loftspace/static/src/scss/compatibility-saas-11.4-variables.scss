@@ -1,0 +1,61 @@
+$s-banner-3-carosel-control-color: rgba(0, 0, 0, 0);
+$s-banner-3-padding: 15px;
+$s-banner-3-fa-color: o-color('alpha');
+$s-banner-3-carousel-height: 100vh;
+$s-banner-3-text-shadow: none;
+$s-banner-3-hero-bg-color: #000;
+$s-banner-3-indicators-visible: visible;
+ @mixin s-banner-3-row-hook {
+    background-color: o-color('alpha');
+    width: 100%;
+    position: absolute;
+}
+@mixin s-banner-3-col-center-hook {
+    text-align: center;
+    width: 100%;
+}
+@mixin s-banner-3-carousel-control-hook {
+    display: none;
+}
+
+$s-big-icon-circle-color: o-color('epsilon');
+$s-big-icon-circle-icon-size: 150px;
+@mixin s-big-icon-circle-height-hook {
+    height: 100vh;
+    padding-top: 0;
+    @include media-breakpoint-down(xl) {
+        height: 100%;
+    }
+    .row {
+        height: 100vh;
+        @include media-breakpoint-down(xl) {
+            height: 100%;
+        }
+    }
+    .col-lg-12 {
+        height: 35%;
+        padding-top: 10%;
+    }
+}
+@mixin s-big-icon-circle-fa-hook {
+    height: 100px;
+    line-height: 70px;
+    @include media-breakpoint-down(xl) {
+        height: 80px;
+    }
+}
+
+$s-big-picture-text-padding: 0;
+$s-big-picture-text-align: center;
+@mixin s-big-picture-text-hero-hook {
+    border-bottom: 1px solid o-color('epsilon');
+}
+
+$s-text-big-picture-padding: 0;
+$s-text-big-picture-text-align: center;
+@mixin s-text-big-picture-hero-hook {
+    border-bottom: 1px solid o-color('epsilon');
+    margin: 0 20%;
+}
+
+$s-timeline-company-color: $-gray-700;

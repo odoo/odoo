@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_shapes" inherit_id="website.s_company_team_shapes">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1 pt80 pb104" remove="o_cc2 pt48 pb48" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/15','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_container_small')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_15" style="background-image: url('/html_editor/shape/html_builder/Bold/15.svg?c5=o-color-1');"></div>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+            <h2 style="text-align: center;"><span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 4px; --text-highlight-color: var(--o-color-4);">Meet The Band</span></h2>
+    </xpath>
+</template>
+
+</odoo>

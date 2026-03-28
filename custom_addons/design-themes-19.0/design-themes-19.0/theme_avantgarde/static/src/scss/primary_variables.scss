@@ -1,0 +1,226 @@
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Theme colors
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'avantgarde-1': (
+            'alpha': #E91E63,
+            'beta': #FF9833,
+            'gamma': #339ACC,
+            'delta': #00CC64,
+            'epsilon': #572F59,
+
+            'success': #5CB85C,
+            'info': #4D68A3,
+            'warning': #DDC66B,
+            'danger': #D86060,
+        ),
+        'avantgarde-2':(
+            'alpha': #DBAD10,
+            'beta': #595959,
+            'gamma': #808F85,
+            'delta': #91C499,
+            'epsilon': #F2E9DC,
+        ),
+        'avantgarde-3':(
+            'alpha': #3BBFEE,
+            'beta': #58355E,
+            'gamma': #E03616,
+            'delta': #FFF689,
+            'epsilon': #CFFFB0,
+
+            'success': #31B05E,
+            'info': #4D68A3,
+            'warning': #EACF41,
+            'danger': #CB3E3E,
+        ),
+        'avantgarde-4':(
+            'alpha': #009688,
+            'beta': #003249,
+            'gamma': #313715,
+            'delta': #ECCE8E,
+            'epsilon': #D16014,
+
+            'success': #5CB85C,
+        ),
+        'avantgarde-5':(
+            'alpha': #F44336,
+            'beta': #450D0B,
+            'gamma': #1F143B,
+            'delta': #80A2BD,
+            'epsilon': #655557,
+
+            'success': #31B05E,
+            'info': #4D68A3,
+            'warning': #EACF41,
+            'danger': #CB3E3E,
+        ),
+        'avantgarde-6':(
+            'alpha': #CDDC39,
+            'beta': #D6F8D6,
+            'gamma': #7FC6A4,
+            'delta': #5D737E,
+            'epsilon': #55505C,
+        ),
+        'avantgarde-7':(
+            'alpha': #FF5722,
+            'beta': #29335C,
+            'gamma': #F3A712,
+            'delta': #F0CEA0,
+            'epsilon': #534D41,
+        ),
+        'avantgarde-8':(
+            'alpha': #607D8B,
+            'beta': #3B1F2B,
+            'gamma': #A9ACA9,
+            'delta': #969397,
+            'epsilon': #60495A,
+
+            'success': #5CB85C,
+        ),
+    )
+);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h3-font-size-multiplier: (31.25 / 16);
+$o-theme-h4-font-size-multiplier: (25.00 / 16);
+$o-theme-h6-font-size-multiplier: 1.1;
+
+$o-theme-font-configs: (
+    'Lato': (
+        'family': ('Lato', sans-serif),
+        'url': 'Lato:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Heebo': (
+        'family': ('Heebo', sans-serif),
+        'url': 'Heebo:300,300i,400,400i,700,700i',
+    ),
+    'Abril Fatface': (
+        'family': ('Abril Fatface', cursive),
+        'url': 'Abril+Fatface:300,300i,400,400i,700,700i',
+    ),
+    'Alfa Slab One': (
+        'family': ('Alfa Slab One', cursive),
+        'url': 'Alfa+Slab+One:300,300i,400,400i,700,700i',
+    ),
+    'Arvo': (
+        'family': ('Arvo', serif),
+        'url': 'Arvo:300,300i,400,400i,700,700i',
+    ),
+    'Cantata One': (
+        'family': ('Cantata One', serif),
+        'url': 'Cantata+One:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans Condensed': (
+        'family': ('Open Sans Condensed', sans-serif),
+        'url': 'Open+Sans+Condensed:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans': (
+        'family': ('Open Sans', sans-serif),
+        'url': 'Open+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Oswald': (
+        'family': ('Oswald', sans-serif),
+        'url': 'Oswald:300,300i,400,400i,700,700i',
+    ),
+    'Poiret One': (
+        'family': ('Poiret One', cursive),
+        'url': 'Poiret+One:300,300i,400,400i,700,700i',
+    ),
+    'PT Sans Narrow': (
+        'family': ('PT Sans Narrow', sans-serif),
+        'url': 'PT+Sans+Narrow:300,300i,400,400i,700,700i',
+    ),
+    'Roboto Slab': (
+        'family': ('Roboto Slab', serif),
+        'url': 'Roboto+Slab:300,300i,400,400i,700,700i',
+    ),
+    'Playfair Display': (
+        'family': ('Playfair Display', serif),
+        'url': 'Playfair+Display:300,300i,400,400i,700,700i',
+    ),
+    'Vollkorn': (
+        'family': ('Vollkorn', serif),
+        'url': 'Vollkorn:300,300i,400,400i,700,700i',
+    ),
+    'Libre Baskerville': (
+        'family': ('Libre Baskerville', serif),
+        'url': 'Libre+Baskerville:300,300i,400,400i,700,700i',
+    ),
+    'Atkinson Hyperlegible': (
+        'family': ('Atkinson Hyperlegible', serif),
+        'url': 'Atkinson+Hyperlegible:300,300i,400,400i,700,700i',
+    ),
+    'Syne': (
+        'family': ('Syne', serif),
+        'url': 'Syne:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'default-15',
+
+        'font': 'Open Sans',
+        'headings-font': 'Syne',
+
+        'header-template': 'hamburger',
+
+        'footer-template': 'descriptive',
+
+        'link-underline': 'never',
+    ),
+);
+
+$default-15: map-get($o-color-palettes, 'default-15');
+$default-15: map-merge($default-15, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-15': $default-15));
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'avantgarde-1',
+    2: 'avantgarde-2',
+    3: 'avantgarde-3',
+    4: 'avantgarde-4',
+    5: 'avantgarde-5',
+    6: 'avantgarde-6',
+    7: 'avantgarde-7',
+    8: 'avantgarde-8',
+    9: 'generic-1',
+    10: 'generic-2',
+    11: 'generic-3',
+    12: 'generic-4',
+    13: 'generic-5',
+    14: 'generic-6',
+    15: 'generic-7',
+    16: 'generic-8',
+    17: 'generic-9',
+    18: 'generic-10',
+    19: 'generic-11',
+    20: 'generic-12',
+    21: 'generic-13',
+    22: 'generic-14',
+    23: 'generic-15',
+    24: 'generic-16',
+    25: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/18', (1: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/14_001', (3: 4, 4: rgba(0, 0, 0, 0)));

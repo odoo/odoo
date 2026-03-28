@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        <b>Real Estate Agency.<br/>Near You.</b>
+    </xpath>
+
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace">
+        <p class="lead">Now you can find more than 5,000+ property choices with our professional agents!<br/></p>
+    </xpath>
+
+    <!-- Button -->
+    <xpath expr="//a[@t-att-href='cta_btn_href']" position="replace" mode="inner">
+        See properties
+    </xpath>
+</template>
+
+</odoo>

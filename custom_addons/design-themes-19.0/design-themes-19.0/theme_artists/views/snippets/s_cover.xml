@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt224 pb200" remove="pt232 pb232 s_parallax_bg parallax s_parallax_is_fixed bg-black-50" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20','colors':{'c5': 'o-color-1'},'flip':['y'], 'showOnMobile':true}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_20 o_we_animated" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-1&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+    <!-- Remove filter & parallax -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace"/>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Emotions <br/>through the colors
+    </xpath>
+    <xpath expr="//h1" position="after">
+        <p><br/></p>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn-secondary')]" position="attributes">
+        <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

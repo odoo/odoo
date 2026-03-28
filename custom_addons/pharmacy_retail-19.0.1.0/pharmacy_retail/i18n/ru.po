@@ -1,0 +1,906 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pharmacy_retail
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-20 13:00+0000\n"
+"PO-Revision-Date: 2025-12-04 20:11+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"pharmacy_retail/ru/>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "08/07/2024<br/>"
+msgstr "08/07/2024<br/>"
+
+#. module: pharmacy_retail
+#: model:loyalty.program,name:pharmacy_retail.loyalty_program_pharma_3
+msgid "10% Discount Coupon Program"
+msgstr "Программа купонов на скидку 10%"
+
+#. module: pharmacy_retail
+#: model:loyalty.reward,description:pharmacy_retail.loyalty_reward_pharma_3
+msgid "10% on your order"
+msgstr "10% on Ваш заказ"
+
+#. module: pharmacy_retail
+#: model:loyalty.program,name:pharmacy_retail.loyalty_program_pharma_2
+msgid "2% Discount on Total order"
+msgstr "Скидка 2% на весь заказ"
+
+#. module: pharmacy_retail
+#: model:loyalty.reward,description:pharmacy_retail.loyalty_reward_pharma_2
+msgid "2% on your order"
+msgstr "2% на ваш заказ"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "40<br/>"
+msgstr "40<br/>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "60"
+msgstr "60"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<b><u>Receipt Creation</u></b>"
+msgstr "<b><u>Создание чека</u></b>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Company</strong></font>: "
+"two fields have been created in company form: \"<font class=\"text-o-"
+"color-1\">Drug License Numbe</font>r \" and \"\n"
+"                <font class=\"text-o-color-1\">Drug License Date</font>\". "
+"They will be used for every outgoing document."
+msgstr ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Компания</strong></font>: в "
+"форму компании добавлены два поля: «<font class=\"text-o-color-1\">Номер "
+"лицензии на продажу лекарств</font>» и «\n"
+"                <font class=\"text-o-color-1\">Дата лицензии на продажу "
+"лекарств</font>». Эти данные будут использоваться во всех исходящих "
+"документах."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Customer (B2B) / Vendor</"
+"strong></font> : \"<font class=\"text-o-color-1\">Drug License Number</"
+"font>\" and \"<font class=\"text-o-color-1\">Drug License Date</font>\" "
+"fields have been created\n"
+"                in contact form. This will ensure that the necessary "
+"information is collected from Customers/Vendors."
+msgstr ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Клиент (B2B) / Поставщик</"
+"strong></font> : в форму контакта добавлены поля «<font class=\"text-o-"
+"color-1\">Номер лицензии на продажу лекарств</font>» и «<font class=\"text-o-"
+"color-1\">Дата лицензии на продажу лекарств</font>».\n"
+"                Это обеспечит сбор необходимой информации от клиентов/"
+"поставщиков."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Doctor</strong></font>: new "
+"menu has been created \"<font class=\"text-o-color-1\">Doctors</font>\" on "
+"<font class=\"text-o-color-1\">Contacts</font>. This model will\n"
+"                include a \"<font class=\"text-o-color-1\">Registration "
+"Number</font>\", which is specific to doctors. This will help you keep track "
+"of doctor-related information in your system."
+msgstr ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Врач:</strong></font>: "
+"новый раздел «<font class=\"text-o-color-1\">Врачи</font>» был добавлен в "
+"меню «<font class=\"text-o-color-1\">Контакты</font>». Для этого типа "
+"контактов\n"
+"                предусмотрено поле «<font class=\"text-o-"
+"color-1\">Регистрационный номер врача</font>». Это поможет учитывать "
+"информацию, связанную с медицинскими специалистами."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Manufacturer Name </"
+"strong>(OEM)</font>: new menu has been created \"<font class=\"text-o-"
+"color-1\">Manufacturers</font>\" on <font class=\"text-o-color-1\">Contacts</"
+"font> to\n"
+"                <font>handle Manufacturer specific information.</font>"
+msgstr ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Производитель </strong></"
+"font>: новый раздел «<font class=\"text-o-color-1\">Производители</font>» "
+"был добавлен в меню «<font class=\"text-o-color-1\">Контакты</font>» для\n"
+"                <font>хранения данных, относящихся к производителям лекарств."
+"</font>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Medical Type, and "
+"Therapeutic Classification</strong></font>: Medical Type and Therapeutic "
+"Classification will be managed via Product Attribute. This will provide a "
+"way to categorize\n"
+"                and classify pharmaceutical products."
+msgstr ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Тип медикамента и "
+"терапевтическая классификация</strong></font>: будут настраиваться через "
+"атрибуты товара. Это обеспечит классификацию\n"
+"                фармацевтической продукции."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Product Tags</strong></"
+"font>: Generic Names (ingredient) will be managed via Tags. This will allow "
+"easier categorization and searching."
+msgstr ""
+"<font style=\"color: rgb(255, 156, 0);\"><strong>Теги товара</strong></"
+"font>: международные непатентованные наименования действующих веществ будут "
+"организованы через теги. Это облегчит категоризацию и поиск."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.report_saleorder_document_customization_pharma
+msgid ""
+"<span>\n"
+"                            <strong>Doctor:</strong>\n"
+"                            <br/>\n"
+"                        </span>"
+msgstr ""
+"<span>\n"
+"                            <strong>Врач:</strong>\n"
+"                            <br/>\n"
+"                        </span>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<strong><u> Product Location Assignment</u></strong>"
+msgstr "<strong><u> Привязка товара к местоположению</u></strong>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<strong><u>Sale Order with Discount</u></strong>"
+msgstr "<strong><u>Заказ на продажу со скидкой</u></strong>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u><b>Purchase Order Management</b></u>"
+msgstr "<u><b>Управление заказами на закупку</b></u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Adding Product and Promotion</u>"
+msgstr "<u>Добавление товара и акции</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Applying the Promotion</u>"
+msgstr "<u>Применение акции</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Confirm the Delivery Order</u>"
+msgstr "<u>Подтвердить заказ на доставку</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Confirm the Sales Order</u>"
+msgstr "<u>Подтвердить заказ на продажу</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Create Delivery Order and Assign Lot Numbers</u>"
+msgstr "<u>Создать заказ на доставку и присвоить серийные номера</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Create Invoice from Sales Order</u>"
+msgstr "<u>Создать счет на основе заказа на продажу</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Lot Serial Number and Expiry Date Tracking</u>"
+msgstr "<u>Отслеживание серийных номеров и сроков годности</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Processing a Sale</u>"
+msgstr "<u>Оформление продажи</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "<u>Selecting Payment Method</u>"
+msgstr "<u>Выбор метода оплаты</u>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "AC-001<br/>"
+msgstr "AC-001<br/>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "AC-002<br/>"
+msgstr "AC-002<br/>"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_4
+msgid "Abciximab"
+msgstr "Абциксимаб"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_1
+msgid "Acepromazine Maleate"
+msgstr "Ацепромазин малеат"
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_template_13
+msgid "Acetratine 10 mg"
+msgstr "Ацетратинин 10 мг"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Add the product <font class=\"text-o-color-1\">\"Acetratine 10 mg</font>\" "
+"with a quantity of \"<font class=\"text-o-color-1\">100</font>\"."
+msgstr ""
+"Добавьте товар «<font class=\"text-o-color-1\">Acetratine 10 мг</font>» в "
+"количестве «<font class=\"text-o-color-1\">100</font>»."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.product_template_product_form_customization_pharma_2
+msgid "Alias Name"
+msgstr "Псевдоним"
+
+#. module: pharmacy_retail
+#: model:product.attribute.value,name:pharmacy_retail.product_attribute_value_5
+msgid "Alimentary system"
+msgstr "Пищеварительная система"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"All products have predefined locations (Racks) “<font class=\"text-o-"
+"color-1\">Rack 2</font>” for storage in the pharmacy store. This will be "
+"done with the help of Putaway Rule functionality."
+msgstr ""
+"Все товары имеют предопределенные места хранения («<font class=\"text-o-"
+"color-1\">Стеллаж 2</font>») на аптечном складе. Это настраивается через "
+"правила размещения."
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_10
+msgid "Almond Oil"
+msgstr "Миндальное масло"
+
+#. module: pharmacy_retail
+#: model:pos.category,name:pharmacy_retail.pos_category_3
+msgid "Analgesic"
+msgstr "Обезболивающее"
+
+#. module: pharmacy_retail
+#: model:pos.category,name:pharmacy_retail.pos_category_4
+msgid "Blood Pressure"
+msgstr "Давление"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Business Flows"
+msgstr "Бизнес-процессы"
+
+#. module: pharmacy_retail
+#: model:loyalty.program,name:pharmacy_retail.loyalty_program_pharma_1
+msgid "Buy 2 Get 1 Free"
+msgstr "Три по цене двух"
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_template_18
+msgid "CEFTAS 400 5 TAB"
+msgstr "CEFTAS 400, 5 таблеток"
+
+#. module: pharmacy_retail
+#: model:product.attribute.value,name:pharmacy_retail.product_attribute_value_8
+msgid "Cardiovascular System"
+msgstr "Сердечно-сосудистая система"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Configuration and Master Set up"
+msgstr "Настройки и конфигурация"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Confirm the delivery order to reserve the products and mark them as ready "
+"for delivery."
+msgstr ""
+"Подтвердите заказ на доставку, чтобы зарезервировать товар и отметить его "
+"как готовый к отгрузке."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Confirm the order based on the received rates."
+msgstr "Подтвердите заказ на основании полученных цен."
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_5
+msgid "Country Mallow (Sida Cordifolia)"
+msgstr "Сида сердцевиднолистная (Sida cordifolia)"
+
+#. module: pharmacy_retail
+#: model:loyalty.program,portal_point_name:pharmacy_retail.loyalty_program_pharma_3
+msgid "Coupon point(s)"
+msgstr "Купонный пункт(ы)"
+
+#. module: pharmacy_retail
+#: model:pos.payment.method,name:pharmacy_retail.pos_payment_method_1
+msgid "Credit Card"
+msgstr "Кредитная карта"
+
+#. module: pharmacy_retail
+#: model:loyalty.program,portal_point_name:pharmacy_retail.loyalty_program_pharma_1
+msgid "Credit(s)"
+msgstr "Кредит(ы)"
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_template_14
+msgid "Crocin 650"
+msgstr "Крокин 650"
+
+#. module: pharmacy_retail
+#: model:pos.category,name:pharmacy_retail.pos_category_1
+msgid "Dermatology"
+msgstr "Дерматология"
+
+#. module: pharmacy_retail
+#: model:ir.actions.act_window,name:pharmacy_retail.actions_doctor_partner_pharma
+#: model:ir.model.fields,field_description:pharmacy_retail.new_many2one_sales_pharma
+msgid "Doctor"
+msgstr "Врач"
+
+#. module: pharmacy_retail
+#: model:ir.model.fields,field_description:pharmacy_retail.new_related_field_jo_pharma
+msgid "Doctor Name"
+msgstr "Имя врача"
+
+#. module: pharmacy_retail
+#: model:ir.ui.menu,name:pharmacy_retail.contacts_doctor_menu_pharma
+msgid "Doctors"
+msgstr "Врачи"
+
+#. module: pharmacy_retail
+#: model:ir.model.fields,field_description:pharmacy_retail.new_date_companies_pharma
+#: model:ir.model.fields,field_description:pharmacy_retail.new_date_contact_pharma
+msgid "Drug License Date"
+msgstr "Дата лицензии на продажу лекарств"
+
+#. module: pharmacy_retail
+#: model:ir.model.fields,field_description:pharmacy_retail.new_text_companies_pharma
+#: model:ir.model.fields,field_description:pharmacy_retail.new_text_contact_pharma
+msgid "Drug License Number"
+msgstr "Номер лицензии на продажу лекарств"
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_template_17
+msgid "ENAPRIL 10MG TAB"
+msgstr "Таблетка ENAPRIL 10 мг"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Expiry Date<br/>"
+msgstr "Срок годности<br/>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Flow 1 : Purchase the Product and Manage Stock"
+msgstr "Сценарий 1: Закупка товара и управление запасами"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Flow 2: B2B Sales: Quotation &gt; Delivery &gt; Invoice"
+msgstr ""
+"Сценарий 2: Продажа B2B – Коммерческое предложение &gt; Доставка &gt; Счет"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Flow 3: Sales B2C Customer : Point of Sale with Offers"
+msgstr "Сценарий 3: Продажа B2C – акции в POS"
+
+#. module: pharmacy_retail
+#: model:loyalty.reward,description:pharmacy_retail.loyalty_reward_pharma_1
+msgid "Free Product - Himalaya Baby Powder 100 g"
+msgstr "Бесплатный товар – Детская присыпка Himalaya 100 г"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "From the confirmed sales order, Open the respective Delivery Order."
+msgstr ""
+"Из подтвержденного заказа на продажу откройте соответствующий заказ на "
+"доставку."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.product_template_product_form_customization_pharma_2
+msgid "Generic Name"
+msgstr "МНН"
+
+#. module: pharmacy_retail
+#. odoo-javascript
+#: code:addons/pharmacy_retail/static/src/js/my_tour.js:0
+msgid "Get on track and explore our recommendations for your Odoo usage here!"
+msgstr ""
+"Чтобы работать эффективно, изучите наши рекомендации по использованию Odoo!"
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_template_23
+msgid "Gift Card"
+msgstr "Подарочная карта"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Go to the Sales module and create a new quotation."
+msgstr "Перейдите в модуль Продажи и создайте новое коммерческое предложение."
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_product_20_product_template
+msgid "Himalaya Baby Cream - Extra Soft & Gentle, Paraben Free, 100 ml Tube"
+msgstr "Детский крем Himalaya – нежный, без парабенов, тюбик 100 мл"
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_product_19_product_template
+msgid "Himalaya Baby Powder 100 g"
+msgstr "Детская присыпка Himalaya 100 мг"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"In the delivery order, users can find line items for \"<font class=\"text-o-"
+"color-1\">Acetratine 10 mg</font>\" with a quantity of \"<font class=\"text-"
+"o-color-1\">100</font>\"."
+msgstr ""
+"В заказе на доставку появятся строки с товаром «<font class=\"text-o-"
+"color-1\">Acetratine 10 мг</font>» в количестве «<font class=\"text-o-"
+"color-1\">100</font>»."
+
+#. module: pharmacy_retail
+#: model:ir.model.fields,field_description:pharmacy_retail.new_checkbox_contact_doctor_pharma
+msgid "Is a Doctor"
+msgstr "Врач"
+
+#. module: pharmacy_retail
+#: model:ir.model.fields,field_description:pharmacy_retail.new_checkbox_contact_manufacturer_pharma
+msgid "Is a Manufacturer"
+msgstr "Производитель"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_6
+msgid "Licorice (Glycyrrhiza Glabra)"
+msgstr "Солодка (Glycyrrhiza Glabra)"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Lot Number<br/>"
+msgstr "Серийный номер<br/>"
+
+#. module: pharmacy_retail
+#: model:loyalty.program,portal_point_name:pharmacy_retail.loyalty_program_pharma_2
+msgid "Loyalty point(s)"
+msgstr "Балл(ы) лояльности"
+
+#. module: pharmacy_retail
+#: model:ir.actions.act_window,name:pharmacy_retail.actions_manufacturer_pharma
+#: model:ir.model.fields,field_description:pharmacy_retail.new_many2one_product_pharma
+msgid "Manufacturer"
+msgstr "Производитель"
+
+#. module: pharmacy_retail
+#: model:ir.ui.menu,name:pharmacy_retail.manufacturer_pharma
+msgid "Manufacturers"
+msgstr "Производители"
+
+#. module: pharmacy_retail
+#: model:product.attribute,name:pharmacy_retail.product_attribute_3
+msgid "Medical Item Type"
+msgstr "Тип медицинского товара"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_11
+msgid "Natural Zinc"
+msgstr "Натуральный цинк"
+
+#. module: pharmacy_retail
+#: model:product.attribute.value,name:pharmacy_retail.product_attribute_value_7
+msgid "Non Scheduled"
+msgstr "Не запланировано"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_9
+msgid "Olive Oil"
+msgstr "Оливковое масло"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_8
+msgid "Olive Oil (Olea Europaea)"
+msgstr "Оливковое масло (Olea Europaea)"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Once the delivery is validated, go back to the sales order and \"Create "
+"Invoice\"."
+msgstr ""
+"После подтверждения доставки вернитесь к заказу на продажу и нажмите "
+"«Создать счет»."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Once the order is confirmed, the system automatically generates a receipt "
+"against the purchase order."
+msgstr ""
+"После подтверждения заказа система автоматически создаст чек по заказу на "
+"закупку."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Once the order total is calculated (<font class=\"text-o-color-1\">$191.59</"
+"font>), select the payment method (<font class=\"text-o-color-1\">Cash</"
+"font>)."
+msgstr ""
+"После расчета общей суммы заказа (<font class=\"text-o-color-1\">191,59 $</"
+"font>) выберите метод оплаты (<font class=\"text-o-color-1\">Наличные</"
+"font>)."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Once the quotation is ready, confirm it to convert it into a sales order."
+msgstr ""
+"После подготовки предложения подтвердите его, чтобы превратить в заказ на "
+"продажу."
+
+#. module: pharmacy_retail
+#: model:pos.category,name:pharmacy_retail.pos_category_2
+msgid "Otolaryngology"
+msgstr "Отоларингология"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_2
+msgid "Paclitaxel"
+msgstr "Паклитаксел"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_3
+#: model:product.template,name:pharmacy_retail.product_template_15
+msgid "Paracetamol"
+msgstr "Парацетамол"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.account_move_form_customization_pharma
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.sale_order_form_customization_pharma
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.sale_order_tree_customization_pharma
+msgid "Patient Name"
+msgstr "Имя пациента"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Pharmacy Retail"
+msgstr "Аптечная розница"
+
+#. module: pharmacy_retail
+#: model:pos.category,name:pharmacy_retail.pos_category_5
+msgid "Pregnancy & Baby"
+msgstr "Беременность и уход за ребенком"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Putaway Rule : Defines a Warehouse Assignment Strategy for incoming stock<br/"
+">"
+msgstr ""
+"Правило размещения: определяет стратегию распределения поступающих товаров "
+"на складе<br/>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Qty"
+msgstr "Количество"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"RFQs (Request for Quotations) are sent to vendors, and they respond with "
+"rates for each RFQ."
+msgstr ""
+"Запросы котировок отправляются поставщикам, которые отвечают, указывая цены "
+"по каждому запросу."
+
+#. module: pharmacy_retail
+#: model:ir.model.fields,field_description:pharmacy_retail.new_text_contact__reg_pharma
+msgid "Registration Number"
+msgstr "Регистрационный номер"
+
+#. module: pharmacy_retail
+#: model:product.pricelist,name:pharmacy_retail.product_pricelist_2
+msgid "Retailer (B2C)"
+msgstr "Розничный покупатель (B2C)"
+
+#. module: pharmacy_retail
+#: model:product.attribute.value,name:pharmacy_retail.product_attribute_value_6
+msgid "Scheduled"
+msgstr "Запланировано"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Select the customer \"<font class=\"text-o-color-1\">Rite Care Pharmacy</"
+"font>.\""
+msgstr ""
+"Выберите клиента «<font class=\"text-o-color-1\">Rite Care Pharmacy</font>»."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Select the product \"<font class=\"text-o-color-1\">Himalaya Baby Powder 100 "
+"g</font>\"."
+msgstr ""
+"Выберите товар «<font class=\"text-o-color-1\">Детская присыпка Himalaya 100 "
+"г</font>»."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Some businesses run promotion programs for specific products.  Create the "
+"Point of Sale Order for the product \"Himalaya Baby Powder 100 g\", apply a "
+"\"Buy 2 Get 1\" promotion, and accept payments using different methods\n"
+"            like cash, bank, or customer accounts. Here's a step-by-step "
+"breakdown:"
+msgstr ""
+"Некоторые аптеки проводят акции для отдельных товаров. Создайте заказ в POS "
+"на товар «Детская присыпка Himalaya 100 г», примените акцию «Три по цене "
+"двух», примите оплату любым методом:\n"
+"            наличные, банковский перевод или со счета клиента. Ниже "
+"пошаговая инструкция:"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"System already has a Promotion program with the name \"<font class=\"text-o-"
+"color-1\">Buy 2 Get 1</font>\".<br/>\n"
+"                <br/>"
+msgstr ""
+"В системе уже создана акция под названием «<font class=\"text-o-"
+"color-1\">Три по цене двух</font>».<br/>\n"
+"                <br/>"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"System will automatically apply the B2B discount of 7% by the Sales Price "
+"List \"<font class=\"text-o-color-1\">Wholesale (B2B)</font>\"."
+msgstr ""
+"Система автоматически применит скидку 7% по прайс-листу продаж «<font "
+"class=\"text-o-color-1\">Оптовая (B2B)</font>»."
+
+#. module: pharmacy_retail
+#: model:product.template,name:pharmacy_retail.product_template_16
+msgid "TELVAS AM TAB"
+msgstr "Таблетка TELVAS AM"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"The POS system should automatically recognize the \"<font class=\"text-o-"
+"color-1\">Buy 2 Get 1</font>\" promotion and adjust the total price "
+"accordingly."
+msgstr ""
+"POS-система должна автоматически определить акцию «<font class=\"text-o-"
+"color-1\">Три по цене двух</font>» и пересчитать сумму заказа."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "The company runs a B2C and B2B Business."
+msgstr "Компания работает как с B2C, так и с B2B-сегментом."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"The customer should only be charged for the 2 units, with the 3rd unit being "
+"free."
+msgstr "Клиент должен оплатить только 2 товара, третий идет бесплатно."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"The invoice will consider the discounted price due to the applied B2B "
+"customer discount."
+msgstr "Счет будет учитывать цену со скидкой для B2B-клиента."
+
+#. module: pharmacy_retail
+#: model:product.attribute,name:pharmacy_retail.product_attribute_2
+msgid "Therapeutic Classification"
+msgstr "Терапевтическая классификация"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"This setup is for pharmacy retail companies that purchase and sell products. "
+"They maintain the stock lot wise and also manage the expiry of the lots."
+msgstr ""
+"Это решение разработано для аптек, осуществляющих закупку и продажу. Запасы "
+"учитываются по партиям, с отслеживанием срока годности."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "This will create an invoice based on the delivered products."
+msgstr "Будет создан счет на основе доставленных товаров."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Through Purchase application and create Purchase Orders (POs) for specific "
+"product “<font class=\"text-o-color-1\">Acetratine 10 mg</font>” from "
+"predefined vendors."
+msgstr ""
+"Через модуль Закупки создаются заказы на закупку на конкретный товар «<font "
+"class=\"text-o-color-1\">Acetratine 10 мг</font>» от определенных "
+"поставщиков."
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_7
+msgid "Tinospora Gulancha (Tinospora Cordifolia)"
+msgstr "Тиноспора сердцелистная (Tinospora cordifolia)"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"To assign lot numbers, click on the product line. In the pop-up, specify the "
+"lot number and the quantity against that lot number."
+msgstr ""
+"Чтобы назначить серийный номер, нажмите на строку товара. В открывшемся окне "
+"укажите номер партии и количество."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"Upon validation of the receipt, the system automatically sets the locations "
+"(Racks) for the particular products received. \"<font class=\"text-o-"
+"color-1\">Acetratine 10 mg</font>” product will be stored at \"\n"
+"            <font class=\"text-o-color-1\">WH/Stock/Rack 2</font>”."
+msgstr ""
+"После подтверждения поступления система автоматически укажет место хранения "
+"(стеллажи) для полученных товаров. Товар «Acetratine 10 mg» будет размещен "
+"на «\n"
+"            <font class=\"text-o-color-1\">Склад/Зона хранения/Стеллаж 2</"
+"font>»."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid "Validate the reception for all quantities at once."
+msgstr "Подтвердите приемку всего количества сразу."
+
+#. module: pharmacy_retail
+#: model_terms:web_tour.tour,rainbow_man_message:pharmacy_retail.knowledge_tour
+msgid "Welcome! Happy exploring."
+msgstr "Добро пожаловать! Приятного изучения."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"When a customer wants to purchase \"<font class=\"text-o-color-1\">Himalaya "
+"Baby Powder 100 g</font>,\" add \"<font class=\"text-o-color-1\">3</font>\" "
+"quantity. When you select this product at that time, the system will fetch "
+"the\n"
+"            price from the product master and enter the Lot Number \"<font "
+"class=\"text-o-color-1\">A-003</font>\"."
+msgstr ""
+"Когда покупатель приобретает «<font class=\"text-o-color-1\">Детская "
+"присыпка Himalaya 100 г</font>», добавьте количество «<font class=\"text-o-"
+"color-1\">3</font>». При выборе товара система подставит\n"
+"            цену и номер партии «<font class=\"text-o-color-1\">A-003</"
+"font>»."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"When the material is received, the user can either scan the barcode or "
+"manually enter the Lot Number, Expiry Date and Quantity for \"<font "
+"class=\"text-o-color-1\">Acetratine 10 mg</font>” product received."
+msgstr ""
+"При поступлении товара пользователь может отсканировать штрихкод или вручную "
+"ввести номер партии, срок годности и количество для товара «<font "
+"class=\"text-o-color-1\">Acetratine 10 мг</font>»."
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"While Processing the payment, the  customer gives  <font class=\"text-o-"
+"color-1\">$200</font> as cash payment. Change amount as $8.41 gets "
+"automatically calculated.  Validate the Order and Print Receipt."
+msgstr ""
+"При оплате  клиент вносит  <font class=\"text-o-color-1\">200 $</font> "
+"наличными. Система автоматически рассчитывает сдачу 8,41 $.  Подтвердите "
+"заказ и распечатайте чек."
+
+#. module: pharmacy_retail
+#: model:product.pricelist,name:pharmacy_retail.product_pricelist_3
+msgid "Wholesale (B2B)"
+msgstr "Оптовая (B2B)"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_20
+msgid "Xylometazoliine"
+msgstr "Ксилометазолин"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_12
+msgid "Yellow Fever Vaccine"
+msgstr "Вакцина против желтой лихорадки"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"You can use the following payment methods: Cash, Bank or Customer Account."
+"<br/>"
+msgstr ""
+"Можно использовать следующие методы оплаты: Наличные, Банковский перевод, "
+"Счет клиента<br/>"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_13
+msgid "Zafirlukast"
+msgstr "Зафирлукаст"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_16
+msgid "Zeledronic Acid"
+msgstr "Золедроновая кислота"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_14
+msgid "Zinc Oxide"
+msgstr "Оксид цинка"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_15
+msgid "Zinc Sulphate"
+msgstr "Сульфат цинка"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_18
+msgid "Zolpidem"
+msgstr "Золпидем"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_17
+msgid "Zomitriptan"
+msgstr "Зомитриптан"
+
+#. module: pharmacy_retail
+#: model:product.tag,name:pharmacy_retail.product_tag_19
+msgid "Zuclopenthixol"
+msgstr "Зуклопентиксол"
+
+#. module: pharmacy_retail
+#: model_terms:ir.ui.view,arch_db:pharmacy_retail.welcome_article_body
+msgid ""
+"​To manage the stock lot number-wise and streamline the purchase order and "
+"receipt process for the pharmacy store, a software solution needs to be "
+"implemented. Here's an outline of the system's functionalities."
+msgstr ""
+"Чтобы организовать учет по партиям и упростить процесс закупок и приемки "
+"товаров в аптеке, необходимо внедрение программного решения. Ниже приведен "
+"перечень ключевых функций системы."

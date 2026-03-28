@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height parallax s_parallax_is_fixed" separator=" "/>
+        <attribute name="data-scroll-background-ratio">1</attribute>
+    </xpath>
+    <xpath expr="//section/div" position="before">
+        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+    </xpath>
+    <!-- Remove grid images -->
+    <xpath expr="//div[hasclass('o_grid_item_image')]" position="replace"/>
+    <xpath expr="//div[hasclass('o_grid_item_image')]" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-5')][2]" position="replace"/>
+    <!-- Row - remove grid mode -->
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="class" remove="o_grid_mode" separator=" "/>
+        <attribute name="data-row-count"/>
+    </xpath>
+    <!-- Jumbotron -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="col-lg-6 o_cc o_cc1 pt32 pb32 shadow rounded" remove="o_grid_item g-height-10 g-col-lg-5 col-lg-5" separator=" "/>
+        <attribute name="style"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" remove="display-1" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        A Different Viewpoint.
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        We are a contemporary architecture firm working mainly in the residential, commercial and office sectors. Our projects are built all over the world, in urban and rural environments.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')]//p[2]" position="attributes">
+        <attribute name="class" add="mb-0" separator=" "/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[@t-att-href='cta_btn_href']" position="attributes">
+        <attribute name="class" remove="btn-lg" separator=" "/>
+    </xpath>
+    <xpath expr="//a[@t-att-href='cta_btn_href']" position="replace" mode="inner">
+        Discover More
+    </xpath>
+</template>
+
+</odoo>

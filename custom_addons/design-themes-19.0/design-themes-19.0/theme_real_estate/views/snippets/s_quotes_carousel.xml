@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <xpath expr="//section/div" position="attributes">
+        <attribute name="class" remove="s_carousel_boxed" add="s_carousel_default" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" remove="carousel-dark" separator=" "/>
+    </xpath>
+    <!-- Quote 1 -->
+    <xpath expr="(//blockquote)[1]" position="attributes">
+        <attribute name="class" remove="s_blockquote_with_icon w-50" add="s_blockquote_with_line w-75" separator=" "/>
+        <attribute name="style">border-radius: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[1]" position="replace" mode="inner">
+        Amazing team! smiling, always nice to talk with, they always have the best advices for you, adapted to your needs!
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//span//span" position="replace" mode="inner">
+        Customer, bought a house
+    </xpath>
+    <!-- Quote 2 -->
+    <xpath expr="(//blockquote)[2]" position="attributes">
+        <attribute name="class" remove="s_blockquote_with_icon w-50" add="s_blockquote_with_line w-75" separator=" "/>
+        <attribute name="style">border-radius: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        From start to finish, they were extremely professional, friendly, helpful and easy to do business with. Very happy with the experience and the company.
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//span//span" position="replace" mode="inner">
+        Customer, bought an appartement
+    </xpath>
+    <!-- Quote 3 -->
+    <xpath expr="(//blockquote)[3]" position="attributes">
+        <attribute name="class" remove="s_blockquote_with_icon w-50" add="s_blockquote_with_line w-75" separator=" "/>
+        <attribute name="style">border-radius: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        Positive energy, great team spirit, hard workers and awesome people! I warmly recommend them!
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//span//span" position="replace" mode="inner">
+        Customer, sold an appartement
+    </xpath>
+</template>
+
+</odoo>

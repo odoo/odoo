@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- Theme Header - Option -->
+<t t-name="theme_test_custo.headerTemplateOption" t-inherit="website.HeaderTemplateOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderSelect[@action=&quot;'reloadComposite'&quot;]" position="inside">
+        <BuilderSelectItem title.translate="Custom Theme"
+            actionParam="[
+                    {
+                        action: 'websiteConfig',
+                        actionParam: {
+                            views: ['theme_test_custo.template_header_custom'],
+                            vars: {'header-links-style': 'default', 'header-template': 'custom-theme'},
+                            checkVars: false,
+                        },
+                    },
+                ]"
+        >
+            <Img src="'/theme_test_custo/static/src/img/template_header_opt.svg'" class="'theme_test_custo_header'"/>
+        </BuilderSelectItem>
+    </xpath>
+</t>
+
+</templates>

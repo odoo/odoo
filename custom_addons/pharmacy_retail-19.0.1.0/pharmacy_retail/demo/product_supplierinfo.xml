@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="product_supplierinfo_11" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_13"/>
+        <field name="partner_id" ref="res_partner_10"/>
+        <field name="min_qty">1.0</field>
+        <field name="price">50.0</field>
+    </record>
+    <record id="product_supplierinfo_1" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_13"/>
+        <field name="partner_id" ref="res_partner_11"/>
+        <field name="price">50.0</field>
+    </record>
+    <record id="product_supplierinfo_10" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_15"/>
+        <field name="partner_id" ref="res_partner_10"/>
+        <field name="min_qty">1.0</field>
+        <field name="price">30.0</field>
+    </record>
+    <record id="product_supplierinfo_2" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_18"/>
+        <field name="partner_id" ref="res_partner_11"/>
+        <field name="price">40.0</field>
+    </record>
+    <record id="product_supplierinfo_3" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_14"/>
+        <field name="partner_id" ref="res_partner_11"/>
+        <field name="price">10.0</field>
+    </record>
+    <record id="product_supplierinfo_4" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_17"/>
+        <field name="partner_id" ref="res_partner_10"/>
+        <field name="price">50.0</field>
+    </record>
+    <record id="product_supplierinfo_5" model="product.supplierinfo">
+        <field name="product_tmpl_id" model="product.product" eval="obj().env.ref('pharmacy_retail.product_product_20').product_tmpl_id.id"/>
+        <field name="partner_id" ref="res_partner_9"/>
+        <field name="price">80.0</field>
+    </record>
+    <record id="product_supplierinfo_6" model="product.supplierinfo">
+        <field name="product_tmpl_id" model="product.product" eval="obj().env.ref('pharmacy_retail.product_product_19').product_tmpl_id.id"/>
+        <field name="partner_id" ref="res_partner_9"/>
+        <field name="price">30.0</field>
+    </record>
+    <record id="product_supplierinfo_7" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_15"/>
+        <field name="partner_id" ref="res_partner_9"/>
+        <field name="price">10.0</field>
+    </record>
+    <record id="product_supplierinfo_8" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_16"/>
+        <field name="partner_id" ref="res_partner_9"/>
+        <field name="price">40.0</field>
+    </record>
+    <record id="product_supplierinfo_9" model="product.supplierinfo">
+        <field name="product_tmpl_id" ref="product_template_14"/>
+        <field name="partner_id" ref="res_partner_10"/>
+        <field name="min_qty">1.0</field>
+        <field name="price">16.0</field>
+    </record>
+</odoo>

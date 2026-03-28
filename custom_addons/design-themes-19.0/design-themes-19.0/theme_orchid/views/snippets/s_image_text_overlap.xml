@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text_overlap" inherit_id="website.s_image_text_overlap">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pb104" remove="pb80 pb64" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        The Orchid Concept
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        From your local producer to your door, discover how we deliver our multiple sorts of flowers and bring you happiness.
+    </xpath>
+</template>
+
+<template id="configurator_s_image_text_overlap" inherit_id="website.configurator_s_image_text_overlap">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/16','flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}</attribute>
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_16 o_shape_show_mobile"/>
+    </xpath>
+
+    <xpath expr="//div[hasclass('o_grid_item')][2]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc5" separator=" "/>
+    </xpath>
+
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/theme_orchid/static/src/img/snippets/configurator_s_image_text_overlap.webp</attribute>
+        <attribute name="class" add="img-thumbnail" separator=" "/>
+        <attribute name="style" add="padding: 16px" separator=";"/>
+    </xpath>
+
+    <xpath expr="//h2" position="before">
+        <p class="lead">Global 24-Hour Flower Delivery</p>
+    </xpath>
+
+    <xpath expr="//h2" position="replace" mode="inner">
+        Brighten any corner of the globe with our express 24-hour worldwide flower delivery service.
+    </xpath>
+
+    <xpath expr="//p[2]" position="replace"/>
+    <xpath expr="//p[2]" position="replace"/>
+    <xpath expr="//p[2]" position="replace"/>
+</template>
+
+</odoo>

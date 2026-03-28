@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cards_grid" inherit_id="website.s_cards_grid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Main Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Redefining Fashion
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="(//div[hasclass('card')])[1]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Timeless Elegance
+    </xpath>
+    <xpath expr="(//p)[1]" position="replace" mode="inner">
+        Our collection captures the essence of timeless elegance, blending classic designs with modern sophistication for every occasion.
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Sustainable Craftsmanship
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        We are committed to sustainable practices, using eco-friendly materials and supporting ethical craftsmanship in every piece we create.
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Versatile Style
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        Designed for the modern individual, our fashion seamlessly transitions from day to night, offering versatile pieces for any wardrobe.
+    </xpath>
+    <!-- Card 4 -->
+    <xpath expr="(//div[hasclass('card')])[4]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Innovative Design
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        Pushing the boundaries of fashion, our innovative designs merge cutting-edge trends with unparalleled comfort and quality.
+    </xpath>
+</template>
+
+</odoo>

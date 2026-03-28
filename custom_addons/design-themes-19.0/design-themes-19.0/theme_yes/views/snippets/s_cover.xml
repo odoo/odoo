@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height pt208 pb256" remove="pt232 pb232" separator=" "/>
+    </xpath>
+    <!-- Filter -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_bg_filter" style="background-color: rgba(25, 41, 37, 0.55) !important;"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" add="display-1-fs" remove="display-3-fs" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        Once in a lifetime moments
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        You focus on the big day, let us focus on you.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a//t" position="replace" mode="inner">
+        Meet us
+    </xpath>
+    <!-- Scroll Down Button -->
+    <xpath expr="//*[hasclass('container')]" position="after">
+        <a class="o_scroll_button rounded-circle align-items-center justify-content-center mx-auto mb-5 text-white o_not_editable" href="#" contenteditable="false" title="" style="background-color: rgba(25, 41, 37, 0.55) !important;" data-bs-original-title="Scroll down to next section">
+            <i class="fa fa-chevron-down fa-1x"></i>
+        </a>
+    </xpath>
+</template>
+
+</odoo>

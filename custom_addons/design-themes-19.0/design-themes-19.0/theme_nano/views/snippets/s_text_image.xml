@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt48 pb48" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="attributes">
+        <attribute name="class" add="container-fluid" remove="container" separator=" "/>
+    </xpath>
+    <!-- Image + Shape -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/pattern/pattern_point.svg</attribute>
+            <attribute name="data-file-name">s_text_image.svg</attribute>
+        <attribute name="data-shape">html_builder/pattern/pattern_point</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

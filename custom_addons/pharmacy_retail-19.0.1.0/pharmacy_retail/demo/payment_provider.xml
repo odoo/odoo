@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="payment.payment_provider_demo" model="payment.provider" forcecreate="0">
+        <field name="name">Card Payment</field>
+        <field name="payment_method_ids" eval="[
+            Command.link(ref('payment.payment_method_card')),
+            Command.link(ref('payment.payment_method_visa')),
+            Command.link(ref('payment.payment_method_mastercard')),
+            Command.link(ref('payment.payment_method_rupay')),
+            Command.link(ref('payment.payment_method_maestro')),
+            ]"/>
+    </record>
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_images" inherit_id="website.s_key_images">
+    <!-- Texts -->
+    <xpath expr="//h2" position="before">
+        <p class="o_small">
+            New in Store
+        </p>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+        <h3>Creating pieces that resonate with enduring quality,<br/>elegant simplicity, and sustainable innovation.</h3>
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace"/>
+
+    <!-- First col -->
+    <xpath expr="//div[hasclass('col-lg-3')]//p" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-3')]/p/img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])//p[2]" position="before">
+        <h4>Carmine Leather Sofa</h4>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[2]" position="replace">
+        <p class="lead">$80.00</p>
+    </xpath>
+
+    <!-- Second col -->
+    <xpath expr="//div[hasclass('col-lg-3')][2]//p" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-3')][2]/p/img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[2]" position="before">
+        <h4>Oakridge Dining Set</h4>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[2]" position="replace">
+        <p class="lead">$184.00</p>
+    </xpath>
+
+    <!-- Third col -->
+    <xpath expr="//div[hasclass('col-lg-3')][3]//p" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-3')][3]/p/img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[2]" position="before">
+        <h4>Mapleton Chair</h4>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[2]" position="replace">
+        <p class="lead">$349.00</p>
+    </xpath>
+
+    <!-- Last col -->
+    <xpath expr="//div[hasclass('col-lg-3')][4]//p" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-3')][4]//p/img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[2]" position="before">
+        <h4>Birchwood Stool</h4>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[2]" position="replace">
+        <p class="lead">$859.00</p>
+    </xpath>
+</template>
+
+</odoo>

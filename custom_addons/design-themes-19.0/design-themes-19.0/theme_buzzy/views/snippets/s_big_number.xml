@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_big_number" inherit_id="website.s_big_number">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Blocks/01_001"}</attribute>
+        <attribute name="class" add="o_cc4" remove="o_cc5" separator=" "/>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Blocks_01_001"/>
+    </xpath>
+
+    <!-- Text -->
+    <xpath expr="//h2/span" position="replace" mode="inner">
+        90%
+    </xpath>
+</template>
+
+</odoo>

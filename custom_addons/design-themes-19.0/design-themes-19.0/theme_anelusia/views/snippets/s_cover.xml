@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height pt128 pb128" remove="pt232 pb232" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Color Matters
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Color trends are already waiting to spring into action for the next summer.
+        <br/>
+        <br/>
+    </xpath>
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Discover
+    </xpath>
+</template>
+
+</odoo>

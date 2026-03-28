@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_shape_image" inherit_id="website.s_shape_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level o_cc o_cc4 pt56 pb56" remove="pt32 pb32" separator=" "/>
+    </xpath>
+
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_shape_image_default_image/html_builder/geometric/geo_square_1.svg</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Dylan Doe
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Dylan Doe is a 3D artist known for his vibrant and immersive digital creations that captivate audiences worldwide.
+    </xpath>
+    <xpath expr="//p[2]" position="replace"/>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Contact Me
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="report_saleorder_document_customization_pharma" model="ir.ui.view">
+        <field name="name">report_saleorder_document.customization.pharma</field>
+        <field name="inherit_id" ref="sale.report_saleorder_document"/>
+        <field name="type">qweb</field>
+        <field name="mode">extension</field>
+        <field name="active" eval="True"/>
+        <field name="priority">160</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='informations']" position="after">
+                <div class="row">
+                    <div class="col-3">
+                        <span>
+                            <strong>Doctor:</strong>
+                            <br/>
+                        </span>
+                        <span t-field="doc.x_doctor"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

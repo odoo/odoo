@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_masonry_block_mosaic_template" inherit_id="website.s_masonry_block_mosaic_template">
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+        <attribute name="src">/web/image/website.s_text_image_default_image</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb64 pt64" remove="pb80 pt80" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/13","flip":["y"]}</attribute>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_13" style="background-image: url('/html_editor/shape/html_builder/Floats/13.svg?c1=o-color-1&amp;c2=o-color-2&amp;c5=o-color-5&amp;flip=y'); background-position: 50% 50%;"/>
+    </xpath>
+
+    <!-- Separator -->
+    <xpath expr="//h2" position="after">
+        <div class="s_hr pb32 pt8" data-snippet="s_hr" data-name="Separator">
+            <hr class="w-50 me-auto" style="border-top: 4px dotted var(--o-color-1) !important;"/>
+        </div>
+    </xpath>
+
+    <!-- Img -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/geometric_round/geo_round_square_1.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric_round/geo_round_square_1</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">content_img_13.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

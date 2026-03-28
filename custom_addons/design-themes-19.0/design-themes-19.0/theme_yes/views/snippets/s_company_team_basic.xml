@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="s_company_team_basic" inherit_id="website.s_company_team_basic">
+    <xpath expr="//h2" position="replace" mode="inner">
+        Meet our team
+    </xpath>
+    <!-- Team #01 - Title -->
+    <xpath expr="//h3" position="replace" mode="inner">
+        Tony Fred
+    </xpath>
+    <!-- Team #01 - Work Description -->
+    <xpath expr="//p[hasclass('o_small-fs')]" position="replace" mode="inner">
+        Founder &amp; Planner
+    </xpath>
+
+    <!-- Team #02 - Title -->
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Clair Stark
+    </xpath>
+    <!-- Team #02 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[2]" position="replace" mode="inner">
+        The Designer
+    </xpath>
+
+    <!-- Team #03 - Title -->
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Aline Turner
+    </xpath>
+    <!-- Team #03 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[3]" position="replace" mode="inner">
+        The Stylist
+    </xpath>
+
+    <!-- Team #04 - Title -->
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Iris Joe
+    </xpath>
+    <!-- Team #04 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[4]" position="replace" mode="inner">
+        Professional Photographer
+    </xpath>
+</template>
+
+</odoo>

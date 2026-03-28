@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_comparisons" inherit_id="website.s_comparisons">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt48 pb48" add="pt72 pb72" separator=" "/>
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Check out our flexible pricing plans with no hidden fees. Contact us for a custom quote.
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="(//div[hasclass('col-lg-4')])[1]" position="attributes">
+        <attribute name="class" add="pt32" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[1]" position="attributes">
+        <attribute name="style">box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 16px 0px !important;</attribute>
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//div[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+        <attribute name="style">box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 16px 0px !important;</attribute>
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//div[hasclass('col-lg-4')])[3]" position="attributes">
+        <attribute name="class" add="pt32" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="style">box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 16px 0px !important;</attribute>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="actions_doctor_partner_pharma" model="ir.actions.act_window">
+        <field name="name">Doctor</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form,map,activity</field>
+        <field name="context">{'x_is_a_doctor': True, 'default_x_is_a_doctor': 1}</field>
+        <field name="domain">[('x_is_a_doctor','=', True)]</field>
+        <field name="filter" eval="True"/>
+    </record>
+    <record id="actions_manufacturer_pharma" model="ir.actions.act_window">
+        <field name="name">Manufacturer</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form,map,activity</field>
+        <field name="context">{'x_is_a_manufacturer': True, 'default_x_is_a_manufacturer': 1}</field>
+        <field name="domain">[('x_is_a_manufacturer','=', True)]</field>
+        <field name="filter" eval="True"/>
+    </record>
+</odoo>

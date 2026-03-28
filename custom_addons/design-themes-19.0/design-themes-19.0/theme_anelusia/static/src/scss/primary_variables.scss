@@ -1,0 +1,169 @@
+//------------------------------------------------------------------------------//
+// Presets
+//------------------------------------------------------------------------------//
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'default-25',
+
+        // Header
+        'header-font-size':                 1rem,
+
+        // Font
+        'font':                             'Source Sans Pro',
+        'headings-font':                    'Spartan',
+
+        // Links
+        'link-underline':                   'never',
+
+        // Buttons
+        'btn-padding-y':                    .45rem,
+        'btn-padding-x':                    1.35rem,
+        'btn-padding-y-sm':                 .3rem,
+        'btn-padding-x-sm':                 .9rem,
+        'btn-padding-y-lg':                 .6rem,
+        'btn-padding-x-lg':                 1.8rem,
+        'btn-border-radius':                10rem,
+        'btn-border-radius-sm':             10rem,
+        'btn-border-radius-lg':             10rem,
+
+        // Footer
+        'footer-template':                  'headline',
+    ),
+);
+
+$default-25: map-get($o-color-palettes, 'default-25');
+$default-25: map-merge($default-25, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-25': $default-25));
+
+//------------------------------------------------------------------------------//
+// Fonts
+//------------------------------------------------------------------------------//
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (32 / 16);
+$o-theme-h3-font-size-multiplier: (28 / 16);
+$o-theme-h4-font-size-multiplier: (24 / 16);
+$o-theme-h5-font-size-multiplier: (21 / 16);
+
+$o-theme-headings-font-weight: 700;
+
+$o-theme-font-configs: (
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Forum': (
+        'family': ('Forum', cursive),
+        'url': 'Forum:300,300i,400,400i,700,700i',
+    ),
+    'Heebo': (
+        'family': ('Heebo', sans-serif),
+        'url': 'Heebo:300,300i,400,400i,600,600i',
+    ),
+    'Buda': (
+        'family': ('Buda', cursive),
+        'url': 'Buda:300,300i,400,400i,700,700i',
+    ),
+    'PT Serif': (
+        'family': ('PT Serif', serif),
+        'url': 'PT+Serif:300,300i,400,400i,700,700i',
+    ),
+    'Rajdhani': (
+        'family': ('Rajdhani', sans-serif),
+        'url': 'Rajdhani:300,300i,400,400i,700,700i',
+    ),
+    'EB Garamond': (
+        'family': ('EB Garamond', serif),
+        'url': 'EB+Garamond:300,300i,400,400i,700,700i',
+    ),
+    'Spartan': (
+        'family': ('Spartan', sans-serif),
+        'url': 'Spartan:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Compatibility
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'anelusia-1': (
+            'alpha':                            #ffffff,
+            'beta':                             #cdd0a2,
+            'gamma':                            #b4bbb9,
+            'delta':                            #242327,
+            'epsilon':                          #957985,
+        ),
+        'anelusia-2': (
+            'alpha':                            #ffffff,
+            'beta':                             #f4f1db,
+            'gamma':                            #928371,
+            'delta':                            #53453f,
+            'epsilon':                          #c31737,
+        ),
+        'anelusia-3': (
+            'alpha':                            #ffffff,
+            'beta':                             #d8eff1,
+            'gamma':                            #0d75ac,
+            'delta':                            #000f3d,
+            'epsilon':                          #e07a6b,
+        ),
+        'anelusia-4': (
+            'alpha':                            #ffffff,
+            'beta':                             #faf7e1,
+            'gamma':                            #e3d6c6,
+            'delta':                            #eed187,
+            'epsilon':                          #dc733f,
+        ),
+        'anelusia-5': (
+            'alpha':                            #ffffff,
+            'beta':                             #cfcfcf,
+            'gamma':                            #2e2e2e,
+            'delta':                            #000000,
+            'epsilon':                          #32c0c9,
+        ),
+        'anelusia-6': (
+            'alpha':                            #ffffff,
+            'beta':                             #aacfb0,
+            'gamma':                            #4dac5e,
+            'delta':                            #93ab12,
+            'epsilon':                          #e62e3e,
+        ),
+    )
+);
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'anelusia-1',
+    2: 'anelusia-2',
+    3: 'anelusia-3',
+    4: 'anelusia-4',
+    5: 'anelusia-5',
+    6: 'anelusia-6',
+    7: 'generic-1',
+    8: 'generic-2',
+    9: 'generic-3',
+    10: 'generic-4',
+    11: 'generic-5',
+    12: 'generic-6',
+    13: 'generic-7',
+    14: 'generic-8',
+    15: 'generic-9',
+    16: 'generic-10',
+    17: 'generic-11',
+    18: 'generic-12',
+    19: 'generic-13',
+    20: 'generic-14',
+    21: 'generic-15',
+    22: 'generic-16',
+    23: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/02', (1: 3, 3: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/17', (3: 5));

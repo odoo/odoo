@@ -1,0 +1,20 @@
+$s-banner-3-carousel-row-height: auto;
+
+@mixin s-banner-3-row-hook {
+    background-color: white;
+    float: right;
+    height: auto;
+    margin-right: 150px;
+    @media screen and (max-width: 640px) {
+        float: none;
+    }
+    img {
+        display: none;
+    }
+}
+
+@mixin s-banner-3-carousel-control-hook {
+    display: inherit;
+}
+
+$s-big-icon-circle-text-color: $-gray-700;

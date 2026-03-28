@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Right align Scroll-to-Top button -->
+<template id="option_footer_scrolltop" inherit_id="website.option_footer_scrolltop">
+    <xpath expr="//*[@id='o_footer_scrolltop_wrapper']" position="attributes">
+        <attribute name="class" add="justify-content-end" remove="justify-content-center" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

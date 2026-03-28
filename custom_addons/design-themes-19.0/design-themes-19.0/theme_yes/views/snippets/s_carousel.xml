@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel" inherit_id="website.s_carousel">
+    <!-- Slide 1 -->
+    <xpath expr="(//*[hasclass('o_we_bg_filter')])" position="replace">
+        <div class="o_we_bg_filter" style="background-color: rgba(25, 41, 37, 0.55) !important;"/>
+    </xpath>
+    <!-- Slide 2 -->
+    <xpath expr="(//*[hasclass('container')])[2]" position="before">
+        <div class="o_we_bg_filter" style="background-color: rgba(25, 41, 37, 0.55) !important;"/>
+    </xpath>
+    <xpath expr="//*[hasclass('carousel-item')][2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt152 pb152" remove="pt96 pb96" separator=" "/>
+    </xpath>
+    <!-- Slide 3 -->
+    <xpath expr="(//*[hasclass('container')])[3]" position="before">
+        <div class="o_we_bg_filter" style="background-color: rgba(25, 41, 37, 0.55) !important;"/>
+    </xpath>
+    <xpath expr="//*[hasclass('carousel-item')][3]" position="attributes">
+        <attribute name="class" add="pt152 pb152" remove="pt128 pb128" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

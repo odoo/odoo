@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="new_checkbox_contact_doctor_pharma" model="ir.model.fields">
+        <field name="name">x_is_a_doctor</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="field_description">Is a Doctor</field>
+        <field name="ttype">boolean</field>
+    </record>
+    <record id="new_checkbox_contact_manufacturer_pharma" model="ir.model.fields">
+        <field name="name">x_is_a_manufacturer</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="field_description">Is a Manufacturer</field>
+        <field name="ttype">boolean</field>
+    </record>
+    <record id="new_date_contact_pharma" model="ir.model.fields">
+        <field name="name">x_drug_license_date</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="field_description">Drug License Date</field>
+        <field name="ttype">date</field>
+    </record>
+    <record id="new_date_companies_pharma" model="ir.model.fields">
+        <field name="name">x_drug_license_date</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="field_description">Drug License Date</field>
+        <field name="ttype">date</field>
+        <field name="related">partner_id.x_drug_license_date</field>
+    </record>
+    <record id="new_many2one_product_pharma" model="ir.model.fields">
+        <field name="name">x_manufacturer</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="field_description">Manufacturer</field>
+        <field name="ttype">many2one</field>
+        <field name="relation">res.partner</field>
+    </record>
+    <record id="new_many2one_sales_pharma" model="ir.model.fields">
+        <field name="name">x_doctor</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="field_description">Doctor</field>
+        <field name="ttype">many2one</field>
+        <field name="relation">res.partner</field>
+    </record>
+    <record id="new_related_field_jo_pharma" model="ir.model.fields">
+        <field name="name">x_doctor_name</field>
+        <field name="field_description">Doctor Name</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="ttype">many2one</field>
+        <field name="depends">invoice_line_ids</field>
+        <field name="relation">res.partner</field>
+        <field name="related">invoice_line_ids.sale_line_ids.order_id.x_doctor</field>
+    </record>
+    <record id="new_text_contact_pharma" model="ir.model.fields">
+        <field name="name">x_drug_license_number</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="field_description">Drug License Number</field>
+        <field name="ttype">char</field>
+    </record>
+    <record id="new_text_companies_pharma" model="ir.model.fields">
+        <field name="name">x_drug_license_number</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="field_description">Drug License Number</field>
+        <field name="ttype">char</field>
+        <field name="related">partner_id.x_drug_license_number</field>
+    </record>
+    <record id="new_text_contact__reg_pharma" model="ir.model.fields">
+        <field name="name">x_registration_number</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="field_description">Registration Number</field>
+        <field name="ttype">char</field>
+    </record>
+</odoo>

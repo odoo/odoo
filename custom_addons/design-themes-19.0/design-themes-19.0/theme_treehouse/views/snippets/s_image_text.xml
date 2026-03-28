@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" add="img-thumbnail" separator=" "/>
+        <attribute name="style" add="padding: 15px;" separator=";"/>
+    </xpath>
+    <xpath expr="//p[2]" position="after">
+        <p><br/></p>
+    </xpath>
+</template>
+
+</odoo>

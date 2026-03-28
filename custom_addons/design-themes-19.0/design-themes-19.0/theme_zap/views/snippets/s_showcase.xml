@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_showcase" inherit_id="website.s_showcase">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt72 pb72" remove="pt48 pb48" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Meet Our Specialists
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Our specialists bring a wealth of knowledge and experience to deliver top-quality solutions every time.
+    </xpath>
+    <!-- Image Col -->
+    <xpath expr="(//div[hasclass('col-lg-6')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-5 offset-lg-1" remove="col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" add="shadow" separator=" "/>
+    </xpath>
+    <!-- Feature 1 -->
+    <xpath expr="(//div[hasclass('col-12')])[2]//i" position="attributes">
+        <attribute name="class" remove="bg-o-color-3" add="bg-o-color-2" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-12')])[2]//h3" position="replace" mode="inner">
+        Coding Excellence
+    </xpath>
+    <xpath expr="(//div[hasclass('col-12')])[2]//p" position="replace" mode="inner">
+        We focus on writing clean, efficient code, ensuring scalable and high-performance software that meets industry standards.
+    </xpath>
+    <!-- Feature 2 -->
+    <xpath expr="(//div[hasclass('col-12')])[3]//i" position="attributes">
+        <attribute name="class" remove="bg-o-color-3" add="bg-o-color-2" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-12')])[3]//h3" position="replace" mode="inner">
+        Agile Approach
+    </xpath>
+    <xpath expr="(//div[hasclass('col-12')])[3]//p" position="replace" mode="inner">
+        Using agile methods, we deliver flexible, iterative solutions that adapt quickly to changing business needs and feedback.
+    </xpath>
+    <!-- Feature 3 -->
+    <xpath expr="(//div[hasclass('col-12')])[4]//i" position="attributes">
+        <attribute name="class" remove="bg-o-color-3" add="bg-o-color-2" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-12')])[4]//h3" position="replace" mode="inner">
+        Security First
+    </xpath>
+    <xpath expr="(//div[hasclass('col-12')])[4]//p" position="replace" mode="inner">
+        We integrate strong security measures at every stage, protecting your software and data from vulnerabilities and threats.
+    </xpath>
+    <!-- Link -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Book an appointment
+    </xpath>
+</template>
+
+</odoo>

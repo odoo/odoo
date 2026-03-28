@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="loyalty_rule_pharma_1" model="loyalty.rule" >
+        <field name="program_id" ref="loyalty_program_pharma_1"/>
+        <field name="minimum_qty">2</field>
+        <field name="reward_point_mode">unit</field>
+        <field name="product_ids" eval="[(6, 0, [ref('product_product_19')])]"/>
+    </record>
+    <record id="loyalty_rule_pharma_2" model="loyalty.rule" >
+        <field name="program_id" ref="loyalty_program_pharma_2"/>
+        <field name="minimum_qty">1</field>
+        <field name="minimum_amount">10.00</field>
+        <field name="reward_point_amount">0.10</field>
+        <field name="reward_point_mode">money</field>
+    </record>
+</odoo>

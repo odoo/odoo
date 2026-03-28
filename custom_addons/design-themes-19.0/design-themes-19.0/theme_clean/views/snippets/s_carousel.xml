@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel" inherit_id="website.s_carousel">
+    <!-- Titles -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Personal adviser
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Simplify things
+    </xpath>
+    <xpath expr="(//h2)[3]" position="replace" mode="inner">
+        Efficient team processes
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')][3]//p" position="replace"/>
+
+    <!-- Paragraphs -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        At any moment, you may contact our advisor through the in-app video meeting system.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        We invest in strategic advice tailored to your business problems and needs.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[3]" position="replace" mode="inner">
+        We integrate digital tools and solutions for better insights, enabling data-driven planning.
+    </xpath>
+
+    <!-- Filter -->
+    <xpath expr="(//div[hasclass('container')])[2]" position="before">
+        <div class="o_we_bg_filter bg-white-50"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('container')])[3]" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+
+    <!-- Background -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="style" add="background-position: 50% 10%;" separator=";"/>
+    </xpath>
+</template>
+
+</odoo>

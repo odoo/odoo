@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Create an environment<br/>for growth
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Welcome to our nursery, where every child's development is our top priority. We provide a warm and supportive setting designed to foster curiosity and learning. With experienced staff and engaging activities, we ensure your little ones receive the care and attention they need to thrive.<br/><br/>
+    </xpath>
+</template>
+
+</odoo>

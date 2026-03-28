@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_images" inherit_id="website.s_key_images">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our bestsellers of the moment
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Finely hand-picked by our most avid readers
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="replace">
+        <h5>Boundless</h5>
+        <p class="text-muted">by <em>Frantzou Fleurine</em></p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="replace">
+        <h5>Romans</h5>
+        <p class="text-muted">by <em>Steve Backwood</em></p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="replace">
+        <h5>101 Essays That Will Change the Way You Think</h5>
+        <p class="text-muted">by <em>Brianna Wiest</em></p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="replace">
+        <h5>What I Didn't Post On Instagram</h5>
+        <p class="text-muted">by <em>Chrissy Stockton</em></p>
+    </xpath>
+</template>
+
+</odoo>

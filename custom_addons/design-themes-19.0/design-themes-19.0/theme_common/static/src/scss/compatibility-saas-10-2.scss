@@ -1,0 +1,28 @@
+// This file is for compatibility since saas-10 web_editor refactoring.
+// As a fix to work properly in the editor, some classes have been renamed.
+// To allow a smooth transition, old classes alias are created here.
+
+// Define new theme variables in case the user changes its theme
+$gray-light-light: map-get($grays, '200');
+$gray-light-dark: map-get($grays, '600');
+$gray-dark-light: map-get($grays, '700');
+$gray-dark-dark: map-get($grays, '900');
+$gray-darkest: map-get($grays, '900');
+
+body .color-black { color: $black; }
+body .color-white { color: $white; }
+body .color-gray-lighter { color: map-get($grays, '200'); }
+body .color-gray-light-light { color: $gray-light-light; }
+body .color-gray-light { color: map-get($grays, '600'); }
+body .color-gray-light-dark { color: $gray-light-dark; }
+body .color-gray { color: map-get($grays, '700'); }
+body .color-gray-dark-light { color: $gray-dark-light; }
+body .color-gray-dark { color: map-get($grays, '900'); }
+body .color-gray-dark-dark { color: $gray-dark-dark; }
+body .color-gray-darker { color: map-get($grays, '900'); }
+body .color-gray-darkest { color: $gray-darkest; }
+body .color-alpha { color: o-color('alpha'); }
+body .color-beta { color: o-color('beta'); }
+body .color-gamma { color: o-color('gamma'); }
+body .color-delta { color: o-color('delta'); }
+body .color-epsilon { color: o-color('epsilon'); }

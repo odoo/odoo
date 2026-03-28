@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_showcase" inherit_id="website.s_showcase">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt48 pb104" remove="pt48 pb48" separator=" "/>
+    </xpath>
+    <!-- Row -->
+    <xpath expr="//div[hasclass('container')]//div" position="attributes">
+        <attribute name="class" add="align-items-center" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Why Choose Us
+    </xpath>
+    <!-- Content -->
+    <xpath expr="//h3" position="replace" mode="inner">
+        Expertly Curated Trips
+    </xpath>
+    <xpath expr="//div[hasclass('col-12')][2]//p" position="replace" mode="inner">
+        We select only the best destinations, ensuring your travel experience is nothing short of extraordinary.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Personalized Itineraries
+    </xpath>
+    <xpath expr="//div[hasclass('col-12')][3]//p" position="replace" mode="inner">
+        Your journey is tailored to match your preferences, making every trip uniquely yours.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Seamless Travel Experience
+    </xpath>
+    <xpath expr="//div[hasclass('col-12')][4]//p" position="replace" mode="inner">
+        From booking to departure, we handle all the details so you can focus on enjoying your adventure.
+    </xpath>
+    <!-- Remove link -->
+    <xpath expr="(//div[hasclass('col-12')])[5]" position="replace" />
+    <!-- Image Column -->
+    <xpath expr="(//div[hasclass('col-lg-6')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-5 offset-lg-1" remove="col-lg-6" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_aviato/s_accordion_image.svg?c1=o-color-1</attribute>
+    </xpath>
+</template>
+
+</odoo>

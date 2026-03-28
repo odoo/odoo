@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_banner" inherit_id="website.s_banner">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/12"}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_12"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Hello Planet.
+    </xpath>
+</template>
+
+</odoo>

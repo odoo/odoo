@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc1 pt16 pb16" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Title & Paragraphs -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Everything you need, <br/>totally free
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        Track every expenses, uncover new ways to save, choose the right credit cards. <br/>All those advices and much more are included and totally free of charge.
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/pattern/pattern_point.svg?c1=o-color-1</attribute>
+        <attribute name="data-shape">html_builder/pattern/pattern_point</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">image_content_19.svg</attribute>
+        <attribute name="data-shape-colors">o-color-1;;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

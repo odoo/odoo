@@ -1,0 +1,204 @@
+//------------------------------------------------------------------------------//
+// Presets
+//------------------------------------------------------------------------------//
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name':              'base-2',
+
+        // Header
+        'header-template':                  'sales_four',
+
+        // Font
+        'font':                             'Open Sans',
+        'headings-font':                    'Manrope',
+
+        // Buttons
+        'btn-padding-y':                    .625rem,
+        'btn-padding-x':                    1.5rem,
+        'btn-padding-y-sm':                 .375rem,
+        'btn-padding-x-sm':                 .75rem,
+        'btn-padding-y-lg':                 .75rem,
+        'btn-padding-x-lg':                 2rem,
+
+        'btn-ripple':                       true,
+
+        'input-padding-y':                  .75rem,
+        'input-padding-y-sm':               .375rem,
+        'input-padding-y-lg':               .75rem,
+
+        // Footer
+        'footer-template':                  'links',
+    ),
+);
+
+//------------------------------------------------------------------------------//
+// Fonts
+//------------------------------------------------------------------------------//
+
+$o-theme-font-configs: (
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,500,500i',
+    ),
+    'Roboto Slab': (
+        'family': ('Roboto Slab', serif),
+        'url': 'Roboto+Slab:300,300i,400,400i,700,700i',
+    ),
+    'Dosis': (
+        'family': ('Dosis', sans-serif),
+        'url': 'Dosis:300,300i,400,400i,700,700i',
+    ),
+    'Lato': (
+        'family': ('Lato', sans-serif),
+        'url': 'Lato:300,300i,400,400i,700,700i',
+    ),
+    'Advent Pro': (
+        'family': ('Advent Pro', sans-serif),
+        'url': 'Advent+Pro:300,300i,400,400i,600,600i',
+        'properties': (
+            'base': (
+                'font-size-base':           1.125rem,
+            ),
+        )
+    ),
+    'Oswald': (
+        'family': ('Oswald', sans-serif),
+        'url': 'Oswald:300,300i,400,400i,700,700i',
+        'properties': (
+            'base': (
+                'font-size-base':           1.25rem,
+            ),
+        )
+    ),
+    'Oxygen': (
+        'family': ('Oxygen', sans-serif),
+        'url': 'Oxygen:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans': (
+        'family': ('Open Sans', sans-serif),
+        'url': 'Open+Sans:300,300i,400,400i,600,600i',
+    ),
+    'Merriweather': (
+        'family': ('Merriweather', serif),
+        'url': 'Merriweather:300,300i,400,400i,700,700i',
+    ),
+    'Montserrat Alternates': (
+        'family': ('Montserrat Alternates', sans-serif),
+        'url': 'Montserrat+Alternates:300,300i,400,400i,600,600i',
+    ),
+    'Nunito': (
+        'family': ('Nunito', sans-serif),
+        'url': 'Nunito:300,300i,400,400i,600,600i',
+        'properties' : (
+            'base': (
+                'header-font-size':         (15 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Manrope': (
+        'family': ('Manrope', sans-serif),
+        'url': 'Manrope:300,300i,400,400i,600,600i',
+    ),
+);
+
+// Headings
+
+$o-theme-headings-font-weight:              400;
+
+// Texts
+
+$o-theme-font-size-lg-multiplier:           1.25;
+$o-theme-font-size-sm-multiplier:           .875;
+
+$o-theme-font-weight-light:                 300;
+$o-theme-font-weight-normal:                400;
+$o-theme-font-weight-bold:                  700;
+
+// Buttons
+
+$o-theme-btn-font-weight:                   400;
+
+//------------------------------------------------------------------------------//
+// Colors
+//------------------------------------------------------------------------------//
+
+// Compatibility
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'zap-1': (
+            'alpha':                        #337ab7,
+            'beta':                         #5cb85c,
+            'gamma':                        #5bc0de,
+            'delta':                        #f0ad4e,
+            'epsilon':                      #d9534f,
+        ),
+        'zap-2': (
+            'alpha':                        #ed8c2b,
+            'beta':                         #cf4a30,
+            'gamma':                        #911146,
+            'delta':                        #35203b,
+            'epsilon':                      #88a825,
+        ),
+        'zap-3': (
+            'alpha':                        #79bd8f,
+            'beta':                         #00a388,
+            'gamma':                        #046380,
+            'delta':                        #4bb5c1,
+            'epsilon':                      #beeb9f,
+        ),
+        'zap-4': (
+            'alpha':                        #16c6cc,
+            'beta':                         #d72d3C,
+            'gamma':                        #ff6d3b,
+            'delta':                        #ffb733,
+            'epsilon':                      #ffd55c,
+        ),
+        'zap-5': (
+            'alpha':                        #14212b,
+            'beta':                         #e6e2af,
+            'gamma':                        #c9de55,
+            'delta':                        #962d3e,
+            'epsilon':                      #413659,
+        ),
+        'zap-6': (
+            'alpha':                        #ee592f,
+            'beta':                         #59c1b0,
+            'gamma':                        #1fa58d,
+            'delta':                        #f8c63b,
+            'epsilon':                      #dcb038,
+        ),
+    )
+);
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'zap-1',
+    2: 'zap-2',
+    3: 'zap-3',
+    4: 'zap-4',
+    5: 'zap-5',
+    6: 'zap-6',
+    7: 'generic-1',
+    8: 'generic-2',
+    9: 'generic-3',
+    10: 'generic-4',
+    11: 'generic-5',
+    12: 'generic-6',
+    13: 'generic-7',
+    14: 'generic-8',
+    15: 'generic-9',
+    16: 'generic-10',
+    17: 'generic-11',
+    18: 'generic-12',
+    19: 'generic-13',
+    20: 'generic-14',
+    21: 'generic-15',
+    22: 'generic-16',
+    23: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/04_001', (3: 4));

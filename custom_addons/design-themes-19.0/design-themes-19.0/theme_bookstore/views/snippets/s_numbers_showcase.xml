@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers_showcase" inherit_id="website.s_numbers_showcase">
+    <!-- Item #1 -->
+    <xpath expr="//div[hasclass('o_grid_item')]//h2" position="replace" mode="inner">
+        Numbers speak by themselves
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')]//p[hasclass('lead')]" position="replace" mode="inner">
+        Discover how your support and enthusiasm help us grow and succeed. Here’s a look at the impact you’ve made on our bookstore journey.
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')]//p[3]" position="replace"/>
+    <!-- Item #2 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]//h4" position="replace" mode="inner">
+        Unique references
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]//p[2]" position="replace" mode="inner">
+        Explore 12,000 unique book titles curated just for you.
+    </xpath>
+    <!-- Item #3 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]//h3" position="replace" mode="inner">
+        98%
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]//h4" position="replace" mode="inner">
+        Happy customers
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]//p[2]" position="replace" mode="inner">
+        Join our community of thousands of happy and satisfied readers.
+    </xpath>
+    <!-- Item #4 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]//h3" position="replace" mode="inner">
+        418
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]//h4" position="replace" mode="inner">
+        Stores around the world
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]//p[2]" position="replace" mode="inner">
+        Explore our bookstores worldwide, bringing a world of books closer to you.
+    </xpath>
+</template>
+
+</odoo>

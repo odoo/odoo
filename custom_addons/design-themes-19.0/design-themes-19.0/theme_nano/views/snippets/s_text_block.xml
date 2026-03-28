@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_block" inherit_id="website.s_text_block">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt96 pb96" remove="pt40 pb40" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="replace" mode="inner">
+        <div class="row">
+            <div class="col-12 col-lg-10">
+                <h6><strong><font class="text-o-color-1">OUR APPROACH</font></strong></h6>
+                <p>
+                    <span class="h3-fs">Our approach is rooted in creativity and innovation. What started as a small team has evolved into an agency dedicated to delivering results through strategic thinking and fostering long-term client partnerships.</span>
+                </p>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

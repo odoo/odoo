@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel_minimal" inherit_id="website.s_quotes_carousel_minimal">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc o_cc4" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//p[hasclass('s_blockquote_quote')]" position="replace" mode="inner">
+        " Their products transformed our look. Effective, high-quality, and luxurious. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        " A trusted partner for beauty. <br/>Innovative, reliable, and always setting new trends. "
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        " Outstanding results and service! <br/>They consistently elevate our beauty routine. "
+    </xpath>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+    <xpath expr="//span[hasclass('text-muted')]" position="replace"/>
+</template>
+
+</odoo>

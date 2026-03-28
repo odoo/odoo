@@ -1,0 +1,55 @@
+$s-banner-parallax-text-color: o-color('alpha') !default;
+
+#wrapwrap .s_banner_parallax {
+    margin-bottom: 0px !important;
+
+    @include media-breakpoint-down(md) {
+        background-position: $s-banner-parallax-bg-position;
+    }
+    @include s-banner-parallax-height-hook;
+
+    .container-fluid {
+
+        .row {
+            height: $s-banner-parallax-height;
+            @include s-banner-parallax-row-hook;
+
+            .hero-bg {
+                padding-left: $s-banner-parallax-padding;
+                color: $s-banner-parallax-text-color;
+                @include s-banner-parallax-hero-bg-hook;
+
+                @include media-breakpoint-down(md) {
+                    text-align: center;
+                    padding-left: 15px;
+                }
+
+                h1 {
+                    font-size: $s-banner-parallax-h1-size;
+                    text-shadow: $s-banner-parallax-text-shadow;
+
+                    @media screen and (max-width: 360px) { // FIXME
+                        font-size: 50px;
+                    }
+                }
+
+                h2 {
+                    font-size: 40px;
+                    text-shadow: $s-banner-parallax-text-shadow;
+
+                    @media screen and (max-width: 360px) { // FIXME
+                        font-size: 30px;
+                    }
+                }
+
+                img {
+                    max-height: $s-banner-parallax-img-height;
+
+                    @media screen and (max-width: 360px) { // FIXME
+                        max-height: 200px;
+                    }
+                }
+            }
+        }
+    }
+}

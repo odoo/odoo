@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_intro" inherit_id="website.s_carousel_intro">
+    <xpath expr="//h1" position="replace" mode="inner">
+        Explore a world of literature
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Books and genres curated for you
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Discover your next read
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Immerse yourself in a vast selection of books that spark imagination and offer insight, tailored to every reader's taste.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Refresh your collection with our diverse genres and expert recommendations.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[3]" position="replace" mode="inner">
+        Explore more and find books that match your interests, curated for enriching your reading journey and expanding your horizons.
+    </xpath>
+</template>
+
+</odoo>

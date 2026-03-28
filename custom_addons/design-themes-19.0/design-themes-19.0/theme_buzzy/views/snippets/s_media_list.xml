@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Media item #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]/div" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media item #1 - Img -->
+    <xpath expr="//div[hasclass('s_media_list_item')]//img" position="attributes">
+        <attribute name="style">padding: 32px !important;</attribute>
+        <!-- Enable SVG dynamic color functionality -->
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_media_list-01.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Media item #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]/div" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media item #2 - Img -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]//img" position="attributes">
+        <attribute name="style">padding: 32px !important;</attribute>
+        <!-- Enable SVG dynamic color functionality -->
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_media_list-02.svg?c1=o-color-1</attribute>
+    </xpath>
+    <!-- Media item #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]/div" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Media item #3 - Img -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]//img" position="attributes">
+        <attribute name="style">padding: 32px !important;</attribute>
+        <!-- Enable SVG dynamic color functionality -->
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_media_list-03.svg?c1=o-color-1</attribute>
+    </xpath>
+</template>
+
+</odoo>

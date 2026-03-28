@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Listen to your<br/>favorite tunes
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Join us for live performances that captivate and energize. Our music band brings passion and expertise to every show, delivering a memorable experience with every note. From original compositions to beloved covers, we create a vibrant atmosphere that resonates with fans and keeps the music alive.<br/><br/>
+    </xpath>
+</template>
+
+</odoo>

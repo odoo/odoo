@@ -1,0 +1,183 @@
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Theme colors
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'notes-1': (
+            'alpha': #ffffff,
+            'beta': #47464b,
+            'gamma': #3B3D4D,
+            'delta': #E6FA16,
+            'epsilon': #9B96B4,
+        ),
+        'notes-2': (
+            'alpha': #ffffff,
+            'beta': #101010,
+            'gamma': #474747,
+            'delta': #ff0000,
+            'epsilon': #e94060,
+        ),
+        'notes-3': (
+            'alpha': #ffffff,
+            'beta': #19272c,
+            'gamma': #90c0cf,
+            'delta': #e94060,
+            'epsilon': #5ed7e9,
+        ),
+        'notes-4': (
+            'alpha': #ffffff,
+            'beta': #212523,
+            'gamma': #2d6a51,
+            'delta': #72bd9e,
+            'epsilon': #bcfa16,
+        ),
+        'notes-5': (
+            'alpha': #ffffff,
+            'beta': #4B4D52,
+            'gamma': #DE8642,
+            'delta': #B9B1A8,
+            'epsilon': #FFF2E7,
+        ),
+        'notes-6': (
+            'alpha': #ffffff,
+            'beta': #fee202,
+            'gamma': #514947,
+            'delta': #48372f,
+            'epsilon': #766151,
+        ),
+    )
+);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (36 / 16);
+$o-theme-h3-font-size-multiplier: (28 / 16);
+
+$o-theme-headings-font-weight: 700;
+
+$o-theme-font-configs: (
+    'Cuprum': (
+        'family': ('Cuprum', sans-serif),
+        'url': 'Cuprum:300,300i,400,400i,700,700i',
+    ),
+    'Oxygen': (
+        'family': ('Oxygen', sans-serif),
+        'url': 'Oxygen:300,300i,400,400i,700,700i',
+    ),
+    'Mukta': (
+        'family': ('Mukta', sans-serif),
+        'url': 'Mukta:300,300i,400,400i,700,700i',
+    ),
+    'Overlock': (
+        'family': ('Overlock', cursive),
+        'url': 'Overlock:300,300i,400,400i,700,700i',
+    ),
+    'Rajdhani': (
+        'family': ('Rajdhani', sans-serif),
+        'url': 'Rajdhani:300,300i,400,400i,700,700i',
+    ),
+    'Ubuntu': (
+        'family': ('Ubuntu', sans-serif),
+        'url': 'Ubuntu:300,300i,400,400i,700,700i',
+    ),
+    'Droid Sans': (
+        'family': ('Droid Sans', sans-serif),
+    ),
+    'Sen': (
+        'family': ('Sen', sans-serif),
+        'url': 'Sen:300,300i,400,400i,700,700i',
+    ),
+    'Crimson Text': (
+        'family': ('Crimson Text', serif),
+        'url': 'Crimson+Text:300,300i,400,400i,700,700i',
+    ),
+    'Libre Baskerville': (
+        'family': ('Libre Baskerville', serif),
+        'url': 'Libre+Baskerville:300,300i,400,400i,700,700i',
+    ),
+    'Lobster': (
+        'family': ('Lobster', cursive),
+        'url': 'Lobster:300,300i,400,400i,700,700i',
+    ),
+    'Montserrat': (
+        'family': ('Montserrat', sans-serif),
+        'url': 'Montserrat:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans': (
+        'family': ('Open Sans', sans-serif),
+        'url': 'Open+Sans:300,300i,400,400i,600,600i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'default-19',
+        'header-font-size': 1rem,
+        'logo-height': 3rem,
+        'fixed-logo-height': 3rem,
+        'font': 'Open Sans',
+        'headings-font': 'Montserrat',
+        'navbar-font': 'Montserrat',
+        'buttons-font': 'Montserrat',
+        'link-underline': 'never',
+        'footer-template': 'descriptive',
+    ),
+);
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'notes-1',
+    2: 'notes-2',
+    3: 'notes-3',
+    4: 'notes-4',
+    5: 'generic-1',
+    6: 'generic-2',
+    7: 'generic-3',
+    8: 'generic-4',
+    9: 'generic-5',
+    10: 'generic-6',
+    11: 'generic-7',
+    12: 'generic-8',
+    13: 'generic-9',
+    14: 'generic-10',
+    15: 'generic-11',
+    16: 'generic-12',
+    17: 'generic-13',
+    18: 'generic-14',
+    19: 'generic-15',
+    20: 'generic-16',
+    21: 'generic-17',
+);
+
+$o-theme-color-palettes-compatibility-indexes: (
+    1: 'notes-1',
+    2: 'notes-2',
+    3: 'notes-3',
+    4: 'notes-4',
+    5: 'notes-5',
+    6: 'notes-6',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/10', (1: 5, 2: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/13_001', (1: 5));
+$o-bg-shapes: add-footer-shape-colors-mapping('html_builder', 'Wavy/13_001', (1: 'footer'));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/25', (1: 5, 2: 5));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Wavy/25', 'second', (1: 2, 2: 2));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Wavy/25', 'third', (1: 3, 2: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Blobs/04', (5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Blobs/01', (2: 2));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Blobs/01_001', (2: 2));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/08', (5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/12', (5: 4));

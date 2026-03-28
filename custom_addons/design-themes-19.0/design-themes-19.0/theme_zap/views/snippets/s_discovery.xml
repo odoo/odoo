@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_discovery" inherit_id="website.s_discovery">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level oe_img_bg o_bg_img_center o_cc5 pb216" remove="o_cc1 pb136" separator=" "/>
+        <attribute name="style">background-image: url('/web/image/website.s_kickoff_default_image'); background-position: 50% 75%;</attribute>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/14','colors':{'c1':'o-color-3','c5':'rgba(0,0,0,0)'}}</attribute>
+    </xpath>
+    <!-- Shape and Filter -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+        <div class="o_we_shape o_html_builder_Bold_14" style="background-image: url('/html_editor/shape/html_builder/Bold/14.svg?c1=o-color-3&amp;c5=rgba(0,0,0,0)');"/>
+    </xpath>
+    <!-- CTA -->
+    <xpath expr="//span[hasclass('s_cta_badge')]" position="replace" mode="inner">
+        <i class="fa fa-circle text-success" role="presentation"/>&#160;&#160;We're hiring now!&#160;&#160;&#160;&#160;<a href="#">See more&#160;&#160;<i class="fa fa-long-arrow-right" role="presentation"/></a>
+    </xpath>
+    <xpath expr="//span[hasclass('s_cta_badge')]" position="attributes">
+        <attribute name="class" remove="border" separator=" "/>
+        <attribute name="style">border-radius: 32px !important; box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Experience the real<br/>innovation
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Experience top-tier software solutions designed to streamline operations,<br/> boost efficiency, and drive innovation for your business.
+    </xpath>
+    <!-- Buttons -->
+    <xpath expr="(//a)[2]" position="replace" mode="inner">
+        Get a Quote
+    </xpath>
+    <xpath expr="(//a)[3]" position="replace" mode="inner">
+        Contact Us
+    </xpath>
+</template>
+
+</odoo>

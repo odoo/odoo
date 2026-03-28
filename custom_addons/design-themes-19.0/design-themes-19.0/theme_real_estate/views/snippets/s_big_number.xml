@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_big_number" inherit_id="website.s_big_number">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/03"}</attribute>
+        <attribute name="class" add="o_cc4" remove="o_cc5" separator=" "/>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Wavy_03"/>
+    </xpath>
+
+    <!-- Text -->
+    <xpath expr="//h2/span" position="attributes">
+        <attribute name="style" add="font-size: 9.375rem;" remove="font-size: 10.75rem;" separator=";"/>
+    </xpath>
+    <xpath expr="//h2/span" position="replace" mode="inner">
+        85%
+    </xpath>
+    <xpath expr="//p/span" position="replace" mode="inner">
+        customers satisfaction
+    </xpath>
+</template>
+
+</odoo>

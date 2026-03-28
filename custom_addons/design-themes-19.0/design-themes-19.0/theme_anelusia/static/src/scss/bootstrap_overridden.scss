@@ -1,0 +1,47 @@
+//------------------------------------------------------------------------------//
+// Bootstrap
+//------------------------------------------------------------------------------//
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer:                                    1.25rem !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$border-radius:                             0 !default;
+$border-radius-lg:                          0 !default;
+$border-radius-sm:                          0 !default;
+
+$box-shadow-sm:                             0 0 .3125rem rgba(0,0,0,.25) !default;
+$box-shadow:                                0 0 .3125rem rgba(0,0,0,.25) !default;
+$box-shadow-lg:                             0 0 .3125rem rgba(0,0,0,.25) !default;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+// stylelint-enable value-keyword-case
+
+$font-weight-normal:                        if(o-website-value('font-number') == 4, 300, 500) !default;
+
+$headings-font-weight:                      $o-theme-headings-font-weight !default;
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-border-radius:                    .25rem !default;
+$dropdown-border-width:                     .0625rem !default;
+$dropdown-box-shadow:                       0 .375rem 1.75em rgba(o-color('black'), .175) !default;
+
+// Badges
+
+$badge-padding-y:                           .3125rem !default;
+$badge-padding-x:                           .625rem !default;
+$badge-border-radius:                       .625rem !default;

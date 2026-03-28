@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Column #1 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="class" add="shadow" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_card')]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Column #1 - Title -->
+    <xpath expr="//div[hasclass('card-body')]//h2" position="replace" mode="inner">
+        My artistic process
+    </xpath>
+    <!-- Column #1 - Paragraph -->
+    <xpath expr="//div[hasclass('card-body')]//p" position="replace" mode="inner">
+        The choice of materials, colours are not insignificant, discover more about my artistic process.
+    </xpath>
+    <!-- Column #1 - Add a button -->
+    <xpath expr="//div[hasclass('card-body')]//p" position="after">
+        <p><a href="#" class="btn btn-primary o_translate_inline">More details</a></p>
+    </xpath>
+    <!-- Column #2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="class" add="shadow" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Column #2 - Title -->
+    <xpath expr="(//div[hasclass('card-body')])[2]//h2" position="replace" mode="inner">
+        My work
+    </xpath>
+    <!-- Column #2 - Paragraph -->
+    <xpath expr="(//div[hasclass('card-body')])[2]//p" position="replace" mode="inner">
+        Here is a selection of my works, exhibited in my studio and in galleries around the world.
+    </xpath>
+    <!-- Column #2 - Add a button -->
+    <xpath expr="(//div[hasclass('card-body')])[2]//p" position="after">
+        <p><a href="#" class="btn btn-primary o_translate_inline">Discover</a></p>
+    </xpath>
+    <!-- Column #3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="class" add="shadow" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Column #3 - Title -->
+    <xpath expr="(//div[hasclass('card-body')])[3]//h2" position="replace" mode="inner">
+        About me
+    </xpath>
+    <!-- Column #3 - Paragraph -->
+    <xpath expr="(//div[hasclass('card-body')])[3]//p" position="replace" mode="inner">
+        Formerly a corporate accountant, I started a professional transition 10 years ago.
+    </xpath>
+    <!-- Column #3 - Add a button -->
+    <xpath expr="(//div[hasclass('card-body')])[3]//p" position="after">
+        <p><a href="/contactus" class="btn btn-primary o_translate_inline">Contact me</a></p>
+    </xpath>
+</template>
+
+</odoo>

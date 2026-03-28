@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/12','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_bg_filter bg-black-50"/>
+        <div class="o_we_shape o_html_builder_Floats_12 o_we_animated"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-8')]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our Wedding Services
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Explore our exclusive wedding services designed to create unforgettable moments. From planning to execution, we ensure every detail is perfect for your special day.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Wedding Planning
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Venue &amp; Decor
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Full Wedding Planning Package
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        $5,000.00
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        Comprehensive wedding planning service including timeline creation, vendor coordination, and on-the-day management to ensure a seamless event.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Partial Wedding Planning
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        $3,000.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Tailored planning assistance for specific aspects of your wedding, including vendor selection and coordination of key elements of your day.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Day-Of Coordination
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        $1,500.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        On-the-day coordination to oversee and manage the wedding activities, ensuring everything runs smoothly according to the planned schedule.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        Elegant Venue Decoration
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        $2,500.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Sophisticated venue decoration service including floral arrangements, table settings, and thematic decor to create a stunning atmosphere for your wedding.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Custom Floral Arrangements
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        $1,200.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Bespoke floral arrangements designed to match your wedding theme, including bridal bouquets, centerpieces, and ceremony flowers.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Lighting &amp; Ambiance
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        $1,800.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Customized lighting solutions and ambiance settings to enhance the mood and atmosphere of your wedding venue, including fairy lights and chandeliers.
+    </xpath>
+</template>
+
+</odoo>

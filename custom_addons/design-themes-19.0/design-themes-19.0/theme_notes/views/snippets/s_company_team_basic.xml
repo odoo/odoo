@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_basic" inherit_id="website.s_company_team_basic">
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover our talented artists
+    </xpath>
+    <!-- Team #01 - Title -->
+    <xpath expr="//h3" position="replace" mode="inner">
+        Tony
+    </xpath>
+    <!-- Team #01 - Work Description -->
+    <xpath expr="//p[hasclass('o_small-fs')]" position="replace" mode="inner">
+        Lead Singer
+    </xpath>
+
+    <!-- Team #02 - Title -->
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Mich
+    </xpath>
+    <!-- Team #02 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[2]" position="replace" mode="inner">
+        Singer / Song Writer
+    </xpath>
+
+    <!-- Team #03 - Title -->
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Aline
+    </xpath>
+    <!-- Team #03 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[3]" position="replace" mode="inner">
+        Singer
+    </xpath>
+
+    <!-- Team #04 - Title -->
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Iris
+    </xpath>
+    <!-- Team #04 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[4]" position="replace" mode="inner">
+        Singer
+    </xpath>
+</template>
+
+</odoo>

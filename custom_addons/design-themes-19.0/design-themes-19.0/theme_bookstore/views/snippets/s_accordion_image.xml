@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_accordion_image" inherit_id="website.s_accordion_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2 pt56 pb56" add="o_cc1 pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Frequently Asked Questions
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Find quick answers to common questions about our books, services and policies.
+    </xpath>
+</template>
+
+</odoo>

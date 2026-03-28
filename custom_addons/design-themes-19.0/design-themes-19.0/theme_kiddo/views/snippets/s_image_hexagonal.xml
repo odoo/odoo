@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_hexagonal" inherit_id="website.s_image_hexagonal">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        A little place of paradise
+    </xpath>
+    <!-- Columns -->
+    <xpath expr="//div[hasclass('o_grid_item_image')]" position="attributes">
+        <attribute name="class" remove="g-col-lg-4 col-lg-4" add="g-col-lg-3 col-lg-3" separator=" "/>
+        <attribute name="style">grid-area: 3 / 2 / 12 / 5; z-index: 1;</attribute>
+    </xpath>
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.library_image_05/html_builder/composition/composition_mixed_1.svg</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_mixed_1</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_cover_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

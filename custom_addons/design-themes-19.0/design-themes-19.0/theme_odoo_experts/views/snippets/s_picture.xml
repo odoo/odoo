@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_picture" inherit_id="website.s_picture">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1 oe_img_bg" separator=" "/>
+        <attribute name="style">background-image: url('/web/image/website.s_picture_default_image_bg'); background-position: center;</attribute>
+    </xpath>
+    <!-- Filter -->
+    <xpath expr="//div[hasclass('o_container_small')]" position="before">
+        <div class="o_we_bg_filter bg-white-75"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace">
+        <h1 style="text-align: center;">
+            <font style="background-image: linear-gradient(135deg, var(--o-color-5) 0%, var(--o-color-1) 100%);" class="text-gradient">
+            Unleash your</font><br/>
+            <font style="background-image: linear-gradient(135deg, var(--o-color-5) 0%, var(--o-color-1) 100%);" class="text-gradient">growth potential</font>
+        </h1>
+    </xpath>
+    <!-- First paragraph -->
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        <br/>
+        Ask your questions and discuss your projects with our partners.<br/>
+        They are here to help you grow your business!
+    </xpath>
+    <!-- Add a button -->
+    <xpath expr="//p[1]" position="after">
+        <p style="text-align: center;">
+            <a t-att-href="cta_btn_href" class="btn btn-primary rounded-circle btn-lg o_translate_inline"><t t-out="cta_btn_text">Contact Us</t></a>
+        </p>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//div[hasclass('col-lg-12')]//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_picture_default_image/html_builder/devices/macbook_front.svg?c3=o-color-3</attribute>
+        <attribute name="data-shape">html_builder/devices/macbook_front</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_picture.svg</attribute>
+        <attribute name="data-shape-colors">;;o-color-3;;</attribute>
+        <attribute name="class">img-fluid</attribute>
+    </xpath>
+    <!-- Remove figcaption -->
+    <xpath expr="//figcaption" position="replace"/>
+</template>
+
+</odoo>

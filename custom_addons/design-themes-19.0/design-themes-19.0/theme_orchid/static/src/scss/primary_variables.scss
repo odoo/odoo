@@ -1,0 +1,110 @@
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-font-configs: (
+    'Heebo': (
+        'family': ('Heebo', sans-serif),
+        'url': 'Heebo:300,300i,400,400i,700,700i',
+    ),
+    'Rajdhani': (
+        'family': ('Rajdhani', sans-serif),
+        'url': 'Rajdhani:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Ubuntu': (
+        'family': ('Ubuntu', sans-serif),
+        'url': 'Ubuntu:300,300i,400,400i,700,700i',
+    ),
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:300,300i,400,400i,700,700i',
+    ),
+    'Questrial': (
+        'family': ('Questrial', sans-serif),
+        'url': 'Questrial:300,300i,400,400i,700,700i',
+    ),
+    'Mulish': (
+        'family': ('Mulish', sans-serif),
+        'url': 'Mulish:300,300i,400,400i,700,700i',
+    ),
+    'Cormorant Garamond': (
+        'family': ('Cormorant Garamond', serif),
+        'url': 'Cormorant+Garamond:300,300i,400,400i,700,700i',
+    ),
+    'Elsie': (
+        'family': ('Elsie', serif),
+        'url': 'Elsie:400,900',
+    ),
+    'DM Sans': (
+        'family': ('DM Sans', serif),
+        'url': 'DM+Sans:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'default-light-9',
+        'font': 'DM Sans',
+        'headings-font': 'Elsie',
+        'header-template': 'sales_four',
+        'footer-template': 'descriptive',
+    ),
+);
+
+$default-light-9: map-get($o-color-palettes, 'default-light-9');
+$default-light-9: map-merge($default-light-9, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-light-9': $default-light-9));
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'orchid-1',
+    2: 'orchid-2',
+    3: 'orchid-3',
+    4: 'orchid-4',
+    5: 'orchid-5',
+    6: 'orchid-6',
+    7: 'generic-1',
+    8: 'generic-2',
+    9: 'generic-3',
+    10: 'generic-4',
+    11: 'generic-5',
+    12: 'generic-6',
+    13: 'generic-7',
+    14: 'generic-8',
+    15: 'generic-9',
+    16: 'generic-10',
+    17: 'generic-11',
+    18: 'generic-12',
+    19: 'generic-13',
+    20: 'generic-14',
+    21: 'generic-15',
+    22: 'generic-16',
+    23: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/05', (1: 4, 5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/04', (5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/07', (3: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/22', (3: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/23', (3: 1));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/01_001', (3: 2));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/12', (2: 2, 5: 4));

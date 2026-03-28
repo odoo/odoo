@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers_boxed" inherit_id="website.s_numbers_boxed">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc5" separator=" "/>
+    </xpath>
+    <!-- Grid Item -->
+    <xpath expr="//div[hasclass('o_grid_item')][2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')][2]//h3" position="replace" mode="inner">
+        30+
+    </xpath>
+    <!-- Grid Item 2 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]//h3" position="replace" mode="inner">
+        45%
+    </xpath>
+    <!-- Grid Item 3 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]//h3" position="replace" mode="inner">
+        8+
+    </xpath>
+</template>
+
+</odoo>

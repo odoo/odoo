@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" add="img-thumbnail" separator=" "/>
+        <attribute name="style" add="padding: 20px !important;" separator=";"/>
+    </xpath>
+</template>
+
+</odoo>

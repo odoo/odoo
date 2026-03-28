@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_block" inherit_id="website.s_text_block">
+    <!-- Section/span -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc4 pb56 pt56" remove="pt40 pb40" separator=" "/>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We are <b>Odoo Travel Agency</b>, dedicated to making your vacation dreams come true! Overwhelmed with too many choices on the internet? We offer you answers, support, advice, and itineraries that will amaze you with their <b>thoroughness and thoughtfulness</b>.
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+            At <b>Odoo Travel Agency</b> our agents are more than a consultant, they are fellow <b>travelers with a passion</b> to help you explore the world. With more than 75 years combined experience you can be sure we are devoted to finding the best solutions for your travel plans.
+    </xpath>
+</template>
+
+</odoo>

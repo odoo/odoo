@@ -1,0 +1,219 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <template id="welcome_article_body">
+        <h1 style="margin-bottom: 0px;">Pharmacy Retail</h1>
+        <p style="margin-bottom: 0px;">This setup is for pharmacy retail companies that purchase and sell products. They maintain the stock lot wise and also manage the expiry of the lots.</p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">The company runs a B2C and B2B Business.</p>
+        <div data-embedded="tableOfContent"></div>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <h1 style="margin-bottom: 0px;">Configuration and Master Set up</h1>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <ul style="margin-bottom: 0px;">
+            <li>
+                <font style="color: rgb(255, 156, 0);"><strong>Company</strong></font>: two fields have been created in company form: "<font class="text-o-color-1">Drug License Numbe</font>r " and "
+                <font class="text-o-color-1">Drug License Date</font>". They will be used for every outgoing document.
+            </li>
+            <li>
+                <font style="color: rgb(255, 156, 0);"><strong>Manufacturer Name </strong>(OEM)</font>: new menu has been created "<font class="text-o-color-1">Manufacturers</font>" on <font class="text-o-color-1">Contacts</font> to
+                <font>handle Manufacturer specific information.</font>
+            </li>
+            <li>
+                <font style="color: rgb(255, 156, 0);"><strong>Medical Type, and Therapeutic Classification</strong></font>: Medical Type and Therapeutic Classification will be managed via Product Attribute. This will provide a way to categorize
+                and classify pharmaceutical products. 
+            </li>
+            <li>
+                <font style="color: rgb(255, 156, 0);"><strong>Product Tags</strong></font>: Generic Names (ingredient) will be managed via Tags. This will allow easier categorization and searching.
+            </li>
+            <li>
+                <font style="color: rgb(255, 156, 0);"><strong>Doctor</strong></font>: new menu has been created "<font class="text-o-color-1">Doctors</font>" on <font class="text-o-color-1">Contacts</font>. This model will
+                include a "<font class="text-o-color-1">Registration Number</font>", which is specific to doctors. This will help you keep track of doctor-related information in your system.
+            </li>
+            <li>
+                <font style="color: rgb(255, 156, 0);"><strong>Customer (B2B) / Vendor</strong></font> : "<font class="text-o-color-1">Drug License Number</font>" and "<font class="text-o-color-1">Drug License Date</font>" fields have been created
+                in contact form. This will ensure that the necessary information is collected from Customers/Vendors.
+            </li>
+        </ul>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <h1 style="margin-bottom: 0px;">Business Flows</h1>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <h2 style="margin-bottom: 0px;">Flow 1 : Purchase the Product and Manage Stock</h2>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">
+            ​To manage the stock lot number-wise and streamline the purchase order and receipt process for the pharmacy store, a software solution needs to be implemented. Here's an outline of the system's functionalities.
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">
+            <u><b>Purchase Order Management</b></u>
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <ul style="margin-bottom: 0px;">
+            <li>Through Purchase application and create Purchase Orders (POs) for specific product “<font class="text-o-color-1">Acetratine 10 mg</font>” from predefined vendors.</li>
+            <li>RFQs (Request for Quotations) are sent to vendors, and they respond with rates for each RFQ.</li>
+            <li>Confirm the order based on the received rates.</li>
+        </ul>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">
+            <b><u>Receipt Creation</u></b>
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">Once the order is confirmed, the system automatically generates a receipt against the purchase order.</p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;"><u>Lot Serial Number and Expiry Date Tracking</u></p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">When the material is received, the user can either scan the barcode or manually enter the Lot Number, Expiry Date and Quantity for "<font class="text-o-color-1">Acetratine 10 mg</font>” product received.</p>
+        <table class="table table-bordered o_table" style="width: 749.8px; margin-left: 0.2667px;">
+            <tbody>
+                <tr>
+                    <td style="width: 249.5px;">
+                        <p>Lot Number<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">Expiry Date<br/></td>
+                    <td style="width: 249.783px;">Qty</td>
+                </tr>
+                <tr>
+                    <td style="width: 249.767px;">
+                        <p>AC-001<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">
+                        <p>08/07/2024<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">
+                        <p>40<br/></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 249.767px;">
+                        <p>AC-002<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">
+                        <p>08/07/2024<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">60</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-bottom: 0px;">Validate the reception for all quantities at once.</p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">
+            <strong><u> Product Location Assignment</u></strong>
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">All products have predefined locations (Racks) “<font class="text-o-color-1">Rack 2</font>” for storage in the pharmacy store. This will be done with the help of Putaway Rule functionality.</p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <blockquote style="margin-bottom: 0px;" data-o-mail-quote-node="1" data-o-mail-quote="1">Putaway Rule : Defines a Warehouse Assignment Strategy for incoming stock<br/></blockquote>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">
+            Upon validation of the receipt, the system automatically sets the locations (Racks) for the particular products received. "<font class="text-o-color-1">Acetratine 10 mg</font>” product will be stored at "
+            <font class="text-o-color-1">WH/Stock/Rack 2</font>”.
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <h2 style="margin-bottom: 0px;">Flow 2: B2B Sales: Quotation &gt; Delivery &gt; Invoice</h2>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">
+            <strong><u>Sale Order with Discount</u></strong>
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <ul style="margin-bottom: 0px;">
+            <li>Go to the Sales module and create a new quotation.</li>
+            <li>Select the customer "<font class="text-o-color-1">Rite Care Pharmacy</font>."</li>
+            <li>Add the product <font class="text-o-color-1">"Acetratine 10 mg</font>" with a quantity of "<font class="text-o-color-1">100</font>".</li>
+        </ul>
+        <blockquote style="margin-bottom: 0px;" data-o-mail-quote-node="1" data-o-mail-quote="1">System will automatically apply the B2B discount of 7% by the Sales Price List "<font class="text-o-color-1">Wholesale (B2B)</font>".</blockquote>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;"><u>Confirm the Sales Order</u></p>
+        <p style="margin-bottom: 0px;">Once the quotation is ready, confirm it to convert it into a sales order.</p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;"><u>Create Delivery Order and Assign Lot Numbers</u></p>
+        <ul style="margin-bottom: 0px;">
+            <li>From the confirmed sales order, Open the respective Delivery Order.</li>
+            <li>In the delivery order, users can find line items for "<font class="text-o-color-1">Acetratine 10 mg</font>" with a quantity of "<font class="text-o-color-1">100</font>".</li>
+            <li>To assign lot numbers, click on the product line. In the pop-up, specify the lot number and the quantity against that lot number.</li>
+        </ul>
+        <table style="width: 749.667px; margin-left: 0.3333px;" class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td style="width: 249.433px;">
+                        <p>Lot Number<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">Expiry Date<br/></td>
+                    <td style="width: 249.783px;">Qty</td>
+                </tr>
+                <tr>
+                    <td style="width: 249.767px;">
+                        <p>AC-001<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">
+                        <p>08/07/2024<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">
+                        <p>40<br/></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 249.767px;">
+                        <p>AC-002<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">
+                        <p>08/07/2024<br/></p>
+                    </td>
+                    <td style="width: 249.783px;">60</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-bottom: 0px;"> </p>
+        <p style="margin-bottom: 0px;"><u>Confirm the Delivery Order</u></p>
+        <p style="margin-bottom: 0px;">Confirm the delivery order to reserve the products and mark them as ready for delivery.</p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;"><u>Create Invoice from Sales Order</u></p>
+        <p style="margin-bottom: 0px;">Once the delivery is validated, go back to the sales order and "Create Invoice".</p>
+        <p style="margin-bottom: 0px;">This will create an invoice based on the delivered products.</p>
+        <blockquote style="margin-bottom: 0px;" data-o-mail-quote-node="1" data-o-mail-quote="1">The invoice will consider the discounted price due to the applied B2B customer discount.</blockquote>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <h2 style="margin-bottom: 0px;">Flow 3: Sales B2C Customer : Point of Sale with Offers</h2>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;">
+            Some businesses run promotion programs for specific products.  Create the Point of Sale Order for the product "Himalaya Baby Powder 100 g", apply a "Buy 2 Get 1" promotion, and accept payments using different methods
+            like cash, bank, or customer accounts. Here's a step-by-step breakdown:
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;"><u>Adding Product and Promotion</u></p>
+        <ul style="margin-bottom: 0px;">
+            <li>Select the product "<font class="text-o-color-1">Himalaya Baby Powder 100 g</font>".</li>
+            <li>
+                System already has a Promotion program with the name "<font class="text-o-color-1">Buy 2 Get 1</font>".<br/>
+                <br/>
+            </li>
+        </ul>
+        <p style="margin-bottom: 0px;"><u>Processing a Sale</u></p>
+        <p style="margin-bottom: 0px;">
+            When a customer wants to purchase "<font class="text-o-color-1">Himalaya Baby Powder 100 g</font>," add "<font class="text-o-color-1">3</font>" quantity. When you select this product at that time, the system will fetch the
+            price from the product master and enter the Lot Number "<font class="text-o-color-1">A-003</font>".
+        </p>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;"><u>Applying the Promotion</u></p>
+        <p style="margin-bottom: 0px;">The POS system should automatically recognize the "<font class="text-o-color-1">Buy 2 Get 1</font>" promotion and adjust the total price accordingly. </p>
+        <blockquote style="margin-bottom: 0px;" data-o-mail-quote-node="1" data-o-mail-quote="1">The customer should only be charged for the 2 units, with the 3rd unit being free. </blockquote>
+        <p style="margin-bottom: 0px;"><br/></p>
+        <p style="margin-bottom: 0px;"><u>Selecting Payment Method</u></p>
+        <p style="margin-bottom: 0px;">Once the order total is calculated (<font class="text-o-color-1">$191.59</font>), select the payment method (<font class="text-o-color-1">Cash</font>).</p>
+        <p style="margin-bottom: 0px;">
+            While Processing the payment, the  customer gives  <font class="text-o-color-1">$200</font> as cash payment. Change amount as $8.41 gets automatically calculated.  Validate the Order and Print Receipt.
+        </p>
+        <blockquote style="margin-bottom: 0px;" data-o-mail-quote-node="1" data-o-mail-quote="1">You can use the following payment methods: Cash, Bank or Customer Account.<br/></blockquote>
+        <br/><br/>
+        <p><br/></p>
+    </template>
+    <record id="welcome_article" model="knowledge.article">
+        <field name="name">Pharmacy</field>
+        <field name="sequence">1</field>
+        <field name="cover_image_id" ref="knowledge_cover_2"/>
+        <field name="internal_permission">write</field>
+        <field name="is_locked" eval="True"/>
+        <field name="is_article_visible_by_everyone" eval="True"/>
+        <field name="icon">💊</field>
+        <field name="body">
+            <![CDATA[]]>
+        </field>
+    </record>
+</odoo>

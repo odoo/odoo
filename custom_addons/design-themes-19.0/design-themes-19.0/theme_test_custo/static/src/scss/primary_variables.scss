@@ -1,0 +1,71 @@
+// -------------------------------------------------------------------------- //
+// PRESETS
+// -------------------------------------------------------------------------- //
+
+$o-website-values-palettes: (
+    (
+        // Colors
+        'color-palettes-name': 'custom-theme',
+
+        // Fonts
+        'font': 'Source Sans Pro',
+        'headings-font': 'Poppins',
+
+        // Header
+        'header-template': 'custom-theme',
+        'logo-height': 4rem,
+
+        // Footer
+        'footer-template': 'custom-theme',
+    ),
+);
+
+// -------------------------------------------------------------------------- //
+// FONTS
+// -------------------------------------------------------------------------- //
+
+$o-theme-font-configs: (
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,400,400i,600',
+    ),
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:400,500',
+    ),
+);
+
+// -------------------------------------------------------------------------- //
+// COLORS
+// -------------------------------------------------------------------------- //
+
+$o-color-palettes: map-merge($o-color-palettes,
+    (
+        'custom-theme': (
+            'o-color-1': #BEDB39,
+            'o-color-2': #2C3E50,
+            'o-color-3': #ECF0F1,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #212529,
+
+            'menu': 1,
+            'footer': 3,
+            'copyright': 5,
+        ),
+    )
+);
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'custom-theme');
+
+// ------------------------------------------------------------------------------ //
+// SHAPES
+// ------------------------------------------------------------------------------ //
+
+$o-bg-shapes: map-merge($o-bg-shapes,
+    (
+        'theme_test_custo':(
+            'hexagons/01': ('position': center center, 'size': auto 100%, 'colors': (1), 'repeat-y': false),
+            'curves/01': ('position': center bottom, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
+        ),
+    )
+);

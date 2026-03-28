@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_framed_intro" inherit_id="website.s_framed_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Blobs/03','showOnMobile':true}</attribute>
+        <attribute name="class" add="o_cc5" remove="" separator=" "/>
+    </xpath>
+     <!-- Section Shape -->
+    <xpath expr="//section//div" position="before">
+        <div class="o_we_shape o_html_builder_Blobs_03 o_shape_show_mobile"/>
+    </xpath>
+    <!-- Subtitle -->
+    <xpath expr="//h1" position="before">
+        <p class="lead">Bloom with Joy:</p>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Fresh Flowers Delivered to Your Doorstep! Hello
+    </xpath>
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" add="display-2" remove="display-4"  separator=" "/>
+    </xpath>
+    <!-- CTA -->
+    <xpath expr="//a" position="before">
+        <a href="#" class="btn btn-lg btn-secondary o_translate_inline">See the Full Bloom</a>
+    </xpath>
+    <xpath expr="//a" position="replace" mode="inner">
+        About Us
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_three_columns_default_image_2</attribute>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Pamper Yourself
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        <br/>
+        Escape from everyday busy reality and treat your body with intensive care. Beauty and health go hand in hand. Take time to slow down in our relaxing spa, and everything you’re chasing will come around.
+    </xpath>
+    <xpath expr="//p[2]" position="replace"/>
+    <!-- Img -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/pattern/pattern_wave_4.svg?c1=o-color-1&amp;c2=o-color-2&amp;c3=o-color-3&amp;c5=o-color-1</attribute>
+        <attribute name="data-shape">html_builder/pattern/pattern_wave_4</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_text_image.svg</attribute>
+        <attribute name="data-shape-colors">o-color-1;o-color-2;o-color-3;;o-color-1</attribute>
+    </xpath>
+</template>
+
+</odoo>

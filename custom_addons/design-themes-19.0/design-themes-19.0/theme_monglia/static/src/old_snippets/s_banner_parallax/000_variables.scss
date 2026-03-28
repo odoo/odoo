@@ -1,0 +1,21 @@
+$s-banner-parallax-height: 100vh;
+$s-banner-parallax-padding: 15px;
+$s-banner-parallax-header-shadow: none;
+$s-banner-parallax-bg-position: none !important;
+$s-banner-parallax-h1-size: 50px;
+
+@mixin s-banner-parallax-hero-bg-hook {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+}
+@mixin s-banner-parallax-row-hook {
+    vertical-align: top;
+    padding: 0;
+}
+@mixin s-banner-parallax-height-hook {
+    @include media-breakpoint-down(md) {
+        height: 100vh !important;
+    }
+}

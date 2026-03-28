@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Item #1 - img -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_1/html_builder/composition/composition_line_2.svg?c1=o-color-1</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_line_2</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_1.svg</attribute>
+        <attribute name="data-shape-colors">o-color-1;;;;</attribute>
+    </xpath>
+    <!-- Item #2 - img -->
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_2/html_builder/composition/composition_line_3.svg?c1=o-color-1&amp;c2=o-color-2&amp;c5=o-color-3</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_line_3</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_2.svg</attribute>
+        <attribute name="data-shape-colors">o-color-1;o-color-2;;;o-color-3</attribute>
+    </xpath>
+    <!-- Item #3 - img -->
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_3/html_builder/composition/composition_line_2.svg?c2=o-color-2</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_line_2</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_3.svg</attribute>
+        <attribute name="data-shape-colors">;o-color-2;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

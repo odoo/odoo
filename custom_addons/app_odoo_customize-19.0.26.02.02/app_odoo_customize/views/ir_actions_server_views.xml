@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    改顺序-->
+    <record id="app_view_server_action_tree" model="ir.ui.view">
+        <field name="name">app.ir.actions.server.tree</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='usage']" position="after">
+                <field name="sequence"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="app_ir_server_action_form_view" model="ir.ui.view">
+        <field name="name">app.ir.actions.server.form</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='model_id']/.." position="inside">
+                <field name="sequence"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

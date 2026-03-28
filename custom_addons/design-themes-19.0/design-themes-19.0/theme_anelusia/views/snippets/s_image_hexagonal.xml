@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_hexagonal" inherit_id="website.s_image_hexagonal">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_grid_item')]" position="attributes">
+        <attribute name="class" add="o_snippet_mobile_invisible d-none d-lg-block" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="style" add="--grid-item-padding-x: 24px; --grid-item-padding-y: 24px;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]" position="attributes">
+        <attribute name="class" remove="o_snippet_mobile_invisible d-none d-lg-block" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+        <h1 class="display-4-fs">Unvail our <br/>Exclusive <br/>Collections</h1>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Discover timeless elegance and modern style with our exclusive fashion collections. Elevate your wardrobe with unique pieces crafted to make a statement.
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace"/>
+</template>
+
+</odoo>

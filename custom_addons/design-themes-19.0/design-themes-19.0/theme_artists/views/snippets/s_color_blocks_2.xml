@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Left column -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="pt208 pb208 text-center" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/27","flip":["x","y"]}</attribute>
+    </xpath>
+    <!-- Left column - Shape -->
+    <xpath expr="//div[hasclass('col-lg-6')]//h2" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_27 o_second_extra_shape_mapping" style="background-image: url('/html_editor/shape/html_builder/Wavy/27.svg?c1=o-color-5&amp;c2=o-color-5&amp;flip=xy'); background-position: 50% 50%;"/>
+    </xpath>
+    <!-- Left column - Button -->
+    <xpath expr="//div[hasclass('col-lg-6')]//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-secondary" remove="btn-primary" separator=" "/>
+    </xpath>
+    <!-- Right column -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]" position="attributes">
+        <attribute name="class" add="pt208 pb208 text-center" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/27","flip":[]}</attribute>
+    </xpath>
+    <!-- Right column - Shape -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]//h2" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_27"/>
+    </xpath>
+    <!-- Right column - Button -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-secondary" remove="btn-primary" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

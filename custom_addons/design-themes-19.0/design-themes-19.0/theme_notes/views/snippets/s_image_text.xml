@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc1" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/13','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//section/div" position="before">
+        <div class="o_we_shape o_html_builder_Bold_13" style="background-image: url('/html_editor/shape/html_builder/Bold/13.svg?c5=o-color-1');"/>
+    </xpath>
+    <!-- Text wrapper -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="offset-lg-2" remove="offset-lg-1" separator=" "/>
+    </xpath>
+    <!-- Title & Paragraph -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 3px; --text-highlight-color: var(--o-color-1);">Redefining modern rocks</span>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>
+    </xpath>
+    <xpath expr="//p[2]" position="replace">
+        <p>With electrifying performances and a sound that's both raw and innovative, they bring an energy that keeps fans captivated from start to finish.</p>
+        <p>Their music isn't just heard—it's felt, combining powerful melodies with deeply relatable lyrics. Each song connects on a personal level, while their unmatched musicianship drives every note forward.</p>
+    </xpath>
+    <!-- Img wrapper -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="col-lg-4" remove="col-lg-6" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

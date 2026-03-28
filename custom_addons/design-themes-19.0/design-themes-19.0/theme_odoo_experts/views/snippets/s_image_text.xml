@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64" remove="pt80 pb80" separator=" "/>
+    </xpath>
+
+    <!-- Title -->
+    <xpath expr="//h2" position="replace">
+        <h2>End-to-End  24/7 Customer Support</h2>
+    </xpath>
+
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace">
+        <p class="lead"><br/>From initial consultation to full implementation, we’re with you every step of the way, ensuring that all aspects of your business are optimized, giving you the tools and resources needed to achieve lasting results.</p>
+    </xpath>
+    <xpath expr="//p[2]" position="replace"/>
+
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" "/>
+    </xpath>
+
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_image_text_default_image/html_builder/devices/browser_03.svg?</attribute>
+        <attribute name="data-shape">html_builder/devices/browser_03</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_image_text.svg</attribute>
+        <attribute name="class" add="shadow" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+</odoo>

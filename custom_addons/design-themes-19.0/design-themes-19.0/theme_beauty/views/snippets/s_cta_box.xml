@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover our large<br/>choice of cosmetics !
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Find the perfect products to express your beauty!<br/><br/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/theme_beauty/static/src/img/snippets/library_image_16.webp</attribute>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Shop now
+    </xpath>
+</template>
+
+</odoo>

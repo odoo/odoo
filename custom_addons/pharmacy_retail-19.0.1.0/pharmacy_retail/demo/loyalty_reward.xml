@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="loyalty_reward_pharma_1" model="loyalty.reward">
+        <field name="program_id" ref="loyalty_program_pharma_1"/>
+        <field name="reward_type">product</field>
+        <field name="required_points">2.00</field>
+        <field name="reward_product_id" ref="product_product_19"/>
+    </record>
+    <record id="loyalty_reward_pharma_2" model="loyalty.reward">
+        <field name="program_id" ref="loyalty_program_pharma_2"/>
+        <field name="discount">2.00</field>
+        <field name="required_points">200.00</field>
+    </record>
+    <record id="loyalty_reward_pharma_3" model="loyalty.reward">
+        <field name="program_id" ref="loyalty_program_pharma_3"/>
+        <field name="discount">10.00</field>
+        <field name="required_points">1.00</field>
+    </record>
+</odoo>

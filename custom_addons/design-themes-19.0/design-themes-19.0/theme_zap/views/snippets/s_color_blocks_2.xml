@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Column #01 -->
+    <xpath expr="//*[hasclass('row')]/*[1]" position="attributes">
+        <attribute name="class" add="pt96 pb96" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Cloud <b>Solution</b>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Keep your files in one place. <br/>Manage documents online with an easy to use interface. <br/>Rely on an highly secure cloud storage.</p>
+        <p><br/></p>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//*[hasclass('row')]/*[2]" position="replace">
+        <div class="col-lg-6 oe_img_bg o_bg_img_center" style="background-image: url('/web/image/website.library_image_08');">
+            <br/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

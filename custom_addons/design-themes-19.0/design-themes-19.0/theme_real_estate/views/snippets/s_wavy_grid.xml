@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/26','colors':{'c5':'o-color-4'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Bold_26" style="background-image: url('/html_editor/shape/html_builder/Bold/26.svg?c5=o-color-4');"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we offer to our clients
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Tailored Property Solutions
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We provide personalized real estate services to match your unique needs. Our team works with you to find the perfect property and guide you through every step of the process.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Sustainable Living Options
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your satisfaction and sustainability are our goals. Our experienced agents are always available to assist, ensuring you find eco-friendly properties that meet your needs.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Expertise
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With extensive market knowledge and industry experience, we offer insights and services that help you make informed decisions and secure the best deals.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Innovation and Service
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We utilize the latest technology and innovative approaches to enhance your property search. Our dedicated team ensures a seamless experience from start to finish.
+    </xpath>
+</template>
+
+</odoo>

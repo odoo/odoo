@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_empowerment" inherit_id="website.s_empowerment">
+    <!-- Badge content -->
+    <xpath expr="//span[hasclass('s_cta_badge')]" position="replace" mode="inner">
+        <i class="fa fa-fw fa-info-circle o_not-animable" role="img"/>&#160;&#160;Trusted expertise&#160;&#160;&#160;&#160;
+        <a href="#">Read client testimonials&#160;&#160; <i class="fa fa-long-arrow-right" role="img"/></a>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+       Navigating legal complexities<br/>with Cornerstone Law Group
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Providing reliable legal solutions tailored to your needs.<br/><br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')][1]" position="replace" mode="inner">
+        Our services
+    </xpath>
+    <!-- Second Button -->
+    <xpath expr="//a[hasclass('btn')][2]" position="replace" mode="inner">
+        Book an appointment
+    </xpath>
+</template>
+
+</odoo>

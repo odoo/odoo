@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_basic" inherit_id="website.s_company_team_basic">
+    <!-- Team #01 - Title -->
+    <xpath expr="//h3" position="replace" mode="inner">
+        Tony Fred
+    </xpath>
+    <!-- Team #01 - Work Description -->
+    <xpath expr="//p[hasclass('o_small-fs')]" position="replace" mode="inner">
+        Editor-in-chief
+    </xpath>
+    <!-- Team #01 - Img -->
+    <xpath expr="(//img)[1]" position="attributes">
+        <attribute name="class" remove="rounded-circle" separator=" "/>
+        <attribute name="src">/html_editor/image_shape/website.s_company_team_image_1/html_builder/geometric/geo_square_6.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_6</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">uiface_1.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+
+    <!-- Team #02 - Title -->
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Mich Stark
+    </xpath>
+    <!-- Team #02 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[2]" position="replace" mode="inner">
+        Sports Reporter
+    </xpath>
+    <!-- Team #02 - Img -->
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" remove="rounded-circle" separator=" "/>
+        <attribute name="src">/html_editor/image_shape/website.s_company_team_image_2/html_builder/geometric/geo_square_4.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_4</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">uiface_2.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+
+    <!-- Team #03 - Title -->
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Aline Turner
+    </xpath>
+    <!-- Team #03 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[3]" position="replace" mode="inner">
+        Photograph
+    </xpath>
+    <!-- Team #03 - Img -->
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="class" remove="rounded-circle" separator=" "/>
+        <attribute name="src">/html_editor/image_shape/website.s_company_team_image_3/html_builder/geometric/geo_square_3.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_3</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">uiface_3.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+
+    <!-- Team #04 - Title -->
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Iris Joe
+    </xpath>
+    <!-- Team #04 - Work Description -->
+    <xpath expr="(//p[hasclass('o_small-fs')])[4]" position="replace" mode="inner">
+        Political Reporter
+    </xpath>
+    <!-- Team #04 - Img -->
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="class" remove="rounded-circle" separator=" "/>
+        <attribute name="src">/html_editor/image_shape/website.s_company_team_image_4/html_builder/geometric/geo_square_5.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_5</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">uiface_4.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+
+</template>
+
+</odoo>

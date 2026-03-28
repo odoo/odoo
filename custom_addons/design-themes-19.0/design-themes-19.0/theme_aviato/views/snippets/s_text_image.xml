@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we can do, <b>for you</b>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        Our team travels widely the globe to bring our clients first-hand knowledge of upcoming destinations, new "hot" hotels and ships, local restaurants, neighborhood hangouts, bars, pubs, the best. beaches and places to visit and not to see.
+    </xpath>
+    <xpath expr="//p[2]" position="replace">
+        <p><br/></p>
+    </xpath>
+    <xpath expr="//p[3]" position="replace"/>
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('row')]/div" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-5" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]" position="attributes">
+        <attribute name="class" add="col-lg-5" remove="col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_aviato/s_text_image.svg?c1=o-color-1</attribute>
+    </xpath>
+</template>
+
+</odoo>

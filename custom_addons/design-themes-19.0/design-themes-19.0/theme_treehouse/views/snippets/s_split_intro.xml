@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Protect our<br/>natural world
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Join us in making a positive impact on the environment. We offer solutions and initiatives that promote sustainability and conservation, from reducing waste to supporting green practices. Together, we can create a healthier planet and ensure a thriving future for generations to come.<br/><br/>
+    </xpath>
+</template>
+
+</odoo>

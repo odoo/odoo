@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt16 pb56 o_cc3" remove="pt32 pb32 o_cc2" separator=" "/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//*[hasclass('s_card')]" position="attributes">
+        <attribute name="style" add="--card-img-aspect-ratio: 132%" separator=";"/>
+    </xpath>
+    <xpath expr="//figure" position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="o_card_img_ratio_custom" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Paris
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Paris' monument-lined boulevards, museums, classical bistros and boutiques are enhanced by a new wave of multimedia galleries, creative wine bars..
+    </xpath>
+    <xpath expr="//p" position="after">
+        <a href="#" class="btn btn-primary">Book now</a>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="(//*[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="style" add="--card-img-aspect-ratio: 132%" separator=";"/>
+    </xpath>
+    <xpath expr="(//figure)[2]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="o_card_img_ratio_custom" separator=" "/>
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Rome
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        A heady mix of haunting ruins, awe-inspiring art and vibrant street life, Italy’s hot-blooded capital is one of the world’s most romantic and charismatic cities.
+    </xpath>
+    <xpath expr="(//p)[2]" position="after">
+        <a href="#" class="btn btn-primary">Book now</a>
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="(//*[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="style" add="--card-img-aspect-ratio: 132%" separator=";"/>
+    </xpath>
+    <xpath expr="(//figure)[3]"  position="attributes">
+        <attribute name="class" remove="ratio-16x9" add="o_card_img_ratio_custom" separator=" "/>
+    </xpath>
+    <xpath expr="(//h2)[3]" position="replace" mode="inner">
+        Prague
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        Prague is the equal of Paris in terms of beauty. Its history goes back a millennium. And the beer? The best in Europe. Prague is the perfect city to walk around.
+    </xpath>
+    <xpath expr="(//p)[3]" position="after">
+        <a href="#" class="btn btn-primary">Book now</a>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Curated Collections
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Personalized Recommendations
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Book Events
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        Explore handpicked books that cater to all interests, offering a carefully selected range of genres and authors.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our knowledgeable staff provides tailored book suggestions, helping you discover new favorites that match your taste.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Join us for author signings, readings, and special events that connect you with the literary community.
+    </xpath>
+</template>
+
+</odoo>

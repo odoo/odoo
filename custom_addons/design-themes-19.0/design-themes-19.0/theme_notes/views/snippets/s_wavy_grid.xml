@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Wavy/10','colors':{'c1':'o-color-1','c2':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Wavy_10" style="background-image: url('/html_editor/shape/html_builder/Wavy/10.svg?c1=o-color-1&amp;c2=o-color-1');"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we bring to our guests
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Unforgettable Moments
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We craft exceptional events and activities designed to create lasting memories. Our team ensures a thrilling and immersive experience from beginning to end.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Eco-Friendly Fun
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your enjoyment and our planet’s health are top priorities. Our friendly staff is here to support you, making sure your festival experience is enjoyable and sustainable.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Excellence and Excitement
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With extensive expertise and a commitment to high standards, we offer top-notch performances and attractions that keep you entertained and engaged.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Creativity and Engagement
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We introduce innovative concepts and interactive elements to our events. Embracing the latest trends, we ensure every activity is fun and captivating for all guests.
+    </xpath>
+</template>
+
+</odoo>

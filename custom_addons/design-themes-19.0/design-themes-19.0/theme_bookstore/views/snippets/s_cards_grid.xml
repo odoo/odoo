@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cards_grid" inherit_id="website.s_cards_grid">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover Your Next Great Read
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="(//div[hasclass('s_card')])[1]" position="attributes">
+        <attribute name="class" add="flex-lg-row-reverse" remove="flex-lg-row" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[1]//img" position="attributes">
+        <attribute name="class" add="rounded-end" remove="rounded-start" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Boundless
+    </xpath>
+    <xpath expr="(//p)[1]" position="replace" mode="inner">
+        Dive into a gripping adventure exploring the limits of human potential and the quest for freedom. Follow a protagonist who breaks barriers and discovers new horizons in a thrilling journey.
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//div[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="class" add="flex-lg-row-reverse" remove="flex-lg-row" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[2]//img" position="attributes">
+        <attribute name="class" add="rounded-end" remove="rounded-start" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Romans
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Immerse yourself in the grandeur and intrigue of ancient Rome through richly detailed storytelling. Experience the intricate lives and societal dynamics of one of history's most fascinating civilizations.
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//div[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="class" add="flex-lg-row-reverse" remove="flex-lg-row" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[3]//img" position="attributes">
+        <attribute name="class" add="rounded-end" remove="rounded-start" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Change the Way You Think
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        Transform your perspective with practical strategies and insights designed to shift your mindset and enhance your life. Discover how changing your way of thinking can lead to profound personal growth.
+    </xpath>
+    <!-- Card 4 -->
+    <xpath expr="(//div[hasclass('s_card')])[4]" position="attributes">
+        <attribute name="class" add="flex-lg-row-reverse" remove="flex-lg-row" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[4]//img" position="attributes">
+        <attribute name="class" add="rounded-end" remove="rounded-start" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        What I Didn't Post on Social Media
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        Explore the untold stories and hidden truths behind social media profiles. This eye-opening book reveals the realities behind online personas and the contrast with what remains unshared.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="configurator_s_kickoff" inherit_id="website.configurator_s_kickoff">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="oe_img_bg" remove="parallax s_parallax_is_fixed" separator=" "/>
+        <attribute name="style" add="background-image: url('/web/image/website.s_kickoff_default_image'); background-position: 100% 100%;" separator=";"/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/06','colors':{'c5':'o-color-3'},'showOnMobile':true}</attribute>
+    </xpath>
+
+    <!-- Refine shape's colors -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="style">background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-3');</attribute>
+    </xpath>
+
+    <!-- Remove the parallax effect: the background image has been already set in the main <section> tag -->
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Text -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Bloom with Joy:
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        Fresh Flowers Delivered to Your Doorstep!
+    </xpath>
+</template>
+
+</odoo>

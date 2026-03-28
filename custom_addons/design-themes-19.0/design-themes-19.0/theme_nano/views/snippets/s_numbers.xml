@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers" inherit_id="website.s_numbers">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-5')]" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-2')]" position="replace">
+        <div class="col-lg-4 pt24 pb24">
+            <p class="lead" style="text-align: center;">
+                <span class="s_number display-1-fs">50+</span><br/>
+                <span class="h5-fs">Happy customers</span>
+            </p>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')]" position="replace">
+        <div class="col-lg-4 pt24 pb24" style="box-shadow: var(--o-border-color) 1px 0px 0px 0px inset !important;">
+            <p class="lead" style="text-align: center;">
+                <span class="s_number display-1-fs">40h</span><br/>
+                <span class="h5-fs">Average shipping time</span>
+            </p>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')]" position="replace">
+        <div class="col-lg-4 pt24 pb24" style="box-shadow: var(--o-border-color) 1px 0px 0px 0px inset !important;">
+            <p class="lead" style="text-align: center;">
+                <span class="s_number display-1-fs">4.5</span><br/>
+                <span class="h5-fs">Review Rate</span>
+            </p>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

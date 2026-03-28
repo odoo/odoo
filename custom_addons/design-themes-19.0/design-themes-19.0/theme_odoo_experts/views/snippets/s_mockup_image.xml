@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mockup_image" inherit_id="website.s_mockup_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+        <attribute name="class" add="pt64 pb64" remove="pt72 pb72" separator=" "/>
+    </xpath>
+    <!-- Remove shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-4')]" position="replace">
+        <div class="col-lg-5 pt16 pb16">
+            <h1>
+                Unlock the
+                <span class="o_text_highlight o_translate_inline o_text_highlight_circle_1" style="--text-highlight-color: var(--o-color-1); --text-highlight-width: 6px;"><span class="o_text_highlight_item">growth</span></span>
+                of your business
+            </h1>
+            <p>With over 15 years of proven success, we deliver expert guidance and strategic insights for your business’s future.</p>
+            <p><br/></p>
+            <a t-att-href="cta_btn_href" class="btn btn-primary btn-lg"><t t-esc="cta_btn_text">Learn more</t></a>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-8')]" position="attributes">
+        <attribute name="class" add="col-lg-6 offset-lg-1" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_image_text_device_perspective/html_builder/devices/iphone_3d_portrait_02.svg?c5=o-color-5</attribute>
+        <attribute name="data-shape">html_builder/devices/iphone_3d_portrait_02</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_image_text_device_perspective.svg</attribute>
+        <attribute name="data-shape-colors">;;;;o-color-5</attribute>
+        <attribute name="style" add="width: 50% !important;" separator=";"/>
+        <attribute name="class" add="mx-auto" remove="ms-auto" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

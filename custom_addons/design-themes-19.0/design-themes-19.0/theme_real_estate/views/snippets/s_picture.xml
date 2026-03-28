@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_picture" inherit_id="website.s_picture">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Open your horizons
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        We’ve selected properties from all types and all areas.<br/>
+        The house of your dreams is around the corner.
+    </xpath>
+    <!-- Caption -->
+    <xpath expr="//figcaption" position="replace">
+        <figcaption class="figure-caption text-muted py-3">Property on the coasts of the Mediterranean.</figcaption>
+    </xpath>
+</template>
+
+</odoo>

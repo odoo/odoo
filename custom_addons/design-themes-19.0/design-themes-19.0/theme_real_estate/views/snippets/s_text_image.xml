@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Are you thinking of selling?
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        Make an appointment for a free valuation of your property. We visit the property, advise you on a realistic asking price and we explain our way of working. <br/>
+        You can decide in all freedom whether or not you would like to work with us for the sale of your property.
+    </xpath>
+    <!-- Paragraph 2 -->
+    <xpath expr="//p[2]" position="replace" />
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/panel/panel_duo_step.svg</attribute>
+        <attribute name="data-shape">html_builder/panel/panel_duo_step</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_text_image.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/12','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Floats_12 o_we_animated"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we create for your special day
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Custom Wedding Plans
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We design personalized wedding experiences tailored to your unique vision. Our team works with you to ensure every detail is perfect, from planning to the final celebration.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Elegant and Sustainable
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your dream wedding and eco-friendly practices are our priorities. Our dedicated team ensures a stylish and environmentally-conscious celebration that reflects your values.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Service
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With extensive experience and a passion for perfection, we provide exceptional service and quality, making sure your wedding day is as beautiful and seamless as you envisioned.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Creativity and Excellence
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We offer innovative ideas and exquisite designs for your celebration. Using the latest trends, we create a memorable and breathtaking event that exceeds your expectations.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_top" inherit_id="website.s_striped_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        <font class="text-o-color-2">ESTATE®.</font> Your Easy Home Search, All in One
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        With a simple click, finding your dream home has never been easier. Explore your future with ease and confidence.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="attributes">
+        <attribute name="class" remove="btn-primary" add="btn-secondary btn-lg" separator=" "/>
+    </xpath>
+    <xpath expr="//a" position="replace" mode="inner">
+        Search Now
+    </xpath>
+</template>
+
+</odoo>

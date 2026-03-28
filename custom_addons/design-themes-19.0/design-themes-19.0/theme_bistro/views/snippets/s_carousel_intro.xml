@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_intro" inherit_id="website.s_carousel_intro">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Savor the flavors of our bistro
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Culinary delights crafted just for you
+    </xpath>
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Discover your favorite dish
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Indulge in fresh, flavorful dishes with our menu that brings a taste of comfort and gourmet excellence, every time.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Elevate your dining experience with our unique recipes.
+    </xpath>
+    <xpath expr="(//p[hasclass('lead')])[3]" position="replace" mode="inner">
+        Explore more and find your favorite flavors crafted with passion, designed to delight your palate and satisfy your cravings.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64" remove="pt32 pb32" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/01","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_01"/>
+    </xpath>
+    <!-- Row 1 -->
+    <xpath expr="(//div[hasclass('row')])[2]" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_body')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_3/html_builder/geometric_round/geo_round_blob_medium.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric_round/geo_round_blob_medium</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_3.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+        <!-- Row 2 -->
+    <xpath expr="(//div[hasclass('row')])[3]" position="attributes">
+        <attribute name="class" add="flex-row-reverse" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_2/html_builder/geometric_round/geo_round_blob_medium.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric_round/geo_round_blob_medium</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_2.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Row 3 -->
+    <xpath expr="(//div[hasclass('row')])[4]" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[3]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_media_list_default_image_1/html_builder/geometric_round/geo_round_blob_medium.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric_round/geo_round_blob_medium</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_1.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Text 1 -->
+    <xpath expr="//h3" position="replace" mode="inner">
+        Comfort &amp; Ease
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We only use original parts or parts of equivalent quality. ​We make sure you get the best quality available on the market at the best price. All our interventions are guaranteed for a period of one year.
+    </xpath>
+    <!-- Text 2 -->
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Fitting design
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        We only use original parts or parts of equivalent quality. ​We make sure you get the best quality available on the market at the best price. All our interventions are guaranteed for a period of one year.
+    </xpath>
+    <!-- Text 3 -->
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Natural control
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        Use this snippet to build various types of components that feature a left- or right-aligned image alongside textual content. Duplicate the element to create a list that fits your needs.
+    </xpath>
+</template>
+
+</odoo>

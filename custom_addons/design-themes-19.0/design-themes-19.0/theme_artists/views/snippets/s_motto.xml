@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_motto" inherit_id="website.s_motto">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+</template>
+
+</odoo>

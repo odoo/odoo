@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc4" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Airy/14_001","colors":{"c5":"rgba(0,0,0,0.25)"},"flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Airy_14_001" style="background-image: url('/html_editor/shape/html_builder/Airy/14_001.svg?c5=rgba(0,0,0,0.25)');"/>
+    </xpath>
+    <!-- Feature #01 - Icon -->
+    <xpath expr="//i" position="attributes">
+        <attribute name="class" add="bg-o-color-5" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+    <!-- Feature #02 - Icon -->
+    <xpath expr="(//i)[2]" position="attributes">
+        <attribute name="class" add="bg-o-color-5" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+    <!-- Feature #03 - Icon -->
+    <xpath expr="(//i)[3]" position="attributes">
+        <attribute name="class" add="bg-o-color-5" remove="bg-o-color-3" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

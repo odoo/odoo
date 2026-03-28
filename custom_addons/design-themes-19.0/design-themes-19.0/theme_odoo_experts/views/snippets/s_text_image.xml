@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64" remove="pt80 pb80" separator=" "/>
+    </xpath>
+
+    <!-- Title -->
+    <xpath expr="//h2" position="replace">
+        <h2>Expert Guidance for Long-Term Success</h2>
+    </xpath>
+
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace">
+        <p class="lead"><br/>Our team provides the expertise and strategic insight needed to help your business thrive in a competitive landscape. We create tailored solutions that foster sustainable growth and long-term success.</p>
+    </xpath>
+    <xpath expr="//p[2]" position="replace"/>
+
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-primary" remove="btn-secondary" separator=" "/>
+    </xpath>
+
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/devices/ipad_front_landscape.svg</attribute>
+        <attribute name="data-shape">html_builder/devices/ipad_front_landscape</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_text_image.svg</attribute>
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

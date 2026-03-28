@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_popup" inherit_id="website.s_popup">
+    <!-- Modal -->
+    <xpath expr="//*[hasclass('modal-content')]" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <!-- Jumbotron -->
+    <xpath expr="//*[hasclass('jumbotron')]" position="attributes">
+        <attribute name="class" add="rounded col-lg-8 offset-lg-2" remove="col-lg-10 offset-lg-1" separator=" "/>
+    </xpath>
+    <!-- Close Button -->
+    <xpath expr="//*[hasclass('s_popup_close')]" position="attributes">
+        <attribute name="style" add="border-radius: 0 4px 0 4px" separator=";"/>
+    </xpath>
+</template>
+
+</odoo>

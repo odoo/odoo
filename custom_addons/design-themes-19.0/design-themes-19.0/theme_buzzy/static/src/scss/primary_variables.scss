@@ -1,0 +1,129 @@
+//------------------------------------------------------------------------------
+// Presets
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name':              'default-24',
+
+        // Header
+        'logo-height':                      2.75rem,
+        'fixed-logo-height':                2rem,
+
+        // Font
+        'font':                             'Montserrat',
+        'headings-font':                    'Quicksand',
+
+        // Buttons
+        'btn-padding-x':                    1rem,
+        'btn-padding-y-sm':                 .3rem,
+        'btn-padding-x-sm':                 .75rem,
+        'btn-padding-y-lg':                 1.25rem,
+        'btn-padding-x-lg':                 2.5rem,
+        'btn-border-radius':                10rem,
+        'btn-border-radius-sm':             10rem,
+        'btn-border-radius-lg':             10rem,
+        'btn-ripple':                       true,
+
+        // Footer
+        'footer-template':                  'headline',
+        'footer-effect':                    'slideout_slide_hover',
+        'footer-scrolltop':                 true,
+    ),
+);
+
+$default-24: map-get($o-color-palettes, 'default-24');
+$default-24: map-merge($default-24, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-24': $default-24));
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+
+$o-theme-font-configs: (
+
+    'Abel': (
+        'family': ('Abel', sans-serif),
+        'url': 'Abel:300,300i,400,400i,700,700i',
+        'properties' : (
+            'base': (
+                'font-size-base':           (18 / 16) * 1rem,
+                'header-font-size':         (18 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Dosis': (
+        'family': ('Dosis', sans-serif),
+        'url': 'Dosis:300,300i,400,400i,700,700i',
+        'properties' : (
+            'base': (
+                'font-size-base':           (18 / 16) * 1rem,
+                'header-font-size':         (18 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Karla': (
+        'family': ('Karla', sans-serif),
+        'url': 'Karla:300,300i,400,400i,700,700i',
+    ),
+    'Laila': (
+        'family': ('Laila', serif),
+        'url': 'Laila:300,300i,400,400i,600,600i',
+    ),
+    'Lato': (
+        'family': ('Lato', sans-serif),
+        'url': 'Lato:300,300i,400,400i,700,700i',
+    ),
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:300,300i,400,400i,600,600i',
+        'properties': (
+            'base': (
+                'header-font-size':         (14 / 16) * 1rem,
+                'font-size-base':           (14 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Montserrat': (
+        'family': ('Montserrat', serif),
+        'url': 'Montserrat:300,300i,400,400i,600,600i',
+        'properties': (
+            'base': (
+                'font-size-base':           (14 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Quicksand': (
+        'family': ('Quicksand', sans-serif),
+        'url': 'Quicksand:300,400,600',
+    ),
+);
+
+// Headings
+
+$o-theme-h4-font-size-multiplier:           1.75;
+$o-theme-h5-font-size-multiplier:           1.5;
+
+$o-theme-headings-font-weight:              600;
+
+// Texts
+
+$o-theme-font-size-lg-multiplier:           1.25;
+$o-theme-font-size-sm-multiplier:           .875;
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/02_001', (4: 2, 5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Rainy/08_001', (1: 4, 4: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/11', (1: 5, 4: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/03_001', (5: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Zigs/02_001', (2: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/13_001', (1: 1, 4: 2));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Wavy/11', 'second', (1: 4, 4: 4));

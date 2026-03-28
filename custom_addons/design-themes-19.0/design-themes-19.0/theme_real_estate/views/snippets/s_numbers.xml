@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers" inherit_id="website.s_numbers">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt32 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//span[hasclass('h5-fs')]" position="replace" mode="inner">
+        properties already sold
+    </xpath>
+    <xpath expr="//span[hasclass('s_number')]" position="replace" mode="inner">
+        14K
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="(//span[hasclass('s_number')])[2]" position="replace" mode="inner">
+        98%
+    </xpath>
+    <xpath expr="(//span[hasclass('h5-fs')])[2]" position="replace" mode="inner">
+        happy customers
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="(//span[hasclass('s_number')])[3]" position="replace" mode="inner">
+        142
+    </xpath>
+    <xpath expr="(//span[hasclass('h5-fs')])[3]" position="replace" mode="inner">
+        amazing agents
+    </xpath>
+</template>
+
+</odoo>

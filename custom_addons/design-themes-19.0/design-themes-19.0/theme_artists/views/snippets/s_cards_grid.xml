@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cards_grid" inherit_id="website.s_cards_grid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc2" separator=" "/>
+    </xpath>
+
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Distinctive Creations: Art That Speaks
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="(//div[hasclass('s_card')])[1]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Unique Creative Vision
+    </xpath>
+    <xpath expr="(//p)[1]" position="replace" mode="inner">
+        My art is a reflection of a distinctive vision, blending contemporary techniques with personal storytelling to create pieces that captivate and inspire.
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//div[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Original and Handcrafted Works
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Each piece is a one-of-a-kind creation, meticulously handcrafted to convey emotion, thought, and imagination in every brushstroke or sculpted form.
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//div[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Bold Use of Color and Texture
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        My work is known for its vibrant colors and dynamic textures, pushing the boundaries of conventional art forms to evoke a strong emotional response.
+    </xpath>
+    <!-- Card 4 -->
+    <xpath expr="(//div[hasclass('s_card')])[4]" position="attributes">
+        <attribute name="class" add="border" separator=" "/>
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Personalized Art Commissions
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        I offer bespoke art commissions, collaborating closely with clients to create custom pieces that resonate deeply with their personal stories and spaces.
+    </xpath>
+
+</template>
+
+</odoo>

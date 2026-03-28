@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<asset id="theme_graphene.s_showcase_slider_000_variables_scss" name="Showcase slider 000 variables SCSS" active="False">
+    <field name="key">theme_graphene.s_showcase_slider_000_variables_scss</field>
+    <bundle>web._assets_primary_variables</bundle>
+    <path>theme_graphene/static/src/old_snippets/s_showcase_slider/000_variables.scss</path>
+</asset>
+
+<asset id="theme_graphene.primary_variables_scss" name="Primary variables SCSS">
+    <field name="key">theme_graphene.primary_variables_scss</field>
+    <bundle directive="append">web._assets_primary_variables</bundle>
+    <path>theme_graphene/static/src/scss/primary_variables.scss</path>
+</asset>
+
+<asset id="theme_graphene.secondary_variables_scss" name="Secondary variables SCSS">
+    <field name="key">theme_graphene.secondary_variables_scss</field>
+    <bundle>web._assets_secondary_variables</bundle>
+    <path>theme_graphene/static/src/scss/secondary_variables.scss</path>
+</asset>
+
+<asset id="theme_graphene.bootstrap_overridden_scss" name="Bootstrap overridden SCSS">
+    <field name="key">theme_graphene.bootstrap_overridden_scss</field>
+    <bundle directive="prepend">web._assets_frontend_helpers</bundle>
+    <path>theme_graphene/static/src/scss/bootstrap_overridden.scss</path>
+</asset>
+
+</odoo>

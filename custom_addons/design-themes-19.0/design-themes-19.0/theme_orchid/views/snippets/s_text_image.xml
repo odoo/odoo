@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Row -->
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="class" add="align-items-stretch" remove="align-items-center" separator=" "/>
+    </xpath>
+    <!-- Text wrapper -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="col-lg-4 px-5 o_cc o_cc5 rounded pt56 pb56" remove="col-lg-5 pt16 pb16" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our Mission
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>
+        Deliver flowers to live up to your dedication for your loved ones.
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        To do so, we collaborate with local producers who care about the environment and cultivate their flowers with love.
+    </xpath>
+    <!-- Img wrapper -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="col-lg-7" remove="col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Img -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/solid/solid_blob_shadow_2.svg?c2=o-color-2</attribute>
+        <attribute name="data-shape">html_builder/solid/solid_blob_shadow_2</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_media_list_3.svg</attribute>
+        <attribute name="data-shape-colors">;o-color-2;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

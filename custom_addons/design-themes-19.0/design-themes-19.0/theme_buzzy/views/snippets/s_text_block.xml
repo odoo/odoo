@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_block" inherit_id="website.s_text_block">
+    <!-- Container -->
+    <xpath expr="//div[hasclass('container')]" position="attributes">
+        <attribute name="class" add="o_container_small" remove="container" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

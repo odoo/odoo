@@ -1,0 +1,22 @@
+$s-banner-parallax-text-color: white;
+@mixin s-banner-parallax-row-hook {
+    .hero-bg:before {
+        border-top: 0px solid rgba(0, 0, 0, 0);
+    }
+    .hero-bg:after {
+        border-top: 0px solid rgba(0, 0, 0, 0);
+    }
+}
+@mixin s-banner-parallax-hero-bg-hook {
+    margin-top: 200px;
+    width: auto;
+    float: right;
+    margin-right: 50px;
+    text-align: right;
+    @media screen and (max-width: 640px) { // FIXME
+        margin-top: 50px;
+        text-align: center;
+        width: 100%;
+        float: none;
+    }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt48 pb48" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="attributes">
+        <attribute name="class" add="container-fluid" remove="container" separator=" "/>
+    </xpath>
+    <!-- Image + Shape -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_image_text_default_image/html_builder/composition/composition_planet_2.svg</attribute>
+        <attribute name="data-file-name">s_image_text.svg</attribute>
+        <attribute name="data-shape">html_builder/composition/composition_planet_2</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//*[hasclass('row')]/*[2]" position="attributes">
+        <attribute name="class" add="pt48 pb32" remove="pt16 pb16" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

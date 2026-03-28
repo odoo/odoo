@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cards_grid" inherit_id="website.s_cards_grid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/5','flip':[],'showOnMobile':false,'animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_05 o_we_animated"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Caring for Your Child's Growth and Happiness
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Nurturing Early Learning
+    </xpath>
+    <xpath expr="(//p)[1]" position="replace" mode="inner">
+        We provide a safe and engaging environment where children can explore, learn, and grow. Our programs are designed to foster creativity, curiosity, and a love for learning from an early age.
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Professional and Caring Staff
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Our team of trained caregivers and educators is dedicated to providing personalized attention and care. We focus on creating a warm and supportive atmosphere where every child feels valued and understood.
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Fun and Educational Activities
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        We offer a range of activities that combine fun with learning, from creative arts and crafts to outdoor play and interactive storytelling, ensuring every child enjoys a balanced and enriching day.
+    </xpath>
+    <!-- Card 4 -->
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Safe and Secure Environment
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        Our facilities are designed with your child’s safety in mind. With secure premises, child-friendly spaces, and vigilant supervision, we provide peace of mind for parents and a joyful experience for children.
+    </xpath>
+</template>
+
+</odoo>

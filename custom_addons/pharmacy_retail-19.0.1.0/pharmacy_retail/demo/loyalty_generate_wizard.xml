@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="generate_coupon" model="loyalty.generate.wizard">
+        <field name="program_id" ref="loyalty_program_pharma_3"/>
+        <field name="coupon_qty">10</field>
+    </record>
+
+    <function model="loyalty.generate.wizard" name="generate_coupons">
+        <value eval="[ref('generate_coupon')]"/>
+    </function>
+</odoo>

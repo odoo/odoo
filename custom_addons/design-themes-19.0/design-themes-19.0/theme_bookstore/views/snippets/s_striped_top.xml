@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_top" inherit_id="website.s_striped_top">
+    <!-- Title -->
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" add="h2-fs" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        Where Every Book Lover Finds Delight
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Take a look at our recommendations
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_media_list_default_image_1</attribute>
+    </xpath>
+</template>
+
+</odoo>

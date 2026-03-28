@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references_grid" inherit_id="website.s_references_grid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Row -->
+    <xpath expr="//div[hasclass('o_grid_mode')]" position="attributes">
+        <attribute name="style">row-gap: 64px;</attribute>
+    </xpath>
+    <!-- Title & Lead -->
+    <xpath expr="//div[hasclass('o_grid_mode')]/div[1]" position="attributes">
+        <attribute name="class" add="g-height-2" remove="g-height-4" separator=" "/>
+        <attribute name="style">grid-area: 2 / 1 / 4 / 6; z-index: 1;</attribute>
+    </xpath>
+    <!-- Set images to contain -->
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[1]" position="attributes">
+        <attribute name="class" add="o_grid_item_image_contain" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[2]" position="attributes">
+        <attribute name="class" add="o_grid_item_image_contain" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[3]" position="attributes">
+        <attribute name="class" add="o_grid_item_image_contain" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[4]" position="attributes">
+        <attribute name="class" add="o_grid_item_image_contain" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[5]" position="attributes">
+        <attribute name="class" add="o_grid_item_image_contain" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[6]" position="attributes">
+        <attribute name="class" add="o_grid_item_image_contain" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

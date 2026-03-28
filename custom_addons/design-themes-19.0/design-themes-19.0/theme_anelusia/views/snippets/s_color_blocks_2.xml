@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Column #1 -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="col-lg-4 o_cc3 text-center" remove="col-lg-6 o_cc4" separator=" "/>
+    </xpath>
+    <!-- Column #1 - Icon -->
+    <xpath expr="//h2" position="before">
+        <i class="fa fa-5x m-3 fa-venus"/>
+    </xpath>
+    <!-- Column #1 - Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Fashion for her
+    </xpath>
+    <!-- Column #1 - Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Refresh your daily rotation with our women’s clothing range. Discover our last collection for her for the next summer.
+    </xpath>
+    <!-- Column #1 - Button -->
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-lg" separator=" "/>
+    </xpath>
+
+    <!-- Column #2 -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="o_cc4 col-lg-4 text-center" remove="o_cc5 col-lg-6" separator=" "/>
+    </xpath>
+    <!-- Column #2 - Icon -->
+    <xpath expr="(//h2)[2]" position="before">
+        <i class="fa fa-5x m-3 fa-mars"/>
+    </xpath>
+    <!-- Column #2 - Title -->
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Style for him
+    </xpath>
+    <!-- Column #2 - Paragraph -->
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Perfectly combined by fashion experts. Get fresh outfit ideas for the new season and every occasion. Discover what's made for him.
+    </xpath>
+    <!-- Column #2 - Button -->
+    <xpath expr="(//a[hasclass('btn')])[2]" position="attributes">
+        <attribute name="class" add="btn-lg" separator=" "/>
+    </xpath>
+
+    <!-- Add a 3rd column -->
+    <xpath expr="(//div[hasclass('col-lg-4')])[2]" position="after">
+        <div class="col-lg-4 o_cc o_cc5 text-center">
+            <i class="fa fa-venus-mars fa-5x m-3"/>
+            <h2 class="h3-fs">Fancy for them</h2>
+            <p>Are you looking for sustainable clothing for men or women? Discover our exclusive fashion brand for both of you.</p>
+            <a href="#" class="btn btn-primary btn-lg">More Details</a>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

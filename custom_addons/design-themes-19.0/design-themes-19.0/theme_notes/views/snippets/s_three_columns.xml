@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4 pt80 pb120" remove="o_cc2 pt32 pb32" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('row')]/." position="before">
+        <div class="col-lg-12">
+            <h2 style="text-align: center;">
+                <span class="o_text_highlight o_text_highlight_underline o_translate_inline" style="--text-highlight-width: 4px; --text-highlight-color: var(--o-color-4);">Upcoming concerts</span>
+            </h2>
+            <p>
+                <br/>
+            </p>
+        </div>
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="//div[hasclass('s_card')]" position="attributes">
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_card')]//h2" position="replace">
+        <h2 class="card-title h4-fs">Belgium Tour</h2>
+    </xpath>
+    <xpath expr="//div[hasclass('s_card')]//p" position="replace">
+        <p class="o_small_fs">24th AUGUST</p>
+        <p>Discover the new album live.</p>
+        <p>
+            <br/>
+        </p>
+        <p>
+            <a class="btn btn-primary o_translate_inline" href="#">Get your tickets</a>
+        </p>
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//div[hasclass('s_card')])[2]" position="attributes">
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[2]//img" position="attributes">
+        <attribute name="src">/web/image/website.s_carousel_default_image_2</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[2]//h2" position="replace">
+        <h2 class="card-title h4-fs">Barcelona Night</h2>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[2]//p" position="replace">
+        <p class="o_small_fs">27th AUGUST</p>
+        <p>Get up close with the artists.</p>
+        <p>
+            <br/>
+        </p>
+        <p>
+            <a class="btn btn-primary o_translate_inline" href="#">Get your tickets</a>
+        </p>
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//div[hasclass('s_card')])[3]" position="attributes">
+        <attribute name="style" add="border-width: 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[3]//h2" position="replace">
+        <h2 class="card-title h4-fs">Amsterdam Tour</h2>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_card')])[3]//p" position="replace">
+        <p class="o_small_fs">9th SEPTEMBER</p>
+        <p>Tour Grand Final.</p>
+        <p><br/></p>
+        <p>
+            <a class="btn btn-primary o_translate_inline" href="#">Get your tickets</a>
+        </p>
+    </xpath>
+</template>
+
+</odoo>

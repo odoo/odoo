@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_title" inherit_id="website.s_title">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt120 pb120 o_cc o_cc4" remove="pt40 pb40" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Airy/07_001','colors':{'c5':'rgba(255,255,255,0.25)'},'showOnMobile':true}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Airy_07_001" style="background-image: url('/html_editor/shape/html_builder/Airy/07_001.svg?c5=rgba(255,255,255,0.25)');"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Where every house becomes a home.
+    </xpath>
+</template>
+
+</odoo>

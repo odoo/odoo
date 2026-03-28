@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" add="o_cc o_cc3" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/01','colors':{'c1':'o-color-1','c2':'o-color-1','c3':'o-color-1','c4':'o-color-1','c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_01 o_we_animated" style="background-image: url('/html_editor/shape/html_builder/Floats/01.svg?c1=o-color-1&amp;c2=o-color-1&amp;c3=o-color-1&amp;c4=o-color-1&amp;c5=o-color-1');"/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our VR Services
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Explore our cutting-edge virtual reality solutions designed to enhance user experiences and transform digital interactions.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;VR Development
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;VR Consulting
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Custom VR Application Development
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        Starting at $10,000
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        Tailored VR applications developed to meet your specific needs, featuring interactive environments and immersive experiences.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        VR Experience Design
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        Starting at $8,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Creative design of VR experiences, including storyboarding, 3D modeling, and user interaction to captivate and engage your audience.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        VR Consulting Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        Starting at $2,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        Expert advice on implementing VR technology, including feasibility studies, strategy development, and technology recommendations.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        VR Hardware Setup
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        Starting at $1,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Installation and configuration of VR hardware, ensuring optimal performance and compatibility with your VR applications.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        VR Training and Workshops
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        Starting at $1,200
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Hands-on training and workshops to equip your team with the skills needed to effectively use and manage VR technology.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        VR Content Creation
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        Starting at $4,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Creation of high-quality VR content, including 360-degree videos, animations, and interactive elements to enhance user engagement.
+    </xpath>
+</template>
+
+</odoo>

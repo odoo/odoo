@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" add="o_cc o_cc4" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/01_001','colors':{'c5':'o-color-2'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_01_001" style="background-image: url('/html_editor/shape/html_builder/Bold/01_001.svg?c5=o-color-2');"/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our Corporate Services
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Enhance your business operations with our comprehensive suite of professional services, tailored to meet your corporate needs.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Consulting Services
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Technology Solutions
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Business Strategy Consulting
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        Starting at $2,500
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        Expert advice on business planning, market analysis, and competitive strategy to help your company achieve its goals.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Financial Advisory Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        Starting at $3,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Comprehensive financial planning, including risk assessment, investment strategy, and tax optimization for your business.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Human Resources Management
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        Starting at $1,800
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        Customized HR solutions, including talent acquisition, employee training, and performance management to boost productivity.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        IT Support Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        Starting at $2,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Reliable IT support, network management, and cybersecurity solutions to safeguard your business operations and data integrity.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Cloud Computing Solutions
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        Starting at $2,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Scalable cloud services to enhance your business’s flexibility and data accessibility, supporting remote work and collaboration.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Digital Marketing Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        Starting at $1,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Strategic online marketing, SEO optimization, and social media management to boost your brand visibility and customer engagement.
+    </xpath>
+</template>
+
+</odoo>

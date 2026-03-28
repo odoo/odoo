@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_sidegrid" inherit_id="website.s_sidegrid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Wavy/22_001','colors':{'c5':'o-color-2'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_22_001" style="background-image: url('/html_editor/shape/html_builder/Wavy/22_001.svg?c5=o-color-2');"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Protect <br/>the planet <br/>for future generations
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        <br/>
+        Every step we take towards sustainability is a commitment to preserving nature's beauty and resources, for today and tomorrow.
+    </xpath>
+</template>
+
+</odoo>

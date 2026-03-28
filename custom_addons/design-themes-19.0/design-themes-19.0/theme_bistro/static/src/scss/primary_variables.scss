@@ -1,0 +1,203 @@
+//------------------------------------------------------------------------------//
+// Presets
+//------------------------------------------------------------------------------//
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name':              'default-22',
+
+        // Header
+        'header-template':                  'vertical',
+        'hamburger-position':               'right',
+        'logo-height':                      3rem,
+        'fixed-logo-height':                2rem,
+        'header-links-style':               'pills',
+
+        // Font
+        'font':                             'Poppins',
+
+        // Buttons
+        'btn-padding-y':                    .5rem,
+        'btn-padding-x':                    1.35rem,
+        'btn-padding-y-sm':                 .3rem,
+        'btn-padding-x-sm':                 .9rem,
+        'btn-padding-y-lg':                 .6rem,
+        'btn-padding-x-lg':                 1.8rem,
+        'btn-border-radius':                10rem,
+        'btn-border-radius-sm':             10rem,
+        'btn-border-radius-lg':             10rem,
+        'btn-ripple':                       true,
+
+        'input-padding-y':                  .45rem,
+        'input-padding-y-sm':               .3rem,
+        'input-padding-y-lg':               .6rem,
+
+        // Footer
+        'footer-template':                  'default',
+        'footer-effect':                    'slideout_slide_hover',
+        'footer-scrolltop':                 true,
+    ),
+);
+
+$default-22: map-get($o-color-palettes, 'default-22');
+$default-22: map-merge($default-22, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-22': $default-22));
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-font-configs: (
+    'Abel': (
+        'family': ('Abel', sans-serif),
+        'url': 'Abel:300,300i,400,400i,700,700i',
+        'properties' : (
+            'base': (
+                'font-size-base':           (18 / 16) * 1rem,
+                'header-font-size':         (18 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Dosis': (
+        'family': ('Dosis', sans-serif),
+        'url': 'Dosis:300,300i,400,400i,700,700i',
+        'properties' : (
+            'base': (
+                'font-size-base':           (18 / 16) * 1rem,
+                'header-font-size':         (18 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Karla': (
+        'family': ('Karla', sans-serif),
+        'url': 'Karla:300,300i,400,400i,700,700i',
+    ),
+    'Laila': (
+        'family': ('Laila', serif),
+        'url': 'Laila:300,300i,400,400i,600,600i',
+    ),
+    'Lato': (
+        'family': ('Lato', sans-serif),
+        'url': 'Lato:300,300i,400,400i,700,700i',
+    ),
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:300,300i,400,400i,600,600i',
+        'properties': (
+            'base': (
+                'header-font-size':         (15 / 16) * 1rem,
+                'font-size-base':           (15 / 16) * 1rem,
+            ),
+        )
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+);
+
+// Headings
+
+$o-theme-h4-font-size-multiplier:           1.75;
+$o-theme-h5-font-size-multiplier:           1.5;
+$o-theme-h6-font-size-multiplier:           1.25;
+
+$o-theme-headings-font-weight:              400;
+
+// Texts
+
+$o-theme-font-size-lg-multiplier:           1.25;
+$o-theme-font-size-sm-multiplier:           .875;
+
+$o-theme-font-weight-light:                 300;
+$o-theme-font-weight-normal:                400;
+$o-theme-font-weight-bold:                  700;
+
+// Buttons
+
+$o-theme-btn-font-weight:                   400;
+
+//------------------------------------------------------------------------------//
+// Colors
+//------------------------------------------------------------------------------//
+
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'bistro-1': (
+            'alpha':                        #68b581,
+            'beta':                         #00a388,
+            'gamma':                        #046380,
+            'delta':                        #4bb5c1,
+            'epsilon':                      #beeb9f,
+        ),
+        'bistro-2': (
+            'alpha':                        #a3cc52,
+            'beta':                         #cc4452,
+            'gamma':                        #8e3557,
+            'delta':                        #f7f2b2,
+            'epsilon':                      #4a1a2c,
+        ),
+        'bistro-3': (
+            'alpha':                        #eebf3e,
+            'beta':                         #e2ad3b,
+            'gamma':                        #bf5c00,
+            'delta':                        #77c4d3,
+            'epsilon':                      #901811,
+        ),
+        'bistro-4': (
+            'alpha':                        #0092b2,
+            'beta':                         #046380,
+            'gamma':                        #a8c545,
+            'delta':                        #fff6c5,
+            'epsilon':                      #ffd55c,
+        ),
+        'bistro-5': (
+            'alpha':                        #dd7e43,
+            'beta':                         #d45c45,
+            'gamma':                        #911146,
+            'delta':                        #9cc264,
+            'epsilon':                      #306e73,
+        ),
+        'bistro-6': (
+            'alpha':                        #b7ca79,
+            'beta':                         #677e52,
+            'gamma':                        #b0cc99,
+            'delta':                        #89725b,
+            'epsilon':                      #f6e8b1,
+        ),
+    )
+);
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'bistro-1',
+    2: 'bistro-2',
+    3: 'bistro-3',
+    4: 'bistro-4',
+    5: 'bistro-5',
+    6: 'bistro-6',
+    7: 'generic-1',
+    8: 'generic-2',
+    9: 'generic-3',
+    10: 'generic-4',
+    11: 'generic-5',
+    12: 'generic-6',
+    13: 'generic-7',
+    14: 'generic-8',
+    15: 'generic-9',
+    16: 'generic-10',
+    17: 'generic-11',
+    18: 'generic-12',
+    19: 'generic-13',
+    20: 'generic-14',
+    21: 'generic-15',
+    22: 'generic-16',
+    23: 'generic-17',
+);
+
+//------------------------------------------------------------------------------//
+// Shapes
+//------------------------------------------------------------------------------//
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/04_001', (3: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/09_001', (3: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Zigs/06', (5: rgba(0,0,0,0)));

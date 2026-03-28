@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Column #01 -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        A Call for Environmental Protection
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>
+        Environmental protection is the practice of safeguarding the natural world from harmful human activities and preserving ecosystems for future generations. It involves efforts to reduce pollution, conserve biodiversity, and sustainably manage natural resources such as air, water, and soil.
+        <br/>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//div[hasclass('row')]/*[2]" position="replace">
+        <div class="col-lg-6 p-0">
+            <img src="/web/image/website.s_text_image_default_image" class="img-fluid w-100 h-100" style="object-fit: cover;" alt=""/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

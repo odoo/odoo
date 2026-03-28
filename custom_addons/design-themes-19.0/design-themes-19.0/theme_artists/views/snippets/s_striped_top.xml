@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_top" inherit_id="website.s_striped_top">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20','colors':{'c5': 'o-color-1'},'flip':[], 'showOnMobile':true}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="style">background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-1');</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" add="h2-fs" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        Exploring Art's Masterpieces: A Journey to the Best Creations
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Color trends are already waiting to spring into action for the next summer.
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_media_list_default_image_1</attribute>
+    </xpath>
+</template>
+
+</odoo>

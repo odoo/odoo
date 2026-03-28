@@ -1,0 +1,104 @@
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+$o-theme-h5-font-size-multiplier: (14 / 12);
+
+$o-theme-font-configs: (
+    'Playfair Display': (
+        'family': ('Playfair Display', script),
+        'url': 'Playfair+Display:400,400i,500,500i,600,600i,700,700i,800,800i',
+
+    ),
+    'Bodoni Moda': (
+        'family': ('Bodoni Moda', script),
+        'url': 'Bodoni+Moda:400,400i,600,600i,800,800i',
+    ),
+    'Petit Formal Script': (
+        'family': ('Petit Formal Script', cursive),
+        'url': 'Petit+Formal+Script',
+    ),
+    'Dancing Script': (
+        'family': ('Dancing Script', cursive),
+        'url': 'Dancing+Script:400,600,700',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Lato': (
+        'family': ('Lato', sans-serif),
+        'url': 'Lato:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans': (
+        'family': ('Open Sans', sans-serif),
+        'url': 'Open+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Quicksand': (
+        'family': ('Quicksand', sans-serif),
+        'url': 'Quicksand:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Default Values Override
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name':              'yes-3',
+        'font':                             'Quicksand',
+        'headings-font':                    'Playfair Display',
+        'footer-template':                  'descriptive',
+        'btn-padding-y-lg':                 .5rem,
+        'btn-padding-x-lg':                 2rem,
+        'btn-border-radius':                0,
+        'btn-border-radius-sm':             0,
+        'btn-border-radius-lg':             0,
+        'btn-ripple':                       true,
+    ),
+);
+
+$yes-3: map-get($o-color-palettes, 'yes-3');
+$yes-3: map-merge($yes-3, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('yes-3': $yes-3));
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'yes-3');
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'yes-1',
+    2: 'yes-2',
+    3: 'yes-3',
+    4: 'yes-4',
+    5: 'generic-1',
+    6: 'generic-2',
+    7: 'generic-3',
+    8: 'generic-4',
+    9: 'generic-5',
+    10: 'generic-6',
+    11: 'generic-7',
+    12: 'generic-8',
+    13: 'generic-9',
+    14: 'generic-10',
+    15: 'generic-11',
+    16: 'generic-12',
+    17: 'generic-13',
+    18: 'generic-14',
+    19: 'generic-15',
+    20: 'generic-16',
+    21: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Bootstrap Overrides
+//------------------------------------------------------------------------------
+$carousel-indicator-width:  10px;
+$border-radius:             4px;
+
+//-----------------------------------------------------------------------------
+// Shapes
+//-----------------------------------------------------------------------------
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Origins/14_001', 'second', (3:1, 4:2));

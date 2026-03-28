@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="//h2" position="attributes">
+        <attribute name="class" add="display-4" remove="display-3" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        <h5>Personalized Itineraries</h5>
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        <h5>24/7 Travel Support</h5>
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        <h5>Exclusive Experiences</h5>
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We craft custom travel plans that suit your interests and needs, ensuring every trip is unique and unforgettable.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our dedicated team is here to assist you at any time, from the moment you book until you return home safely.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Gain access to curated experiences and hidden gems that go beyond the usual tourist paths, making your journey truly special.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt40 pb48 o_cc o_cc5" remove="pt64 pb64" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/12"}</attribute>
+    </xpath>
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_12"/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace" mode="inner">
+        Intuitive
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/p" position="replace" mode="inner">
+        We create easy-to-use products.
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//div[hasclass('row')]/div[2]/div/h3" position="replace" mode="inner">
+        Adaptable
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/p" position="replace" mode="inner">
+        We build modular solutions.
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="//div[hasclass('row')]/div[3]/div/h3" position="replace" mode="inner">
+        Durable
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/p" position="replace" mode="inner">
+        We craft long-lasting goods.
+    </xpath>
+</template>
+
+</odoo>

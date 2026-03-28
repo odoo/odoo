@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+<template id="s_unveil" inherit_id="website.s_unveil">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover Your Next Favorite Book
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Explore our vast collection and find your next great read.
+    </xpath>
+    <!-- Images -->
+    <xpath expr="(//img)[1]" position="attributes">
+        <attribute name="src">/web/image/website.s_unveil_bookstore_1</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_unveil_bookstore_2</attribute>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/web/image/website.s_unveil_bookstore_3</attribute>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="src">/web/image/website.s_unveil_bookstore_4</attribute>
+    </xpath>
+    <xpath expr="(//img)[5]" position="attributes">
+        <attribute name="src">/web/image/website.s_unveil_bookstore_5</attribute>
+    </xpath>
+</template>
+
+</odoo>

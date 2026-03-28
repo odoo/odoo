@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_sidegrid" inherit_id="website.s_sidegrid">
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_text_image_default_image</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_banner_default_image_2</attribute>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/web/image/website.s_banner_default_image</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Experience the real travel experience
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Traveling lets you explore new cultures and places while discovering more about yourself. It's a chance to connect with others and create lasting memories.
+    </xpath>
+</template>
+
+</odoo>

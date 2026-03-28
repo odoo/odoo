@@ -1,0 +1,165 @@
+// Theme colors - compatibility
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'vehicle-1': (
+            'alpha': #ffffff,
+            'beta': #add3ce,
+            'gamma': #a7c7d5,
+            'delta': #47464b,
+            'epsilon': #f3997b,
+        ),
+        'vehicle-2': (
+            'alpha': #f8f1d4,
+            'beta': #5b4645,
+            'gamma': #ffffff,
+            'delta': #21263a,
+            'epsilon': #8f8747,
+        ),
+        'vehicle-3': (
+            'alpha': #dedede,
+            'beta': #adadad,
+            'gamma': #ffffff,
+            'delta': #3e3e3e,
+            'epsilon': #848f47,
+        ),
+        'vehicle-4': (
+            'alpha': #cfcfcf,
+            'beta': #2e2e2e,
+            'gamma': #ffffff,
+            'delta': #000000,
+            'epsilon': #1ad68f,
+        ),
+        'vehicle-5': (
+            'alpha': #9fcae2,
+            'beta': #bbc05c,
+            'gamma': #ffffff,
+            'delta': #112625,
+            'epsilon': #45b08c,
+        ),
+        'vehicle-6': (
+            'alpha': #fdeacc,
+            'beta': #e8cda2,
+            'gamma': #ffffff,
+            'delta': #3e3f43,
+            'epsilon': #e1444d,
+        ),
+    )
+);
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+
+$o-theme-h1-font-size-multiplier: (50 / 16);
+$o-theme-h2-font-size-multiplier: (38 / 16);
+$o-theme-h3-font-size-multiplier: (24 / 16);
+$o-theme-h4-font-size-multiplier: (20 / 16);
+$o-theme-h5-font-size-multiplier: (18 / 16);
+
+$o-theme-headings-font-weight: 600;
+
+$o-theme-font-configs: (
+    'Oswald': (
+        'family': ('Oswald', sans-serif),
+        'url': 'Oswald:300,300i,400,400i,700,700i',
+    ),
+    'Inter': (
+        'family': ('Inter', sans-serif),
+        'url': 'Inter:300,300i,,400,400i,700,700i',
+    ),
+    'Droid Sans': (
+        'family': ('Droid Sans', sans-serif),
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Amatic SC': (
+        'family': ('Amatic SC', cursive),
+        'url': 'Amatic+SC:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans Condensed': (
+        'family': ('Open Sans Condensed', sans-serif),
+        'url': 'Open+Sans+Condensed:300,300i,400,400i,700,700i',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'vehicle-1',
+
+        'font': 'Inter',
+        'headings-font': 'Oswald',
+        'navbar-font': 'Inter',
+
+        'buttons-font': 'Inter',
+        'btn-secondary-outline': true,
+
+        'btn-border-width': 2px,
+        'btn-border-radius': 1px,
+        'btn-border-radius-sm': 0,
+        'btn-border-radius-lg': 1px,
+        'btn-padding-x': 1.25rem,
+        'btn-padding-y': .474rem,
+        'btn-padding-x-lg': 1.8rem,
+        'btn-padding-y-lg': .6rem,
+        'btn-font-size': 1.2rem,
+
+        'header-links-style': 'border-bottom',
+        'footer-template': 'minimalist',
+    ),
+);
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'vehicle-1');
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'vehicle-1',
+    2: 'vehicle-2',
+    3: 'generic-1',
+    4: 'generic-2',
+    5: 'generic-3',
+    6: 'generic-4',
+    7: 'generic-5',
+    8: 'generic-6',
+    9: 'generic-7',
+    10: 'generic-8',
+    11: 'generic-9',
+    12: 'generic-10',
+    13: 'generic-11',
+    14: 'generic-12',
+    15: 'generic-13',
+    16: 'generic-14',
+    17: 'generic-15',
+    18: 'generic-16',
+    19: 'generic-17',
+);
+
+$o-theme-color-palettes-compatibility-indexes: (
+    1: 'vehicle-1',
+    2: 'vehicle-2',
+    3: 'vehicle-3',
+    4: 'vehicle-4',
+    5: 'vehicle-5',
+    6: 'vehicle-6',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/09', (1: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/18', (1: 1));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/05', (1: 1));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Rainy/09_001', (1: 1));

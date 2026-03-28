@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_framed_intro" inherit_id="website.s_framed_intro">
+    <!-- Image -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="style" add="border-radius: 8px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

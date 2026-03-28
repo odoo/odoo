@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Row #1 - Title & paragraph -->
+    <xpath expr="//div[hasclass('s_media_list_body')]//h3" position="replace" mode="inner">
+        Construction site
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_body')]//p" position="replace" mode="inner">
+        Our mastery of construction techniques has been built up over time through our close collaboration with the workers and our sustained presence on the construction sites.
+    </xpath>
+    <!-- Row #2 - Title & paragraph -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]//h3" position="replace" mode="inner">
+        Nature friendly
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]//p" position="replace" mode="inner">
+        Our creations integrate and are in perfect harmony with their environment.
+    </xpath>
+    <!-- Row #3 - Title & paragraph -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//h3" position="replace" mode="inner">
+        Know our clients.
+    </xpath>
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//p" position="replace" mode="inner">
+        We always start by exploring our clients goals, priorities, lifestyle, and tastes.
+    </xpath>
+</template>
+
+</odoo>

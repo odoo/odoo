@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features_wall" inherit_id="website.s_features_wall">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/02"}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Floats_02 o_we_animated"/>
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')]//h3" position="replace" mode="inner">
+        Immersive VR Experiences
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')]//p" position="replace" mode="inner">
+        Dive into captivating virtual worlds with our state-of-the-art VR technology, offering unparalleled immersion and interactive adventures.
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')][4]//h3" position="replace" mode="inner">
+        Custom VR Solutions
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')][4]//p" position="replace" mode="inner">
+        Tailor virtual reality applications to meet your specific needs, whether for gaming, training, or business applications.
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="//div[hasclass('g-col-lg-3')][6]//h3" position="replace" mode="inner">
+        Cutting-Edge VR Equipment
+    </xpath>
+    <xpath expr="//div[hasclass('g-col-lg-3')][6]//p" position="replace" mode="inner">
+        Equip yourself with the latest in VR hardware and accessories, ensuring top performance and an exceptional user experience.
+    </xpath>
+</template>
+
+</odoo>

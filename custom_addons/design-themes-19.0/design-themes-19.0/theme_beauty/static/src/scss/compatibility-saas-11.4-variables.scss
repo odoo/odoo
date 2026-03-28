@@ -1,0 +1,37 @@
+$s-banner-3-carousel-height: 500px;
+$s-banner-3-padding: 30px;
+$s-banner-3-h1-size: 50px;
+$s-banner-3-h2-size: 30px;
+
+@mixin s-banner-3-row-hook {
+    background-color: rgba(0, 0, 0, 0);
+    height: auto;
+
+    img {
+        display: none;
+    }
+}
+@mixin s-banner-3-col-center-hook {
+    text-align: left;
+    width: 400px;
+    height: auto;
+    padding-bottom: 10px;
+    margin-top: 100px;
+    background-color: rgba(255, 255, 255, 1);
+    float: right;
+    @media screen and (max-width: 640px) { // FIXME
+        background-color: rgba(255, 255, 255, .5);
+        text-align: center !important;
+        width: auto;
+        margin-top: 0;
+    }
+    h1 {
+        @include media-breakpoint-down(md) {
+            font-size: 40px !important;
+            margin-top: 0;
+        }
+    }
+    h2 {
+        font-size: 30px;
+    }
+}

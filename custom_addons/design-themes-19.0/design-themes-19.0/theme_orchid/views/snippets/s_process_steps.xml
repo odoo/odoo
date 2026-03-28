@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+<template id="configurator_s_process_steps" inherit_id="website.configurator_s_process_steps">
+    <!-- Section Colors -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" separator=" "/>
+    </xpath>
+
+    <!-- Steps 1 -->
+    <xpath expr="//div[hasclass('s_process_step_number')]" position="attributes">
+        <attribute name="class" add="bg-o-color-2" remove="bg-primary-light" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_process_step_number')]//h3" position="attributes">
+        <attribute name="class" remove="text-primary" add="text-o-color-5" separator=" "/>
+    </xpath>
+
+    <!-- Steps 2 -->
+    <xpath expr="(//div[hasclass('s_process_step_number')])[2]" position="attributes">
+        <attribute name="class" add="bg-o-color-2" remove="bg-primary-light" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_process_step_number')]//h3)[2]" position="attributes">
+        <attribute name="class" remove="text-primary" add="text-o-color-5" separator=" "/>
+    </xpath>
+
+    <!-- Steps 3 -->
+    <xpath expr="(//div[hasclass('s_process_step_number')])[3]" position="attributes">
+        <attribute name="class" add="bg-o-color-2" remove="bg-primary-light" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_process_step_number')]//h3)[3]" position="attributes">
+        <attribute name="class" remove="text-primary" add="text-o-color-5" separator=" "/>
+    </xpath>
+
+    <!-- Steps 4 -->
+    <xpath expr="(//div[hasclass('s_process_step_number')])[4]" position="attributes">
+        <attribute name="class" add="bg-o-color-2" remove="bg-primary-light" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_process_step_number')]//h3)[4]" position="attributes">
+        <attribute name="class" remove="text-primary" add="text-o-color-5" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

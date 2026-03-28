@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_cover" inherit_id="website.s_text_cover">
+    <xpath expr="//div[hasclass('o_grid_item')]" position="attributes">
+        <attribute name="style" add="grid-area: 2 / 3 / 11 / 9;" remove="grid-area: 2 / 3 / 11 / 8;" separator=";"/>
+        <attribute name="class" add="g-col-lg-6 col-lg-6" remove="g-col-lg-5 col-lg-5" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Promote<br/>Sustainability.
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        <br/>Highlight your environmental initiatives and projects with a user-friendly platform that simplifies all the steps, from setup to campaign management, making it easy to engage supporters and drive positive change.<br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Start promoting
+    </xpath>
+</template>
+
+</odoo>

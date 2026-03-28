@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_framed_intro" inherit_id="website.s_framed_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3 pt80 pb80" remove="pt56 pb56" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Unplug &amp; Unwind: The <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 6px; --text-highlight-color: var(--o-color-1);">Ultimate</span> Music Experience
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_three_columns_default_image_2</attribute>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        A groundbreaking force in modern rock, bringing an electrifying blend of high-energy performances and innovative sound
+    </xpath>
+</template>
+
+</odoo>

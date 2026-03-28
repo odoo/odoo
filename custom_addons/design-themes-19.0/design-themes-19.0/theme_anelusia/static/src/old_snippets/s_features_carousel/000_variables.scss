@@ -1,0 +1,9 @@
+$s-features-carousel-border-width: 0;
+@mixin s-features-carousel-inner-hook {
+    .carousel-inner .row {
+        margin: 0 70px;
+        @include media-breakpoint-down(md) {
+            margin: 0;
+        }
+    }
+}

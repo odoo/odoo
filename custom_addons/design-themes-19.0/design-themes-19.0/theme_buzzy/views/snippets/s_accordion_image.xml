@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_accordion_image" inherit_id="website.s_accordion_image">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Top <span class="o_text_highlight o_translate_inline o_text_highlight_scribble_4 o_text_highlight_fill">questions</span> answered
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_buzzy/s_accordion_image.svg?c1=o-color-2</attribute>
+    </xpath>
+</template>
+
+</odoo>

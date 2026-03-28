@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_shapes" inherit_id="website.s_company_team_shapes">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb128" remove="pb48" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/10','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_container_small')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_10" style="background-image: url('/html_editor/shape/html_builder/Connections/10.svg?c5=o-color-1');"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <!-- Carousel -->
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/12","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_12"/>
+    </xpath>
+    <!-- Quote 1 -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[1]" position="replace" mode="inner">
+        They turned our dream into reality with ease and professionalism!
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//strong" position="replace" mode="inner">
+        Linda and Paul
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//span//span" position="replace" mode="inner">
+        Married in 2020
+    </xpath>
+    <!-- Quote 2 -->
+    <xpath expr="(//*[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[1]" position="replace" mode="inner">
+        They made our big day stree-free and absolutely beautiful!
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//strong" position="replace" mode="inner">
+        Jack and Mary
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//span//span" position="replace" mode="inner">
+        Married in 2019
+    </xpath>
+    <!-- Quote 3 -->
+    <xpath expr="(//*[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        Everything was so well-coordinated, we couldn't have asked for more!
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//strong" position="replace" mode="inner">
+        Rose and Peter
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//span//span" position="replace" mode="inner">
+        Renewed their vows in 2021
+    </xpath>
+</template>
+
+</odoo>

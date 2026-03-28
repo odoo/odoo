@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <xpath expr="//section" position="attributes">
+        <attribute name="style" add="background-image: url('/web/image/website.s_parallax_default_image');" separator=";"/>
+        <attribute name="class" add="oe_img_bg o_bg_img_center" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_bg_filter bg-black-25"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace">
+        <h2>Discover how we can help you<br/>making this day unforgettable.</h2>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace">
+        <p><br/></p>
+    </xpath>
+    <!-- CTA -->
+    <xpath expr="//p" position="after">
+        <a t-att-href="cta_btn_href" class="btn btn-primary btn-lg"><t t-esc="cta_btn_text">Contact us</t></a>
+    </xpath>
+    <!-- Remove right-side button -->
+    <xpath expr="//div[hasclass('col-lg-3')]" position="replace"/>
+</template>
+
+</odoo>

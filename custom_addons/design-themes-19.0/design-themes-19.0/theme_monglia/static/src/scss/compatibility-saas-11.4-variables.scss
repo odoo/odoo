@@ -1,0 +1,50 @@
+$s-banner-3-carosel-control-color: rgba(0, 0, 0, 0);
+$s-banner-3-padding: 15px;
+$s-banner-3-fa-color: white; // FIXME alpha
+$s-banner-3-carousel-height: 100vh;
+$s-banner-3-text-shadow: none;
+$s-banner-3-hero-bg-color: #000;
+$s-banner-3-indicators-visible: visible;
+$s-banner-3-h1-size: 45px;
+$s-banner-3-h2-size: 25px;
+
+@mixin s-banner-3-row-hook {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid o-color('alpha');
+    height: 200px;
+    width: 400px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    float: left;
+    img {
+        display: none;
+    }
+    @include media-breakpoint-down(md) {
+        top: 100px;
+        width: 100%;
+    }
+}
+@mixin s-banner-3-col-center-hook {
+    text-align: center;
+    width: 100%;
+}
+@mixin s-banner-3-carousel-control-hook {
+    display: none;
+}
+
+$s-big-picture-text-padding: 0;
+$s-big-picture-text-align: center;
+@mixin s-big-picture-text-hero-hook {
+    border-bottom: 1px solid o-color('epsilon');
+    margin: 0 20%;
+}
+
+$s-text-big-picture-padding: 0;
+$s-text-big-picture-text-align: center;
+@mixin s-text-big-picture-hero-hook {
+    border-bottom: 1px solid o-color('epsilon');
+    margin: 0 20%;
+}
+
+$s-timeline-company-color: $-gray-700;

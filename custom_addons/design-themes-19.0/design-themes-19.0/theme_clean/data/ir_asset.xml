@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<asset id="theme_clean.primary_variables_scss" name="Primary variables SCSS">
+    <field name="key">theme_clean.primary_variables_scss</field>
+    <bundle>web._assets_primary_variables</bundle>
+    <path>theme_clean/static/src/scss/primary_variables.scss</path>
+</asset>
+
+<asset id="theme_clean.bootstrap_overridden_scss" name="Bootstrap overridden SCSS">
+    <field name="key">theme_clean.bootstrap_overridden_scss</field>
+    <bundle directive="prepend">web._assets_frontend_helpers</bundle>
+    <path>theme_clean/static/src/scss/bootstrap_overridden.scss</path>
+</asset>
+
+</odoo>

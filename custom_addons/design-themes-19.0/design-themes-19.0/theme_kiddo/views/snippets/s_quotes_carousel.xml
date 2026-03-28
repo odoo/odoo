@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <!-- Carousel item n°1 -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="pt128 pb128" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//i" position="attributes">
+        <attribute name="class" add="rounded-circle" remove="rounded" separator=" "/>
+    </xpath>
+
+    <!-- Carousel item n°2 -->
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="pt128 pb128" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="(//i)[2]" position="attributes">
+        <attribute name="class" add="rounded-circle" remove="rounded" separator=" "/>
+    </xpath>
+
+    <!-- Carousel item n°3 -->
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="pt128 pb128" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="(//i)[3]" position="attributes">
+        <attribute name="class" add="rounded-circle" remove="rounded" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

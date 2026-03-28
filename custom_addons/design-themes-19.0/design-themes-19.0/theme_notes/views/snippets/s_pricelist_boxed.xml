@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" add="o_cc o_cc3" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Rainy/08_001','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Rainy_08_001 o_we_animated"/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Upcoming Festivals
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Experience the excitement of our upcoming festivals with a diverse range of music, arts, and culture. Don’t miss out on these unforgettable events!
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Music Festivals
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Arts &amp; Culture Festivals
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Summer Music Fest
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        July 10-12, 2024
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        Central Park, New York
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        A vibrant music festival featuring top artists across genres, food trucks, and interactive art installations in the heart of Central Park.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Rock On Festival
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        August 15-17, 2024
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Red Rocks Amphitheatre, Colorado
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Three days of electrifying rock performances at the iconic Red Rocks, with stunning views and a packed lineup of legendary bands.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Jazz &amp; Blues Gala
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        September 5-7, 2024
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        New Orleans, Louisiana
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        An enchanting celebration of jazz and blues music with performances by renowned artists, workshops, and street parades in the heart of New Orleans.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        International Art Expo
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        October 20-22, 2024
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Paris, France
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        A premier arts festival showcasing contemporary art, installations, and performances from around the globe in the artistic city of Paris.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Global Film Festival
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        November 10-14, 2024
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Toronto, Canada
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Celebrate cinema with screenings of international films, director Q&amp;A sessions, and red carpet events at this prestigious film festival.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Cultural Heritage Festival
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        December 1-3, 2024
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Tokyo, Japan
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        An immersive festival celebrating global cultural traditions with performances, crafts, and culinary experiences from diverse cultures.
+    </xpath>
+</template>
+
+</odoo>

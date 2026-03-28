@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_card" inherit_id="website.s_cta_card">
+   <!-- Section -->
+   <xpath expr="//section" position="attributes">
+      <attribute name="class" add="o_cc4 o_colored_level pt136" remove="o_cc2 pt64" separator=" "/>
+      <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/14','colors':{'c5':'o-color-4','c1':'o-color-1'}}</attribute>
+   </xpath>
+   <!-- Shape -->
+   <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+      <div class="o_we_shape o_html_builder_Bold_14" style="background-image: url('/html_editor/shape/html_builder/Bold/14.svg?c5=o-color-4&amp;c1=o-color-1');"/>
+   </xpath>
+   <!-- Text Col -->
+   <xpath expr="//div[hasclass('col-lg-8')]" position="attributes">
+      <attribute name="class" remove="col-lg-8" add="col-lg-5" separator=" "/>
+   </xpath>
+   <!-- Title -->
+   <xpath expr="//h2" position="replace" mode="inner">
+      We’re seeking exceptional talent to join our team
+   </xpath>
+   <!-- Card Col -->
+   <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+      <attribute name="class" remove="col-lg-4" add="col-lg-6 offset-lg-1" separator=" "/>
+   </xpath>
+   <!-- Card -->
+   <xpath expr="//div[hasclass('s_card')]" position="attributes">
+      <attribute name="class" add="o_card_img_horizontal flex-lg-row" separator=" "/>
+      <attribute name="style">border-width: 0px; max-width: 100%; --card-img-size-h: 50%;</attribute>
+   </xpath>
+   <xpath expr="//div[hasclass('card-body')]" position="before">
+      <figure class="o_card_img_wrapper mb-0 ratio ratio-1x1">
+         <img class="o_card_img object-fit-cover rounded-start" src="/web/image/website.s_three_columns_default_image_3"/>
+      </figure>
+   </xpath>
+   <xpath expr="//div[hasclass('s_card')]//p[1]" position="replace" mode="inner">
+      <i class="fa fa-check text-o-color-1" role="presentation" contenteditable="false"/> Attractive Salary
+   </xpath>
+   <xpath expr="//div[hasclass('s_card')]//p[2]" position="replace" mode="inner">
+      <i class="fa fa-check text-o-color-1" role="presentation" contenteditable="false"/> Continuous Learning
+   </xpath>
+   <xpath expr="//div[hasclass('s_card')]//p[3]" position="replace" mode="inner">
+      <i class="fa fa-check text-o-color-1" role="presentation" contenteditable="false"/> Healthy Environement
+   </xpath>
+</template>
+
+</odoo>

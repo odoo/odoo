@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_title" inherit_id="website.s_image_title">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc5 oe_img_bg" separator=" "/>
+        <attribute name="style"/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/26','colors':{'c5':'o-color-3'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_26" style="background-image: url('/html_editor/shape/html_builder/Bold/26.svg?c5=o-color-3');"></div>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace"/>
+</template>
+
+</odoo>

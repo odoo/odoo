@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Airy/10_001','colors':{'c5':'o-color-1'},'flip':["y"],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Airy_10_001" style="background-image: url('/html_editor/shape/html_builder/Airy/10_001.svg?c5=o-color-1&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we offer to our clients
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Custom Furniture Solutions
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We design and create personalized furniture tailored to your unique needs. Our team works with you to ensure every piece fits perfectly into your space and lifestyle.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Sustainable Materials
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your satisfaction is our priority. Our experts are always ready to assist, ensuring you receive high-quality, eco-friendly furniture that complements your home.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Craftsmanship
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With extensive experience and skilled craftsmanship, we provide furniture that meets the highest standards of quality and durability.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Innovation and Design
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We offer the latest trends and innovative designs to enhance your space. Using cutting-edge techniques, we help you achieve a stylish and functional interior.
+    </xpath>
+</template>
+
+</odoo>

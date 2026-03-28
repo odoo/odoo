@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt0 pb0" remove="pt72 pb72" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/14','colors':{'c5':'o-color-4', 'c1':'o-color-4'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_14" style="background-image: url('/html_editor/shape/html_builder/Bold/14.svg?c5=o-color-4&amp;c1=o-color-4');"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div" position="attributes">
+        <attribute name="class" add="o_cc2 col-lg-5 border" remove="o_cc1 offset-lg-2 col-lg-8" separator=" "/>
+        <attribute name="style">border-width: 16px !important; border-color: rgb(255, 255, 255) !important;</attribute>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our Beauty Collection
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Enhance your natural beauty with our range of luxurious cosmetic services and products. Expertly crafted for every skin type and style.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Facial Treatments
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Makeup Products
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Anti-Aging Facial
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        $120.00
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        A rejuvenating facial treatment designed to reduce wrinkles and fine lines, leaving your skin looking fresh and youthful.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Hydrating Facial
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        $100.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Deeply hydrating facial treatment that restores moisture and balances your skin, perfect for dry or sensitive skin types.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Brightening Facial
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        $110.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        A revitalizing facial that uses vitamin C and natural extracts to enhance radiance and even out skin tone.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        Long-Lasting Foundation
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        $50.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        A lightweight, long-lasting foundation that provides full coverage while allowing your skin to breathe.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Volumizing Mascara
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        $30.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        High-quality mascara that adds volume and length to your lashes, with a smudge-proof and long-lasting formula.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Velvet Matte Lipstick
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        $25.00
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Richly pigmented matte lipstick available in various shades, providing a bold, long-lasting finish without drying out your lips.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_title" inherit_id="website.s_title">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt256 parallax s_parallax_is_fixed o_cc o_cc5" remove="pt40" separator=" "/>
+        <attribute name="data-scroll-background-ratio">1</attribute>
+    </xpath>
+    <!-- Parallax background & filter -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_cover_default_image');"/>
+        <div class="o_we_bg_filter" style="background-color: rgba(17, 13, 22, 0.85) !important;"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        It's all about perception
+    </xpath>
+</template>
+
+<template id="configurator_s_title" inherit_id="website.configurator_s_title">
+    <!-- Remove parallax for the configurator -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb0 pt64" remove="parallax s_parallax_is_fixed pt256 pb40" separator=" "/>
+        <attribute name="data-scroll-background-ratio">0</attribute>
+    </xpath>
+    <xpath expr="//h2" position="attributes">
+        <attribute name="class" remove="display-3-fs" separator=" "/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace"/>
+</template>
+
+</odoo>

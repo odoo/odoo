@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Savor the art<br/>of casual dining
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Indulge in a dining experience where flavor meets comfort. At our bistro, we blend fresh ingredients with culinary creativity to offer a menu that delights every palate. Whether you're here for a quick bite or a leisurely meal, our welcoming atmosphere and delicious dishes make every visit special.<br/><br/>
+    </xpath>
+</template>
+
+</odoo>

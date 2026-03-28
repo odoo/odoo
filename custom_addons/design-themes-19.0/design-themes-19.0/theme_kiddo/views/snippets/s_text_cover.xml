@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_cover" inherit_id="website.s_text_cover">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Discover<br/>our nursery
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        <br/>Discover our nursery’s welcoming environment and engaging programs with ease. Our platform helps you explore our activities, meet our staff, and see how we make early learning fun and enriching for your child.<br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Learn more
+    </xpath>
+</template>
+
+</odoo>

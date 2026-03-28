@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2">
+    <!-- Left column -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc4" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Grids/02",'colors':{'c5':'rgba(0,0,0,0.25)'},'flip':[]}</attribute>
+    </xpath>
+    <xpath expr="//h2" position="before">
+        <div class="o_we_shape o_html_builder_Grids_02" style="background-image: url('/html_editor/shape/html_builder/Grids/02.svg?c5=rgba(0,0,0,0.25)');"/>
+    </xpath>
+    <!-- Right column -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc5" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Grids/02",'colors':{'c5':'rgba(0,0,0,0.25)'},'flip':['x']}</attribute>
+    </xpath>
+    <xpath expr="(//h2)[2]" position="before">
+        <div class="o_we_shape o_html_builder_Grids_02" style="background-image: url('/html_editor/shape/html_builder/Grids/02.svg?c5=rgba(0,0,0,0.25)&amp;flip=x'); background-position: 0% 50%;"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_list" inherit_id="website.s_product_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt96 pb96" remove="pt64 pb64" separator=" "/>
+    </xpath>
+
+    <!-- Title -->
+    <xpath expr="//h2" position="attributes">
+        <attribute name="style">text-align: center;</attribute>
+    </xpath>
+    
+    <!-- Item n°1 -->
+    <xpath expr="//div[hasclass('col-lg-2')]" position="attributes">
+        <attribute name="class" add="offset-lg-1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')]//h3" position="replace" mode="inner">
+        About us
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-radius: 16px !important; border-width: 4px !important; border-style: dotted !important; border-color: var(--o-color-2) !important;</attribute>
+    </xpath>
+    <!-- Item n°1 : SVG with dynamic color -->
+    <xpath expr="//div[hasclass('col-lg-2')]//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_kiddo/s_product_list_1.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+    
+    <!-- Item n°2 -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[2]//h3" position="replace" mode="inner">
+        Our team
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][2]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-radius: 16px !important; border-width: 4px !important; border-style: dotted !important; border-color: var(--o-color-2) !important;</attribute>
+    </xpath>
+    <!-- Item n°2 : SVG with dynamic color -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[2]//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_kiddo/s_product_list_2.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+    
+    <!-- Item n°3 -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[3]//h3" position="replace" mode="inner">
+        Playground
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][3]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-radius: 16px !important; border-width: 4px !important; border-style: dotted !important; border-color: var(--o-color-2) !important;</attribute>
+    </xpath>
+    <!-- Item n°3 : SVG with dynamic color -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[3]//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_kiddo/s_product_list_3.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+    
+    <!-- Item n°4 -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[4]//h3" position="replace" mode="inner">
+        Events
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][4]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-radius: 16px !important; border-width: 4px !important; border-style: dotted !important; border-color: var(--o-color-2) !important;</attribute>
+    </xpath>
+    <!-- Item n°4 : SVG with dynamic color -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[4]//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_kiddo/s_product_list_4.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+    
+    <!-- Item n°5 -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[5]//h3" position="replace" mode="inner">
+        Visit us
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][5]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-radius: 16px !important; border-width: 4px !important; border-style: dotted !important; border-color: var(--o-color-2) !important;</attribute>
+    </xpath>
+    <!-- Item n°5 : SVG with dynamic color -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[5]//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_kiddo/s_product_list_6.svg?c1=o-color-1&amp;c2=o-color-2</attribute>
+    </xpath>
+    
+    <!-- Remove last item -->
+    <xpath expr="(//div[hasclass('col-lg-2')])[6]" position="replace"/>
+</template>
+
+</odoo>

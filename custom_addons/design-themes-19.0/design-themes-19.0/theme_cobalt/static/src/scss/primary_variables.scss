@@ -1,0 +1,87 @@
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (48 / 16);
+$o-theme-h6-font-size-multiplier: 1.1;
+
+$o-theme-font-configs: (
+    'Inter': (
+        'family': ('Inter', serif),
+        'url': 'Inter:300,300i,400,400i,600,600i,800,800i',
+    ),
+
+    'Abril Fatface': (
+        'family': ('Abril Fatface', serif),
+        'url': 'Abril+Fatface:300,300i,400,400i,700,700i',
+    ),
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:300,300i,400,400i,700,700i',
+    ),
+);
+
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'default-8',
+
+        'font': 'Inter',
+        'headings-font': 'Poppins',
+
+        'headings-line-height': 1.1,
+
+        'btn-ripple': true,
+        'btn-border-radius': 10rem,
+        'btn-border-radius-sm': 10rem,
+        'btn-border-radius-lg': 10rem,
+        'btn-padding-y': .5rem,
+        'btn-padding-x': 1rem,
+        'btn-padding-y-lg': 1rem,
+        'btn-padding-x-lg': 2rem,
+        'btn-padding-x-sm': .5rem,
+        'header-template': 'boxed',
+        'header-links-style': 'pills',
+        'footer-template': 'call_to_action',
+    ),
+);
+
+$default-8: map-get($o-color-palettes, 'default-8');
+$default-8: map-merge($default-8, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('default-8': $default-8));
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'cobalt-1',
+    2: 'generic-1',
+    3: 'generic-2',
+    4: 'generic-3',
+    5: 'generic-4',
+    6: 'generic-5',
+    7: 'generic-6',
+    8: 'generic-7',
+    9: 'generic-8',
+    10: 'generic-9',
+    11: 'generic-10',
+    12: 'generic-11',
+    13: 'generic-12',
+    14: 'generic-13',
+    15: 'generic-14',
+    16: 'generic-15',
+    17: 'generic-16',
+    18: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+// Keep for compatibility
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Blobs/03', (2: 2));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Bold/01', (2: 2));
+$o-bg-shapes: add-footer-shape-colors-mapping('html_builder', 'Bold/01', (2: 'footer'));
+// New
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/11_001', (3: 1));

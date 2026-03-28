@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" inherit_id="website.s_product_catalog">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3 pb160 pt160 parallax s_parallax_is_fixed s_parallax_no_overflow_hidden o_full_screen_height" remove="pb64 pt64" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/10","colors":{"c1":"o-color-2","c2":"o-color-2"},"flip":[]}</attribute>
+        <attribute name="data-scroll-background-ratio">1</attribute>
+    </xpath>
+    <!-- Shape & Background image -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace">
+        <span class="s_parallax_bg oe_img_bg o_bg_img_center" style="background-image: url('/web/image/website.s_product_catalog_default_image');"/>
+        <div class="o_we_bg_filter bg-black-50"/>
+        <div class="o_we_shape o_html_builder_Wavy_10" style="background-image: url('/html_editor/shape/html_builder/Wavy/10.svg?c1=o-color-2&amp;c2=o-color-2');"/>
+    </xpath>
+    <!-- Title & subtitles -->
+    <xpath expr="//h2" position="replace">
+        <h2 style="text-align: center;">Upcoming events</h2>
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Brussels edition
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Paris edition
+    </xpath>
+    <!-- Description -->
+    <xpath expr="//div[hasclass('container')]//p" position="replace" mode="inner">
+        Get your ticket now
+    </xpath>
+    <!-- Left column : names -->
+    <xpath expr="//ul/t/t" position="replace" mode="inner">
+        Regular ticket
+    </xpath>
+    <xpath expr="//ul/t[2]/t" position="replace" mode="inner">
+        Regular ticket + hotel
+    </xpath>
+    <xpath expr="//ul/t[3]/t" position="replace" mode="inner">
+        VIP ticket
+    </xpath>
+    <!-- Left column : prices -->
+    <xpath expr="//ul/t/t[2]" position="replace" mode="inner">
+        $19.00
+    </xpath>
+    <xpath expr="//ul/t[2]/t[2]" position="replace" mode="inner">
+        $59.00
+    </xpath>
+    <xpath expr="//ul/t[3]/t[2]" position="replace" mode="inner">
+        $109.50
+    </xpath>
+    <!-- Right column : names -->
+    <xpath expr="(//ul)[2]/t/t" position="replace" mode="inner">
+        Regular ticket
+    </xpath>
+    <xpath expr="(//ul)[2]/t[2]/t" position="replace" mode="inner">
+        Regular ticket + hotel
+    </xpath>
+    <xpath expr="(//ul)[2]/t[3]/t" position="replace" mode="inner">
+        VIP ticket
+    </xpath>
+    <!-- Right column : prices -->
+    <xpath expr="(//ul)[2]//t[2]" position="replace" mode="inner">
+        $25.00
+    </xpath>
+    <xpath expr="(//ul)[2]/t[2]/t[2]" position="replace" mode="inner">
+        $65.00
+    </xpath>
+    <xpath expr="(//ul)[2]/t[3]/t[2]" position="replace" mode="inner">
+        $115.50
+    </xpath>
+</template>
+
+</odoo>

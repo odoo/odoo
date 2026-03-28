@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_image" inherit_id="website.s_text_image">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Shaping our future
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        With all the global problems our planet faces today,<br/> communities of people concerned with them are growing<br/> to prevent the negative impact.
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[2]" position="replace">
+        <p><br/></p>
+    </xpath>
+    <!-- Image + Shape -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_text_image_default_image/html_builder/geometric_round/geo_round_blob_medium.svg</attribute>
+        <attribute name="data-file-name">text_image.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric_round/geo_round_blob_medium</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Subtitle -->
+    <xpath expr="//h2" position="before">
+        <p style="font-size: 12px;"><b>ABOUT US</b></p>
+    </xpath>
+</template>
+
+</odoo>

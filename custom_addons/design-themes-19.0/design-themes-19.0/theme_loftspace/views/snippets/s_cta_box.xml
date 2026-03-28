@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- Card -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc4" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Transform your space with<br/>our furniture. Contact us<br/>to bring your vision to life!<br/>
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p" position="replace">
+        <p><br/></p>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" remove="btn-lg" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

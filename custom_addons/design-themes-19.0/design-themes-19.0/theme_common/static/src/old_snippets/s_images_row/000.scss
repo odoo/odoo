@@ -1,0 +1,15 @@
+.s_images_row {
+    .s_images_row_overlay {
+        min-height: 250px;
+        &:after {
+            content: '';
+            display: block;
+        }
+    }
+    .s_images_row_body {
+        // @include o-position-absolute($spacer,$spacer,$spacer,$spacer);
+        background-color: #fff;
+        padding: $spacer/2 $spacer;
+        display: inline-block;
+    }
+}

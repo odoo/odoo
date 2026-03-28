@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Custom Creations
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Personalized Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Exclusive Designs
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We design and build bespoke items tailored to your specifications, ensuring each piece is unique and meets your exact needs.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Receive hands-on assistance throughout the creation process, from concept to completion, to ensure your vision comes to life.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Explore one-of-a-kind designs and limited-edition pieces that showcase exceptional craftsmanship and creativity.
+    </xpath>
+</template>
+
+</odoo>

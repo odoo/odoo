@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Celebrating Artistic Expression
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Immerse yourself in the world of art. Our galleries showcase a diverse range of creativity, from paintings to photography.<br/><br/> Discover the works that speak to your soul and elevate your space.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Visit Galleries
+    </xpath>
+</template>
+
+</odoo>

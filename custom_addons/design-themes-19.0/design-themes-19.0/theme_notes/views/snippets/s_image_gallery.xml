@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_gallery" inherit_id="website.s_image_gallery">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="s_image_gallery_arrows_boxed" remove="s_image_gallery_arrows_default" separator=" "/>
+    </xpath>
+</template>
+
+<template id="s_images_wall" inherit_id="website.s_images_wall">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb80" remove="pt24 pb24" separator=" "/>
+        <attribute name="data-oe-shape-data" add="{'shape':'html_builder/Bold/14','colors':{'c5':'o-color-1','c1':'o-color-1'},'showOnMobile':false,'shapeAnimationSpeed':'0'}"/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_14" style="background-image: url('/html_editor/shape/html_builder/Bold/14.svg?c5=o-color-1&amp;c1=o-color-1');"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/." position="before">
+        <div class="col-lg-12">
+            <h2 style="text-align: center;"><span class="o_text_highlight o_text_highlight_underline o_translate_inline" style="--text-highlight-color: var(--o-color-4); --text-highlight-width: 3px;">Band Gallery</span></h2>
+            <p>
+                <br/>
+            </p>
+        </div>
+    </xpath>
+    <!-- First image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.library_image_19</attribute>
+    </xpath>
+    <!-- Third image -->
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/web/image/website.s_cover_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

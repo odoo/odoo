@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team_detail" inherit_id="website.s_company_team_detail">
+    <xpath expr="//h3" position="replace" mode="inner">
+        Meet our talents
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Talented musicians and performers who are dedicated to bringing you the best in live music.
+    </xpath>
+    <!-- Team member #1-->
+    <xpath expr="(//div[hasclass('col-lg-4')])[1]//p[hasclass('text-muted')]" position="replace" mode="inner">
+        Lead singer
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-4')])[1]//p[last()]" position="replace" mode="inner">
+        James Mitchell is a dynamic lead singer known for his captivating stage presence and powerful vocals.
+    </xpath>
+    <!-- Team member #2-->
+    <xpath expr="(//div[hasclass('col-lg-4')])[2]//p[hasclass('text-muted')]" position="replace" mode="inner">
+        Electronic DJ
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-4')])[2]//p[last()]" position="replace" mode="inner">
+        Sophia Benett is a renowned underground techno DJ celebrated for her innovative sound.
+    </xpath>
+    <!-- Team member #3-->
+    <xpath expr="(//div[hasclass('col-lg-4')])[3]//p[hasclass('text-muted')]" position="replace" mode="inner">
+        Singer &amp; Songwriter
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-4')])[3]//p[last()]" position="replace" mode="inner">
+        Olivia Reed is a talented singer-songwriter famous for her soulful voice and heartfelt lyrics.
+    </xpath>
+    <!-- Team member #4-->
+    <xpath expr="(//div[hasclass('col-lg-4')])[4]//p[hasclass('text-muted')]" position="replace" mode="inner">
+        Singer
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-4')])[4]//p[last()]" position="replace" mode="inner">
+        Emily Carter is a captivating singer known for her enchanting voice and magnetic stage presence.
+    </xpath>
+    <!-- Team member #5-->
+    <xpath expr="(//div[hasclass('col-lg-4')])[5]//p[hasclass('text-muted')]" position="replace" mode="inner">
+        Guitarist
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-4')])[5]//p[last()]" position="replace" mode="inner">
+        Alexander Rivera is a skilled guitarist known for his exceptional technique and innovative playing style.
+    </xpath>
+    <!-- Team member #6-->
+    <xpath expr="(//div[hasclass('col-lg-4')])[6]//p[hasclass('text-muted')]" position="replace" mode="inner">
+        Rapper
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-4')])[6]//p[last()]" position="replace" mode="inner">
+        Daniel Foster is a dynamic rapper known for his sharp lyrics and compelling storytelling.
+    </xpath>
+</template>
+
+</odoo>

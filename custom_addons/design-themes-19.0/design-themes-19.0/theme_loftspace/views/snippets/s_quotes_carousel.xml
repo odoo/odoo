@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <!-- Change carousel style -->
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" add="s_carousel_default" remove="s_carousel_boxed" separator=" "/>
+    </xpath>
+
+    <!-- Hide indicators -->
+    <xpath expr="//div[hasclass('carousel-indicators')]" position="attributes">
+        <attribute name="class" add="s_carousel_indicators_hidden" remove="s_carousel_indicators_dots" separator=" "/>
+    </xpath>
+
+    <!-- Quote 1 -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="pt168" remove="pt80" separator=" "/>
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="//blockquote[hasclass('s_blockquote')][1]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[1]" position="replace" mode="inner">
+        "Dining set is top quality<br/>and fits perfectly!"
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//strong" position="replace" mode="inner">
+        Linda
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//span//span" position="replace"/>
+
+    <!-- Quote 2 -->
+    <xpath expr="(//*[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="pt168" remove="pt80" separator=" "/>
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//blockquote[hasclass('s_blockquote')])[2]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        "Desk is stylish and built to last!"
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//strong" position="replace" mode="inner">
+        Jack
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//span//span" position="replace"/>
+
+    <!-- Quote 3 -->
+    <xpath expr="(//*[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="pt168" remove="pt80" separator=" "/>
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//blockquote[hasclass('s_blockquote')])[3]" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace" mode="inner">
+        "Sofa is both chic and super comfy!"
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//strong" position="replace" mode="inner">
+        Rose
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//span//span" position="replace"/>
+</template>
+
+</odoo>

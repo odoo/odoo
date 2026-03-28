@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1 pb96 pt96" remove="o_cc2 pt32 pb32" separator=" "/>
+    </xpath>
+
+    <!-- Row #1 -->
+    <xpath expr="//div[hasclass('s_media_list_item')]" position="attributes">
+        <attribute name="class" add="pt0 pb0" remove="pt16 pb16" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')]/div" position="attributes">
+        <attribute name="class" add="flex-row-reverse" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Row #1 - Img Wrapper -->
+    <xpath expr="//div[hasclass('s_media_list_img_wrapper')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Row #1 - Body -->
+    <xpath expr="//div[hasclass('s_media_list_body')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Row #1 - Title -->
+    <xpath expr="//div[hasclass('s_media_list_body')]//h3" position="replace" mode="inner">
+        Go to the <br/>Miraillet Festival
+    </xpath>
+    <!-- Row #1 - Paragraph -->
+    <xpath expr="//div[hasclass('s_media_list_body')]//p" position="replace" mode="inner">
+        <br/>
+        You will find here the different means of transport to get to the festival. The festival is accessible by bike. Be careful, you will be riding in the city centre where there are a lot of cars. Please make sure to park your bike in the designated areas of the city.
+    </xpath>
+
+    <!-- Row #2 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][2]" position="attributes">
+        <attribute name="class" add="pt0 pb0" remove="pt16 pb16" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')][2]/div" position="attributes">
+        <attribute name="class" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Row #2 - Img Wrapper -->
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Row #2 - Body -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Row #2 - Title -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]//h3" position="replace" mode="inner">
+        Ticketing <br/>&amp; timetables
+    </xpath>
+    <!-- Row #2 - Paragraph -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]//p" position="replace" mode="inner">
+        <br/>
+        Where and when to exchange your festival bracelets? Where to buy food and drink tickets? What is the price for children? The answer can be found here!
+    </xpath>
+    <!-- Row #2 - Add a button -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[2]//p" position="after">
+        <a href="#" class="btn btn-primary">More info</a>
+    </xpath>
+
+    <!-- Row #3 -->
+    <xpath expr="//div[hasclass('s_media_list_item')][3]" position="attributes">
+        <attribute name="class" add="pt0 pb0" remove="pt16 pb16" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')][3]/div" position="attributes">
+        <attribute name="class" add="flex-row-reverse" remove="o_cc o_cc1" separator=" "/>
+    </xpath>
+    <!-- Row #3 - Img Wrapper -->
+    <xpath expr="(//div[hasclass('s_media_list_img_wrapper')])[3]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Row #3 - Body -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-8" separator=" "/>
+    </xpath>
+    <!-- Row #3 - Title -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//h3" position="replace" mode="inner">
+        Wheelchair <br/>accessibility
+    </xpath>
+    <!-- Row #3 - Paragraph -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//p" position="replace" mode="inner">
+        <br/>
+        Once again this year, the festival, with the support of the non-profit organisations that implement the necessary means to facilitate access to the event for people with reduced mobility and people affected by or carrying a disability.
+    </xpath>
+    <!-- Row #3 - Add a button -->
+    <xpath expr="(//div[hasclass('s_media_list_body')])[3]//a" position="replace">
+        <a href="#" class="btn btn-primary">More info</a>
+    </xpath>
+</template>
+
+</odoo>

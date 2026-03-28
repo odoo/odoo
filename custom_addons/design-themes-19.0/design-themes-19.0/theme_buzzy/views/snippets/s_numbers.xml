@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers" inherit_id="website.s_numbers">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4 pt96 pb96" remove="o_cc1 pt80 pb80" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Zigs/01_001","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Zigs_01_001"/>
+    </xpath>
+</template>
+
+</odoo>

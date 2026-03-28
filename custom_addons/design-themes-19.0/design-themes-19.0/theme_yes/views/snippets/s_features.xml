@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pb88" remove="pb64" separator=" "/>
+    </xpath>
+    <!-- Remove title and subtitle -->
+    <xpath expr="//div[hasclass('container')]/h2" position="replace"/>
+    <xpath expr="//div[hasclass('container')]/p" position="replace"/>
+    <!-- Column #01 -->
+    <xpath expr="//div[hasclass('row')]/div[1]/div[hasclass('s_hr')]" position="replace"/>
+    <xpath expr="//div[hasclass('row')]/div[1]/i" position="replace">
+        <i class="s_features_icon fa fa-map-o mb-3 fa-2x mx-auto d-block" role="img"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace">
+        <h3 style="text-align: center;"><span class="h5-fs">Dream venues</span></h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/p" position="replace">
+        <p style="text-align: center;">We help you discover the ideal location that matches your style and vision.</p>
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="//div[hasclass('row')]/div[2]/div[hasclass('s_hr')]" position="replace"/>
+    <xpath expr="//div[hasclass('row')]/div[2]/i" position="replace">
+        <i class="s_features_icon fa fa-file-text-o mb-3 fa-2x mx-auto d-block" role="img"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/h3" position="replace">
+        <h3 style="text-align: center;"><span class="h5-fs">Curating the finest menu</span></h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/p" position="replace">
+        <p style="text-align: center;">We help you crafting a personalized wedding menu tailored to your tastes.</p>
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="//div[hasclass('row')]/div[3]/div[hasclass('s_hr')]" position="replace"/>
+    <xpath expr="//div[hasclass('row')]/div[3]/i" position="replace">
+        <i class="s_features_icon fa fa-diamond mb-3 fa-2x mx-auto d-block" role="img"/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/h3" position="replace">
+        <h3 style="text-align: center;"><span class="h5-fs">Capturing the moment</span></h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/p" position="replace">
+        <p style="text-align: center;">From photography to videography, we will record all the important moments.</p>
+    </xpath>
+</template>
+
+</odoo>

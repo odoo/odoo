@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+        <attribute name="class" add="o_cc o_cc4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_wavy_grid_default_image_1/html_builder/geometric/geo_square_3.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_3</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_wavy_grid_default_image_1.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_wavy_grid_default_image_4/html_builder/geometric/geo_square_6.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_6</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_wavy_grid_default_image_4.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we bring to our clients
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Tailored Designs
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We craft bespoke styles to reflect your unique identity. Our team collaborates with you to ensure flawless fashion from concept to creation.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Sustainable Fashion
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Customer delight drives us. Our support team is always on hand, ensuring your fashion journey is smooth and satisfying.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Craftsmanship
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With rich experience and fashion expertise, we offer trends and solutions that keep you ahead of the curve.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Expertise and Vision
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We deliver innovative fashion solutions for today’s demands. Harnessing the latest trends, we help you set new standards.
+    </xpath>
+</template>
+
+</odoo>

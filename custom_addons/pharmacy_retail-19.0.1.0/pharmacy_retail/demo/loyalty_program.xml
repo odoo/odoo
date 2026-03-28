@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="loyalty_program_pharma_1" model="loyalty.program">
+        <field name="name">Buy 2 Get 1 Free</field>
+        <field name="program_type">buy_x_get_y</field>
+        <field name="portal_point_name">Credit(s)</field>
+        <field name="pos_config_ids" eval="[(6, 0, [ref('pos_config_pharmacy')])]"/>
+    </record>
+    <record id="loyalty_program_pharma_2" model="loyalty.program">
+        <field name="name">2% Discount on Total order</field>
+        <field name="program_type">loyalty</field>
+        <field name="portal_visible" eval="True"/>
+        <field name="portal_point_name">Loyalty point(s)</field>
+        <field name="pos_config_ids" eval="[(6, 0, [ref('pos_config_pharmacy')])]"/>
+    </record>
+    <record id="loyalty_program_pharma_3" model="loyalty.program">
+        <field name="name">10% Discount Coupon Program</field>
+        <field name="program_type">coupons</field>
+        <field name="portal_visible" eval="True"/>
+        <field name="portal_point_name">Coupon point(s)</field>
+        <field name="pos_config_ids" eval="[(6, 0, [ref('pos_config_pharmacy')])]"/>
+    </record>
+</odoo>

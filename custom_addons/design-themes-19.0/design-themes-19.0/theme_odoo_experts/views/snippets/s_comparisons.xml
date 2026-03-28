@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_comparisons" inherit_id="website.s_comparisons">
+    <!-- Box #01 -->
+    <xpath expr="//div[hasclass('row')]//div" position="attributes">
+        <attribute name="class" add="pt16" separator=" "/>
+    </xpath>
+    <!-- Box #02 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="class" add="bg-o-color-1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('card')])[2]//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-secondary" remove="btn-primary" separator=" "/>
+    </xpath>
+    <!-- Box #03 -->
+    <xpath expr="//div[hasclass('row')]//div[3]" position="attributes">
+        <attribute name="class" add="pt16" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="class" add="bg-o-color-3" separator=" "/>
+    </xpath>
+</template>
+
+<template id="configurator_s_comparisons" inherit_id="website.configurator_s_comparisons">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Wavy/04","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Wavy_04"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_parallax" inherit_id="website.s_parallax">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt48 pb48" separator=" "/>
+        <attribute name="data-scroll-background-ratio" add="3" remove="1"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="attributes">
+        <attribute name="class" add="bg-black-25" remove="bg-black-50" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

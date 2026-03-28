@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt200 pb200" remove="parallax s_parallax_is_fixed bg-black-50 pt232 pb232" separator=" "/>
+        <attribute name="data-scroll-background-ratio">0</attribute>
+        <attribute name="style">background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;</attribute>
+    </xpath>
+    <xpath expr="//*[hasclass('s_parallax_bg')]" position="replace"/>
+    <!-- Title & Text -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Creative Studio
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We combine smart design with rich technology <br/>to craft innovative products.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,1202 @@
+@function o-theme-common-add-color-variations($from, $to, $variations: ('light': 10%, 'dark': -10%)) {
+    $color-variations: ();
+    @each $color-name in ('alpha', 'beta', 'gamma', 'delta', 'epsilon') {
+        $color: map-get($from, $color-name);
+        @if $color != null {
+            @each $variation-name, $amount in $variations {
+                $color-variations: map-merge($color-variations, (
+                    '#{$color-name}-#{$variation-name}': adjust-color($color, $lightness: $amount),
+                ));
+            }
+        }
+    }
+    @return map-merge($color-variations, $to);
+}
+
+@mixin fa-size-generator($base-size) {
+    .fa {
+        text-align: center;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .fa,
+    .fa.fa-1x {
+        width: ($base-size + 20px);
+        height: ($base-size + 20px);
+        line-height: ($base-size + 20px);
+    }
+    .fa.fa-2x {
+        width: ($base-size + 40px);
+        height: ($base-size + 40px);
+        line-height: ($base-size + 40px);
+    }
+    .fa.fa-3x {
+        width: ($base-size + 60px);
+        height: ($base-size + 60px);
+        line-height: ($base-size + 60px);
+    }
+    .fa.fa-4x {
+        width: ($base-size + 80px);
+        height: ($base-size + 80px);
+        line-height: ($base-size + 80px);
+    }
+    .fa.fa-5x {
+        width: ($base-size + 100px);
+        height: ($base-size + 100px);
+        line-height: ($base-size + 100px);
+    }
+}
+
+@mixin blockquote-layout($bg-color, $color) {
+    blockquote {
+        font-style: italic;
+        margin: 0 0 12px 0;
+        padding: 0;
+        border: 0;
+        > .fa,
+        > span .fa {
+            float: left;
+        }
+        @include fa-size-generator(20px);
+        img {
+            display: inline-block;
+            max-width: 40px;
+            max-height: 40px;
+        }
+        small {
+            display: inline-block;
+        }
+        .blockquote-text {
+            overflow: hidden;
+            font-size: $font-size-base;
+            text-align: left;
+            &:focus{
+                outline: none;
+            }
+        }
+        p {
+            padding: 24px;
+        }
+    }
+}
+
+@mixin carousel-control($position, $fa-position, $fa-padding) {
+    opacity: 1;
+    text-shadow: none;
+    color: map-get($grays, '900');
+    font-size: inherit;
+    width: 5%;
+    .fa {
+        top: 50%;
+        background-color: #fff;
+        &:hover {
+            color: map-get($theme-colors, 'primary');
+        }
+        @include media-breakpoint-down(md) {
+            top: auto;
+            bottom: 0;
+        }
+    }
+    @include fa-size-generator(20px);
+    &.left {
+        background-image: none;
+        left: $position;
+        .fa {
+            left: $fa-position;
+            right: auto;
+            padding-right: $fa-padding;
+        }
+    }
+    &.right {
+        background-image: none;
+        right: $position;
+        .fa {
+            right: $fa-position;
+            left: auto;
+            padding-left: $fa-padding;
+        }
+    }
+}
+
+@mixin PlaceholderStyle($color) {
+    ::-webkit-input-placeholder { /* WebKit browsers */
+        color: $color;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: $color;
+        opacity: 1;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: $color;
+        opacity: 1;
+    }
+    :-ms-input-placeholder { /* Internet Explorer 10+ */
+        color: $color;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Themes specific style.
+//
+// This was introduced as a post-stable-12.0 review. The goal is to regroup
+// similar block of scss code (accross different theme) in theme_common
+// mixins which are then simply called in the related themes. This will ease
+// stable fixes and master refactorings.
+//------------------------------------------------------------------------------
+
+@mixin o-theme-responsive-spacing-classes($lg, $md, $sm, $xs) {
+    @include media-breakpoint-down(xl) {
+        @include o-spacing-all($lg);
+    }
+    @include media-breakpoint-down(lg) {
+        @include o-spacing-all($md);
+    }
+    @include media-breakpoint-down(md) {
+        @include o-spacing-all($sm);
+    }
+    @include media-breakpoint-down(sm) {
+        @include o-spacing-all($xs);
+    }
+}
+
+@mixin o-theme-cfa-bg-img-classes(
+        $bg1: $o-theme-bg-img-01, $bg2: $o-theme-bg-img-02, $bg3: $o-theme-bg-img-03,
+        $bg4: $o-theme-bg-img-04, $bg5: $o-theme-bg-img-05, $bg6: $o-theme-bg-img-06,
+        $bg7: $o-theme-bg-img-07) {
+    %cfa-bg-img {
+        background-size: cover;
+        background-position: center center;
+    }
+    .bg-img-01 {
+        @extend %cfa-bg-img;
+        background-image: $bg1;
+    }
+    .bg-img-02 {
+        @extend %cfa-bg-img;
+        background-image: $bg2;
+    }
+    .bg-img-03 {
+        @extend %cfa-bg-img;
+        background-image: $bg3;
+    }
+    .bg-img-04 {
+        @extend %cfa-bg-img;
+        background-image: $bg4;
+    }
+    .bg-img-05 {
+        @extend %cfa-bg-img;
+        background-image: $bg5;
+    }
+    .bg-img-06 {
+        @extend %cfa-bg-img;
+        background-image: $bg6;
+    }
+    .bg-img-07 {
+        @extend %cfa-bg-img;
+        background-image: $bg7;
+    }
+}
+
+// This is probably to deprecate
+@mixin o-theme-cfa-px-classes() {
+    .px14 {
+        font-size: 14px !important;
+        line-height: 25px;
+    }
+    .px16 {
+        font-size: 16px !important;
+        line-height: 28px;
+    }
+    .px18 {
+        font-size: 18px !important;
+        line-height: 30px;
+    }
+    .px22 {
+        font-size: 22px !important;
+        line-height: 32px;
+    }
+    .px30 {
+        font-size: 30px !important;
+        line-height: 30px;
+    }
+    .px36 {
+        font-size: 36px !important;
+        line-height: 36px;
+    }
+    .px42 {
+        font-size: 42px !important;
+        line-height: 42px;
+    }
+    .px50 {
+        font-size: 50px !important;
+        line-height: 50px;
+    }
+    .px60 {
+        font-size: 60px !important;
+        line-height: 60px;
+    }
+}
+
+@mixin o-theme-cfa-btn-main-style() {
+    .btn {
+        transition: all 0.3s ease-out;
+    }
+}
+
+@mixin o-theme-cfa-btn-style() {
+    @include o-theme-cfa-btn-main-style();
+
+    @if ($o-support-13-0-color-system) {
+        .btn {
+            // TODO this is not very consistent but this was how the theme was
+            // designed... should we keep this ?
+            @each $color, $alias in ('success': 'epsilon', 'info': 'gamma', 'warning': 'delta') {
+                &.btn-#{$color} {
+                    @include button-variant(map-get($theme-colors, $alias), map-get($theme-colors, $alias));
+                }
+                &.btn-outline-#{$color} {
+                    @include button-outline-variant(map-get($theme-colors, $alias));
+                }
+            }
+            &.btn-danger {
+                @include button-variant(map-get($grays, 'black'), map-get($grays, 'black'));
+            }
+            &.btn-outline-danger {
+                @include button-outline-variant(map-get($grays, 'black'), map-get($grays, 'black'));
+            }
+        }
+    }
+}
+
+@mixin o-theme-cfa-header-responsive-sizes() {
+    @include media-breakpoint-down(md) {
+        h1 {
+            font-size: 30px;
+        }
+        h2 {
+            font-size: 26px;
+        }
+        h3 {
+            font-size: 22px;
+        }
+    }
+}
+
+@mixin o-theme-cfa-custom-form-control($with-color: true, $with-focus-border-width: true) {
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-radius: 0px;
+    @if $with-color {
+        color: map-get($grays, '700');
+    }
+
+    &:focus {
+        border-bottom-color: o-color('primary');
+        @if $with-focus-border-width {
+            border-bottom-width: 2px;
+        }
+    }
+
+    + .input-group-append {
+        margin-left: 1em;
+    }
+}
+
+@mixin o-theme-cfa-full-width-styles() {
+    #wrapwrap {
+        #wrap {
+            width: 100%;
+            max-width: 100%;
+            margin: auto;
+        }
+        .navbar > .container {
+            max-width: 100%;
+        }
+    }
+    #footer {
+        width: 100%;
+    }
+}
+
+@mixin o-theme-cfa-card-classes($font-size: $h4-font-size) {
+    .card-header {
+        background-color: inherit;
+        border: none;
+        font-size: $font-size;
+    }
+    .card-footer {
+        background: inherit;
+    }
+    .card {
+        text-align: center;
+        box-shadow: none;
+        border-radius: 0px;
+    }
+}
+
+@mixin o-theme-cfa-top-menu-style($padding: 0, $display: flex, $margin: 0, $media-padding: 0,
+    $bg-color: white, $top: auto, $font-size: inherit, $dropdown-item-color: o-color('delta'),
+    $dropdown-item-hover-bg-color: rgba(0, 0, 0, 0), $dropdown-item-hover-color: o-color('epsilon'),
+    $nav-link-color: rgba(0, 0, 0, 0.5), $font-weight: normal, $text-transform: none,
+    $transition: all 0s ease 0s) {
+
+    padding: $padding;
+    margin: $margin;
+    @include media-breakpoint-up(md) {
+        display: $display;
+    }
+    @include media-breakpoint-down(md) {
+        padding: $media-padding;
+    }
+    .divider {
+        display: none;
+    }
+    .nav-link {
+        font-weight: $font-weight;
+        text-transform: $text-transform;
+        transition: $transition;
+
+        &.active {
+            font-weight: bolder;
+        }
+    }
+    .dropdown-menu, .navbar-collapse { // FIXME navbar should be removed ? (https://github.com/odoo/design-themes/commit/d20298fe41fdee5324c7e32f78e89d26edc71896#diff-042ad6434fc37ef55af3ca7db63906b8L259)
+        border-radius: 0px;
+        box-shadow: none;
+        top: $top;
+        .dropdown-item, .nav-link {
+            font-size: $font-size;
+        }
+        .dropdown-divider, .divider {
+            margin: 0;
+        }
+    }
+}
+
+@mixin o-theme-cfa-footer-style($font-size: 14px, $container-padding: 8px 65px 32px, $padding: 0, $border-top: 0, $margin-right: 50px, $h4-padding: 0 0 0 20px, $text-transform: uppercase) {
+
+    .container {
+        .js_language_selector .dropdown-toggle {
+            padding: 6px 20px;
+        }
+        p, .list-unstyled {
+            font-size: $font-size;
+        }
+        h4 {
+            margin-right: $margin-right;
+            padding: $h4-padding;
+            text-transform: $text-transform;
+        }
+    }
+    .o_footer_copyright {
+        border-top: $border-top;
+        padding: $padding;
+    }
+}
+
+@mixin o-theme-cfa-ecommerce-classes(
+    $nav-link-color: o-color('epsilon'), $nav-link-hover-color: o-color('beta'), $nav-link-hover-bg-color: map-get($grays, '800'),
+    $nav-link-active-bg-color: rgba(0, 0, 0, 0), $nav-link-active-color: o-color('epsilon'),
+    $js-attributes-padding: 0px 15px 15px 15px, $js-attributes-strong-color: o-color('gamma'), $js-attributes-label-color: map-get($grays, '700'),
+    $h6-padding-y: 10px, $h6-font-size: 13px, $h6-text-align: left, $h6-border-top: 0, $h6-border-bottom: 0, $h6-color: o-color('delta'),
+    $price-font-size: 12px, $product-price-padding: 0, $product-price-align: left, $btn-secondary-padding: 5px 10px,
+    $right-column-border-bottom: 1px solid map-get($grays, '700'), $right-column-color: map-get($grays, '700'), $right-column-font-weight: bold,
+    $add-cart-bg-color: map-get($grays, '700'), $add-cart-color: white, $add-cart-width: auto, $price-h4: 25px) {
+
+    .breadcrumb {
+        padding-top: 20px;
+        font-size: 15px;
+    }
+    .form-inline .input-group {
+        .form-control {
+            width: 100%;
+            box-shadow: none;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+        .input-group-btn {
+            width: 50px;
+            .btn {
+                line-height: 2.5;
+            }
+            .btn-secondary {
+                border-radius: 0px;
+                height: 50px;
+                width: 50px;
+            }
+        }
+    }
+    .js_add_cart_variants {
+        li strong {
+            font-size: 20px;
+        }
+    }
+    .oe_product  {
+        .btn.btn-danger {
+            @include button-variant(map-get($theme-colors, 'danger'), map-get($theme-colors, 'danger'));
+        }
+        .text-danger {
+            color: map-get($theme-colors, 'danger') !important;
+        }
+        .o_wsale_product_information {
+            padding: 0px 15px;
+            h6 {
+                border-top: $h6-border-top;
+                border-bottom: $h6-border-bottom;
+                font-size: $h6-font-size;
+                margin: 0px;
+                padding: $h6-padding-y 0px;
+                text-align: $h6-text-align;
+            }
+            .oe_subdescription {
+                text-align: left;
+            }
+            .product_price {
+                font-size: $price-font-size;
+                padding: $product-price-padding;
+                position: relative;
+                text-align: $product-price-align;
+            }
+        }
+
+        .o_wsale_product_btn {
+            @include o-position-absolute(auto, map-get($spacers, 2), map-get($spacers, 2), auto);
+            padding: 0;
+
+            .btn {
+                padding: $btn-padding-y-sm $btn-padding-x-sm;
+                transform: scale(1);
+            }
+        }
+    }
+    .oe_product_cart {
+        &:not(:hover) {
+            border-color: transparent;
+        }
+    }
+
+    #products_grid {
+        &.o_wsale_layout_list {
+            .oe_product_cart {
+                border-bottom: $card-border-width solid $card-border-color;
+
+                .o_wsale_product_information {
+                    padding-right: 0px !important;
+
+                    h6 {
+                        text-align: left !important;
+                        font-size: 24px !important;
+                        border-bottom: none !important;
+                    }
+                    .product_price {
+                        display: inline-block;
+                        font-size: 18px !important;
+                    }
+                    .oe_subdescription {
+                        max-width: 70%;
+                    }
+                }
+                .o_wsale_product_btn {
+                    position: static;
+                    display: inline-block;
+                    width: auto;
+                    padding: 0;
+                    background: transparent;
+
+                    > .btn {
+                        padding: $btn-padding-y $btn-padding-x;
+                    }
+                }
+            }
+        }
+    }
+
+    /* =================== Categories =================== */
+    #products_grid_before {
+
+        .card, .card-body {
+            border: none !important;
+            padding: 0 !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+            text-align: left !important
+        }
+
+        .js_attributes {
+            padding: $js-attributes-padding;
+
+            .css_attribute_color.active {
+                border: 5px ridge o-color('primary');
+            }
+            li > ul {
+                display: block;
+                padding-left: 15px;
+            }
+            strong {
+                display: block;
+                padding-left: 10px;
+                margin-bottom: 10px;
+                margin-top: 10px;
+                text-transform: uppercase;
+            }
+        }
+    }
+    .list-unstyled .css_attribute_color.active {
+        border: 3px solid;
+    }
+    #website_sale_recommended_products {
+        padding: 30px;
+        h3 {
+            text-align: center;
+            border-bottom: 5px solid;
+            padding-bottom: 20px;
+        }
+        .row {
+            padding: 0 15px;
+        }
+        .col-lg-2 {
+            margin-top: 10px;
+            min-height: 160px;
+        }
+    }
+    .oe_cart {
+        .btn {
+            @include media-breakpoint-down(md) {
+                padding: 10px;
+            }
+        }
+        .card {
+            background-color: rgba(0, 0, 0, 0);
+        }
+        strong {
+            color: map-get($grays, '700');
+        }
+        #cart_products img {
+            max-width: 100px;
+        }
+        .a-submit {
+            padding: 20px 0px;
+            min-width: 150px;
+        }
+    }
+    #modal_optional_products {
+        .modal-title {
+            background: rgba(0, 0, 0, 0);
+        }
+        .input-group {
+            border-collapse: inherit;
+        }
+    }
+    .product-description {
+        text-align: center;
+        font-size: 18px;
+    }
+    #right_column {
+        color: map-get($grays, '700');
+        a {
+            color: red;
+        }
+        .btn {
+            border-radius: 0px;
+            border: none;
+        }
+        .input-group-btn {
+            padding-left: 5px;
+        }
+        h4 {
+            border-bottom: $right-column-border-bottom;
+            color: $right-column-color;
+            font-size: 22px;
+            font-weight: $right-column-font-weight;
+        }
+        .fa {
+            padding-right: 5px;
+        }
+    }
+    .wizard {
+        box-shadow: none;
+        @include media-breakpoint-down(md) {
+            padding-right: 0px;
+            li {
+                padding-left: 7px;
+            }
+        }
+    }
+    .oe_sale_acquirer_button .btn {
+        min-width: 150px !important;
+        text-transform: uppercase;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+@mixin o-theme-chd-bg-img-classes(
+        $bg1: $o-theme-bg-img-01, $bg2: $o-theme-bg-img-02, $bg3: $o-theme-bg-img-03,
+        $bg4: $o-theme-bg-img-04, $bg5: $o-theme-bg-img-05, $bg6: $o-theme-bg-img-06,
+        $bg7: $o-theme-bg-img-07, $bg8: $o-theme-bg-img-08, $bg9: $o-theme-bg-img-09,
+        $bg10: $o-theme-bg-img-10, $bg11: $o-theme-bg-img-11, $bg12: $o-theme-bg-img-12,
+        $font-color: white) {
+    %chd-bg-img {
+        background-size: cover;
+    }
+    .bg-img-01 {
+        @extend %chd-bg-img;
+        background-image: $bg1;
+    }
+    .bg-img-02 {
+        @extend %chd-bg-img;
+        background-image: $bg2;
+    }
+    .bg-img-03 {
+        @extend %chd-bg-img;
+        background-image: $bg3;
+    }
+    .bg-img-04 {
+        @extend %chd-bg-img;
+        background-image: $bg4;
+    }
+    .bg-img-05 {
+        @extend %chd-bg-img;
+        background-image: $bg5;
+    }
+    .bg-img-06 {
+        @extend %chd-bg-img;
+        background-image: $bg6;
+    }
+    .bg-img-07 {
+        @extend %chd-bg-img;
+        background-image: $bg7;
+    }
+    .bg-img-08 {
+        @extend %chd-bg-img;
+        background-image: $bg8;
+    }
+    .bg-img-09 {
+        @extend %chd-bg-img;
+        background-image: $bg9;
+    }
+    .bg-img-10 {
+        @extend %chd-bg-img;
+        background-image: $bg10;
+    }
+    .bg-img-11 {
+        @extend %chd-bg-img;
+        background-image: $bg11;
+    }
+    .bg-img-12 {
+        @extend %chd-bg-img;
+        background-image: $bg12;
+    }
+}
+
+@mixin o-theme-chd-bg-pattern-classes($o-theme-bg-patterns) {
+    @for $i from 1 through length($o-theme-bg-patterns) {
+        .bg-pattern-0#{$i} {
+            background-image: nth($o-theme-bg-patterns, $i);
+        }
+    }
+}
+
+@mixin o-theme-chd-bg-gradient-classes() {
+    .bg_gradient_primary_down {
+        background-image: linear-gradient( rgba(map-get($theme-colors, 'primary'), 0), rgba(map-get($theme-colors, 'primary'), 1) ),;
+    }
+    .bg_gradient_primary_up {
+        background-image: linear-gradient( rgba(map-get($theme-colors, 'primary'), 1), rgba(map-get($theme-colors, 'primary'), 0) ),;
+    }
+    .bg_gradient_white_down_thumb {
+        background-image: linear-gradient( rgba(#ccc, 1), rgba(white, 0.5) ),;
+    }
+    .bg_gradient_white_down {
+        background-image: linear-gradient( rgba(white, 0), rgba(white, 0.5) ),;
+    }
+    .bg_gradient_white_up_thumb {
+        background-image: linear-gradient( rgba(white, 0.5), rgba(#ccc, 1) ),;
+    }
+    .bg_gradient_white_up {
+        background-image: linear-gradient( rgba(white, 0.5), rgba(white, 0) ),;
+    }
+    .bg_gradient_black_up {
+        background-image: linear-gradient( rgba(black, 0.5), rgba(black, 0) ),;
+    }
+    .bg_gradient_black_down {
+        background-image: linear-gradient( rgba(black, 0), rgba(black, 0.5) ),;
+    }
+}
+
+@mixin o-theme-chd-bg-option-menu-styles() {
+    .bg_option_menu_img, .bg_option_menu_gradient {
+        height: 25px;
+        width: 120px;
+        border: 1px solid #ccc;
+    }
+}
+
+@mixin o-theme-chd-padding-l-r-classes() {
+    // Note: To be removed.
+    // Kept for back-compatibility only.
+    .padding-l-r-8 {
+        @extend .px-2;
+    }
+    .padding-l-r-16 {
+        @extend .px-3;
+    }
+    .padding-l-r-32 {
+        @extend .px-4;
+    }
+}
+
+@mixin o-theme-chd-footer-styles() {
+    p {
+        text-align: justify;
+    }
+}
+
+@mixin o-theme-chd-ecommerce-classes() {
+    #products_grid .oe_product section {
+        padding: 4px 15px 24px 10px;
+        border-top: 1px dotted;
+        background-color: rgba(o-color('primary'), 0.2);
+        h5 a {
+            font-weight: 300;
+        }
+        &:hover {
+            background-color: rgba(o-color('primary'), 0.4);
+            transition: all 0.3s ease-in-out;
+        }
+    }
+    #products_grid_before .nav-pills {
+        font-size: 15px;
+        .nav-link {
+            font-size: 16px;
+            margin: 1px 0px;
+
+            &.active, &:focus, &:hover {
+                transition: all 0.3s ease-in-out;
+                padding: 6px 6px;
+            }
+        }
+    }
+}
+
+@mixin o-theme-chd-big-icons-styles($bg-color: o-color('alpha'), $border-color: o-color('alpha'),
+    $transform: scale(1.1, 1.1), $fa-color: white, $h5-color: white) {
+
+    background-color: $bg-color !important;
+    border-color: $border-color;
+    transform: $transform;
+    .fa {
+        color: $fa-color !important;
+    }
+}
+
+@mixin o-theme-sri-bg-effects-styles(
+    $opacity: 1, $border-top: 2px solid #fff, $border-bottom: 2px solid #848484,
+    $background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(241, 241, 241, 0.5) 50%, rgba(225, 225, 225, 0.5) 51%, rgba(246, 246, 246, 0.5) 100%)) {
+
+    position: relative;
+    opacity: 0.999; // Force stacking context creation
+    &:before {
+        content: "";
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: block;
+        opacity: $opacity;
+        background: $background;
+        border-top: $border-top;
+        border-bottom: $border-bottom;
+    }
+}
+
+@mixin o-theme-sri-bg-effects-classes() {
+    // TODO: remove these classes in a future version (kept for compatibility)
+    .glossy {
+        @include o-theme-sri-bg-effects-styles($border-top: 2px solid rgba(255, 255, 255, 0.73), $border-bottom: 1px solid rgba(155, 155, 155, 0.73));
+    }
+    .glossy-medium {
+        @include o-theme-sri-bg-effects-styles($opacity: 0.7);
+    }
+    .glossy-soft {
+        @include o-theme-sri-bg-effects-styles($opacity: 0.3);
+    }
+    .insetShadow {
+        @include o-theme-sri-bg-effects-styles(
+            $background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.2) 100%),
+            $border-top: 0, $border-bottom: 0);
+    }
+    .insetShadowBig {
+        @include o-theme-sri-bg-effects-styles(
+            $background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 50%,rgba(0, 0, 0, 0.4) 100%),
+            $border-top: 0, $border-bottom: 0);
+    }
+}
+
+@mixin o-theme-sri-bg-styles($std-url, $x, $y, $body-color, $url-2x) {
+    background-image: $std-url!important;
+    background-position: $x $y;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: $body-color;
+
+    @media
+    only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (   min--moz-device-pixel-ratio: 2),
+    only screen and (     -o-min-device-pixel-ratio: 2/1),
+    only screen and (        min-device-pixel-ratio: 2),
+    only screen and (                min-resolution: 192dpi),
+    only screen and (                min-resolution: 2dppx) {
+        background-image: $url-2x!important;
+    }
+}
+
+@mixin o-theme-sri-bg-image-styles($img, $body-color: white, $shadow-color : rgba(255, 0, 0, 0), $x: 50%, $y: 50%) {
+    @include o-theme-sri-bg-styles(url("/#{$o-theme-img-base-url}#{$img}"), $x, $y, $body-color, url("/#{$o-theme-img-base-url}#{$o-theme-pattern-2x-prefix}#{$img}"));
+    text-shadow: 0 1px 1px transparentize($shadow-color, 0.4);
+}
+
+@mixin o-theme-sri-bg-pattern-styles($img, $body-color: white, $x: 50%, $y: 50%) {
+    @include o-theme-sri-bg-styles(url("/#{$o-theme-pattern-base-url}#{$img}"), $x, $y, $body-color, url("/#{$o-theme-pattern-base-url}#{$o-theme-img-2x-prefix}#{$img}"));
+}
+
+@mixin o-theme-sri-bg-img-thumb-classes($backgrounds) {
+    @each $name, $image in $backgrounds {
+        .#{$name}-thumb {
+            background-image: url("/#{$o-theme-thumb-base-url}#{$image}") !important;
+            background-position: center center;
+            background-size: cover;
+        }
+    }
+}
+
+@mixin o-theme-sri-ecommerce-classes() {
+    // GENERAL
+    .oe_website_sale .wizard {
+        font-weight: bold;
+    }
+    // PRODUCTS' LIST
+    #products_grid {
+        div.oe_product {
+            padding-bottom: 15px;
+            padding-top: 10px;
+
+            &:nth-child(odd) {
+                background: rgba(black, 0.015);
+            }
+            &:first-child {
+                border-top: 1px solid rgba(black, 0.1);
+            }
+        }
+        td.oe_product, div.oe_product .oe_product_image  {
+            padding: 5px;
+        }
+    }
+    // PPRODUCTS CATEGORIES
+    #products_grid_before > ul > li {
+        &:first-child {
+            margin-bottom: 10px;
+        }
+        > a {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    }
+    // PPRODUCT PAGE
+    #product_detail {
+        > .row:first-of-type{
+            margin-bottom: 36px;
+        }
+        form .form-control, form .input-group .btn {
+            height: 36px;
+        }
+        #product_details {
+            position: relative;
+
+            &:before {
+                content: "";
+                width: 1px;
+                background-color: map-get($grays, '200');
+                height: 100%;
+                @include o-position-absolute(0, auto, 0, -10%);
+            }
+            > h1 {
+                margin: 0 0 20px;
+            }
+            hr:first-of-type{
+                display: none;
+            }
+            // LIST VIEW OF VARIANTS
+            .js_product > label > input{
+                position: relative;
+                margin: 0 10px 0 0;
+            }
+            // PRODUCTS'S VARIANTS
+            ul.js_add_cart_variants {
+                margin-bottom: 20px;
+                display: table;
+                width: 100%;
+
+                > li {
+                    display: block;
+                    > strong {
+                        font-size: 0.9em;
+                        display: block;
+                        opacity: 0.7;
+                        padding: 0;
+                        margin-top: 20px;
+                    }
+                    > ul {
+                        display: block;
+                        padding-left: 0;
+                        margin-left: 0;
+
+                        &.list-unstyled > label {
+                            margin: 0!important;
+                        }
+                        &.list-inline {
+                            li {
+                                padding-left: 0;
+                            }
+                            label.css_attribute_color {
+                                opacity: 0.8;
+                                cursor: pointer;
+                                border: 1px solid map-get($grays, '600');
+                                box-shadow: inset 0 0 0 2px #fff;
+                                border-radius: 2px;
+
+                                input {
+                                    cursor: pointer;
+                                    margin: 1px;
+                                    width: 18px;
+                                }
+                                &.active {
+                                    opacity: 1;
+                                    border: 2px solid #55e58e;
+                                }
+                                &:hover {
+                                    opacity: 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            @include media-breakpoint-up(md) {
+                .css_quantity {
+                    float: left;
+                }
+                #add_to_cart {
+                    margin-top: 0!important;
+                    margin-left: 10px;
+                }
+                ul.js_add_cart_variants > li {
+                    display: table-row;
+                    > strong, > ul {
+                        display: table-cell;
+                    }
+                }
+            }
+            .product_price h4 {
+                border-top: 1px solid #eee;
+                font-size: 35px;
+                margin-top: 25px;
+                padding-top: 10px;
+            }
+        }
+    }
+}
+
+@mixin o-theme-sri-header-styles($name, $text-transform, $font-weight) {
+    ##{$name}_header {
+        font-family: $headings-font-family;
+        .navbar {
+            padding: 20px 0 20px;
+
+            .navbar-nav {
+                > li > a {
+                    text-transform: $text-transform;
+                    font-weight: $font-weight;
+                }
+                .navbar-toggle {
+                    margin: 0;
+                }
+            }
+        }
+    }
+    #wrapwrap {
+        .o_header_affixed:not(.o_header_fixed) {
+            .navbar {
+                padding: 2px 20px;
+            }
+        }
+        &.o_header_overlay {
+            > main, > footer {
+                opacity: 0.999; // hack to create a stacking context allowing to place top_content on top of background but behind everything else
+            }
+            .move_to_top {
+                z-index: -1;
+                width: 100%;
+                @include o-position-absolute($top: 0, $left: 0);
+            }
+        }
+    }
+}
+
+@mixin o-theme-sri-ripple-animation-styles($name) {
+    .preserve3d, %preserve3d {
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+    }
+
+    .btn {
+        z-index: 2;
+        @extend %preserve3d;
+    }
+
+    @keyframes ripple {
+        100% { opacity: 0; transform: scale(2.5); }
+    }
+
+    .#{$name}-ripple {
+        display: block;
+        position: absolute;
+        border-radius: 100%;
+        opacity: 0.3;
+        z-index: -1;
+        background: currentColor;
+        pointer-events: none;
+        transform: scale(0);
+
+        &.#{$name}-ripple-animated {
+            animation: ripple 0.35s ease-in;
+        }
+    }
+}
+
+@mixin o-theme-sri-v-align-class() {
+    .v-align {
+        position: relative;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+
+        @media only screen and (max-width : 480px) {
+            top: auto;
+            transform: translate(0, 0);
+        }
+        > *:first-child {
+            margin-top: 0;
+        }
+    }
+}
+
+@mixin o-theme-nmi-website-forum-classes($border-radius, $navbar-brand-color, $padding,
+    $hover-bg-color, $hover-color, $active-bg-color) {
+    .o_wforum_navbar_container {
+        .navbar {
+            padding-top: 0;
+            padding-bottom: 0;
+            border-radius: $border-radius;
+            .navbar-brand {
+                padding: 18px;
+                font-weight: $font-weight-bold;
+                color: $navbar-brand-color;
+            }
+            .navbar-nav .nav-link {
+                &:hover {
+                    background-color: $hover-bg-color;
+                    color: $hover-color;
+                }
+                &.active, &:focus {
+                    background-color: $active-bg-color;
+                    color: $hover-bg-color;
+                }
+            }
+        }
+        .input-group .form-control {
+            height: auto;
+            padding: $padding;
+            color: map-get($grays, '900');
+            @include border-start-radius(20px);
+
+            + .input-group-append button {
+                padding: 6px 20px;
+            }
+        }
+    }
+    .website_forum #wrap {
+        // Ask a question - Button
+        .btn-group .btn {
+            padding: 6px 12px;
+            @include border-end-radius(0);
+            &.dropdown-toggle {
+                @include border-start-radius(0);
+                @include border-end-radius(20px);
+            }
+        }
+        // Ask a question - Editor icons
+        .btn-toolbar .btn {
+            background-color: rgba(0, 0, 0, 0);
+            color: #000;
+            border-radius: 0;
+            &.dropdown-toggle {
+                border-radius: 0;
+            }
+        }
+    }
+}
+
+@mixin o-theme-nmi-bg-pattern-classes($o-theme-bg-patterns) {
+    @for $i from 1 through length($o-theme-bg-patterns) {
+        .bg-pattern-0#{$i}{
+            background-image: nth($o-theme-bg-patterns, $i);
+            background-repeat: repeat !important;
+            background-size: inherit !important;
+        }
+    }
+}
+
+@mixin o-theme-nmi-bg-image-classes($o-theme-bg-imgs, $bg-size) {
+    @for $i from 1 through length($o-theme-bg-imgs) {
+        $j: $i;
+        @if $i < 10 { $j: 0#{$i}; }
+        .bg-img-#{$j}{
+            background: nth($o-theme-bg-imgs, $i);
+            background-repeat: no-repeat !important;
+            background-size: $bg-size !important;
+        }
+    }
+}
+
+@mixin o-theme-nmi-wrapwrap-styles($shadow-class, $border-radius) {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    background-color: rgba(0, 0, 0, 0);
+
+    p:not(.s_share) a:not(.btn) {
+        text-decoration: underline;
+    }
+    .readable {
+        padding: 0 30px;
+        .container {
+            width: auto;
+        }
+    }
+    .text-underline {
+        text-decoration: underline;
+    }
+    .text-boxed {
+        border: 1px solid;
+        border-color: inherit;
+        padding: 20px;
+        border-radius: $border-radius;
+    }
+}

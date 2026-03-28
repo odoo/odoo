@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_parallax" inherit_id="website.s_parallax">
+    <!-- Bg Image -->
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace">
+        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 75%;"/>
+    </xpath>
+</template>
+
+</odoo>

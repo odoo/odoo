@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_media_list" inherit_id="website.s_media_list">
+    <!-- Items -->
+    <xpath expr="//div[hasclass('s_media_list_item')][1]/div" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')][2]/div" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_media_list_item')][3]/div" position="attributes">
+        <attribute name="class" add="rounded" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

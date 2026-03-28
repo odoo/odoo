@@ -1,0 +1,184 @@
+
+// Backgrounds
+$bg-img-01: url("/web/image/theme_common.image_content_11");
+$bg-img-02: url("/web/image/theme_common.image_content_09");
+$bg-img-03: url("/web/image/theme_common.image_content_10");
+$bg-img-04: url("/web/image/theme_common.image_content_12");
+$bg-img-05: url("/web/image/theme_common.image_content_02");
+$bg-img-06: url("/web/image/theme_common.image_content_03");
+$bg-img-07: url("/web/image/theme_common.image_content_07");
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Theme colors
+
+// The system for this theme is particular to support somehow the old version.
+// The alpha color is always white but primary is using beta (instead of alpha)
+// and secondary is using alpha (white) (instead of beta). In the old system,
+// this only applied to buttons though but we extended that to all components.
+// Success, info, warning and error buttons are also customized with epsilon,
+// gamma, delta and ... black colors (see theme.scss).
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'loftspace-1': (
+            'alpha': #ffffff,
+            'beta': #cdd0a2,
+            'gamma': #b4bbb9,
+            'delta': #242327,
+            'epsilon': #957985,
+        ),
+        'loftspace-2': (
+            'alpha': #ffffff,
+            'beta': #e9e9e9,
+            'gamma': #c8efeb,
+            'delta': #1e222f,
+            'epsilon': #55e8da,
+        ),
+        'loftspace-3': (
+            'alpha': #ffffff,
+            'beta': #dbe8ed,
+            'gamma': #ecd5d6,
+            'delta': #590046,
+            'epsilon': #df699c,
+        ),
+        'loftspace-4': (
+            'alpha': #ffffff,
+            'beta': #d3d3d3,
+            'gamma': #f2ef1a,
+            'delta': #000000,
+            'epsilon': #f1aa6b,
+        ),
+        'loftspace-5': (
+            'alpha': #ffffff,
+            'beta': #cfcfcf,
+            'gamma': #2e2e2e,
+            'delta': #000000,
+            'epsilon': #1ad68f,
+        ),
+        'loftspace-6': (
+            'alpha': #ffffff,
+            'beta': #9fcae2,
+            'gamma': #bbc05c,
+            'delta': #112625,
+            'epsilon': #45b08c,
+        ),
+    )
+);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (36 / 16);
+$o-theme-h3-font-size-multiplier: (28 / 16);
+$o-theme-h5-font-size-multiplier: (18 / 16);
+
+$o-theme-font-configs: (
+    'Heebo': (
+        'family': ('Heebo', sans-serif),
+        'url': 'Heebo:300,300i,400,400i,700,700i',
+    ),
+    'Rajdhani': (
+        'family': ('Rajdhani', sans-serif),
+        'url': 'Rajdhani:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Ubuntu': (
+        'family': ('Ubuntu', sans-serif),
+        'url': 'Ubuntu:300,300i,400,400i,700,700i',
+    ),
+    'Poppins': (
+        'family': ('Poppins', sans-serif),
+        'url': 'Poppins:300,300i,400,400i,700,700i',
+    ),
+    'Questrial': (
+        'family': ('Questrial', sans-serif),
+        'url': 'Questrial:300,300i,400,400i,700,700i',
+    ),
+    'Mulish': (
+        'family': ('Mulish', sans-serif),
+        'url': 'Mulish:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'graphene-2',
+        'header-font-size': .95rem,
+        'btn-border-radius': 5px,
+        'btn-border-radius-lg': 5px,
+        'btn-border-radius-sm': 5px,
+        'btn-padding-y': 8px,
+        'btn-padding-x': 20px,
+        'btn-padding-y-lg': 10px,
+        'btn-padding-x-lg': 30px,
+        'font': 'Questrial',
+        'headings-font': 'Poppins',
+        'navbar-font': 'Poppins',
+        'buttons-font': 'Poppins',
+        'header-template': 'search',
+        'link-underline': 'never',
+    ),
+);
+
+$graphene-2: map-get($o-color-palettes, 'graphene-2');
+$graphene-2: map-merge($graphene-2, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('graphene-2': $graphene-2));
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'graphene-2');
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'loftspace-1',
+    2: 'loftspace-2',
+    3: 'loftspace-3',
+    4: 'loftspace-4',
+    5: 'loftspace-5',
+    6: 'loftspace-6',
+    7: 'generic-1',
+    8: 'generic-2',
+    9: 'generic-3',
+    10: 'generic-4',
+    11: 'generic-5',
+    12: 'generic-6',
+    13: 'generic-7',
+    14: 'generic-8',
+    15: 'generic-9',
+    16: 'generic-10',
+    17: 'generic-11',
+    18: 'generic-12',
+    19: 'generic-13',
+    20: 'generic-14',
+    21: 'generic-15',
+    22: 'generic-16',
+    23: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/13_001', (1: 5, 4: 5));
+$o-bg-shapes: add-footer-shape-colors-mapping('html_builder', 'Airy/13_001', (1: 5, 4: 'footer'));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/10', (5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/03_001', (5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/07', (2: 1, 5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/09', (2: 5, 3: 5));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Airy/04_001', 'second', (1: 5));

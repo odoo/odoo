@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt232 pb232" add="pt176 pb176" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace">
+        <h1 class="display-1-fs" style="text-align: center;"><font class="text-o-color-2">ESTATE ®</font><br/>Your easy home search, all in one</h1>
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        With a simple click, finding your dream home has never been easier.<br/><br/>
+    </xpath>
+    <!-- Button 1 -->
+    <xpath expr="(//a)[1]" position="attributes">
+        <attribute name="class" add="btn-lg" separator=" "/>
+    </xpath>
+    <xpath expr="(//a)[1]" position="replace" mode="inner">
+        Search Now
+    </xpath>
+    <!-- Button 2 -->
+    <xpath expr="(//a)[2]" position="replace"/>
+</template>
+
+</odoo>

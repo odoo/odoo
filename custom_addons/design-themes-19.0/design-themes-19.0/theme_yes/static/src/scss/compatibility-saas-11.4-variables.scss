@@ -1,0 +1,35 @@
+$s-banner-3-carousel-height: 100vh;
+$s-banner-3-indicators-visible: visible;
+$s-banner-3-padding: 30px;
+$s-banner-3-h1-size: 50px;
+$s-banner-3-h2-size: 30px;
+
+@mixin s-banner-3-row-hook {
+    background-color: rgba(0, 0, 0, 0);
+    height: auto;
+
+    img {
+        display: none;
+    }
+}
+
+@mixin s-banner-3-col-center-hook {
+    text-align: center;
+    height: auto;
+    padding-bottom: 20px;
+    h1, h2 {
+        color: white;
+    }
+    .fa {
+        transform: none;
+        font-size: 18px;
+    }
+    @include media-breakpoint-down(md) {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+@mixin s-banner-3-carousel-control-hook {
+    display: none;
+}

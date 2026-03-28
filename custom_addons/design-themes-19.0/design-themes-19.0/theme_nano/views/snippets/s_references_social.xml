@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references_social" inherit_id="website.s_references_social">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div/h3" position="replace" mode="inner">
+        Barbershop
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/h3" position="replace" mode="inner">
+        Oceandor
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/h3" position="replace" mode="inner">
+        Mountain
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[4]/h3" position="replace" mode="inner">
+        Hosoren
+    </xpath>
+    <!-- Column #1 -->
+    <xpath expr="(//div[hasclass('col-lg-3')])//i[hasclass('fa-facebook')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])//i[hasclass('fa-instagram')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])//i[hasclass('fa-twitter')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <!-- Column #2 -->
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//i[hasclass('fa-facebook')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//i[hasclass('fa-instagram')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//i[hasclass('fa-twitter')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <!-- Column #3 -->
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//i[hasclass('fa-facebook')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//i[hasclass('fa-instagram')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//i[hasclass('fa-twitter')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <!-- Column #4 -->
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//i[hasclass('fa-facebook')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//i[hasclass('fa-instagram')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//i[hasclass('fa-twitter')]" position="attributes">
+        <attribute name="class" remove="rounded shadow-sm" separator=" "/>
+    </xpath>
+</template>
+</odoo>

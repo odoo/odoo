@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_images" inherit_id="website.s_key_images">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_key_images_default_image_1/html_builder/geometric/geo_square_6.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_6</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_key_images_default_image_1.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_key_images_default_image_4/html_builder/geometric/geo_square_5.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_5</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_key_images_default_image_4.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover Our Latest Fashion Collection
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Explore the Trends that Define Style
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="replace" mode="inner">
+        A glimpse of elegance and comfort in every piece
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="replace" mode="inner">
+        Perfect outfits for every occasion
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="replace" mode="inner">
+        Quality that speaks for itself
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="replace" mode="inner">
+        Redefine your wardrobe with our latest styles
+    </xpath>
+</template>
+
+</odoo>

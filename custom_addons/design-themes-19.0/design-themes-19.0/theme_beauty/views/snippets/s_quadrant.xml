@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Beauty &amp; Care
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Indulge in the ultimate beauty and health experience. Our range of products and services, from cosmetics to hair care, are designed to enhance your natural beauty.<br/><br/> Discover your glow with us.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Discover Beauty
+    </xpath>
+</template>
+
+</odoo>

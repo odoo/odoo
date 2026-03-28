@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/09','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Floats_09 o_we_animated"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we offer to our community
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Customized Conservation Programs
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We develop tailored conservation strategies to address specific environmental needs. Our team works with you to implement effective solutions that protect and restore nature.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Eco-Friendly Initiatives
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your support is vital to our mission. Our dedicated team ensures that every initiative is sustainable and impactful, fostering a healthier environment for future generations.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Impact
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With extensive expertise and a commitment to conservation, we deliver high-impact projects that make a meaningful difference in preserving natural habitats.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Innovation and Outreach
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We employ innovative methods and engage with communities to advance our conservation goals. Using the latest practices, we help drive positive environmental change.
+    </xpath>
+</template>
+
+</odoo>

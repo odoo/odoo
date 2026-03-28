@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text_overlap" inherit_id="website.s_image_text_overlap">
+  <xpath expr="//section" position="attributes">
+    <attribute name="class" add="o_cc o_cc2" separator=" "/>
+  </xpath>
+  <xpath expr="//div[hasclass('row')]" position="attributes">
+    <attribute name="data-row-count" add="10" remove="9" separator=" "/>
+  </xpath>
+  <xpath expr="(//div[hasclass('o_grid_item')])[1]" position="attributes">
+    <attribute name="style" add="grid-area: 1 / 4 / 11 / 13; --grid-item-padding-x: 0px;" remove="grid-area: 1 / 1 / 10 / 8;" separator=";"/>
+    <attribute name="class" add="g-col-lg-9 col-lg-9 g-height-10" remove="g-col-lg-7 col-lg-7 g-height-9" separator=" "/>
+  </xpath>
+  <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+    <attribute name="style" add="grid-area: 3 / 1 / 9 / 7;--grid-item-padding-y: 40px;" remove="grid-area: 2 / 7 / 9 / 13;--grid-item-padding-y: 56px;" separator=";"/>
+    <attribute name="class" add="g-height-6 o_cc1" remove="g-height-7 o_cc5" separator=" "/>
+  </xpath>
+  <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="replace" mode="inner">
+    <p class="o_small">OUR MISSION</p>
+    <h3>Our goal is to ensure this day will be unforgettable for you and your beloved soulmate.</h3>
+  </xpath>
+</template>
+
+</odoo>

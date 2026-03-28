@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_freegrid" inherit_id="website.s_freegrid">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Indulge in Culinary Excellence at Our Bistros
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Savor the finest cuisine at our bistros and cafes, where each dish is crafted with passion and precision. Whether it’s a casual meal or a special occasion, we have something for everyone.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Reserve a Table
+    </xpath>
+</template>
+
+</odoo>

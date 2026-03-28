@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_shape_image" inherit_id="website.s_shape_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level o_cc o_cc4" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Celebrating diversity in fashion
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Explore our diverse range of fashion that embraces all identities and styles. We believe in inclusivity, offering collections that represent everyone. Fashion is for all—find your unique expression with us.
+    </xpath>
+    <xpath expr="//p[2]" position="replace"/>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Discover more
+    </xpath>
+</template>
+
+</odoo>

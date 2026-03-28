@@ -1,0 +1,34 @@
+
+#wrapwrap .s_clonable_boxes {
+    width: 100%;
+    height: auto!important; // Force height to avoid overlaps
+
+    .row {
+        display: flex;
+        flex-flow: row wrap;
+
+        > div {
+            display: flex;
+            flex-flow: column wrap;
+            justify-content: center;
+            text-align: center;
+            padding-top: $grid-gutter-width/2;
+            padding-bottom: $grid-gutter-width/2;
+
+            @include media-breakpoint-down(lg) {
+                width: 100%;
+            }
+        }
+    }
+}
+
+html[data-no-flex] .s_clonable_boxes {
+    width: 100%;
+    overflow: hidden;
+
+    .item {
+        height: 200px;
+        overflow: hidden;
+        text-align: center;
+    }
+}

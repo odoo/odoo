@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_big_number" inherit_id="website.s_big_number">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/20','colors':{'c5':'o-color-1','c1':'o-color-1'}}</attribute>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Bold_20" style="background-image: url('/html_editor/shape/html_builder/Bold/20.svg?c5=o-color-1&amp;c1=o-color-1');"/>
+    </xpath>
+
+    <!-- Text -->
+    <xpath expr="//h2/span" position="attributes">
+        <attribute name="style" add="font-size: 7.75rem;" remove="font-size: 10.75rem;" separator=";"/>
+    </xpath>
+    <xpath expr="//h2/span" position="replace" mode="inner">
+        250+
+    </xpath>
+    <xpath expr="//p/span" position="replace" mode="inner">
+        satisfied clients
+    </xpath>
+</template>
+
+</odoo>

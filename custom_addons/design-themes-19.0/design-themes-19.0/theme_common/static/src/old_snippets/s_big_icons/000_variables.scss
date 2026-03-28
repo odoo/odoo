@@ -1,0 +1,19 @@
+$s-big-icon-circle-icon-size: 120px;
+
+@mixin s-big-icon-circle-height-hook {}
+@mixin s-big-icon-circle-fa-hook {}
+
+@mixin o-theme-chd-big-icons-classes($border, $font-color) {
+    .s_big_icons_box {
+        .s_big_icons_icon {
+            border: $border;
+            color: #fff;
+            .fa {
+                color: o-color('alpha') !important;
+            }
+        }
+        &:hover .s_big_icons_icon {
+            @include o-theme-chd-big-icons-styles($h5-color: o-color('alpha'));
+        }
+    }
+}

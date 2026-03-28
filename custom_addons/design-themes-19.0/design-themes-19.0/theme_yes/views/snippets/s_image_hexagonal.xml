@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_hexagonal" inherit_id="website.s_image_hexagonal">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Enjoy the moment, we take care of everything
+    </xpath>
+    <!-- Image -->
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/web/image/website.s_cover_default_image</attribute>
+    </xpath>
+</template>
+
+</odoo>

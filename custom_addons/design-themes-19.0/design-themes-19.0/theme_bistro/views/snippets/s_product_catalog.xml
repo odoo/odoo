@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" inherit_id="website.s_product_catalog">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="style"/>
+        <attribute name="class" add="parallax s_parallax_is_fixed o_cc o_cc5 pt120 pb104" remove="pt64 pb64" separator=" "/>
+        <attribute name="data-scroll-background-ratio">1</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace">
+        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_product_catalog_default_image'); background-position: 50% 0%;"/>
+        <div class="o_we_bg_filter bg-black-50"/>
+    </xpath>
+    <!-- Remove Title & lead -->
+    <xpath expr="//section/div/h2" position="replace"/>
+    <xpath expr="//section/div/p" position="replace"/>
+</template>
+
+<template id="configurator_s_product_catalog" inherit_id="website.configurator_s_product_catalog">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/18","colors":{"c5": "o-color-4"}}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_18" style="background-image: url('/html_editor/shape/html_builder/Connections/18.svg?c5=o-color-4');"/>
+    </xpath>
+</template>
+
+<template id="s_product_catalog_dish" inherit_id="website.s_product_catalog_dish">
+    <xpath expr="//li" position="attributes">
+        <attribute name="class" add="mb-3" remove="mb-4" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

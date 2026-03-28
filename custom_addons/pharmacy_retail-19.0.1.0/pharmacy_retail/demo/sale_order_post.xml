@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <function name="action_confirm" model="sale.order">
+        <value eval="[
+            ref('sale_order_1'),
+            ref('sale_order_2'),
+            ref('sale_order_3'),
+            ref('sale_order_4'),
+            ref('sale_order_5'),
+        ]"/>
+    </function>
+
+    <function name="button_validate" model="stock.picking" context="{'skip_sms': True}">
+        <value model="stock.picking" eval="
+        (
+            obj().env.ref('pharmacy_retail.sale_order_1') +
+            obj().env.ref('pharmacy_retail.sale_order_2') +
+            obj().env.ref('pharmacy_retail.sale_order_3') +
+            obj().env.ref('pharmacy_retail.sale_order_4') +
+            obj().env.ref('pharmacy_retail.sale_order_5')
+        ).picking_ids.ids"/>
+    </function>
+
+    <function name="_create_invoices" model="sale.order">
+        <value eval="[
+            ref('sale_order_1'),
+            ref('sale_order_2'),
+            ref('sale_order_3'),
+            ref('sale_order_5'),
+        ]"/>
+    </function>
+
+</odoo>

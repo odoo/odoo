@@ -1,0 +1,212 @@
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Theme colors
+$o-theme-color-palettes: map-merge($o-theme-color-palettes,
+    (
+        'clean-1': (
+            'alpha': #bdc3c7,
+            'beta': #95a5a6,
+            'gamma': #2980b9,
+            'delta': #3498db,
+            'epsilon': #34495e,
+        ),
+        'clean-2': (
+            'alpha': #bdc3c7,
+            'beta': #7a58b2,
+            'gamma': #593d87,
+            'delta': #39225f,
+            'epsilon': #2c3e50,
+        ),
+        'clean-3': (
+            'alpha': #c5bcb1,
+            'beta': #e67e22,
+            'gamma': #c0392b,
+            'delta': #e74c3c,
+            'epsilon': #d35400,
+        ),
+        'clean-4': (
+            'alpha': #c5bcb1,
+            'beta': #f1c40f,
+            'gamma': #f3ac12,
+            'delta': #e67e22,
+            'epsilon': #d35400,
+        ),
+        'clean-5': (
+            'alpha': #ecf0f1,
+            'beta': #bdc3c7,
+            'gamma': #27ae60,
+            'delta': #254c3a,
+            'epsilon': #2ecc71,
+        ),
+        'clean-6': (
+            'alpha': #ecf0f1,
+            'beta': #bdc3c7,
+            'gamma': #7f8c8d,
+            'delta': #445b5c,
+            'epsilon': #34495e,
+        )
+    )
+);
+
+@if $o-support-13-0-color-system {
+    $-status-color-palettes: (
+        'clean-1': (
+            'success': #2980b9,
+            'info': #1abc9c,
+            'warning': #36495e,
+            'danger': #2c3e50,
+        ),
+        'clean-2': (
+            'success': #593d87,
+            'info': #39225f,
+            'warning': #2c3e50,
+            'danger': #c0392b,
+        ),
+        'clean-3': (
+            'success': #c0392b,
+            'info': #e67e22,
+            'warning': #c5bcb1,
+            'danger': #d35400,
+        ),
+        'clean-4': (
+            'success': #f3ac12,
+            'info': #f1c40f,
+            'warning': #c0392b,
+            'danger': #d35400,
+        ),
+        'clean-5': (
+            'success': #27ae60,
+            'info': #254c3a,
+            'warning': #34495e,
+            'danger': #2c3e50,
+        ),
+        'clean-6': (
+            'success': #bdc3c7,
+            'info': #7f8c8d,
+            'warning': #445b5c,
+            'danger': #2c3e50,
+        ),
+    );
+    $-palettes: $o-theme-color-palettes;
+    $o-theme-color-palettes: ();
+    @each $key in map-keys($-palettes) {
+        $o-theme-color-palettes: map-merge($o-theme-color-palettes, (
+            $key: map-merge(map-get($-palettes, $key), map-get($-status-color-palettes, $key) or ()),
+        ));
+    }
+}
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (48 / 16);
+$o-theme-h3-font-size-multiplier: (36 / 16);
+$o-theme-h5-font-size-multiplier: (21 / 16);
+$o-theme-h6-font-size-multiplier: (18 / 16);
+
+$o-theme-font-configs: (
+    'PT Sans': (
+        'family': ('PT Sans', sans-serif),
+        'url': 'PT+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Ubuntu': (
+        'family': ('Ubuntu', sans-serif),
+        'url': 'Ubuntu:300,300i,400,400i,700,700i',
+    ),
+    'IBM Plex Sans': (
+        'family': ('IBM Plex Sans', sans-serif),
+        'url': 'IBM+Plex+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Inter': (
+        'family': ('Inter', sans-serif),
+        'url': 'Inter:300,300i,400,400i,700,700i',
+    ),
+    'Noto Serif': ( // font update - Droid Serif -> Noto+Serif
+        'family': ('Noto Serif', serif),
+        'url': 'Noto+Serif:300,300i,400,400i,700,700i',
+    ),
+    'Dosis': (
+        'family': ('Dosis', sans-serif),
+        'url': 'Dosis:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans': (
+        'family': ('Open Sans', sans-serif),
+        'url': 'Open+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Heebo': (
+        'family': ('Heebo', sans-serif),
+        'url': 'Heebo:300,300i,400,400i,700,700i',
+    ),
+    'Lato': (
+        'family': ('Lato', sans-serif),
+        'url': 'Lato:300,300i,400,400i,700,700i',
+    ),
+    'Josefin Slab': (
+        'family': ('Josefin Slab', serif),
+        'url': 'Josefin+Slab:300,300i,400,400i,700,700i',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'clean-1',
+        'headings-font': 'IBM Plex Sans',
+        'navbar-font': 'Inter',
+        'buttons-font': 'Inter',
+        'header-template': 'default',
+    ),
+);
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'clean-1');
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'clean-1',
+    2: 'clean-2',
+    3: 'clean-3',
+    4: 'clean-4',
+    5: 'clean-5',
+    6: 'generic-1',
+    7: 'generic-2',
+    8: 'generic-3',
+    9: 'generic-4',
+    10: 'generic-5',
+    11: 'generic-6',
+    12: 'generic-7',
+    13: 'generic-8',
+    14: 'generic-9',
+    15: 'generic-10',
+    16: 'generic-11',
+    17: 'generic-12',
+    18: 'generic-13',
+    19: 'generic-14',
+    20: 'generic-15',
+    21: 'generic-16',
+    22: 'generic-17',
+);
+$o-theme-color-palettes-compatibility-indexes: (
+    1: 'clean-1',
+    2: 'clean-2',
+    3: 'clean-3',
+    4: 'clean-4',
+    5: 'clean-5',
+    6: 'clean-6',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/10', (5: 1));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/04_001', (3: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/14', (4: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/14_001', (4: 2, 3: 1));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/07_002', (3: 2, 4: 4, 5: 2));
+$o-bg-shapes: add-header-shape-colors-mapping('html_builder', 'Origins/07_002', (3: 'menu', 4: 4, 5: 2));

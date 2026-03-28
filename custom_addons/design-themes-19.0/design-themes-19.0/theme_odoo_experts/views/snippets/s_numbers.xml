@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers" inherit_id="website.s_numbers">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt200 pb200 oe_img_bg o_bg_img_center o_cc4" remove="pt80 pb80 o_cc1" separator=" "/>
+        <attribute name="style">background-image:url('/html_editor/shape/theme_odoo_experts/s_numbers.svg?c1=o-color-1');</attribute>
+    </xpath>
+    <!-- Numbers -->
+    <xpath expr="//span[hasclass('h5-fs')]" position="replace" mode="inner">
+        <strong>Useful options</strong>
+    </xpath>
+    <xpath expr="(//span[hasclass('h5-fs')])[2]" position="replace" mode="inner">
+        <strong>More leads</strong>
+    </xpath>
+    <xpath expr="(//span[hasclass('h5-fs')])[3]" position="replace" mode="inner">
+        <strong>Amazing pages</strong>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_freegrid" inherit_id="website.s_freegrid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2 pt88" remove="o_cc1 pt64" separator=" "/>
+    </xpath>
+    <!-- Item #1 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[1]" position="attributes">
+        <attribute name="style" add="grid-area: 8 / 1 / 16 / 2;" remove="grid-area: 2 / 1 / 10 / 2" separator=";"/>
+    </xpath>
+    <!-- Item #2 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[2]" position="attributes">
+        <attribute name="style" add="grid-area: 7 / 2 / 12 / 5;" remove="grid-area: 1 / 2 / 6 / 5" separator=";"/>
+    </xpath>
+    <!-- Item #3 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[3]" position="attributes">
+        <attribute name="style" add="grid-area: 12 / 2 / 17 / 5;" remove="grid-area: 6 / 2 / 11 / 5" separator=";"/>
+    </xpath>
+    <!-- Item #4 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]" position="attributes">
+        <attribute name="style" add="grid-area: 8 / 5 / 16 / 8;" remove="grid-area: 2 / 5 / 10 / 8" separator=";"/>
+    </xpath>
+    <!-- Item #5 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[5]" position="attributes">
+        <attribute name="style" add="grid-area: 7 / 8 / 17 / 11;" remove="grid-area: 1 / 8 / 11 / 11" separator=";"/>
+    </xpath>
+    <!-- Item #6 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[6]" position="attributes">
+        <attribute name="style" add="grid-area: 8 / 11 / 16 / 13;" remove="grid-area: 2 / 11 / 10 / 13" separator=";"/>
+    </xpath>
+    <!-- Item #7 -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[7]" position="replace">
+        <div class="o_grid_item g-col-lg-8 g-height-6 col-lg-8" style="grid-area: 1 / 3 / 7 / 11; z-index: 7;">
+            <p class="o_small" style="text-align: center;"> PORTFOLIO</p>
+            <h2 style="text-align: center;">Discover some of the latest<br/>moments we helped to create</h2>
+            <p><br/></p>
+            <p style="text-align: center;">
+                <a t-att-href="cta_btn_href" class="btn btn-primary btn-lg o_translate_inline"><t t-esc="cta_btn_text">View all the pictures</t></a>
+            </p>
+        </div>
+    </xpath>
+    <!-- Remove last item -->
+    <xpath expr="(//div[hasclass('o_grid_item')])[8]" position="replace"/>
+</template>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="section" position="attributes">
+        <attribute name="class" add="pt160 pb160" remove="pt232 pb232" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="before">
+        <i class="fa fa-2x fa-bug d-block my-3 mx-auto rounded-circle bg-o-color-4 text-o-color-1"/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        <font style="font-size: 62px;">— Life on Earth —</font>
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Our mission is to create a shared plan<br/> for saving the planet’s most exceptional wild places.
+    </xpath>
+    <xpath expr="//p" position="after">
+        <p class="lead" style="text-align: center;"><br/></p>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a//t" position="replace" mode="inner">
+        Get involved
+    </xpath>
+</template>
+
+</odoo>

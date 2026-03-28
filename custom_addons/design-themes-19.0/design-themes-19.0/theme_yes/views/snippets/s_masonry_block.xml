@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_masonry_block_default_template" inherit_id="website.s_masonry_block_default_template">
+    <!-- Little Blocks -->
+    <!-- Little block #01 - Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Caterers
+    </xpath>
+    <!-- Little block #01 - Text -->
+    <xpath expr="//*[hasclass('col-lg-3')]//p" position="replace">
+        <p>Check out our list of favorite caterers.</p>
+        <p><a href="#" class="btn btn-secondary rounded-circle o_translate_inline">Find a Caterer</a></p>
+    </xpath>
+
+    <!-- Bigger block #02 - Title -->
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Venues
+    </xpath>
+    <!-- Bigger block #02 - Text -->
+    <xpath expr="//*[hasclass('col-lg-4')]//p" position="replace">
+        <p>Check out our carefully curated list of favorite venues.</p>
+        <p><a href="#" class="btn btn-secondary o_translate_inline">Find a venue</a></p>
+    </xpath>
+
+    <!-- Bigger block #03 - Title -->
+    <xpath expr="(//h2)[3]" position="replace" mode="inner">
+        Attire
+    </xpath>
+    <!-- Bigger block #03 - Text -->
+    <xpath expr="//*[hasclass('col-lg-4')][2]//p" position="replace">
+        <p>Find the perfect outfit for before, during and after the main event.</p>
+        <p><a href="#" class="btn btn-primary o_translate_inline">Shop</a></p>
+    </xpath>
+
+    <!-- Little block #04 - Title -->
+    <xpath expr="(//h2)[4]" position="replace" mode="inner">
+        FAQ
+    </xpath>
+    <!-- Little block #04 - Text -->
+    <xpath expr="//*[hasclass('col-lg-3')][2]//p" position="replace">
+        <p>Find the answers to all your questions in our FAQ.</p>
+        <p><a href="#" class="btn btn-primary o_translate_inline">Go to FAQ</a></p>
+    </xpath>
+</template>
+
+</odoo>

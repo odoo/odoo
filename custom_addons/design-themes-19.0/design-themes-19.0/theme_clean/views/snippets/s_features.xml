@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_features" inherit_id="website.s_features">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+    <!-- First column : icon -->
+    <xpath expr="//div[hasclass('row')]//div//i" position="attributes">
+        <attribute name="class" add="bg-o-color-4 fa-shield" remove="bg-o-color-3 fa-paper-plane-o" separator=" "/>
+    </xpath>
+    <!-- First column : title -->
+    <xpath expr="//div[hasclass('row')]//div//h3" position="replace" mode="inner">
+        Secured
+    </xpath>
+    <!-- Second column : icon -->
+    <xpath expr="//div[hasclass('row')]//div[2]//i" position="attributes">
+        <attribute name="class" add="bg-o-color-4 fa-laptop" remove="bg-o-color-3 fa-credit-card" separator=" "/>
+    </xpath>
+    <!-- Second column : title -->
+    <xpath expr="//div[hasclass('row')]//div[2]//h3" position="replace" mode="inner">
+        All in one
+    </xpath>
+    <!-- Third column : icon -->
+    <xpath expr="//div[hasclass('row')]//div[3]//i" position="attributes">
+        <attribute name="class" add="bg-o-color-4 fa-star" remove="bg-o-color-3 fa-flag-o" separator=" "/>
+    </xpath>
+    <!-- Third column : title -->
+    <xpath expr="//div[hasclass('row')]//div[3]//h3" position="replace" mode="inner">
+        Easy to use
+    </xpath>
+</template>
+
+</odoo>

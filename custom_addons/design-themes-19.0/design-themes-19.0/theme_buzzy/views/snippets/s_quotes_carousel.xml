@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <!-- Carousel -->
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" add="s_carousel_rounded o_cc5" remove="s_carousel_boxed o_cc2 carousel-dark" separator=" "/>
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Rainy/10","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('carousel-inner')]" position="before">
+        <div class="o_we_shape o_html_builder_Rainy_10"/>
+    </xpath>
+    <!-- Carousel items - Remove background image -->
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="style"/>
+    </xpath>
+    <!-- Authors -->
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//span//span" position="attributes">
+        <attribute name="class" add="text-o-color-2" remove="text-muted" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//span//span" position="attributes">
+        <attribute name="class" add="text-o-color-2" remove="text-muted" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//span//span" position="attributes">
+        <attribute name="class" add="text-o-color-2" remove="text-muted" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_references" inherit_id="website.s_references">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+        <h2 style="text-align: center;">Trusted by industry leaders</h2>
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-2')]" position="attributes">
+        <attribute name="class" add="offset-lg-1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-2')])[6]" position="replace"/>
+</template>
+
+</odoo>

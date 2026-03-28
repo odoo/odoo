@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_key_images" inherit_id="website.s_key_images">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+        <h2 style="text-align: center;">Our case studies</h2>
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace">
+        <p class="lead" style="text-align: center;">Some of the latest projects we had the pleasure to work on</p>
+    </xpath>
+
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="col-lg-6 o_animate o_animated o_anim_from_left o_anim_slide_in" remove="col-lg-3" separator=" "/>
+        <attribute name="style" add="--wanim-intensity: 3; animation-name: o_anim_slide_in_left; animation-play-state: running;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')]//p" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-6')]//p[2]" position="replace" separator=" ">
+       <h3><font class="text-o-color-1">Nova App Launch</font></h3>
+    </xpath>
+    <xpath expr="//h3" position="after">
+        <p>2021</p>
+    </xpath>
+
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="col-lg-6 o_animate o_animated o_anim_from_right o_anim_slide_in" remove="col-lg-3" separator=" "/>
+        <attribute name="style" add="--wanim-intensity: 3; animation-delay: 0.3s; animation-name: o_anim_slide_in_right; animation-play-state: running;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][2]//p" position="replace"/>
+    <xpath expr="(//div[hasclass('col-lg-6')])[2]//p[2]" position="replace" separator=" ">
+        <h3><font class="text-o-color-1">Pulse Website Redesign</font></h3>
+    </xpath>
+    <xpath expr="(//h3)[2]" position="after">
+        <p>2022</p>
+    </xpath>
+
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="col-lg-6 pt48 o_animate o_animated o_anim_from_left o_anim_slide_in" remove="col-lg-3" separator=" "/>
+        <attribute name="style" add="--wanim-intensity: 3; animation-name: o_anim_slide_in_left; animation-play-state: running;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][3]//p" position="replace"/>
+    <xpath expr="(//div[hasclass('col-lg-6')])[3]//p[2]" position="replace" separator=" ">
+        <h3><font class="text-o-color-1">Skyline Brand Strategy</font></h3>
+    </xpath>
+    <xpath expr="(//h3)[3]" position="after">
+        <p>2023</p>
+    </xpath>
+
+    <xpath expr="//div[hasclass('col-lg-3')]" position="attributes">
+        <attribute name="class" add="col-lg-6 pt48 o_animate o_animated o_anim_from_right o_anim_slide_in" remove="col-lg-3" separator=" "/>
+        <attribute name="style" add="--wanim-intensity: 3; animation-delay: 0.3s; animation-name: o_anim_slide_in_right; animation-play-state: running;" separator=";"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][4]//p" position="replace"/>
+    <xpath expr="(//div[hasclass('col-lg-6')])[4]//p[2]" position="replace" separator=" ">
+        <h3><font class="text-o-color-1">LunaTech Rebrand</font></h3>
+    </xpath>
+    <xpath expr="(//h3)[4]" position="after">
+        <p>2019</p>
+    </xpath>
+</template>
+
+</odoo>

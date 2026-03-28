@@ -1,0 +1,18 @@
+$s-banner-parallax-text-color: white;
+$s-banner-parallax-height: 100vh;
+
+@mixin s-banner-parallax-row-hook {
+    .hero-bg:before {
+        border-top: 0px solid rgba(0, 0, 0, 0);
+    }
+    .hero-bg:after {
+        border-top: 0px solid rgba(0, 0, 0, 0);
+    }
+}
+
+@mixin s-banner-parallax-hero-bg-hook {
+    margin-bottom: 100px;
+    @media screen and (max-width: 640px) {
+        margin-top: 50px;
+    }
+}

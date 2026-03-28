@@ -1,0 +1,171 @@
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-h1-font-size-multiplier: (62 / 16);
+$o-theme-h2-font-size-multiplier: (44 / 16);
+$o-theme-h3-font-size-multiplier: (36 / 16);
+$o-theme-h4-font-size-multiplier: (24 / 16);
+$o-theme-h5-font-size-multiplier: (21 / 16);
+$o-theme-h6-font-size-multiplier: (18 / 16);
+
+$o-theme-font-configs: (
+    'Handlee': (
+        'family': ('Handlee', cursive),
+        'url': 'Handlee:300,300i,400,400i,700,700i',
+    ),
+    'Gruppo': (
+        'family': ('Gruppo', cursive),
+        'url': 'Gruppo:300,300i,400,400i,700,700i',
+    ),
+    'Droid Sans': (
+        'family': ('Droid Sans', sans-serif),
+    ),
+    'Bowlby One SC': (
+        'family': ('Bowlby One SC', cursive),
+        'url': 'Bowlby+One+SC:300,300i,400,400i,700,700i',
+    ),
+    'Lobster': (
+        'family': ('Lobster', cursive),
+        'url': 'Lobster:300,300i,400,400i,700,700i',
+    ),
+    'Nunito': (
+        'family': ('Nunito', sans-serif),
+        'url': 'Nunito:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Amatic SC': (
+        'family': ('Amatic SC', cursive),
+        'url': 'Amatic+SC:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans Condensed': (
+        'family': ('Open Sans Condensed', sans-serif),
+        'url': 'Open+Sans+Condensed:300,300i,400,400i,700,700i',
+    ),
+    'Oswald': (
+        'family': ('Oswald', sans-serif),
+        'url': 'Oswald:300,300i,400,400i,700,700i',
+    ),
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Permanent Marker': (
+        'family': ('Permanent Marker', cursive),
+        'url': 'Permanent+Marker:300,300i,400,400i,700,700i',
+    ),
+    'Pacifico': (
+        'family': ('Pacifico', cursive),
+        'url': 'Pacifico:300,300i,400,400i,700,700i',
+    ),
+    'Playfair Display': (
+        'family': ('Playfair Display', serif),
+        'url': 'Playfair+Display:300,300i,400,400i,700,700i',
+    ),
+    'Playfair Display SC': (
+        'family': ('Playfair Display SC', serif),
+        'url': 'Playfair+Display+SC:300,300i,400,400i,700,700i',
+    ),
+    'Radley': (
+        'family': ('Radley', serif),
+        'url': 'Radley:300,300i,400,400i,700,700i',
+    ),
+    'Oxygen': (
+        'family': ('Oxygen', sans-serif),
+        'url': 'Oxygen:300,400,700',
+    ),
+    'Montserrat': (
+        'family': ('Montserrat', sans-serif),
+        'url': 'Montserrat:300,300i,400,400i,700,700i',
+    ),
+    'Bebas Neue': (
+        'family': ('Bebas Neue', sans-serif),
+        'url': 'Bebas+Neue:400,700',
+    ),
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'color-palettes-name': 'artists-1',
+        'header-font-size': (13 / 16) * 1rem,
+        'font': 'Montserrat',
+        'headings-font': 'Bebas Neue',
+        'btn-ripple': true,
+        'header-template': 'vertical',
+        'footer-template': 'centered',
+        'link-underline': 'never',
+        'btn-padding-y': .5rem,
+        'btn-padding-x': 1rem,
+        'btn-padding-y-sm': .25rem,
+        'btn-padding-x-sm': .5rem,
+        'btn-padding-y-lg': .75rem,
+        'btn-padding-x-lg': 1.5rem,
+        'btn-border-radius': .125rem,
+        'btn-border-radius-sm': .125rem,
+        'btn-border-radius-lg': .125rem,
+        'input-border-radius': .125rem,
+        'input-border-radius-sm': .125rem,
+        'input-border-radius-lg': .125rem,
+    ),
+);
+
+$artists-1: map-get($o-color-palettes, 'artists-1');
+$artists-1: map-merge($artists-1, ('footer': 5));
+$o-color-palettes: map-merge($o-color-palettes, ('artists-1': $artists-1));
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'artists-1');
+
+$o-color-palettes-compatibility-indexes: (
+    1: 'artists-1',
+    2: 'artists-2',
+    3: 'artists-3',
+    4: 'artists-4',
+    5: 'artists-5',
+    6: 'artists-6',
+    7: 'generic-1',
+    8: 'generic-2',
+    9: 'generic-3',
+    10: 'generic-4',
+    11: 'generic-5',
+    12: 'generic-6',
+    13: 'generic-7',
+    14: 'generic-8',
+    15: 'generic-9',
+    16: 'generic-10',
+    17: 'generic-11',
+    18: 'generic-12',
+    19: 'generic-13',
+    20: 'generic-14',
+    21: 'generic-15',
+    22: 'generic-16',
+    23: 'generic-17',
+);
+
+//------------------------------------------------------------------------------
+// Shapes
+//------------------------------------------------------------------------------
+
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/12', (3: 3));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Airy/12_001', (3: 5));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Airy/12_001', 'second', (3: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/02_001', (3: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/04', (5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/05', (5: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/08', (2: 4));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Wavy/27', (2: 4));
+$o-bg-shapes: add-extra-shape-colors-mapping('html_builder', 'Wavy/27', 'second', (1: 5, 2: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Origins/16', (3: 5));
+$o-bg-shapes: change-shape-colors-mapping('html_builder', 'Floats/02', (1: 5, 2: 5, 3: 1, 5: 1));
+$o-bg-shapes: add-footer-shape-colors-mapping('html_builder', 'Airy/12', (3: 'footer'));
+$o-bg-shapes: add-footer-shape-colors-mapping('html_builder', 'Airy/12_001', (3: 'footer'));

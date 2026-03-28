@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/02','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Floats_02 o_we_animated"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we offer to your little ones
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Fun Learning Activities
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We create engaging and playful experiences tailored to each child's needs. Our caring teachers provide a safe and stimulating environment for early growth and exploration.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Creative Play
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your child's happiness is our focus. Our friendly staff ensures a joyful and interactive learning experience with plenty of fun activities and games.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Nurturing
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With experienced caregivers and a love for teaching, we offer a curriculum that nurtures every child’s curiosity and supports their early development.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Growth and Exploration
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We provide hands-on activities and creative projects to help your child learn and grow. Using innovative methods, we make every day a new adventure in discovery.
+    </xpath>
+</template>
+
+</odoo>

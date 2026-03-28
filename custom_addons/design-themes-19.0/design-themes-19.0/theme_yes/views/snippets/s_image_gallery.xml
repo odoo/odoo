@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_gallery" inherit_id="website.s_image_gallery">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Floats/12", "flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//*[hasclass('o_container_small')]" position="before">
+        <div class="o_we_shape o_html_builder_Floats_12"/>
+    </xpath>
+</template>
+
+</odoo>

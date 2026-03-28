@@ -1,0 +1,153 @@
+
+#wrapwrap .s_css_slider {
+    position: relative;
+    min-height: 150px;
+
+    .wrapper {
+        height: 100%;
+        position: relative;
+        z-index: 10;
+        transition: width 400ms;
+        /* Force Hardware Acceleration */
+        transform: translateZ(0);
+        backface-visibility: hidden;
+
+        @include s-css-slider-wrapper-hook;
+    }
+
+    .slider{
+        padding: 0;
+        height: 100%;
+        position: relative;
+        z-index: 10;
+        overflow: hidden;
+        @include s-css-slider-slider-hook;
+    }
+
+    .slider .slide {
+        position: absolute;
+        list-style: none;
+        overflow: hidden;
+        top:0;
+        left:0;
+        margin: 0;
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+        transform: translate(100%, 0);
+        transition: transform 300ms linear;
+        .info {
+            position: relative;
+            margin: 0;
+
+            &:not([class*=bg-]) {
+                color : $s-css-slider-info-text-color;
+                background-color : $s-css-slider-info-bg-color;
+            }
+
+            @include media-breakpoint-up(md) {
+                padding: $grid-gutter-width;
+                padding-top: $grid-gutter-width*0.5;
+                @include o-position-absolute(30%, $left: 60px);
+                max-width: 60%;
+            }
+        }
+        img {
+            display:block;
+            width:100%;
+
+            // Fix the image size on some devices (e.g. iPhone X)
+            @media screen and (max-width: 400px) {
+                // The image height was greater than the container height
+                height: 100%;
+
+                // Necessary if we don't want images of different sizes
+                // see resizeImgs() in s_css_slider_frontend.js
+                margin-top: 0 !important;
+            }
+        }
+        &.selected {
+            position:relative;
+            z-index:12;
+            transform: translate(0, 0);
+        }
+        &.move-left {
+            transform: translate(-100%, 0);
+        }
+    }
+    .navigation li {
+        position:absolute;
+        z-index:12;
+        top:50%;
+        list-style:none;
+        bottom:auto;
+        transform: translate(0, -50%);
+
+        span {
+            display: block;
+            width: 48px;
+            height: 48px;
+            overflow: hidden;
+            font-size: 1.6em;
+            color: $s-css-slider-navigation-color;
+            text-shadow: $s-css-slider-navigation-text-shadow;
+            white-space: nowrap;
+            transition: e("opacity 200ms, visibility 0s");
+
+            @include s-css-slider-navigation-buttons-hook;
+
+            &.inactive {
+                opacity:0;
+                visibility:hidden;
+                transition: e("opacity 200ms 0s, visibility 0s 200ms");
+            }
+            &:hover {
+                opacity:.7;
+            }
+        }
+        &:first-of-type {
+            left:10px;
+        }
+        &:last-of-type {
+            right:10px;
+        }
+
+        @include s-css-slider-navigation-hook;
+    }
+
+    .s_css_slider_pagination {
+        position:absolute;
+        padding: 0;
+        z-index: 12;
+        bottom: 30px;
+        left: 50%;
+        right:auto;
+        transform: translate(-50%, 0);
+
+        li {
+            display:inline-block;
+            float:left;
+            margin:0 5px;
+        }
+        li.selected a {
+            background:#f5f4f3;
+        }
+        a {
+            display:block;
+            height:12px;
+            width:12px;
+            border-radius:50%;
+            box-shadow: 0 1px 0 #333;
+            border:1px solid #f5f4f3;
+            background-color:rgba(255,255,255,0);
+            overflow:hidden;
+            text-indent:100%;
+            white-space:nowrap;
+        }
+        &:after {
+            content:"";
+            display:table;
+            clear:both;
+        }
+    }
+}

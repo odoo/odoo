@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc4 pt56 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('s_card')]" position="attributes">
+        <attribute name="style" add="border-radius: 0px !important; --card-spacer-x: 0px;" remove="--card-spacer-x: 64px;" separator=";"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover new creations<br/>and artistic masterpieces !
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Elevate your space with the unique wonders of artistic craftsmanship.<br/><br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Discover
+    </xpath>
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" remove="rounded-end" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

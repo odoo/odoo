@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ==== Banner ===== -->
+<template id="s_banner" inherit_id="website.s_banner" name="Cobalt s_banner">
+    <!-- Content -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt24 pb80" remove="pt96 pb96" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20','colors':{'c5': 'o-color-3'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_20" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-3');"/>
+    </xpath>
+    <!-- Row - remove grid mode -->
+    <xpath expr="//div[hasclass('row')]" position="attributes">
+        <attribute name="class" remove="o_grid_mode" separator=" "/>
+        <attribute name="data-row-count"/>
+    </xpath>
+    <!-- Jumbotron -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="pt64" remove="o_grid_item g-height-10 g-col-lg-5" separator=" "/>
+        <attribute name="style"/>
+    </xpath>
+    <!-- Remove grid images -->
+    <xpath expr="//div[hasclass('o_grid_item_image')]" position="replace"/>
+    <xpath expr="//div[hasclass('o_grid_item_image')]" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-5')][2]" position="replace"/>
+    <!-- Image -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="after">
+        <div class="col-lg-7 d-lg-block d-none o_snippet_mobile_invisible">
+            <img src="/html_editor/shape/theme_cobalt/s_banner_2.svg?c1=o-color-1" class="img img-fluid mx-auto" style="width: 100%;" alt=""/>
+        </div>
+    </xpath>
+    <!-- Content -->
+    <xpath expr="//h1" position="replace">
+        <h1>The <br/><font class="text-o-color-1">ultimate</font> <br/>marketing platform</h1>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">
+            <br/>
+            Building game-changing digital experiences designed to set your brand apart.
+            <br/>
+        </p>
+    </xpath>
+</template>
+
+<!-- ==== Image-Text ===== -->
+<template id="s_image_text" inherit_id="website.s_image_text" name="Cobalt s_image_text">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pt72 pb72" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//div[hasclass('col-lg-5')]" position="attributes">
+        <attribute name="class" add="pt24 pb24" remove="pt16 pb16" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img src="/html_editor/shape/theme_cobalt/s_image_text_2.svg?c1=o-color-1" class="img img-fluid mx-auto" style="width: 100%;" alt="Marketing"/>
+    </xpath>
+    <!-- Content -->
+    <xpath expr="//h2" position="replace">
+        <h2>Strategy synchronising multiple channels</h2>
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>
+        We create a consistent customer experience through a detailed digital strategy built on precise customer research.
+    </xpath>
+    <xpath expr="//p[last()-1]" position="replace"/>
+    <xpath expr="//a[hasclass('btn')]" position="replace"/>
+</template>
+
+<!-- ==== Text-Image ===== -->
+<template id="s_text_image" inherit_id="website.s_text_image" name="Cobalt s_text_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb88" remove="pb80" separator=" "/>
+    </xpath>
+    <!-- Content -->
+    <xpath expr="//h2" position="replace">
+        <h2>Unlock the possibilities of what we can offer you</h2>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img src="/html_editor/shape/theme_cobalt/s_text_image.svg?c1=o-color-1" class="img img-fluid mx-auto" style="width: 100%;" alt="Marketing"/>
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+    <xpath expr="//p" position="replace">
+        <p><br/></p>
+        <h5>Digital Transformation</h5>
+        <p>Leader in digital business, we’re helping companies of all sizes to thrive in an ever-changing landscape.</p>
+        <br/>
+        <h5>Web &amp; App Development</h5>
+        <p>We have collected solid experience in building native and cross-platform mobile applications and websites. Check our portfolio from clients around the world.</p>
+        <br/>
+        <p><a href="#" class="btn btn-secondary o_translate_inline">Learn more</a></p>
+    </xpath>
+    <xpath expr="//a[hasclass('btn')]" position="replace"/>
+</template>
+
+<!-- ======== TITLE ======== -->
+<template id="s_title" inherit_id="website.s_title" name="Cobalt s_title">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt56" remove="pt40" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">
+        Projects
+    </xpath>
+</template>
+
+<!-- ======== COMPANY TEAM SHAPES ======== -->
+<template id="s_company_team_shapes" inherit_id="website.s_company_team_shapes" name="Cobalt s_company_team_shapes">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== QUOTES ======== -->
+ <template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel" name="Cobalt s_quotes_carousel">
+    <!-- Assign slide3 as 'active' and move it in first position -->
+    <xpath expr="//div[hasclass('carousel-inner')]/div" position="attributes">
+        <attribute name="class" remove="active" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]/div[3]" position="attributes">
+        <attribute name="class" add="active" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-inner')]/div" position="before">
+        <xpath expr="//div[hasclass('carousel-inner')]/div[3]" position="move"/>
+    </xpath>
+    <!-- Adjust  (new-)slide3 bg position -->
+    <xpath expr="//div[hasclass('carousel-inner')]/div[3]" position="attributes">
+        <attribute name="style" remove="background-position: 50% 50%;" add="background-position: 50% 20%;" separator=";"/>
+    </xpath>
+</template>
+
+<!-- ======== CAROUSEL ======== -->
+<template id="s_carousel" inherit_id="website.s_carousel" name="Cobalt s_carousel">
+    <xpath expr="(//div[hasclass('carousel-content')])[3]" position="attributes">
+        <attribute name="class" add="o_cc o_cc4" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== CAROUSEL INTRO ======== -->
+<template id="s_carousel_intro" inherit_id="website.s_carousel_intro" name="Cobalt s_carousel_intro">
+    <!-- Layout -->
+    <xpath expr="//div[hasclass('carousel')]" position="attributes">
+        <attribute name="class" remove="carousel-dark" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-item')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-item')])[3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="(//h2)[2]" position="replace" mode="inner">
+        Leading the future with innovation
+    </xpath>
+</template>
+
+<!-- ==== References ===== -->
+<template id="s_references" inherit_id="website.s_references" name="Cobalt s_references">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+</template>
+
+<!-- ==== Three Columns ===== -->
+<template id="s_three_columns" inherit_id="website.s_three_columns" name="Cobalt s_three_columns">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc o_cc2 pt32 pb32" add="pt72 pb120" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]" position="before">
+        <h2 style="text-align: center;">Latest projects</h2>
+        <p/>
+    </xpath>
+</template>
+
+<!-- ==== Call To Action ===== -->
+<template id="s_call_to_action" inherit_id="website.s_call_to_action" name="Cobalt s_call_to_action">
+    <xpath expr="//t[@t-out='cta_btn_text']" position="replace" mode="inner">
+        START NOW
+    </xpath>
+</template>
+
+<!-- ======== CTA Box ======== -->
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Discover our data-driven strategy
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        No assumptions, every decision is based on data<br/><br/>
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/theme_cobalt/static/src/img/pictures/s_image_3.webp</attribute>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace" mode="inner">
+        Our services
+    </xpath>
+</template>
+
+<!-- ==== Picture ===== -->
+<template id="s_picture" inherit_id="website.s_picture" name="Cobalt s_picture">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt72 overflow-hidden" remove="pt64" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_container_small')]" position="attributes">
+        <attribute name="class" add="container-fluid px-5 px-lg-0" remove="o_container_small" separator=" "/>
+    </xpath>
+    <xpath expr="//figcaption" position="replace">
+        <figcaption class="figure-caption text-400"><em>Our office in Dhaka</em></figcaption>
+    </xpath>
+</template>
+
+<!-- ==== Images Wall ===== -->
+<template id="s_images_wall" inherit_id="website.s_images_wall">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb64" remove="pb24" separator=" "/>
+    </xpath>
+    <!-- Delete 3rd col -->
+    <xpath expr="(//div[hasclass('col-lg-4')])[last()]" position="replace"/>
+    <!-- Switch to col-4-->
+    <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][1]" position="attributes">
+        <attribute name="class" add="col-lg-6" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <!-- Add one more row of images -->
+    <xpath expr="//div[hasclass('col-lg-6')]/img" position="after">
+        <img class="img img-fluid d-block" src="/web/image/website.library_image_14" data-index="1" data-name="Image"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][2]/img" position="after">
+        <img class="img img-fluid d-block" src="/web/image/website.library_image_16" data-index="1" data-name="Image"/>
+    </xpath>
+    <!-- Remove image roundness -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[5]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+    <xpath expr="(//img)[6]" position="attributes">
+        <attribute name="class" remove="rounded" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== BIG BOXES ======== -->
+<template id="s_color_blocks_2" inherit_id="website.s_color_blocks_2" name="Cobalt s_color_blocks_2">
+    <!-- Left column -->
+    <xpath expr="//div[hasclass('col-lg-6')]" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc4" separator=" "/>
+    </xpath>
+    <!-- Left column - Text -->
+    <xpath expr="//div[hasclass('col-lg-6')]//p" position="replace"/>
+    <!-- Left column - Title -->
+    <xpath expr="//div[hasclass('col-lg-6')][1]//h2" position="replace" mode="inner">
+        Are you a startup or a seasoned company looking for a new brand identity?
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][1]//h2" position="after">
+        <p><br/></p>
+    </xpath>
+    <!-- Left column - Button -->
+    <xpath expr="//div[hasclass('col-lg-6')]//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-lg flat" separator=" "/>
+    </xpath>
+
+    <!-- Right column - Text -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]//p" position="replace"/>
+    <!-- Right column - Title -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]//h2" position="replace" mode="inner">
+        Are you an established brand looking for ongoing creative services?
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-6')][2]//h2" position="after">
+        <p><br/></p>
+    </xpath>
+    <!-- Right column - Button -->
+    <xpath expr="//div[hasclass('col-lg-6')][2]//a[hasclass('btn')]" position="attributes">
+        <attribute name="class" add="btn-lg flat" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== FREE GRID ======== -->
+<template id="s_freegrid" inherit_id="website.s_freegrid">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Pioneering IT Development and Design Solutions
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Harness the power of technology with our cutting-edge IT development and design services. We create solutions that drive innovation and deliver exceptional results for your business.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a" position="replace" mode="inner">
+        Explore Services
+    </xpath>
+</template>
+
+<!-- ======== KEY BENEFITS ======== -->
+<template id="s_key_benefits" inherit_id="website.s_key_benefits">
+    <!-- Titles -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Tailored Development Plans
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Continuous Project Support
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Innovative Solutions
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]/p" position="replace" mode="inner">
+        We create customized development strategies that meet your project’s unique requirements, ensuring successful outcomes.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]/p" position="replace" mode="inner">
+        Our team offers ongoing support throughout every phase of development, ensuring your project stays on track and on time.
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]/p" position="replace" mode="inner">
+        Leverage cutting-edge technologies and innovative approaches that drive your development projects forward and deliver exceptional results.
+    </xpath>
+</template>
+
+<!-- ======== PRICELIST BOXED ======== -->
+<template id="s_pricelist_boxed" inherit_id="website.s_pricelist_boxed" name="Cobalt s_pricelist_boxed">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-scroll-background-ratio"/>
+        <attribute name="class" add="o_cc o_cc2" remove="parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/01_001','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_01_001" style="background-image: url('/html_editor/shape/html_builder/Bold/01_001.svg?c5=o-color-1');"/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Our Corporate Services
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Enhance your business operations with our comprehensive suite of professional services, tailored to meet your corporate needs.
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        ✽&#160;&#160;Consulting Services
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        ✽&#160;&#160;Technology Solutions
+    </xpath>
+    <xpath expr="//t[@t-set='name']" position="replace" mode="inner">
+        Business Strategy Consulting
+    </xpath>
+    <xpath expr="//t[@t-set='price']" position="replace" mode="inner">
+        Starting at $2,500
+    </xpath>
+    <xpath expr="//t[@t-set='description']" position="replace" mode="inner">
+        Expert advice on business planning, market analysis, and competitive strategy to help your company achieve its goals.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[2]" position="replace" mode="inner">
+        Financial Advisory Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[2]" position="replace" mode="inner">
+        Starting at $3,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[2]" position="replace" mode="inner">
+        Comprehensive financial planning, including risk assessment, investment strategy, and tax optimization for your business.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[3]" position="replace" mode="inner">
+        Human Resources Management
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[3]" position="replace" mode="inner">
+        Starting at $1,800
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[3]" position="replace" mode="inner">
+        Customized HR solutions, including talent acquisition, employee training, and performance management to boost productivity.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[4]" position="replace" mode="inner">
+        IT Support Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[4]" position="replace" mode="inner">
+        Starting at $2,000
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[4]" position="replace" mode="inner">
+        Reliable IT support, network management, and cybersecurity solutions to safeguard your business operations and data integrity.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[5]" position="replace" mode="inner">
+        Cloud Computing Solutions
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[5]" position="replace" mode="inner">
+        Starting at $2,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[5]" position="replace" mode="inner">
+        Scalable cloud services to enhance your business’s flexibility and data accessibility, supporting remote work and collaboration.
+    </xpath>
+    <xpath expr="(//t[@t-set='name'])[6]" position="replace" mode="inner">
+        Digital Marketing Services
+    </xpath>
+    <xpath expr="(//t[@t-set='price'])[6]" position="replace" mode="inner">
+        Starting at $1,500
+    </xpath>
+    <xpath expr="(//t[@t-set='description'])[6]" position="replace" mode="inner">
+        Strategic online marketing, SEO optimization, and social media management to boost your brand visibility and customer engagement.
+    </xpath>
+</template>
+
+<!-- ======== STRIPED CENTER TOP ======== -->
+<template id="s_striped_center_top" inherit_id="website.s_striped_center_top">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc5" add="o_cc3" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Innovative IT Solutions for Your Growth
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Transform your business with cutting-edge IT development and design solutions that drive efficiency and growth.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Discover Our Services
+    </xpath>
+    <!-- Figcaption -->
+    <xpath expr="//figcaption" position="replace" mode="inner">
+        Technology that drives success
+    </xpath>
+</template>
+<!-- ======== IMAGE PUNCHY ======== -->
+<template id="s_image_punchy" inherit_id="website.s_image_punchy">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc2" add="o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== IMAGE TITLE ======== -->
+<template id="s_image_title" inherit_id="website.s_image_title" name="Cobalt s_image_title">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" remove="o_cc5 oe_img_bg" separator=" "/>
+        <attribute name="style"/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Airy/10_001','colors':{'c5':'rgba(0,0,0,0.25)'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Airy_10_001" style="background-image: url('/html_editor/shape/html_builder/Airy/10_001.svg?c5=rgba(0,0,0,0.25)');"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="replace"/>
+</template>
+
+<!-- ======== KEY IMAGES ======== -->
+<template id="s_key_images" inherit_id="website.s_key_images" name="Cobalt s_key_images">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt112" remove="pt72" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/06','colors':{'c5':'o-color-3'},'flip':['y'],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-3&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+
+    <!-- Numbers -->
+    <xpath expr="//div[hasclass('col-lg-3')]/p" position="replace">
+        <p class="h1-fs" style="text-align: center;">
+            <font class="text-o-color-2">01</font>
+        </p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]/p" position="replace">
+        <p class="h1-fs" style="text-align: center;">
+            <font class="text-o-color-2">02</font>
+        </p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]/p" position="replace">
+        <p class="h1-fs" style="text-align: center;">
+            <font class="text-o-color-2">03</font>
+        </p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]/p" position="replace">
+        <p class="h1-fs" style="text-align: center;">
+            <font class="text-o-color-2">04</font>
+        </p>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace">
+        <h2 style="text-align: center;">
+            Driving Success <br/>Through Innovation
+        </h2>
+    </xpath>
+    <xpath expr="//p[hasclass('lead')]" position="replace">
+        <p class="lead" style="text-align: center;">
+            Empowering Businesses to Reach New Heights
+        </p>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="replace">
+        <h3 class="h4-fs" style="text-align: center;">Efficiency</h3>
+        <p><br/></p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="replace">
+        <h3 class="h4-fs" style="text-align: center;">Reliability</h3>
+        <p><br/></p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="replace">
+        <h3 class="h4-fs" style="text-align: center;">Innovation</h3>
+        <p><br/></p>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="replace">
+        <h3 class="h4-fs" style="text-align: center;">Scalability</h3>
+        <p><br/></p>
+    </xpath>
+
+    <!-- Images -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_cobalt/s_key_images_1.svg?c1=o-color-1</attribute>
+    </xpath>
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_cobalt/s_key_images_2.svg?c1=o-color-1</attribute>
+    </xpath>
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_cobalt/s_key_images_3.svg?c1=o-color-1</attribute>
+    </xpath>
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="src">/html_editor/shape/theme_cobalt/s_key_images_4.svg?c1=o-color-1</attribute>
+    </xpath>
+
+    <!-- Move texts before images -->
+    <xpath expr="//div[hasclass('col-lg-3')]//p[3]" position="after">
+        <xpath expr="//div[hasclass('col-lg-3')]//p[2]" position="move"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[3]" position="after">
+        <xpath expr="(//div[hasclass('col-lg-3')])[2]//p[2]" position="move"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[3]" position="after">
+        <xpath expr="(//div[hasclass('col-lg-3')])[3]//p[2]" position="move"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[3]" position="after">
+        <xpath expr="(//div[hasclass('col-lg-3')])[4]//p[2]" position="move"/>
+    </xpath>
+</template>
+
+<!-- ======== IMAGE FRAME ======== -->
+<template id="s_image_frame" inherit_id="website.s_image_frame">
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_carousel_default_image_1</attribute>
+    </xpath>
+</template>
+
+<!-- ======== BIG NUMBER ======== -->
+<template id="s_big_number" inherit_id="website.s_big_number">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Blocks/01_001"}</attribute>
+        <attribute name="class" add="o_cc4" remove="o_cc5" separator=" "/>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Blocks_01_001"/>
+    </xpath>
+
+    <!-- Text -->
+    <xpath expr="//h2/span" position="replace" mode="inner">
+        90%
+    </xpath>
+</template>
+
+<!-- ===== WAVY GRID ======== -->
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/14','colors':{'c5':'o-color-3','c1':'o-color-3'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Bold_14" style="background-image: url('/html_editor/shape/html_builder/Bold/14.svg?c5=o-color-3&amp;c1=o-color-3');"/>
+    </xpath>
+</template>
+<!-- ======== CARD OFFSET ======== -->
+<template id="s_card_offset" inherit_id="website.s_card_offset">
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_carousel_default_image_3</attribute>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Pioneering IT Solutions &amp; Development
+    </xpath>
+    <!-- Paragraph 1 -->
+    <xpath expr="(//p[hasclass('lead')])[1]" position="replace" mode="inner">
+        Leverage the power of technology with our advanced IT development services. We deliver innovative solutions that meet the evolving needs of your business.
+    </xpath>
+    <!-- Paragraph 2 -->
+    <xpath expr="(//p[hasclass('lead')])[2]" position="replace" mode="inner">
+        Innovate with confidence.
+    </xpath>
+</template>
+
+<!-- ======== SHAPE IMAGE ======== -->
+<template id="s_shape_image" inherit_id="website.s_shape_image">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ==== Cover ===== -->
+<template id="s_cover" inherit_id="website.s_cover" name="Cobalt s_cover">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc5" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="attributes">
+        <attribute name="class" add="bg-black-75" remove="bg-black-50" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== IMAGES CONSTELLATIONS ======== -->
+<template id="s_images_constellation" inherit_id="website.s_images_constellation">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc5" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item')])[4]" position="attributes">
+        <attribute name="style" add="grid-area: 11 / 5 / 15 / 11;" remove="grid-area: 12 / 5 / 16 / 11;" separator=";"/>
+    </xpath>
+</template>
+
+<!-- ======== EMPOWERMENT ======== -->
+<template id="s_empowerment" inherit_id="website.s_empowerment">
+    <!-- Badge content -->
+    <xpath expr="//span[hasclass('s_cta_badge')]" position="replace" mode="inner">
+        <i class="fa fa-fw fa-info-circle o_not-animable" role="img"/>&#160;&#160;Innovative solutions&#160;&#160;&#160;&#160;
+        <a href="#">See our projects&#160;&#160; <i class="fa fa-long-arrow-right" role="img"/></a>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Building the future<br/>with NovaDev Solutions
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Transforming ideas into impactful digital experiences.<br/><br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')][1]" position="replace" mode="inner">
+        Our services
+    </xpath>
+    <!-- Second Button -->
+    <xpath expr="//a[hasclass('btn')][2]" position="replace" mode="inner">
+        Start a project
+    </xpath>
+</template>
+
+<!-- ======== STRIPED TOP ======== -->
+<template id="s_striped_top" inherit_id="website.s_striped_top">
+    <xpath expr="//h1" position="replace" mode="inner">
+        Experience the Future of Innovation
+    </xpath>
+</template>
+
+<!-- ======== COMPANY TEAM DETAIL ======== -->
+<template id="s_company_team_detail" inherit_id="website.s_company_team_detail">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5 pt96" remove="o_cc1 pt64" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/05','colors':{'c5':'o-color-4'},'flip':['y'],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_05" style="background-image: url('/html_editor/shape/html_builder/Connections/05.svg?c5=o-color-4&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+        <attribute name="class" add="col-lg-3" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+        <attribute name="class" add="col-lg-3" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+        <attribute name="class" add="col-lg-3" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')]" position="attributes">
+        <attribute name="class" add="col-lg-3" remove="col-lg-4" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')]" position="replace"/>
+    <xpath expr="//div[hasclass('col-lg-4')]" position="replace"/>
+</template>
+
+<!-- ======== REFERENCES GRID ======== -->
+<template id="s_references_grid" inherit_id="website.s_references_grid">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt112" remove="pt64" separator=" "/>
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/06','flip':['y'],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_06" style="background-image: url('/html_editor/shape/html_builder/Connections/06.svg?c5=o-color-5&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+</template>
+
+<!-- ======== COMPANY TREAM GRID ======== -->
+<template id="s_company_team_grid" inherit_id="website.s_company_team_grid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3" remove="o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== COMPANY TEAM CARD ======== -->
+<template id="s_company_team_card" inherit_id="website.s_company_team_card" name="Cobalt's s_company_team_card">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc1" remove="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Team Member 1 -->
+    <xpath expr="//div[hasclass('card')]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Team Member 2 -->
+    <xpath expr="(//div[hasclass('card')])[2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Team Member 3 -->
+    <xpath expr="(//div[hasclass('card')])[3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Team Member 4 -->
+    <xpath expr="(//div[hasclass('card')])[4]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ==== Split Intro ===== -->
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<!-- ======== FRAMED NUMBERS ======== -->
+<template id="s_numbers_framed" inherit_id="website.s_numbers_framed">
+    <!-- KPI's -->
+    <xpath expr="//div[hasclass('col-lg-4')][1]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][2]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-4')][3]" position="attributes">
+        <attribute name="class" add="o_cc4" remove="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

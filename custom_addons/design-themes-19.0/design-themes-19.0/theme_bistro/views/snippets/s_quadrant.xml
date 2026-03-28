@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3 o_colored_level" separator=" "/>
+    </xpath>
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[1]" position="replace"/>
+    <xpath expr="(//div[hasclass('o_grid_item_image')])[2]" position="replace"/>
+
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Taste &amp; Enjoy
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Experience the finest in dining with our carefully curated menus. Whether you’re at a bistro, bar, or cafe, our culinary offerings are sure to delight.<br/><br/> Taste the difference in every dish.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Reserve a Table
+    </xpath>
+</template>
+
+</odoo>

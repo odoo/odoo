@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_striped_top" inherit_id="website.s_striped_top">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_cc5" add="o_cc2" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="attributes">
+        <attribute name="class" add="h2-fs" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">
+        Discovering the Ultimate Travel Experience
+    </xpath>
+    <!-- Lead -->
+    <xpath expr="//p" position="replace" mode="inner">
+        A travel agent helps you to plan your trip from start to finish.
+    </xpath>
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/web/image/website.s_media_list_default_image_1</attribute>
+    </xpath>
+</template>
+
+</odoo>

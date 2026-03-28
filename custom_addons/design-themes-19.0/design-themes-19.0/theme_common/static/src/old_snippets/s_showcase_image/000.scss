@@ -1,0 +1,106 @@
+
+#wrapwrap .s_showcase_image {
+    height: auto;
+    text-align: left;
+    .info {
+        margin-bottom: 1.5em;
+    }
+    > .row {
+        height: 100%;
+    }
+    figure {
+        background-size : cover;
+        position        : relative;
+        height          : 200px;
+
+        // Layout Options
+        // =======================
+        &.tl figcaption {
+            top    : 0;
+            left   : 0;
+            bottom : auto;
+            right  : auto;
+            margin-left : 14px;
+            text-align: right;
+        }
+        &.tr figcaption {
+            top    : 0;
+            left   : auto;
+            bottom : auto;
+            right  : 0;
+        }
+        &.bl figcaption {
+            top    : auto;
+            left   : 0;
+            bottom : 0;
+            margin-left : 14px;
+            right  : auto;
+            text-align: right;
+        }
+    }
+    figcaption {
+        position    : absolute;
+        bottom      : 0;
+        width       : 100%;
+        text-shadow : $s-showcase-image-caption-text-shadow;
+        font-size   : $s-showcase-image-caption-font-size-mobile;
+        padding     : $s-showcase-image-caption-padding;
+
+        &:not([class*=bg-]) {
+            color       : $s-showcase-image-caption-color;
+            background  : $s-showcase-image-caption-bg;
+        }
+
+        h6 {
+            margin-top: 0;
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        height: 350px;
+        .info {
+            height: 100%;
+            margin-bottom: 0;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+        }
+        figure {
+            height: 100%;
+        }
+        figcaption {
+            position     : absolute;
+            bottom       : 0;
+            right        : 0;
+            width        : 50%;
+            font-size : $s-showcase-image-caption-font-size-desktop;
+            padding   : $s-showcase-image-caption-padding;
+        }
+    }
+
+    &.s_right {
+        text-align: right;
+        figure {
+            float: right;
+
+            // Layout Options
+            // =======================
+            &.tl figcaption {
+                margin-left: 0;
+            }
+            &.tr figcaption {
+                margin-right : 14px;
+            }
+            &.bl figcaption {
+                margin-left: 0;
+            }
+        }
+
+        @include media-breakpoint-up(lg) {
+            figcaption {
+                margin-right : 14px;
+                text-align   : left;
+            }
+        }
+    }
+}

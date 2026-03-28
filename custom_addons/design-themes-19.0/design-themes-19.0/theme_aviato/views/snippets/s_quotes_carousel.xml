@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" inherit_id="website.s_quotes_carousel">
+    <xpath expr="//div[hasclass('s_quotes_carousel')]" position="attributes">
+        <attribute name="class" remove="carousel-dark" separator=" "/>
+    </xpath>
+    <!-- Quote 1 -->
+    <xpath expr="//blockquote" position="attributes">
+        <attribute name="class" add="w-75" remove="w-50" separator=" "/>
+    </xpath>
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[1]" position="replace" mode="inner">
+        It would take too long to describe day by day the sights, sounds, and people that we came across. Ireland was fantastic.
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//strong" position="replace" mode="inner">
+        Linda and Paulo
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[1]//span//span" position="replace" mode="inner">
+        From Italy
+    </xpath>
+    <!-- Quote 2 -->
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[2]" position="replace" mode="inner">
+        The parts of the country we visited were beautiful, people were friendly, everything we ate was delicious, and there were many fun things to see and do.
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//strong" position="replace" mode="inner">
+        Jacques and Marie
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[2]//span//span" position="replace" mode="inner">
+        From France
+    </xpath>
+    <!-- Quote 3 -->
+    <xpath expr="(//p[hasclass('s_blockquote_quote')])[3]" position="replace"  mode="inner">
+        Everything was very well organised. Thank you very much for everything!
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//strong" position="replace" mode="inner">
+        Rose and Peter
+    </xpath>
+    <xpath expr="(//div[hasclass('s_blockquote_author')])[3]//span//span" position="replace" mode="inner">
+        From United Kingdom
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_motto" inherit_id="website.s_motto">
+    <!-- Shape -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Floats/09','showOnMobile':false, 'animated': true}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="attributes">
+        <attribute name="class" remove="o_html_builder_Floats_07" add="o_html_builder_Floats_09" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

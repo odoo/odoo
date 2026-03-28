@@ -1,0 +1,51 @@
+#wrapwrap .s_event_slide {
+    overflow: hidden;
+    .row {
+        text-align: center;
+        overflow: hidden;
+        box-shadow: inset 0px -7px 9px -6px rgba(0,0,0,0.45);
+        .s_event_slide_title{
+            float: left;
+            @media screen and (max-width: 640px) { // FIXME
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+        }
+        .s_event_slide_list {
+            float: right;
+            border-left: 4px solid o-color('epsilon');
+            .header-border {
+                width: 20%;
+                height: 5px;
+                margin-bottom: 15px;
+                border-radius: 10px;
+                background-color: o-color('epsilon');
+            }
+            > .row > div {
+                border-right: 1px solid map-get($grays, '200');
+                border-bottom: 1px solid map-get($grays, '200');
+                text-align: left;
+                h4 {
+                    text-align: center;
+                }
+            }
+            .event {
+                height: 400px;
+                overflow: hidden;
+                overflow-y: scroll;
+                padding-top: 40px;
+                @include media-breakpoint-down(md) {
+                    overflow: visible;
+                    height: auto;
+                }
+                img {
+                    width: 100%;
+                }
+            }
+        }
+    }
+    .fa {
+        display: inline-block;
+        margin-top: 50px;
+    }
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers_charts" inherit_id="website.s_numbers_charts">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt48 pb48" add="pt80 pb80" separator=" "/>
+    </xpath>
+    <!-- Pie Chart -->
+    <xpath expr="//div[hasclass('s_chart')]" position="attributes">
+        <attribute name="data-data">{"labels":["First","Second"],"datasets":[{"label":"One","data":["25","75"],"backgroundColor":["o-color-3","o-color-1"],"borderColor":["",""]}]}</attribute>
+    </xpath>
+    <!-- Progress 1 -->
+    <xpath expr="(//div[hasclass('progress-bar')])[1]" position="attributes">
+        <attribute name="class" remove="bg-o-color-5" add="bg-o-color-1" separator=" "/>
+    </xpath>
+    <!-- Progress 2 -->
+    <xpath expr="(//div[hasclass('progress-bar')])[2]" position="attributes">
+        <attribute name="class" remove="bg-o-color-5" add="bg-o-color-1" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>

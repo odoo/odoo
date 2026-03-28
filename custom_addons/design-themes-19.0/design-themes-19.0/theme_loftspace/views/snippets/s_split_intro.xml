@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_split_intro" inherit_id="website.s_split_intro">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc5" remove="o_cc1" separator=" "/>
+    </xpath>
+    <!-- Left column -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Discover our<br/>stylish furniture
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        <br/>Transform your home with our curated collection of furniture that combines elegance and functionality. From contemporary designs to timeless classics, we offer pieces that elevate your living spaces and reflect your personal style. Discover how our quality furnishings can make your home both beautiful and comfortable.<br/><br/>
+    </xpath>
+</template>
+
+</odoo>

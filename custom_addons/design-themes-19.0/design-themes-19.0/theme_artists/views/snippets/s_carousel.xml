@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel" inherit_id="website.s_carousel">
+    <!-- Content -->
+    <xpath expr="//div[hasclass('carousel-item')]//div[hasclass('carousel-content')]" position="replace">
+        <div class="carousel-content col-lg-12 pb112 pt112">
+            <h2 style="text-align: center;">Aquitani</h2>
+            <p class="lead" style="text-align: center;"><b>Photoshoot / June 2021</b></p>
+            <p style="text-align: center;">
+                <a href="#" class="btn btn-primary btn-lg o_translate_inline">Discover</a>
+            </p>
+        </div>
+    </xpath>
+
+    <!-- Carousel-item #02 -->
+    <xpath expr="//div[hasclass('carousel-item')][2]" position="attributes">
+        <attribute name="class" add="o_cc o_cc5 pt152 pb152" remove="pt96 pb96" separator=" "/>
+    </xpath>
+    <!-- Shape & filter -->
+    <xpath expr="//div[hasclass('carousel-item')][2]//div[hasclass('container')]" position="before">
+        <div class="o_we_bg_filter bg-black-25"/>
+    </xpath>
+    <!-- Content -->
+    <xpath expr="//div[hasclass('carousel-item')][2]//div[hasclass('carousel-content')]" position="replace">
+        <div class="carousel-content col-lg-12 pb112 pt112">
+            <h2 style="text-align: center;">Immemorabili</h2>
+            <p class="lead" style="text-align: center;"><b>Painting concept / April 2021</b></p>
+            <p style="text-align: center;">
+                <a href="#" class="btn btn-primary btn-lg o_translate_inline">Discover</a>
+            </p>
+        </div>
+    </xpath>
+
+    <!-- Carousel-item #03 -->
+    <xpath expr="//div[hasclass('carousel-item')][3]" position="attributes">
+        <attribute name="class" add="pt152 pb152" remove="pb128 pt128" separator=" "/>
+    </xpath>
+    <!-- Shape & filter -->
+    <xpath expr="//div[hasclass('carousel-item')][3]//div[hasclass('container')]" position="before">
+        <div class="o_we_bg_filter bg-black-25"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//div[hasclass('carousel-item')][3]//div[hasclass('carousel-content')]" position="replace">
+        <div class="carousel-content col-lg-12 pb112 pt112">
+            <h2 style="text-align: center;">Vincam</h2>
+            <p class="lead" style="text-align: center;"><b>Typographic collection / March 2021</b></p>
+            <p style="text-align: center;">
+                <a href="#" class="btn btn-primary btn-lg o_translate_inline">Discover</a>
+            </p>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

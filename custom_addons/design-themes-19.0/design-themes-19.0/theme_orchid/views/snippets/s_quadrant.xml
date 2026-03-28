@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" inherit_id="website.s_quadrant">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Floral &amp; Gardens
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        Bring nature’s beauty into your life with our exquisite floral arrangements and garden designs. Our selections are perfect for any occasion and setting.<br/><br/> Discover the elegance of flowers and greenery.
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Browse Flowers
+    </xpath>
+</template>
+
+</odoo>

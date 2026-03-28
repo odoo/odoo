@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_big_number" inherit_id="website.s_big_number">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="style">background-image: linear-gradient(60deg, var(--o-color-2) 0%, var(--o-color-5) 100%);</attribute>
+        <attribute name="data-oe-shape-data"/>
+        <attribute name="class" add="o_cc3" remove="o_cc5" separator=" "/>
+    </xpath>
+
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+
+    <!-- Text -->
+    <xpath expr="//h2/span" position="attributes">
+        <attribute name="style" add="font-size: 7.75rem;" remove="font-size: 10.75rem;" separator=";"/>
+    </xpath>
+    <xpath expr="//h2/span" position="replace" mode="inner">
+        1,250
+    </xpath>
+    <xpath expr="//p/span" position="replace" mode="inner">
+        trees planted since last year
+    </xpath>
+</template>
+
+</odoo>

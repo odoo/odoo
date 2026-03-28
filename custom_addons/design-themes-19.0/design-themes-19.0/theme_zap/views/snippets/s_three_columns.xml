@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_three_columns" inherit_id="website.s_three_columns">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt64 pb64" remove="pt32 pb32" separator=" "/>
+    </xpath>
+    <!-- Column #01 -->
+    <xpath expr="//*[hasclass('card')]" position="attributes">
+        <attribute name="style" add="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="//*[hasclass('card-title')]" position="replace" mode="inner">
+        Services
+    </xpath>
+    <!-- Column #02 -->
+    <xpath expr="(//*[hasclass('card')])[2]" position="attributes">
+        <attribute name="style" add="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//*[hasclass('card-title')])[2]" position="replace" mode="inner">
+        Features
+    </xpath>
+    <!-- Column #03 -->
+    <xpath expr="(//*[hasclass('card')])[3]" position="attributes">
+        <attribute name="style" add="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px !important;" separator=";"/>
+    </xpath>
+    <xpath expr="(//*[hasclass('card-title')])[3]" position="replace" mode="inner">
+        Benefits
+    </xpath>
+</template>
+
+</odoo>

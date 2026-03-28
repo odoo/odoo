@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cover" inherit_id="website.s_cover">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height bg-black-15" remove="bg-black-50" separator=" "/>
+    </xpath>
+    <!-- Change position of background image -->
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="attributes">
+        <attribute name="style" add="background-position: 50% 50%;" remove="background-position: 50% 75%;" separator=";"/>
+    </xpath>
+    <!-- Filter -->
+    <xpath expr="//div[hasclass('o_we_bg_filter')]" position="attributes">
+        <attribute name="class" add="bg-black-15" remove="bg-black-50" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Working beauty <br/>from the inside out
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p[2]" position="replace"/>
+    <xpath expr="//p[1]" position="replace"/>
+</template>
+
+<template id="configurator_s_cover" inherit_id="website.configurator_s_cover">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Blurry/06","flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Blurry_06"/>
+    </xpath>
+</template>
+
+</odoo>

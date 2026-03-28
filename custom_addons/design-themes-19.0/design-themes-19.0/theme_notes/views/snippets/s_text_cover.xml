@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_cover" inherit_id="website.s_text_cover">
+    <!-- Title -->
+    <xpath expr="//h1" position="replace" mode="inner">
+        Share Music.<br/>Effortlessly.
+    </xpath>
+    <!-- Paragraph -->
+    <xpath expr="//p[hasclass('lead')]" position="replace" mode="inner">
+        <br/>Showcase your band’s music and updates online with a user-friendly platform that simplifies everything, from setup to track management, making it easy for fans to discover and enjoy your sound.<br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]/t" position="replace" mode="inner">
+        Get started
+    </xpath>
+</template>
+
+</odoo>

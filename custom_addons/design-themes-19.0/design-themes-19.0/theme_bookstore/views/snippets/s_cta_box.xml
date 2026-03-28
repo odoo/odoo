@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_box" inherit_id="website.s_cta_box">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="pt80 pb80" add="o_colored_level o_cc o_cc2 pt48 pb48" separator=" "/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace">
+        <h2 class="card-title h1-fs">Discover new reads,<br/> shop our bestsellers today!</h2>
+    </xpath>
+    <!-- Paragraphs -->
+    <xpath expr="//p" position="replace" mode="inner">
+        Uncover hidden gems, indulge in literary adventures now<br/><br/>
+    </xpath>
+    <!-- Button -->
+    <xpath expr="//a[hasclass('btn')]" position="replace">
+        <a t-att-href="cta_btn_href" class="btn btn-lg btn-secondary">Start Now<i class="fa fa-angle-right ms-2" role="img"/></a>
+    </xpath>
+</template>
+
+<template id="configurator_s_cta_box" inherit_id="website.configurator_s_cta_box">
+    <!-- Shape option -->
+    <xpath expr="section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Connections/20', 'colors':{'c5':'o-color-4'},'flip':['y']}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_20" style="background-image: url('/html_editor/shape/html_builder/Connections/20.svg?c5=o-color-4&amp;flip=y'); background-position: 50% 0%;"/>
+    </xpath>
+</template>
+
+</odoo>

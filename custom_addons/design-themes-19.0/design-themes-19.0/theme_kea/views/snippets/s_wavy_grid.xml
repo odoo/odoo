@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/01_001','colors':{'c5':'o-color-2'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Bold_01_001" style="background-image: url('/html_editor/shape/html_builder/Bold/01_001.svg?c5=o-color-2');"/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we create for our clients
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Immersive Experiences
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We design customized VR experiences tailored to your needs. Our team works with you to ensure engaging and innovative virtual environments from concept to execution.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Cutting-Edge Technology
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your satisfaction is our goal. Our support team is always available, ensuring that your VR experience is seamless and impactful.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Innovation
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With extensive experience and advanced VR expertise, we offer solutions that push the boundaries of virtual reality and keep you at the forefront of the industry.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Expertise and Creativity
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We provide cutting-edge VR content and interactive solutions. Leveraging the latest advancements, we help you create unforgettable virtual experiences.
+    </xpath>
+</template>
+
+</odoo>

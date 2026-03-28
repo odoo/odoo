@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_company_team" inherit_id="website.s_company_team">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc2 pb128" remove="pb48" separator=" "/>
+    </xpath>
+    <!-- Member #1 -->
+    <xpath expr="//div[hasclass('col-lg-9')]//h3" position="replace" mode="inner">
+        Tony
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-9')]//p" position="replace" mode="inner"/>
+    <xpath expr="//div[hasclass('col-lg-9')]//p[2]" position="replace" mode="inner">
+        Tony is praised for the quality of his flow and beats but often criticised because of the controversial nature of his lyrics. He has also established a label, and developed a line of jewellery.
+    </xpath>
+    <!-- Member #2 -->
+    <xpath expr="(//div[hasclass('col-lg-9')])[2]//h3" position="replace" mode="inner">
+        Aline
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-9')])[2]//p" position="replace" mode="inner"/>
+    <xpath expr="(//div[hasclass('col-lg-9')])[2]//p[2]" position="replace" mode="inner">
+        Aline is a French singer, songwriter and producer. In 2016, she was ranked as the most powerful and influential French person by Vanity Fair, who noticed her radiance of French genius.
+    </xpath>
+    <!-- Member #3 -->
+    <xpath expr="(//div[hasclass('col-lg-9')])[3]//h3" position="replace" mode="inner">
+        Mich Starck
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-9')])[3]//p" position="replace" mode="inner"/>
+    <xpath expr="(//div[hasclass('col-lg-9')])[3]//p[2]" position="replace" mode="inner">
+        Mich Starck is a French DJ, record producer and songwriter. He has sold over nine million albums and thirty million singles worldwide. In 2011, he was voted as the number one DJ in the DJ Mag Top 100 DJs poll.
+    </xpath>
+    <!-- Member #4 -->
+    <xpath expr="(//div[hasclass('col-lg-9')])[4]//h3" position="replace" mode="inner">
+        Joseris
+    </xpath>
+    <xpath expr="(//div[hasclass('col-lg-9')])[4]//p" position="replace" mode="inner"/>
+    <xpath expr="(//div[hasclass('col-lg-9')])[4]//p[2]" position="replace" mode="inner">
+        Joseris is a Belgian band that formed in October 1995. Though originally categorised as a trip hop group, they quickly expanded their sound to the point where they could no longer be described as a lone genre, but rather encompass alternative, electronica, electro-pop, rock, and a mixture of others.
+    </xpath>
+</template>
+
+<template id="configurator_s_company_team" inherit_id="website.configurator_s_company_team">
+    <!-- Shape option -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Connections/10","colors":{"c5":"o-color-1"},"flip":[]}</attribute>
+    </xpath>
+    <!-- Shape -->
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Connections_10" style="background-image: url('/html_editor/shape/html_builder/Connections/10.svg?c5=o-color-1');"/>
+    </xpath>
+</template>
+
+</odoo>

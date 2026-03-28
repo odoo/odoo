@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cards_grid" inherit_id="website.s_cards_grid">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{'shape':'html_builder/Bold/01_001','colors':{'c5':'o-color-2'},'flip':[],'showOnMobile':false}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]" position="before">
+        <div class="o_we_shape o_html_builder_Bold_01_001" style="background-image: url('/html_editor/shape/html_builder/Bold/01_001.svg?c5=o-color-2');"/>
+    </xpath>
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Unlock a World of Possibilities
+    </xpath>
+    <!-- Card 1 -->
+    <xpath expr="(//h3)[1]" position="replace" mode="inner">
+        Virtual Collaboration and Meetings
+    </xpath>
+    <xpath expr="(//p)[1]" position="replace" mode="inner">
+        Redefine your remote work experience with our VR headsets. Conduct meetings, collaborate in virtual environments, and connect with colleagues from around the globe in a more engaging way.
+    </xpath>
+    <!-- Card 2 -->
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Elevate Your Gaming Experience
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Transform your gameplay with our high-performance VR headsets. Feel the action, engage with realistic environments, and take your gaming to the next level with our state-of-the-art technology.
+    </xpath>
+    <!-- Card 3 -->
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Ultimate Comfort and Design
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        Enjoy extended VR sessions with headsets designed for maximum comfort. Lightweight, adjustable, and crafted to fit perfectly, our VR headsets let you stay immersed for longer.
+    </xpath>
+    <!-- Card 4 -->
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Explore Virtual Worlds
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        Discover new dimensions with our cutting-edge VR headsets. Dive into immersive virtual worlds, explore fantastical landscapes, and experience the future of entertainment like never before.
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+        <attribute name="class" add="o_cc o_cc5" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we create for our customers
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Custom Creations
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We craft personalized art to express your unique vision. Our team works closely with you to bring your ideas to life from concept to completion.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Sustainable Art
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your satisfaction is our passion. Our support team is always available, ensuring your artistic journey is seamless and fulfilling.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Mastery and Quality
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With vast experience and artistic insight, we offer techniques and concepts that keep you ahead in the art world.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Expertise and Inspiration
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We provide innovative art solutions for today’s challenges. Using cutting-edge methods, we help you achieve your creative goals.
+    </xpath>
+</template>
+
+</odoo>

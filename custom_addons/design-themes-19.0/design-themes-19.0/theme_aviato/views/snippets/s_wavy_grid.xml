@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace"/>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we deliver to our travelers
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Tailored Journeys
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We craft personalized itineraries to match your travel dreams. Our team works with you to ensure a seamless adventure from start to finish.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Sustainable Travel
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your satisfaction is our priority. Our support team is always ready to assist, ensuring you have a smooth and memorable journey.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Experience
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With vast experience and deep travel knowledge, we offer insights and destinations that keep you ahead of the curve.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Expertise and Adventure
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We provide cutting-edge travel solutions to explore the world. Leveraging the latest trends, we help you achieve your travel goals.
+    </xpath>
+</template>
+
+</odoo>

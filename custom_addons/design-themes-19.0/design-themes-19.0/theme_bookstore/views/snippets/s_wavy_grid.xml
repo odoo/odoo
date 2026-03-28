@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_wavy_grid" inherit_id="website.s_wavy_grid">
+    <!-- Layout -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-oe-shape-data">{"shape":"html_builder/Blobs/03","colors":{"c2":"o-color-3"},"flip":["x","y"],"showOnMobile":false,"shapeAnimationSpeed":"0"}</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_shape')]" position="replace">
+        <div class="o_we_shape o_html_builder_Blobs_03" style="background-image: url('/html_editor/shape/html_builder/Blobs/03.svg?c2=o-color-3&amp;flip=xy');  background-position: 50% 100%;"/>
+    </xpath>
+    <xpath expr="//h3" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h5-fs" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[2]" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h5-fs" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[3]" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h5-fs" separator=" "/>
+    </xpath>
+    <xpath expr="(//h3)[4]" position="attributes">
+        <attribute name="class" add="h4-fs" remove="h5-fs" separator=" "/>
+    </xpath>
+
+    <!-- Texts -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        What we offer to our readers
+    </xpath>
+    <xpath expr="//h3" position="replace" mode="inner">
+        Curated Collections
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        We provide handpicked selections to suit your literary tastes. Our team helps you discover the perfect books from cover to cover.
+    </xpath>
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
+        Eco-Friendly Reads
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace" mode="inner">
+        Your satisfaction is our mission. Our staff is always ready to assist, ensuring a delightful and fulfilling reading experience.
+    </xpath>
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
+        Quality and Selection
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace" mode="inner">
+        With extensive knowledge and passion for literature, we offer insights and recommendations that keep you engaged and inspired.
+    </xpath>
+    <xpath expr="(//h3)[4]" position="replace" mode="inner">
+        Expertise and Passion
+    </xpath>
+    <xpath expr="(//p)[4]" position="replace" mode="inner">
+        We bring you the latest titles and timeless classics. Leveraging our literary expertise, we help you find your next great read.
+    </xpath>
+</template>
+
+</odoo>

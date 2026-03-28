@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_call_to_action" inherit_id="website.s_call_to_action">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb208 o_cc4" remove="pb64 o_cc5" separator=" "/>
+    </xpath>
+    <!-- Title & Paragraph -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Want to discover more?
+    </xpath>
+    <xpath expr="//p" position="replace" mode="inner">
+        Contact me for a visit of my studio.
+    </xpath>
+</template>
+
+</odoo>

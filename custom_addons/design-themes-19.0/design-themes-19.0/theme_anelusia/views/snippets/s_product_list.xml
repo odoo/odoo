@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_list" inherit_id="website.s_product_list">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt72 pb72" remove="pt64 pb64" separator=" "/>
+    </xpath>
+    <!-- Cards -->
+    <xpath expr="//div[hasclass('col-lg-2')]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][2]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][3]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][4]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][5]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('col-lg-2')][6]//div[hasclass('card')]" position="attributes">
+        <attribute name="style">border-width: 0px !important;</attribute>
+    </xpath>
+    <!-- Item #1 - Img -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_product_list_default_image_1/html_builder/geometric/geo_square_1.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_1</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_product_1.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Item #2 - Img -->
+    <xpath expr="(//img)[2]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_product_list_default_image_2/html_builder/geometric/geo_square_3.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_3</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_product_2.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Item #3 - Img -->
+    <xpath expr="(//img)[3]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_product_list_default_image_3/html_builder/geometric/geo_square_2.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_2</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_product_3.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Item #4 - Img -->
+    <xpath expr="(//img)[4]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_product_list_default_image_4/html_builder/geometric/geo_square_1.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_1</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_product_4.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Item #5 - Img -->
+    <xpath expr="(//img)[5]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_product_list_default_image_5/html_builder/geometric/geo_square_2.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_2</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_product_5.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+    <!-- Item #6 - Img -->
+    <xpath expr="(//img)[6]" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_product_list_default_image_6/html_builder/geometric/geo_square_3.svg</attribute>
+        <attribute name="data-shape">html_builder/geometric/geo_square_3</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_product_6.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

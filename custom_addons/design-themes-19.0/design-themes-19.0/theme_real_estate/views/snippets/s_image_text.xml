@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_image_text" inherit_id="website.s_image_text">
+    <!-- Title -->
+    <xpath expr="//h2" position="replace" mode="inner">
+        Bored with your interior?
+    </xpath>
+
+    <!-- Paragraph -->
+    <xpath expr="//p[1]" position="replace" mode="inner">
+        Our decoration experts are at your disposal to guide you step by step in the design of your interior and will give you the best advice for your interior design.
+    </xpath>
+    <xpath expr="//p[2]" position="replace" mode="inner">
+        Discover our tailor-made services to embellish the decoration of your home.
+    </xpath>
+    <xpath expr="//p[3]" position="replace">
+        <p><a href="#" class="btn btn-secondary o_translate_inline">Explore our services</a></p>
+    </xpath>
+
+    <!-- Image -->
+    <xpath expr="//img" position="attributes">
+        <attribute name="src">/html_editor/image_shape/website.s_image_text_default_image/html_builder/panel/panel_duo_step.svg</attribute>
+        <attribute name="data-shape">html_builder/panel/panel_duo_step</attribute>
+        <attribute name="data-format-mimetype">image/webp</attribute>
+        <attribute name="data-file-name">s_image_text.svg</attribute>
+        <attribute name="data-shape-colors">;;;;</attribute>
+    </xpath>
+</template>
+
+</odoo>

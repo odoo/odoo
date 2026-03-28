@@ -1,0 +1,37 @@
+#wrapwrap .s_compact_menu {
+    overflow: hidden;
+
+    .container-fluid .menu-container {
+        overflow: hidden;
+
+        > div {
+            &.s_compact_menu_row_title {
+                h4 {
+                    font-size: 20px;
+                }
+                .fa {
+                    margin: 20px 0px;
+                }
+            }
+
+            > .row {
+                min-height: 150px;
+                height: auto;
+                border-left: 3px solid map-get($grays, '200');
+
+                > .menublock {
+                    margin: 0 0 0 20px;
+                    padding: 0 20px 0 0;
+                    border-bottom: 1px solid map-get($grays, '200');
+                    float: left;
+                    h4 {
+                        font-weight: bold;
+                    }
+                    span {
+                        list-style: none;
+                    }
+                }
+            }
+        }
+    }
+}

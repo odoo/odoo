@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_cta_mobile" inherit_id="website.s_cta_mobile">
+    <!-- Section -->
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc4" separator=" "/>
+    </xpath>
+    <!-- Background -->
+    <xpath expr="//div[hasclass('col-lg-12')]" position="attributes">
+        <attribute name="class" remove="o_cc2" add="o_cc5" separator=" "/>
+    </xpath>
+</template>
+
+</odoo>
