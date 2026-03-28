@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="homepage" inherit_id="website.homepage" name="SEMSA Homepage">
-        <xpath expr="//div[@id='wrap']" position="replace">
+    <template id="homepage" name="SEMSA Homepage">
+        <t t-call="website.layout" pageName.f="homepage">
             <div id="wrap" class="oe_structure oe_empty semsa-homepage">
                 <section id="inicio" class="semsa-shell">
                     <header class="semsa-topbar">
@@ -202,6 +202,6 @@
                     </section>
                 </section>
             </div>
-        </xpath>
+        </t>
     </template>
 </odoo>

@@ -49,7 +49,7 @@
 }
 
 .semsa-shell {
-    width: min(1380px, calc(100vw - 48px));
+    width: #{'min(1380px, calc(100vw - 48px))'};
     margin: 0 auto;
     padding: 24px 0 48px;
 }
@@ -173,7 +173,7 @@
 }
 
 .semsa-identity-card__crest {
-    width: min(100%, 280px);
+    width: #{'min(100%, 280px)'};
     display: block;
     margin: 0 auto 28px;
     filter: drop-shadow(0 12px 24px rgba(18, 50, 97, 0.14));
@@ -220,7 +220,7 @@
 .semsa-hero-overlay {
     position: absolute;
     inset: auto 36px 36px auto;
-    width: min(100%, 560px);
+    width: #{'min(100%, 560px)'};
     padding: 28px 30px;
     color: white;
     border-radius: var(--semsa-radius-md);
@@ -496,7 +496,7 @@
 
 @media (max-width: 1199.98px) {
     .semsa-shell {
-        width: min(100vw - 28px, 1200px);
+        width: #{'min(1200px, calc(100vw - 28px))'};
     }
 
     .semsa-hero-grid,
@@ -517,7 +517,7 @@
 
 @media (max-width: 767.98px) {
     .semsa-shell {
-        width: min(100vw - 18px, 100%);
+        width: #{'min(100%, calc(100vw - 18px))'};
         padding-top: 16px;
     }
 

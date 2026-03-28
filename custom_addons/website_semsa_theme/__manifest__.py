@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "SEMSA Website Theme",
-    "summary": "Homepage institucional exclusiva para o site da SEMSA",
+    "name": "SEMSA Website Theme Legacy",
+    "summary": "Legado substituido pelo theme_semsa",
     "version": "19.0.1.0.0",
     "category": "Website/Theme",
     "author": "Kodoo",
@@ -20,6 +20,6 @@
     "images": [
         "static/src/img/hero-painting.svg",
     ],
-    "installable": True,
+    "installable": False,
     "application": False,
 }
