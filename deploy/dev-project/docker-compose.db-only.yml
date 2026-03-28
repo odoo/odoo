@@ -2,3 +2,6 @@ services:
   db:
     ports:
       - "${DOCKER_DB_BIND_HOST:-127.0.0.1}:${DOCKER_DB_HOST_PORT:-5433}:5432"
+  db-replica:
+    ports:
+      - "${DOCKER_DB_REPLICA_BIND_HOST:-127.0.0.1}:${DOCKER_DB_REPLICA_HOST_PORT:-5434}:5432"

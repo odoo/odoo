@@ -9,6 +9,18 @@ services:
   db:
     image: postgres:16
     container_name: kodoo-db
+    command:
+      - postgres
+      - -c
+      - wal_level=replica
+      - -c
+      - max_wal_senders=${DB_REPLICA_MAX_WAL_SENDERS:-10}
+      - -c
+      - max_replication_slots=${DB_REPLICA_MAX_SLOTS:-10}
+      - -c
+      - hot_standby=on
+      - -c
+      - hba_file=/etc/postgresql/pg_hba.replication.conf
     environment:
       - POSTGRES_DB=${PROD_DB_NAME}
       - POSTGRES_USER=${PROD_DB_USER}
@@ -17,6 +29,7 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=md5
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
+      - ./docker/postgres/primary/pg_hba.replication.conf:/etc/postgresql/pg_hba.replication.conf:ro
     networks:
       - kodoo-net
     restart: always
@@ -26,6 +39,65 @@ services:
       timeout: 5s
       retries: 5
 
+  db-replica-setup:
+    image: postgres:16
+    container_name: kodoo-db-replica-setup
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PGHOST=db
+      - PGPORT=5432
+      - PGUSER=${PROD_DB_USER}
+      - PGPASSWORD=${PROD_DB_PASSWORD}
+      - REPLICATION_USER=${DB_REPLICA_USER:-replicator}
+      - REPLICATION_PASSWORD=${DB_REPLICA_PASSWORD:-}
+      - FALLBACK_REPLICATION_PASSWORD=${PROD_DB_PASSWORD}
+      - REPLICATION_SLOT=${DB_REPLICA_SLOT:-kodoo_replica}
+    command:
+      - /bin/bash
+      - /opt/kodoo/db-replica-setup.sh
+    volumes:
+      - ./docker/postgres/scripts/db-replica-setup.sh:/opt/kodoo/db-replica-setup.sh:ro
+    networks:
+      - kodoo-net
+    restart: "no"
+
+  db-replica:
+    image: postgres:16
+    container_name: kodoo-db-replica
+    depends_on:
+      db:
+        condition: service_healthy
+      db-replica-setup:
+        condition: service_completed_successfully
+    environment:
+      - PGDATA=/var/lib/postgresql/data
+      - PRIMARY_HOST=db
+      - PRIMARY_PORT=5432
+      - REPLICATION_USER=${DB_REPLICA_USER:-replicator}
+      - REPLICATION_PASSWORD=${DB_REPLICA_PASSWORD:-}
+      - FALLBACK_REPLICATION_PASSWORD=${PROD_DB_PASSWORD}
+      - REPLICATION_SLOT=${DB_REPLICA_SLOT:-kodoo_replica}
+    command:
+      - /bin/bash
+      - /opt/kodoo/db-replica-bootstrap.sh
+    volumes:
+      - odoo-db-replica-data:/var/lib/postgresql/data
+      - ./docker/postgres/scripts/db-replica-bootstrap.sh:/opt/kodoo/db-replica-bootstrap.sh:ro
+    networks:
+      - kodoo-net
+    restart: always
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${PROD_DB_USER} -d postgres && psql -U ${PROD_DB_USER} -d postgres -tAc \"SELECT pg_is_in_recovery()\" | grep -q t",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   odoo:
     build:
       context: .
@@ -33,10 +105,10 @@ services:
       args:
         PUBLIC_SECTOR_EXTRA_APT_PACKAGES: ${PUBLIC_SECTOR_EXTRA_APT_PACKAGES:-}
         PUBLIC_SECTOR_EXTRA_PIP_PACKAGES: ${PUBLIC_SECTOR_EXTRA_PIP_PACKAGES:-}
-        PUBLIC_SECTOR_INSTALL_AI_EXTRAS: ${PUBLIC_SECTOR_INSTALL_AI_EXTRAS:-}
+        PUBLIC_SECTOR_INSTALL_AI_EXTRAS: ${PUBLIC_SECTOR_INSTALL_AI_EXTRAS:-1}
         LEGACY_GOV_EXTRA_APT_PACKAGES: ${AGI_GOV_EXTRA_APT_PACKAGES:-}
         LEGACY_GOV_EXTRA_PIP_PACKAGES: ${AGI_GOV_EXTRA_PIP_PACKAGES:-}
-        LEGACY_GOV_INSTALL_AI_EXTRAS: ${AGI_GOV_INSTALL_AI_EXTRAS:-0}
+        LEGACY_GOV_INSTALL_AI_EXTRAS: ${AGI_GOV_INSTALL_AI_EXTRAS:-1}
     image: kodoo-odoo:19.0-public-sector
     container_name: kodoo-odoo
     command:
@@ -81,6 +153,7 @@ services:
     environment:
       - DOMAIN=${DOMAIN}
       - PROD_DB_NAME=${PROD_DB_NAME}
+      - LOCAL_DEFAULT_DB=${LOCAL_DEFAULT_DB:-}
     command: ["/bin/sh", "/etc/nginx/start-nginx.sh"]
     networks:
       - kodoo-net
@@ -119,6 +192,7 @@ services:
 
 volumes:
   odoo-db-data:
+  odoo-db-replica-data:
   odoo-web-data:
   ollama-data:
   letsencrypt:

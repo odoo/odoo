@@ -44,12 +44,6 @@
         'web.assets_backend': [
             'powered_by_odoo_remove/static/src/js/kodoo_branding.js',
         ],
-        'web.assets_frontend': [
-            'powered_by_odoo_remove/static/src/js/kodoo_branding.js',
-        ],
-        'web.assets_frontend_minimal': [
-            'powered_by_odoo_remove/static/src/js/kodoo_branding.js',
-        ],
     },
     'images': ['static/description/banner.png'],
     'installable': True,

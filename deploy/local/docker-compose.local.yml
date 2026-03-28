@@ -4,5 +4,5 @@ services:
   odoo:
     ports: []
   nginx:
-    ports:
+    ports: !override
       - "${LOCAL_BIND_HOST:-127.0.0.1}:${LOCAL_HTTP_PORT:-8069}:80"

@@ -85,6 +85,13 @@ DEV_UPGRADE_DB ?= $(DEV_HOST_TEST_DB)
 DEV_MODULES ?= gov_compras
 DOCKER_DB_BIND_HOST ?= 127.0.0.1
 DOCKER_DB_HOST_PORT ?= 5433
+DOCKER_DB_REPLICA_BIND_HOST ?= 127.0.0.1
+DOCKER_DB_REPLICA_HOST_PORT ?= 5434
+DB_REPLICA_USER ?= replicator
+DB_REPLICA_PASSWORD ?=
+DB_REPLICA_SLOT ?= kodoo_replica
+DB_REPLICA_MAX_WAL_SENDERS ?= 10
+DB_REPLICA_MAX_SLOTS ?= 10
 PG_LOCAL_SERVICE ?= postgresql
 PG_LOCAL_SUPERUSER ?= postgres
 PG_LOCAL_HOST ?= 127.0.0.1
@@ -128,6 +135,7 @@ CONFIG_FIND_CMD = find . \
 	up-cowork down-cowork logs-cowork smoke-cowork troubleshoot-cowork \
 	up-dev down-dev logs-dev smoke-dev troubleshoot-dev \
 	up-project down-project logs-project smoke-project troubleshoot-project \
+	db-replica-status db-replica-lag db-replica-logs \
 	tui tui-live tui-build tui-install tui-menu tui-doctor \
 	odoo-tui odoo-shell odoo-fix-url \
 	dev-host-db-setup dev-host-db-init dev-host-test-init \
@@ -176,13 +184,13 @@ help:
 	@echo ""
 	@echo "Stacks:"
 	@echo "  make up             # Start the local/home stack (not the public internet path)"
-	@echo "  make up-base        # Start the stable stack with the plain Odoo runtime"
+	@echo "  make up-base        # Start the stable stack with the shared public-sector runtime"
 	@echo "  make up-cpu         # Same as up (CPU mode default for Ollama; local/home)"
 	@echo "  make up-gpu         # Start local/home stack with optional Ollama GPU override"
-	@echo "  make up-local       # Local dev via nginx on $(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT) (websocket-safe)"
-	@echo "  make down-base      # Stop the stable plain-runtime stack"
+	@echo "  make up-local       # Local dev via nginx on $(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT) (websocket-safe, use DB=name)"
+	@echo "  make down-base      # Stop the stable shared-runtime stack"
 	@echo "  make down-local     # Stop local-dev stack"
-	@echo "  make logs-base      # Tail logs for the stable plain-runtime stack"
+	@echo "  make logs-base      # Tail logs for the stable shared-runtime stack"
 	@echo "  make logs-local     # Tail local-dev logs (nginx + odoo + db + ollama)"
 	@echo "  make up-insecure    # Quick test: expose Odoo 8069/8072 (UNSAFE)"
 	@echo "  make down-insecure  # Stop insecure stack"
@@ -229,6 +237,9 @@ help:
 	@echo "  make db-init        # Open Odoo database manager over Docker PostgreSQL to create/use DB ($(DB))"
 	@echo "  make db-check       # Check if base module exists in DB"
 	@echo "  make db-list        # List reachable PostgreSQL databases and tags"
+	@echo "  make db-replica-status # Show primary/replica streaming replication state"
+	@echo "  make db-replica-lag # Estimate replica replay lag on the standby"
+	@echo "  make db-replica-logs # Tail replica bootstrap and PostgreSQL logs"
 	@echo "  make db-manager     # Open the interactive database manager"
 	@echo "  make prod-db-create # Ensure production database $(PROD_DB_NAME) exists"
 	@echo "  make prod-db-init   # Install Odoo base on $(PROD_DB_NAME) when the DB is still empty"
@@ -250,9 +261,9 @@ help:
 	@echo ""
 	@echo "Containers:"
 	@echo "  make build          # Build Docker images"
-	@echo "  make build-base     # Build the plain Odoo runtime image"
+	@echo "  make build-base     # Build the shared public-sector runtime image"
 	@echo "  make status         # Show compose status"
-	@echo "  make status-base    # Show compose status for the plain-runtime stack"
+	@echo "  make status-base    # Show compose status for the shared-runtime stack"
 	@echo "  make logs           # Tail odoo + nginx logs"
 	@echo "  make stop           # Stop all modes and free service ports ($(STOP_PORTS))"
 	@echo "  make odoo-start CONFIG=... DB=... HTTP_PORT=... # Generic host boot pinned to one DB"
@@ -828,9 +839,9 @@ up-base:
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
 	@$(MAKE) prod-db-ensure
-	@$(COMPOSE_BASE) up -d db odoo nginx ollama
+	@$(COMPOSE_BASE) up -d db db-replica-setup db-replica odoo nginx ollama
 	@$(MAKE) ollama-pull
-	@echo "Stable plain Odoo runtime: https://$(DOMAIN)"
+	@echo "Stable shared runtime: https://$(DOMAIN)"
 
 up-home:
 	@$(MAKE) down-tunnel >/dev/null 2>&1 || true
@@ -1044,7 +1055,7 @@ up-cpu:
 	@$(MAKE) prod-config
 	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
 	@$(MAKE) prod-db-ensure
-	@$(COMPOSE) up -d db odoo nginx ollama
+	@$(COMPOSE) up -d db db-replica-setup db-replica odoo nginx ollama
 	@$(MAKE) ollama-pull
 
 up-gpu:
@@ -1061,15 +1072,16 @@ up-local:
 	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
 	@$(MAKE) prod-db-ensure
 	@echo "Starting local-dev mode via nginx on $(LOCAL_BIND_HOST) (websocket enabled)."
-	@$(COMPOSE_LOCAL) up -d db odoo nginx ollama
+	@LOCAL_DEFAULT_DB="$(DB)" $(COMPOSE_LOCAL) up -d db db-replica-setup db-replica odoo nginx ollama
 	@$(MAKE) ollama-pull
 	@echo "Local Odoo: http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)"
+	@echo "Local default DB: $(DB)"
 
 logs-local:
-	@$(COMPOSE_LOCAL) logs -f --tail=120 nginx odoo db ollama
+	@$(COMPOSE_LOCAL) logs -f --tail=120 nginx odoo db db-replica db-replica-setup ollama
 
 logs-base:
-	@$(COMPOSE_BASE) logs -f --tail=120 nginx odoo db ollama
+	@$(COMPOSE_BASE) logs -f --tail=120 nginx odoo db db-replica db-replica-setup ollama
 
 down-local:
 	@$(COMPOSE_LOCAL) down --remove-orphans
@@ -1087,7 +1099,7 @@ status-base:
 	@$(COMPOSE_BASE) ps
 
 logs:
-	@$(COMPOSE) logs -f --tail=120 odoo nginx
+	@$(COMPOSE) logs -f --tail=120 odoo nginx db db-replica db-replica-setup
 
 probe:
 	@echo "ACME/certbot probe is disabled for now."
@@ -1111,6 +1123,22 @@ db-check:
 
 db-list:
 	@./scripts/db-manager.sh list || true
+
+db-replica-status:
+	@$(MAKE) guard-prod-host
+	@echo "== Primary =="; \
+	docker exec kodoo-db psql -U "$(PROD_DB_USER)" -d postgres -c "SELECT now() AS checked_at, application_name, client_addr, state, sync_state, slot_name FROM pg_stat_replication ORDER BY application_name;" || true; \
+	echo ""; \
+	echo "== Replica =="; \
+	docker exec kodoo-db-replica psql -U "$(PROD_DB_USER)" -d postgres -c "SELECT now() AS checked_at, pg_is_in_recovery() AS in_recovery, status, sender_host, slot_name, conninfo FROM pg_stat_wal_receiver;" || true
+
+db-replica-lag:
+	@$(MAKE) guard-prod-host
+	@docker exec kodoo-db-replica psql -U "$(PROD_DB_USER)" -d postgres -c "SELECT now() AS checked_at, now() - pg_last_xact_replay_timestamp() AS replay_delay, pg_last_wal_receive_lsn() AS receive_lsn, pg_last_wal_replay_lsn() AS replay_lsn;" || true
+
+db-replica-logs:
+	@$(MAKE) guard-prod-host
+	@$(COMPOSE) logs -f --tail=120 db-replica db-replica-setup
 
 db-manager:
 	@./scripts/db-manager.sh

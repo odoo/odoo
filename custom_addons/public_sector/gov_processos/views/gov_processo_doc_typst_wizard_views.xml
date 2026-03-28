@@ -9,6 +9,7 @@
                     <group>
                         <group>
                             <field name="processo_id"/>
+                            <field name="source_doc_id" invisible="not source_doc_id"/>
                             <field name="modelo_typst"/>
                             <field name="doc_type"/>
                             <field name="name"/>
@@ -22,6 +23,17 @@
                     </group>
 
                     <notebook>
+                        <page string="Estrutura">
+                            <group string="Pecas do Documento" col="4">
+                                <field name="incluir_peca_dfd" widget="boolean_toggle"/>
+                                <field name="incluir_peca_justificativa" widget="boolean_toggle"/>
+                                <field name="incluir_peca_etp" widget="boolean_toggle"/>
+                                <field name="incluir_peca_tr" widget="boolean_toggle"/>
+                                <field name="incluir_peca_despacho" widget="boolean_toggle"/>
+                                <field name="incluir_peca_ratificacao" widget="boolean_toggle"/>
+                                <field name="incluir_peca_nota_tecnica" widget="boolean_toggle"/>
+                            </group>
+                        </page>
                         <page string="Conteudo">
                             <group>
                                 <field name="area_requisitante"/>
@@ -44,19 +56,23 @@
                         </page>
                         <page string="Previa Typst">
                             <div class="alert alert-info" role="alert">
-                                O conteudo abaixo sera gravado em <code>typst_source</code> no documento do processo.
+                                Gere a previa sob demanda. O conteudo abaixo sera gravado em <code>typst_source</code> no documento do processo.
                             </div>
                             <field
                                 name="typst_preview"
                                 nolabel="1"
-                                widget="ace"
                                 readonly="1"
-                                options="{'mode': 'text'}"
+                                placeholder="Clique em Atualizar Previa para montar o Typst."
                             />
                         </page>
                     </notebook>
                 </sheet>
                 <footer>
+                    <button
+                        name="action_atualizar_previa"
+                        string="Atualizar Previa"
+                        type="object"
+                    />
                     <button
                         name="action_criar_documento"
                         string="Criar Documento"

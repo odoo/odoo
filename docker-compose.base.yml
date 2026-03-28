@@ -1,4 +1,6 @@
-# Optional override: replace the public-sector runtime with a plain Odoo image.
+# Stable base override: keep the same shared public-sector runtime image
+# used by the general stack so GOV/Typst/LaTeX/Ollama integrations stay
+# available across all make up* entry points.
 #
 # Usage:
 #   docker compose -f docker-compose.yml -f docker-compose.base.yml build odoo
@@ -8,7 +10,14 @@ services:
   odoo:
     build:
       context: .
-      dockerfile: docker/odoo/Dockerfile
-    image: kodoo-odoo:19.0
+      dockerfile: docker/odoo/Dockerfile.public-sector
+      args:
+        PUBLIC_SECTOR_EXTRA_APT_PACKAGES: ${PUBLIC_SECTOR_EXTRA_APT_PACKAGES:-}
+        PUBLIC_SECTOR_EXTRA_PIP_PACKAGES: ${PUBLIC_SECTOR_EXTRA_PIP_PACKAGES:-}
+        PUBLIC_SECTOR_INSTALL_AI_EXTRAS: ${PUBLIC_SECTOR_INSTALL_AI_EXTRAS:-1}
+        LEGACY_GOV_EXTRA_APT_PACKAGES: ${AGI_GOV_EXTRA_APT_PACKAGES:-}
+        LEGACY_GOV_EXTRA_PIP_PACKAGES: ${AGI_GOV_EXTRA_PIP_PACKAGES:-}
+        LEGACY_GOV_INSTALL_AI_EXTRAS: ${AGI_GOV_INSTALL_AI_EXTRAS:-1}
+    image: kodoo-odoo:19.0-public-sector
     environment:
-      KODOO_RUNTIME_PROFILE: "plain"
+      KODOO_RUNTIME_PROFILE: "public-sector"

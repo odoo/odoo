@@ -16,8 +16,16 @@ This document defines the intended operational split between the named hosts in 
 
 `srv-01`
 - Stable 24/7 runtime.
-- Runs only the stable Docker stack and related operational tasks: deploy, refresh, logs, smoke, backup, restore, rollback.
+- Runs only the stable Docker stack and related operational tasks: deploy, refresh, logs, smoke, backup, restore, rollback, replica monitoring.
 - Must not run native host development targets such as `make dev` or `make dev-safe`.
+
+## PostgreSQL Redundancy
+
+- Production now supports an asynchronous physical standby named `kodoo-db-replica`.
+- This protects the full PostgreSQL cluster, not only the default Odoo database, so tenant databases created later are replicated automatically as well.
+- The replica is a hot standby for recovery and read-only inspection; applications should keep writing to `kodoo-db`.
+- Use `make db-replica-status` and `make db-replica-lag` on `srv-01` to verify streaming health.
+- Keep a logical backup policy as well; streaming replication reduces RPO but does not replace versioned backups against operator error or bad writes.
 
 ## Workflow Rules
 

@@ -2,18 +2,22 @@ FROM odoo:19.0
 
 USER root
 ARG PYTHON_BIN=python3.12
+ARG TARGETARCH
+ARG TYPST_VERSION=0.13.1
 ARG PUBLIC_SECTOR_EXTRA_APT_PACKAGES=""
 ARG PUBLIC_SECTOR_EXTRA_PIP_PACKAGES=""
-ARG PUBLIC_SECTOR_INSTALL_AI_EXTRAS=""
+ARG PUBLIC_SECTOR_INSTALL_AI_EXTRAS="1"
 ARG LEGACY_GOV_EXTRA_APT_PACKAGES=""
 ARG LEGACY_GOV_EXTRA_PIP_PACKAGES=""
-ARG LEGACY_GOV_INSTALL_AI_EXTRAS=""
+ARG LEGACY_GOV_INSTALL_AI_EXTRAS="1"
 
 # Public-sector runtime dependencies (PDF/LaTeX/OCR/ingest).
 # The requirements files still keep their historical names for now.
 RUN apt-get update \
     && EXTRA_APT_PACKAGES="${PUBLIC_SECTOR_EXTRA_APT_PACKAGES:-${LEGACY_GOV_EXTRA_APT_PACKAGES}}" \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
         python3.12-venv \
         wkhtmltopdf \
         texlive-latex-base \
@@ -22,6 +26,9 @@ RUN apt-get update \
         texlive-fonts-recommended \
         texlive-lang-portuguese \
         lmodern \
+        fonts-dejavu \
+        fonts-liberation \
+        fonts-noto-core \
         tesseract-ocr \
         tesseract-ocr-por \
         ocrmypdf \
@@ -29,7 +36,18 @@ RUN apt-get update \
         poppler-utils \
         libmagic1 \
         pandoc \
+        xz-utils \
         ${EXTRA_APT_PACKAGES} \
+    && case "${TARGETARCH}" in \
+        amd64) TYPST_ARCH='x86_64-unknown-linux-musl' ;; \
+        arm64) TYPST_ARCH='aarch64-unknown-linux-musl' ;; \
+        *) echo "Unsupported TARGETARCH for Typst: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+    && curl -fsSL "https://github.com/typst/typst/releases/download/v${TYPST_VERSION}/typst-${TYPST_ARCH}.tar.xz" -o /tmp/typst.tar.xz \
+    && mkdir -p /tmp/typst-extract \
+    && tar -xJf /tmp/typst.tar.xz -C /tmp/typst-extract \
+    && install -m 0755 "/tmp/typst-extract/typst-${TYPST_ARCH}/typst" /usr/local/bin/typst \
+    && rm -rf /tmp/typst.tar.xz /tmp/typst-extract \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/kodoo
@@ -39,16 +57,18 @@ WORKDIR /opt/kodoo
 # then install only the public-sector runtime/document extras by default.
 COPY requirements-gov-runtime.txt /opt/kodoo/requirements-gov-runtime.txt
 COPY requirements-gov-ai.txt /opt/kodoo/requirements-gov-ai.txt
+COPY requirements-gov-general.txt /opt/kodoo/requirements-gov-general.txt
 RUN ${PYTHON_BIN} --version \
     && ${PYTHON_BIN} -m venv --system-site-packages /opt/kodoo-venv \
     && EXTRA_PIP_PACKAGES="${PUBLIC_SECTOR_EXTRA_PIP_PACKAGES:-${LEGACY_GOV_EXTRA_PIP_PACKAGES}}" \
     && INSTALL_AI_EXTRAS="${PUBLIC_SECTOR_INSTALL_AI_EXTRAS:-${LEGACY_GOV_INSTALL_AI_EXTRAS}}" \
-    && if [ -z "${INSTALL_AI_EXTRAS}" ]; then INSTALL_AI_EXTRAS=0; fi \
+    && if [ -z "${INSTALL_AI_EXTRAS}" ]; then INSTALL_AI_EXTRAS=1; fi \
+    && if [ "${INSTALL_AI_EXTRAS}" = "0" ]; then GOV_REQUIREMENTS=/opt/kodoo/requirements-gov-runtime.txt; else GOV_REQUIREMENTS=/opt/kodoo/requirements-gov-general.txt; fi \
     && /opt/kodoo-venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel \
-    && /opt/kodoo-venv/bin/pip install --no-cache-dir -r /opt/kodoo/requirements-gov-runtime.txt \
-    && if [ "${INSTALL_AI_EXTRAS}" = "1" ]; then /opt/kodoo-venv/bin/pip install --no-cache-dir -r /opt/kodoo/requirements-gov-ai.txt; fi \
+    && /opt/kodoo-venv/bin/pip install --no-cache-dir -r "${GOV_REQUIREMENTS}" \
     && if [ -n "${EXTRA_PIP_PACKAGES}" ]; then /opt/kodoo-venv/bin/pip install --no-cache-dir ${EXTRA_PIP_PACKAGES}; fi
 ENV PATH="/opt/kodoo-venv/bin:${PATH}"
+ENV TYPST_BIN=/usr/local/bin/typst
 ENV KODOO_RUNTIME_PROFILE=public-sector
 
 USER odoo
