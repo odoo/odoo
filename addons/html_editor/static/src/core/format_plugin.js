@@ -197,14 +197,18 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const isFormatted = formatsSpecs[format].isFormatted;
+        const isNonFormattedWhiteSpaces = (node) =>
+            /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
         const targetedTextNodes = targetedNodes.filter(
             (node) =>
                 isTextNode(node) &&
                 !isZwnbsp(node) &&
                 !isEmptyTextNode(node) &&
-                (!/^\n+$/.test(node.nodeValue) || !isBlock(closestElement(node)))
+                !isNonFormattedWhiteSpaces(node) &&
+                (!/^\n+$/.test(node.nodeValue) || !isBlock(closestElement(node))) &&
+                this.dependencies.selection.isNodeEditable(node)
         );
-        const isFormatted = formatsSpecs[format].isFormatted;
         return (
             targetedTextNodes.length &&
             targetedTextNodes.every((node) => isFormatted(node, { editable: this.editable }))
@@ -395,7 +399,14 @@ export class FormatPlugin extends Plugin {
             selectedTextNodes[0] &&
             selectedTextNodes[0].textContent === "\u200B"
         ) {
-            this.dependencies.selection.setCursorStart(selectedTextNodes[0]);
+            // We set the cursor at the end of the selected ZWS text node, to
+            // avoid an issue on ios safari where the selection is collapsed,
+            // and set the format as bold/italic, the cursor is not properly
+            // updated. Even though the selection is properly set, safari seems
+            // to force the cursor to stay at the old position at rendering
+            // if there's no node between the old and new cursor position,
+            // e.g. <div>[]<p>\u200B</p></div> -> <div><p>[]\u200B</p></div>.
+            this.dependencies.selection.setCursorEnd(selectedTextNodes[0]);
         } else if (selectedTextNodes.length) {
             const firstNode = selectedTextNodes[0];
             const lastNode = selectedTextNodes[selectedTextNodes.length - 1];

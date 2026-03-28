@@ -2069,6 +2069,7 @@ class RelatedTranslation2(models.Model):
     name = fields.Char('Name Related', related='related_id.name', readonly=False)
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
     computed_name = fields.Char('Name Computed', compute='_compute_name')
+    name_en = fields.Char('Name EN', compute='_compute_name_en')
     computed_html = fields.Char('HTML Computed', compute='_compute_html')
 
     @api.depends_context('lang')
@@ -2076,6 +2077,11 @@ class RelatedTranslation2(models.Model):
     def _compute_name(self):
         for record in self:
             record.computed_name = record.related_id.name
+
+    @api.depends('name')
+    def _compute_name_en(self):
+        for record in self.with_context(lang='en_US'):
+            record.name_en = record.name
 
     @api.depends_context('lang')
     @api.depends('related_id.html')

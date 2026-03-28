@@ -16,16 +16,17 @@ const INDEXED_DB_VERSION = 1;
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+    static serviceDependencies = ["orm", "bus_service", "dialog"];
 
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
 
-    async setup(env, { orm, bus_service }) {
+    async setup(env, { orm, bus_service, dialog }) {
         this.orm = orm;
         this.bus = bus_service;
+        this.dialog = dialog;
         this.relations = [];
         this.custom = {};
         this.syncInProgress = false;
@@ -107,7 +108,7 @@ export class PosData extends Reactive {
             data.key,
             name,
         ]);
-        this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models);
+        this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, this.dialog);
     }
 
     deleteDataIndexedDB(model, uuid) {
