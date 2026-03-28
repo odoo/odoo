@@ -822,8 +822,8 @@ class AccountAccount(models.Model):
             domain = Domain.AND([search_domain, domain])
         else:
             move_type_accounts = {
-                'out': ['income'],
-                'in': ['expense', 'asset_fixed'],
+                'out': ['income', 'income_other'],
+                'in': ['expense', 'expense_direct_cost', 'expense_depreciation', 'expense_other', 'asset_fixed'],
             }
             allowed_account_types = move_type_accounts.get(move_type.split('_')[0])
             type_domain = [('account_type', 'in', allowed_account_types)] if allowed_account_types else []
