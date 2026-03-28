@@ -350,11 +350,13 @@ functionRegistry.add("ODOO.ACCOUNT.GROUP", {
             "type (string)",
             _t("The technical account type (possible values are: %s).", ACCOUNT_TYPES.join(", "))
         ),
+        COMPANY_ARG,
     ],
     category: "Odoo",
     returns: ["NUMBER"],
-    compute: function (accountType) {
-        const accountTypes = this.getters.getAccountGroupCodes(toString(accountType));
+    compute: function (accountType, companyId = { value: null }) {
+        const _companyId = companyId?.value;
+        const accountTypes = this.getters.getAccountGroupCodes(toString(accountType), _companyId);
         return accountTypes.join(",");
     },
 });
