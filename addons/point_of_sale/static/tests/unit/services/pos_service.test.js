@@ -287,8 +287,8 @@ describe("pos_store.js", () => {
 
         const productA = store.models["product.product"].get(5);
         const productB = store.models["product.product"].get(6);
-        productA.parentPosCategIds = [1];
-        productB.parentPosCategIds = [2];
+        productA.pos_categ_ids = [1];
+        productB.pos_categ_ids = [2];
 
         const currentOrderChange = {
             new: [
@@ -391,7 +391,7 @@ describe("pos_store.js", () => {
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); //Only one group
         expect(grouped[0][0]).toBe("0");
-        expect(grouped[0][1].length).toBe(14);
+        expect(grouped[0][1].length).toBe(15);
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;

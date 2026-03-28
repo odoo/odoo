@@ -5,13 +5,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025.
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-13 15:52+0000\n"
+"POT-Creation-Date: 2026-03-13 18:38+0000\n"
+"PO-Revision-Date: 2026-03-18 11:18+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/nl/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -533,6 +533,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A reference to a cell."
+msgstr "Een verwijzing naar een cel."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A segment of a string."
 msgstr "Een segment van een tekenreeks."
 
@@ -621,6 +627,12 @@ msgstr "Absolute waarde"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Absolute value of a number."
 msgstr "Absolute waarde van een getal."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid "Access Error"
+msgstr "Toegangsfout"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -794,7 +806,7 @@ msgstr "Extra getallen of bereiken toe te voegen aan value1."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Additional ranges or references for which you want the subtotal."
-msgstr ""
+msgstr "Extra bereiken of referenties waarvoor je het subtotaal wilt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1926,6 +1938,8 @@ msgstr "Kan de selectie niet splitsen voor een onbekende reden"
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Cannot use custom pivot groups with \"Count Distinct\" measure"
 msgstr ""
+"Kan geen aangepaste draaitabelgroepen gebruiken met de maatstaf ‘Aantal "
+"unieke waarden’"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2086,6 +2100,16 @@ msgstr "Grafiektype"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Checkbox"
 msgstr "Selectievakje"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Checks whether there is a reference to a cell that contains a formula, and "
+"returns TRUE or FALSE."
+msgstr ""
+"Controleert of er een verwijzing is naar een cel die een formule bevat, en "
+"retourneert TRUE of FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3251,7 +3275,7 @@ msgstr "Rijen %s - %s verwijderen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Delete table"
-msgstr "Verwijder tabel"
+msgstr "Tabel verwijderen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3412,7 +3436,7 @@ msgstr "Weergegeven als % differentie van \"%s\""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of \"%s\""
-msgstr "Weergegeven als % of \"%s\""
+msgstr "Weergegeven als % van \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4838,13 +4862,13 @@ msgstr "ISO-weeknummer van het jaar."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Icon set"
-msgstr "Pictogrammenset"
+msgstr "Iconenset"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Icons"
-msgstr "Pictogrammen"
+msgstr "Iconen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6509,6 +6533,24 @@ msgstr "Odoo staafdiagram"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Combo Chart"
+msgstr "Combinatiegrafiek Odoo"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Funnel Chart"
+msgstr "Trechtergrafiek Odoo"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Geo Chart"
+msgstr "Geografische grafiek Odoo"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Line Chart"
 msgstr "Odoo Lijngrafiek"
 
@@ -6521,14 +6563,44 @@ msgstr "Odoo cirkeldiagram"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Pyramid Chart"
+msgstr "Odoo piramide-diagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Radar Chart"
 msgstr "Odoo radardiagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Scatter Chart"
+msgstr "Odoo spreidingsdiagram"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/hooks.js:0
 msgid "Odoo Spreadsheet"
 msgstr "Odoo Spreadsheet"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Sunburst Chart"
+msgstr "Odoo Zonnestraalgrafiek"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Treemap Chart"
+msgstr "Odoo Treemapdiagram"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
+msgid "Odoo Waterfall Chart"
+msgstr "Odoo watervaldiagram"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7533,7 +7605,7 @@ msgstr "Geeft als resultaat de waarde afhankelijk van logische expressie."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Reverse icons"
-msgstr "Pictogrammen omkeren"
+msgstr "Iconen omkeren"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8101,6 +8173,7 @@ msgstr "Specifiek bereik"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Specifies how to match search_key with the items in lookup_range. "
 msgstr ""
+"Geeft aan hoe search_key moet worden gematcht aan de items in lookup_range. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8443,6 +8516,8 @@ msgstr "Symbool"
 msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order."
 msgstr ""
+"TRUE of FALSE om aan te geven of sort_column in oplopende volgorde moet "
+"worden gesorteerd."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10996,7 +11071,7 @@ msgstr "Het celbereik waarover criterion1 moet worden geëvalueerd."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The range or reference for which you want the subtotal."
-msgstr ""
+msgstr "Bereik of referentie waarvoor je het subtotaal wilt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13711,6 +13786,15 @@ msgstr "Je kunt geen cellen samenvoegen binnen een bestaand filter."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Je kunt geen overlappende tabellen maken."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr ""
+"Je hebt geen rechten om gegevens te exporteren. Neem contact op met een "
+"beheerder."
 
 #. module: spreadsheet
 #. odoo-javascript

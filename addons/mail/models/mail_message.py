@@ -723,8 +723,10 @@ class MailMessage(models.Model):
                             attachment.generate_access_token()
                             attachments = values.setdefault('attachment_ids', [])
                             attachments.append((4, attachment.id))
-                            data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
-                    return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
+                            data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name, attachment.id]
+                    # data-attachment-id helps identify image attachments that are already inserted in the body
+                    # this is notably used to avoid displaying them twice in the chatter
+                    return f'{data_to_url[key][0]}{match.group(3)} alt="{data_to_url[key][1]}" data-attachment-id="{data_to_url[key][2]}"'
                 values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
 
             # delegate creation of tracking after the create as sudo to avoid access rights issues
@@ -1104,7 +1106,7 @@ class MailMessage(models.Model):
             # sudo: mail.message: access to author_id is allowed
             Store.One(
                 "author_id",
-                ["avatar_128", "is_company", Store.One("main_user_id", "share")],
+                ["avatar_128", "is_company", Store.One("main_user_id", ["partner_id", "share"])],
                 dynamic_fields=lambda m: m._get_store_partner_name_fields(),
                 sudo=True,
             ),
@@ -1206,6 +1208,7 @@ class MailMessage(models.Model):
         record_fields = [
             # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
             Store.Attr("display_name", sudo=True),
+            Store.Attr("has_mail_thread", lambda record: isinstance(record, self.env.registry["mail.thread"])),
             Store.Attr(
                 "module_icon",
                 lambda record: modules.module.get_module_icon(self.env[record._name]._original_module),

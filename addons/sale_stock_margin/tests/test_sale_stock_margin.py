@@ -258,6 +258,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'currency_id': new_company_currency.id,
         })
         self.env.user.company_id = new_company.id
+        self.env = self.env.user.with_company(new_company.id).env
 
         self.pricelist.currency_id = new_company_currency.id
 

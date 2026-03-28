@@ -89,24 +89,43 @@ export class ProductTemplateAccounting extends Base {
             quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
         }
 
-        const tmplRules = (productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [])
-            .filter((rule) => rule.pricelist_id.id === pricelist.id && !rule.product_id)
-            .sort((a, b) => b.min_quantity - a.min_quantity);
-        const productRules = (product?.backLink?.("<-product.pricelist.item.product_id") || [])
-            .filter((rule) => rule.pricelist_id.id === pricelist.id)
-            .sort((a, b) => b.min_quantity - a.min_quantity);
+        let rule = null;
 
-        const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
-        const productRulesSet = new Set(productRules.map((rule) => rule.id));
-        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
-        const rules = this.models["product.pricelist.item"]
-            .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds])
-            .filter((r) => !r.min_quantity || r.min_quantity <= quantity);
+        // 1. Variant Rules
+        if (product) {
+            const productRules = pricelist.getRulesByProductId(product.id);
+            rule = pricelist.findBestRule(productRules, quantity);
+        }
 
-        const rule = rules.length && rules[0];
+        // 2. Template Rules
+        if (!rule) {
+            const tmplRules = pricelist.getRulesByTmplId(productTmpl.id);
+            rule = pricelist.findBestRule(tmplRules, quantity);
+        }
+
+        // 3. Category Rules
+        if (!rule) {
+            const categoryRulesIds = pricelist.getCategoryRulesIds(this.parentCategories);
+            if (categoryRulesIds.length > 0) {
+                const categoryRules =
+                    this.models["product.pricelist.item"].readMany(categoryRulesIds);
+                rule = pricelist.findBestRule(categoryRules, quantity);
+            }
+        }
+
+        // 4. Global Rules
+        if (!rule) {
+            const globalRulesIds = pricelist.getGlobalRulesIds();
+            if (globalRulesIds.length > 0) {
+                const globalRules = this.models["product.pricelist.item"].readMany(globalRulesIds);
+                rule = pricelist.findBestRule(globalRules, quantity);
+            }
+        }
+
         if (!rule) {
             return price;
         }
+
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
                 price = this.getPrice(rule.base_pricelist_id, quantity, 0, true, variant);
@@ -118,10 +137,10 @@ export class ProductTemplateAccounting extends Base {
         if (rule.compute_price === "fixed") {
             price = rule.fixed_price;
         } else if (rule.compute_price === "percentage") {
-            price = price - price * (rule.percent_price / 100);
+            price = price - price * ((rule.percent_price || 0) / 100);
         } else {
             var price_limit = price;
-            price -= price * (rule.price_discount / 100);
+            price -= price * ((rule.price_discount || 0) / 100);
             if (rule.price_round) {
                 price = roundPrecision(price, rule.price_round);
             }

@@ -89,9 +89,11 @@ class SequenceMixin(models.AbstractModel):
         # To avoid requiring multiple savepoints when generating successive
         # sequence numbers within a single transaction, we cache the sequence value
         # for the duration of the in-flight transaction.
-        # The `precommit.data` container is used instead of `cr.cache` to
-        # reduce the need for manual invalidation and ensure that the
-        # cache does not survive a commit or rollback.
+        #
+        # We use `cr.cache` and expects any savepoint rollback or commit to clear the cache.
+        # This is important because as soon as the lock is released, there might be a record
+        # consumming the next sequence in a concurent transaction for which the cache can't be
+        # aware.
         #
         # Before adding an entry for a sequence to this `sequence.mixin` cache,
         # the transaction must have locked the corresponding unique constraint,
@@ -107,7 +109,7 @@ class SequenceMixin(models.AbstractModel):
         # See also:
         # - https://postgres.ai/blog/20210831-postgresql-subtransactions-considered-harmful
         # - the documentation in _locked_increment()
-        return self.env.cr.precommit.data.setdefault('sequence.mixin', {})
+        return self.env.cr.cache.setdefault('sequence.mixin', {})
 
     def write(self, vals):
         if self._sequence_field in vals and self.env.context.get('clear_sequence_mixin_cache', True):

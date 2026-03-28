@@ -77,11 +77,6 @@ export class SetupEditorPlugin extends Plugin {
         root.querySelectorAll(".o_editable").forEach((el) => {
             el.classList.remove("o_editable");
         });
-
-        [root, ...root.querySelectorAll("[data-editor-message]")].forEach((el) => {
-            el.removeAttribute("data-editor-message");
-            el.removeAttribute("data-editor-message-default");
-        });
     }
 
     /**

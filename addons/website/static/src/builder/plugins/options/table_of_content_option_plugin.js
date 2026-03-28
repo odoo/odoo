@@ -43,7 +43,7 @@ class TableOfContentOptionPlugin extends Plugin {
         // Prevent dropping a table of content inside another table of content.
         dropzone_selector: {
             selector: ".s_table_of_content",
-            excludeAncestor: ".s_table_of_content",
+            excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",
         },
         // Only allow moving main parts of the table of content by using arrows.
         is_draggable_handlers: (el) => {

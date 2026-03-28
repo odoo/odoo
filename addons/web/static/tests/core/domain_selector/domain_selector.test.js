@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, getFixture } from "@odoo/hoot";
 import { press, queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
@@ -1061,7 +1061,7 @@ test("support properties", async () => {
         },
         {
             name: "xphone_prop_5",
-            domain: `[("properties", "any", ["&", ("xphone_prop_5", ">=", "today"), ("xphone_prop_5", "<", "today +1d")])]`,
+            domain: `["&", ("properties.xphone_prop_5", ">=", "today"), ("properties.xphone_prop_5", "<", "today +1d")]`,
             options: [
                 label("in range"),
                 label("="),
@@ -2674,4 +2674,132 @@ test(`swith from [(0, "=", 1)] to other condition`, async () => {
         label("not set"),
     ]);
     expect.verifySteps([`["&", ("datetime", ">=", "today"), ("datetime", "<", "today +1d")]`]);
+});
+
+test("properties field: date & datetime", async () => {
+    mockDate("2077-01-02 10:00:00", 0);
+    Partner._fields.properties = fields.Properties({
+        string: "partner_properties",
+        definition_record: "product_id",
+        definition_record_field: "definitions",
+    });
+
+    Product._fields.properties = fields.Properties({
+        string: "product_properties",
+        definition_record: "partner_id",
+        definition_record_field: "definitions",
+    });
+
+    Product._fields.partner_id = fields.Many2one({ relation: "partner" });
+    Product._fields.definitions = fields.PropertiesDefinition({
+        string: "Definitions",
+    });
+
+    Product._records[0].definitions = [
+        { name: "date_properties", string: "date_properties", type: "date" },
+        { name: "datetime_properties", string: "datetime_properties", type: "datetime" },
+    ];
+
+    Partner._fields.definitions = fields.PropertiesDefinition({
+        string: "Definitions",
+    });
+
+    Partner._records[1].definitions = [
+        { name: "date_properties", string: "date_properties", type: "date" },
+        { name: "datetime_properties", string: "datetime_properties", type: "datetime" },
+    ];
+    const domain = `[(0, "=", 1)]`;
+    await makeDomainSelector({
+        isDebugMode: true,
+        domain,
+    });
+    const target = getFixture();
+    const checkEditor = async (value) => {
+        const { fields, operator, expectedDomain, treeValue } = value;
+        await contains(`.o_domain_selector_debug_container textarea`).edit(domain);
+        await contains(".o_model_field_selector").click();
+        for (const [index, field] of fields.entries()) {
+            await contains(".o_model_field_selector_popover_search input").edit(field, {
+                confirm: false,
+            });
+            await runAllTimers();
+            await animationFrame();
+            if (index != fields.length - 1) {
+                await contains(".o_model_field_selector_popover_search input").press("ArrowRight");
+            } else {
+                await contains(".o_model_field_selector_popover_search input").press("Enter");
+            }
+        }
+        await selectOperator(operator);
+        if (treeValue) {
+            await selectValue(treeValue);
+        }
+        await runAllTimers();
+        await animationFrame();
+        await expect(
+            target.querySelector(".o_domain_selector_debug_container textarea").value
+        ).toBe(expectedDomain);
+    };
+    const values = [
+        {
+            fields: ["partner_properties", "date_properties"],
+            operator: "in range",
+            expectedDomain: `["&", ("properties.date_properties", ">=", "today"), ("properties.date_properties", "<", "today +1d")]`,
+        },
+        {
+            fields: ["partner_properties", "datetime_properties"],
+            operator: "in range",
+            expectedDomain: `["&", ("properties.datetime_properties", ">=", "today"), ("properties.datetime_properties", "<", "today +1d")]`,
+        },
+        {
+            fields: ["product", "product_properties", "date_properties"],
+            operator: "in range",
+            expectedDomain:
+                '[("product_id", "any", ["&", ("properties.date_properties", ">=", "today"), ("properties.date_properties", "<", "today +1d")])]',
+        },
+        {
+            fields: ["product", "product_properties", "datetime_properties"],
+            operator: "in range",
+            expectedDomain:
+                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today"), ("properties.datetime_properties", "<", "today +1d")])]',
+        },
+        {
+            fields: ["product", "product_properties", "date_properties"],
+            operator: "=",
+            expectedDomain: '[("product_id.properties.date_properties", "=", "2077-01-02")]',
+        },
+        {
+            fields: ["product", "product_properties", "datetime_properties"],
+            operator: "=",
+            expectedDomain:
+                '[("product_id.properties.datetime_properties", "=", "2077-01-02 00:00:00")]',
+        },
+        {
+            fields: ["product", "product_properties", "date_properties"],
+            operator: ">",
+            expectedDomain: '[("product_id.properties.date_properties", ">", "2077-01-02")]',
+        },
+        {
+            fields: ["product", "product_properties", "datetime_properties"],
+            operator: "<",
+            expectedDomain:
+                '[("product_id.properties.datetime_properties", "<", "2077-01-02 00:00:00")]',
+        },
+        {
+            fields: ["product", "product_properties", "datetime_properties"],
+            operator: "in range",
+            treeValue: "last 12 months",
+            expectedDomain:
+                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today =1d -12m"), ("properties.datetime_properties", "<", "today =1d")])]',
+        },
+        {
+            fields: ["product", "product_properties", "date_properties"],
+            operator: "in range",
+            treeValue: "year to date",
+            expectedDomain: `[("product_id", "any", ["&", ("properties.date_properties", ">=", "today =1m =1d"), ("properties.date_properties", "<", "today +1d")])]`,
+        },
+    ];
+    for (const value of values) {
+        await checkEditor(value);
+    }
 });

@@ -177,12 +177,19 @@ class PosOrder(models.Model):
             inv_line_vals["name"] = origin_line.name
             origin_line._set_analytic_distribution(inv_line_vals)
 
+        if self.config_id.down_payment_product_id == pos_line.product_id:
+            inv_line_vals["is_downpayment"] = True
+
         return inv_line_vals
 
     def write(self, vals):
         if 'crm_team_id' in vals:
             vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team_id.id
         return super().write(vals)
+
+    def _force_create_picking_real_time(self):
+        result = super()._force_create_picking_real_time()
+        return result or any(self.lines.mapped('sale_order_origin_id'))
 
 
 class PosOrderLine(models.Model):

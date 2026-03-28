@@ -1090,10 +1090,14 @@
       "name": "Invoices by Total Signed",
       "fieldMatching": {
           "757a1b4b-e339-4879-beb6-9851050387cf": {
-              "chain": "invoice_date_due",
+              "chain": "invoice_date",
               "type": "date",
               "offset": 0
-          }
+          },
+          "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "partner_id.country_id", "type": "many2one" },
+          "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "invoice_line_ids.product_id.categ_id", "type": "many2one" },
+          "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "invoice_line_ids.product_id", "type": "many2one" },
+          "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
       }
     }
   },

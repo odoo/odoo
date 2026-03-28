@@ -90,7 +90,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
-const DELAY_TOOLBAR_OPEN = 300;
+export const DELAY_TOOLBAR_OPEN = 300;
 /** Number of buttons below which toolbar will open directly in its expanded form */
 const MIN_SIZE_FOR_COMPACT = 7;
 /** Special namespace that prevents the toolbar from opening */

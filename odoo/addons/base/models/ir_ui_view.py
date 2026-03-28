@@ -322,6 +322,7 @@ actual arch.
     @api.depends('arch', 'inherit_id')
     def _compute_invalid_locators(self):
         def assess_locator(source, spec):
+            node = None
             with suppress(ValidationError):  # Syntax error
                 # If locate_node returns None here:
                 # Invalid expression: Ok Syntax, but cannot be anchored to the parent view.

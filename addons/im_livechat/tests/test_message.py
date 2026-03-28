@@ -191,6 +191,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "mail.thread": self._filter_threads_fields(
                     {
                         "display_name": "test1 Ernest Employee",
+                        "has_mail_thread": True,
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
                         "module_icon": "/mail/static/description/icon.png",
@@ -219,7 +220,11 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     },
                 ),
                 "res.users": self._filter_users_fields(
-                    {"id": self.users[1].id, "share": False},
+                    {
+                        "id": self.users[1].id,
+                        "partner_id": self.users[1].partner_id.id,
+                        "share": False,
+                    },
                 ),
             },
         )
@@ -298,6 +303,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Chell Gladys Ernest Employee",
+                                        "has_mail_thread": True,
                                         "id": channel.id,
                                         "model": "discuss.channel",
                                         "module_icon": "/mail/static/description/icon.png",
@@ -327,7 +333,11 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                     },
                                 ),
                                 "res.users": self._filter_users_fields(
-                                    {"id": self.env.user.id, "share": True},
+                                    {
+                                        "id": self.env.user.id,
+                                        "partner_id": self.env.user.partner_id.id,
+                                        "share": True,
+                                    },
                                 ),
                             },
                             "id": channel.id,

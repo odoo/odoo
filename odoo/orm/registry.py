@@ -451,6 +451,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # recursively mark fields to re-setup
             todo = []
             for model_cls in self.models.values():
+                if model_cls._custom:
+                    # custom models are going to be reloaded and set up below
+                    model_cls._setup_done__ = False
                 if model_cls._setup_done__:
                     models_field_depends_done.add(model_cls)
                 else:
@@ -701,6 +704,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # not already marked as "to be applied".
                 with cr.savepoint(flush=False):
                     func(cr)
+            else:
+                self._constraint_queue[key] = func
         except Exception as e:
             if self._is_install:
                 _schema.error(*e.args)

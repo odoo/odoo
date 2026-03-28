@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from base64 import b64encode
 import uuid
 from freezegun import freeze_time
+from lxml import etree
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools, Command
@@ -537,3 +539,144 @@ class TestItEdiImport(TestItEdi):
             'amount_untaxed': 25.0,
             'amount_tax': 5.5,
         }])
+
+    def test_cron_import_bill_from_another_company_without_conflicts(self):
+        """
+        Ensure that in a multi-company environment, importing a bill containing products
+        restricted to another company does not fail due to company inconsistencies.
+        """
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'TEST',
+            'barcode': 'TEST',
+            'standard_price': 75.0,
+            'company_id': self.company_data['company'].id,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': test_product.id,
+            'product_code': 'TEST',
+            'partner_id': self.company_data_2["company"].partner_id.id,
+        })
+
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee" position="after">
+                <DettaglioLinee>
+                    <NumeroLinea>2</NumeroLinea>
+                    <CodiceArticolo>
+                        <CodiceTipo>EAN</CodiceTipo>
+                        <CodiceValore>TEST</CodiceValore>
+                    </CodiceArticolo>
+                    <Descrizione>[TEST] Test Product</Descrizione>
+                    <Quantita>1.00</Quantita>
+                    <PrezzoUnitario>5.00</PrezzoUnitario>
+                    <PrezzoTotale>5.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DettaglioLinee>
+                <DettaglioLinee>
+                    <NumeroLinea>3</NumeroLinea>
+                    <CodiceArticolo>
+                        <CodiceTipo>INTERNAL</CodiceTipo>
+                        <CodiceValore>TEST</CodiceValore>
+                    </CodiceArticolo>
+                    <Descrizione>[TEST] Test Product</Descrizione>
+                    <Quantita>2.00</Quantita>
+                    <PrezzoUnitario>4.00</PrezzoUnitario>
+                    <PrezzoTotale>8.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DettaglioLinee>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 18.0,
+            'amount_tax': 3.96,
+            'invoice_line_ids': [
+                {
+                    "product_id": False,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'quantity': 5.0,
+                    'price_unit': 1.0,
+                    'debit': 5.0,
+                },
+                {
+                    'product_id': False,
+                    'name': '[TEST] Test Product',
+                    'quantity': 1.0,
+                    'price_unit': 5.0,
+                    'debit': 5.0,
+                },
+                {
+                    'product_id': False,
+                    'name': '[TEST] Test Product',
+                    'quantity': 2.0,
+                    'price_unit': 4.0,
+                    'debit': 8.0,
+                },
+            ],
+        }], applied_xml)
+
+    def test_receive_bill_with_attachment(self):
+        """ Test that a bill with embedded attachments saves attachments and original xml file."""
+        # must build file from scratch in order to check l10n_it_edi_attachment_file
+        filename = 'IT01234567890_FPR02.xml'
+        embedded_files = {
+            'testfile.txt': ('TXT', 'This is a test file.'),
+            'testfile2.txt': ('', 'Test file without FormatoAttachment.'),
+            'testfile3.xml': ('XML', '<hello>How are you?</hello>'),
+        }
+        attachments_data = [
+            f"""
+                <Allegati>
+                    <NomeAttachment>{filename}</NomeAttachment>
+                    <FormatoAttachment>{extension}</FormatoAttachment>
+                    <DescrizioneAttachment>An embedded attachment.</DescrizioneAttachment>
+                    <Attachment>{b64encode(raw.encode()).decode()}</Attachment>
+                </Allegati>
+            """
+            for filename, (extension, raw) in embedded_files.items()
+        ]
+        attachments_str = "\n".join(attachments_data)
+        applied_xml = f'<xpath expr="//FatturaElettronicaBody/DatiGenerali" position="after">{attachments_str}</xpath>'
+
+        tree = self.with_applied_xpath(
+            etree.fromstring(self.fake_test_content.encode()),
+            applied_xml
+        )
+        import_content = etree.tostring(tree)
+
+        # import the xml
+        move = self.env['account.move']._l10n_it_edi_process_downloads_attachments(
+            self.company,
+            [{
+                'name': filename,
+                'raw': import_content.decode(),
+                'type': 'binary',
+            }])
+
+        # There should be one attachment with this filename, and it should match the original XML.
+        # TODO: During bill import, we bypass the ORM to manually create the
+        # `ir.attachment` with `res_field`. This requires cache invalidation,
+        # (or commit) as the Binary field isn't updated automatically.
+        # In `master`, we should fix the import by letting the Binary field
+        # handle attachment creation on write.
+        move.invalidate_recordset(fnames=['l10n_it_edi_attachment_file'])
+        it_edi_attachment = self.env['ir.attachment'].search([
+            ('name', '=', filename),
+            ('res_model', '=', 'account.move'),
+            ('res_field', '=', 'l10n_it_edi_attachment_file'),
+        ])
+        self.assertEqual(len(it_edi_attachment), 1)
+        self.assertEqual(move.l10n_it_edi_attachment_file, b64encode(import_content))
+
+        # ensure that the embedded files are imported correctly
+        for filename, (extension, raw) in embedded_files.items():
+            chatter_attachments = self.env['ir.attachment'].search([
+                ('name', '=', filename),
+                ('res_model', '=', 'account.move'),
+                ('res_id', '=', move.id),
+                ('res_field', '=', False),
+            ])
+            self.assertEqual(len(chatter_attachments), 1)
+            self.assertEqual(chatter_attachments.raw.decode(), raw)

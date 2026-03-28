@@ -19,6 +19,7 @@ import {
     waitFor,
     hover,
     manuallyDispatchProgrammaticEvent,
+    advanceTime,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
@@ -311,16 +312,16 @@ test("html field in readonly with embedded components and editable descendants",
     READONLY_MAIN_EMBEDDINGS.pop();
 });
 
-test("links should open on a new tab in readonly", async () => {
+test("only external links should always open on a new tab in readonly", async () => {
     Partner._records = [
         {
             id: 1,
             txt: `
             <body>
                 <p>first</p>
-                <a href="/contactus">Relative link</a>
-                <a href="${browser.location.origin}/contactus">Internal link</a>
-                <a href="https://google.com">External link</a>
+                <a class="internal" href="/contactus">Relative link</a>
+                <a class="internal" href="${browser.location.origin}/contactus">Internal link</a>
+                <a class="external" href="https://google.com">External link</a>
             </body>`,
         },
         {
@@ -328,9 +329,9 @@ test("links should open on a new tab in readonly", async () => {
             txt: `
             <body>
                 <p>second</p>
-                <a href="/contactus2">Relative link</a>
-                <a href="${browser.location.origin}/contactus2">Internal link</a>
-                <a href="https://google2.com">External link</a>
+                <a class="internal" href="/contactus2">Relative link</a>
+                <a class="internal" href="${browser.location.origin}/contactus2">Internal link</a>
+                <a class="external" href="https://google2.com">External link</a>
             </body>`,
         },
     ];
@@ -346,16 +347,24 @@ test("links should open on a new tab in readonly", async () => {
     });
 
     expect("[name='txt'] p").toHaveText("first");
-    for (const link of queryAll("a")) {
+    for (const link of queryAll("a.external")) {
         expect(link.getAttribute("target")).toBe("_blank");
         expect(link.getAttribute("rel")).toBe("noreferrer");
+    }
+    for (const link of queryAll("a.internal")) {
+        expect(link.getAttribute("target")).toBe(null);
+        expect(link.getAttribute("rel")).toBe(null);
     }
 
     await contains(`.o_pager_next`).click();
     expect("[name='txt'] p").toHaveText("second");
-    for (const link of queryAll("a")) {
+    for (const link of queryAll("a.external")) {
         expect(link.getAttribute("target")).toBe("_blank");
         expect(link.getAttribute("rel")).toBe("noreferrer");
+    }
+    for (const link of queryAll("a.internal")) {
+        expect(link.getAttribute("target")).toBe(null);
+        expect(link.getAttribute("rel")).toBe(null);
     }
 });
 
@@ -913,7 +922,7 @@ test("Embed video by pasting video URL", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html"/>
+                <field name="txt" widget="html" options="{'debounceHints': false}"/>
             </form>`,
     });
 
@@ -999,6 +1008,54 @@ test("isDirty should be false when the content is being transformed by the edito
     expect(`.o_form_button_save`).not.toBeVisible();
 });
 
+test("isDirty should not be reset to false if onChange fired between getEditorContent and updateValue", async () => {
+    let htmlField;
+    const { promise: firstStep, resolve: resolveFirst } = Promise.withResolvers();
+    const { promise: secondStep, resolve: resolveSecond } = Promise.withResolvers();
+    const { promise: thirdStep, resolve: resolveThird } = Promise.withResolvers();
+    patchWithCleanup(HtmlField.prototype, {
+        setup() {
+            super.setup();
+            htmlField = this;
+        },
+        async getEditorContent() {
+            const el = await super.getEditorContent();
+            resolveFirst();
+            await secondStep;
+            return el;
+        },
+        async updateValue() {
+            const updated = await super.updateValue(...arguments);
+            resolveThird();
+            return updated;
+        },
+    });
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect(htmlField.isDirty).toBe(false);
+    expect(`.o_form_button_save`).not.toBeVisible();
+    const p = htmlField.editor.editable.querySelector("p");
+    p.append(htmlField.editor.document.createTextNode("Second"));
+    htmlField.editor.shared.history.addStep();
+    await clickSave();
+    await firstStep;
+    p.append(htmlField.editor.document.createTextNode("Third"));
+    htmlField.editor.shared.history.addStep();
+    resolveSecond();
+    await thirdStep;
+    await animationFrame();
+    expect(htmlField.editor.editable).toHaveInnerHTML(`<p>firstSecondThird</p>`);
+    expect(htmlField.isDirty).toBe(true);
+    expect(`.o_form_button_save`).toBeVisible();
+});
+
 test.tags("desktop");
 test("link preview in Link Popover", async () => {
     Partner._records = [
@@ -1082,7 +1139,7 @@ test("html field with a placeholder", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html" placeholder="test"/>
+                <field name="txt" widget="html" placeholder="test" options="{'debounceHints': false}"/>
             </form>`,
     });
 
@@ -1218,13 +1275,11 @@ test("add Vimeo video link in 'Videos' tab of MediaDialog", async () => {
     });
     setSelectionInHtmlField();
 
-    await onRpc("/html_editor/video_url/data", async () => {
-        return {
-            video_id: "1128489814",
-            platform: "vimeo",
-            embed_url: vimeoVideoLink,
-        };
-    });
+    await onRpc("/html_editor/video_url/data", async () => ({
+        video_id: "1128489814",
+        platform: "vimeo",
+        embed_url: vimeoVideoLink,
+    }));
 
     // Insert Vimeo video link
     await insertText(htmlEditor, "/video");
@@ -2576,6 +2631,7 @@ describe("save image", () => {
         await delay(50);
         // reswitch tab, and check the image was saved properly.
         await contains(".o_notebook_headers .nav-link:not(.active)").click();
+        await waitFor(".odoo-editor-editable");
         const savedImg = htmlEditor.editable.querySelector("img");
         expect(savedImg.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
         expect(savedImg).not.toHaveClass("o_b64_image_to_save");
@@ -2681,4 +2737,32 @@ test("should always have a block before a Table of Contents", async () => {
     expect(firstChild).toHaveOuterHTML(
         '<div class="o-paragraph" data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></div>'
     );
+});
+
+test.tags("desktop");
+test("should not open icon toolbar when creating table of contents inside a list", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<ol><li><br></li></ol>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField("li");
+    await insertText(htmlEditor, "/tableofcontents");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Table of Contents");
+    await press("Enter");
+    await animationFrame();
+    setSelectionInHtmlField("li");
+    await advanceTime(200);
+    await expectElementCount(".o-we-toolbar", 0);
 });

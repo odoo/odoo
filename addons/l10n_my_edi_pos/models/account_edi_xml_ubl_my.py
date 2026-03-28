@@ -364,7 +364,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         self._add_document_monetary_total_nodes(document_node, vals)
         currency_suffix = vals['currency_suffix']
 
-        amount_paid = vals[f'total_paid_amount{currency_suffix}']
+        amount_paid = 0.0
         document_node['cac:PrepaidPayment'] = {
             'cbc:PaidAmount': {
                 '_text': self.format_float(amount_paid, vals['currency_dp']),

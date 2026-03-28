@@ -67,3 +67,13 @@ class TestRoutes(TransactionCase):
 
         wh.reception_steps = 'two_steps'
         self.assertEqual(wh.reception_steps, 'two_steps')
+
+    def test_buy_to_resupply_unchecks_and_unlinks_warehouse(self):
+        """Unchecking Buy to Resupply should keep buy_to_resupply disabled."""
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        buy_route = wh.buy_pull_id.route_id
+        wh.buy_to_resupply = False
+        # Invalidate recordset to avoid cached `buy_to_resupply`
+        wh.invalidate_recordset(["buy_to_resupply"])
+        self.assertFalse(wh.buy_to_resupply)
+        self.assertNotIn(wh, buy_route.warehouse_ids)

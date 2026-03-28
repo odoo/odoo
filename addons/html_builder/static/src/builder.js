@@ -193,6 +193,7 @@ export class Builder extends Component {
                 baseContainers: ["P"],
                 cleanEmptyStructuralContainers: false,
                 isEditableRTL: false,
+                publicAttachments: true,
             },
             this.env.services
         );
@@ -264,7 +265,7 @@ export class Builder extends Component {
         const getStatePromises = [];
         const { promise: updatePromise, resolve } = Promise.withResolvers();
         this.editorBus.trigger("DOM_UPDATED", { getStatePromises, updatePromise });
-        await Promise.all(getStatePromises);
+        await Promise.allSettled(getStatePromises);
         const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
         resolve(isLastTriggerId);
     }

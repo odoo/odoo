@@ -334,7 +334,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 left=Markup('<span class="nolabel">'),
                 right=Markup('</span>'),
             ), 'sequence': 10},
-            'users': {'input': 'user_ids', 'label': _('Search in Assignees'), 'sequence': 20},
+            'user_ids': {'input': 'user_ids', 'label': _('Search in Assignees'), 'sequence': 20},
             'stage_id': {'input': 'stage_id', 'label': _('Search in Stages'), 'sequence': 30},
             'status': {'input': 'status', 'label': _('Search in Status'), 'sequence': 40},
             'priority': {'input': 'priority', 'label': _('Search in Priority'), 'sequence': 60},
@@ -350,7 +350,7 @@ class ProjectCustomerPortal(CustomerPortal):
     def _task_get_search_domain(self, search_in, search, milestones_allowed, project):
         if not search_in or search_in == 'name':
             return ['|', ('name', 'ilike', search), ('id', 'ilike', search)]
-        elif search_in == 'users':
+        elif search_in == 'user_ids':
             user_ids = request.env['res.users'].sudo().search([('name', 'ilike', search)])
             return [('user_ids', 'in', user_ids.ids)]
         elif search_in == 'priority':

@@ -7,7 +7,11 @@
             <field name="inherit_id" ref="im_livechat.discuss_channel_view_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//*[@name='filter_my_sessions']" position="after">
-                    <filter name="filter_my_team" domain="[('channel_member_ids.partner_id.user_ids.employee_id.member_of_department', '=', True)]" string="My Team"/>
+                    <filter
+                       name="filter_my_team"
+                       domain="['|', ('channel_member_ids.partner_id.user_ids', '=', uid), ('channel_member_ids.partner_id.employee_ids.parent_id.user_id', '=', uid)]"
+                       string="My Team"
+                    />
                 </xpath>
             </field>
         </record>

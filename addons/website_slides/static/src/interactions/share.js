@@ -23,7 +23,11 @@ export class Share extends Interaction {
         const data = currentTargetEl.dataset;
         this.services.dialog.add(SlideShareDialog, {
             category: data.category,
-            documentMaxPage: data.category == 'document' && this.getDocumentMaxPage(),
+            documentMaxPage:
+                data.category == "document" &&
+                new URL($(data.embedCode).attr("src"), window.location.href).origin ===
+                    window.location.origin &&
+                this.getDocumentMaxPage(),
             emailSharing: data.emailSharing === 'True',
             embedCode: data.embedCode,
             id: parseInt(data.id),

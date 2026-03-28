@@ -9,6 +9,18 @@ const { DateTime } = luxon;
 
 export class PosOrder extends PosOrderAccounting {
     static pythonModel = "pos.order";
+    static excludedLazyGetters = [
+        "user",
+        "company",
+        "currency",
+        "pickingType",
+        "session",
+        "finalized",
+        "isUnsyncedPaid",
+        "originalSplittedOrder",
+        "isRefund",
+        "floatingOrderName",
+    ];
 
     setup(vals) {
         super.setup(vals);
@@ -47,6 +59,10 @@ export class PosOrder extends PosOrderAccounting {
         }
         if (!this.user_id && this.models["res.users"]) {
             this.user_id = this.user;
+        }
+
+        if (!this.config_id) {
+            this.config_id = this.config;
         }
     }
 
@@ -96,6 +112,10 @@ export class PosOrder extends PosOrderAccounting {
 
     get finalized() {
         return this.state !== "draft";
+    }
+
+    get canBeRemovedFromIndexedDB() {
+        return (this.finalized && this.isSynced) || this.state === "cancel";
     }
 
     get totalQuantity() {
@@ -445,17 +465,12 @@ export class PosOrder extends PosOrderAccounting {
     /* ---- Payment Lines --- */
     addPaymentline(payment_method) {
         this.assertEditable();
-        const existingCash = this.payment_ids.find((pl) => pl.payment_method_id.is_cash_count);
 
         if (this.electronicPaymentInProgress()) {
             return {
                 status: false,
                 data: _t("There is already an electronic payment in progress."),
             };
-        }
-
-        if (existingCash && payment_method.is_cash_count) {
-            return { status: false, data: _t("There is already a cash payment line.") };
         }
 
         const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
@@ -544,7 +559,7 @@ export class PosOrder extends PosOrderAccounting {
         return (
             this.isRefund &&
             this.payment_ids.some(
-                (pl) => pl.payment_method_id.use_payment_terminal && pl.payment_status !== "done"
+                (pl) => pl.payment_method_id.payment_terminal && pl.payment_status !== "done"
             )
         );
     }
@@ -644,7 +659,7 @@ export class PosOrder extends PosOrderAccounting {
                   )
                 : defaultFiscalPosition;
             newPartnerPricelist =
-                this.models["product.pricelist"].find(
+                this.config.available_pricelist_ids.find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
                 ) || this.config.pricelist_id;
         } else {

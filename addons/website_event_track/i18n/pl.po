@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-01-15 14:30+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-25 14:50+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "website_event_track/pl/>\n"
@@ -42,8 +42,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event_track
@@ -97,13 +97,6 @@ msgstr "10 DIY Pomysły na meble dla absolutnych amatorów"
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 Porad i Trików w obróbce drewna dla początkujących"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -1000,7 +993,7 @@ msgstr "Nazwa firmy"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1444,11 +1437,8 @@ msgstr "Przyszłe czynności"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
-msgstr ""
+msgid "Get prepared and"
+msgstr "Przygotuj się i"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1499,6 +1489,11 @@ msgstr "Wysoki"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "Najwyższy"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "Strona domowa"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -3207,6 +3202,12 @@ msgid "minutes after Track start"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "dodaj do swoich ulubionych rozmów teraz."
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "zaczyna się w"
@@ -3303,14 +3304,8 @@ msgstr "zaczyna się"
 #~ msgid "Filter Tracks..."
 #~ msgstr "Filtruj ścieżki ..."
 
-#~ msgid "Get prepared and"
-#~ msgstr "Przygotuj się i"
-
 #~ msgid "Group By"
 #~ msgstr "Grupuj wg"
-
-#~ msgid "Home page"
-#~ msgstr "Strona domowa"
 
 #~ msgid "No results found"
 #~ msgstr "Nic nie znaleziono"
@@ -3377,9 +3372,6 @@ msgstr "zaczyna się"
 #~ "interesująca i potencjalnie użyteczna dla \n"
 #~ "publiki, to zostanie rozważone \n"
 #~ "umieszczenie w programie"
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "dodaj do swoich ulubionych rozmów teraz."
 
 #~ msgid "search."
 #~ msgstr "Szukaj."

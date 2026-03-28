@@ -129,6 +129,7 @@ class MrpProduction(models.Model):
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': 1,
+                'picking_id': move.picking_id.id,
                 'lot_id': False,
             })
         return move.action_show_subcontract_details(lot_id=False)

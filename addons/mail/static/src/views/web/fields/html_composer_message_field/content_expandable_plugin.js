@@ -52,7 +52,7 @@ export class ContentExpandablePlugin extends Plugin {
             this.dependencies.protectedNode.setProtectingNode(subEl, false);
             subEl.classList.add("d-none");
         }
-        const mailQuoteElement = this.editable.querySelectorAll('*[data-o-mail-quote="1"]');
+        const mailQuoteElement = ele.querySelectorAll('*[data-o-mail-quote="1"]');
         for (const element of mailQuoteElement) {
             element.removeAttribute("data-o-mail-quote");
             element.removeAttribute("style");

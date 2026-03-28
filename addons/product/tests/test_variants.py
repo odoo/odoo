@@ -1447,6 +1447,37 @@ class TestVariantsArchive(ProductVariantsCommon):
         (multiple_archived + multiple_active).unlink()
         self.assertFalse(products.exists())
 
+    @mute_logger('odoo.models.unlink')
+    def test_add_attribute_to_archived_template(self):
+        template = self.env['product.template'].create({
+            'name': 'Test Product',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.link(self.size_attribute_s.id)],
+            })]
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+        template_id = template.id
+        template.action_archive()
+        self.assertFalse(template.active)
+        template.write({
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.color_attribute.id,
+                'value_ids': [
+                    Command.link(self.color_attribute_red.id),
+                    Command.link(self.color_attribute_blue.id),
+                ],
+            })]
+        })
+        template = self.env['product.template'].browse(template_id).with_context(active_test=False)
+        self.assertTrue(template.exists(), "Template should not be deleted when adding attributes to archived template")
+        self.assertFalse(template.active, "Template should remain archived")
+        # Verify new variants are created but remain archived
+        all_variants = template.product_variant_ids
+        self.assertEqual(len(all_variants), 2, "Should create 2 variants: S+Red and S+Blue")
+        for variant in all_variants:
+            self.assertFalse(variant.active, "Variants should remain archived when template is archived")
+
 @tagged('post_install', '-at_install')
 class TestVariantWrite(TransactionCase):
 
@@ -1683,3 +1714,37 @@ class TestVariantsExclusion(ProductVariantsCommon):
         ]
         self.assertEqual(len(product_template.product_variant_ids), 2)
         self.assertTrue(variant_to_archive.active)
+
+    def test_supplierinfo_with_dynamic_attribute(self):
+        """
+        Ensure that supplierinfo.product_id is never automatically set when
+        variants are created dynamically.
+
+        The supplierinfo should remain template-level (product_id = False)
+        unless the user explicitly assigns a specific variant manually,
+        even if only one variant exists initially.
+        """
+        product_template = self.env['product.template'].create({
+            'name': 'Test dynamic',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.dynamic_attribute.id,
+                    'value_ids': [Command.set(self.dynamic_attribute.value_ids.ids)],
+                }),
+            ]
+        })
+        self.assertFalse(product_template.product_variant_ids)
+
+        supplierinfo = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner.id,
+            'product_tmpl_id': product_template.id,
+        })
+        self.assertFalse(product_template.product_variant_ids)
+
+        product_template._create_product_variant(product_template.attribute_line_ids.product_template_value_ids[0])
+        self.assertEqual(len(product_template.product_variant_ids), 1)
+        self.assertFalse(supplierinfo.product_id)
+
+        product_template._create_product_variant(product_template.attribute_line_ids.product_template_value_ids[1])
+        self.assertEqual(len(product_template.product_variant_ids), 2)
+        self.assertFalse(supplierinfo.product_id)

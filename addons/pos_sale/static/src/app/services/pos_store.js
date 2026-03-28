@@ -43,14 +43,6 @@ patch(PosStore.prototype, {
             fiscal_position_id: orderFiscalPos,
         });
 
-        //Add a down payment for transactions that were already done online
-        if (sale_order.amount_paid > 0) {
-            await this.addDownPaymentProductOrderlineToOrder(
-                sale_order,
-                -sale_order.amount_paid,
-                false
-            );
-        }
         const selectedOption = await makeAwaitable(this.dialog, SelectionPopup, {
             title: _t("What do you want to do?"),
             list: [
@@ -115,7 +107,7 @@ patch(PosStore.prototype, {
                 product_id: line.product_id,
                 qty: line.product_uom_qty,
                 price_unit: line.price_unit,
-                price_type: "automatic",
+                price_type: "manual",
                 tax_ids: taxes.map((tax) => ["link", tax]),
                 sale_order_origin_id: sale_order,
                 sale_order_line_id: line,
@@ -133,7 +125,7 @@ patch(PosStore.prototype, {
                     },
                 ]),
             };
-            if (line.display_type === "line_section") {
+            if (["line_section", "line_subsection"].includes(line.display_type)) {
                 continue;
             }
             newLineValues.attribute_value_ids = (line.product_custom_attribute_value_ids || []).map(
@@ -238,6 +230,15 @@ patch(PosStore.prototype, {
                 }
             }
         }
+        // Add a down payment for transactions when automatic invoice is disabled
+        const paidDiff = this.getOrder().amount_total - sale_order.amount_unpaid;
+        const currency = sale_order.currency_id || this.currency;
+        if (currency.isPositive(sale_order.amount_paid) && !currency.isZero(paidDiff)) {
+            if (!(await this.loadDownPaymentProduct())) {
+                return;
+            }
+            this.addDownPaymentProductOrderlineToOrder(sale_order, -paidDiff, false);
+        }
     },
 
     prepareSoBaseLineForTaxesComputationExtraValues(so, soLine) {
@@ -319,7 +320,22 @@ patch(PosStore.prototype, {
         accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
         if (isPercentage) {
             const percentage = amount / 100.0;
-            amount = baseLines.length ? saleOrder.amount_unpaid * percentage : 0.0;
+            amount = baseLines.length ? saleOrder.amount_unpaid : 0.0;
+            const fixedBaseLines = accountTaxHelpers.dispatch_taxes_into_new_base_lines(
+                baseLines,
+                this.company,
+                (baseLine, taxData) => !accountTaxHelpers.can_be_discounted(taxData.tax)
+            );
+            const baseLinesAggregatedValues = accountTaxHelpers.aggregate_base_lines_tax_details(
+                fixedBaseLines,
+                (baseLine, taxData) => true
+            );
+            const valuesPerGroupingKey =
+                accountTaxHelpers.aggregate_base_lines_aggregated_values(baseLinesAggregatedValues);
+            const fixedBaseLinesTotal = Object.values(valuesPerGroupingKey).map(
+                (v) => v.base_amount_currency + v.tax_amount_currency
+            );
+            amount = fixedBaseLinesTotal * percentage;
         }
 
         const downPaymentProduct = this.config.down_payment_product_id;

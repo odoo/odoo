@@ -5,6 +5,8 @@ import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 import { setupIgnoreDOMMutations } from "@website/js/content/auto_hide_menu";
 import { omit } from "@web/core/utils/objects";
+import { Cache } from "@web/core/utils/cache";
+import { rpc } from "@web/core/network/rpc";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -54,6 +56,13 @@ export const websiteEditService = {
         const patches = [];
         const historyCallbacks = {};
         const shared = {};
+        // A cached rpc to be used for edit/preview mode interactions
+        // (e.g., when dynamic snippets are loading content with the
+        // same config: filter, template, number of records,...).
+        const _rpcCall = async (params) => rpc(params.url, params);
+        const cache = new Cache(_rpcCall, JSON.stringify);
+        const clearRpcCache = () => cache.invalidate();
+        const rpcCache = async (params) => cache.read(params);
 
         const update = (target, mode) => {
             // editMode = true;
@@ -291,14 +300,16 @@ export const websiteEditService = {
             uninstallPatches,
             applyAction,
             callShared,
+            rpcCache,
+            clearRpcCache,
         };
 
-        window.parent.document.addEventListener("edit_page", (ev) => {
+        const handleEditPage = (ev) => {
             stop(ev.detail.iframeDocument);
-        });
+        };
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
-        window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
+        const handlePluginLoaded = (ev) => {
             ev.currentTarget.dispatchEvent(
                 new CustomEvent("transfer_website_edit_service", {
                     detail: {
@@ -309,6 +320,22 @@ export const websiteEditService = {
             Object.assign(shared, ev.shared);
             historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
             setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
+        };
+
+        window.parent.document.addEventListener("edit_page", handleEditPage);
+        window.parent.document.addEventListener(
+            "edit_interaction_plugin_loaded",
+            handlePluginLoaded
+        );
+
+        // Clean up parent document listeners when iframe unloads to prevent
+        // stale handlers from serving an outdated service to new plugins.
+        window.addEventListener("beforeunload", () => {
+            window.parent.document.removeEventListener("edit_page", handleEditPage);
+            window.parent.document.removeEventListener(
+                "edit_interaction_plugin_loaded",
+                handlePluginLoaded
+            );
         });
 
         return websiteEditService;

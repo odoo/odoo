@@ -55,6 +55,7 @@ declare module "models" {
         livechat_operator_id: ResPartner;
         livechatVisitorMember: ChannelMember;
         open_chat_window: true|undefined;
+        livechat_lang_id: ResLang;
     }
 
     export interface Models {

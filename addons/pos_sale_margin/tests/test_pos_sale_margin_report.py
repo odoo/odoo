@@ -41,3 +41,28 @@ class TestPoSSaleMarginReport(TestPoSCommon):
         reports = self.env['sale.report'].sudo().search([('product_id', '=', product1.id)], order='id')
 
         self.assertEqual(reports[0].margin, 100)
+
+    def test_pos_sale_margin_report_refund_sign(self):
+        product = self.create_product('Refund Product', self.categ_basic, 150, standard_price=0)
+
+        self.open_new_session()
+        self.env['pos.order'].create({
+            'session_id': self.pos_session.id,
+            'is_refund': True,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 150,
+                'qty': -1.0,
+                'price_subtotal': 150,
+                'price_subtotal_incl': 150,
+                'total_cost': 0,
+            })],
+            'amount_total': -150.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+
+        reports = self.env['sale.report'].sudo().search([('product_id', '=', product.id)], order='id')
+        self.assertEqual(reports[0].margin, -150)

@@ -60,3 +60,4 @@ Tomasz Walter tomasz.walter@camptocamp.com https://github.com/twalter-c2c
 Florent Xicluna florent.xicluna@camptocamp.com https://github.com/florentx
 Paolo Yammouni paolo.yammouni@camptocamp.com https://github.com/paoloyam
 Cyril Jeanneret cyril.jeanneret@camptocamp.com https://github.com/cyrilmanuel
+Henry Backman henry.backman@camptocamp.com https://github.com/henrybackman

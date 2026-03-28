@@ -75,7 +75,7 @@ class MailingMailingTest(models.TransientModel):
                     'body': full_body,
                     'mailing_style': Markup(f'<style>{styles}</style>'),
                 }, minimal_qcontext=True),
-                'is_notification': True,
+                'is_notification': False,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'auto_delete': False,  # they are manually deleted after notifying the document

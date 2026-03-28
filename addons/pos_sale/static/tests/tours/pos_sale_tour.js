@@ -244,6 +244,17 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_pos_settle_so_with_downpayment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.checkOrderlinesNumber(3),
+            ProductScreen.totalAmountIs(755.0),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_uom", {
     steps: () =>
         [
@@ -576,7 +587,7 @@ registry.category("web_tour.tours").add("test_multiple_lots_sale_order_1", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            Order.hasLine({ productName: "Product", quantity: "3.0" }),
+            Order.hasLine({ productName: "Product", quantity: "6.0" }),
         ].flat(),
 });
 
@@ -585,7 +596,7 @@ registry.category("web_tour.tours").add("test_multiple_lots_sale_order_2", {
         [
             Chrome.startPoS(),
             PosSale.settleNthOrder(1, { loadSN: false }),
-            Order.hasLine({ productName: "Product", quantity: "3.0" }),
+            Order.hasLine({ productName: "Product", quantity: "6.0" }),
             {
                 content: "Check that the line-lot-icon has text-danger class",
                 trigger: `.order-container .orderline:has(.product-name:contains("Product")) .line-lot-icon.text-danger`,
@@ -601,9 +612,9 @@ registry.category("web_tour.tours").add("test_multiple_lots_sale_order_3", {
             PosSale.selectedOrderLinesHasLots("Product", ["1002"]),
             Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1001"])),
             ProductScreen.selectedOrderlineHas("Product", "2.00"),
-            ProductScreen.clickOrderline("Product", "1"),
+            ProductScreen.clickOrderline("Product", "4"),
             PosSale.selectedOrderLinesHasLots("Product", ["1001"]),
-            ProductScreen.selectedOrderlineHas("Product", "1.00"),
+            ProductScreen.selectedOrderlineHas("Product", "4.00"),
             Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1002"])),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -658,5 +669,20 @@ registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount"
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1, { loadSN: true }),
             Order.hasTotal("12.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs("180.00"),
+            Order.doesNotHaveLine({
+                productName: "Settle Lots",
+                quantity: "1.0",
+                price: "100",
+            }),
         ].flat(),
 });

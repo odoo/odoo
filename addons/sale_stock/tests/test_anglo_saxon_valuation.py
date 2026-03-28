@@ -514,13 +514,106 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.account_income.id,     'debit': 0,     'credit': 12},
             {'account_id': self.account_receivable.id,  'debit': 12,    'credit': 0},
-            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
-            {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 5},
+            {'account_id': self.account_expense.id,     'debit': 5,    'credit': 0},
         ])
         self.assertRecordValues(invoice02.line_ids, [
             # pylint: disable=bad-whitespace
             {'account_id': self.account_income.id,     'debit': 0,     'credit': 12},
             {'account_id': self.account_receivable.id,  'debit': 12,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 5},
+            {'account_id': self.account_expense.id,     'debit': 5,    'credit': 0},
+        ])
+
+    def test_avco_partially_owned_invoice_post_delivery(self):
+        """
+        Avco product with cost of 10. Sale order 2@12. One of the delivered
+        products was owned by an external partner. Invoice all quantities at once.
+        Make sure the cogs is only for the non consigned product.
+        """
+        self.product_avco_auto.invoice_policy = 'delivery'
+        self.product_avco_auto.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 1)
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
+        # Deliver both products (there should be two SML)
+        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
+        sale_order.picking_ids.button_validate()
+
+        # Invoice
+        invoice01 = sale_order._create_invoices()
+        invoice01.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice01.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
+            {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
+            {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
+        ])
+
+    def test_std_price_partially_owned_invoice_post_delivery(self):
+        """
+        Standard price product with price of 10. Sale order 2@12. One of the delivered
+        products was owned by an external partner. Invoice all quantities at once.
+        Make sure the cogs is only for the non consigned product.
+        """
+        self.product_standard_auto.invoice_policy = 'delivery'
+        self.product_standard_auto.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product_standard_auto, self.stock_location, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(self.product_standard_auto, self.stock_location, 1)
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
+        # Deliver both products (there should be two SML)
+        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
+        sale_order.picking_ids.button_validate()
+
+        # Invoice
+        invoice01 = sale_order._create_invoices()
+        invoice01.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice01.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
+            {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
+            {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
+            {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
+        ])
+
+    def test_fifo_partially_owned_invoice_post_delivery(self):
+        """
+        Fifo product with cost of 10. Sale order 2@12. One of the delivered
+        products was owned by an external partner. Invoice all quantities at once.
+        Make sure the cogs is only for the non consigned product.
+        """
+        self.product_fifo_auto.invoice_policy = 'delivery'
+        self.product_fifo_auto.standard_price = 10
+
+        self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.stock_location, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.stock_location, 1)
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_deliver(self.product_fifo_auto, 2, 12, picking=False)
+        # Deliver both products (there should be two SML)
+        sale_order.picking_ids.move_line_ids.write({'quantity': 1, 'picked': True})
+        sale_order.picking_ids.button_validate()
+
+        # Invoice
+        invoice01 = sale_order._create_invoices()
+        invoice01.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice01.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
+            {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
             {'account_id': self.account_stock_valuation.id,   'debit': 0,     'credit': 10},
             {'account_id': self.account_expense.id,     'debit': 10,    'credit': 0},
         ])
@@ -1391,3 +1484,104 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(self.lot1.standard_price, 10)
         self.assertEqual(self.lot2.standard_price, 16)
         self.assertEqual(self.product_avco_auto.standard_price, 14)
+
+    def test_credit_note_cogs_uom(self):
+        """
+        Check that when posting a credit note for a returned product, in a
+        different uom than the product's uom, the cogs are computed correctly.
+        """
+        self.product_standard_auto.invoice_policy = 'delivery'
+        self.product_standard_auto.standard_price = 10.0
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product_standard_auto.id,
+            'inventory_quantity': 12,
+            'location_id': self.stock_location.id,
+        }).action_apply_inventory()
+
+        # confirm a sale order in other uom
+        so_1 = self.env['sale.order'].sudo().create({
+            'partner_id': self.owner.id,
+            'order_line': [Command.create({
+                'name': self.product_standard_auto.name,
+                'product_id': self.product_standard_auto.id,
+                'product_uom_qty': 2,
+                'product_uom_id': self.uom_pack_of_6.id,
+                'price_unit': 20,
+                'tax_ids': False,
+            })],
+        })
+        so_1.action_confirm()
+        so_1.picking_ids.move_ids.write({'quantity': 12, 'picked': True})
+        so_1.picking_ids.button_validate()
+
+        # invoice the picking
+        invoice_1 = so_1._create_invoices()
+        invoice_1.action_post()
+
+        # create the return in the products uom
+        ctx = {'active_id': so_1.picking_ids.id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_wizard.product_return_moves.quantity = 9
+        return_picking = return_wizard._create_return()
+        return_picking.move_ids.write({'quantity': 9, 'picked': True})
+        return_picking.button_validate()
+
+        # invoice the credit note
+        credit_note = so_1._create_invoices(final=True)
+        credit_note.action_post()
+        cogs_aml = credit_note.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('credit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 90.0, 'credit': 0.0},
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 90.0},
+        ])
+
+    def test_backorder_cogs_different_uom(self):
+        """
+        Check that when posting a credit note for a returned product, in a
+        different uom than the product's uom, the cogs are computed correctly.
+        """
+        self.product_standard_auto.invoice_policy = 'delivery'
+        self.product_standard_auto.standard_price = 10.0
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product_standard_auto.id,
+            'inventory_quantity': 12,
+            'location_id': self.stock_location.id,
+        }).action_apply_inventory()
+
+        # confirm a sale order in other uom
+        so_1 = self.env['sale.order'].sudo().create({
+            'partner_id': self.owner.id,
+            'order_line': [Command.create({
+                'name': self.product_standard_auto.name,
+                'product_id': self.product_standard_auto.id,
+                'product_uom_qty': 2,
+                'product_uom_id': self.uom_pack_of_6.id,
+                'price_unit': 20,
+                'tax_ids': False,
+            })],
+        })
+        so_1.action_confirm()
+
+        # deliver and invoice first part
+        picking = so_1.picking_ids
+        picking.move_ids.write({'quantity': 6, 'picked': True})
+        Form.from_action(self.env, so_1.picking_ids.button_validate()).save().process()
+        invoice_1 = so_1._create_invoices()
+        invoice_1.action_post()
+
+        # deliver and validate barckorder
+        picking.backorder_ids.move_ids.write({'quantity': 6, 'picked': True})
+        picking.backorder_ids.button_validate()
+        invoice_2 = so_1._create_invoices()
+        invoice_2.action_post()
+
+        cogs_aml = invoice_1.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 60.0},
+            {'account_id': self.account_expense.id, 'debit': 60.0, 'credit': 0.0},
+        ])
+        backorder_cogs_aml = invoice_2.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(backorder_cogs_aml, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 60.0},
+            {'account_id': self.account_expense.id, 'debit': 60.0, 'credit': 0.0},
+        ])

@@ -9,6 +9,7 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
+    setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
 import {
@@ -57,6 +58,7 @@ import {
     toggleActionMenu,
     toggleMenuItem,
     toggleSearchBarMenu,
+    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -76,6 +78,7 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { FormController } from "@web/views/form/form_controller";
 import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 import { WebClient } from "@web/webclient/webclient";
+import { FileUploader } from "@web/views/fields/file_handler";
 
 const fieldsRegistry = registry.category("fields");
 const widgetsRegistry = registry.category("view_widgets");
@@ -9713,6 +9716,45 @@ test(`support header button as widgets on form statusbar on mobile`, async () =>
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     expect(`button.o_attachment_button`).toHaveCount(1);
     expect(`span.o_attach_document`).toHaveText("Attach document");
+});
+
+test.tags("mobile");
+test("support header button as widgets in submenu on form statusbar on mobile", async () => {
+    class TestUploadWidget extends Component {
+        static props = ["*"];
+        static template = xml`
+            <FileUploader onUploaded="this.onUploaded">
+                <t t-set-slot="toggler">
+                    <button>Upload Test</button>
+                </t>
+            </FileUploader>`
+        static components = { FileUploader };
+
+        onUploaded(ev) {
+            expect(ev.name).toBe("fake_file.txt");
+            expect.step("File changed");
+        }
+    }
+    registry.category("view_widgets").add("test_upload_widget", { component: TestUploadWidget });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><header>
+            <button name="main" string="Main"/>
+            <widget name="test_upload_widget"/>
+        </header></form>`,
+    });
+
+    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
+    expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
+    await contains(".o-dropdown--menu button:contains(Upload Test)").click();
+    expect(".o-dropdown--menu button:contains(Upload Test)").toHaveCount(1);
+
+    const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+    await contains("input.o_input_file", { visible: false }).click();
+    await setInputFiles([file]);
+    await waitForSteps(["File changed"]);
 });
 
 test(`basic support for widgets: onchange update`, async () => {

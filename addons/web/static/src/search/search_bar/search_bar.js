@@ -40,6 +40,8 @@ const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 let nextItemId = 1;
 const SUB_ITEMS_DEFAULT_LIMIT = 8;
 
+export const DROPDOWN_CLOSE_DELAY = 10;
+
 export class SearchBar extends Component {
     static template = "web.SearchBar";
     static components = {
@@ -667,6 +669,8 @@ export class SearchBar extends Component {
      * @param {InputEvent} ev
      */
     onSearchInput(ev) {
+        clearTimeout(this.searchDropdownCloseTimeout);
+
         if (!hasTouch()) {
             this.searchBarDropdownState.close();
         }
@@ -678,8 +682,10 @@ export class SearchBar extends Component {
             }
             this.computeState({ query, expanded: [], subItems: [] });
         } else if (this.items.length) {
-            this.inputDropdownState.close();
-            this.resetState();
+            this.searchDropdownCloseTimeout = setTimeout(() => {
+                this.inputDropdownState.close();
+                this.resetState();
+            }, DROPDOWN_CLOSE_DELAY);
         }
     }
 

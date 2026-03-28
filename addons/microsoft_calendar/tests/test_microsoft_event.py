@@ -4,6 +4,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
+from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, patch_api
 
@@ -32,6 +33,66 @@ class TestMicrosoftEvent(TestCommon):
         # assert
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
+
+    def test_forbid_edit_outlook_recurring_event(self):
+        """
+        Test that no user can edit a recurring event imported from Outlook
+        (identified by microsoft_recurrence_master_id), but that the sync
+        mechanism itself can still write through via dont_notify context.
+        """
+        # Give the organizer user a Microsoft token
+        self.organizer_user.microsoft_calendar_token = "fake_token"
+
+        outlook_recurring_event, recurring_event = self.env['calendar.event'].with_context(dont_notify=True).create([
+            {
+                'name': 'Outlook Recurring Event',
+                'start': datetime(2023, 9, 25, 10, 0),
+                'stop': datetime(2023, 9, 25, 11, 0),
+                'microsoft_id': 'AAA123:BBB456',
+                'microsoft_recurrence_master_id': 'MASTER123',
+                'user_id': self.organizer_user.id,
+            },
+            {
+                'name': 'Regular Recurring Event',
+                'start': datetime(2023, 9, 25, 10, 0),
+                'stop': datetime(2023, 9, 25, 11, 0),
+                'user_id': self.organizer_user.id,
+                'partner_ids': [(4, self.organizer_user.partner_id.id)],
+                'recurrency': True,
+                'follow_recurrence': True,
+                'rrule_type': 'daily',
+                'interval': 1,
+                'end_type': 'count',
+                'count': 3,
+            },
+        ])
+
+        # No user should be able to edit the Outlook event through Odoo
+        for user in [self.attendee_user, self.organizer_user]:
+            with self.assertRaises(UserError):
+                outlook_recurring_event.with_user(user).with_context(dont_notify=False).write({
+                    'name': 'Trying to change name',
+                    'recurrence_update': 'future_events',
+                })
+        self.assertEqual(outlook_recurring_event.name, 'Outlook Recurring Event')
+
+        # But changes from Microsoft sync itself should still work
+        outlook_recurring_event.with_context(dont_notify=True).write({
+            'name': 'Updated from Outlook',
+            'recurrence_update': 'future_events'
+        })
+        self.assertEqual(outlook_recurring_event.name, 'Updated from Outlook')
+
+        # Remove token: organizer is no longer synced to Outlook
+        self.organizer_user.microsoft_calendar_token = False
+
+        # Any user should be able to edit a non-Outlook recurring event
+        for user in [self.attendee_user, self.organizer_user]:
+            recurring_event.with_user(user).with_context(dont_notify=False).write({
+                'name': f'Changed by {user.name}',
+                'recurrence_update': 'future_events',
+            })
+            self.assertEqual(recurring_event.name, f'Changed by {user.name}')
 
     def test_map_an_event_using_global_id(self):
         # arrange

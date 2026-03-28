@@ -84,6 +84,7 @@ export class ImageShapeOptionPlugin extends Plugin {
             FlipImageShapeAction,
             RotateImageShapeAction,
             SetImageShapeSpeedAction,
+            ResetImageShapeTransformationAction,
             ToggleImageShapeRatioAction,
         },
         process_image_warmup_handlers: this.processImageWarmup.bind(this),
@@ -448,7 +449,11 @@ export class SetImageShapeAction extends BuilderAction {
     static id = "setImageShape";
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, value: shapeId }) {
-        const params = { shape: shapeId };
+        const params = {
+            shape: shapeId,
+            shapeFlip: undefined,
+            shapeRotate: undefined,
+        };
         // A crop is applied to the image at the same time as certain shapes,
         // which is why we reset the crop here or when the shape is removed.
         // However, we don’t reset it when the crop was applied intentionally.
@@ -540,6 +545,19 @@ export class SetImageShapeSpeedAction extends BuilderAction {
     async load({ editingElement: img, value: speed }) {
         return this.dependencies.imageShapeOption.loadShape(img, {
             shapeAnimationSpeed: speed,
+        });
+    }
+    apply({ loadResult: updateImageAttributes }) {
+        updateImageAttributes();
+    }
+}
+export class ResetImageShapeTransformationAction extends BuilderAction {
+    static id = "resetImageShapeTransformation";
+    static dependencies = ["imageShapeOption"];
+    async load({ editingElement: img }) {
+        return this.dependencies.imageShapeOption.loadShape(img, {
+            shapeFlip: undefined,
+            shapeRotate: undefined,
         });
     }
     apply({ loadResult: updateImageAttributes }) {

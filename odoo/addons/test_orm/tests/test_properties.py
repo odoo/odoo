@@ -4,7 +4,6 @@ import psycopg2
 import unittest
 from collections import abc
 from unittest.mock import patch
-
 import babel.dates
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
@@ -2594,7 +2593,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {'mychar': 'boum'}
 
         Model = self.env['test_orm.message']
-        with self.assertQueryCount(6):  # 3 for formatted_read_group + 1 query by group opened
+        with self.assertQueryCount(9):  # 3 for formatted_read_group + 1 query by group opened + 1 query by get_property_definition
             result = Model.web_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -2602,6 +2601,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
                 auto_unfold=True,
                 unfold_read_specification={'id': {}},
             )
+
         groups = result['groups']
 
         self.assertEqual(len(groups), 3)

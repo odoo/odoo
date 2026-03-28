@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.http import root, SESSION_ROTATION_INTERVAL
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
@@ -57,3 +58,20 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertEqual(notification["message"]["payload"]["partner_id"], self.partner_demo.id)
         self.assertEqual(notification["message"]["payload"]["im_status"], "online")
         self.assertEqual(notification["message"]["payload"]["presence_status"], "online")
+
+    def test_do_not_rotate_session_when_updating_presence(self):
+        self.authenticate('admin', 'admin')
+        self.url_open('/odoo')
+        original_session = self.opener.cookies['session_id']
+        original_session_obj = root.session_store.get(original_session)
+        original_session_obj['create_time'] -= SESSION_ROTATION_INTERVAL
+        root.session_store.save(original_session_obj)
+        self.make_jsonrpc_request('/websocket/peek_notifications', {
+            'channels': [],
+            'last': 0,
+            'is_first_poll': True,
+        })
+        self.make_jsonrpc_request('/websocket/update_bus_presence', {'inactivity_period': 0})
+        self.assertEqual(self.opener.cookies['session_id'], original_session)
+        self.url_open("/odoo")
+        self.assertNotEqual(self.opener.cookies['session_id'], original_session)

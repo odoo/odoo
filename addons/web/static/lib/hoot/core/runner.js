@@ -984,6 +984,8 @@ export class Runner {
                 continue;
             }
 
+            logger.logTest(test);
+
             // Suppress console errors and warnings if test is in "todo" mode
             // (and not in debug).
             const restoreConsole = handleConsoleIssues(test, !this.debug);
@@ -1051,14 +1053,7 @@ export class Runner {
 
             // Log test errors and increment counters
             this.expectHooks.after(this);
-            if (lastResults.pass) {
-                logger.logTest(test);
-
-                if (this.state.failedIds.has(test.id)) {
-                    this.state.failedIds.delete(test.id);
-                    storageSet(STORAGE.failed, [...this.state.failedIds]);
-                }
-            } else {
+            if (!lastResults.pass) {
                 this._failed++;
 
                 const failReasons = [];
@@ -1091,6 +1086,9 @@ export class Runner {
                     this.state.failedIds.add(test.id);
                     storageSet(STORAGE.failed, [...this.state.failedIds]);
                 }
+            } else if (this.state.failedIds.has(test.id)) {
+                this.state.failedIds.delete(test.id);
+                storageSet(STORAGE.failed, [...this.state.failedIds]);
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
@@ -1807,11 +1805,14 @@ export class Runner {
             return ev.preventDefault();
         }
 
-        if (this.state.currentTest && !(error instanceof HootError)) {
+        if (this.state.currentTest) {
             // Handle the error in the current test
             const handled = this._handleErrorInTest(ev, error);
             if (handled) {
-                return ev.preventDefault();
+                if (!(error instanceof HootError)) {
+                    ev.preventDefault();
+                }
+                return;
             }
         } else {
             this._handleGlobalError(ev, error);

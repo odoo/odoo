@@ -5,13 +5,7 @@ import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/c
 export function nbOrdersIs(nb) {
     return [
         {
-            trigger: `.ticket-screen`,
-            run: () => {
-                const orders = document.querySelectorAll(".ticket-screen .order-row");
-                if (orders.length !== nb) {
-                    throw new Error(`Expected ${nb} orders, but found ${orders.length}`);
-                }
-            },
+            trigger: `.ticket-screen .order-row:count(${nb})`,
         },
     ];
 }
@@ -44,7 +38,7 @@ export function selectOrderByPrice(price) {
 export function doubleClickOrder(orderName) {
     return [
         {
-            trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}")`,
+            trigger: `.ticket-screen .order-row:contains("${orderName}")`,
             run: "dblclick",
         },
     ];
@@ -257,4 +251,13 @@ export function noOrderIsThere() {
         content: "No orders should be visible on the Ticket Screen",
         trigger: ".ticket-screen:not(:has(.order-row))",
     };
+}
+
+export function isShown() {
+    return [
+        {
+            content: "ticket screen is shown",
+            trigger: ".pos .ticket-screen",
+        },
+    ];
 }

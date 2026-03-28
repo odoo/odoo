@@ -363,6 +363,7 @@ from __future__ import annotations
 
 import base64
 import fnmatch
+import glob
 import io
 import logging
 import math
@@ -384,6 +385,7 @@ from copy import deepcopy
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
+from os.path import join as opj
 from pathlib import Path
 from psycopg2.extensions import TransactionRollbackError
 from psycopg2.errors import ReadOnlySqlTransaction
@@ -2913,7 +2915,11 @@ class IrQweb(models.AbstractModel):
         """
         Returns the list of bundles to pregenerate.
         """
+        js_views_bundles, css_views_bundles = self._get_bundles_from_views()
+        lazy_bundles = self._get_lazy_bundles_from_js()
+        return (js_views_bundles | lazy_bundles, css_views_bundles | lazy_bundles)
 
+    def _get_bundles_from_views(self):
         views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
         js_bundles = set()
         css_bundles = set()
@@ -2927,6 +2933,22 @@ class IrQweb(models.AbstractModel):
                 if css:
                     css_bundles.add(asset)
         return (js_bundles, css_bundles)
+
+    def _get_lazy_bundles_from_js(self):
+        modules = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+        lazy_bundle_regex = re.compile(r'\bloadBundle\((["\'`])([\w\.-]+)\1\)', flags=re.ASCII)
+        bundles = set()
+        for module in modules:
+            manifest = Manifest.for_addon(module, display_warning=False)
+            if not (manifest and manifest.static_path):
+                continue
+            for fname in glob.iglob('**/src/**/*.js', root_dir=manifest.static_path, recursive=True):
+                with file_open(opj(manifest.static_path, fname)) as f:
+                    fcontent = f.read()
+                    if match := lazy_bundle_regex.search(fcontent):
+                        bundles.add(match[2])
+        return bundles
+
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.

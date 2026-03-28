@@ -5,6 +5,7 @@ import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { withSequence } from "../utils/resource";
 
 /** @typedef {import("../core/selection_plugin").Cursors} Cursors */
 
@@ -34,7 +35,7 @@ export class FeffPlugin extends Plugin {
 
     /** @type {import("plugins").EditorResources} */
     resources = {
-        normalize_handlers: this.updateFeffs.bind(this),
+        normalize_handlers: withSequence(Infinity, this.updateFeffs.bind(this)),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).

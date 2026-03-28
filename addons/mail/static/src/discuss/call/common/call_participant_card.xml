@@ -47,8 +47,8 @@
                 <span t-if="showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
                     <span class="fw-bolder p-1 rounded-1 o-video-text o-proportional-text">Video visible in the call tab</span>
                 </span>
-                <CallDropdown t-if="isContextMenuAvailable and ((!isMobileOS and rootHover.isHover) or (isMobileOS and !props.minimized))" class="'position-absolute top-0 end-0'" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
-                    <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 smaller p-1" title="Participant options">
+                <CallDropdown t-if="isContextMenuAvailable and ((!isMobileOS and rootHover.isHover) or (isMobileOS and !props.minimized))" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
+                    <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 smaller p-1 position-absolute top-0 end-0" title="Participant options">
                         <i class="fa fa-chevron-down fa-fw"/>
                     </button>
                     <t t-set-slot="content">

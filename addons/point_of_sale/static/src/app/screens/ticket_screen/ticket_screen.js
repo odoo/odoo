@@ -191,6 +191,11 @@ export class TicketScreen extends Component {
             }
         }
     }
+    onDblClickOrder(order) {
+        if (!order.finalized) {
+            this.setOrder(order);
+        }
+    }
     async onClickReprintAll(order) {
         const printingChanges = order.uiState?.lastPrints;
         if (printingChanges) {

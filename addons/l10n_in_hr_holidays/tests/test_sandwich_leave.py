@@ -14,6 +14,7 @@ class TestSandwichLeave(TransactionCase):
             'name': 'Test Indian Company',
             'country_id': self.env.ref('base.in').id
         })
+        self.indian_company.resource_calendar_id.tz = 'UTC'
         self.env = self.env(context=dict(self.env.context, allowed_company_ids=self.indian_company.ids))
         self.demo_user = self.env["res.users"].with_company(self.indian_company).create({
             "login": "piyush",
@@ -60,6 +61,7 @@ class TestSandwichLeave(TransactionCase):
             'date_from': '2025-01-29 00:00:00',
             'date_to': '2025-01-29 23:59:59',
             'resource_id': False,
+            'company_id': self.indian_company.id,
         })
 
     def test_approved_leave_does_not_raise_access_error(self):
@@ -206,6 +208,41 @@ class TestSandwichLeave(TransactionCase):
         })
         self.assertTrue(holiday_leave.l10n_in_contains_sandwich_leaves)
         self.assertEqual(holiday_leave.number_of_days, 3)
+
+    @freeze_time('2025-03-01')
+    def test_sandwich_leave_with_utc_full_day_public_holiday(self):
+        """
+            Public holiday for one full local day in IST:
+            - local day: 12-Mar-2025 12:00 AM to 11:59:59 PM
+            - UTC value: 11-Mar-2025 18:30:00 to 12-Mar-2025 18:29:59
+        """
+        self.env['resource.calendar.leaves'].create({
+            'name': 'IST Full Day Public Holiday',
+            'date_from': '2025-03-11 18:30:00',
+            'date_to': '2025-03-12 18:29:59',
+            'resource_id': False,
+            'company_id': self.indian_company.id,
+        })
+        self.indian_company.resource_calendar_id.tz = 'Asia/Kolkata'
+        before_holiday_leave = self.env['hr.leave'].create({
+            'name': 'Before Public Holiday',
+            'employee_id': self.rahul_emp.id,
+            'holiday_status_id': self.leave_type_day.id,
+            'request_date_from': '2025-03-11',
+            'request_date_to': '2025-03-11',
+        })
+        after_holiday_leave = self.env['hr.leave'].create({
+            'name': 'After Public Holiday',
+            'employee_id': self.rahul_emp.id,
+            'holiday_status_id': self.leave_type_day.id,
+            'request_date_from': '2025-03-13',
+            'request_date_to': '2025-03-13',
+        })
+
+        self.assertFalse(before_holiday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(before_holiday_leave.number_of_days, 1)
+        self.assertTrue(after_holiday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(after_holiday_leave.number_of_days, 2)
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_2days_stop_with_public_holidays(self):
@@ -598,3 +635,50 @@ class TestSandwichLeave(TransactionCase):
         # Refuse the linked Monday leave -> Friday should drop back to 1 day
         before_leave.action_refuse()
         self.assertEqual(after_leave.number_of_days, 1)
+
+    @freeze_time('2025-01-15')
+    def test_sandwich_leave_reapprove(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': "Public Holiday",
+            'date_from': "2025-01-21",
+            'date_to': "2025-01-21",
+            'resource_id': False,
+            'company_id': self.indian_company.id,
+        })
+
+        fri_mon_leave = self.env['hr.leave'].create({
+            'name': "Fri-Mon Leave",
+            'employee_id': self.rahul_emp.id,
+            'holiday_status_id': self.leave_type_day.id,
+            'request_date_from': "2025-01-17",  # Friday
+            'request_date_to': "2025-01-20",    # Monday
+            'state': 'confirm',
+        })
+        wed_leave = self.env['hr.leave'].create({
+            'name': "Wednesday Leave",
+            'employee_id': self.rahul_emp.id,
+            'holiday_status_id': self.leave_type_day.id,
+            'request_date_from': "2025-01-22",  # Wednesday
+            'request_date_to': "2025-01-22",
+            'state': 'confirm',
+        })
+        self.assertEqual(fri_mon_leave.number_of_days, 4)
+        self.assertEqual(wed_leave.number_of_days, 2)
+
+        # Refuse Fri-Mon: Wed shrinks to 1 day
+        fri_mon_leave.action_refuse()
+        self.assertEqual(wed_leave.number_of_days, 1)
+
+        # Approve: Fri-Mon = 5 days, Wed = 1 days → total 6
+        fri_mon_leave.action_approve()
+        self.assertEqual(fri_mon_leave.number_of_days, 5)
+        self.assertEqual(wed_leave.number_of_days, 1)
+
+        # Refuse Wed: Fri-Mon shrinks to 4 day
+        wed_leave.action_refuse()
+        self.assertEqual(fri_mon_leave.number_of_days, 4)
+
+        # Approve: wed = 2 days, Fri-Mon = 4 days → total 6
+        wed_leave.action_approve()
+        self.assertEqual(fri_mon_leave.number_of_days, 4)
+        self.assertEqual(wed_leave.number_of_days, 2)

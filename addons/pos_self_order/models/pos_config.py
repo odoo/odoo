@@ -98,6 +98,21 @@ class PosConfig(models.Model):
     )
     has_paper = fields.Boolean("Has paper", default=True)
 
+    @api.model
+    def _load_pos_self_data_fields(self, pos_config_id):
+        return ['id', 'name', 'company_id', 'journal_id', 'payment_method_ids', 'limit_categories',
+            'iface_available_categ_ids', 'iface_splitbill', 'module_pos_restaurant', 'self_ordering_mode',
+            'self_ordering_service_mode', 'self_ordering_default_language_id', 'self_ordering_available_language_ids',
+            'self_ordering_image_home_ids', 'self_ordering_default_user_id', 'self_ordering_pay_after',
+            'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'printer_ids', 'has_paper',
+            'floor_ids', 'fiscal_position_ids', 'is_order_printer', 'iface_print_via_proxy', 'receipt_header',
+            'receipt_footer', 'proxy_ip', 'current_session_id', 'pricelist_id', 'available_pricelist_ids',
+            'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
+            'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
+            'available_preset_ids', 'default_preset_id', 'epson_printer_ip', 'use_presets', 'iface_tax_included',
+            'status', 'self_ordering_image_background_ids', 'other_devices',
+        ]
+
     def _update_access_token(self):
         self.access_token = uuid.uuid4().hex[:16]
         self.floor_ids.table_ids._update_identifier()
@@ -157,7 +172,13 @@ class PosConfig(models.Model):
             if (not vals.get('module_pos_restaurant') and not record.module_pos_restaurant) and vals.get('self_ordering_mode') == 'mobile':
                 vals['self_ordering_pay_after'] = 'each'
 
-            if (vals.get('self_ordering_service_mode') == 'counter' or record.self_ordering_service_mode == 'counter') and vals.get('self_ordering_mode') == 'mobile':
+            if (
+                vals.get('self_ordering_mode') == 'mobile'
+                and (
+                    vals.get('self_ordering_service_mode') == 'counter'
+                    or (record.self_ordering_service_mode == 'counter' and vals.get('self_ordering_service_mode') != 'table')
+                )
+            ):
                 vals['self_ordering_pay_after'] = 'each'
 
             if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
@@ -281,10 +302,10 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
-            'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
-            'account.tax.group', 'pos.printer', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
+            'res.currency', 'pos.printer', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
-            'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
+            'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
             'res.country', 'res.country.state', 'mail.template']
 
     @api.model
@@ -443,9 +464,7 @@ class PosConfig(models.Model):
         }
 
     def get_pos_qr_order_data(self):
-
         url_form = "https://www.odoo.com/app/point-of-sale-restaurant-qr-code"
-
         table_data = []
         if self.self_ordering_mode not in ['mobile', 'consultation']:
             return {
@@ -463,23 +482,22 @@ class PosConfig(models.Model):
                 table_data.append({
                     'url': url,
                     'name': f"{table.floor_id.name} - {table.table_number}",
-                    'images': self._generate_single_qr_code__(unquote(url)),
                 })
         else:
             url = self._get_self_order_url()
             table_data.append({
                 'url': url,
                 'name': "generic",
-                'images': self._generate_single_qr_code__(unquote(url)),
             })
 
         zip_buffer = BytesIO()
         with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
-            for index, qr_data in enumerate(table_data):
-                with zip_file.open(f"{qr_data['name']} ({index + 1}).png", "w") as buf:
-                    qr_data['images']['png'].save(buf, format="PNG")
-                with zip_file.open(f"{qr_data['name']} ({index + 1}).svg", "w") as buf:
-                    buf.write(qr_data['images']['svg'].to_string())
+            for index, qr_data in enumerate(table_data, start=1):
+                images = self._generate_single_qr_code__(unquote(qr_data['url']))
+                with zip_file.open(f"{qr_data['name']} ({index}).png", "w") as buf:
+                    images['png'].save(buf, format="PNG")
+                with zip_file.open(f"{qr_data['name']} ({index}).svg", "w") as buf:
+                    buf.write(images['svg'].to_string())
         zip_buffer.seek(0)
 
         return {

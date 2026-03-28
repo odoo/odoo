@@ -9,7 +9,7 @@ class MrpProductionSerials(models.TransientModel):
     def action_apply(self):
         self.ensure_one()
         sbc_move = self.production_id._get_subcontract_move()
-        if not sbc_move:
+        if not sbc_move or not self.serial_numbers:
             return super().action_apply()
 
         lots = list(filter(lambda serial_number: len(serial_number.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []
@@ -25,7 +25,7 @@ class MrpProductionSerials(models.TransientModel):
             if lot_name in existing_lot_names:
                 continue
             if sequence and lot_name == sequence.get_next_char(sequence.number_next_actual):
-                sequence.number_next_actual += 1
+                sequence.sudo().number_next_actual += 1
             new_lots.append({
                 'name': lot_name,
                 'product_id': self.production_id.product_id.id
@@ -35,12 +35,14 @@ class MrpProductionSerials(models.TransientModel):
             'lot_producing_ids': all_lots[0],
             'product_qty': 1,
         })
+        picking = sbc_move.picking_id
         sbc_move.move_line_ids.create([
             {
                 'product_id': lot.product_id.id,
                 'lot_id': lot.id,
                 'move_id': sbc_move.id,
+                'picking_id': picking.id,
                 'quantity': 1,
             } for lot in all_lots[1:]
         ])
-        return sbc_move.picking_id.action_show_subcontract_details()
+        return picking.action_show_subcontract_details()

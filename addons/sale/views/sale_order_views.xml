@@ -463,6 +463,7 @@
                             nolabel="1"
                             invisible="state in ['draft', 'sent']"
                             readonly="state in ['cancel', 'sale']"/>
+                        <field name="show_update_pricelist" invisible="1"/>
                         <label for="pricelist_id"
                                groups="product.group_product_pricelist"
                                invisible="not has_active_pricelist"/>

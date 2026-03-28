@@ -1,6 +1,6 @@
 import { reactive } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 
@@ -44,7 +44,6 @@ export class StockValuationReportController {
         }
         // Prepare the "Initial Balance" lines.
         this.data.initial_balance.lines = [];
-        this.data.initial_balance.accounts = [];
         for (let [accountId, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
             const account = this.data.accounts_by_id[accountId];
             this.data.initial_balance.lines.push({
@@ -52,11 +51,9 @@ export class StockValuationReportController {
                 value: data.value,
                 account_id: accountId,
             });
-            this.data.initial_balance.accounts.push(...data.accounts);
         }
         // Prepare the "Ending Stock" lines.
         this.data.ending_stock.lines = [];
-        this.data.ending_stock.accounts = [];
         for (let [accountId, data] of Object.entries(this.data.ending_stock.lines_by_account_id)) {
             const account = this.data.accounts_by_id[accountId];
             this.data.ending_stock.lines.push({
@@ -64,13 +61,12 @@ export class StockValuationReportController {
                 value: data.value,
                 account_id: accountId,
             });
-            this.data.ending_stock.accounts.push(...data.accounts);
         }
     }
 
     async setDate(date) {
         this.state.date = date;
-        this.dateAsString = serializeDateTime(date);
+        this.dateAsString = serializeDate(date);
         await this.loadReportData();
     }
 

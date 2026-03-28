@@ -94,7 +94,8 @@ class PurchaseOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
-        lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+        if not self.env.context.get('bypass_move_update'):
+            lines.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return lines
 
     def write(self, vals):

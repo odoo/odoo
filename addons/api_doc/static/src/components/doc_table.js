@@ -17,16 +17,16 @@ export class DocTable extends Component {
     setup() {
         this.subTableRef = useRef("subTableRef");
         this.tooltipRef = useRef("tooltipRef");
-        this.hideTooltipTimeout = null;
         this.state = useState({
             sortBy: 0,
             sortOrder: "desc",
             subTable: undefined,
             tooltipContent: "",
             tooltipStyle: "",
-            lastTooltipLeft: 0,
-            lastTooltipTop: 0,
         });
+        this.isHovering = false;
+        this.hideTimeout = null;
+        this.requestAnim = null;
 
         onWillRender(() => {
             this.items = this.computeItems();
@@ -46,52 +46,56 @@ export class DocTable extends Component {
     }
 
     showDynamicTooltip(event, content) {
-        if (this.hideTooltipTimeout) {
-            clearTimeout(this.hideTooltipTimeout);
-            this.hideTooltipTimeout = null;
-        }
-        this.state.tooltipContent = content;
+        if (this.requestAnim) cancelAnimationFrame(this.requestAnim);
+        if (this.hideTimeout) clearTimeout(this.hideTimeout);
+
+        this.activeHoverTarget = event.target;
+        this.isHovering = true;
+
         const triggerRect = event.target.getBoundingClientRect();
-        this.state.tooltipStyle = `
-            opacity: 0;
-            pointer-events: none;
-        `;
-        requestAnimationFrame(() => {
-            if (!this.tooltipRef.el) {
+
+        this.requestAnim = requestAnimationFrame(() => {
+            if (!this.tooltipRef.el || !this.isHovering) {
                 return;
             }
-            const tooltipRect = this.tooltipRef.el.getBoundingClientRect();
-            const top = triggerRect.top - tooltipRect.height - 10;
-            const left = triggerRect.left - tooltipRect.width / 2;
+            const top = triggerRect.top;
+            const left = triggerRect.left + 20;
+
+            this.state.tooltipContent = content;
             this.state.tooltipStyle = `
                 top: ${top}px;
                 left: ${left}px;
-                position: fixed;
                 opacity: 1;
                 pointer-events: auto;
             `;
-            this.state.lastTooltipTop = top;
-            this.state.lastTooltipLeft = left;
         });
     }
 
-    hideDynamicTooltip() {
-        if (this.hideTooltipTimeout) {
-            clearTimeout(this.hideTooltipTimeout);
-            this.hideTooltipTimeout = null;
-        }
-        const top = this.state.lastTooltipTop;
-        const left = this.state.lastTooltipLeft;
-        this.state.tooltipStyle = `
-            top: ${top}px;
-            left: ${left}px;
-            position: fixed;
-            opacity: 0;
-            pointer-events: none;
-        `;
-        this.hideTooltipTimeout = setTimeout(() => {
-            this.state.tooltipContent = "";
-        }, 200);
+    scheduleHide(event) {
+        if (this.hideTimeout) clearTimeout(this.hideTimeout);
+        const currentTarget = event.target;
+        this.isHovering = false;
+
+        this.hideTimeout = setTimeout(() => {
+            if (!this.isHovering) {
+                this.state.tooltipStyle = `
+                    top: ${this.tooltipRef.el ? this.tooltipRef.el.style.top : 0};
+                    left: ${this.tooltipRef.el ? this.tooltipRef.el.style.left : 0};
+                    opacity: 0;
+                    pointer-events: none;
+                `;
+                setTimeout(() => {
+                    if (currentTarget === this.activeHoverTarget) {
+                        this.state.tooltipContent = "";
+                    }
+                }, 200);
+            }
+        }, 100);
+    }
+
+    keepAlive() {
+        if (this.hideTimeout) clearTimeout(this.hideTimeout);
+        this.isHovering = true;
     }
 
     computeItems() {

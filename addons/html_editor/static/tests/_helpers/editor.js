@@ -8,10 +8,16 @@ import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import { dispatchCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
+import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
     FORWARD: "FORWARD",
+};
+
+const defaultTestConfig = {
+    debouncePowerbuttons: false,
+    debounceHints: false,
 };
 
 // A generic base64 image for testing
@@ -62,7 +68,7 @@ class TestEditor extends Component {
         if (this.props.onWillDestroy) {
             onWillDestroy(this.props.onWillDestroy);
         }
-        if (this.wysiwygProps.config.resources?.embedded_components) {
+        if (this.wysiwygProps.config.Plugins?.includes(EmbeddedComponentPlugin)) {
             this.wysiwygProps.config.embeddedComponentInfo = {
                 app: this.__owl__.app,
                 env: this.env,
@@ -93,7 +99,10 @@ class TestEditor extends Component {
  */
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
-    wysiwygProps.config = options.config || {};
+    wysiwygProps.config = {
+        ...defaultTestConfig,
+        ...(options.config || {}),
+    };
     const attachedEditor = new Promise((resolve) => {
         wysiwygProps.onLoad = (editor) => {
             const oldAttachTo = editor.attachTo;

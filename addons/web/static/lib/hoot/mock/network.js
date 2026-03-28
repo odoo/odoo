@@ -1323,7 +1323,7 @@ export class ServerWebSocket extends MockEventTarget {
         if (!isOpen(this)) {
             return;
         }
-        this._logger.logResponse(() => data);
+        this._logger.logResponse(() => [data]);
         dispatchMessage(this._clientWs, data);
     }
 }

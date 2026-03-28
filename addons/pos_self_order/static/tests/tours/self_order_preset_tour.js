@@ -49,18 +49,6 @@ registry.category("web_tour.tours").add("self_order_preset_delivery_tour", {
         CartPage.fillInput("City", "New York"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
-
-        // Check if the partner is available in cache
-        Utils.checkIsNoBtn("My Order"),
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Delivery"),
-        ProductPage.clickProduct("Free"),
-        Utils.clickBtn("Checkout"),
-        CartPage.checkProduct("Free", "0", "1"),
-        Utils.clickBtn("Order"),
-        CartPage.selectRandomValueInInput(".partner-select"),
-        Utils.clickBtn("Continue"),
-        Utils.clickBtn("Ok"),
     ],
 });
 
@@ -88,8 +76,7 @@ registry.category("web_tour.tours").add("test_slot_limit_orders", {
         ProductPage.clickProduct("Free"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
-        // Will always pick the first available: 00:00
-        CartPage.selectRandomValueInInput(".slot-select"),
+        CartPage.selectSpecificValueInInput(".slot-select", "18:00"),
         CartPage.fillInput("Name", "Dr Dre"),
         Utils.clickBtn("Continue"),
         Utils.clickBtn("Ok"),
@@ -98,7 +85,7 @@ registry.category("web_tour.tours").add("test_slot_limit_orders", {
         ProductPage.clickProduct("Free"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Order"),
-        CartPage.checkSlotUnavailable("00:00"),
+        CartPage.checkSlotUnavailable("18:00"),
     ],
 });
 
@@ -107,12 +94,13 @@ registry.category("web_tour.tours").add("test_preset_takeaway_email_tour", {
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Takeaway"),
-        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickProduct("Free"),
         Utils.clickBtn("Checkout"),
-        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        CartPage.checkProduct("Free", "0", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Public user"),
         CartPage.fillInput("Email", "public.user@test.com"),
+        CartPage.fillInput("Phone", "+32000111222"),
         Utils.clickBtn("Continue"),
         // Waiting for mail to be sent
         {

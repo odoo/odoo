@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo import Command
 
 
 class TestMultistepManufacturing(TestMrpCommon):
@@ -206,3 +207,74 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.assertFalse(self.sale_order.picking_ids.move_ids.move_orig_ids)
         self.sale_order.picking_ids.action_assign()
         self.assertEqual(self.sale_order.picking_ids.move_ids.quantity, 1.0)
+
+    def test_rr_triggered_mos_shared_pick(self):
+        """Test that a single PBM picking is created for multiple MOs triggered by reordering rules
+        from the same SO and that its properly linked to these MOs.
+        """
+        self.warehouse.manufacture_steps = "pbm"
+        self.warehouse.mto_pull_id.route_id.rule_ids.procure_method = "make_to_stock"
+
+        product_1, product_2, raw_1, raw_2 = self.env["product.product"].create([
+            {"name": "product 1", "uom_id": self.uom_unit.id, "is_storable": True},
+            {"name": "product 2", "uom_id": self.uom_unit.id, "is_storable": True},
+            {"name": "raw 1", "uom_id": self.uom_unit.id, "is_storable": True},
+            {"name": "raw 2", "uom_id": self.uom_unit.id, "is_storable": True},
+        ])
+        bom_1, bom_2 = self.env["mrp.bom"].create([{
+                "product_tmpl_id": product_1.product_tmpl_id.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "bom_line_ids": [
+                    Command.create({"product_id": raw_1.id, "product_qty": 2}),
+                ],
+            }, {
+                "product_tmpl_id": product_2.product_tmpl_id.id,
+                "product_qty": 1.0,
+                "type": "normal",
+                "bom_line_ids": [
+                    Command.create({"product_id": raw_2.id, "product_qty": 2}),
+                ],
+        }])
+        self.env["stock.warehouse.orderpoint"].create([{
+                "name": "Orderpoint for P1",
+                "product_id": product_1.id,
+                "product_min_qty": 0,
+                "product_max_qty": 0,
+                "route_id": self.warehouse.manufacture_pull_id.route_id.id,
+                "bom_id": bom_1.id,
+                "warehouse_id": self.warehouse.id,
+            }, {
+                "name": "Orderpoint for P2",
+                "product_id": product_2.id,
+                "product_min_qty": 0,
+                "product_max_qty": 0,
+                "route_id": self.warehouse.manufacture_pull_id.route_id.id,
+                "bom_id": bom_2.id,
+                "warehouse_id": self.warehouse.id,
+        }])
+
+        partner = self.env["res.partner"].create({"name": "My Picking Production Test Partner"})
+        so = self.env["sale.order"].create({
+            "partner_id": partner.id,
+            "picking_policy": "direct",
+            "warehouse_id": self.warehouse.id,
+            "order_line": [
+                Command.create({
+                    "name": product_1.name,
+                    "product_id": product_1.id,
+                    "product_uom_qty": 1.0,
+                    "price_unit": 10.0,
+                }),
+                Command.create({
+                    "name": product_2.name,
+                    "product_id": product_2.id,
+                    "product_uom_qty": 1.0,
+                    "price_unit": 10.0,
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertEqual(so.mrp_production_count, 2, "There should be 2 manufactured orders linked to this sale order.")
+        self.assertEqual(len(so.mrp_production_ids.picking_ids), 1, "There should only be 1 pick components transfer for the 2 manufacturing orders.")
+        self.assertEqual(len(so.mrp_production_ids.picking_ids.production_ids), 2, "There should be 2 manufacture orders linked to the pick components transfer.")

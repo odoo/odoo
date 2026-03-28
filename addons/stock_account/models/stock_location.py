@@ -19,7 +19,7 @@ class StockLocation(models.Model):
         if operator not in ['=', '!=']:
             raise NotImplementedError(self.env._("Invalid search operator or value"))
         positive_operator = (operator == '=' and value) or (operator == '!=' and not value)
-        domain = Domain([('company_id', '!=', False), ('usage', 'in', ['internal', 'transit'])])
+        domain = Domain([('company_id', 'in', self.env.companies.ids), ('usage', 'in', ['internal', 'transit'])])
         if positive_operator:
             return domain
         return ~domain

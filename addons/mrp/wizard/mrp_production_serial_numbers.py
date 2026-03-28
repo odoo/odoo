@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class MrpProductionSerials(models.TransientModel):
@@ -50,6 +51,8 @@ class MrpProductionSerials(models.TransientModel):
 
     def action_apply(self):
         self.ensure_one()
+        if not self.serial_numbers:
+            raise UserError(self.env._("There is no serial numbers to apply."))
         lots = list(filter(lambda serial_number: len(serial_number.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []
         existing_lots = self.env['stock.lot'].search([
             '|', ('company_id', '=', False), ('company_id', '=', self.production_id.company_id.id),
@@ -63,7 +66,7 @@ class MrpProductionSerials(models.TransientModel):
             if lot_name in existing_lot_names:
                 continue
             if sequence and lot_name == sequence.get_next_char(sequence.number_next_actual):
-                sequence.number_next_actual += 1
+                sequence.sudo().number_next_actual += 1
             new_lots.append({
                 'name': lot_name,
                 'product_id': self.production_id.product_id.id

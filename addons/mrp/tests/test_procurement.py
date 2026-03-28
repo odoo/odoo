@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
+from freezegun import freeze_time
 from json import loads
 
 from odoo import Command, fields
@@ -988,6 +989,7 @@ class TestProcurement(TestMrpCommon):
         self.assertRecordValues(mo.move_raw_ids, expected_vals)
         self.assertRecordValues(mo.picking_ids.move_ids, expected_vals)
 
+    @freeze_time("2025-11-3")
     def test_consecutive_pickings(self):
         """ Test that when we generate several procurements for a product in a raw
             we do not create demand for the same quantities several times """
@@ -1046,14 +1048,14 @@ class TestProcurement(TestMrpCommon):
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
                     'product_id': product_1.id,
-                    'product_uom_qty': 15,
+                    'product_uom_qty': 8,
                     'product_uom': self.uom_unit.id,
                 })],
             })
             picking.action_confirm()
             mo = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
             self.assertEqual(len(mo), i, 'One mo per picking')
-            self.assertEqual(delta_hours(mo[i - 1].date_finished - mo[i - 1].date_start), 15)
+            self.assertEqual(delta_hours(mo[i - 1].date_finished - mo[i - 1].date_start), 24)
 
     def test_mo_split_with_batch_size_mto(self):
         """ Check the MO is split with the correct product_qty when we apply a batch size in BoM

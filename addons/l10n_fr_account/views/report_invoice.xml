@@ -52,8 +52,9 @@
 
         <xpath expr="//div[@name='qr_code_placeholder']" position="before">
             <div class="mb-3">
-                <p t-if="o.l10n_fr_is_company_french and o.move_type.startswith('out_') and 'on_invoice' in o.invoice_line_ids.mapped('tax_ids.tax_exigibility')">
-                    Option to pay tax on debits
+                <p t-if="o.l10n_fr_is_company_french and o.is_sale_document(include_receipts=True) and
+                         any(l.product_id.type == 'service' and any(t.tax_exigibility == 'on_invoice' and t.tax_scope == 'consu' for t in l.tax_ids) for l in o.invoice_line_ids)">
+                    Tax exigibility on debits
                 </p>
             </div>
         </xpath>

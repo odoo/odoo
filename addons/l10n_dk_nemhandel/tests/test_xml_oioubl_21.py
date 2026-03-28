@@ -28,6 +28,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             'acc_type': 'iban',
             'partner_id': cls.company_data['company'].partner_id.id,
             'acc_number': 'DK5000400440116243',
+            'allow_out_payment': True,
         })
 
         cls.company_data['company'].partner_id.update({
@@ -39,6 +40,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             'city': 'Aalborg',
             'zip': '9430',
             'vat': 'DK12345674',
+            'nemhandel_identifier_value': '12345674',
             'phone': '+45 32 12 35 56',
             'street': 'Paradisæblevej, 11',
             'country_id': cls.env.ref('base.dk').id,
@@ -194,6 +196,19 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         invoice = self.create_post_and_send_invoice()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_export_with_partner_child(self):
+        """ This test verifies that when creating a OIOUBL file for a individual partner,
+            linked to a company partner, that we use the GLN from the company partner.
+        """
+        individual_partner = self.env['res.partner'].create({
+                'name': 'Jean-Michel',
+                'parent_id': self.partner_b.id,
+        })
+        invoice = self.create_post_and_send_invoice(partner=individual_partner)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_child_partner.xml")
 
     @freeze_time('2017-01-01')
     def test_oioubl_export_import_with_discount(self):

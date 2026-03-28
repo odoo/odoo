@@ -57,6 +57,18 @@ export class ChartDataSource extends OdooViewsDataSource {
         return this._getHierarchicalData();
     }
 
+    get source() {
+        this._assertMetadataIsLoaded();
+        const data = this._metaData;
+        return {
+            resModel: data.resModel,
+            type: "graph",
+            fields: [data.measure],
+            groupby: data.groupBy,
+            domain: this._searchParams.domain,
+        };
+    }
+
     changeChartType(newMode) {
         this._metaData.mode = newMode;
         this._model?.updateMetaData({ mode: newMode });

@@ -285,7 +285,8 @@ class ResPartner(models.Model):
             "avatar_128",
             "im_status",
             "is_company",
-            Store.One("main_user_id", ["share"], sudo=True),  # sudo: to access portal user of another company in chatter
+            # sudo: res.partner - to access portal user of another company in chatter
+            Store.One("main_user_id", ["partner_id", "share"], sudo=True),
             "name",
         ]
         if target.is_internal(self.env):

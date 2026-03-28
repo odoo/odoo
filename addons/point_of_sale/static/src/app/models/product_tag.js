@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 
 export class ProductTag extends Base {
     static pythonModel = "product.tag";
+    static enableLazyGetters = false;
 
     get posDescriptionMarkup() {
         return this.pos_description ? markup(this.pos_description) : "";

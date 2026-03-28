@@ -68,6 +68,82 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
 
         self.start_tour(self_route, "self_combo_selector_category")
 
+    def test_combo_price_no_free_items(self):
+        """
+        Regression test: when all combo sub-combos have qty_free=0, remaining_total
+        (= parent list price) must be distributed proportionally to the extra lines,
+        not silently dropped.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        # Sub-combo with qty_free=0 (no free items) and qty_max=1
+        no_free_combo = self.env['product.combo'].create({
+            'name': 'No Free Combo',
+            'qty_free': 0,
+            'qty_max': 1,
+            'combo_item_ids': [
+                Command.create({'product_id': self.cola.id, 'extra_price': 0}),
+                Command.create({'product_id': self.fanta.id, 'extra_price': 0}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'No Free Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.set([no_free_combo.id])],
+            'taxes_id': False,
+        })
+
+        cola_item = no_free_combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.cola
+        )
+
+        order = self.env['pos.order'].create({
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [
+                Command.create({
+                    'product_id': combo_product.id,
+                    'qty': 1,
+                    'price_unit': combo_product.lst_price,
+                    'price_subtotal': combo_product.lst_price,
+                    'price_subtotal_incl': combo_product.lst_price,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+
+        parent_line = order.lines
+        child_line = self.env['pos.order.line'].create({
+            'order_id': order.id,
+            'product_id': self.cola.id,
+            'qty': 1,
+            'price_unit': 0,
+            'price_subtotal': 0,
+            'price_subtotal_incl': 0,
+            'tax_ids': False,
+            'combo_parent_id': parent_line.id,
+            'combo_item_id': cola_item.id,
+        })
+
+        order.recompute_prices()
+
+        # base_price of the combo = min lst_price among items = min(cola.lst_price, fanta.lst_price) = 2.2
+        # With qty_free=0, remaining_total = parent lst_price = 10.0 must flow into the child
+        # price_unit should be: base_price + proportional_share_of_parent_price
+        # = base_price + round(base_price * 10 / (base_price * 1)) = base_price + 10.0
+        expected_price = no_free_combo.base_price + combo_product.lst_price
+        self.assertAlmostEqual(
+            child_line.price_unit, expected_price, places=2,
+            msg="When qty_free=0, remaining_total must be proportionally distributed to extra lines",
+        )
+
     def test_product_dont_display_all_variants(self):
         """
         Tests that when a variant is in a combo, clicking the variant

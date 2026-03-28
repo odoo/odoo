@@ -123,7 +123,7 @@ export class DropZonePlugin extends Plugin {
                     selectorSiblings.push(
                         ...this.getSelectorSiblings(editableAreaEls, rootEl, {
                             selector: dropNear,
-                            excludeNearParent,
+                            excludeParent: excludeNearParent,
                         })
                     );
                 }

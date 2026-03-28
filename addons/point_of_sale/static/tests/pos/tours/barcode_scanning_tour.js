@@ -1,4 +1,6 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
@@ -52,6 +54,12 @@ registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
             ProductScreen.selectedOrderlineHas("Packaging Product", 12),
             scan_barcode("12345610"),
             ProductScreen.selectedOrderlineHas("Packaging Product", 22),
+
+            // Add Product which has no barcode, but it's packaging has one
+            scan_barcode("12345618"),
+            ProductConfiguratorPopup.pickMulti("Cushion"),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Packaging Product2", 10),
             Chrome.endTour(),
         ].flat(),
 });
@@ -109,6 +117,29 @@ registry.category("web_tour.tours").add("test_quantity_package_of_non_basic_unit
             Dialog.confirm("Open Register"),
             scan_barcode("555555"),
             ProductScreen.selectedOrderlineHas("Cord", 12),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_variants_merge_line_barcode", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("A variant product"),
+            ProductConfiguratorPopup.pickRadio("S"),
+            Dialog.confirm(),
+            Order.hasLine({
+                productName: "A variant product",
+                quantity: 1,
+                attributeLine: "S, blue",
+            }),
+            scan_barcode("TEST123"),
+            Order.hasLine({
+                productName: "A variant product",
+                quantity: 2,
+                attributeLine: "S, Blue",
+            }),
             Chrome.endTour(),
         ].flat(),
 });

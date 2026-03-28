@@ -21,15 +21,25 @@ const INITIALIZED_CLASSES = new Set();
  */
 export function processModelClasses(modelDefs, modelClasses = {}) {
     const modelNames = new Set(Object.keys(modelDefs));
+    const modelClassSetupFns = [];
     for (const modelName of modelNames) {
         if (INITIALIZED_CLASSES.has(modelName)) {
             continue; // Skip already initialized classes in the registry
         }
 
         const fields = modelDefs[modelName];
-        const ModelRecordClass = modelClasses[modelName] || class ModelRecord extends Base {};
-        const excludedLazyGetters = [];
+        let ModelRecordClass = modelClasses[modelName];
 
+        if (!ModelRecordClass) {
+            ModelRecordClass = class ModelRecord extends Base {};
+            ModelRecordClass.enableLazyGetters = false;
+        } else {
+            if (ModelRecordClass.setupFn) {
+                modelClassSetupFns.push(ModelRecordClass.setupFn.bind(ModelRecordClass));
+            }
+        }
+
+        const excludedLazyGetters = [];
         if (modelClasses[modelName]) {
             INITIALIZED_CLASSES.add(modelName);
         }
@@ -59,7 +69,7 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
                                 ? convertRawToDateTime(this, value, field)
                                 : convertRawToDate(this, value, field);
                         } else if (isRelationNotInModelDef && value instanceof Set) {
-                            return unmodifiableArray(
+                            return immutableArray(
                                 [...value],
                                 `The '${fieldName}' array cannot be modified.`
                             );
@@ -77,12 +87,21 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
                 if (X2MANY_TYPES.has(field.type)) {
                     Object.defineProperty(ModelRecordClass.prototype, fieldName, {
                         get: function () {
-                            return unmodifiableArray(
-                                Array.from(this[RAW_SYMBOL][fieldName] || new Set(), (recordID) =>
-                                    this[STORE_SYMBOL].getById(relationModel, recordID)
-                                ).filter((s) => s), //avoid empty records,
-                                updateErrorMessage
-                            );
+                            const rawValue = this[RAW_SYMBOL][fieldName];
+                            const result = [];
+                            if (rawValue?.size) {
+                                for (const recordID of rawValue) {
+                                    const record = this[STORE_SYMBOL].getById(
+                                        relationModel,
+                                        recordID
+                                    );
+                                    if (record) {
+                                        //avoid empty records,
+                                        result.push(record);
+                                    }
+                                }
+                            }
+                            return immutableArray(result, updateErrorMessage);
                         },
                         set: function (values) {
                             this.update({ [fieldName]: values });
@@ -113,6 +132,9 @@ export function processModelClasses(modelDefs, modelClasses = {}) {
             ];
         }
     }
+    for (const setupFn of modelClassSetupFns) {
+        setupFn();
+    }
 }
 export function createExtraField(record, extraFields, serverData, vals) {
     if (!extraFields?.length) {
@@ -136,7 +158,7 @@ export function createExtraField(record, extraFields, serverData, vals) {
             get: function () {
                 const value = this[RAW_SYMBOL][fieldName];
                 if (Array.isArray(value)) {
-                    return unmodifiableArray(value, `The '${fieldName}' array cannot be modified`);
+                    return immutableArray(value, `The '${fieldName}' array cannot be modified`);
                 }
                 return value;
             },
@@ -148,7 +170,7 @@ export function createExtraField(record, extraFields, serverData, vals) {
     }
 }
 
-function unmodifiableArray(arr, message) {
+function immutableArray(arr, message) {
     return new Proxy(arr, {
         set(target, prop, value) {
             throw new Error(message);

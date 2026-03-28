@@ -40,7 +40,9 @@ class PosCategory(models.Model):
     def _load_pos_data_domain(self, data, config):
         domain = []
         if config.limit_categories:
-            domain += [('id', 'in', config.iface_available_categ_ids.ids)]
+            preparation_categories = [printer['product_categories_ids'] for printer in data['pos.printer']]
+            flattened_preparation_categories = [item for sublist in preparation_categories for item in sublist]
+            domain += [('id', 'in', flattened_preparation_categories + config.iface_available_categ_ids.ids)]
         return domain
 
     @api.model

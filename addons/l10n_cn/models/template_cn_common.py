@@ -11,7 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'name': _('Common'),
             'visible': 0,
-            'code_digits': 6,
+            'code_digits': 4,
             'use_storno_accounting': True,
             'property_account_receivable_id': 'l10n_cn_common_account_1122',
             'property_account_payable_id': 'l10n_cn_common_account_2202',

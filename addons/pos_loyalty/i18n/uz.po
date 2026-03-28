@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -42,6 +42,14 @@ msgstr ""
 #, fuzzy
 msgid "%s Points"
 msgstr "%s ball"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
+msgid ""
+"%s: %s\n"
+"Balance: %s"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
@@ -240,6 +248,7 @@ msgid "Discount & Loyalty"
 msgstr "Chegirma va sodiqlik"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__display_name
@@ -315,15 +324,6 @@ msgstr "Sovg‘a kartasi"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-#, fuzzy
-msgid ""
-"Gift Card: %s\n"
-"Balance: %s"
-msgstr "Sovg‘a kartasi: %s Balans: %s"
-
-#. module: pos_loyalty
-#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 #, fuzzy
 msgid "Gift card or Discount code"
@@ -343,6 +343,7 @@ msgid "How many point this reward cost on the coupon."
 msgstr "Bu mukofot kuponda necha ballga tushishi."
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__id
@@ -404,6 +405,11 @@ msgstr "Sovg‘a kartasi dasturi noto‘g‘ri. Birdan ortiq qoida mavjud."
 #, fuzzy
 msgid "Is Reward Line"
 msgstr "Mukofot liniyasi"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -1029,6 +1035,12 @@ msgstr "Elektron hamyon mijoz tanlanishini talab qiladi"
 #, fuzzy
 msgid "no expiration"
 msgstr "muddati cheklanmagan"
+
+#, fuzzy
+#~ msgid ""
+#~ "Gift Card: %s\n"
+#~ "Balance: %s"
+#~ msgstr "Sovg‘a kartasi: %s Balans: %s"
 
 #, fuzzy
 #~ msgid "Restrict publishing to those shops."

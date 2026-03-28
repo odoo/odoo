@@ -5,7 +5,6 @@ import {
     hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
-    hasTextColorClass,
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
@@ -199,8 +198,12 @@ export class ColorPlugin extends Plugin {
         };
 
         const hexColor = rgbaToHex(color).toLowerCase();
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedNodes = targetedNodes
             .filter((node) => {
+                if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
+                    return false;
+                }
                 if (mode === "backgroundColor" && color) {
                     return !closestElement(node, "table.o_selected_table");
                 }
@@ -230,11 +233,7 @@ export class ColorPlugin extends Plugin {
                         node,
                         '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
                     ) ||
-                    closestElement(node, "span") ||
-                    closestElement(
-                        node,
-                        (node) => node.nodeName !== "LI" && hasTextColorClass(node, mode)
-                    );
+                    closestElement(node, "span");
 
                 const faNodes = font?.querySelectorAll(".fa");
                 if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
@@ -253,10 +252,7 @@ export class ColorPlugin extends Plugin {
                 if (
                     font &&
                     font.nodeName !== "T" &&
-                    (font.nodeName !== "SPAN" ||
-                        font.style[mode] ||
-                        font.style.backgroundImage ||
-                        hasTextColorClass(font, mode)) &&
+                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
                     (isColorGradient(color) ||
                         color === "" ||
                         !hasInlineGradient ||

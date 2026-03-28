@@ -116,6 +116,7 @@ class TestHrAttendanceOvertime(HttpCase):
             'name': 'Flexible 40 hours/week',
             'company_id': cls.company.id,
             'hours_per_day': 8,
+            'hours_per_week': 40,
             'flexible_hours': True,
             'full_time_required_hours': 40,
         })
@@ -824,8 +825,8 @@ class TestHrAttendanceOvertime(HttpCase):
 
     def test_no_validation_extra_hours_change(self):
         """
-         In case of attendances requiring no validation, check that extra hours are not recomputed
-         if the value is different from `validated_hours` (meaning it has been modified by the user).
+         Check that manual edits are recomputed when updating another attendance,
+         but flags the record as 'to_approve'
         """
         self.company.attendance_overtime_validation = "no_validation"
 
@@ -841,7 +842,7 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertAlmostEqual(attendance.overtime_hours, 1, 2)
         self.assertAlmostEqual(attendance.validated_overtime_hours, 1, 2)
 
-        attendance.linked_overtime_ids.manual_duration = previous = 0.5
+        attendance.linked_overtime_ids.manual_duration = 0.5
         self.assertNotEqual(attendance.validated_overtime_hours, attendance.overtime_hours)
 
         # Create another attendance for the same employee
@@ -850,7 +851,11 @@ class TestHrAttendanceOvertime(HttpCase):
             'check_in': datetime(2023, 1, 4, 8, 0),
             'check_out': datetime(2023, 1, 4, 18, 0)
         })
-        self.assertEqual(attendance.validated_overtime_hours, previous, "Extra hours shouldn't be recomputed")
+        # The hours will now be recomputed
+        # But they should have the 'to_approve' status
+        self.assertEqual(attendance.linked_overtime_ids.status, 'to_approve', "Record should be flagged for approval")
+        self.assertAlmostEqual(attendance.linked_overtime_ids.duration, 1.0, 2, "Math should be reset to 1.0")
+        self.assertEqual(attendance.validated_overtime_hours, 0.0, "Validated hours should be 0 until approved")
 
     def _check_overtimes(self, overtimes, vals_list):
         self.assertEqual(len(overtimes), len(vals_list), "Wrong number of overtimes")
@@ -1219,3 +1224,64 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertTrue(afternoon_att.linked_overtime_ids)
         # Should be the same as it's the reverse checking
         self.assertEqual(overtime_lines._linked_attendances(), afternoon_att)
+
+    def test_regenerate_overtime_employee_multiple_versions(self):
+        """ Checks that regenerating overtimes succeeds when an employee who has entries in attendances
+         has more than one version (contract) and each version has a different ruleset. """
+        ruleset_1, ruleset_2 = self.env['hr.attendance.overtime.ruleset'].create([{
+            'name': 'Test Ruleset Version 1',
+            'rule_ids': [
+                Command.create({
+                    'name': "> 8h/d",
+                    'base_off': 'quantity',
+                    'quantity_period': 'day',
+                    'expected_hours_from_contract': False,
+                    'expected_hours': 9,
+                    'paid': True
+                }),
+            ],
+        }, {
+            'name': 'Test Ruleset Version 2',
+            'rule_ids': [
+                Command.create({
+                    'name': "> 8h/d",
+                    'base_off': 'quantity',
+                    'quantity_period': 'day',
+                    'expected_hours_from_contract': False,
+                    'expected_hours': 9,
+                    'paid': True
+                }),
+            ],
+        }])
+        self.env['hr.version'].create([{
+            'name': 'version old',
+            'employee_id': self.employee.id,
+            'structure_type_id': self.employee.version_id.structure_type_id.id,
+            'date_version': date(2020, 3, 1),
+            'date_start': datetime(2020, 3, 1, 0, 0),
+            'date_end': datetime(2020, 4, 1, 23, 59, 59),
+            'ruleset_id': ruleset_1.id,
+            'resource_calendar_id':  self.company.resource_calendar_id.id,
+        }, {
+            'name': 'version new',
+            'employee_id': self.employee.id,
+            'structure_type_id': self.employee.version_id.structure_type_id.id,
+            'date_version': date(2020, 4, 1),
+            'date_start': datetime(2020, 4, 2, 0, 0),
+            'date_end': False,
+            'ruleset_id': ruleset_2.id,
+            'resource_calendar_id':  self.company.resource_calendar_id.id,
+        }])
+
+        attendance_1, attendance_2 = self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2020, 3, 4, 7, 0),
+            'check_out': datetime(2020, 3, 4, 18, 0)
+            }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2020, 4, 4, 10, 0),
+            'check_out': datetime(2020, 4, 4, 19, 30)
+        }])
+        ruleset_1.action_regenerate_overtimes()
+        self.assertEqual(attendance_1.overtime_hours, 1)
+        self.assertEqual(attendance_2.overtime_hours, 0.5)

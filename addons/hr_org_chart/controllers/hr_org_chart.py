@@ -32,6 +32,7 @@ class HrOrgChartController(http.Controller):
             job_name=job.name or '',
             direct_sub_count=len(employee.child_ids - employee),
             indirect_sub_count=employee.child_all_count,
+            write_date=int(employee.write_date.timestamp()) * 1000,  # to have it in milliseconds for js
         )
 
     @http.route('/hr/get_redirect_model', type='jsonrpc', auth='user')
@@ -43,7 +44,7 @@ class HrOrgChartController(http.Controller):
     @http.route('/hr/get_org_chart', type='jsonrpc', auth='user')
     def get_org_chart(self, employee_id, new_parent_id=None, **kw):
         employee = self._get_employee(employee_id, **kw)
-        new_parent = self._get_employee(new_parent_id, **kw)
+        new_parent = self._get_employee(new_parent_id, **kw).sudo()
         if not employee:  # to check
             return {
                 'managers': [],

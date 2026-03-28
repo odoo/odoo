@@ -21,7 +21,7 @@ import { effect } from "@web/core/utils/reactive";
 import { utils } from "@web/core/ui/ui_service";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-function getFirstElementOfNode(node) {
+export function getFirstElementOfNode(node) {
     if (!node) {
         return null;
     }

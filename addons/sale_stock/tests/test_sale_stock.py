@@ -2322,10 +2322,22 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             } for partner in [self.partner_a, self.partner_b]
         ])
         sale_orders.action_confirm()
-        self.assertEqual(
-            sale_orders.picking_ids.move_ids.mapped('description_picking'),
-            ['No variant: extra: Best', 'No variant: extra: Best\nFrench Sofa']
-        )
+        basic_user = self.env['res.users'].create({
+            'name': 'Some Stock Sale User',
+            'login': 'some_stock_sale_user',
+            'email': 'some_stock_sale@user.com',
+            'group_ids': [
+                Command.set([
+                self.ref('sales_team.group_sale_salesman'),
+                self.ref('stock.group_stock_user'),
+            ])],
+        })
+        deliveries = sale_orders.picking_ids.with_user(basic_user.id)
+        sale_orders.invalidate_recordset()
+        self.assertRecordValues(deliveries.move_ids, [
+            {'description_picking': "No variant: extra: Best"},
+            {'description_picking': "No variant: extra: Best\nFrench Sofa"},
+        ])
 
     def test_multicompany_transit_with_one_company_for_user(self):
         """ Check that the inter-company transit location is created when
@@ -2612,7 +2624,28 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         Check that the customer of an SO is propageted to all moves of the
         pull chain in multi-step deliveries.
         """
-        # delivery_route = self.warehouse_3_steps_pull.delivery_route_id
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id':  self.warehouse_3_steps_pull.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })]
+        })
+        sale_order.action_confirm()
+        self.assertRecordValues(sale_order.picking_ids.sorted(lambda p: p.picking_type_id.name)[::-1], [
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.pick_type_id.id},
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.pack_type_id.id},
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.out_type_id.id},
+        ])
+
+    def test_sale_partner_propagation_3_step_mtso_pull(self):
+        """
+        Check that the customer of an SO is propageted to all moves of the
+        pull chain in multi-step take from stock if availble else trigger an
+        other rule (mtso) deliveries.
+        """
+        self.warehouse_3_steps_pull.delivery_route_id.rule_ids[1:].procure_method = 'mts_else_mto'
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'warehouse_id':  self.warehouse_3_steps_pull.id,
@@ -2692,3 +2725,32 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         invoice.action_post()
 
         self.assertEqual(invoice.state, 'posted')
+
+    def test_validate_picking_creates_sale_line_for_so_with_no_sol(self):
+        """Test that validating a picking creates a sale order line for a sale order with no lines"""
+        warehouse = self.company_data['default_warehouse']
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id
+        })
+        sale_order.action_confirm()
+        self.assertFalse(sale_order.order_line)
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'sale_id': sale_order.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.new_product.id,
+                    'product_uom_qty': 3,
+                }),
+            ],
+        })
+        delivery.button_validate()
+
+        self.assertEqual(delivery.state, 'done')
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.new_product.id, 'sale_line_id': sale_order.order_line.id}
+        ])
+        self.assertRecordValues(sale_order.order_line, [
+            {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
+        ])

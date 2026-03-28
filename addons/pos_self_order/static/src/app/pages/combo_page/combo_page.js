@@ -6,7 +6,7 @@ import { ProductNameWidget } from "@pos_self_order/app/components/product_name_w
 import { ComboStepper } from "@pos_self_order/app/components/combo_stepper/combo_stepper";
 import { computeTotalComboPrice } from "../../services/card_utils";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
-import { formatProductName } from "../../utils";
+import { formatProductName, shouldShowMissingDetails } from "../../utils";
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
@@ -93,13 +93,11 @@ export class ComboPage extends Component {
     }
 
     shouldShowMissingDetails() {
-        const el = this.scrollContainerRef?.el;
-        if (!el) {
-            return false;
-        }
-        return (
-            el.scrollHeight > el.clientHeight &&
-            this.currentChoiceState.displayAttributesOfItem.product_id.attribute_line_ids.length > 1
+        const product = this.currentChoiceState.displayAttributesOfItem?.product_id;
+        return shouldShowMissingDetails(
+            product,
+            this.state.selectedValues,
+            this.scrollContainerRef
         );
     }
 

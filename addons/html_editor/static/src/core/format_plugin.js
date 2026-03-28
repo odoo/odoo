@@ -307,11 +307,13 @@ export class FormatPlugin extends Plugin {
             }
         }
 
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedTextNodes = /** @type { Text[] } **/ (
             this.dependencies.selection
                 .getTargetedNodes()
                 .filter(
                     (n) =>
+                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
                         this.dependencies.selection.areNodeContentsFullySelected(n) &&
                         ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
                             (n.nodeName === "BR" &&
@@ -351,6 +353,17 @@ export class FormatPlugin extends Plugin {
                 [...classList].every((className) =>
                     this.getResource("format_class_predicates").some((cb) => cb(className))
                 );
+
+            // Special case: if the parent node is unsplittable and fully selected,
+            // we should make sure the span is applied outside of it.
+            if (
+                parentNode &&
+                !isBlock(parentNode) &&
+                this.dependencies.split.isUnsplittable(parentNode) &&
+                this.dependencies.selection.areNodeContentsFullySelected(parentNode)
+            ) {
+                inlineAncestors.push(parentNode);
+            }
 
             while (
                 parentNode &&

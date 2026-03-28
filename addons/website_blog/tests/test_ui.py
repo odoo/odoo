@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
 import re
-from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from datetime import datetime
+
+import odoo.tests
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -21,7 +23,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_tag = cls.env.ref('website_blog.blog_tag_2', raise_if_not_found=False)
         if not blog_tag:
             blog_tag = cls.env['blog.tag'].create({'name': 'adventure'})
-        cls.env['blog.post'].create({
+        cls.blog_post = cls.env['blog.post'].create({
             "name": "Post Test",
             "subtitle": "Subtitle Test",
             "blog_id": blog.id,
@@ -70,6 +72,20 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         })
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.start_tour("/blog", "blog_context_and_social_media", login="admin")
+
+    def test_blog_social_image(self):
+        with MockRequest(self.env, website=self.env.ref('website.default_website'), url_root='http://example.com'):
+            meta = self.blog_post.get_website_meta()
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/website_blog/static/src/img/cover_1.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/website_blog/static/src/img/cover_1.jpg')
+            self.blog_post.cover_properties = """{"background-image": "url(\\"/2.jpg\\")"}"""
+            meta = self.blog_post.get_website_meta()
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/2.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/2.jpg')
+            self.blog_post.cover_properties = """{"background-image": "url(/3.jpg)"}"""
+            meta = self.blog_post.get_website_meta()
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
+            self.assertEqual(meta['twitter_meta']['twitter:image'], 'http://example.com/3.jpg')
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({

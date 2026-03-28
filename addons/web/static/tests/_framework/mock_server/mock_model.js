@@ -3247,16 +3247,16 @@ export class Model extends Array {
             // in by the 'in' operator (with the ids of children)
             if (criterion[1] === "child_of") {
                 let oldLength = 0;
-                const childIds = [criterion[2]];
-                while (childIds.length > oldLength) {
-                    oldLength = childIds.length;
+                const childIds = new Set([criterion[2]]);
+                while (childIds.size > oldLength) {
+                    oldLength = childIds.size;
                     for (const record of this) {
-                        if (childIds.indexOf(record[this._parent_name]) >= 0) {
-                            childIds.push(record.id);
+                        if (childIds.has(record[this._parent_name])) {
+                            childIds.add(record.id);
                         }
                     }
                 }
-                criterion = [criterion[0], "in", childIds];
+                criterion = [criterion[0], "in", Array.from(childIds)];
             }
             // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
             const field = this._fields[criterion[0]] || {};
