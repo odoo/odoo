@@ -79,7 +79,7 @@ body, .o_web_client {
     color: var(--o-main-text-color) !important;
 }
 
-.btn {
+.btn, .list-group-item {
     --btn-color: var(--o-active-option-text-color) !important;
     background-color: var(--nortk-button-background) !important;
     border-color: var(--o-input-border-color) !important;
@@ -129,7 +129,7 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 }
 
 /* Style the "Card" (The white box containing the login form or DB list) */
-.card, .o_card {
+.card, .o_card, .card-body {
     background-color: var(--o-component-background-color) !important;
     border-color: var(--o-border-color) !important;
     color: var(--o-main-text-color) !important;
@@ -141,6 +141,13 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
     border-color: var(--o-input-border-color) !important;
     color: var(--o-input-text-color) !important;
 }
+
+/* TODO: Change background of the inputs of the login screen
+input[type="text"], textarea {
+    background-color: #FF0000  !important;
+    background: #FF0000  !important;
+    color: #0000FF  !important;
+}*/
 
 /* Chat and Mail */
 .o-mail-DiscussContent-core {
