@@ -973,7 +973,7 @@ class TransactionCase(BaseCase):
 
         def metamodel_setattr(model, key, value):
             caller = inspect.currentframe().f_back
-            filename = inspect.getsourcefile(caller)
+            filename = (inspect.getsourcefile(caller) or '').replace('\\', '/')
 
             # special case / fastpath because this does model alterations everywhere
             if filename.endswith('odoo/models.py'):
