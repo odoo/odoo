@@ -5,11 +5,13 @@ comparisons, boolean logic, variables, and simple dict/list/tuple
 access are needed.
 """
 import ast
-import operator
 from types import NoneType
 from typing import Any
 
+from odoo.tools.lru import LRU
 from odoo.tools.misc import OrderedSet
+
+from . import unsafe_eval
 
 MAX_INT_POW_EXP = 1024
 
@@ -23,35 +25,6 @@ def _safe_pow(a, b):
     return res
 
 
-_BIN_OPS = {
-    ast.Add: operator.add,
-    ast.Sub: operator.sub,
-    ast.Mult: operator.mul,
-    ast.Div: operator.truediv,
-    ast.Mod: operator.mod,
-    ast.Pow: _safe_pow,
-    ast.FloorDiv: operator.floordiv,
-}
-
-_UNARY_OPS = {
-    ast.Not: operator.not_,
-    ast.UAdd: operator.pos,
-    ast.USub: operator.neg,
-}
-
-_COMPARE_OPS = {
-    ast.Eq: operator.eq,
-    ast.NotEq: operator.ne,
-    ast.Lt: operator.lt,
-    ast.LtE: operator.le,
-    ast.Gt: operator.gt,
-    ast.GtE: operator.ge,
-    ast.In: lambda element, container: element in container,
-    ast.NotIn: lambda element, container: element not in container,
-    ast.Is: operator.is_,
-    ast.IsNot: operator.is_not,
-}
-
 _ALLOWED_CALLS = {
     # funcs
     'max': max,
@@ -63,130 +36,146 @@ _ALLOWED_CALLS = {
     'set': OrderedSet,
 }
 
+_EXPR_EVAL_CACHE = LRU(1000)
 
-_BOOL_OP_SHORT_CIRCUIT_TEST = {
-    ast.And: operator.not_,
-    ast.Or: operator.truth,
-}
+# whitelisted nodes, no need to visit children
+_AST_OK = frozenset(c.__name__ for c in (
+    # Only loading is allowed
+    ast.Load,
+    # BOOL_OP
+    ast.And, ast.Or,
+    # BIN_OP
+    ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Mod, ast.Pow, ast.FloorDiv,
+    # UNARY_OP
+    ast.Not, ast.UAdd, ast.USub,
+    # COMPARE_OP
+    ast.Eq, ast.NotEq, ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.In, ast.NotIn,
+    ast.Is, ast.IsNot
+))
+# whitelisted nodes, visit all children
+_AST_GENERIC = frozenset(c.__name__ for c in (
+    ast.Dict, ast.Subscript, ast.List, ast.Tuple, ast.Slice,
+    ast.BoolOp, ast.BinOp, ast.UnaryOp, ast.Compare, ast.IfExp,
+))
 
 
-def _get_func(ops_set, node):
+def eval_name(context, name):
+    # ast.Name accessor
     try:
-        return ops_set[type(node)]
+        return context[name]
     except KeyError:
-        raise SyntaxError(f"Unsupported operator: {type(node).__name__}") from None
+        raise NameError(name) from None
 
 
-class _ExprEval(ast.NodeVisitor):
-    """Evaluate supported expressions for `expr_eval`."""
-    __slots__ = ("context",)
+def eval_attr(obj, name):
+    # ast.Attribute accessor
+    from odoo.models import BaseModel  # noqa: PLC0415
+    if isinstance(obj, BaseModel):
+        if field := obj._fields.get(name):
+            return field.__get__(obj)
+        if name == 'ids':
+            return obj.ids
+        if name == '_name':
+            return obj._name
+    raise AttributeError(
+        f"Attribute access is only supported on Odoo recordsets, got {type(obj).__name__!r}"
+    )
 
-    def __init__(self, context: dict[str, Any]):
-        self.context = context
+
+class _ExprMakeLambda(ast.NodeTransformer):
+    """ Transform an expression into a lambda function. """
+    def __init__(self):
+        self._name_whitelist = set()
 
     def visit_Expression(self, node):
-        return self.visit(node.body)
-
-    def visit_BoolOp(self, node):
-        test = _get_func(_BOOL_OP_SHORT_CIRCUIT_TEST, node.op)
-        for value in node.values:
-            result = self.visit(value)
-            if test(result):
-                return result
-        return result
+        """ expr => lambda ctx: visited_expr """
+        body = self.visit(node.body)
+        args = ast.arguments(posonlyargs=[ast.arg('ctx')], args=[], vararg=None, defaults=[], kw_defaults=[], kwarg=None, kwonlyargs=[])
+        body_lambda = ast.Lambda(args, body=ast.Pass())
+        ast.fix_missing_locations(body_lambda)
+        body_lambda.body = body  # move current body into the lambda content
+        node.body = body_lambda  # return the lambda
+        return node
 
     def visit_BinOp(self, node):
-        op = _get_func(_BIN_OPS, node.op)
-        return op(self.visit(node.left), self.visit(node.right))
-
-    def visit_UnaryOp(self, node):
-        op = _get_func(_UNARY_OPS, node.op)
-        return op(self.visit(node.operand))
+        """ Generic visit, except for `_pow(a, b)`."""
+        node = super().generic_visit(node)
+        if isinstance(node.op, ast.Pow):
+            load = ast.Load()
+            func = ast.Name('_pow', load)
+            call = ast.Call(func, [node.left, node.right], [])
+            ast.copy_location(load, node)
+            ast.copy_location(func, node)
+            ast.copy_location(call, node)
+            return call
+        return node
 
     def visit_Dict(self, node):
-        out = {}
-        for key_node, value_node in zip(node.keys, node.values):
-            if key_node is None:
-                raise SyntaxError("Dict unpacking is not supported")
-            out[self.visit(key_node)] = self.visit(value_node)
-        return out
+        if not all(key is not None for key in node.keys):
+            raise SyntaxError("Dict unpacking is not supported")
+        return super().generic_visit(node)
 
     def visit_Set(self, node):
-        return OrderedSet(self.visit(item) for item in node.elts)
+        """ {x...} => set([x...])
 
-    def visit_Compare(self, node):
-        current = self.visit(node.left)
-        for op_node, right_node in zip(node.ops, node.comparators):
-            op = _get_func(_COMPARE_OPS, op_node)
-            next_value = self.visit(right_node)
-            if not op(current, next_value):
-                return False
-            current = next_value
-        return True
+        This allows to use custom set implementation. """
+        load = ast.Load()
+        func = ast.Name('set', load)
+        arg = ast.List([self.visit(e) for e in node.elts], load)
+        call = ast.Call(func, [arg], [])
+        ast.copy_location(load, node)
+        ast.copy_location(func, node)
+        ast.copy_location(arg, node)
+        ast.copy_location(call, node)
+        return call
 
     def visit_Call(self, node):
         if node.keywords:
             raise SyntaxError("Keyword arguments are not supported in function calls")
         if not isinstance(node.func, ast.Name) or node.func.id not in _ALLOWED_CALLS:
             raise NameError("Only %s function calls are allowed" % ", ".join(_ALLOWED_CALLS))
-
-        func = _ALLOWED_CALLS[node.func.id]
-        return func(*(self.visit(arg) for arg in node.args))
+        self._name_whitelist.add(node.func)
+        return super().generic_visit(node)
 
     def visit_Constant(self, node):
         value = node.value
         if isinstance(value, (NoneType, bytes, str, int, float, bool)):
-            return value
+            return node
         raise TypeError(f"Unsupported constant: {type(value).__name__}")
 
-    def visit_IfExp(self, node):
-        return self.visit(node.body) if self.visit(node.test) else self.visit(node.orelse)
-
     def visit_Attribute(self, node):
-        from odoo.models import BaseModel  # noqa: PLC0415
-        if not isinstance(node.ctx, ast.Load):
-            raise SyntaxError("Only attribute loading is supported")  # noqa: TRY004
-
-        obj = self.visit(node.value)
-        if not isinstance(obj, BaseModel):
-            raise TypeError(
-                f"Attribute access is only supported on Odoo recordsets, got {type(obj).__name__!r} "
-                f"while accessing {node.attr!r}"
-            )
-
-        if field := obj._fields.get(node.attr):
-            return field.__get__(obj)
-
-        if node.attr == 'ids':
-            return obj.ids
-        if node.attr == '_name':
-            return obj._name
-
-        raise AttributeError(f"{obj._name!r} object has no field {node.attr!r}")
-
-    def visit_Subscript(self, node):
-        return self.visit(node.value)[self.visit(node.slice)]
+        """ a.b => _ATTR(a, 'b') """
+        load = self.visit(node.ctx)
+        func = ast.Name('_ATTR', load)
+        value = self.visit(node.value)
+        attr = ast.Constant(node.attr)
+        call = ast.Call(func, [value, attr], [])
+        ast.copy_location(func, node)
+        ast.copy_location(attr, node)
+        ast.copy_location(call, node)
+        return call
 
     def visit_Name(self, node):
-        try:
-            return self.context[node.id]
-        except KeyError as error:
-            raise NameError(node.id) from error
+        """ a => _NAME(ctx, 'a')
 
-    def visit_List(self, node):
-        return [self.visit(item) for item in node.elts]
-
-    def visit_Tuple(self, node):
-        return tuple(self.visit(item) for item in node.elts)
-
-    def visit_Slice(self, node):
-        return slice(
-            self.visit(node.lower) if node.lower is not None else None,
-            self.visit(node.upper) if node.upper is not None else None,
-            self.visit(node.step) if node.step is not None else None,
-        )
+        Either name is in `ctx` or it was validated as a name of Call.
+        """
+        if node in self._name_whitelist:  # whitelisted for function calls
+            return node
+        load = self.visit(node.ctx)
+        func = ast.Name('_NAME', load)
+        ctx = ast.Name('ctx', load)
+        name = ast.Constant(node.id)
+        call = ast.Call(func, [ctx, name], [])
+        call = ast.fix_missing_locations(call)
+        return call
 
     def generic_visit(self, node):
+        name = node.__class__.__name__
+        if name in _AST_OK:
+            return node
+        if name in _AST_GENERIC:
+            return super().generic_visit(node)
         raise SyntaxError(f"Unsupported syntax: {type(node).__name__}")
 
 
@@ -212,4 +201,18 @@ def expr_eval(expr: str, context: dict[str, Any] | None = None) -> Any:
     assert type(expr) is str, "Expression must be a string"
     if not (expr := expr.strip()):
         raise SyntaxError("Expression cannot be empty")
-    return _ExprEval(context or {}).visit(ast.parse(expr, mode="eval"))
+    compiled_func = _EXPR_EVAL_CACHE.get(expr)
+    if compiled_func is None:
+        node = ast.parse(expr, mode="eval")
+        node_lambda = _ExprMakeLambda().visit(node)
+        compiled = compile(node_lambda, '<expr_eval>', 'eval')
+        compiled_func = unsafe_eval(compiled, dict(
+            _ALLOWED_CALLS,
+            __builtins__={},
+            _ATTR=eval_attr,
+            _NAME=eval_name,
+            _pow=_safe_pow,
+        ))
+        if len(expr) < 200:
+            _EXPR_EVAL_CACHE[expr] = compiled_func
+    return compiled_func(context or {})
