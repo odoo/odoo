@@ -229,7 +229,7 @@ class SnailmailLetter(models.Model):
             }
         }
         """
-        account_token = self.env['iap.account'].get('snailmail').sudo().account_token
+        account_token = self.env['iap.account'].sudo().get('snailmail').account_token
         dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         documents = []
 
