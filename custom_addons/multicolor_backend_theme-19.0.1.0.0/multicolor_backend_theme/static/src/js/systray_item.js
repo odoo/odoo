@@ -20,10 +20,18 @@ patch(NavBar.prototype, {
         this.themes_by_id = {};
         onWillStart(async () => {
             this.isThemeManager = await user.hasGroup("multicolor_backend_theme.multicolor_theme_manager_access");
-            const theme_data = await this.orm.searchRead('theme.config', [], ['name', 'is_theme_active', 'theme_font_color', 'theme_main_color', 'view_font_color']);
+            const theme_data = await this.orm.searchRead('theme.config', [], [
+                'name',
+                'is_theme_active',
+                'theme_font_color',
+                'theme_main_color',
+                'view_font_color',
+                'login_background_color',
+            ]);
             if (theme_data) {
                 this.themeState.theme_data = theme_data;
                 theme_data.forEach(theme => {
+                    theme.login_background_color = theme.login_background_color || '#f1f4f5';
                     if (theme.is_theme_active) {
                         this.selected_theme = theme;
                     }
@@ -42,7 +50,12 @@ patch(NavBar.prototype, {
     onChangeTheme() {
         let themeId = parseInt($('.theme_select').val());
         this.themeState.selected_theme = this.themes_by_id[themeId];
-        const colorProperties = ['theme_main_color', 'theme_font_color', 'view_font_color'];
+        const colorProperties = [
+            'theme_main_color',
+            'theme_font_color',
+            'view_font_color',
+            'login_background_color',
+        ];
         colorProperties.forEach(property => {
             document.getElementById(property).style.backgroundColor = this.themeState.selected_theme[property];
         });
@@ -52,7 +65,12 @@ patch(NavBar.prototype, {
     onClickBaseColor(){
         var self = this;
         const selectedTheme = this.themes_by_id[parseInt($('.theme_select').val())]
-        const colorProperties = ['theme_main_color', 'theme_font_color', 'view_font_color'];
+        const colorProperties = [
+            'theme_main_color',
+            'theme_font_color',
+            'view_font_color',
+            'login_background_color',
+        ];
         colorProperties.forEach(property => {
             $('#' + property).loads({
                 layout: 'hex',
@@ -96,6 +114,10 @@ patch(NavBar.prototype, {
             document.documentElement.style.setProperty("--theme_main_color", this.themeState.selected_theme.theme_main_color);
             document.documentElement.style.setProperty("--theme_font_color", this.themeState.selected_theme.theme_font_color);
             document.documentElement.style.setProperty("--view_font_color", this.themeState.selected_theme.view_font_color);
+            document.documentElement.style.setProperty(
+                "--login_background_color",
+                this.themeState.selected_theme.login_background_color || '#f1f4f5'
+            );
             $('.cybro-main-menu .input-group-text').css({
                 'background-color': this.themeState.selected_theme.theme_main_color,
                 'border-color': this.themeState.selected_theme.theme_main_color,
@@ -110,6 +132,9 @@ patch(NavBar.prototype, {
                 'color': this.themeState.selected_theme.theme_font_color,
             });
             $('.o-mail-ChatWindow-header').attr('style', `background-color: ${this.themeState.selected_theme.theme_main_color} !important; color: ${this.themeState.selected_theme.theme_font_color};`);
+            $('.oe_website_login_container').css({
+                'background-color': this.themeState.selected_theme.login_background_color || '#f1f4f5',
+            });
 
         }
         let curr_theme_id = parseInt($('.theme_select').val());

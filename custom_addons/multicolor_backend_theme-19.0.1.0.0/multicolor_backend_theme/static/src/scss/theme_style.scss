@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
+:root {
+  --login_background_color: #f1f4f5;
+}
+
 body {
   font-size: 14px;
-  font-family: lato, sans-serif
+  font-family: lato, sans-serif;
+  background: var(--login_background_color);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -117,7 +122,7 @@ blockquote p {
 /*==============login================*/
 .oe_website_login_container {
     padding: 1rem 5rem 5rem;
-    background: #f1f4f5;
+    background: var(--login_background_color);
 }
 .oe_login_form, .oe_signup_form, .oe_reset_password_form {
   color: #fff !important;

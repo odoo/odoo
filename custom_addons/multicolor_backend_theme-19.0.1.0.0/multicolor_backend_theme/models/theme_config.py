@@ -31,6 +31,10 @@ class ThemeConfig(models.Model):
     theme_main_color = fields.Char(help="main theme color")
     view_font_color = fields.Char(help="backend font color")
     theme_font_color = fields.Char(help="backend view font color")
+    login_background_color = fields.Char(
+        help="login page background color",
+        default="#f1f4f5",
+    )
     is_theme_active = fields.Boolean(string="Active Theme")
 
     @api.model
@@ -40,11 +44,13 @@ class ThemeConfig(models.Model):
             'theme_main_color': '#6fb702',
             'view_font_color': '#333',
             'theme_font_color': '#fff',
+            'login_background_color': '#f1f4f5',
             'is_theme_active': False,
         })
         theme_obj.name = 'Theme ' + str(theme_obj.id)
         return theme_obj.read(['name', 'theme_main_color', 'view_font_color',
-                               'theme_font_color', 'is_theme_active'])
+                               'theme_font_color', 'login_background_color',
+                               'is_theme_active'])
 
     @api.model
     def update_active_theme(self, theme_id):

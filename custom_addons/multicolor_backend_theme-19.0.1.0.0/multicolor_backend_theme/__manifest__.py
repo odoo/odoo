@@ -23,15 +23,15 @@
     "name": "Chameleon Multi Color Backend Theme",
     "version": "19.0.1.0.0",
     "category": "Customization/Backend",
-    "summary": "Configurable multi color backend theme for Odoo 19",
+    "summary": "Be a chameleon with your Kodoo backend! Customize it with a vibrant palette of colors. ",
     "description": """
         Configurable multi color backend theme for Odoo 19, 
         Only Admin can have the role to create, update, and removing the themes.
     """,
-    'author': 'Cybrosys Techno Solutions',
-    'company': 'Cybrosys Techno Solutions',
-    'maintainer': 'Cybrosys Techno Solutions',
-    "website": "https://www.cybrosys.com",
+    'author': 'ksoft',
+    'company': 'ksoft',
+    'maintainer': 'bootstrapprx',
+#    "website": "https://www.cybrosys.com",
     "depends": ['web', 'mail'],
     "data": [
         'security/security_groups.xml',
