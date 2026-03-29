@@ -2,7 +2,7 @@
 <odoo>
     <template id="kodoo_web_layout_title" inherit_id="web.layout">
         <xpath expr="//title" position="replace">
-            <title t-esc="title or 'Kodoo'"/>
+            <title t-esc="title or request.env['ir.config_parameter'].sudo().get_param('app_system_name', 'Kodoo')"/>
         </xpath>
     </template>
 </odoo>

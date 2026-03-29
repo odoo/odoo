@@ -21,10 +21,10 @@
 #
 #############################################################################
 {
-    'name': 'Kodoo Branding',
+    'name': 'Kodoo Branding Cleanup',
     # 'version': '1.0.0',
-    'summary': """Replace visible Odoo branding with Kodoo across login, portal, website and webclient.""",
-    'description': """Replace visible Odoo branding with Kodoo across login, portal, website and webclient.""",
+    'summary': """Remove visible Odoo promotional labels from login, portal, website and webclient.""",
+    'description': """Remove visible Odoo promotional labels from login, portal, website and webclient.""",
     'author': 'TugIT Software',
     'company': 'TugIT Software',
     'maintainer': 'TugIT Software',

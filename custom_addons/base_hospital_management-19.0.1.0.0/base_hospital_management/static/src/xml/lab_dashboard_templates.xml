@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Lab dashboard template-->
+<template>
+    <t t-name="LabDashboard">
+        <div class="oh_dashboards" t-ref="root">
+            <div class="container-fluid o_pj_dashboard">
+                <div style="width:100%; margin:0; padding:0;">
+                    <div class="row">
+                        <div class="col-md-2 bg-white dashButtonContainer">
+                            <div class="row dashButton" id="test-create"
+                                 style="margin-top: 45px;font-size: 18px;cursor:pointer;"
+                                 t-on-click="_loadTestData">
+                                Tests to Confirm
+                            </div>
+                            <div class="row dashButton" id="all-test"
+                                 style="margin-top: 45px;font-size: 18px;cursor:pointer;"
+                                 t-on-click="_allLabTest">
+                                Process Test
+                            </div>
+                            <div class="row dashButton" id="published-test"
+                                 style="margin-top: 45px;font-size: 18px;cursor:pointer;"
+                                 t-on-click="_loadPublished">
+                                Published
+                            </div>
+                        </div>
+                        <div class="col-md-9 bg-white PatientContainer">
+                            <div class="row">
+                                <div class="row" id="main-div">
+                                    <div t-if="state.activeView === 'main'" class="main-view" t-ref="main_view">
+                                        <div class="tests_confirm">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sequence</th>
+                                                        <th>Patient</th>
+                                                        <th>Doctor</th>
+                                                        <th>Type</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="record_list">
+                                                    <t t-set="index"
+                                                       t-value="-1"/>
+                                                    <t t-foreach="state.tests_confirm"
+                                                       t-as="test"
+                                                       t-key="test.id">
+                                                        <t t-set="index_id"
+                                                           t-value="test.id"/>
+                                                        <tr class="tests-confirmed"
+                                                            t-ref="tests_confirmed"
+                                                            t-on-click="_fetchTestData"
+                                                            t-att-data-index="index_id">
+                                                            <td>
+                                                                <t t-esc="test.display_name"/>
+                                                            </td>
+                                                            <td>
+                                                                <t t-esc="test.patient_id[1]"/>
+                                                            </td>
+                                                            <td>
+                                                                <t t-esc="test.doctor_id[1]"/>
+                                                            </td>
+                                                            <td>
+                                                                <t t-esc="test.patient_type"/>
+                                                            </td>
+                                                            <td>
+                                                                <t t-esc="test.date"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div t-if="state.activeView === 'form'" class="form-view"
+                                         t-ref="form_view">
+                                        <div class="col-md-12 bg-white LabReport">
+                                            <div class="row">
+                                                <div style="display:flex;">
+                                                    <h1>
+                                                        <t t-esc="state.tests_confirm_data.name"/>
+                                                    </h1>
+                                                    <img t-if="state.tests_confirm_data.image_1920" t-att-src="'data:image/png;base64,' + state.tests_confirm_data.image_1920"
+                                                         style="height:50px;width:50px;margin-left:auto;"/>
+                                                </div>
+                                                <table class="table table-bordered"
+                                                       width="100%">
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Phone
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.phone">
+                                                                <t t-esc="state.tests_confirm_data.phone"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Email
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.email">
+                                                                <t t-esc="state.tests_confirm_data.email"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Date of
+                                                                Birth
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.dob">
+                                                                <t t-esc="state.tests_confirm_data.dob"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Gender
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.gender">
+                                                                <t t-esc="state.tests_confirm_data.gender"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Marital
+                                                                Status
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.status">
+                                                                <t t-esc="state.tests_confirm_data.status"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Blood
+                                                                Group
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.blood_group">
+                                                                <t t-esc="state.tests_confirm_data.blood_group"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Slot
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <p id="patient-slot1"
+                                                               style="margin:0"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Doctor
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.doctor">
+                                                                <t t-esc="state.tests_confirm_data.doctor"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="custom_tr">
+                                                        <td>
+                                                            <strong>Patient
+                                                                type
+                                                            </strong>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="state.tests_confirm_data.patient_type">
+                                                                <t t-esc="state.tests_confirm_data.patient_type"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div id="action-table"/>
+                                                <h2 style="margin-top:15px;">Test Details</h2>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Sl</th>
+                                                            <th>Name</th>
+                                                            <th>Lead</th>
+                                                            <th>Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr t-foreach="state.test_data" t-as="testdata" t-key="testdata.id">
+                                                            <td>
+                                                                <t t-esc="testdata.id"/>
+                                                            </td>
+                                                            <td>
+                                                                <t t-esc="testdata.name"/>
+                                                            </td>
+                                                            <td>
+                                                                <t t-esc="testdata.patient_lead"/>
+                                                            </td>
+                                                            <td>
+                                                                <t t-esc="testdata.price"/>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div id="action-button">
+                                                    <button class="btn btn-primary col-md-2"
+                                                            id="confirm-test"
+                                                            t-on-click="confirmLabTest">
+                                                        Confirm
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div t-if="state.activeView === 'process'" class="process_test_view"
+                                         t-ref="process_test_view">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sequence</th>
+                                                    <th>Patient</th>
+                                                    <th>Date</th>
+                                                    <th>Price</th>
+                                                    <th>State</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="all_test_data">
+                                                <t t-foreach="state.all_test_data"
+                                                   t-as="testdata"
+                                                   t-key="testdata.id">
+                                                    <t t-set="index"
+                                                       t-value="testdata.id"/>
+                                                    <tr class="all-test-data"
+                                                        t-on-click="fetch_all_test_data"
+                                                        t-att-data-index="index">
+                                                        <td>
+                                                            <t t-esc="testdata.display_name"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="testdata.patient_id[1]"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="testdata.date"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="testdata.total_price"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="testdata.state"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div t-if="state.activeView === 'published'" class="published_data"
+                                         t-ref="published_data">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sequence</th>
+                                                    <th>Patient</th>
+                                                    <th>Test</th>
+                                                    <th>Normal</th>
+                                                    <th>Result</th>
+                                                    <th>Unit</th>
+                                                    <th style="text-align:-webkit-center;">Attachment</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="record_list_published">
+                                                <t t-foreach="state.published_data"
+                                                   t-as="published_data"
+                                                   t-key="published_data.id">
+                                                    <tr>
+                                                        <td>
+                                                            <t t-esc="published_data.parent_id"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="published_data.patient_id[1]"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="published_data.test_id"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="published_data.normal">
+                                                                <t t-esc="published_data.normal"/>
+                                                            </t>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="published_data.result">
+                                                                <t t-esc="published_data.result"/>
+                                                            </t>
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="published_data.unit">
+                                                                <t t-esc="published_data.unit"/>
+                                                            </t>
+                                                        </td>
+                                                        <td style="text-align:-webkit-center;">
+                                                            <t t-if="published_data.attachment_id">
+                                                                <a t-attf-href="/web/content/#{published_data.attachment_id}?download=true&amp;access_token="
+                                                                   class='btn btn-outline-primary fa fa-download'/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

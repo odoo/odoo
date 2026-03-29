@@ -44,7 +44,7 @@
                     <filter string="Addons Path" name="addons_path" domain="[]" context="{'group_by': 'addons_path_id'}" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//filter[@name='app']" position="before">
-                    <filter name="odooapp" string="Odoo中文应用" domain="[('module_type', '=', 'odooapp.cn')]"/>
+                    <filter name="odooapp" string="OEM Modules" domain="[('module_type', '=', 'odooapp.cn')]"/>
                 </xpath>
             </field>
         </record>
@@ -134,8 +134,8 @@
             <!--<field name="context">{'search_default_is_local_updatable':1}</field>-->
         <!--</record>-->
         <record id="action_module_odooapp" model="ir.actions.act_window">
-            <field name="name">Odoo中文应用</field>
-            <field name="path">odooapp</field>
+            <field name="name">OEM Modules</field>
+            <field name="path">oem-modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,list,form</field>
             <field name="context">{'search_default_odooapp': 1}</field>

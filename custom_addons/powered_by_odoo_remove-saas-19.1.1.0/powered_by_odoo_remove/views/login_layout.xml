@@ -4,10 +4,10 @@
     <template id="remove_powered_by_login" inherit_id="web.login_layout">
         <xpath expr="//div[hasclass('card-body')]//div[hasclass('text-center') and hasclass('small') and hasclass('mt-4')]" position="replace">
             <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
+                <t t-set="show_poweredby" t-value="request.env['ir.config_parameter'].sudo().get_param('app_show_poweredby', 'False') == 'True'"/>
                 <t t-if="not disable_database_manager">
-                    <a class="border-end pe-2 me-1" href="/web/database/manager">Kodoo Databases</a>
+                    <a t-attf-class="#{show_poweredby and 'border-end pe-2 me-1' or ''}" href="/web/database/manager">Manage Databases</a>
                 </t>
-                <span>Powered by <span>Kodoo</span></span>
             </div>
         </xpath>
     </template>

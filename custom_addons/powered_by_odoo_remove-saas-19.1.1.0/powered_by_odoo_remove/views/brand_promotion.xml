@@ -3,11 +3,7 @@
 <odoo>
     <template id="remove_brand_promotion" inherit_id="web.brand_promotion_message">
         <xpath expr="." position="replace">
-            <t t-set="kodoo_badge">
-                <span class="badge text-bg-light">Kodoo</span>
-            </t>
-            <t t-set="final_message">Powered by %s%s</t>
-            <t t-out="final_message % (kodoo_badge, _message and ('- ' + _message) or '')"/>
+            <t t-out="''"/>
         </xpath>
     </template>
 </odoo>

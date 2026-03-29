@@ -22,19 +22,17 @@
 # description:
 
 {
-    'name': 'Odoo19 Tweak OEM Development Enhance.Boost,Customize,Ai Employee,UI,Security,Remove Data All in One-优化提速53+项大全',
+    'name': 'Kodoo Platform Customization',
     'version': '19.0.26.02.02',
-    'author': 'odooai.cn',
+    'author': 'Kodoo',
     'category': 'Extra Tools',
-    'website': 'https://www.odooai.cn',
-    'live_test_url': 'https://demo.odooapp.cn',
+    'website': 'https://kodoo.online',
+    'live_test_url': 'https://kodoo.online',
     'license': 'LGPL-3',
     'sequence': 2,
     'images': ['static/description/banner.gif', 'static/description/banner.png'],
     'summary': """
-    53+ Odoo Enhance in 1 click Tweak odoo. Change Odoo to your OEM brand.all in one odoo enhancement. for Customize,UI,Boost Security,Development.
-    Easy reset data, clear data, reset account chart, reset Demo data.
-    For quick debug. Set brand,Language Switcher all in one.
+    White-label, admin UX and operational customization tools for the Kodoo platform.
     """,
     'depends': [
         'app_common',
@@ -96,69 +94,21 @@
     'application': True,
     'auto_install': True,
     'description': """
-    App Customize Odoo (Change Title,Language,Documentation,Quick Debug)
-    ============
-    White label odoo. UI and Development Enhance.
-    Support Odoo 19,18,17,16,15,14,13,12,11,10,9.
-    You can config odoo, make it look like your own platform.
-    ============
-    1. Deletes Odoo label in footer
-    2. Replaces "Odoo" in Windows title
-    3. Customize Documentation, Support, About links and title in usermenu
-    4. Adds "Developer mode" link to the top right-hand User Menu.
-    5. Adds Quick Language Switcher to the top right-hand User Menu.
-    6. Adds Country flags  to the top right-hand User Menu.
-    7. Adds English and Chinese user documentation access to the top right-hand User Menu.
-    8. Adds developer documentation access to the top right-hand User Menu.
-    9. Customize "My odoo.com account" button
-    10. Standalone setting panel, easy to setup.
-    11. Provide 236 country flags.
-    12. Multi-language Support.
-    13. Change Powered by Odoo in login screen.(Please change '../views/app_odoo_customize_view.xml' #15)
-    14. Quick delete test data in Apps: Sales/POS/Purchase/MRP/Inventory/Accounting/Project/Message/Workflow etc.
-    15. Reset All the Sequence to beginning of 1: SO/PO/MO/Invoice...
-    16. Fix odoo reload module translation bug while enable english language
-    17. Stop Odoo Auto Subscribe(Moved to app_odoo_boost)
-    18. Show/Hide Author and Website in Apps Dashboard
-    19. One Click to clear all data (Sometime pls click twice)
-    20. Show quick upgrade in app dashboard, click to show module info not go to odoo.com
-    21. Can clear and reset account chart. Be cautious
-    22. Update online manual and developer document to odoo16
-    23. Add reset or clear website blog data
-    24. Customize Odoo Native Module(eg. Enterprise) Url
-    25. Add remove expense data
-    26. Add multi uninstall modules
-    27. Add odoo boost modules link.
-    28. Easy Menu manager.
-    29. Apps version compare. Add Install version in App list. Add Local updatable filter in app list.
-    30. 1 key export app translate file like .po file.
-    31. Show or hide odoo Referral in the top menu.
-    32. Fix odoo bug of complete name bug of product category and stock location..
-    33. Add Demo Ribbon Setting.
-    34. Add Remove all quality data.
-    35. Fixed for odoo 14.
-    36. Add refresh translate for multi module.
-    37. Easy noupdate manage for External Identifiers(xml_id)
-    38. Add Draggable and sizeable Dialog enable.
-    39. Only erp manager can see debug menu..
-    40. Fix support for enterprise version.
-    41. Fix odoo bug, when click Preferences menu not hide in mobile.
-    42. Mobile Enhance. Add menu navbar setup for top or bottom. navigator footer support.
-    43. Check to only Debug / Debug Assets for Odoo Admin. Deny debug from url for other user.
-    44. Check to stop subscribe and follow. This to make odoo speed up.
-    45. Add addons path info to module.
-    46. Add Help documentation anywhere.  easy get help for any odoo operation or action.
-    47. Add ai robot app integration. Use Ai as your employee.
-    48. Add configurable Test Label, Demo Ribbon on top menu.
-    49. Add SaaS client switch for online Translate sync(18 only).
-    50. Quick Menu manager. de-active / active menu.
-    51. Show menu xml_id in debug asset mode.  easy for menu and action development.
-    52. Quick View Fields list and View List of every model.
-    53. Quick management and view of [Application Access Category].
+    Kodoo platform customization layer for Odoo.
 
-    This module can help to white label the Odoo.
-    Also helpful for training and support for your odoo end-user.
-    The user can get the help document just by one click.
+    This module centralizes white-label settings, admin UX improvements,
+    user-menu options, branding cleanup and operational utilities used by
+    the Kodoo deployment.
+
+    Main capabilities:
+    1. Platform title and brand customization
+    2. Login and footer branding cleanup
+    3. Quick language and debug access
+    4. User-menu support, documentation and portal links
+    5. Interface and ribbon configuration
+    6. Module management helpers and upgrade shortcuts
+    7. Safe data cleanup utilities for administrative use
+    8. Extra visibility for technical metadata and menus
     ## 在符合odoo开源协议的前提下，自定义你的odoo系统
     可完全自行设置下列选项，将 odoo 整合进自有软件产品
     支持Odoo 19,18,17,16,15,14,13,12,11,10,9 版本，社区版企业版通用

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Reception dashboard template-->
+<templates id="reception_dashboard" xml:space="preserve">
+    <t t-name="ReceptionDashboard" owl="1">
+        <div class="oh_dashboards" style="overflow: scroll;height: 100%;"
+             t-ref="root">
+            <div class="container-fluid o_pj_dashboard">
+                <div style="width:100%; margin:0; padding:0;">
+                    <div class="row">
+                        <div class="col-12 r_dashButtonContainer">
+                            <div id="patient"
+                                 class="col-md-4 r_dashButton o_patient_button"
+                                 t-on-click="createPatient">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1512/1512910.png"
+                                     width="65px" class="patient_img"/>
+                                <p>Patient</p>
+                            </div>
+                            <div id="appointment"
+                                 class="col-md-4 r_dashButton o_appointment_button"
+                                    t-on-click="fetchAppointmentData">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1069/1069152.png"
+                                     width="65px" class="apnmnt_img"/>
+                                <p>Appointment</p>
+                            </div>
+                            <div id="rw"
+                                 class="col-md-4 r_dashButton o_room_ward_button" t-on-click="fetchRoomWard">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2184/2184890.png"
+                                     width="65px" class="room_ward_img"/>
+                                <p>Room/Ward</p>
+                            </div>
+                        </div>
+                        <div id="view_main" class="col-md-6 col-sm-6">
+                            <div id="buttons" class="row r_AppntBtn">
+                                <div class="row rd_buttons" t-ref="rd_buttons">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div id="outpatient" class="col-md-4 r_dashButton o_outpatient_button"
+                                        t-on-click="fetchAppointmentData">
+                                            <img src="/base_hospital_management/static/src/img/out_p.png" width="80px" class="out_p_image"/>
+                                            <p>Outpatient</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div id="inpatient" class="col-md-4 r_dashButton o_inpatient_button" t-on-click="createInPatient">
+                                            <img src="/base_hospital_management/static/src/img/in_p.png" width="80px" class="in_p_img"/>
+                                            <p>Inpatient</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="controls" class="row r_controls"/>
+                                <div id="content" class="col r_Container container">
+                                    <div class="row r_Profile" t-ref="patient_creation">
+                                        <span class="text-center mb-3 center"><h1>Create Patient</h1></span>
+                                        <table class="hsp_table" id="patient_table">
+                                            <div style="display: flex;">
+                                                <div style="min-width: -webkit-fill-available; margin-left: 110px;">
+                                                    <tr class="tr_name">
+                                                        <td class="td_name">Name :</td>
+                                                        <td><input type="text" id="patient-name" class="form-control" placeholder="Patient Name"/></td>
+                                                    </tr>
+                                                <tr><td>Photo :</td><td><input type="file" name="image" id="patient-img" class="form-control" accept="image/png, image/gif, image/jpeg"/></td></tr>
+                                                <tr><td>Phone :</td><td><input type="tel" id="patient-phone" placeholder="Phone Number" class="form-control"/></td></tr>
+                                                <tr><td>Email:</td><td><input type="email" class="form-control" id="patient-mail" placeholder="Email"/></td></tr>
+                                                </div>
+                                                <div style="min-width: -webkit-fill-available; margin-left: 110px;">
+                                                <tr><td>Date of Birth :</td><td><input type="date" class="form-control" id="patient-dob" placeholder="Date of Birth"/></td></tr>
+                                                <tr><td>Blood Group :</td><td><select id="patient-bloodgroup" class="form-control bloodgroup" name="group">
+                                                    <option value="a">A</option>
+                                                    <option value="b">B</option>
+                                                    <option value="ab">AB</option>
+                                                    <option value="o">O</option>
+                                                </select>
+                                                <input type="radio" id="rhtype" class="form-check-input o_radio_input" checked="true" name="rhtype" value="+"/>
+                                                <label class="radio" style="font-size:15px;" for="+">+ve</label>
+                                                <input type="radio" id="rhtype" class="form-check-input o_radio_input" name="rhtype" value="-"/>
+                                                <label class="radio" style="font-size:15px;" for="-">-ve</label></td></tr>
+                                                <tr><td>Gender :</td><td>
+                                                <div class="d-flex align-items-center" id="p_radio">
+                                                    <input type="radio" class="form-check-input mr-2 o_radio_input" checked="true" id="patient-gender" name="gender" value="male"/>
+                                                    <label class="radio">Male</label>
+                                                    <input type="radio" class="form-check-input mr-2 o_radio_input" id="patient-gender" name="gender" value="female"/>
+                                                    <label class="radio">Female</label>
+                                                    <input type="radio" class="form-check-input mr-2 o_radio_input" id="patient-gender" name="gender" value="other"/>
+                                                    <label class="radio">Other</label>
+                                                </div>
+                                                </td></tr>
+                                                <tr><td>Marital Status :</td><td><select id="patient-m-status" class="form-control marital_status" name="status">
+                                                                                    <option value="married">Married</option><option value="unmarried">Unmarried</option><option value="widow">Widow</option><option value="widower">Widower</option><option value="divorcee">Divorce</option>
+                                                                                </select></td></tr>
+                                                </div>
+                                            </div>
+                                        </table>
+                                        <center class="mt-3 pt-3 mb-3 save">
+                                            <button class="btn btn-outline-success save_patient" t-on-click="savePatient">Save</button>
+                                        </center>
+                                    </div>
+                                    <div class="out-patient" t-ref="out-patient">
+                                        <span class="text-center" ><h1 style="margin-bottom:4rem;">Create Outpatient</h1></span>
+                                        <div class="row" style="margin-left:150px" id="op_table">
+                                            <div class="col-m-12 col-md-6 col-lg-6">
+                                                <label for="select_type">
+                                                Patient Card :</label>
+                                                    <select  id="select_type" class="form-control select_type" name="group" t-on-click="patient_card">
+                                                        <option value="have_card">Have Patient Card</option>
+                                                        <option value="dont_have_card">Dont have Patient Card</option>
+                                                    </select>
+                                                <label id="patient_label" for ="sl_patient" >Patient ID* :</label>
+                                                <select type="text" id="sl_patient" class="form-control select_patient" autofocus="autofocus" placeholder="Select Out Patient" t-on-change="fetch_patient_id">
+                                                    <option value=""></option>  <!-- Add this as a default empty option if needed -->
+                                                    <t t-foreach="state.patient_lst" t-as="patient" t-key="patient.id">
+                                                        <option t-att-value="patient.id">
+                                                            <t t-esc="patient.patient_seq + '-' + patient.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                                <label for="o_patient-name">Patient Name* :</label>
+                                                <input type="text" id="o_patient-name" class="form-control" placeholder="Patient Name"/>
+                                                <label for="o_patient-phone">Number :</label>
+                                                <input type="tel" id="o_patient-phone" placeholder="Phone Number" class="form-control"/>
+                                                <label for="o_patient-dob">Date of Birth :</label>
+                                                <input type="date" class="form-control" id="o_patient-dob" placeholder="Date of Birth"/>
+                                                <label for="o_patient_bloodgroup">Blood Group :</label>
+                                                <select id="o_patient_bloodgroup" class="form-control o_bloodgroup" name="group">
+                                                    <option value="a">A</option>
+                                                    <option value="b">B</option>
+                                                    <option value="ab">AB</option>
+                                                    <option value="o">O</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-m-12 col-md-6 col-lg-6">
+                                                <label for="o_patient-gender">Gender :</label>
+                                                <input type="radio" class="form-check-input mr-2 o_radio_input" id="o_patient-gender" checked="true" name="gender" value="male"/>
+                                                <label >Male</label>
+                                                <input type="radio" class="form-check-input mr-2 o_radio_input" id="o_patient-gender" name="gender" value="female"/>
+                                                <label >Female</label>
+                                                <input type="radio" class="form-check-input mr-3 o_radio_input" id="o_patient-gender" name="gender" value="other"/>
+                                                <label >Other</label>
+                                                <label for="op_date" style="width: 100%;padding: 16px 0px;">OP Date*: </label>
+                                                <input type="date" class="form-control" required= "1" id="op_date" placeholder="OP Date"/>
+                                                <label for="reason">Reason :</label>
+                                                <input type="text" id="reason" class="form-control reason" name="group"/>
+                                                <label for="slot">Slot :</label>
+                                                <input type="text" id="slot" class="form-control slot" name="group"/>
+                                                <label for="sl_dr">Doctor Name: </label>
+                                                <select id="sl_dr" class="form-control select_dr" name="group">
+                                                    <option value=""></option>
+                                                    <t t-foreach="state.dr_lst" t-as="doctor" t-key="doctor.id">
+                                                        <option t-att-value="doctor.id">
+                                                            <t t-esc="doctor.display_name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 d-flex justify-content-center align-items-center mt-4">
+                                            <button  class="btn btn-outline-success me-2 save_out_patient" t-on-click="save_out_patient_data">Save</button>
+                                        </div>
+                                    </div>
+                                    <div class="inpatient" t-ref="inpatient">
+                                        <span class="text-center mb-3" style="margin-bottom:4rem;margin: 25px"><h1>Create Inpatient</h1></span>
+                                        <table class="hsp_table" style="margin:0 auto;">
+                                            <tr><td>Patient ID* : </td><td>
+                                                <select id="sl_patient_id" class="form-control select_patient_id" name="group">
+                                                    <option value=""></option>
+                                                    <t t-foreach="state.patient_id_lst" t-as="patient" t-key="patient.id">
+                                                        <option t-att-value="patient.id">
+                                                            <t t-esc="patient.patient_seq + '-' + patient.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </td></tr>
+                                            <tr><td>Reason of Admission :</td><td><input type="text" class="form-control reason_of_admission" id="reason_of_admission" placeholder="Reason of Admission"/></td></tr>
+                                            <tr>
+                                                <td>Admission Type : </td>
+                                                <td><select  id="admission_type" class="form-control admission_type" name="group">
+                                                    <option value="emergency">Emergency Admission</option>
+                                                    <option value="routine">Routine Admission</option>
+                                                </select></td>
+                                            </tr>
+                                            <tr><td>Attending Doctor*:</td>
+                                            <td>
+                                                <select id="attending_doctor_id" class="form-control attending_doctor_id" name="group">
+                                                    <option value=""></option>
+                                                    <t t-foreach="state.attending_dr_lst" t-as="doctor" t-key="doctor.id">
+                                                        <option t-att-value="doctor.id">
+                                                            <t t-esc="doctor.display_name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </td>
+                                            </tr>
+                                        </table>
+                                        <center class="mt-5 pt-3">
+                                        <button style="width:15%;" class="btn btn-outline-success save_in_patient" t-on-click="save_in_patient_data">Save</button>
+                                        </center>
+                                    </div>
+                                    <div class="room-ward" t-ref="room_ward" style="display:flex;">
+                                        <div class="col">
+                                            <div id="room" class="col-md-4 r_dashButton o_room_button" t-on-click="fetchRoom">
+                                                <img src="https://static.thenounproject.com/png/1183390-200.png" width="80px" class="apnmnt_img"/>
+                                                <p>Rooms</p>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div id="ward" class="col-md-4 r_dashButton o_ward_button" t-on-click="fetchWard">
+                                                <img src="https://cdn-icons-png.flaticon.com/512/1069/1069152.png" width="80px" class="apnmnt_img"/>
+                                                <p>Wards</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ward" t-ref="ward">
+                                        <div class="row o_inPatientList">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Ward Name</th>
+                                                        <th class="text-center">Block Name</th>
+                                                        <th class="text-center">Floor No.</th>
+                                                        <th class="text-center">No. of Beds Available</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="record_list_ward">
+                                                    <t t-foreach="state.ward_data" t-as="ward_data" t-key="ward_data.id">
+                                                        <tr>
+                                                            <td class="text-center"><t t-esc="ward_data.display_name"/> </td>
+                                                            <td class="text-center"><t t-esc="ward_data.building_id[1]"/> </td>
+                                                            <td class="text-center"><t t-esc="ward_data.floor_no"/> </td>
+                                                            <td class="text-center"><t t-esc="ward_data.bed_count"/> </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="room" t-ref="room">
+                                        <div class="row o_inPatientList">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Room No.</th>
+                                                        <th class="text-center">Bed Type</th>
+                                                        <th class="text-center">Rent</th>
+                                                        <th class="text-center">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="record_list_room">
+                                                     <t t-foreach="state.room_data" t-as="room_data" t-key="room_data.id">
+                                                        <tr>
+                                                            <td class="text-center"><t t-esc="room_data.display_name"/> </td>
+                                                            <td class="text-center"><t t-esc="room_data.bed_type"/> </td>
+                                                            <td class="text-center"><t t-esc="room_data.rent"/> </td>
+                                                            <td class="text-center"><t t-esc="room_data.state"/> </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <div id="view_secondary" class="col">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

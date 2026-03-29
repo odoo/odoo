@@ -20,7 +20,7 @@ class IrModuleModule(models.Model):
     addons_path_id = fields.Many2one('ir.module.addons.path', string='Addons Path ID', readonly=True)
     addons_path = fields.Char(string='Addons Path', related='addons_path_id.path', readonly=True)
     license = fields.Char(readonly=True)
-    module_type = fields.Selection(selection_add=[('odooapp.cn', 'Odoo中文应用')], default='official')
+    module_type = fields.Selection(selection_add=[('odooapp.cn', 'OEM Modules')], default='official')
 
     def module_multi_uninstall(self):
         """ Perform the various steps required to uninstall a module completely

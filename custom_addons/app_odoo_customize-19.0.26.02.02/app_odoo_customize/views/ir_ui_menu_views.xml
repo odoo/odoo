@@ -59,7 +59,7 @@
 <!--        </record>-->
         <menuitem
                 id="menu_app_group"
-                name="odooAi"
+                name="Kodoo"
                 parent="base.menu_administration"
                 sequence="0"
                 groups="base.group_system"/>
@@ -100,21 +100,22 @@
                 groups="base.group_system"/>
         <menuitem
             id="menu_module_odooapp"
-            name="Odoo中文应用"
+            name="OEM Modules"
             parent="base.menu_apps"
             sequence="6"
             action="action_module_odooapp"/>
 
         <record model='ir.actions.act_url' id='action_odooapp_store'>
-            <field name='name'>Odoo中文应用商店</field>
-            <field name='url'>https://www.odooapp.cn</field>
+            <field name='name'>Portal Kodoo</field>
+            <field name='url'>https://kodoo.online</field>
         </record>
 
         <menuitem
             id="menu_odooapp_store"
             parent="base.menu_apps"
             sequence="7"
-            action="action_odooapp_store"/>
+            action="action_odooapp_store"
+            groups="base.group_no_one"/>
         <!--        应用权限分类-->
         <menuitem
             id="menu_ir_module_category_list"

@@ -38,43 +38,25 @@
 ##############################################################################
 
 {
-    'name': "odooAi Common Util and Tools,欧度智能基础功能及面板",
+    'name': "Kodoo Platform Core",
     'version': '19.0.26.02.04',
-    'author': 'odooai.cn',
+    'author': 'Kodoo',
     'category': 'Extra tools',
-    'website': 'https://www.odooai.cn',
-    'live_test_url': 'https://demo.odooapp.cn',
+    'website': 'https://kodoo.online',
+    'live_test_url': 'https://kodoo.online',
     'license': 'LGPL-3',
     'sequence': 2,
     'price': 0.00,
     'currency': 'EUR',
     'images': ['static/description/banner.png'],
     'summary': '''
-    Core for common use for odooai.cn apps.
-    基础核心及云面板，必须没有要被依赖字段及视图等，实现auto_install
+    Core utilities and settings foundation for Kodoo platform customizations.
     ''',
     'description': '''
-    need to setup odoo.conf, add follow:
-    server_wide_modules = web,app_common
-    1. Quick import data from excel with .py code
-    2. Quick m2o default value
-    3. Filter for useless field
-    4. UTC local timezone convert
-    5. Get browser ua, user-agent
-    6. Image to local, image url to local, media to local attachment
-    7. Log cron job
-    8. Boost for less no use mail
-    9. Customize .rng file
-    10. Misc like get distance between two points
-    11. Multi-language Support. Multi-Company Support.
-    12. Support Odoo 19,18,17,16,15,14,13,12, Enterprise and Community and odoo.sh Edition.
-    13. Full Open Source.
-    ==========
-    1.
-    2.
-    3. 多语言支持
-    4. 多公司支持
-    5. Odoo 16, 企业版，社区版，多版本支持
+    Base module for Kodoo platform customizations.
+
+    It provides the shared settings structure, operational helpers and
+    backend extension points used by the Kodoo branding and admin addons.
     ''',
     'depends': [
         'mail',

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Hospital Management access category-->
+    <record id="base_hospital_management_access" model="ir.module.category">
+        <field name="name">Hospital Management</field>
+        <field name="description">User access levels for Hospital Management
+        </field>
+        <field name="sequence">10</field>
+    </record>
+    <!--hospital management groups-->
+    <record id="group_hospital_management" model="res.groups">
+        <field name="name">Hospital Management</field>
+    </record>
+    <!--hospital management privilege-->
+    <record model="res.groups.privilege" id="base_hospital_management_access_privilege">
+        <field name="name">Hospital Management</field>
+        <field name="category_id" ref="base_hospital_management.base_hospital_management_access"/>
+        <field name="sequence">10</field>
+    </record>
+    <!--Lab Assistant access group-->
+    <record id="base_hospital_management_group_lab_assistant"
+            model="res.groups">
+        <field name="name">Lab Assistant</field>
+        <field name="sequence">20</field>
+        <field name="comment"></field>
+        <field name="privilege_id" ref="base_hospital_management_access_privilege"/>
+        <field name="implied_ids" eval="[(4, ref('base_hospital_management.group_hospital_management'))]"/>
+    </record>
+    <!--Pharmacist access group-->
+    <record id="base_hospital_management_group_pharmacist" model="res.groups">
+        <field name="name">Pharmacist</field>
+        <field name="sequence">21</field>
+        <field name="comment"></field>
+        <field name="privilege_id" ref="base_hospital_management_access_privilege"/>
+        <field name="implied_ids" eval="[(4, ref('base_hospital_management.group_hospital_management'))]"/>
+    </record>
+    <!--    Nurse access group-->
+    <record id="base_hospital_management_group_nurse" model="res.groups">
+        <field name="name">Nurse</field>
+        <field name="sequence">22</field>
+        <field name="comment"></field>
+        <field name="privilege_id" ref="base_hospital_management_access_privilege"/>
+        <field name="implied_ids" eval="[(4, ref('base_hospital_management.group_hospital_management'))]"/>
+    </record>
+    <!--Doctor access group-->
+    <record id="base_hospital_management_group_doctor" model="res.groups">
+        <field name="name">Doctor</field>
+        <field name="sequence">23</field>
+        <field name="comment"></field>
+        <field name="privilege_id" ref="base_hospital_management_access_privilege"/>
+        <field name="implied_ids" eval="[(4, ref('base_hospital_management.group_hospital_management'))]"/>
+    </record>
+    <!--Receptionist access group-->
+    <record id="base_hospital_management_group_receptionist" model="res.groups">
+        <field name="name">Receptionist</field>
+        <field name="sequence">24</field>
+        <field name="comment"></field>
+        <field name="privilege_id" ref="base_hospital_management_access_privilege"/>
+        <field name="implied_ids" eval="[(4, ref('base_hospital_management.group_hospital_management'))]"/>
+    </record>
+    <!--Manager access group-->
+    <record id="base_hospital_management_group_manager"
+            model="res.groups">
+        <field name="name">Manager</field>
+        <field name="sequence">25</field>
+        <field name="comment"></field>
+        <field name="privilege_id" ref="base_hospital_management_access_privilege"/>
+        <field name="implied_ids" eval="[(4, ref('base_hospital_management.group_hospital_management'))]"/>
+    </record>
+</odoo>

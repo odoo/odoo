@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Doctor dashboard template-->
+<templates id="doc_dashboard" xml:space="preserve">
+    <t t-name="DoctorDashboard" owl="1">
+        <div class="oh_dashboards" t-ref="root">
+            <div class="container-fluid o_pj_dashboard">
+                <div style="width:100%; margin:0; padding:0;">
+                    <div class="row">
+                        <div> <span class="title"> Welcome</span></div>
+                        <div class="col-md-2 bg-white r_dashButtonContainer">
+                            <div class="row r_dashButton outpatient_button"
+                                 id="consultation" style="margin-top: 45px;"
+                                t-on-click="fetch_consultation">
+                                Consultation
+                            </div>
+                            <div class="row r_dashButton patient_data"
+                                 id="patient"  t-on-click="list_patient_data">
+                                Patient
+                            </div>
+                            <div class="row r_dashButton inpatient_button"
+                                 id="inpatient" t-on-click="action_list_inpatient">
+                                Inpatient
+                            </div>
+                            <div class="row r_dashButton scheduled_activity"
+                                 id="scheduled_activity" t-on-click="fetch_doctors_schedule">
+                                Surgery
+                            </div>
+                            <div class="row r_dashButton shift" id="shift"
+                            t-on-click="fetch_allocation_lines">
+                                Shift Allocation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

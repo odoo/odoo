@@ -7,9 +7,8 @@ import { session } from "@web/session";
 patch(Dialog.prototype, {
     setup() {
         super.setup();
-        const app_system_name = session.app_system_name || "odooApp";
+        const app_system_name = session.app_system_name || "Kodoo";
         this.title = app_system_name;
     },
     
 });
-

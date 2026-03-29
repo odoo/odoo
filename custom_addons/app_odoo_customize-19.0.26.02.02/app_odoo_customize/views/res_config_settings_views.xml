@@ -12,7 +12,7 @@
                     <field name="app_system_name"/>
                 </xpath>
 				<xpath expr="//div[@id='app_slot2']" position="before">
-                    <h2 name="app_security_boost_begin">Security and Boost</h2>
+                    <h2 name="app_security_boost_begin">Security and Performance</h2>
                     <div class="row mt16 o_settings_container" name="app_security_boost">
                         <group>
                             <group>
@@ -23,7 +23,7 @@
                             </group>
                         </group>
                     </div>
-                    <h2>Extra Feature</h2>
+                    <h2>Optional Features</h2>
                     <div class="row mt16 o_settings_container" name="app_modules">
                         <div class="col-lg-6 col-md-6 o_setting_box">
                             <div class="o_setting_left_pane">
@@ -31,10 +31,7 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_app_odoo_doc"/>
-                                <a href="https://apps.odoo.com/apps/modules/17.0/app_odoo_doc"
-                                   title="Get Help Documentation on current odoo operation or topic. Click to get " class="o_doc_link ml8"
-                                   target="_blank"/>
-                                <div class="">Get Help Documentation on current odoo operation or topic.</div>
+                                <div class="">Adds quick access to contextual help content.</div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 o_setting_box">
@@ -43,14 +40,12 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_app_chatgpt"/>
-                                <a href="https://apps.odoo.com/apps/modules/17.0/app_chatgpt" class="o_doc_link ml8"
-                                   target="_blank"/>
-                                <div class="">Use Ai to make odoo more powerful.</div>
+                                <div class="">Enables optional AI-related integrations for the platform.</div>
                             </div>
                         </div>
                     </div>
 
-                    <h2>UI Config</h2>
+                    <h2>Interface Settings</h2>
                     <div class="row mt16 o_settings_container" name="app_ui_config">
                         <group string="Navigator">
                             <group>
@@ -101,13 +96,13 @@
                             <div>
                                 <field name="app_ribbon_name"/>
                                 <div>
-                                    <span>Set to False to hide</span>
+                                    <span>Leave empty to hide</span>
                                 </div>
                             </div>
                             <label for="app_enterprise_url"/>
                             <div>
                                 <field name="app_enterprise_url" class="oe_inline"/>
-                                <button string="Click to set" type="object" name="set_module_url" class="ml8 oe_highlight"/>
+                                <button string="Apply to modules" type="object" name="set_module_url" class="ml8 oe_highlight"/>
                             </div>
                         </group>
                     </div>

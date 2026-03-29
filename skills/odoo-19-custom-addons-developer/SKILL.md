@@ -1,6 +1,6 @@
 ---
 name: odoo-19-custom-addons-developer
-description: Develop, extend, debug, and test Odoo 19 custom addons in this repository. Use when Codex needs to work in `custom_addons/`, especially `gov_*` modules and `custom_addons/knowledge/*`, for tasks such as creating modules, updating manifests, models, views, security rules, wizards, data files, and module-scoped tests. Prefer this skill when repo-specific addon paths, local run commands, or vendor-boundary judgment matter, and avoid editing `addons/` or vendored third-party code unless explicitly requested.
+description: Develop, extend, debug, and test Odoo 19 custom addons in this repository. Use when Codex needs to work in `custom_addons/`, for tasks such as creating modules, updating manifests, models, views, security rules, wizards, data files, and module-scoped tests. Prefer this skill when repo-specific addon paths, local run commands, or vendor-boundary judgment matter, and avoid editing `addons/` or vendored third-party code unless explicitly requested.
 ---
 
 # Odoo 19 Custom Addons Developer

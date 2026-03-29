@@ -11,5 +11,9 @@ _logger = logging.getLogger(__name__)
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    app_saas_ok = fields.Boolean('Enable CN SaaS', default=True, config_parameter='app_saas_ok',
-                                 help="Checked to Enable www.odooapp.cn cloud service.")
+    app_saas_ok = fields.Boolean(
+        'Enable managed services',
+        default=False,
+        config_parameter='app_saas_ok',
+        help="Reserved toggle for future Kodoo-managed services."
+    )

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Patient lab test report action-->
+    <record id="action_report_patient_lab_tests" model="ir.actions.report">
+        <field name="name">Patient Lab Tests</field>
+        <field name="model">lab.test.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">
+            base_hospital_management.report_patient_lab_tests
+        </field>
+        <field name="report_file">
+            base_hospital_management.report_patient_lab_tests
+        </field>
+        <field name="binding_model_id" ref="model_lab_test_line"/>
+        <field name="binding_type">report</field>
+    </record>
+    <!--    Patient lab test report template-->
+    <template id="report_patient_lab_tests">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <center>
+                    <h1>Lab Tests</h1>
+                </center>
+                <div>
+                    <strong>Date :</strong>
+                    <span t-esc="date"/>
+                </div>
+                <div>
+                    <strong>Patient's Name :</strong>
+                    <span t-esc="patient_id"/>
+                </div>
+                <div>
+                    <strong>Doctor Name :</strong>
+                    <span t-esc="doctor_name"/>
+                </div>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Test</th>
+                        <th>Normal</th>
+                        <th>Unit</th>
+                        <th>Result</th>
+                        <th>Price Including Tax</th>
+                    </tr>
+                    <tr t-foreach="datas" t-as="line" style="text-align:center">
+                        <td>
+                            <span t-esc="line['name']"/>
+                        </td>
+                        <td>
+                            <span t-esc="line['normal']"/>
+                        </td>
+                        <td>
+                            <span t-esc="line['uom_id']"/>
+                        </td>
+                        <td>
+                            <span t-esc="line['result']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['currency']"/>
+                            <span t-esc="line['cost']"/>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Pharmacy dashboard template -->
+<template>
+    <t t-name="PharmacyOrderLines">
+        <tr class="tbl_row">
+            <td>
+                <Dropdown>
+                    <button class="btn btn-outline-secondary dropdown-toggle">
+                        <span class="fa fa-book me-2"/>
+                        <span t-esc="getSelectedMedicineName()"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="state.medicines" t-as="med" t-key="med.id">
+                            <DropdownItem
+                                onSelected="() => this._onChange_prod_price(med.id)">
+                                <span t-out="med.name"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </td>
+            <td>
+                <input t-model="lineState.qty" type="number" id="qty" class="form-control qty"
+                       t-on-change="_onChange_prod_qty"/>
+            </td>
+            <td>
+                <select name="uom_sl" class="form-control select_uom">
+                    <t t-foreach="state.units" t-as="unit" t-key="unit.id">
+                        <option t-att-value="unit.id">
+                            <t t-esc="unit['name']"/>
+                        </option>
+                    </t>
+                </select>
+            </td>
+            <td>
+                $<span t-out="lineState.price" style="margin-left: 3px;"/>
+            </td>
+            <td style="display: flex;">
+                $<span t-out="lineState.sub_total" style="margin-left: 3px;"/>
+            </td>
+            <td>
+                <button class="delete-row-btn" t-on-click="remove_line">
+                    Remove
+                </button>
+            </td>
+        </tr>
+    </t>
+</template>

@@ -2,7 +2,7 @@
     'name': 'Accountant',
     'version': '1.0.3',
     'category': 'Accounting',
-    'summary': 'Your friendly neighborhood accountant for all your financial needs. '
+    'summary': 'Your friendly neighborhood accountant for all your financial needs.',
 #    'summary': 'Accounting Reports, Asset Management and Budget, Recurring Payments, '
 #               'Lock Dates, Fiscal Year, Accounting Dashboard, Financial Reports, '
 #               'Customer Follow up Management, Bank Statement Import',
@@ -11,7 +11,6 @@
                    'Bank Statement Import, Customer Follow Up Management,'
                    'Account Lock Date, Accounting Dashboard',
 #    'live_test_url': 'https://www.youtube.com/c/OdooMates',
-    'sequence': '1',
     'sequence': '1',
     'website': 'https://www.walnutit.com',
     'author': 'bootstrapprx,Odoo Mates, Walnut Software Solutions, Odoo SA',
@@ -40,6 +39,7 @@
         'views/account_journal.xml',
     ],
     'pre_init_hook': 'pre_init_hook',
+    'installable': True,
     'application': True,
     'images': ['static/description/banner.gif'],
 }

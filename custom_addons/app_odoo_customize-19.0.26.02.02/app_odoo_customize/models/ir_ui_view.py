@@ -13,5 +13,5 @@ class View(models.Model):
         # if template in ['web.login', 'web.webclient_bootstrap']:
         if not values:
             values = {}
-        values["title"] = values["app_title"] = self.env['ir.config_parameter'].sudo().get_param("app_system_name", "odooAi")
+        values["title"] = values["app_title"] = self.env['ir.config_parameter'].sudo().get_param("app_system_name", "Kodoo")
         return super(View, self)._render_template(template, values=values, engine=engine)

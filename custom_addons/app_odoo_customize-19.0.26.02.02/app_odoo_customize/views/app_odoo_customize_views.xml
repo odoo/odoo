@@ -3,15 +3,22 @@
     <!--    处理 title 及 theme-color-->
     <template id="app_layout" inherit_id="web.layout" name="app Web layout">
         <xpath expr="//title" position="replace">
-            <title t-esc="title or 'odooAi'"/>
+            <title t-esc="title or 'Kodoo'"/>
         </xpath>
     </template>
     <!--    end-->
     <template id="replace_login" name="Login Layout" inherit_id="web.login_layout">
-        <xpath expr="//a[@target='_blank']" position="replace">
-            <a href="https://www.odooai.cn" target="_blank">Powered by
-                <span>odooai.cn</span>
-            </a>
+        <xpath expr="//div[hasclass('card-body')]//div[hasclass('text-center') and hasclass('small') and hasclass('mt-4') and hasclass('pt-3') and hasclass('border-top')]" position="replace">
+            <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
+                <t t-set="app_system_name" t-value="request.env['ir.config_parameter'].sudo().get_param('app_system_name', 'Kodoo')"/>
+                <t t-set="show_poweredby" t-value="request.env['ir.config_parameter'].sudo().get_param('app_show_poweredby', 'False') == 'True'"/>
+                <t t-if="not disable_database_manager">
+                    <a t-attf-class="#{show_poweredby and 'border-end pe-2 me-1' or ''}" href="/web/database/manager">Manage Databases</a>
+                </t>
+                <t t-if="show_poweredby">
+                    <span>Powered by <span t-out="app_system_name"/></span>
+                </t>
+            </div>
         </xpath>
     </template>
     <template id="replace_copyright_name" name="Copyright Name" inherit_id="web.frontend_layout">

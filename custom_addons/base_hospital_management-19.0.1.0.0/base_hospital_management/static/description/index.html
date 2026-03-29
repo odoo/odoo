@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hospital Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+
+<body style="font-family: &quot;Montserrat&quot;, sans-serif;background-color: #71639e08;">
+<div class="container-fluid cmpad">
+    <div class="supports my-3 py-3" style="    border: 2px solid #71639e10;
+    padding: 0 35px;
+    border-radius: 10px;    border: 2px solid #e9ecef;background-color: white;">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-lg-3">
+                <div class="my-3 mx-auto mx-sm-0" style="width: 250px; ">
+                    <img src="http://apps.odoocdn.com/apps/assets/17.0/theme_boec/images/Cybrosys.png?fcdde35"
+                         style="width: 100%;">
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="my-3 d-flex align-items-center justify-content-center justify-content-sm-end">
+                        <span class="me-3"><b>Supports: </b></span>
+                        <div class="text-center" style="
+                    background-color: #71639e !important;
+                    font-size: 1rem !important;
+                    color: #fff !important;
+                    font-weight: 500 !important;
+                    padding: 8px !important;
+                    margin: 0 3px !important;
+                    border-radius: 50px !important;
+                    min-width: 130px !important;
+                  ">
+                            Community
+                        </div>
+                        <div class="text-center" style="
+  background-color: #9e6390 !important;
+  font-size: 1rem !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+  padding: 8px !important;
+  margin: 0 3px !important;
+  border-radius: 50px !important;
+  min-width: 130px !important;
+">
+                            Enterprise
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px;display: flex;justify-content: end;float: right;">
+                    <div class="d-flex align-items-center justify-content-end flex-wrap gap-2">
+                        <span class="me-3"><b>Availability: </b></span>
+                        <div class="d-flex align-items-center justify-content-center gap-2 text-center col" style="
+                    border: 2px solid #ebebeb;
+    font-size: 1rem !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    margin: 0 3px !important;
+    border-radius: 20px !important;
+    min-width: 150px !important;
+
+                  ">
+
+                            <img src="./assets/icons/close.png" alt="" width="18" height="18">
+                            Odoo Online
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center gap-2 text-center col" style="
+                    border: 2px solid #ebebeb;
+    font-size: 1rem !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    margin: 0 3px !important;
+    border-radius: 20px !important;
+    min-width: 150px !important;
+
+                  ">
+
+                            <img src="./assets/icons/tick.png" alt="" width="18" height="18">
+                            Odoo.sh
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center gap-2 text-center col" style="
+                   border: 2px solid #ebebeb;
+    font-size: 1rem !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    margin: 0 3px !important;
+    border-radius: 20px !important;
+    min-width: 150px !important;
+
+                  ">
+
+                            <img src="./assets/icons/tick.png" alt="" width="18" height="18">
+                            On Premise
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid cmpad text-center py-5 py-md-3">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="mainhead" style="font-size: 2.3rem;padding-top: 1rem;font-weight: 700;color: black;">
+            </h3>
+            <p class="para mb-4" style="font-size: 20px;color: #6b7280;"></p>
+
+            <div class="col-lg-8 mx-auto gap-4 d-flex flex-column align-items-center">
+
+                <h1 class="text-center text-uppercase my-0"
+                    style="
+  color: #121212;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: normal;
+">Hospital Management</span>
+                </h1>
+                <p class="para mb-4" style="font-size: 20px;color: #6b7280;">
+                    This Module Helps to Manage Patients Records, Doctors Details,
+                    Lab Management , Employee Management etc. And there is Dashboard
+                    Created under the module that help to Analyze Services like Patient Details,
+                    Lab Details, Test Details Doctor's Allocations
+                </p>
+            </div>
+
+            <div class="d-flex justify-content-center gap-1 flex-wrap">
+                <div class="col-lg-12 d-flex justify-content-center align-items-center"
+                             style="margin: 3rem 0;">
+                            <img src="./assets/icons/brand-pair.svg"
+                                 width="100%"
+                                 height="auto"
+                                 style="width: 50%"
+                                 class="img-responsive"/>
+                        </div>
+                <a href="mailto:"
+                   class="contact-btn email-btn d-flex align-items-center gap-2 justify-content-center"
+                   style="position: relative;padding: 15px 25px;border: none;border-radius: 50px;font-size: 16px;font-weight: 600;text-decoration: none;color: white;cursor: pointer;min-width: 200px;justify-content: center;background-color: #4facfe">
+                    <img src="./assets/icons/mail.png" alt="" width="25" height="25">
+                    <span class="btn-text" style="font-size: 15px;letter-spacing: 0.5px;">Email Us</span>
+                </a>
+
+                <a href="skype:"
+                   class="contact-btn skype-btn d-flex align-items-center gap-2 justify-content-center"
+                   style="position: relative;padding: 15px 25px;border: none;border-radius: 50px;font-size: 16px;font-weight: 600;text-decoration: none;color: white;cursor: pointer;min-width: 200px;justify-content: center;background-color: #555ecb">
+                    <img src="./assets/icons/tms.png" alt="" width="30" height="30">
+                    <span class="btn-text" style="font-size: 15px;letter-spacing: 0.5px;">Teams</span>
+                </a>
+
+                <a href="https://wa.me/919074270811"
+                   class="contact-btn whatsapp-btn d-flex align-items-center gap-2 justify-content-center"
+                   style="position: relative;padding: 15px 25px;border: none;border-radius: 50px;font-size: 16px;font-weight: 600;text-decoration: none;color: white;cursor: pointer;min-width: 200px;justify-content: center;background-color: #25d366;">
+                    <img src="./assets/icons/whatsapp.png" alt="" width="25" height="25">
+                    <span class="btn-text" style="font-size: 15px;letter-spacing: 0.5px;">+91 9074270811</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="highlights-section">
+
+        <h2 class="mainhead text-center" style="font-size: 2rem;font-weight: 700;color: black;">Key
+            <span>Highlights</span>
+        </h2>
+
+        <div class="row" style="margin-top: 20px;justify-content: center">
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Dashboard Services</h3>
+
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Patient Management</h3>
+
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Laboratory Management</h3>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Stock Management System</h3>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Blood Bank Management</h3>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Vaccination Management</h3>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Doctor's Allocation and Service Management</h3>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Other Amenities</h3>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Medicine and Related Product Management</h3>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">Online Booking</h3>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="tabs-design1">
+        <ul class="nav nav-pills justify-content-start justify-content-md-center pb-4" style="    flex-flow: nowrap;
+    overflow: hidden;
+    overflow-x: auto;" id="pills1" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="screenshot-tab" data-bs-toggle="pill" data-bs-target="#screenshot"
+                   type="button" role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Screenshot
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="features-tab" data-bs-toggle="pill" data-bs-target="#features" type="button"
+                   role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Features
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq" type="button"
+                   role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Frequent Questions
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="latest-release-tab" data-bs-toggle="pill" data-bs-target="#latest-release"
+                   type="button" role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Latest Release
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content bg-white rounded-4" style="border: 2px solid #e9ecef;border-radius: 10px;"
+             id="pills1Content">
+            <div class="tab-pane fade show active" id="screenshot" role="tabpane2">
+
+                <div class="p-3 py-md-5">
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Give the user access to the user group Manager.
+                    </h2>
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h1.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Add Staff
+                    </h2>
+                    <div class="para"
+                         style="max-width: 80%;text-align: center;margin: auto;font-size: 18px;margin-bottom: 2rem;color: #6b7280;">
+                        Navigate to Staff menu under Configuration. Add the Job Position. Also add Consultation Type, Average Time for a Patient and Consultation Charge for Doctors.
+
+                    </div>
+                     <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h2.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Add Pharmacy
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h3.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                     <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Add Medicine
+                    </h2>
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h4.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Add Vaccine
+                    </h2>
+
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h5.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Add Rooms
+                    </h2>
+
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h6.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Add Lab test
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h7.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Add Doctor Allocation
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h8.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Give the user access to the user group Doctor.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h9.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Doctor's Dashboard.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h10.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Create Patient
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h11.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Download patient card here
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h12.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Create Inpatient here
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h14.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Give the user access to the user group Nurse.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h15.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Can change the stage into Admitted by clicking on the button Admit.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h16.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h17.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h19.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h20.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h21.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h22.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Give the user access to the user group Lab Assistant.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h23.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Lab Assistant Dashboard.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h24.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Confirm the test on clicking the Confirm button
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h25.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Process tests
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h26.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h27.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h28.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h29.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Published tests
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h30.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Give the user access to the user group Pharmacist
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h31.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Pharmacist Dashboard
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h32.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h33.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h34.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h35.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Give the user access to receptionist dashboard.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h36.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Receptionist Dashboard
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h37.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h38.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h39.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h40.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h41.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h42.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Patient booking through website.
+                    </h2>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h43.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h44.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/h45.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="features" role="tabpanel">
+                <div class="p-3 py-md-5">
+
+                    <h2 class="mainhead text-center mb-4" style="font-size: 2rem;font-weight: 700;color: black;">Our
+                        <span>Features</span>
+                    </h2>
+                    <div class="row" style="
+    border-radius: 10px;">
+
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">01
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Dashboard Services
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">02
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Patient Management
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">03
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Laboratory Management
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">04
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Stock Management System
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">05
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Blood Bank Management
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">06
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Vaccination Management
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">07
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Doctor's Allocation and Service Management
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4 d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">08
+                                </div>
+                                <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">Medicine and Related Product Management
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="faq" role="tabpane2 ">
+                <div class="p-3 py-md-5">
+
+                    <h2 class="mainhead text-center mb-4" style="font-size: 2rem;font-weight: 700;color: black;">
+                        Frequently Asked <span>Questions</span></h2>
+
+                    <div class="modern-accordion">
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item loading-animation"
+                                 style="margin-bottom: 1rem;overflow: hidden;background-color: white;border: 2px solid #e2e8f0 !important;border-radius: 10px !important;">
+                                <h2 class="accordion-header" style="border-radius: 10px;">
+                                    <a class="accordion-button  collapsed" type="button" style="box-shadow: unset;
+    border: none !important;
+    padding: 1.5rem 2rem !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem;
+
+    color: #71639e !important;
+    background-color: #e3e3f3a9 !important;
+    position: relative;
+    overflow: hidden;" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                       aria-controls="flush-collapseOne"
+                                       style="font-size: 1.1rem;position: relative;overflow: hidden;background-color: white !important;border: none !important;padding: 1.5rem 2rem !important;font-weight: 600 !important;color: #1e293b !important;border-radius: 10px !important;">
+                                        What is the main purpose of the Hospital Management module in Odoo? </a>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                     data-bs-parent="#accordionFlushExample" style="border-top: 1px solid #e2e8f0;">
+                                    <div class="accordion-body"
+                                         style="background-color: rgba(99, 102, 241, 0.02);line-height: 1.6;font-size: 1rem;padding: 2rem !important;">
+                                        <p style="margin-bottom: 1rem;"> The purpose of the Hospital Management module is to digitize hospital operations such as patient registration, doctor appointments, lab tests, prescriptions, and inventory management for medicines, providing an efficient and centralized system to manage hospital activities.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item loading-animation"
+                                 style="margin-bottom: 1rem;overflow: hidden;background-color: white;border: 2px solid #e2e8f0 !important;border-radius: 10px !important;">
+                                <h2 class="accordion-header" style="border-radius: 10px;">
+                                    <a class="accordion-button  collapsed" type="button" style="box-shadow: unset;
+    border: none !important;
+    padding: 1.5rem 2rem !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem;
+
+    color: #71639e !important;
+    background-color: #e3e3f3a9 !important;
+    position: relative;
+    overflow: hidden;" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                                       aria-controls="flush-collapseTwo"
+                                       style="font-size: 1.1rem;position: relative;overflow: hidden;background-color: white !important;border: none !important;padding: 1.5rem 2rem !important;font-weight: 600 !important;color: #1e293b !important;border-radius: 10px !important;">
+                                        How does the Hospital Management module help in improving hospital efficiency? </a>
+                                </h2>
+                                <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                                     data-bs-parent="#accordionFlushExample" style="border-top: 1px solid #e2e8f0;">
+                                    <div class="accordion-body"
+                                         style="background-color: rgba(99, 102, 241, 0.02);line-height: 1.6;font-size: 1rem;padding: 2rem !important;">
+                                        <p style="margin-bottom: 1rem;"> The Hospital Management module helps improve hospital efficiency by centralizing all operations — from patient registration to discharge — in one platform. It reduces manual paperwork, minimizes errors, speeds up communication between departments (like lab, pharmacy, and doctors), and provides real-time access to patient and treatment information, leading to faster and more accurate service delivery.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="latest-release" role="tabpanel">
+                <div class="p-3 py-md-5">
+                    <h2 class="mainhead text-center mb-4" style="font-size: 2rem;font-weight: 700;color: black;">
+                        Latest <span>Releases</span></h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="release-item h-100" style="    position: relative;
+    padding: 30px;
+    border: 2px solid #71639e24;
+    border-radius: 15px;">
+                                <div class="release-header d-flex align-items-center flex-wrap gap-3" style="
+
+    margin-bottom: 0.75rem;
+    ">
+                                    <div class="version" style="font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a202c;">Latest Release 19.0.1.0.0
+                                    </div>
+                                    <div style="padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;    background-color: #9ae6b4;
+    color: #2d7d32;
+    border: 2px solid #68d391;" class=" add">Add
+                                    </div>
+                                    <div class="date" style="    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    gap: 0.5rem;">
+                                        <img src="./assets/icons/calendar.png" alt="" width="16" height="16"
+                                             style="margin-right: 5px;">
+                                        05th February, 2026
+                                    </div>
+                                </div>
+                                <div class="feature-list">
+                                    <div class="feature-item p-3" style="border-radius: 5px;    display: flex;
+
+    align-items: center;
+    padding: 25px;
+    background-color: #f5f5f5e7;
+    border-radius: 10px;
+    text-align: left;">
+
+                                        <div class="feature-text" style="color: #6b7280;
+    line-height: 1.6;
+    font-size: 0.95rem;">Initial Commit
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="highlights-section">
+
+        <h2 class="mainhead text-center" style="font-size: 2rem;font-weight: 700;color: black;">Our
+            <span>Services</span>
+        </h2>
+
+        <div class="row">
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/setting.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Customization</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/imple.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Implementation</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/support.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Support</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/transfer.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Migration</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/idea.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo integration</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chat.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Consultancy</h3>
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Licensing</h3>
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/people.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Hire Odoo Developer</h3>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="highlights-section">
+
+        <h2 class="mainhead text-center" style="font-size: 2rem;font-weight: 700;color: black;">Related
+            <span>Modules</span>
+        </h2>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <a href="https://apps.odoo.com/apps/modules/19.0/hide_menu_user"
+                   style="text-decoration: none;">
+                    <div class="highlight-card h-100 p-4" style="background-color: white;
+                        backdrop-filter: blur(20px);
+                        border-radius: 10   px;
+                        padding: 32px;
+                        border: 2px solid #71639e1a;
+                        position: relative;
+                        overflow: hidden;">
+
+
+                        <div class="card-image" style="    border: 2px solid #71639e1c;
+                            margin-bottom: 1rem;
+                            border-radius: 10px;
+                            overflow: hidden;">
+                            <img src="./assets/modules/1.jpg" alt="" style="width: 100%;border-radius: 10px;">
+                        </div>
+
+                        <h3 class="card-title"
+                            style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                            Hide Any Menu User Wise</h3>
+                        <p class="card-description"
+                           style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">This Module Helps To Hide any Menu items user wise.
+                        </p>
+
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="https://apps.odoo.com/apps/modules/19.0/dynamic_accounts_report" style="text-decoration: none;">
+                    <div class="highlight-card h-100 p-4" style="background-color: white;
+                        backdrop-filter: blur(20px);
+                        border-radius: 10px;
+                        padding: 32px;
+                        border: 2px solid #71639e1a;
+                        position: relative;
+                        overflow: hidden;">
+
+
+                        <div class="card-image" style="    border: 2px solid #71639e1c;
+                            margin-bottom: 1rem;
+                            border-radius: 10px;
+                            overflow: hidden;">
+                            <img src="./assets/modules/2.gif" alt="" style="width: 100%;border-radius: 10px;">
+                        </div>
+
+                        <h3 class="card-title"
+                            style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                            Odoo19 Dynamic Accounting Reports</h3>
+                        <p class="card-description"
+                           style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Dynamic Reports for Trial Balance, Profit and Loss, General Ledger, Tax Report, etc.</p>
+
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="https://apps.odoo.com/apps/modules/19.0/base_accounting_kit" style="text-decoration: none;">
+                    <div class="highlight-card h-100 p-4" style="background-color: white;
+                        backdrop-filter: blur(20px);
+                        border-radius: 10px;
+                        padding: 32px;
+                        border: 2px solid #71639e1a;
+                        position: relative;
+                        overflow: hidden;">
+                        <div class="card-image" style="    border: 2px solid #71639e1c;
+                            margin-bottom: 1rem;
+                            border-radius: 10px;
+                            overflow: hidden;">
+                            <img src="./assets/modules/3.gif" alt="" style="width: 100%;border-radius: 10px;">
+                        </div>
+                        <h3 class="card-title"
+                            style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                            Odoo 19 Full Accounting Kit for Community</h3>
+                        <p class="card-description"
+                           style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">A Full-Fledged Accounting kit For Every Organization.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -11,8 +11,8 @@ _logger = logging.getLogger(__name__)
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    app_system_name = fields.Char('System Name', help="Setup System Name,which replace Odoo",
-                                  default='odooAi', config_parameter='app_system_name')
+    app_system_name = fields.Char('System Name', help="Setup the platform name shown instead of Odoo",
+                                  default='Kodoo', config_parameter='app_system_name')
     app_show_lang = fields.Boolean('Show Quick Language Switcher',
                                    help="When enable,User can quick switch language in user menu",
                                    config_parameter='app_show_lang')
@@ -25,13 +25,13 @@ class ResConfigSettings(models.TransientModel):
                                                 help="When enable,User can visit development documentation")
     app_show_support = fields.Boolean('Show Support', help="When enable,User can vist your support site",
                                       config_parameter='app_show_support')
-    app_show_account = fields.Boolean('Show My Account', help="When enable,User can login to your website",
+    app_show_account = fields.Boolean('Show Portal Link', help="When enabled, users can open your platform portal",
                                       config_parameter='app_show_account')
     app_show_enterprise = fields.Boolean('Show Enterprise Tag', help="Uncheck to hide the Enterprise tag",
                                          config_parameter='app_show_enterprise')
     app_show_share = fields.Boolean('Show Share Dashboard', help="Uncheck to hide the Odoo Share Dashboard",
                                     config_parameter='app_show_share')
-    app_show_poweredby = fields.Boolean('Show Powered by Odoo', help="Uncheck to hide the Powered by text",
+    app_show_poweredby = fields.Boolean('Show Platform Signature', help="When enabled, shows the platform signature in login areas",
                                         config_parameter='app_show_poweredby')
     group_show_author_in_apps = fields.Boolean(string="Show Author in Apps Dashboard", implied_group='app_odoo_customize.group_show_author_in_apps',
                                                help="Uncheck to Hide Author and Website in Apps Dashboard")
@@ -40,10 +40,10 @@ class ResConfigSettings(models.TransientModel):
     app_documentation_url = fields.Char('Documentation Url', config_parameter='app_documentation_url')
     app_documentation_dev_url = fields.Char('Developer Documentation Url', config_parameter='app_documentation_dev_url')
     app_support_url = fields.Char('Support Url', config_parameter='app_support_url')
-    app_account_title = fields.Char('My Odoo.com Account Title', config_parameter='app_account_title')
-    app_account_url = fields.Char('My Odoo.com Account Url', config_parameter='app_account_url')
-    app_enterprise_url = fields.Char('Customize Module Url(eg. Enterprise)', config_parameter='app_enterprise_url')
-    app_ribbon_name = fields.Char('Show Demo Ribbon', config_parameter='app_ribbon_name')
+    app_account_title = fields.Char('Portal Link Title', config_parameter='app_account_title')
+    app_account_url = fields.Char('Portal Link URL', config_parameter='app_account_url')
+    app_enterprise_url = fields.Char('Default Module Website URL', config_parameter='app_enterprise_url')
+    app_ribbon_name = fields.Char('Environment Ribbon Text', config_parameter='app_ribbon_name')
     app_navbar_pos_pc = fields.Selection(string="Navbar PC", selection=[
         ('top', 'Top(Default)'),
         ('bottom', 'Bottom'),
@@ -61,18 +61,38 @@ class ResConfigSettings(models.TransientModel):
     app_stop_subscribe = fields.Boolean('Stop Odoo Subscribe', help="Check to stop subscribe and follow. This to make odoo speed up.",
                                         config_parameter='app_stop_subscribe')
     # 处理额外模块
-    module_app_odoo_doc = fields.Boolean("Help Document Anywhere", help='Get Help Documentation on current odoo operation or topic.')
-    module_app_chatgpt = fields.Boolean("Ai Center", help='Use Ai to boost you business.')
+    module_app_odoo_doc = fields.Boolean("Contextual Documentation", help='Provides quick access to help content.')
+    module_app_chatgpt = fields.Boolean("AI Integrations", help='Enables optional AI-related modules.')
     
     # 应用帮助文档
-    app_doc_root_url = fields.Char('Help of topic domain', config_parameter='app_doc_root_url', default='https://odooai.cn')
+    app_doc_root_url = fields.Char('Documentation Domain', config_parameter='app_doc_root_url', default='https://kodoo.online')
+
+    @api.model
+    def apply_kodoo_branding_defaults(self):
+        config_parameter = self.env['ir.config_parameter'].sudo()
+        replacements = {
+            'app_system_name': ('Kodoo', {'', False, 'odooAi', 'odooApp'}),
+            'app_documentation_url': ('https://kodoo.online', {'', False, 'https://www.odooai.cn/r/yh19', 'https://odooai.cn/r/yh19'}),
+            'app_documentation_dev_url': ('https://www.odoo.com/documentation/19.0', {'', False, 'https://www.odooai.cn/r/kf19', 'https://odooai.cn/r/kf19'}),
+            'app_support_url': ('https://kodoo.online', {'', False, 'https://www.odooai.cn/trial', 'https://odooai.cn/trial'}),
+            'app_account_title': ('Portal Kodoo', {'', False, '我的Ai服务中心'}),
+            'app_account_url': ('https://kodoo.online', {'', False, 'https://www.odooai.cn/my', 'https://odooai.cn/my'}),
+            'app_enterprise_url': ('https://www.odoo.com', {'', False, 'https://www.odooai.cn', 'https://odooai.cn'}),
+            'app_ribbon_name': ('', {False, 'odooai.cn', 'odooAi', 'odooapp.cn'}),
+        }
+        for key, (replacement, vendor_values) in replacements.items():
+            current = config_parameter.get_param(key)
+            if current in vendor_values:
+                config_parameter.set_param(key, replacement)
+        config_parameter.set_param('app_saas_ok', 'False')
+        return True
 
     @api.model
     def set_module_url(self, rec=None):
         if not self._app_check_sys_op():
             raise UserError(_('Not allow.'))
         config_parameter = self.env['ir.config_parameter'].sudo()
-        app_enterprise_url = config_parameter.get_param('app_enterprise_url', 'https://www.odooai.cn')
+        app_enterprise_url = config_parameter.get_param('app_enterprise_url', 'https://www.odoo.com')
         modules = self.env['ir.module.module'].search([('license', 'like', 'OEEL%'), ('website', '!=', False)])
         if modules:
             sql = "UPDATE ir_module_module SET website = '%s' WHERE id IN %s" % (app_enterprise_url, tuple(modules.ids))
