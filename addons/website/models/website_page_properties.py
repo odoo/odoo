@@ -262,15 +262,14 @@ class WebsitePageProperties(models.TransientModel):
                 old_url = record.old_url
                 new_url = record.url
                 if old_url != new_url:
-                    if vals.get('redirect_old_url'):
-                        website_id = vals.get('website_id') or record.website_id.id or False
+                    if record.redirect_old_url:
                         self.env['website.rewrite'].create(
                             {
-                                'name': vals.get('name') or record.name,
-                                'redirect_type': vals.get('redirect_type') or record.redirect_type,
+                                'name': record.with_context(lang='en_US').name,
+                                'redirect_type': record.redirect_type,
                                 'url_from': old_url,
                                 'url_to': new_url,
-                                'website_id': website_id,
+                                'website_id': record.website_id.id,
                             }
                         )
                     record.old_url = new_url

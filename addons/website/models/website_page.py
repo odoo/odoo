@@ -189,35 +189,48 @@ class WebsitePage(models.Model):
         return super().unlink()
 
     def write(self, vals):
-        for page in self:
-            website_id = False
-            if vals.get('website_id') or page.website_id:
-                website_id = vals.get('website_id') or page.website_id.id
+        if name_in_vals := ('name' in vals):
+            old_en_names = self.with_context(lang='en_US').mapped('name')
 
-            # If URL has been edited, slug it
-            if 'url' in vals:
-                url = vals['url'] or ''
-                url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
-                if page.url != url:
-                    url = self.env['website'].with_context(website_id=website_id).get_unique_path(url)
-                    page.menu_ids.write({'url': url})
-                    # Sync website's homepage URL
-                    website = self.env['website'].get_current_website()
-                    page_url_normalized = {'homepage_url': page.url}
-                    website._handle_homepage_url(page_url_normalized)
-                    if website.homepage_url == page_url_normalized['homepage_url']:
-                        website.homepage_url = url
-                vals['url'] = url
+        if url_in_vals := ('url' in vals):
+            vals_url = vals.pop('url')
+            url = vals_url or ''
+            url = '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
+            vals_url = url
 
-            # If name has changed, check for key uniqueness
-            if 'name' in vals and page.name != vals['name']:
-                vals['key'] = self.env['website'].with_context(website_id=website_id).get_unique_key(self.env['ir.http']._slugify(vals['name'] or ''))
-            if 'visibility' in vals:
-                if vals['visibility'] != 'restricted_group':
-                    vals['group_ids'] = False
+        if 'visibility' in vals:
+            if vals['visibility'] != 'restricted_group':
+                vals['group_ids'] = False
+
         # write on page == write on view
         # the view will invalidate the 'templates' cache
-        return super().write(vals)
+        res = super().write(vals)
+
+        if url_in_vals:
+            for page in self:
+                if vals_url == page.url:
+                    continue
+                # If URL has been edited, slug it
+                url = self.env['website'].with_context(website_id=page.website_id.id).get_unique_path(vals_url)
+                page.menu_ids.write({'url': url})
+                # Sync website's homepage URL
+                website = self.env['website'].get_current_website()
+                page_url_normalized = {'homepage_url': page.url}
+                website._handle_homepage_url(page_url_normalized)
+                if website.homepage_url == page_url_normalized['homepage_url']:
+                    website.homepage_url = url
+                super(WebsitePage, page).write({'url': url})
+
+        if name_in_vals:
+            # If name has changed, check for key uniqueness
+            for page_en, old_en_name in zip(self.with_context(lang='en_US'), old_en_names, strict=True):
+                if old_en_name == page_en.name:
+                    continue
+                key = self.env['ir.http']._slugify(page_en.name or '')
+                key = self.env['website'].with_context(website_id=page_en.website_id.id).get_unique_key(key)
+                super(WebsitePage, page_en).write({'key': key})
+
+        return res
 
     def get_website_meta(self):
         self.ensure_one()
