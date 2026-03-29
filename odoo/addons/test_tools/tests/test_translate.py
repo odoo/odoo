@@ -11,7 +11,7 @@ import io
 
 from odoo.exceptions import UserError
 from odoo.tools import sql
-from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader
+from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader, babel_extract_qweb
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
@@ -410,6 +410,19 @@ class TranslationToolsTestCase(BaseCase):
 
                         <div data-stuff.translate="dog"/>
                     </t>""")
+
+    def test_translate_xml_fstring_in_js(self):
+        file_obj = io.StringIO("""
+        <t t-name="some_owl_template">
+            <img t-attf-title="  Some {{ this.expr1 }} text {{ this.expr2 }}  " />
+            <div t-attf-data-nope="Not translated" title="translated verbatim" />
+        </t>
+        """)
+        results = babel_extract_qweb(file_obj, [], [], {})
+        self.assertEqual(results, [
+            (3, None, 'Some {{0}} text {{1}}', []),
+            (4, None, 'translated verbatim', [])
+        ])
 
     def test_translate_html(self):
         """ Test html_translate(). """
