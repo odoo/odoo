@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Student Portal: My Courses -->
+  <template id="portal_my_courses" name="My Courses">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>My Courses</h2>
+        <t t-if="enrollments">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="enrollments" t-as="enrollment">
+                <td><t t-esc="enrollment.course_id.name"/></td>
+                <td><t t-esc="enrollment.status"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">You are not enrolled in any courses yet.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!-- Student Portal: My Class Schedules -->
+  <template id="portal_my_class_schedules" name="My Class Schedules">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>My Class Schedules</h2>
+        <t t-if="schedules">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Schedule Type</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="schedules" t-as="schedule">
+                <td><t t-esc="schedule.name"/></td>
+                <td><t t-esc="schedule.schedule_type"/></td>
+                <td><t t-esc="schedule.schedule_time"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">No class schedules found.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!-- Student Portal: My Attendance -->
+  <template id="portal_my_attendance" name="My Attendance">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>My Attendance</h2>
+        <t t-if="attendance_records">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="attendance_records" t-as="record">
+                <td><t t-esc="record.attendance_date"/></td>
+                <td><t t-esc="record.status"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">No attendance records found.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!-- Tutor Portal: My Teaching Schedules -->
+  <template id="portal_my_teaching_schedules" name="My Teaching Schedules">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>My Teaching Schedules</h2>
+        <t t-if="schedules">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Schedule Type</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="schedules" t-as="schedule">
+                <td><t t-esc="schedule.name"/></td>
+                <td><t t-esc="schedule.schedule_type"/></td>
+                <td><t t-esc="schedule.schedule_time"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">No teaching schedules found.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!-- Tutor Portal: Student Attendance Management -->
+  <template id="portal_student_attendance" name="Student Attendance">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>Attendance</h2>
+        <t t-if="attendance_records">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="attendance_records" t-as="record">
+                <td><t t-esc="record.student_id.first_name"/></td>
+                <td><t t-esc="record.attendance_date"/></td>
+                <td><t t-esc="record.status"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">No attendance records found.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!-- Tutor Portal: My Courses Taught -->
+  <template id="portal_my_courses_taught" name="My Courses Taught">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>My Courses</h2>
+        <t t-if="courses">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th>Subject</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="courses" t-as="course">
+                <td><t t-esc="course.name"/></td>
+                <td><t t-esc="course.subject_id.name"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">You are not teaching any courses yet.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!-- Parent Portal: Children's Courses -->
+  <template id="portal_children_courses" name="Children's Courses">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>Children's Courses</h2>
+        <t t-if="enrollments">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="enrollments" t-as="enrollment">
+                <td><t t-esc="enrollment.student_id.first_name"/></td>
+                <td><t t-esc="enrollment.course_id.name"/></td>
+                <td><t t-esc="enrollment.status"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">No courses found.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!-- Parent Portal: Children's Attendance -->
+  <template id="portal_children_attendance" name="Children's Attendance">
+    <t t-call="portal.portal_layout">
+      <div class="container">
+        <h2>Children's Attendance</h2>
+        <t t-if="attendance_records">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="attendance_records" t-as="record">
+                <td><t t-esc="record.student_id.first_name"/></td>
+                <td><t t-esc="record.attendance_date"/></td>
+                <td><t t-esc="record.status"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </t>
+        <t t-else="">
+          <p class="alert alert-info">No attendance records found.</p>
+        </t>
+      </div>
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Subject Category Views -->
+<record id="view_subject_category_list" model="ir.ui.view">
+<field name="name">subject.category.list</field>
+<field name="model">subject.category</field>
+<field name="arch" type="xml">
+<list>
+<field name="name"/>
+<field name="description"/>
+</list>
+</field>
+</record>
+
+<record id="view_subject_category_form" model="ir.ui.view">
+<field name="name">subject.category.form</field>
+<field name="model">subject.category</field>
+<field name="arch" type="xml">
+<form>
+<sheet>
+<group>
+<field name="name"/>
+<field name="description"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Subject Master Views -->
+<record id="view_subject_master_list" model="ir.ui.view">
+<field name="name">subject.master.list</field>
+<field name="model">subject.master</field>
+<field name="arch" type="xml">
+<list string="Subjects">
+<field name="category_id"/>
+<field name="name"/>
+<field name="description"/>
+</list>
+</field>
+</record>
+
+<record id="view_subject_master_form" model="ir.ui.view">
+<field name="name">subject.master.form</field>
+<field name="model">subject.master</field>
+<field name="arch" type="xml">
+<form>
+<sheet>
+<group>
+<field name="name"/>
+<field name="category_id"/>
+<field name="description"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Grade Master Views -->
+<record id="view_grade_master_list" model="ir.ui.view">
+<field name="name">grade.master.list</field>
+<field name="model">grade.master</field>
+<field name="arch" type="xml">
+<list>
+<field name="name"/>
+</list>
+</field>
+</record>
+
+<record id="view_grade_master_form" model="ir.ui.view">
+<field name="name">grade.master.form</field>
+<field name="model">grade.master</field>
+<field name="arch" type="xml">
+<form>
+<sheet>
+<group>
+<field name="name"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Student Profile Views -->
+<record id="view_student_profile_list" model="ir.ui.view">
+<field name="name">student.profile.list</field>
+<field name="model">student.profile</field>
+<field name="arch" type="xml">
+<list>
+<field name="first_name"/>
+<field name="last_name"/>
+<field name="email"/>
+<field name="phone"/>
+<field name="grade_id"/>
+</list>
+</field>
+</record>
+
+<record id="view_student_profile_form" model="ir.ui.view">
+<field name="name">student.profile.form</field>
+<field name="model">student.profile</field>
+<field name="arch" type="xml">
+<form>
+<sheet>
+<group string="Personal Information">
+<field name="first_name"/>
+<field name="middle_name"/>
+<field name="last_name"/>
+<field name="email"/>
+<field name="country_code"/>
+<field name="phone"/>
+</group>
+<group string="Academic Information">
+<field name="grade_id"/>
+<field name="subjects_ids" widget="many2many_tags"/>
+</group>
+<group string="Address">
+<field name="address_line_1" placeholder="Address Line 1"/>
+<field name="address_line_2" placeholder="Address Line 2"/>
+<field name="address_line_3" placeholder="Address Line 3"/>
+<field name="address_line_4" placeholder="Address Line 4"/>
+<field name="zip_code"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Tutor Profile Views -->
+<record id="view_tutor_profile_list" model="ir.ui.view">
+<field name="name">tutor.profile.list</field>
+<field name="model">tutor.profile</field>
+<field name="arch" type="xml">
+<list>
+<field name="first_name"/>
+<field name="last_name"/>
+<field name="email"/>
+<field name="phone"/>
+<field name="subjects_ids"/>
+</list>
+</field>
+</record>
+
+<record id="view_tutor_profile_form" model="ir.ui.view">
+<field name="name">tutor.profile.form</field>
+<field name="model">tutor.profile</field>
+<field name="arch" type="xml">
+<form>
+<sheet>
+<group string="Personal Information">
+<field name="first_name"/>
+<field name="middle_name"/>
+<field name="last_name"/>
+<field name="email"/>
+<field name="country_code"/>
+<field name="phone"/>
+</group>
+<group string="Professional Information">
+<field name="subjects_ids" widget="many2many_tags"/>
+</group>
+<group string="Address">
+<field name="address_line_1" placeholder="Address Line 1"/>
+<field name="address_line_2" placeholder="Address Line 2"/>
+<field name="address_line_3" placeholder="Address Line 3"/>
+<field name="address_line_4" placeholder="Address Line 4"/>
+<field name="zip_code"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Tutor Availability Views -->
+<record id="view_tutor_availability_list" model="ir.ui.view">
+<field name="name">tutor.availability.list</field>
+<field name="model">tutor.availability</field>
+<field name="arch" type="xml">
+<list string="Tutor Availability">
+<field name="tutor_id"/>
+<field name="availability_type"/>
+<field name="start_time_display"/>
+<field name="end_time_display"/>
+<field name="timezone"/>
+<field name="active"/>
+</list>
+</field>
+</record>
+
+<record id="view_tutor_availability_form" model="ir.ui.view">
+<field name="name">tutor.availability.form</field>
+<field name="model">tutor.availability</field>
+<field name="arch" type="xml">
+<form string="Tutor Availability">
+<sheet>
+<group>
+<field name="tutor_id"/>
+<field name="availability_type"/>
+<field name="timezone"/>
+<field name="active"/>
+</group>
+
+<group string="Time Slot">
+<group>
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+<span style="font-weight: bold; min-width: 80px;">Start Time</span>
+<field name="start_hour" nolabel="1" style="width: 50px;"/>
+<span>:</span>
+<field name="start_minute" nolabel="1" style="width: 50px;"/>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+<span style="font-weight: bold; min-width: 80px;">End Time</span>
+<field name="end_hour" nolabel="1" style="width: 50px;"/>
+<span>:</span>
+<field name="end_minute" nolabel="1" style="width: 50px;"/>
+</div>
+</group>
+</group>
+
+<group string="Days of Availability">
+<field name="monday"/>
+<field name="tuesday"/>
+<field name="wednesday"/>
+<field name="thursday"/>
+<field name="friday"/>
+<field name="saturday"/>
+<field name="sunday"/>
+</group>
+
+<group string="Notes">
+<field name="notes" nolabel="1"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Parent Profile Views -->
+<record id="view_parent_profile_list" model="ir.ui.view">
+<field name="name">parent.profile.list</field>
+<field name="model">parent.profile</field>
+<field name="arch" type="xml">
+<list>
+<field name="first_name"/>
+<field name="last_name"/>
+<field name="email"/>
+<field name="phone"/>
+</list>
+</field>
+</record>
+
+<record id="view_parent_profile_form" model="ir.ui.view">
+<field name="name">parent.profile.form</field>
+<field name="model">parent.profile</field>
+<field name="arch" type="xml">
+<form>
+<sheet>
+<group string="Personal Information">
+<field name="first_name"/>
+<field name="middle_name"/>
+<field name="last_name"/>
+<field name="email"/>
+<field name="country_code"/>
+<field name="phone"/>
+</group>
+<group string="Address">
+<field name="address_line_1" placeholder="Address Line 1"/>
+<field name="address_line_2" placeholder="Address Line 2"/>
+<field name="address_line_3" placeholder="Address Line 3"/>
+<field name="address_line_4" placeholder="Address Line 4"/>
+<field name="zip_code"/>
+</group>
+<notebook>
+<page string="Students">
+<field name="student_ids"/>
+</page>
+</notebook>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Time Slot Views -->
+<record id="view_tuition_time_slot_tree" model="ir.ui.view">
+<field name="name">tuition.time.slot.tree</field>
+<field name="model">tuition.time.slot</field>
+<field name="arch" type="xml">
+<list>
+<field name="hour"/>
+<field name="minute"/>
+<field name="name"/>
+</list>
+</field>
+</record>
+
+<record id="view_tuition_time_slot_form" model="ir.ui.view">
+<field name="name">tuition.time.slot.form</field>
+<field name="model">tuition.time.slot</field>
+<field name="arch" type="xml">
+<form>
+<sheet>
+<group>
+<field name="hour"/>
+<field name="minute"/>
+<field name="name" readonly="1"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<record id="action_tuition_time_slots" model="ir.actions.act_window">
+<field name="name">Time Slots</field>
+<field name="res_model">tuition.time.slot</field>
+<field name="view_mode">tree,form</field>
+</record>
+
+<!-- Course Master Views -->
+<record id="view_course_master_list" model="ir.ui.view">
+<field name="name">course.master.list</field>
+<field name="model">course.master</field>
+<field name="arch" type="xml">
+<list string="Courses">
+<field name="name"/>
+<field name="subject_id"/>
+<field name="grade_id"/>
+<field name="status"/>
+</list>
+</field>
+</record>
+
+<record id="view_course_master_form" model="ir.ui.view">
+<field name="name">course.master.form</field>
+<field name="model">course.master</field>
+<field name="arch" type="xml">
+<form string="Course">
+<header>
+<button name="action_enroll_student" string="Enroll Student" type="object" class="btn-primary"/>
+<field name="status" widget="statusbar"/>
+</header>
+<sheet>
+<group>
+<field name="name"/>
+<field name="subject_id"/>
+<field name="grade_id"/>
+<field name="status"/>
+<field name="start_date"/>
+<field name="end_date"/>
+<field name="tutor_id"/>
+<field name="coordinator_id"/>
+</group>
+<notebook>
+<page string="Schedules">
+<field name="schedule_ids"/>
+</page>
+<page string="Enrollments">
+<field name="enrollment_ids"/>
+</page>
+</notebook>
+</sheet>
+</form>
+</field>
+</record>
+
+<record id="action_course_masters" model="ir.actions.act_window">
+<field name="name">Courses</field>
+<field name="res_model">course.master</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Course Enrollment Views -->
+<record id="view_course_enrollment_form" model="ir.ui.view">
+<field name="name">course.enrollment.form</field>
+<field name="model">course.enrollment</field>
+<field name="arch" type="xml">
+<form string="Enrollment">
+<sheet>
+<group>
+<field name="name"/>
+<field name="course_id"/>
+<field name="student_id"/>
+</group>
+<group>
+<field name="fee"/>
+<field name="currency_id"/>
+<field name="discount_amount"/>
+<field name="net_fee"/>
+</group>
+<group>
+<field name="invoice_type"/>
+<field name="billing_cycle"/>
+<field name="invoice_start_date"/>
+<field name="invoice_generation_date"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<record id="view_course_enrollment_list" model="ir.ui.view">
+<field name="name">course.enrollment.list</field>
+<field name="model">course.enrollment</field>
+<field name="arch" type="xml">
+<list string="Enrollments">
+<field name="name"/>
+<field name="course_id"/>
+<field name="student_id"/>
+<field name="fee"/>
+<field name="status"/>
+</list>
+</field>
+</record>
+
+<record id="action_course_enrollments" model="ir.actions.act_window">
+<field name="name">Enrollments</field>
+<field name="res_model">course.enrollment</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Class Schedule Views - Read Only -->
+<record id="view_class_schedule_list" model="ir.ui.view">
+<field name="name">class.schedule.list</field>
+<field name="model">class.schedule</field>
+<field name="arch" type="xml">
+<list string="Class Schedules">
+<field name="name"/>
+<field name="course_id"/>
+<field name="schedule_type"/>
+<field name="schedule_hour"/>
+<field name="schedule_minute"/>
+<field name="timezone"/>
+<field name="status"/>
+</list>
+</field>
+</record>
+
+<record id="view_class_schedule_form" model="ir.ui.view">
+<field name="name">class.schedule.form</field>
+<field name="model">class.schedule</field>
+<field name="arch" type="xml">
+<form string="Class Schedule" edit="false" create="false">
+<sheet>
+<group>
+<field name="name"/>
+<field name="course_id"/>
+<field name="tutor_id"/>
+<field name="schedule_type"/>
+<field name="schedule_hour" string="Hour (00-23)"/>
+<field name="schedule_minute" string="Minute (00-59)"/>
+<field name="schedule_duration" string="Duration (Minutes)"/>
+<field name="timezone"/>
+<field name="status"/>
+</group>
+<group string="Days of Week">
+<field name="monday"/>
+<field name="tuesday"/>
+<field name="wednesday"/>
+<field name="thursday"/>
+<field name="friday"/>
+<field name="saturday"/>
+<field name="sunday"/>
+</group>
+<group string="Recurrence Period">
+<field name="start_date"/>
+<field name="end_date"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<record id="action_class_schedules" model="ir.actions.act_window">
+<field name="name">Class Schedules</field>
+<field name="res_model">class.schedule</field>
+<field name="view_mode">list,form</field>
+<field name="context">{'create': False}</field>
+</record>
+
+<!-- Attendance Record Views - Read Only -->
+<record id="view_attendance_record_list" model="ir.ui.view">
+<field name="name">attendance.record.list</field>
+<field name="model">attendance.record</field>
+<field name="arch" type="xml">
+<list string="Attendance Records">
+<field name="class_schedule_id"/>
+<field name="student_id"/>
+<field name="attendance_date"/>
+<field name="status"/>
+</list>
+</field>
+</record>
+
+<record id="view_attendance_record_form" model="ir.ui.view">
+<field name="name">attendance.record.form</field>
+<field name="model">attendance.record</field>
+<field name="arch" type="xml">
+<form string="Attendance Record" edit="false" create="false">
+<sheet>
+<group>
+<field name="class_schedule_id"/>
+<field name="student_id"/>
+<field name="attendance_date"/>
+<field name="status"/>
+<field name="remarks"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<record id="action_attendance_records" model="ir.actions.act_window">
+<field name="name">Attendance</field>
+<field name="res_model">attendance.record</field>
+<field name="view_mode">list,form</field>
+<field name="context">{'create': False}</field>
+</record>
+
+<!-- Subject Master Action -->
+<record id="action_subject_masters" model="ir.actions.act_window">
+<field name="name">Subjects</field>
+<field name="res_model">subject.master</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Subject Category Action -->
+<record id="action_subject_categories" model="ir.actions.act_window">
+<field name="name">Subject Categories</field>
+<field name="res_model">subject.category</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Grade Master Action -->
+<record id="action_grade_masters" model="ir.actions.act_window">
+<field name="name">Grades</field>
+<field name="res_model">grade.master</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Student Profile Action -->
+<record id="action_student_profiles" model="ir.actions.act_window">
+<field name="name">Students</field>
+<field name="res_model">student.profile</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Tutor Profile Action -->
+<record id="action_tutor_profiles" model="ir.actions.act_window">
+<field name="name">Tutors</field>
+<field name="res_model">tutor.profile</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Parent Profile Action -->
+<record id="action_parent_profiles" model="ir.actions.act_window">
+<field name="name">Parents</field>
+<field name="res_model">parent.profile</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Tutor Availability Action -->
+<record id="action_tutor_availability" model="ir.actions.act_window">
+<field name="name">Tutor Availability</field>
+<field name="res_model">tutor.availability</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Top Level Admin Menus -->
+<menuitem id="menu_tuition_root" name="Tuition" sequence="50"/>
+<menuitem id="menu_tuition_time_slots" name="Time Slots" parent="menu_tuition_root" action="action_tuition_time_slots"/>
+<menuitem id="menu_tuition_courses" name="Courses" parent="menu_tuition_root" action="action_course_masters"/>
+<menuitem id="menu_tuition_enrollments" name="Enrollments" parent="menu_tuition_root" action="action_course_enrollments"/>
+<menuitem id="menu_tuition_class_schedules" name="Class Schedules" parent="menu_tuition_root" action="action_class_schedules"/>
+<menuitem id="menu_tuition_attendance" name="Attendance" parent="menu_tuition_root" action="action_attendance_records"/>
+
+<!-- Settings Menu -->
+<menuitem id="menu_tuition_settings" name="Settings" parent="menu_tuition_root" sequence="100"/>
+<menuitem id="menu_tuition_subjects" name="Subjects" parent="menu_tuition_settings" action="action_subject_masters"/>
+<menuitem id="menu_tuition_subject_categories" name="Subject Categories" parent="menu_tuition_settings" action="action_subject_categories"/>
+<menuitem id="menu_tuition_grades" name="Grades" parent="menu_tuition_settings" action="action_grade_masters"/>
+
+<!-- User Management Menu -->
+<menuitem id="menu_tuition_users" name="Users" parent="menu_tuition_root" sequence="110"/>
+<menuitem id="menu_tuition_students" name="Students" parent="menu_tuition_users" action="action_student_profiles"/>
+<menuitem id="menu_tuition_tutors" name="Tutors" parent="menu_tuition_users" action="action_tutor_profiles"/>
+<menuitem id="menu_tuition_parents" name="Parents" parent="menu_tuition_users" action="action_parent_profiles"/>
+<menuitem id="menu_tuition_tutor_availability" name="Tutor Availability" parent="menu_tuition_users" action="action_tutor_availability"/>
+</odoo>

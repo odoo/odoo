@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Subject Categories -->
+    <record id="subject_cat_languages" model="subject.category">
+        <field name="name">Languages</field>
+        <field name="description">Language subjects</field>
+    </record>
+    
+    <record id="subject_cat_instruments" model="subject.category">
+        <field name="name">Instruments</field>
+        <field name="description">Musical instruments</field>
+    </record>
+    
+    <record id="subject_cat_sciences" model="subject.category">
+        <field name="name">Sciences</field>
+        <field name="description">Science subjects</field>
+    </record>
+    
+    <!-- Subjects grouped under Languages -->
+    <record id="subject_english" model="subject.master">
+        <field name="name">English</field>
+        <field name="category_id" ref="subject_cat_languages"/>
+    </record>
+    
+    <record id="subject_french" model="subject.master">
+        <field name="name">French</field>
+        <field name="category_id" ref="subject_cat_languages"/>
+    </record>
+    
+    <record id="subject_german" model="subject.master">
+        <field name="name">German</field>
+        <field name="category_id" ref="subject_cat_languages"/>
+    </record>
+    
+    <!-- Subjects grouped under Instruments -->
+    <record id="subject_guitar" model="subject.master">
+        <field name="name">Guitar</field>
+        <field name="category_id" ref="subject_cat_instruments"/>
+    </record>
+    
+    <record id="subject_keyboard" model="subject.master">
+        <field name="name">Keyboard</field>
+        <field name="category_id" ref="subject_cat_instruments"/>
+    </record>
+    
+    <!-- Subjects grouped under Sciences -->
+    <record id="subject_mathematics" model="subject.master">
+        <field name="name">Mathematics</field>
+        <field name="category_id" ref="subject_cat_sciences"/>
+    </record>
+    
+    <record id="subject_science" model="subject.master">
+        <field name="name">Science</field>
+        <field name="category_id" ref="subject_cat_sciences"/>
+    </record>
+    
+    <!-- Sample Grades -->
+    <record id="grade_10" model="grade.master">
+        <field name="name">Grade 10</field>
+    </record>
+    
+    <record id="grade_11" model="grade.master">
+        <field name="name">Grade 11</field>
+    </record>
+    
+    <record id="grade_12" model="grade.master">
+        <field name="name">Grade 12</field>
+    </record>
+</odoo>

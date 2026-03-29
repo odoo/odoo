@@ -2,6 +2,7 @@
 from datetime import timedelta, datetime, date
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class EmployeeShift(models.Model):
@@ -33,11 +34,12 @@ class EmployeeShift(models.Model):
             else:
                 rec.display_name = rec.name
 
-    @api.constrains('end_datetime', 'start_datetime')
+    @api.constrains('start_datetime', 'end_datetime')
     def _check_dates(self):
         for rec in self:
-            if rec.end_datetime and rec.start_datetime and rec.end_datetime <= rec.start_datetime:
-                raise models.ValidationError("End datetime must be after start datetime.")
+            if rec.end_datetime and rec.start_datetime:
+                if rec.end_datetime <= rec.start_datetime:
+                    raise ValidationError("End datetime must be after start datetime.")
 
     def name_get(self):
         result = []
