@@ -32,9 +32,9 @@
             <h1 class="my-0 me-auto pe-sm-4 h3-fs">Talks</h1>
             <!-- Optional wishlist filter -->
             <div t-if="option_track_wishlist" class="dropdown d-none d-lg-block">
-                <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                     Favorites
-                </a>
+                </button>
                 <div class="dropdown-menu">
                     <a t-att-href="'/event/%s/track?%s' % (
                             slug(event),
@@ -150,9 +150,9 @@
     <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
         <t t-foreach="tag_categories" t-as="tag_category">
             <div t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="dropdown d-none d-lg-block my-1">
-                <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                     <t t-out="tag_category.name"/>
-                </a>
+                </button>
                 <div class="dropdown-menu">
                     <t t-foreach="tag_category.tag_ids" t-as="tag">
                         <span t-att-data-post="'/event/%s/track?%s' % (
