@@ -38,12 +38,12 @@ from psycopg2 import OperationalError
 
 import odoo.exceptions
 from .config import config
-from .func import lazy
+from .func import deprecated, lazy
 from .misc import OrderedSet
 
 unsafe_eval = eval
 
-__all__ = ['const_eval', 'safe_eval']
+__all__ = ['const_eval', 'expr_eval', 'safe_eval']
 
 _logger = logging.getLogger(__name__)
 _logger_runtime = logging.getLogger(f'{__name__}.runtime')
@@ -137,6 +137,8 @@ def to_opcodes(opnames, _opmap=opmap):
     for x in opnames:
         if x in _opmap:
             yield _opmap[x]
+
+
 # opcodes which absolutely positively must not be usable in safe_eval,
 # explicitly subtracted from all sets of valid opcodes just in case
 _BLACKLIST = set(to_opcodes([
@@ -148,10 +150,11 @@ _BLACKLIST = set(to_opcodes([
     # no reason to allow this
     'STORE_GLOBAL', 'DELETE_GLOBAL',
 ]))
-# opcodes necessary to build literal values
-_CONST_OPCODES = set(to_opcodes([
+
+# operations on literal values
+_EXPR_OPCODES = set(to_opcodes([
     # stack manipulations
-    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
+    'POP_TOP',
     'LOAD_CONST',
     'RETURN_VALUE',  # return the result of the literal/expr evaluation
     # literal collections
@@ -159,10 +162,23 @@ _CONST_OPCODES = set(to_opcodes([
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
     'LIST_EXTEND', 'SET_UPDATE',
+
+    'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
+    'BINARY_SUBSCR',
+    'BUILD_SLICE',
+    # comprehensions
+    'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
+    'COMPARE_OP',
+    # specialised comparisons
+    'IS_OP', 'CONTAINS_OP',
+    'DICT_MERGE', 'DICT_UPDATE',
     # 3.11 replace DUP_TOP, DUP_TOP_TWO, ROT_TWO, ROT_THREE, ROT_FOUR
     'COPY', 'SWAP',
     # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
     'RESUME',
+    # Added in 3.11, replacing all BINARY_* and INPLACE_*
+    'BINARY_OP',
+    'BINARY_SLICE',
     # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
     'RETURN_CONST',
     # 3.13
@@ -171,70 +187,30 @@ _CONST_OPCODES = set(to_opcodes([
     'LOAD_SMALL_INT',
 ])) - _BLACKLIST
 
-# operations which are both binary and inplace, same order as in doc'
-_operations = [
-    'POWER', 'MULTIPLY',  # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
-    'FLOOR_DIVIDE', 'TRUE_DIVIDE', 'MODULO', 'ADD',
-    'SUBTRACT', 'LSHIFT', 'RSHIFT', 'AND', 'XOR', 'OR',
-]
-# operations on literal values
-_EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
-    'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
-    *('BINARY_' + op for op in _operations), 'BINARY_SUBSCR',
-    *('INPLACE_' + op for op in _operations),
-    'BUILD_SLICE',
-    # comprehensions
-    'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
-    'COMPARE_OP',
-    # specialised comparisons
-    'IS_OP', 'CONTAINS_OP',
-    'DICT_MERGE', 'DICT_UPDATE',
-    # Basically used in any "generator literal"
-    'GEN_START',  # added in 3.10 but already removed from 3.11.
-    # Added in 3.11, replacing all BINARY_* and INPLACE_*
-    'BINARY_OP',
-    'BINARY_SLICE',
-])) - _BLACKLIST
-
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'POP_BLOCK', 'POP_EXCEPT',
 
-    # note: removed in 3.8
-    'SETUP_LOOP', 'SETUP_EXCEPT', 'BREAK_LOOP', 'CONTINUE_LOOP',
-
     'EXTENDED_ARG',  # P3.6 for long jump offsets.
-    'MAKE_FUNCTION', 'CALL_FUNCTION', 'CALL_FUNCTION_KW', 'CALL_FUNCTION_EX',
+    'MAKE_FUNCTION', 'CALL_FUNCTION_EX',
     # Added in P3.7 https://bugs.python.org/issue26110
-    'CALL_METHOD', 'LOAD_METHOD',
+    'LOAD_METHOD',
 
     'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_ABSOLUTE', 'JUMP_BACKWARD',
-    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
-    'SETUP_FINALLY', 'END_FINALLY',
-    # Added in 3.8 https://bugs.python.org/issue17611
-    'BEGIN_FINALLY', 'CALL_FINALLY', 'POP_FINALLY',
+    'JUMP_FORWARD', 'JUMP_BACKWARD',
+    'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
+    'SETUP_FINALLY',
 
     'RAISE_VARARGS', 'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
-
-    'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
+    'RERAISE',
 
     # Following opcodes were Added in 3.11
-    # replacement of opcodes CALL_FUNCTION, CALL_FUNCTION_KW, CALL_METHOD
-    'PUSH_NULL', 'PRECALL', 'CALL', 'KW_NAMES',
-    # replacement of POP_JUMP_IF_TRUE and POP_JUMP_IF_FALSE
-    'POP_JUMP_FORWARD_IF_FALSE', 'POP_JUMP_FORWARD_IF_TRUE',
-    'POP_JUMP_BACKWARD_IF_FALSE', 'POP_JUMP_BACKWARD_IF_TRUE',
-    # special case of the previous for IS NONE / IS NOT NONE
-    'POP_JUMP_FORWARD_IF_NONE', 'POP_JUMP_BACKWARD_IF_NONE',
-    'POP_JUMP_FORWARD_IF_NOT_NONE', 'POP_JUMP_BACKWARD_IF_NOT_NONE',
-    # replacement of JUMP_IF_NOT_EXC_MATCH
-    'CHECK_EXC_MATCH',
-    # new opcodes
+    'PUSH_NULL', 'CALL', 'KW_NAMES', 'CHECK_EXC_MATCH',
     'RETURN_GENERATOR',
     'PUSH_EXC_INFO',
+
     'NOP',
     'FORMAT_VALUE', 'BUILD_STRING',
     # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
@@ -341,10 +317,11 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
         raise ValueError('%r while compiling\n%r' % (e, expr))
 
 
+@deprecated("Since 20.0, use ast.literal_eval instead")
 def const_eval(expr):
     """const_eval(expression) -> value
 
-    Safe Python constant evaluation
+    Safe Python constant evaluation, equivalent to `ast.literal_eval`.
 
     Evaluates a string that contains an expression describing
     a Python constant. Strings that are not valid Python expressions
@@ -357,11 +334,10 @@ def const_eval(expr):
     >>> const_eval("1+2")
     Traceback (most recent call last):
     ...
-    ValueError: opcode BINARY_ADD not allowed
+    ValueError: malformed node or string on line 1: <ast.BinOp object at 0xdeadbeef>
     """
-    c = compile_codeobj(expr)
-    assert_valid_codeobj(_CONST_OPCODES, c, expr)
-    return unsafe_eval(c)
+    return ast.literal_eval(expr)
+
 
 def expr_eval(expr):
     """expr_eval(expression) -> value
@@ -384,6 +360,7 @@ def expr_eval(expr):
     c = compile_codeobj(expr)
     assert_valid_codeobj(_EXPR_OPCODES, c, expr)
     return unsafe_eval(c)
+
 
 _BUILTINS = {
     '__import__': _import,
