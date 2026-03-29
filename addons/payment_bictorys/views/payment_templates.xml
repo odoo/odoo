@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="redirect_form_bictorys">
+        <form t-att-action="api_url" method="get" id="bictorys_redirect_form">
+            <input type="hidden" name="charge_id" t-att-value="charge_id"/>
+            <input type="hidden" name="op_token" t-att-value="op_token"/>
+            <button type="submit" style="display:none;">Proceed</button>
+        </form>
+    </template>
+</odoo>

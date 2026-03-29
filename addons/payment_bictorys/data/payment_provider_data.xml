@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Online payment provider (eCommerce / Invoicing).
+         Starts disabled — the admin enables it and enters credentials manually.
+         The payment.method record is created automatically by Odoo when the
+         provider is published. -->
+    <record id="payment_provider_bictorys" model="payment.provider">
+        <field name="code">bictorys</field>
+        <field name="name">Bictorys</field>
+        <field name="state">disabled</field>
+        <field name="image_128" type="base64" file="payment_bictorys/static/description/icon.png"/>
+    </record>
+
+    <!--
+        NOTE: No payment.method and no pos.payment.method records are created here.
+
+        payment.method:
+            Odoo creates it automatically when the provider is published (enabled + is_published).
+            Creating it manually while the provider is disabled raises a UserError.
+
+        pos.payment.method (POS terminal):
+            Created manually by the admin in:
+            Point of Sale > Configuration > Payment Methods > New
+            - set "Payment Terminal" = "Bictorys"
+            - set "Device ID" (bictorys_terminal_identifier)
+            - add to POS config
+    -->
+
+</odoo>

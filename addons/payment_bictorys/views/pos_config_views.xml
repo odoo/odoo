@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        The field 'is_bictorys_method' on pos.payment.method is automatically
+        shown by Odoo in the auto-generated list and form views.
+        No explicit view inheritance is needed here.
+    -->
+
+    <!-- POS Order list: show Bictorys order ID and payment status -->
+    <record id="pos_order_list_bictorys" model="ir.ui.view">
+        <field name="name">pos.order.list.bictorys</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="bictorys_order_id" optional="hide"/>
+                <field name="bictorys_payment_status" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

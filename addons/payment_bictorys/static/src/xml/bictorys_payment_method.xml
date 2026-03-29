@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <!-- ============================= -->
+    <!-- Payment in progress dialog    -->
+    <!-- ============================= -->
+    <t t-name="payment_bictorys.BictorysPaymentDialog">
+        <Dialog contentClass="'bictorys_data_dialog'" title="'Payment confirmation in progress...'">
+
+            <div class="text-center py-4">
+                <i class="fa fa-spinner fa-spin mb-3"
+                   style="font-size:48px; color:#E73A6E;"/>
+
+                <div style="font-size:18px; font-weight:600;" t-esc="props.message"/>
+            </div>
+
+            <t t-set-slot="footer">
+                <div class="o_dialog_footer"
+                     style="gap:15px; display:flex; justify-content:center;">
+
+                    <button class="btn"
+                            style="background-color:#E73A6E;
+                                   width:240px;
+                                   height:60px;
+                                   font-size:20px;
+                                   color:white;"
+                            t-on-click="onCancel">
+                        Cancel
+                    </button>
+
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+
+    <!-- ============================= -->
+    <!-- Error dialog                  -->
+    <!-- ============================= -->
+    <t t-name="payment_bictorys.BictorysErrorDialog">
+        <Dialog contentClass="'bictorys_data_dialog'" title="'Information'">
+
+            <div class="text-center py-4">
+                <i class="fa fa-exclamation-triangle mb-3"
+                   style="font-size:48px; color:#E73A6E;"/>
+
+                <div style="font-size:18px;" t-esc="props.message"/>
+            </div>
+
+            <t t-set-slot="footer">
+                <div class="o_dialog_footer"
+                     style="gap:15px; display:flex; justify-content:center;">
+
+                    <button class="btn"
+                            style="background-color:#E73A6E;
+                                   width:240px;
+                                   height:60px;
+                                   font-size:20px;
+                                   color:white;"
+                            t-on-click="onClose">
+                        OK
+                    </button>
+
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

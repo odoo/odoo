@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bictorys — Guide de paramétrage Odoo 18</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bictorys: #E73A6E;
+    --bictorys-dark: #c42d58;
+    --bictorys-light: #fde8ef;
+    --ink: #0f0f0f;
+    --ink-soft: #3a3a3a;
+    --ink-muted: #6b6b6b;
+    --rule: #e2e2e2;
+    --surface: #fafafa;
+    --white: #ffffff;
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); line-height: 1.7; font-size: 15px; }
+
+  /* HEADER */
+  header { background: var(--ink); color: var(--white); padding: 0; position: relative; overflow: hidden; }
+  .header-inner { max-width: 960px; margin: 0 auto; padding: 60px 40px 56px; position: relative; z-index: 2; }
+  .header-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bictorys); color: var(--white); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; margin-bottom: 28px; }
+  .header-badge::before { content: ''; width: 7px; height: 7px; background: var(--white); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.7); } }
+  header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; margin-bottom: 16px; letter-spacing: -.02em; }
+  header h1 span { color: var(--bictorys); }
+  header p.subtitle { font-size: 16px; font-weight: 300; color: rgba(255,255,255,.65); max-width: 560px; line-height: 1.6; }
+  .header-deco { position: absolute; right: -60px; top: -60px; width: 400px; height: 400px; border-radius: 50%; border: 60px solid rgba(231,58,110,.12); z-index: 1; }
+  .header-deco2 { position: absolute; right: 80px; bottom: -100px; width: 240px; height: 240px; border-radius: 50%; border: 40px solid rgba(231,58,110,.07); z-index: 1; }
+
+  /* PAYMENT PILLS */
+  .payment-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 100px; padding: 7px 16px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.85); }
+  .pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pill-dot.wave { background: #1a73e8; }
+  .pill-dot.orange { background: #ff7900; }
+  .pill-dot.card { background: #34d399; }
+
+
+  /* NAV */
+  nav { background: var(--white); border-bottom: 1px solid var(--rule); position: sticky; top: 0; z-index: 100; }
+  .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 40px; display: flex; overflow-x: auto; }
+  nav a { display: block; padding: 16px 20px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink-muted); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: color .2s, border-color .2s; }
+  nav a:hover { color: var(--bictorys); border-color: var(--bictorys); }
+
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 64px 40px; }
+
+  /* SECTION */
+  section { margin-bottom: 80px; }
+  .section-label { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--bictorys); margin-bottom: 12px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--bictorys-light); }
+  section h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.4rem, 3vw, 2rem); letter-spacing: -.02em; margin-bottom: 8px; }
+  section > p.intro { color: var(--ink-muted); font-size: 15px; margin-bottom: 36px; max-width: 640px; }
+
+  /* BICTORYS INTRO CARD */
+  .bictorys-card { background: var(--white); border: 1px solid var(--rule); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  .bictorys-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 10px; }
+  .bictorys-card p { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+  .payment-method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .pm-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: var(--radius); border: 1px solid var(--rule); font-size: 13px; font-weight: 500; }
+  .pm-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .pm-icon.wave { background: #e8f0fe; }
+  .pm-icon.orange { background: #fff3e0; }
+  .pm-icon.card { background: #ecfdf5; }
+
+  .use-case-box { padding: 14px; border-radius: var(--radius); margin-bottom: 10px; }
+  .use-case-box.web { background: var(--bictorys-light); border: 1px solid #f9a8c9; }
+  .use-case-box.pos { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .use-case-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .use-case-box.web .use-case-title { color: var(--bictorys-dark); }
+  .use-case-box.pos .use-case-title { color: #166534; }
+  .use-case-desc { font-size: 13px; color: var(--ink-soft); }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 24px; }
+  .step { background: var(--white); border: 1px solid var(--rule); border-radius: var(--radius-lg); overflow: hidden; transition: box-shadow .2s, border-color .2s; }
+  .step:hover { box-shadow: 0 8px 32px rgba(0,0,0,.06); border-color: #d0d0d0; }
+  .step-header { display: flex; align-items: flex-start; gap: 20px; padding: 28px 32px; }
+  .step-num { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: var(--bictorys); color: var(--white); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .step-num.warn { background: #f59e0b; }
+  .step-content h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; }
+  .step-content p { color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
+  .step-img { margin: 0 32px 28px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--rule); }
+  .step-img img { width: 100%; display: block; }
+  .step-img.placeholder { background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%); min-height: 220px; display: flex; align-items: center; justify-content: center; }
+  .step-img.placeholder::after { content: attr(data-label); font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; color: #b0b0b0; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* INFO BOXES */
+  .info-box { border-radius: var(--radius); padding: 18px 22px; margin: 20px 0; display: flex; gap: 14px; align-items: flex-start; font-size: 14px; }
+  .info-box.note { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .info-box.tip { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+  .info-box.warn { background: var(--bictorys-light); border: 1px solid #f9a8c9; color: #9b1d46; }
+  .info-box-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* CODE / PATH */
+  .path { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--white); font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 6px; font-family: 'Courier New', monospace; margin: 4px 2px; }
+  .path .sep { color: var(--bictorys); }
+  code { background: #f0f0f0; padding: 2px 7px; border-radius: 5px; font-size: 13px; font-family: 'Courier New', monospace; color: var(--bictorys-dark); }
+
+  /* FIELD TABLE */
+  .field-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  .field-table th { text-align: left; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); padding: 10px 16px; border-bottom: 2px solid var(--rule); }
+  .field-table td { padding: 14px 16px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .field-table tr:last-child td { border-bottom: none; }
+  .field-table tr:hover td { background: var(--surface); }
+  .field-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; }
+  .field-required { display: inline-block; background: var(--bictorys); color: var(--white); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 100px; margin-left: 6px; vertical-align: middle; letter-spacing: .05em; }
+  .field-desc { color: var(--ink-soft); line-height: 1.5; }
+
+  /* WEBHOOK BLOCK */
+  .webhook-block { background: var(--ink); border-radius: var(--radius-lg); padding: 32px; color: var(--white); margin: 24px 0; }
+  .webhook-block h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 11px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 20px; }
+  .webhook-url { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius); padding: 14px 20px; margin-bottom: 12px; }
+  .webhook-url-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--bictorys); margin-bottom: 4px; }
+  .webhook-url-value { font-family: 'Courier New', monospace; font-size: 13px; color: rgba(255,255,255,.9); word-break: break-all; }
+  .webhook-header { display: flex; gap: 12px; align-items: center; background: rgba(231,58,110,.15); border: 1px solid rgba(231,58,110,.3); border-radius: var(--radius); padding: 14px 20px; margin-top: 16px; font-size: 13px; font-family: 'Courier New', monospace; }
+  .webhook-header-key { color: var(--bictorys); }
+  .webhook-header-val { color: rgba(255,255,255,.7); }
+
+  /* FLOW */
+  .flow { display: flex; align-items: center; margin: 28px 0; overflow-x: auto; padding-bottom: 8px; }
+  .flow-step { flex-shrink: 0; background: var(--white); border: 1.5px solid var(--rule); border-radius: var(--radius); padding: 14px 18px; text-align: center; min-width: 130px; }
+  .flow-step-icon { font-size: 22px; margin-bottom: 6px; }
+  .flow-step-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; color: var(--ink); line-height: 1.3; }
+  .flow-step-sub { font-size: 11px; color: var(--ink-muted); margin-top: 3px; }
+  .flow-arrow { flex-shrink: 0; color: var(--bictorys); font-size: 20px; padding: 0 6px; }
+  .flow-step.highlight { background: var(--bictorys); border-color: var(--bictorys); }
+  .flow-step.highlight .flow-step-label,
+  .flow-step.highlight .flow-step-sub { color: var(--white); }
+
+  /* FOOTER */
+  footer { background: var(--ink); color: rgba(255,255,255,.4); padding: 40px; font-size: 13px; }
+  .footer-inner { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  footer span { color: var(--bictorys); }
+  footer a { color: rgba(255,255,255,.5); text-decoration: none; }
+  footer a:hover { color: var(--bictorys); }
+
+  @media (max-width: 640px) {
+    .header-inner { padding: 40px 24px 36px; }
+    main { padding: 40px 24px; }
+    .step-header { padding: 20px; }
+    .step-img { margin: 0 20px 20px; }
+    .webhook-block { padding: 20px; }
+    nav a { padding: 14px; font-size: 12px; }
+    .bictorys-card { grid-template-columns: 1fr; }
+    .payment-method-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-deco"></div>
+  <div class="header-deco2"></div>
+  <div class="header-inner">
+    <div class="header-badge">Guide de paramétrage</div>
+    <h1>Module <span>Bictorys</span><br/>pour Odoo 18</h1>
+    <p class="subtitle">Intégrez Bictorys dans Odoo 18 pour accepter Wave, Orange Money et carte bancaire — en ligne et au Point de Vente.</p>
+    <div class="payment-pills">
+      <span class="pill"><span class="pill-dot wave"></span>Wave</span>
+      <span class="pill"><span class="pill-dot orange"></span>Orange Money</span>
+      <span class="pill"><span class="pill-dot card"></span>Carte bancaire</span>
+
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#bictorys">Bictorys</a>
+    <a href="#prerequis">Prérequis</a>
+    <a href="#installation">Installation</a>
+    <a href="#web">Paiement Web</a>
+    <a href="#webhook">Webhooks</a>
+    <a href="#pos">Point de Vente</a>
+    <a href="#flux">Flux</a>
+    <a href="#troubleshooting">Dépannage</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- 00 — QU'EST-CE QUE BICTORYS -->
+  <section id="bictorys">
+    <div class="section-label">00</div>
+    <h2>Qu'est-ce que Bictorys ?</h2>
+    <p class="intro">
+      <a href="https://www.bictorys.com/" target="_blank" style="color:var(--bictorys);font-weight:600;">Bictorys</a>
+      est un intermédiaire de paiement africain qui permet d'accepter les paiements mobiles et par carte via une seule intégration.
+    </p>
+    <div class="bictorys-card">
+      <div>
+        <h3>Moyens de paiement acceptés</h3>
+        <p>Le client choisit son moyen de paiement préféré. Bictorys traite la transaction et crédite votre compte marchand.</p>
+        <div class="payment-method-grid">
+          <div class="pm-item"><div class="pm-icon wave">💙</div><div><div style="font-weight:600;">Wave</div><div style="font-size:11px;color:var(--ink-muted);">Mobile Money</div></div></div>
+          <div class="pm-item"><div class="pm-icon orange">🟠</div><div><div style="font-weight:600;">Orange Money</div><div style="font-size:11px;color:var(--ink-muted);">Mobile Money</div></div></div>
+          <div class="pm-item"><div class="pm-icon card">💳</div><div><div style="font-weight:600;">Carte bancaire</div><div style="font-size:11px;color:var(--ink-muted);">Visa / Mastercard</div></div></div>
+
+        </div>
+      </div>
+      <div>
+        <h3>Deux modes d'utilisation</h3>
+        <p style="margin-bottom:14px;">Ce module active Bictorys dans deux contextes distincts d'Odoo :</p>
+        <div class="use-case-box web">
+          <div class="use-case-title">🌐 Paiement Web</div>
+          <div class="use-case-desc">E-commerce, facturation, portail client. Le client est redirigé vers la page de paiement Bictorys.</div>
+        </div>
+        <div class="use-case-box pos">
+          <div class="use-case-title">🏪 Point de Vente</div>
+          <div class="use-case-desc">Terminal en caisse. La commande est envoyée au terminal Bictorys, le client paie depuis son mobile.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 — PRÉREQUIS -->
+  <section id="prerequis">
+    <div class="section-label">01</div>
+    <h2>Prérequis</h2>
+    <p class="intro">Avant de commencer, assurez-vous d'avoir les éléments suivants à disposition.</p>
+    <table class="field-table">
+      <thead><tr><th>Élément</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="field-name">Compte Bictorys</span> <span class="field-required">requis</span></td>
+          <td class="field-desc">Un compte marchand actif sur <a href="https://www.bictorys.com/" target="_blank" style="color:var(--bictorys);">bictorys.com</a> (test ou production).</td>
+        </tr>
+        <tr>
+          <td><span class="field-name">Secret Key</span> <span class="field-required">requis</span></td>
+          <td class="field-desc">Clé secrète API disponible dans votre tableau de bord Bictorys.</td>
+        </tr>
+        <tr>
+          <td><span class="field-name">Webhook Secret</span> <span class="field-required">requis</span></td>
+          <td class="field-desc">Secret de validation des webhooks entrants, à définir dans votre espace Bictorys.</td>
+        </tr>
+        <tr>
+          <td><span class="field-name">Odoo 18.0</span></td>
+          <td class="field-desc">Modules dépendants : <code>payment</code>, <code>point_of_sale</code>.</td>
+        </tr>
+        <tr>
+          <td><span class="field-name">Device ID</span></td>
+          <td class="field-desc">Identifiant UUID du terminal Bictorys. Requis uniquement pour le Point de Vente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 02 — INSTALLATION -->
+  <section id="installation">
+    <div class="section-label">02</div>
+    <h2>Installation du module</h2>
+    <p class="intro">Le module <code>payment_bictorys</code> s'installe comme tout module Odoo standard.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Copier le module dans les addons</h3>
+            <p>Placez le dossier <code>payment_bictorys</code> dans votre répertoire d'addons Odoo, puis redémarrez le serveur ou mettez à jour la liste des modules.</p>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Activer le mode développeur</h3>
+            <p>Allez dans <span class="path">Paramètres <span class="sep">›</span> À propos <span class="sep">›</span> Activer le mode développeur</span> pour voir tous les modules disponibles.</p>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Installer le module</h3>
+            <p>Dans <span class="path">Paramètres <span class="sep">›</span> Applications</span>, recherchez <strong>Bictorys</strong> et cliquez sur <strong>Installer</strong>.</p>
+          </div>
+        </div>
+        <div class="step-img"><img src="installation.png" alt="Installation du module Bictorys"/></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — PAIEMENT WEB -->
+  <section id="web">
+    <div class="section-label">03</div>
+    <h2>Paiement en ligne (Web)</h2>
+    <p class="intro">Permet à vos clients de payer en ligne via Wave, Orange Money ou carte bancaire — depuis une facture, le portail client ou votre boutique e-commerce.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Accéder aux fournisseurs de paiement</h3>
+            <p>Allez dans <span class="path">Comptabilité <span class="sep">›</span> Configuration <span class="sep">›</span> Fournisseurs de paiement</span> et sélectionnez <strong>Bictorys</strong>.</p>
+          </div>
+        </div>
+        <div class="step-img"><img src="bictorys_provider.png" alt="Fournisseurs de paiement — Bictorys"/></div>
+      </div>
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Renseigner les identifiants API</h3>
+            <p>Dans l'onglet <strong>Identifiants</strong>, renseignez votre <strong>Secret Key</strong> et votre <strong>Webhook Secret</strong> obtenus depuis votre tableau de bord <a href="https://www.bictorys.com/" target="_blank" style="color:var(--bictorys);">bictorys.com</a>.</p>
+          </div>
+        </div>
+        <div style="padding:0 32px 24px;">
+          <table class="field-table">
+            <thead><tr><th>Champ</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="field-name">Secret Key</span> <span class="field-required">requis</span></td>
+                <td class="field-desc">Clé secrète fournie par Bictorys. Disponible dans votre dashboard marchand.</td>
+              </tr>
+              <tr>
+                <td><span class="field-name">Webhook Secret</span> <span class="field-required">requis</span></td>
+                <td class="field-desc">Secret pour valider l'authenticité des notifications entrantes de Bictorys.</td>
+              </tr>
+              <tr>
+                <td><span class="field-name">État</span></td>
+                <td class="field-desc"><code>Test</code> pour les tests sans vrai paiement, <code>Activé</code> pour la production.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="step-img"><img src="conf_bictorys.png" alt="Configuration des identifiants Bictorys"/></div>
+      </div>
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Activer et publier</h3>
+            <p>Passez l'état sur <strong>Activé</strong> (ou <strong>Test</strong>) et cochez <strong>Publié</strong> pour que Bictorys apparaisse comme option de paiement sur le portail client et le site e-commerce.</p>
+          </div>
+        </div>
+        <div class="step-img"><img src="mode.png" alt="Activation et publication du fournisseur"/></div>
+      </div>
+    </div>
+    <div class="info-box tip">
+      <span class="info-box-icon">✅</span>
+      <div>En mode <strong>Test</strong>, l'API <code>https://api.test.bictorys.com</code> est utilisée. En <strong>Activé</strong>, l'URL bascule automatiquement vers <code>https://api.bictorys.com</code>.</div>
+    </div>
+    <div class="info-box warn">
+      <span class="info-box-icon">⚠️</span>
+      <div>Ne cochez <strong>Publié</strong> qu'une fois vos tests terminés et validés.</div>
+    </div>
+  </section>
+
+  <!-- 04 — WEBHOOKS -->
+  <section id="webhook">
+    <div class="section-label">04</div>
+    <h2>Configuration des Webhooks</h2>
+    <p class="intro">Les webhooks permettent à Bictorys de notifier Odoo en temps réel après chaque paiement. Ces URLs sont à enregistrer dans votre tableau de bord Bictorys.</p>
+    <div class="webhook-block">
+      <h4>URLs à enregistrer sur la plateforme Bictorys</h4>
+      <div class="webhook-url">
+        <div>
+          <div class="webhook-url-label">🌐 Paiement Web (e-commerce / facturation)</div>
+          <div class="webhook-url-value">https://votre-domaine.odoo.com/payment/bictorys/webhook</div>
+        </div>
+      </div>
+      <div class="webhook-url">
+        <div>
+          <div class="webhook-url-label">🏪 Point de Vente (terminal)</div>
+          <div class="webhook-url-value">https://votre-domaine.odoo.com/payment/bictorys/pos/webhook</div>
+        </div>
+      </div>
+      <div class="webhook-header">
+        <span class="webhook-header-key">En-tête de sécurité :</span>
+        <span class="webhook-header-val">X-Secret-Key: &lt;votre_webhook_secret&gt;</span>
+      </div>
+    </div>
+    <div class="info-box warn">
+      <span class="info-box-icon">⚠️</span>
+      <div>Le <strong>Webhook Secret</strong> dans Odoo doit être identique à celui sur la plateforme Bictorys. Toute différence entraîne un rejet silencieux (HTTP 403) des notifications.</div>
+    </div>
+    <div class="info-box note">
+      <span class="info-box-icon">💡</span>
+      <div>Remplacez <code>votre-domaine.odoo.com</code> par l'URL réelle de votre Odoo. Sur Odoo.sh : l'URL de votre branche de production.</div>
+    </div>
+  </section>
+
+  <!-- 05 — POINT DE VENTE -->
+  <section id="pos">
+    <div class="section-label">05</div>
+    <h2>Point de Vente (Terminal)</h2>
+    <p class="intro">En caisse, la commande est envoyée au terminal Bictorys. Le client paie via Wave, Orange Money ou carte depuis son téléphone. Odoo est notifié par webhook dès la confirmation.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Créer une méthode de paiement</h3>
+            <p>Allez dans <span class="path">Point de Vente <span class="sep">›</span> Configuration <span class="sep">›</span> Méthodes de paiement</span> et cliquez sur <strong>Nouveau</strong>.</p>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Configurer le terminal Bictorys</h3>
+            <p>Renseignez les trois champs obligatoires :</p>
+          </div>
+        </div>
+        <div style="padding:0 32px 24px;">
+          <table class="field-table">
+            <thead><tr><th>Champ</th><th>Valeur</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="field-name">Nom</span> <span class="field-required">requis</span></td>
+                <td class="field-desc">Ex : <code>Bictorys</code> ou <code>Wave / Orange Money</code></td>
+              </tr>
+              <tr>
+                <td><span class="field-name">Terminal de paiement</span> <span class="field-required">requis</span></td>
+                <td class="field-desc">Sélectionner <code>Bictorys</code> dans la liste déroulante.</td>
+              </tr>
+              <tr>
+                <td><span class="field-name">Terminal / Device ID</span> <span class="field-required">requis</span></td>
+                <td class="field-desc">UUID du terminal fourni dans votre dashboard Bictorys (ex : <code>92b70387-c87b-4c8d-...</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="step-img"><img src="pos_mode.png" alt="Méthode de paiement Bictorys"/></div>
+        <div class="info-box warn" style="margin:0 32px 24px;">
+          <span class="info-box-icon">⚠️</span>
+          <div>Ne cochez <strong>jamais</strong> <em>Paiement en ligne</em> sur cette méthode. Cela déclencherait le QR code natif d'Odoo à la place du terminal Bictorys.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Ajouter la méthode à la caisse</h3>
+            <p>Dans <span class="path">Point de Vente <span class="sep">›</span> Configuration <span class="sep">›</span> Paramètres</span>, section <strong>Paiement</strong>, ajoutez la méthode <strong>Bictorys</strong> à votre caisse.</p>
+          </div>
+        </div>
+        <div class="step-img"><img src="methode.png" alt="Fournisseur Bictorys avec clé"/></div>
+      </div>
+      <div class="step">
+        <div class="step-header">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Vérifier le fournisseur (Secret Key)</h3>
+            <p>Le terminal POS utilise la <strong>Secret Key</strong> du fournisseur Bictorys pour créer la commande sur l'API. Assurez-vous qu'il est en état <strong>Test</strong> ou <strong>Activé</strong> avec la clé renseignée. Il n'est pas nécessaire de le publier sur le site web pour n'utiliser que le POS.</p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <div class="info-box tip">
+      <span class="info-box-icon">✅</span>
+      <div>Le terminal POS et le paiement web sont <strong>totalement indépendants</strong>. Vous pouvez n'utiliser que le POS sans publier le provider web, et inversement.</div>
+    </div>
+  </section>
+
+  <!-- 06 — FLUX -->
+  <section id="flux">
+    <div class="section-label">06</div>
+    <h2>Flux de paiement</h2>
+    <p class="intro">Vue d'ensemble du déroulement d'un paiement selon le canal.</p>
+
+    <h3 style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:16px;font-size:1rem;">🌐 Paiement Web</h3>
+    <div class="flow">
+      <div class="flow-step"><div class="flow-step-icon">🛒</div><div class="flow-step-label">Client valide</div><div class="flow-step-sub">portail / facture</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight"><div class="flow-step-icon">🔄</div><div class="flow-step-label">Redirection</div><div class="flow-step-sub">page Bictorys</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-icon">💳</div><div class="flow-step-label">Client paie</div><div class="flow-step-sub">Wave / OM / CB</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight"><div class="flow-step-icon">📡</div><div class="flow-step-label">Webhook</div><div class="flow-step-sub">/bictorys/webhook</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-icon">✅</div><div class="flow-step-label">Transaction</div><div class="flow-step-sub">confirmée dans Odoo</div></div>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;font-weight:700;margin:36px 0 16px;font-size:1rem;">🏪 Paiement Point de Vente</h3>
+    <div class="flow">
+      <div class="flow-step"><div class="flow-step-icon">🧾</div><div class="flow-step-label">Caissier valide</div><div class="flow-step-sub">commande POS</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight"><div class="flow-step-icon">📤</div><div class="flow-step-label">Commande créée</div><div class="flow-step-sub">sur Bictorys API</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-icon">📱</div><div class="flow-step-label">Client paie</div><div class="flow-step-sub">Wave / OM / CB</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight"><div class="flow-step-icon">📡</div><div class="flow-step-label">Webhook POS</div><div class="flow-step-sub">/pos/webhook</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-icon">✅</div><div class="flow-step-label">Commande confirmée</div><div class="flow-step-sub">reçu imprimé</div></div>
+    </div>
+  </section>
+
+
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>Module <span>payment_bictorys</span> — Odoo 18.0 — LGPL-3</div>
+    <a href="https://www.bictorys.com/" target="_blank">bictorys.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
