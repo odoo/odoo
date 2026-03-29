@@ -7,16 +7,17 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-08 06:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -268,6 +269,13 @@ msgid "No"
 msgstr "Ne"
 
 #. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "No tax"
+msgstr ""
+
+#. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "Order lines where this program is applied."
 msgstr ""
@@ -291,7 +299,7 @@ msgstr ""
 #: code:addons/pos_coupon/models/coupon_program.py:0
 #, python-format
 msgid "PoS Orders"
-msgstr ""
+msgstr "Objednávky prod. místa"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_coupon_program_form
@@ -332,7 +340,7 @@ msgstr "Prodejní místo"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_ids
 msgid "Pos Order"
-msgstr ""
+msgstr "Objednávka prod. místa"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order_line__program_id
@@ -367,6 +375,13 @@ msgstr "Promo / kuponový program, na kterém je založena tato řada odměn."
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/ResetProgramsButton.xml:0
 #, python-format
 msgid "Reset Programs"
+msgstr ""
+
+#. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "Tax: %s"
 msgstr ""
 
 #. module: pos_coupon

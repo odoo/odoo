@@ -98,7 +98,7 @@
                     <field name="internal_group" invisible="1"/>
                     <field name="reconcile" widget="boolean_toggle" attrs="{'invisible': ['|', ('internal_type','=','liquidity'), ('internal_group', '=', 'off_balance')]}"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
-                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>

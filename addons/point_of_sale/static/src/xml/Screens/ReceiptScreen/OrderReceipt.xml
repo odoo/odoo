@@ -182,7 +182,7 @@
                             <t t-esc="env.pos.format_currency_no_symbol(line.price_with_tax_before_discount)"/>
                         </t>
                         <t t-else="">
-                            <t t-esc="env.pos.format_currency_no_symbol(line.price)"/>
+                            <t t-esc="env.pos.format_currency_no_symbol(line.unitDisplayPriceBeforeDiscount)"/>
                         </t>
                     </div>
                 </t>
@@ -191,11 +191,11 @@
                         Discount: <t t-esc="line.discount" />%
                     </div>
                 </t>
-                <div class="pos-receipt-left-padding">
+                <div class="pos-receipt-qty-per-price pos-receipt-left-padding">
                     <t t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"/>
                     <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
                     x
-                    <t t-esc="env.pos.format_currency_no_symbol(line.price_display_one)" />
+                    <t t-esc="env.pos.format_currency(line.price_display_one)" />
                     <span class="price_display pos-receipt-right-align">
                         <t t-esc="env.pos.format_currency_no_symbol(line.price_display)" />
                     </span>

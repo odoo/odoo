@@ -5,7 +5,6 @@
         <field name="name">Disable two-factor authentication</field>
         <field name="model_id" ref="base.model_res_users"/>
         <field name="binding_model_id" ref="base.model_res_users"/>
-        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
             action = records.action_totp_disable()

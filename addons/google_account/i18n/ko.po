@@ -7,17 +7,23 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid "Google %s is not yet configured."
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
@@ -34,6 +40,14 @@ msgstr "[%s] 메서드가 지원되지 않습니다. [GET, POST, PUT, PATCH 또�
 #: code:addons/google_account/models/google_service.py:0
 #, python-format
 msgid ""
+"Something went wrong during the token generation. Please request again an "
+"authorization code."
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
 msgstr "토큰 생성 중에 문제가 발생했습니다. 인증 코드가 잘못되었을 수 있습니다."
@@ -45,3 +59,9 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
 msgstr "토큰 생성 중에 문제가 발생했습니다. 인증 코드가 잘못되었거나 이미 만료되었을 수 있습니다."
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:0
+#, python-format
+msgid "The refresh token for authentication is not set."
+msgstr ""

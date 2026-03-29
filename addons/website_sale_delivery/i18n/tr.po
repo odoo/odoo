@@ -12,15 +12,16 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,7 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_shipping_method
 msgid "<b>Shipping Method: </b>"
 msgstr "<b>Nakliye Yöntemi: </b>"
 
@@ -106,7 +107,6 @@ msgstr "FedEx Nakliye Yöntemleri"
 #. module: website_sale_delivery
 #. openerp-web
 #: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 #, python-format
 msgid "Free"
 msgstr "Uygun"
@@ -130,11 +130,27 @@ msgstr ""
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
+"It seems that there is already a transaction for your order, you can not "
+"change the delivery method anymore"
+msgstr ""
+"Görünüşe göre siparişiniz için zaten bir işlem var, artık teslimat yöntemini"
+" değiştiremezsiniz."
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
 "Mevcut siparişiniz ve gönderim adresiniz için geçerli bir gönderim metodu "
 "bulunmamaktadır. Daha fazla bilgi için lütfen bizimle iletişime geçin."
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery

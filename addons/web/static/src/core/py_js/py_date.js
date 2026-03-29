@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { parseArgs } from "./py_utils";
+import { parseArgs } from "./py_parser";
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -224,10 +224,18 @@ export class PyDate {
      * @returns {PyDate}
      */
     static today() {
-        const now = new Date();
-        const year = now.getUTCFullYear();
-        const month = now.getUTCMonth() + 1;
-        const day = now.getUTCDate();
+        return this.convertDate(new Date());
+    }
+
+    /**
+     * Convert a date object into PyDate
+     * @param {Date} date
+     * @returns {PyDate}
+     */
+    static convertDate(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
         return new PyDate(year, month, day);
     }
 
@@ -323,13 +331,21 @@ export class PyDateTime {
      * @returns {PyDateTime}
      */
     static now() {
-        const now = new Date();
-        const year = now.getUTCFullYear();
-        const month = now.getUTCMonth() + 1;
-        const day = now.getUTCDate();
-        const hour = now.getUTCHours();
-        const minute = now.getUTCMinutes();
-        const second = now.getUTCSeconds();
+        return this.convertDate(new Date());
+    }
+
+    /**
+     * Convert a date object into PyDateTime
+     * @param {Date} date
+     * @returns {PyDateTime}
+     */
+    static convertDate(date) {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+        const second = date.getSeconds();
         return new PyDateTime(year, month, day, hour, minute, second, 0);
     }
 
@@ -473,7 +489,7 @@ export class PyDateTime {
      * @returns {PyDateTime}
      */
     to_utc() {
-        const d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+        const d = new Date(this.year, this.month -1, this.day, this.hour, this.minute, this.second);
         const timedelta = PyTimeDelta.create({ minutes: d.getTimezoneOffset() });
         return this.add(timedelta);
     }
@@ -495,8 +511,8 @@ export class PyTime extends PyDate {
     constructor(hour, minute, second) {
         const now = new Date();
         const year = now.getFullYear();
-        const month = now.getUTCMonth();
-        const day = now.getUTCDate();
+        const month = now.getMonth();
+        const day = now.getDate();
         super(year, month, day);
         this.hour = hour;
         this.minute = minute;

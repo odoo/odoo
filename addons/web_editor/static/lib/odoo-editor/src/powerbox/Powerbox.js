@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { patienceDiff } from './patienceDiff.js';
-import { getRangePosition } from '../utils/utils.js';
+import { closestBlock, getRangePosition } from '../utils/utils.js';
 
 /**
  * Make `num` cycle from 0 to `max`.
@@ -12,6 +12,7 @@ function cycle(num, max) {
 
 export class Powerbox {
     constructor(options = {}) {
+        this._active = false;
         this.options = options;
         this.options.width = this.options.width || 340;
         if (!this.options._t) this.options._t = string => string;
@@ -22,7 +23,7 @@ export class Powerbox {
         this.el.style.width = `${this.options.width}px`;
         document.body.append(this.el);
 
-        this.addKeydownTrigger('/', { commands: this.options.commands });
+        this.addHotKey('/', { commands: this.options.commands });
 
         this._mainWrapperElement = document.createElement('div');
         this._mainWrapperElement.className = 'oe-commandbar-mainWrapper';
@@ -49,6 +50,7 @@ export class Powerbox {
             groupWrapperEl.append(groupNameEl);
             this._mainWrapperElement.append(groupWrapperEl);
             groupNameEl.innerText = this.options._t('No results');
+            this._resetPosition();
             return;
         }
 
@@ -131,23 +133,27 @@ export class Powerbox {
                     ev => {
                         ev.preventDefault();
                         ev.stopImmediatePropagation();
-                        this._currentValidate();
+                        this._currentValidate(command);
                     },
                     true,
                 );
             }
         }
+        // Hide group name if there is only a single group.
+        if (Object.entries(groups).length === 1) {
+            this._mainWrapperElement.querySelector('.oe-commandbar-groupName').style.display = 'none';
+        }
         this._resetPosition();
     }
 
-    addKeydownTrigger(triggerKey, options) {
+    addHotKey(triggerKey, options) {
         this.options.editable.addEventListener(
-            'keydown',
+            'input',
             ev => {
                 const selection = this.options.document.getSelection();
                 if (!selection.isCollapsed || !selection.rangeCount) return;
                 if (
-                    ev.key === triggerKey &&
+                    ev.data === triggerKey &&
                     !this._active &&
                     (!this.options.shouldActivate || this.options.shouldActivate())
                 ) {
@@ -156,6 +162,12 @@ export class Powerbox {
             },
             true,
         );
+    }
+
+    // todo: remove in master. It has been kept when changing addEventListener
+    // keydown to input in stable to avoid removing a public method.
+    addKeydownTrigger(triggerKey, options) {
+        this.addHotKey(triggerKey, options);
     }
 
     open(openOptions) {
@@ -172,8 +184,10 @@ export class Powerbox {
         const showOnceOnKeyup = () => {
             this.show();
             openOnKeyupTarget.removeEventListener('keyup', showOnceOnKeyup, true);
-            initialTarget = openOnKeyupTarget;
-            this._initialValue = openOnKeyupTarget.textContent;
+            const selection = this.options.document.getSelection();
+            const currentBlock = (selection && closestBlock(selection.anchorNode)) || this.options.editable;
+            initialTarget = currentBlock;
+            this._initialValue = currentBlock.textContent;
         };
         openOnKeyupTarget.addEventListener('keyup', showOnceOnKeyup, true);
 
@@ -194,15 +208,19 @@ export class Powerbox {
                 initialTarget.textContent.split(''),
                 true,
             );
-            this._lastText = diff.bMove.join('');
-            if (this._lastText.match(/\s/) && this._currentOpenOptions.closeOnSpace !== false) {
+            this._lastText = diff.bMove.join('').replaceAll('\ufeff', '');
+            const selection = this.options.document.getSelection();
+            if (
+                (this._lastText.match(/\s/) && this._currentOpenOptions.closeOnSpace !== false) ||
+                !selection ||
+                initialTarget !== closestBlock(selection.anchorNode)
+            ) {
                 this._stop();
                 return;
             }
             const term = this._lastText;
 
-            this._currentFilteredCommands =
-                term === '' ? this._currentOpenOptions.commands : await onValueChangeFunction(term);
+            this._currentFilteredCommands = await onValueChangeFunction(term);
             this.render(this._currentFilteredCommands);
         };
         const keydown = ev => {
@@ -254,10 +272,12 @@ export class Powerbox {
 
             this.options.onStop && this.options.onStop();
         };
-        this._currentValidate = () => {
-            const command = this._currentFilteredCommands.find(
-                c => c === this._currentSelectedCommand,
-            );
+        this._currentValidate = (command) => {
+            if (!command) {
+                command = this._currentFilteredCommands.find(
+                    c => c === this._currentSelectedCommand,
+                );
+            }
             if (command) {
                 !command.isIntermediateStep &&
                     (!command.shouldPreValidate || command.shouldPreValidate()) &&
@@ -284,6 +304,8 @@ export class Powerbox {
             document.addEventListener('mousemove', mousemove);
             document.addEventListener('mousedown', this._stop);
         }
+        // Display powerbox immediately when forceShow is set.
+        if (this._currentOpenOptions.forceShow) showOnceOnKeyup();
     }
 
     nextOpenOptions(openOptions) {
@@ -311,36 +333,31 @@ export class Powerbox {
     // -------------------------------------------------------------------------
 
     _filter(term, commands) {
-        const initalCommands = commands;
-        term = term.toLowerCase();
-        term = term.replaceAll(/\s/g, '\\s');
-        const regex = new RegExp(
-            term
-                .split('')
-                .map(c => c.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'))
-                .join('.*'),
-        );
+        const initialCommands = commands.filter(c => !c.isDisabled || !c.isDisabled());
+        if (term === '') {
+            return initialCommands;
+        }
+        term = term.replace(/\s/g, '\\s');
+        term = term.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+        const exactRegex = new RegExp(term, 'i');
+        const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
         if (term.length) {
-            commands = initalCommands.filter(command => {
-                const commandText = (command.groupName + ' ' + command.title).toLowerCase();
-                return commandText.match(regex);
+            commands = initialCommands.filter(command => {
+                const commandText = (command.groupName + ' ' + command.title);
+                const commandDescription = command.description.replace(/\s/g, '');
+                return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex);
             });
         }
         return commands;
     }
 
     _resetPosition() {
-        const position = getRangePosition(this.el, this.options.document);
+        const position = getRangePosition(this.el, this.options.document, this.options);
         if (!position) {
             this.hide();
             return;
         }
         let { left, top } = position;
-        if (this.options.getContextFromParentRect) {
-            const parentContextRect = this.options.getContextFromParentRect();
-            left += parentContextRect.left;
-            top += parentContextRect.top;
-        }
 
         this.el.style.left = `${left}px`;
         this.el.style.top = `${top}px`;

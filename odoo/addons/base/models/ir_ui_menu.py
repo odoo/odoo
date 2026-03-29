@@ -20,6 +20,7 @@ class IrUiMenu(models.Model):
     _description = 'Menu'
     _order = "sequence,id"
     _parent_store = True
+    _allow_sudo_commands = False
 
     def __init__(self, *args, **kwargs):
         super(IrUiMenu, self).__init__(*args, **kwargs)
@@ -66,7 +67,9 @@ class IrUiMenu(models.Model):
         icon_path = get_module_resource(path_info[0], path_info[1])
         icon_image = False
         if icon_path:
-            with tools.file_open(icon_path, 'rb') as icon_file:
+            with tools.file_open(icon_path, 'rb', filter_ext=(
+                '.gif', '.ico', '.jfif', '.jpeg', '.jpg', '.png', '.svg', '.webp',
+            )) as icon_file:
                 icon_image = base64.encodebytes(icon_file.read())
         return icon_image
 
@@ -218,7 +221,7 @@ class IrUiMenu(models.Model):
 
         xmlids = menu_roots._get_menuitems_xmlids()
         for menu in menu_roots_data:
-            menu['xmlid'] = xmlids[menu['id']]
+            menu['xmlid'] = xmlids.get(menu['id'], '')
 
         return menu_root
 

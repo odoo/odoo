@@ -7,6 +7,7 @@ export class TablePicker extends EventTarget {
         this.options = options;
         this.options.minRowCount = this.options.minRowCount || 3;
         this.options.minColCount = this.options.minColCount || 3;
+        this.options.getContextFromParentRect = this.options.getContextFromParentRect || (() => ({ top: 0, left: 0 }));
 
         this.rowNumber = this.options.minRowCount;
         this.colNumber = this.options.minColCount;
@@ -41,11 +42,11 @@ export class TablePicker extends EventTarget {
         const extraRow = 1;
 
         for (let rowNumber = 1; rowNumber <= rowCount + extraRow; rowNumber++) {
-            const rowElement = this.options.document.createElement('div');
+            const rowElement = document.createElement('div');
             rowElement.classList.add('oe-tablepicker-row');
             this.tablePickerElement.appendChild(rowElement);
             for (let colNumber = 1; colNumber <= colCount + extraCol; colNumber++) {
-                const cell = this.options.document.createElement('div');
+                const cell = this.el.ownerDocument.createElement('div');
                 cell.classList.add('oe-tablepicker-cell', 'btn');
                 rowElement.appendChild(cell);
 
@@ -61,9 +62,9 @@ export class TablePicker extends EventTarget {
                             this.render();
                         }
                     });
-                    this.options.document.removeEventListener('mousemove', bindMouseMove);
+                    this.el.ownerDocument.removeEventListener('mousemove', bindMouseMove);
                 };
-                this.options.document.addEventListener('mousemove', bindMouseMove);
+                this.el.ownerDocument.addEventListener('mousemove', bindMouseMove);
                 cell.addEventListener('mousedown', this.selectCell.bind(this));
             }
         }
@@ -98,14 +99,15 @@ export class TablePicker extends EventTarget {
     }
 
     _showFloating() {
+        const isRtl = this.options.direction === 'rtl';
         const keydown = e => {
             const actions = {
                 ArrowRight: {
-                    colNumber: this.colNumber + 1,
+                    colNumber: (this.colNumber + (isRtl ? -1 : 1)) || 1,
                     rowNumber: this.rowNumber,
                 },
                 ArrowLeft: {
-                    colNumber: this.colNumber - 1 || 1,
+                    colNumber: (this.colNumber + (isRtl ? 1 : -1)) || 1,
                     rowNumber: this.rowNumber,
                 },
                 ArrowUp: {
@@ -133,8 +135,13 @@ export class TablePicker extends EventTarget {
             }
         };
 
-        const offset = getRangePosition(this.el, this.options.document);
-        this.el.style.left = `${offset.left}px`;
+        const offset = getRangePosition(this.el, this.options.document, this.options);
+        if (isRtl) {
+            this.el.style.right = `${offset.right}px`;
+        } else {
+            this.el.style.left = `${offset.left}px`;
+        }
+
         this.el.style.top = `${offset.top}px`;
 
         const stop = () => {

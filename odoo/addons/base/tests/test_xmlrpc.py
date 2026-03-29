@@ -65,12 +65,22 @@ class TestXMLRPC(common.HttpCase):
 
     def test_xmlrpc_frozendict_marshalling(self):
         """ Test that the marshalling of a frozendict object works properly over XMLRPC """
+        self.env.ref('base.user_admin').tz = "Europe/Brussels"
         ctx = self.xmlrpc_object.execute(
             common.get_db_name(), self.admin_uid, 'admin',
             'res.users', 'context_get',
         )
         self.assertEqual(ctx['lang'], 'en_US')
         self.assertEqual(ctx['tz'], 'Europe/Brussels')
+
+    def test_xmlrpc_remove_control_characters(self):
+        record = self.env['res.users'].create({
+            'name': 'bob with a control character: \x03',
+            'login': 'bob',
+        })
+        self.assertEqual(record.name, 'bob with a control character: \x03')
+        [record_data] = self.xmlrpc('res.users', 'read', record.id, ['name'])
+        self.assertEqual(record_data['name'], 'bob with a control character: ')
 
     def test_jsonrpc_read_group(self):
         self._json_call(
@@ -99,11 +109,12 @@ class TestXMLRPC(common.HttpCase):
         })
 
     def test_xmlrpc_attachment_raw(self):
-        ids = self.env['ir.attachment'].create({'name': 'n', 'raw': b'\x01\02\03'}).ids
+        ids = self.env['ir.attachment'].create({'name': 'n', 'raw': b'\x01\x09'}).ids
         [att] = self.xmlrpc_object.execute(
             common.get_db_name(), self.admin_uid, 'admin',
             'ir.attachment', 'read', ids, ['raw'])
-        self.assertEqual(att['raw'], '', "actual binary data should be blanked out on read")
+        self.assertEqual(att['raw'], '\t',
+            "on read, binary data should be decoded as a string and stripped from control character")
 
 # really just for the test cursor
 @common.tagged('post_install', '-at_install')

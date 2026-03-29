@@ -23,5 +23,5 @@ class StockInventoryAdjustmentName(models.TransientModel):
     show_info = fields.Boolean('Show warning')
 
     def action_apply(self):
-        return self.quant_ids.with_context(
-            inventory_name=self.inventory_adjustment_name).action_apply_inventory()
+        quants = self.quant_ids.filtered('inventory_quantity_set')
+        return quants.with_context(inventory_name=self.inventory_adjustment_name).action_apply_inventory()

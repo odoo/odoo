@@ -91,9 +91,26 @@ def get_records_pager(ids, current):
     if current.id in ids and (hasattr(current, 'website_url') or hasattr(current, 'access_url')):
         attr_name = 'access_url' if hasattr(current, 'access_url') else 'website_url'
         idx = ids.index(current.id)
+        prev_record = idx != 0 and current.browse(ids[idx - 1])
+        next_record = idx < len(ids) - 1 and current.browse(ids[idx + 1])
+
+        if prev_record and prev_record[attr_name] and attr_name == "access_url":
+            prev_url = '%s?access_token=%s' % (prev_record[attr_name], prev_record._portal_ensure_token())
+        elif prev_record and prev_record[attr_name]:
+            prev_url = prev_record[attr_name]
+        else:
+            prev_url = prev_record
+
+        if next_record and next_record[attr_name] and attr_name == "access_url":
+            next_url = '%s?access_token=%s' % (next_record[attr_name], next_record._portal_ensure_token())
+        elif next_record and next_record[attr_name]:
+            next_url = next_record[attr_name]
+        else:
+            next_url = next_record
+
         return {
-            'prev_record': idx != 0 and getattr(current.browse(ids[idx - 1]), attr_name),
-            'next_record': idx < len(ids) - 1 and getattr(current.browse(ids[idx + 1]), attr_name),
+            'prev_record': prev_url,
+            'next_record': next_url,
         }
     return {}
 
@@ -204,6 +221,7 @@ class CustomerPortal(Controller):
     def security(self, **post):
         values = self._prepare_portal_layout_values()
         values['get_error'] = get_error
+        values['allow_api_keys'] = bool(request.env['ir.config_parameter'].sudo().get_param('portal.allow_api_keys'))
 
         if request.httprequest.method == 'POST':
             values.update(self._update_password(
@@ -275,13 +293,11 @@ class CustomerPortal(Controller):
             raise UserError(_("The document does not exist or you do not have the rights to access it."))
 
         IrAttachment = request.env['ir.attachment']
-        access_token = False
 
-        # Avoid using sudo or creating access_token when not necessary: internal
-        # users can create attachments, as opposed to public and portal users.
+        # Avoid using sudo when not necessary: internal users can create attachments,
+        # as opposed to public and portal users.
         if not request.env.user.has_group('base.group_user'):
             IrAttachment = IrAttachment.sudo().with_context(binary_field_real_user=IrAttachment.env.user)
-            access_token = IrAttachment._generate_access_token()
 
         # At this point the related message does not exist yet, so we assign
         # those specific res_model and res_is. They will be correctly set
@@ -292,7 +308,7 @@ class CustomerPortal(Controller):
             'datas': base64.b64encode(file.read()),
             'res_model': 'mail.compose.message',
             'res_id': 0,
-            'access_token': access_token,
+            'access_token': IrAttachment._generate_access_token(),
         })
         return request.make_response(
             data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
@@ -407,7 +423,7 @@ class CustomerPortal(Controller):
 
         report_sudo = request.env.ref(report_ref).with_user(SUPERUSER_ID)
 
-        if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
+        if not isinstance(report_sudo, request.env.registry['ir.actions.report']):
             raise UserError(_("%s is not the reference of a report", report_ref))
 
         if hasattr(model, 'company_id'):
@@ -420,7 +436,7 @@ class CustomerPortal(Controller):
             ('Content-Length', len(report)),
         ]
         if report_type == 'pdf' and download:
-            filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
+            filename = "%s.pdf" % (re.sub(r'\W+', '-', model._get_report_base_filename()))
             reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
         return request.make_response(report, headers=reporthttpheaders)
 

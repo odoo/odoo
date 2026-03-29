@@ -33,7 +33,9 @@ $o-we-border-color: $o-we-bg-light !default;
 
 $o-we-ace-color: #2F3129 !default;
 
-$o-we-handles-offset-to-hide: 10000px !default;
+// Needed to be changed to be high enough to not overflow when a user
+// has a page with a lot of content (10000px was proven to be too small)
+$o-we-handles-offset-to-hide: 100000px !default;
 $o-we-handles-btn-size: 20px !default;
 $o-we-handles-accent-color: $o-we-accent !default;
 $o-we-handles-accent-color-preview: $o-enterprise-color !default;
@@ -187,6 +189,8 @@ $o-we-sidebar-content-field-toggle-control-height: $o-we-sidebar-content-field-t
 $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
 $o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest !default;
 
+$o-we-technical-modal-zindex: 2001;
+
 //------------------------------------------------------------------------------
 // Preview component Mixins
 //------------------------------------------------------------------------------
@@ -306,6 +310,7 @@ $o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest 
     .modal-content {
         border-radius: 0;
         background-color: white;
+        color: #33363e;
 
         .modal-header {
             border-bottom-color: #e9ecef;
@@ -594,6 +599,7 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     @if type-of($-related-color) == 'number' {
         // This is a preset to be applied, just extend it. This should probably
         // be avoided and use the class in XML if possible.
+        @extend .o_cc;
         @extend .o_cc#{$-related-color};
     } @else {
         @include o-bg-color(o-color($-related-color), $with-extras: $with-extras, $background: $background, $important: false);

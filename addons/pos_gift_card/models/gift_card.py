@@ -17,13 +17,17 @@ class GiftCard(models.Model):
         "pos.order.line", "gift_card_id", string="Pos Redeems"
     )
 
+    def _get_confirmed_redeem_pos_order_lines(self):
+        self.ensure_one()
+        return self.redeem_pos_order_line_ids.sudo().filtered(
+                lambda l: l.order_id.state in ('paid', 'done', 'invoiced')
+            )
+
     @api.depends("redeem_pos_order_line_ids")
     def _compute_balance(self):
         super()._compute_balance()
         for record in self:
-            confirmed_line = record.redeem_pos_order_line_ids.filtered(
-                lambda l: l.order_id.state in ('paid', 'done', 'invoiced')
-            )
+            confirmed_line = record._get_confirmed_redeem_pos_order_lines()
             balance = record.balance
             if confirmed_line:
                 balance -= sum(
@@ -39,9 +43,6 @@ class GiftCard(models.Model):
                 )
             record.balance = balance
 
-    def can_be_used_in_pos(self):
+    def can_be_used_in_pos(self, sale_order_origin_id=False):
         # expired state are computed once a day, so can be not synchro
-        return self.state == 'valid' and self.balance > 0 and self.expired_date >= fields.Date.today() and self.buy_pos_order_line_id
-
-    def can_be_used(self):
-        return super(GiftCard, self).can_be_used() and not self.buy_pos_order_line_id
+        return self.state == 'valid' and self.balance > 0 and (not self.expired_date or self.expired_date >= fields.Date.today())

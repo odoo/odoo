@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-
+from odoo.http import content_disposition
 from odoo.tests import common
 import odoo
 
@@ -129,3 +128,55 @@ class test_ir_http_mimetype(common.TransactionCase):
         status = test_access(access_token=u'Secret')
         self.assertEqual(status, 404,
             "no access with access token for deleted attachment")
+
+    def test_ir_http_default_filename_extension(self):
+        """ Test attachment extension when the record has a dot in its name """
+        self.env.user.name = "Mr. John"
+        self.env.user.image_128 = GIF
+        _, _, filename, _, _ = self.env['ir.http']._binary_record_content(
+            self.env.user, 'image_128',
+        )
+        self.assertEqual(filename, "Mr. John.gif")
+
+        # For attachment, the name is considered to have the extension in the name
+        # and thus the extension should not be added again.
+        attachment = self.env['ir.attachment'].create({
+            'datas': GIF,
+            'name': 'image.gif'
+        })
+        _, _, filename, _, _ = self.env['ir.http']._binary_record_content(
+            attachment,
+        )
+        self.assertEqual(filename, 'image.gif')
+
+    def test_ir_http_public_user_image(self):
+        public_user = self.env.ref('base.public_user')
+        code, *_ = self.env['ir.http']._binary_record_content(public_user.with_user(public_user), 'image_128')
+        self.assertEqual(code, 404)
+
+
+class TestContentDisposition(common.BaseCase):
+
+    def test_content_disposition(self):
+        """ Test that content_disposition filename conforms to RFC 6266, RFC 5987 """
+        assertions = [
+            ('foo bar.xls', 'foo%20bar.xls', 'Space character'),
+            ('foo(bar).xls', 'foo%28bar%29.xls', 'Parenthesis'),
+            ('foo<bar>.xls', 'foo%3Cbar%3E.xls', 'Angle brackets'),
+            ('foo[bar].xls', 'foo%5Bbar%5D.xls', 'Brackets'),
+            ('foo{bar}.xls', 'foo%7Bbar%7D.xls', 'Curly brackets'),
+            ('foo@bar.xls', 'foo%40bar.xls', 'At sign'),
+            ('foo,bar.xls', 'foo%2Cbar.xls', 'Comma sign'),
+            ('foo;bar.xls', 'foo%3Bbar.xls', 'Semicolon sign'),
+            ('foo:bar.xls', 'foo%3Abar.xls', 'Colon sign'),
+            ('foo\\bar.xls', 'foo%5Cbar.xls', 'Backslash sign'),
+            ('foo"bar.xls', 'foo%22bar.xls', 'Double quote sign'),
+            ('foo/bar.xls', 'foo%2Fbar.xls', 'Slash sign'),
+            ('foo?bar.xls', 'foo%3Fbar.xls', 'Question mark'),
+            ('foo=bar.xls', 'foo%3Dbar.xls', 'Equal sign'),
+            ('foo*bar.xls', 'foo%2Abar.xls', 'Star sign'),
+            ("foo'bar.xls", 'foo%27bar.xls', 'Single-quote sign'),
+            ('foo%bar.xls', 'foo%25bar.xls', 'Percent sign'),
+        ]
+        for filename, pct_encoded, hint in assertions:
+            self.assertEqual(content_disposition(filename), f"attachment; filename*=UTF-8''{pct_encoded}", f'{hint} should be percent encoded')

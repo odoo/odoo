@@ -79,6 +79,8 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
             variant_values: self.rootProduct.variant_values,
             pricelist_id: self.pricelistId || false,
             add_qty: self.rootProduct.quantity,
+            no_attribute: self.rootProduct.no_variant_attribute_values,
+            custom_attribute: self.rootProduct.product_custom_attribute_values,
             kwargs: {
                 context: _.extend({
                     'quantity': self.rootProduct.quantity
@@ -115,7 +117,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
             if (!self.preventOpening) {
                 self.$modal.find(".modal-body").replaceWith(self.$el);
                 self.$modal.attr('open', true);
-                self.$modal.removeAttr("aria-hidden");
                 self.$modal.modal().appendTo(self.container);
                 self.$modal.focus();
                 self._openedResolver();
@@ -185,11 +186,11 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         let noVariantAttributeValues;
         for (const product of self.$modal.find('.js_product.in_cart')) {
             var $item = $(product);
-            var quantity = parseInt($item.find('input[name="add_qty"]').val(), 10);
+            var quantity = parseFloat($item.find('input[name="add_qty"]').val().replace(',', '.') || 1);
             var parentUniqueId = product.dataset.parentUniqueId;
             var uniqueId = product.dataset.uniqueId;
-            productCustomVariantValues = self.getCustomVariantValues($item);
-            noVariantAttributeValues = self.getNoVariantAttributeValues($item);
+            productCustomVariantValues = $item.find('.custom-attribute-info').data("attribute-value") || self.getCustomVariantValues($item);
+            noVariantAttributeValues = $item.find('.no-attribute-info').data("attribute-value") || self.getNoVariantAttributeValues($item);
 
             const productID = await self.selectOrCreateProduct(
                 $item,
@@ -488,7 +489,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         if (this.$modal.find('.js_price_total').length) {
             var price = 0;
             this.$modal.find('.js_product.in_cart').each(function () {
-                var quantity = parseInt($(this).find('input[name="add_qty"]').first().val(), 10);
+                var quantity = parseFloat($(this).find('input[name="add_qty"]').first().val().replace(',', '.') || 1);
                 price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
             });
 

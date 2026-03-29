@@ -1,7 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
+
+
+class MailTestPortal(models.Model):
+    """ A model intheriting from mail.thread with some fields used for portal
+    sharing, like a partner, ..."""
+    _description = 'Chatter Model for Portal'
+    _name = 'mail.test.portal'
+    _inherit = [
+        'mail.thread',
+        'portal.mixin',
+    ]
+
+    name = fields.Char()
+    partner_id = fields.Many2one('res.partner', 'Customer')
+
+    def _compute_access_url(self):
+        self.access_url = False
+        for record in self.filtered('id'):
+            record.access_url = '/my/test_portal/%s' % self.id
 
 
 class MailTestSMS(models.Model):
@@ -39,9 +58,19 @@ class MailTestSMSBL(models.Model):
     name = fields.Char()
     subject = fields.Char()
     email_from = fields.Char()
-    phone_nbr = fields.Char()
-    mobile_nbr = fields.Char()
+    phone_nbr = fields.Char(compute='_compute_phone_nbr', readonly=False, store=True)
+    mobile_nbr = fields.Char(compute='_compute_mobile_nbr', readonly=False, store=True)
     customer_id = fields.Many2one('res.partner', 'Customer')
+
+    @api.depends('customer_id')
+    def _compute_mobile_nbr(self):
+        for phone_record in self.filtered(lambda rec: not rec.mobile_nbr and rec.customer_id):
+            phone_record.mobile_nbr = phone_record.customer_id.mobile
+
+    @api.depends('customer_id')
+    def _compute_phone_nbr(self):
+        for phone_record in self.filtered(lambda rec: not rec.phone_nbr and rec.customer_id):
+            phone_record.phone_nbr = phone_record.customer_id.phone
 
     def _sms_get_partner_fields(self):
         return ['customer_id']

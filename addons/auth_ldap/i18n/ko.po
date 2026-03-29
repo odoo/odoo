@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
-"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,6 +38,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    LDAP 데이터베이스에서 사용자 계정을 조회하는 데 사용되는 필터입니다.    해당 LDAP는 문자열로 표현되는 임의의 필터입니다. 모든 `%s`자리 표시자는    사용자가 제공한 로그인(식별자)로 대체되며, 필터에는    이러한 자리 표시자가 하나 이상 포함되어 있어야 합니다.\n"
+"\n"
+"    필터는 정확히 하나(1)의 결과를 반환해야 하며, 그렇지 않으면 로그인은 유효하지 않은 것으로 간주됩니다.\n"
+"\n"
+"    예 (실제 속성은 LDAP 서버 및 설정에 따라 다름):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    또는\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -85,7 +98,7 @@ msgstr "작성일자"
 msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
-msgstr ""
+msgstr "사용자 검색 범위의 DN: 이 기준에 맞는 모든 하위 항목에서 사용자를 검색합니다."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name

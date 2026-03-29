@@ -100,7 +100,8 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 $group.after($add);
             }
         }).then(function (result) {
-            var val = result.val;
+            // Remove any leading slash.
+            const val = result.val.replace(/^\/*/, "");
             var $dialog = result.dialog;
             if (!val) {
                 return;
@@ -179,6 +180,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             self.trigger_up('action_demand', {
                 actionName: 'close_all_widgets',
                 onSuccess: resolve,
+                onFailure: reject,
             });
         }).then(function () {
             self.firstTab = true;

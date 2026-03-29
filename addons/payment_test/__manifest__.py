@@ -4,10 +4,7 @@
     'name': 'Test Payment Acquirer',
     'version': '2.0',
     'category': 'Hidden',
-    'description': """
-This module adds a simple payment acquirer allowing to make test payments.
-It should never be used in production environment. Make sure to disable it before going live.
-""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_templates.xml',

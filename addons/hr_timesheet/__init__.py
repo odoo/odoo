@@ -48,3 +48,5 @@ def _uninstall_hook(cr, registry):
     project_ids = env['res.company'].search([('internal_project_id', '!=', False)]).mapped('internal_project_id')
     if project_ids:
         project_ids.write({'active': False})
+
+    env['ir.model.data'].search([('name', 'ilike', 'internal_project_default_stage')]).unlink()

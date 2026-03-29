@@ -4,6 +4,7 @@
 from unittest.mock import patch
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import fields
 from odoo.tests.common import TransactionCase, new_test_user
@@ -26,10 +27,24 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
     def test_message_invite(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'user_notification',
+            'message_type': 'auto_comment',
             'subtype': 'mail.mt_note',
         }):
             self.event.partner_ids = self.partner
+
+    def test_message_invite_allday(self):
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'auto_comment',
+            'subtype': 'mail.mt_note',
+        }):
+            self.env['calendar.event'].with_context(mail_create_nolog=True).create([{
+                'name': 'Meeting',
+                'allday': True,
+                'start_date': fields.Date.today() + relativedelta(days=7),
+                'stop_date': fields.Date.today() + relativedelta(days=8),
+                'partner_ids': [(4, self.partner.id)],
+            }])
+
 
     def test_message_invite_self(self):
         with self.assertNoNotifications():
@@ -52,7 +67,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         self.event.partner_ids = self.partner
         "Invitation to Presentation of the new Calendar"
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'user_notification',
+            'message_type': 'auto_comment',
             'subtype': 'mail.mt_note',
         }):
             self.event.start = fields.Datetime.now() + relativedelta(days=1)
@@ -65,7 +80,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         })
         self.event.partner_ids = self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'user_notification',
+            'message_type': 'auto_comment',
             'subtype': 'mail.mt_note',
         }):
             self.event.start_date += relativedelta(days=-1)
@@ -107,7 +122,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
     def test_message_add_and_date_changed(self):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-            'message_type': 'user_notification',
+            'message_type': 'auto_comment',
             'subtype': 'mail.mt_note',
         }):
             self.event.write({
@@ -166,7 +181,64 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-                'message_type': 'user_notification',
+                'message_type': 'auto_comment',
                 'subtype': 'mail.mt_note',
             }):
+                self.event.user_id = self.user
+                old_messages = self.event.message_ids
                 self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._send_reminder()
+                new_messages = self.event.message_ids - old_messages
+                user_message = new_messages.filtered(lambda x: self.event.user_id.partner_id in x.partner_ids)
+                self.assertTrue(user_message.notification_ids, "Organizer must receive a reminder")
+
+    def test_notification_event_timezone(self):
+        """
+            Check the domain that decides when calendar events should be notified to the user.
+        """
+        def search_event():
+            return self.env['calendar.event'].search(self.env['res.users']._systray_get_calendar_event_domain())
+
+        self.env.user.tz = 'Europe/Brussels' # UTC +1 15th November 2023
+        event = self.env['calendar.event'].create({
+            'name': "Meeting",
+            'start': datetime(2023, 11, 15, 18, 0), # 19:00
+            'stop': datetime(2023, 11, 15, 19, 0),  # 20:00
+        }).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 17:30:00'):    # 18:30 before event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 18:00:00'):    # 19:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 18:30:00'):    # 19:30 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 19:00:00'):    # 20:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-15 19:30:00'):    # 20:30 after event
+            self.assertEqual(len(search_event()), 0)
+        event.unlink()
+
+        self.env.user.tz = 'America/Lima' # UTC -5 15th November 2023
+        event = self.env['calendar.event'].create({
+            'name': "Meeting",
+            'start': datetime(2023, 11, 16, 0, 0), # 19:00 15th November
+            'stop': datetime(2023, 11, 16, 1, 0),  # 20:00 15th November
+        }).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 23:30:00'):    # 18:30 before event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 00:00:00'):    # 19:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 00:30:00'):    # 19:30 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 01:00:00'):    # 20:00 during event
+            self.assertEqual(search_event(), event)
+        with freeze_time('2023-11-16 01:30:00'):    # 20:30 after event
+            self.assertEqual(len(search_event()), 0)
+        event.unlink()
+
+        event = self.env['calendar.event'].create({
+            'name': "Meeting",
+            'start': datetime(2023, 11, 16, 21, 0), # 16:00 16th November
+            'stop': datetime(2023, 11, 16, 22, 0),  # 27:00 16th November
+        }).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
+            self.assertEqual(len(search_event()), 0)
+        event.unlink()

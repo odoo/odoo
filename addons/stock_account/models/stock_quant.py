@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_is_zero
+from odoo.tools.misc import groupby
 
 
 class StockQuant(models.Model):
@@ -15,6 +16,15 @@ class StockQuant(models.Model):
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
              " If empty, the inventory date will be used.")
+
+    @api.model
+    def _should_exclude_for_valuation(self):
+        """
+        Determines if a quant should be excluded from valuation based on its ownership.
+        :return: True if the quant should be excluded from valuation, False otherwise.
+        """
+        self.ensure_one()
+        return self.owner_id and self.owner_id != self.company_id.partner_id
 
     @api.depends('company_id', 'location_id', 'owner_id', 'product_id', 'quantity')
     def _compute_value(self):
@@ -32,8 +42,7 @@ class StockQuant(models.Model):
                 quant.value = 0
                 return
 
-            if not quant.location_id._should_be_valued() or\
-                    (quant.owner_id and quant.owner_id != quant.company_id.partner_id):
+            if not quant.location_id._should_be_valued() or quant._should_exclude_for_valuation():
                 quant.value = 0
                 continue
             if quant.product_id.cost_method == 'fifo':
@@ -62,13 +71,13 @@ class StockQuant(models.Model):
         return res
 
     def _apply_inventory(self):
-        acc_inventories = self.filtered(lambda quant: quant.accounting_date)
-        for inventory in acc_inventories:
-            super(StockQuant, self.with_context(force_period_date=inventory.accounting_date))._apply_inventory()
-            inventory.write({'accounting_date': False})
-        other_inventories = self - acc_inventories
-        if other_inventories:
-            super(StockQuant, other_inventories)._apply_inventory()
+        for accounting_date, inventory_ids in groupby(self, key=lambda q: q.accounting_date):
+            inventories = self.env['stock.quant'].concat(*inventory_ids)
+            if accounting_date:
+                super(StockQuant, inventories.with_context(force_period_date=accounting_date))._apply_inventory()
+                inventories.accounting_date = False
+            else:
+                super(StockQuant, inventories)._apply_inventory()
 
     @api.model
     def _get_inventory_fields_write(self):

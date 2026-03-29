@@ -65,3 +65,17 @@ class TestSeller(TransactionCase):
         ref = set([x[1] for x in names])
         self.assertEqual(len(names), 2, "2 vendor references should have been found")
         self.assertEqual(ref, {'[B] Boudin', '[NO] Boudin'}, "Incorrect vendor reference list")
+
+    def test_30_seller_ids(self):
+        vendors = self.env['product.supplierinfo'].create([{
+            'name': self.asustec.id,
+            'product_tmpl_id': self.product_consu.product_tmpl_id.id,
+        }, {
+            'name': self.camptocamp.id,
+            'product_id': self.product_consu.id,
+        }])
+        self.assertEqual(vendors, self.product_consu.seller_ids,
+            "Sellers of a product should be listed in the product's seller_ids")
+        vendors.write({'product_id': False})
+        self.assertEqual(vendors, self.product_consu.seller_ids,
+            "Setting the product_id to False shouldn't affect seller_ids.")

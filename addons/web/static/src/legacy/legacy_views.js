@@ -157,6 +157,7 @@ function registerView(name, LegacyView) {
     Controller.isMobileFriendly = LegacyView.prototype.mobile_friendly;
     Controller.multiRecord = LegacyView.prototype.multi_record;
     Controller.type = LegacyView.prototype.viewType;
+    Controller.accessKey = LegacyView.prototype.accesskey;
     Controller.isLegacy = true;
     if (!viewRegistry.contains(name)) {
         viewRegistry.add(name, Controller);

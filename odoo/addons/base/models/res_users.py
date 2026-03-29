@@ -13,14 +13,15 @@ import logging
 import os
 import time
 from collections import defaultdict
+from functools import wraps
 from hashlib import sha256
 from itertools import chain, repeat
 
-import decorator
 import passlib.context
 import pytz
 from lxml import etree
 from lxml.builder import E
+from passlib.context import CryptContext as _CryptContext
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
@@ -34,10 +35,61 @@ from odoo.tools import partition, collections, frozendict, lazy_property, image_
 
 _logger = logging.getLogger(__name__)
 
+class CryptContext:
+    def __init__(self, *args, **kwargs):
+        self.__obj__ = _CryptContext(*args, **kwargs)
+
+    @property
+    def encrypt(self):
+        # deprecated alias
+        return self.hash
+
+    def copy(self):
+        """
+            The copy method must create a new instance of the
+            ``CryptContext`` wrapper with the same configuration
+            as the original (``__obj__``).
+
+            There are no need to manage the case where kwargs are
+            passed to the ``copy`` method.
+
+            It is necessary to load the original ``CryptContext`` in
+            the new instance of the original ``CryptContext`` with ``load``
+            to get the same configuration.
+        """
+        other_wrapper = CryptContext(_autoload=False)
+        other_wrapper.__obj__.load(self.__obj__)
+        return other_wrapper
+
+    @property
+    def hash(self):
+        return self.__obj__.hash
+
+    @property
+    def identify(self):
+        return self.__obj__.identify
+
+    @property
+    def verify(self):
+        return self.__obj__.verify
+
+    @property
+    def verify_and_update(self):
+        return self.__obj__.verify_and_update
+
+    def schemes(self):
+        return self.__obj__.schemes()
+
+    def update(self, **kwargs):
+        if kwargs.get("schemes"):
+            assert isinstance(kwargs["schemes"], str) or all(isinstance(s, str) for s in kwargs["schemes"])
+        return self.__obj__.update(**kwargs)
+
+
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
 USER_PRIVATE_FIELDS = []
 
-DEFAULT_CRYPT_CONTEXT = passlib.context.CryptContext(
+DEFAULT_CRYPT_CONTEXT = CryptContext(
     # kdf which can be verified by the context. The default encryption kdf is
     # the first of the list
     ['pbkdf2_sha512', 'plaintext'],
@@ -46,6 +98,7 @@ DEFAULT_CRYPT_CONTEXT = passlib.context.CryptContext(
     # algorithm. Passlib 1.6 supports an `auto` value which deprecates any
     # algorithm but the default, but Ubuntu LTS only provides 1.5 so far.
     deprecated=['plaintext'],
+    pbkdf2_sha512__rounds=600_000,
 )
 
 concat = chain.from_iterable
@@ -94,8 +147,7 @@ def _jsonable(o):
     except TypeError: return False
     else: return True
 
-@decorator.decorator
-def check_identity(fn, self):
+def check_identity(fn):
     """ Wrapped method should be an *action method* (called from a button
     type=object), and requires extra security to be executed. This decorator
     checks if the identity (password) has been checked in the last 10mn, and
@@ -103,32 +155,36 @@ def check_identity(fn, self):
 
     Prevents access outside of interactive contexts (aka with a request)
     """
-    if not request:
-        raise UserError(_("This method can only be accessed over HTTP"))
+    @wraps(fn)
+    def wrapped(self):
+        if not request:
+            raise UserError(_("This method can only be accessed over HTTP"))
 
-    if request.session.get('identity-check-last', 0) > time.time() - 10 * 60:
-        # update identity-check-last like github?
-        return fn(self)
+        if request.session.get('identity-check-last', 0) > time.time() - 10 * 60:
+            # update identity-check-last like github?
+            return fn(self)
 
-    w = self.sudo().env['res.users.identitycheck'].create({
-        'request': json.dumps([
-            { # strip non-jsonable keys (e.g. mapped to recordsets like binary_field_real_user)
-                k: v for k, v in self.env.context.items()
-                if _jsonable(v)
-            },
-            self._name,
-            self.ids,
-            fn.__name__
-        ])
-    })
-    return {
-        'type': 'ir.actions.act_window',
-        'res_model': 'res.users.identitycheck',
-        'res_id': w.id,
-        'name': _("Security Control"),
-        'target': 'new',
-        'views': [(False, 'form')],
-    }
+        w = self.sudo().env['res.users.identitycheck'].create({
+            'request': json.dumps([
+                { # strip non-jsonable keys (e.g. mapped to recordsets like binary_field_real_user)
+                    k: v for k, v in self.env.context.items()
+                    if _jsonable(v)
+                },
+                self._name,
+                self.ids,
+                fn.__name__
+            ])
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.users.identitycheck',
+            'res_id': w.id,
+            'name': _("Security Control"),
+            'target': 'new',
+            'views': [(False, 'form')],
+        }
+    wrapped.__has_check_identity = True
+    return wrapped
 
 #----------------------------------------------------------
 # Basic res.groups and res.users
@@ -139,6 +195,7 @@ class Groups(models.Model):
     _description = "Access Groups"
     _rec_name = 'full_name'
     _order = 'name'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True, translate=True)
     users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
@@ -161,6 +218,13 @@ class Groups(models.Model):
     def _check_one_user_type(self):
         self.users._check_one_user_type()
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_settings_group(self):
+        classified = self.env['res.config.settings']._get_classified_fields()
+        for _name, _groups, implied_group in classified['group']:
+            if implied_group.id in self.ids:
+                raise ValidationError(_('You cannot delete a group linked with a settings field.'))
+
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
@@ -173,11 +237,7 @@ class Groups(models.Model):
     def _search_full_name(self, operator, operand):
         lst = True
         if isinstance(operand, bool):
-            domains = [[('name', operator, operand)], [('category_id.name', operator, operand)]]
-            if operator in expression.NEGATIVE_TERM_OPERATORS == (not operand):
-                return expression.AND(domains)
-            else:
-                return expression.OR(domains)
+            return [('name', operator, operand)]
         if isinstance(operand, str):
             lst = False
             operand = [operand]
@@ -187,7 +247,9 @@ class Groups(models.Model):
             group_name = values.pop().strip()
             category_name = values and '/'.join(values).strip() or group_name
             group_domain = [('name', operator, lst and [group_name] or group_name)]
-            category_domain = [('category_id.name', operator, lst and [category_name] or category_name)]
+            category_ids = self.env['ir.module.category'].sudo()._search(
+                [('name', operator, [category_name] if lst else category_name)])
+            category_domain = [('category_id', 'in', category_ids)]
             if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
                 category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
             if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
@@ -226,7 +288,6 @@ class Groups(models.Model):
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-            self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(Groups, self).write(vals)
 
 
@@ -261,6 +322,7 @@ class Users(models.Model):
     _description = 'Users'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
+    _allow_sudo_commands = False
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -341,7 +403,7 @@ class Users(models.Model):
         # automatically encrypted at startup: look for passwords which don't
         # match the "extended" MCF and pass those through passlib.
         # Alternative: iterate on *all* passwords and use CryptContext.identify
-        cr.execute("""
+        cr.execute(r"""
         SELECT id, password FROM res_users
         WHERE password IS NOT NULL
           AND password !~ '^\$[^$]+\$[^$]+\$.'
@@ -448,8 +510,9 @@ class Users(models.Model):
 
     def _read(self, fields):
         super(Users, self)._read(fields)
-        canwrite = self.check_access_rights('write', raise_exception=False)
-        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(fields):
+        if set(USER_PRIVATE_FIELDS).intersection(fields):
+            if self.check_access_rights('write', raise_exception=False):
+                return
             for record in self:
                 for f in USER_PRIVATE_FIELDS:
                     try:
@@ -475,6 +538,14 @@ class Users(models.Model):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
+        # Prevent using reload actions.
+        # We use sudo() because  "Access rights" admins can't read action models
+        for user in self.sudo():
+            if user.action_id.type == "ir.actions.client":
+                action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
+                if action.tag == "reload":
+                    raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
+
 
     @api.constrains('groups_id')
     def _check_one_user_type(self):
@@ -619,6 +690,9 @@ class Users(models.Model):
     def _unlink_except_superuser(self):
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
+        user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
+        if user_admin and user_admin in self:
+            raise UserError(_('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
         self.clear_caches()
 
     @api.model
@@ -678,6 +752,10 @@ class Users(models.Model):
     @api.model
     def _get_login_domain(self, login):
         return [('login', '=', login)]
+
+    @api.model
+    def _get_email_domain(self, email):
+        return [('email', '=', email)]
 
     @api.model
     def _get_login_order(self):
@@ -817,8 +895,10 @@ class Users(models.Model):
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
-        uid = self.id or self._uid
-        return self.with_user(uid)._has_group(group_ext_id)
+        uid = self.id
+        if uid and uid != self._uid:
+            self = self.with_user(uid)
+        return self._has_group(group_ext_id)
 
     @api.model
     @tools.ormcache('self._uid', 'group_ext_id')
@@ -834,11 +914,9 @@ class Users(models.Model):
         assert group_ext_id and '.' in group_ext_id, "External ID '%s' must be fully qualified" % group_ext_id
         module, ext_id = group_ext_id.split('.')
         self._cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
-                            (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
+                            (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s AND model='res.groups')""",
                          (self._uid, module, ext_id))
         return bool(self._cr.fetchone())
-    # for a few places explicitly clearing the has_group cache
-    has_group.clear_cache = _has_group.clear_cache
 
     def _action_show(self):
         """If self is a singleton, directly access the form view. If it is a recordset, open a tree view"""
@@ -899,6 +977,10 @@ class Users(models.Model):
             'target': 'current',
         }
 
+    def _is_internal(self):
+        self.ensure_one()
+        return not self.share
+
     def _is_public(self):
         self.ensure_one()
         return self.has_group('base.group_public')
@@ -927,7 +1009,7 @@ class Users(models.Model):
         Requires a CryptContext as deprecation and upgrade notices are used
         internally
         """
-        return DEFAULT_CRYPT_CONTEXT
+        return DEFAULT_CRYPT_CONTEXT.copy()
 
     @contextlib.contextmanager
     def _assert_can_auth(self):
@@ -1026,6 +1108,9 @@ class Users(models.Model):
         if hasattr(self, 'check_credentials'):
             _logger.warning("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
 
+    def _mfa_type(self):
+        """ If an MFA method is enabled, returns its type as a string. """
+        return
 
     def _mfa_url(self):
         """ If an MFA method is enabled, returns the URL for its second step. """
@@ -1096,16 +1181,18 @@ class GroupsImplied(models.Model):
         """ Add the given group to the groups implied by the current group
         :param implied_group: the implied group to add
         """
-        if implied_group not in self.implied_ids:
-            self.write({'implied_ids': [Command.link(implied_group.id)]})
+        groups = self.filtered(lambda g: implied_group not in g.implied_ids)
+        groups.write({'implied_ids': [Command.link(implied_group.id)]})
 
     def _remove_group(self, implied_group):
         """ Remove the given group from the implied groups of the current group
         :param implied_group: the implied group to remove
         """
-        if implied_group in self.implied_ids:
-            self.write({'implied_ids': [Command.unlink(implied_group.id)]})
-            implied_group.write({'users': [Command.unlink(user.id) for user in self.users]})
+        groups = self.filtered(lambda g: implied_group in g.implied_ids)
+        if groups:
+            groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+            if groups.users:
+                implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
 
 class UsersImplied(models.Model):
     _inherit = 'res.users'
@@ -1118,23 +1205,27 @@ class UsersImplied(models.Model):
                 user = self.new(values)
                 gs = user.groups_id._origin
                 gs = gs | gs.trans_implied_ids
-                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
+                values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     def write(self, values):
+        if not values.get('groups_id'):
+            return super(UsersImplied, self).write(values)
         users_before = self.filtered(lambda u: u.has_group('base.group_user'))
         res = super(UsersImplied, self).write(values)
-        if values.get('groups_id'):
-            # add implied groups for all users
-            for user in self:
-                if not user.has_group('base.group_user') and user in users_before:
-                    # if we demoted a user, we strip him of all its previous privileges
-                    # (but we should not do it if we are simply adding a technical group to a portal user)
-                    vals = {'groups_id': [Command.clear()] + values['groups_id']}
-                    super(UsersImplied, user).write(vals)
-                gs = set(concat(g.trans_implied_ids for g in user.groups_id))
-                vals = {'groups_id': [Command.link(g.id) for g in gs]}
-                super(UsersImplied, user).write(vals)
+        demoted_users = users_before.filtered(lambda u: not u.has_group('base.group_user'))
+        if demoted_users:
+            # demoted users are restricted to the assigned groups only
+            vals = {'groups_id': [Command.clear()] + values['groups_id']}
+            super(UsersImplied, demoted_users).write(vals)
+        # add implied groups for all users (in batches)
+        users_batch = defaultdict(self.browse)
+        for user in self:
+            users_batch[user.groups_id] += user
+        for groups, users in users_batch.items():
+            gs = set(concat(g.trans_implied_ids for g in groups))
+            vals = {'groups_id': [Command.link(g.id) for g in gs]}
+            super(UsersImplied, users).write(vals)
         return res
 
 #
@@ -1465,6 +1556,13 @@ class UsersView(models.Model):
                     values.pop('groups_id', None)
         return res
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if fields:
+            # ignore reified fields
+            fields = [fname for fname in fields if not is_reified_group(fname)]
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
     def _add_reified_groups(self, fields, values):
         """ add the given reified group fields into `values` """
         gids = set(parse_m2m(values.get('groups_id') or []))
@@ -1543,12 +1641,14 @@ class CheckIdentity(models.TransientModel):
             self.create_uid._check_credentials(self.password, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
-
-        self.password = False
+        finally:
+            self.password = False
 
         request.session['identity-check-last'] = time.time()
         ctx, model, ids, method = json.loads(self.sudo().request)
-        return getattr(self.env(context=ctx)[model].browse(ids), method)()
+        method = getattr(self.env(context=ctx)[model].browse(ids), method)
+        assert getattr(method, '__has_check_identity', False)
+        return method()
 
 #----------------------------------------------------------
 # change password wizard
@@ -1657,6 +1757,7 @@ class APIKeysUser(models.Model):
 class APIKeys(models.Model):
     _name = _description = 'res.users.apikeys'
     _auto = False # so we can have a secret column
+    _allow_sudo_commands = False
 
     name = fields.Char("Description", required=True, readonly=True)
     user_id = fields.Many2one('res.users', index=True, required=True, readonly=True, ondelete="cascade")
@@ -1750,8 +1851,7 @@ class APIKeyDescription(models.TransientModel):
     @check_identity
     def make_key(self):
         # only create keys for users who can delete their keys
-        if not self.user_has_groups('base.group_user'):
-            raise AccessError(_("Only internal users can create API keys"))
+        self.check_access_make_key()
 
         description = self.sudo()
         k = self.env['res.users.apikeys']._generate(None, self.sudo().name)
@@ -1767,6 +1867,10 @@ class APIKeyDescription(models.TransientModel):
                 'default_key': k,
             }
         }
+
+    def check_access_make_key(self):
+        if not self.user_has_groups('base.group_user'):
+            raise AccessError(_("Only internal users can create API keys"))
 
 class APIKeyShow(models.AbstractModel):
     _name = _description = 'res.users.apikeys.show'

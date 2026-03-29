@@ -5,6 +5,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
     const Registries = require('point_of_sale.Registries');
     const { _t } = require('web.core');
     const { parse } = require('web.field_utils');
+    const { useValidateCashInput } = require('point_of_sale.custom_hooks');
 
     class CashMovePopup extends AbstractAwaitablePopup {
         setup() {
@@ -13,8 +14,10 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
                 inputAmount: '',
                 inputReason: '',
                 inputHasError: false,
+                parsedAmount: 0,
             });
             this.inputAmountRef = owl.hooks.useRef('input-amount-ref');
+            useValidateCashInput('input-amount-ref');
         }
         confirm() {
             try {
@@ -38,10 +41,14 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
         }
         getPayload() {
             return {
-                amount: parse.float(this.state.inputAmount),
+                amount: this.state.parsedAmount,
                 reason: this.state.inputReason.trim(),
                 type: this.state.inputType,
             };
+        }
+        handleInputChange(event) {
+            if (event.target.classList.contains('invalid-cash-input')) return;
+            this.state.parsedAmount = parse.float(this.inputAmountRef.el.value);
         }
     }
     CashMovePopup.template = 'point_of_sale.CashMovePopup';

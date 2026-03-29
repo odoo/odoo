@@ -11,11 +11,12 @@ import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
 from base64 import b64decode, b64encode
+from math import floor
 
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_resource_path
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, base64_to_image
@@ -26,6 +27,38 @@ from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_M
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
+diverging_history_regex = 'data-last-history-steps="([0-9,]*?)"'
+
+def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
+    server_history_matches = re.search(diverging_history_regex, record[html_field_name] or '')
+    # Do not check old documents without data-last-history-steps.
+    if server_history_matches:
+        server_last_history_id = server_history_matches[1].split(',')[-1]
+        if server_last_history_id not in incoming_history_ids:
+            logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+            raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
+
+def handle_history_divergence(record, html_field_name, vals):
+    # Do not handle history divergence if the field is not in the values.
+    if html_field_name not in vals:
+        return
+    incoming_html = vals[html_field_name]
+    incoming_history_matches = re.search(diverging_history_regex, incoming_html or '')
+    # When there is no incoming history id, it means that the value does not
+    # comes from the odoo editor or the collaboration was not activated. In
+    # project, it could come from the collaboration pad. In that case, we do not
+    # handle history divergences.
+    if incoming_history_matches is None:
+        return
+    incoming_history_ids = incoming_history_matches[1].split(',')
+    incoming_last_history_id = incoming_history_ids[-1]
+
+    if record[html_field_name]:
+        ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
+
+    # Save only the latest id.
+    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
+
 class Web_Editor(http.Controller):
     #------------------------------------------------------
     # convert font into picture
@@ -34,12 +67,15 @@ class Web_Editor(http.Controller):
         '/web_editor/font_to_img/<icon>',
         '/web_editor/font_to_img/<icon>/<color>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>/<int:alpha>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>',
-        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
         ], type='http', auth="none")
-    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
+    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
@@ -49,14 +85,31 @@ class Web_Editor(http.Controller):
             :param size : Pixels in integer
             :param alpha : transparency of the image from 0 to 255
             :param font : font path
+            :param width : Pixels in integer
+            :param height : Pixels in integer
 
             :returns PNG image converted from given font
         """
+        # For custom icons, use the corresponding custom font
+        if icon.isdigit():
+            if int(icon) == 57467:
+                font = "/web/static/fonts/tiktok_only.woff"
+            elif int(icon) == 61593:  # F099
+                icon = "59392"  # E800
+                font = "/web/static/fonts/twitter_x_only.woff"
+            elif int(icon) == 61569:  # F081
+                icon = "59395"  # E803
+                font = "/web/static/fonts/twitter_x_only.woff"
+
+        size = max(width, height, 1) if width else size
+        width = width or size
+        height = height or size
         # Make sure we have at least size=1
-        size = max(1, min(size, 512))
+        width = max(1, min(width, 512))
+        height = max(1, min(height, 512))
         # Initialize font
-        addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        with tools.file_open(font.lstrip('/'), 'rb') as f:
+            font_obj = ImageFont.truetype(f, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -66,18 +119,33 @@ class Web_Editor(http.Controller):
             bg = bg.replace('rgba', 'rgb')
             bg = ','.join(bg.split(',')[:-1])+')'
 
+        # Convert the opacity value compatible with PIL Image color (0 to 255)
+        # when color specifier is 'rgba'
+        if color is not None and color.startswith('rgba'):
+            *rgb, a = color.strip(')').split(',')
+            opacity = str(floor(float(a) * 255))
+            color = ','.join([*rgb, opacity]) + ')'
+
         # Determine the dimensions of the icon
-        image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
+        image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
 
-        boxw, boxh = draw.textsize(icon, font=font_obj)
+        if hasattr(draw, 'textbbox'):
+            box = draw.textbbox((0, 0), icon, font=font_obj)
+            left = box[0]
+            top = box[1]
+            boxw = box[2] - box[0]
+            boxh = box[3] - box[1]
+        else:  # pillow < 8.00 (Focal)
+            left, top, _right, _bottom = image.getbbox()
+            boxw, boxh = draw.textsize(icon, font=font_obj)
+
         draw.text((0, 0), icon, font=font_obj)
-        left, top, right, bottom = image.getbbox()
 
         # Create an alpha mask
         imagemask = Image.new("L", (boxw, boxh), 0)
         drawmask = ImageDraw.Draw(imagemask)
-        drawmask.text((-left, -top), icon, font=font_obj, fill=alpha)
+        drawmask.text((-left, -top), icon, font=font_obj, fill=255)
 
         # Create a solid color image and apply the mask
         if color.startswith('rgba'):
@@ -87,7 +155,7 @@ class Web_Editor(http.Controller):
         iconimage.putalpha(imagemask)
 
         # Create output image
-        outimage = Image.new("RGBA", (boxw, size), bg or (0, 0, 0, 0))
+        outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
         outimage.paste(iconimage, (left, top), iconimage)
 
         # output image
@@ -111,71 +179,32 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/checklist', type='json', auth='user')
     def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
         record = request.env[res_model].browse(res_id)
-        value = getattr(record, filename, False)
+        value = filename in record._fields and record[filename]
         htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
         checked = bool(checked)
 
         li = htmlelem.find(".//li[@id='checklist-id-" + str(checklistId) + "']")
 
-        if not li or not self._update_checklist_recursive(li, checked, children=True, ancestors=True):
+        if li is None:
             return value
 
-        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
+        classname = li.get('class', '')
+        if ('o_checked' in classname) != checked:
+            if checked:
+                classname = '%s o_checked' % classname
+            else:
+                classname = re.sub(r"\s?o_checked\s?", '', classname)
+            li.set('class', classname)
+        else:
+            return value
+
+        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6].decode("utf-8")
         record.write({filename: value})
 
         return value
 
-    def _update_checklist_recursive (self, li, checked, children=False, ancestors=False):
-        if 'checklist-id-' not in li.get('id', ''):
-            return False
-
-        classname = li.get('class', '')
-        if ('o_checked' in classname) == checked:
-            return False
-
-        # check / uncheck
-        if checked:
-            classname = '%s o_checked' % classname
-        else:
-            classname = re.sub(r"\s?o_checked\s?", '', classname)
-        li.set('class', classname)
-
-        # propagate to children
-        if children:
-            node = li.getnext()
-            ul = None
-            if node is not None:
-                if node.tag == 'ul':
-                    ul = node
-                if node.tag == 'li' and len(node.getchildren()) == 1 and node.getchildren()[0].tag == 'ul':
-                    ul = node.getchildren()[0]
-
-            if ul is not None:
-                for child in ul.getchildren():
-                    if child.tag == 'li':
-                        self._update_checklist_recursive(child, checked, children=True)
-
-        # propagate to ancestors
-        if ancestors:
-            allSelected = True
-            ul = li.getparent()
-            if ul.tag == 'li':
-                ul = ul.getparent()
-
-            for child in ul.getchildren():
-                if child.tag == 'li' and 'checklist-id' in child.get('id', '') and 'o_checked' not in child.get('class', ''):
-                    allSelected = False
-
-            node = ul.getprevious()
-            if node is None:
-                node = ul.getparent().getprevious()
-            if node is not None and node.tag == 'li':
-                self._update_checklist_recursive(node, allSelected, ancestors=True)
-
-        return True
-
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', generate_access_token=False, **kwargs):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
@@ -191,7 +220,7 @@ class Web_Editor(http.Controller):
                 return {'error': e.args[0]}
 
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, generate_access_token=generate_access_token)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
@@ -241,7 +270,7 @@ class Web_Editor(http.Controller):
         id_match = re.search('^/web/image/([^/?]+)', src)
         if id_match:
             url_segment = id_match.group(1)
-            number_match = re.match('^(\d+)', url_segment)
+            number_match = re.match(r'^(\d+)', url_segment)
             if '.' in url_segment: # xml-id
                 attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
             elif number_match: # numeric id
@@ -263,7 +292,7 @@ class Web_Editor(http.Controller):
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', generate_access_token=False):
         """Create and return a new attachment."""
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
@@ -295,6 +324,9 @@ class Web_Editor(http.Controller):
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
         attachment = request.env['ir.attachment'].create(attachment_data)
+        if generate_access_token:
+            attachment.generate_access_token()
+
         return attachment
 
     def _clean_context(self):
@@ -334,7 +366,7 @@ class Web_Editor(http.Controller):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []
@@ -361,7 +393,7 @@ class Web_Editor(http.Controller):
 
         # Compile regex outside of the loop
         # This will used to exclude library scss files from the result
-        excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
+        excluded_url_matcher = re.compile(r"^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
         # First check the t-call-assets used in the related views
         url_infos = dict()
@@ -536,6 +568,17 @@ class Web_Editor(http.Controller):
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
     def _get_shape_svg(self, module, *segments):
+        Module = request.env['ir.module.module'].sudo()
+        # Avoid creating a bridge module just for this check.
+        if 'imported' in Module._fields and Module.search([('name', '=', module)]).imported:
+            attachment = request.env['ir.attachment'].sudo().search([
+                ('url', '=', f"/{module.replace('.', '_')}/static/{'/'.join(segments)}"),
+                ('public', '=', True),
+                ('type', '=', 'binary'),
+            ], limit=1)
+            if attachment:
+                return b64decode(attachment.datas)
+            raise werkzeug.exceptions.NotFound()
         shape_path = get_resource_path(module, 'static', *segments)
         if not shape_path:
             raise werkzeug.exceptions.NotFound()
@@ -554,7 +597,7 @@ class Web_Editor(http.Controller):
         }
         bundle_css = None
         regex_hex = r'#[0-9A-F]{6,8}'
-        regex_rgba = r'rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)'
+        regex_rgba = r'rgba?\(\d{1,3}, ?\d{1,3}, ?\d{1,3}(?:, ?[0-9.]{1,4})?\)'
         for key, value in options.items():
             colorMatch = re.match('^c([1-5])$', key)
             if colorMatch:
@@ -598,7 +641,15 @@ class Web_Editor(http.Controller):
                     or attachment.type != 'binary'
                     or not attachment.public
                     or not attachment.url.startswith(request.httprequest.path)):
-                raise werkzeug.exceptions.NotFound()
+                # Fallback to URL lookup to allow using shapes that were
+                # imported from data files.
+                attachment = request.env['ir.attachment'].sudo().search([
+                    ('type', '=', 'binary'),
+                    ('public', '=', True),
+                    ('url', '=', request.httprequest.path),
+                ], limit=1)
+                if not attachment:
+                    raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
         else:
             svg = self._get_shape_svg(module, 'shapes', filename)
@@ -606,11 +657,11 @@ class Web_Editor(http.Controller):
         svg, options = self._update_svg_colors(kwargs, svg)
         flip_value = options.get('flip', False)
         if flip_value == 'x':
-            svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
+            svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ', 1)
         elif flip_value == 'y':
-            svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
+            svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ', 1)
         elif flip_value == 'xy':
-            svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
+            svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ', 1)
 
         return request.make_response(svg, [
             ('Content-type', 'image/svg+xml'),
@@ -715,3 +766,11 @@ class Web_Editor(http.Controller):
         channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
+
+    @http.route("/web_editor/ensure_common_history", type="json", auth="user")
+    def ensure_common_history(self, model_name, field_name, res_id, history_ids):
+        record = request.env[model_name].browse([res_id])
+        try:
+            ensure_no_history_divergence(record, field_name, history_ids)
+        except ValidationError:
+            return record[field_name]

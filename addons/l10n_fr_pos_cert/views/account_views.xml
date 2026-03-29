@@ -12,13 +12,13 @@
                 <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='journal_id']" position="attributes">
-                <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
+                <attribute name="attrs">{'readonly': ['|', ('move_line_count','!=', 0), ('pos_session_id', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='date']" position="attributes">
-                <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
+                <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'open'), ('pos_session_id', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='line_ids']" position="attributes">
-                <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
+                <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'open'), ('pos_session_id', '!=', False)]}</attribute>
             </xpath>
 
         </field>

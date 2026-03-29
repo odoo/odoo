@@ -109,8 +109,9 @@ export class Activity extends Component {
      * @param {Object} ev.detail
      * @param {mail.attachment} ev.detail.attachment
      */
-    _onAttachmentCreated(ev) {
-        this.activity.markAsDone({ attachments: [ev.detail.attachment] });
+    async _onAttachmentCreated(ev) {
+        await this.activity.markAsDone({ attachments: [ev.detail.attachment] });
+        this.trigger('o-attachments-changed');
     }
 
     /**
@@ -145,7 +146,8 @@ export class Activity extends Component {
     /**
      * @private
      */
-    _onClickDetailsButton() {
+    _onClickDetailsButton(ev) {
+        ev.preventDefault();
         this.state.areDetailsVisible = !this.state.areDetailsVisible;
     }
 
@@ -153,8 +155,9 @@ export class Activity extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickEdit(ev) {
-        this.activity.edit();
+    async _onClickEdit(ev) {
+        await this.activity.edit();
+        this.trigger('reload', { keepChanges: true });
     }
 
     /**

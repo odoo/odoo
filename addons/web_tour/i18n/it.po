@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web_tour
 #. openerp-web
@@ -30,15 +32,23 @@ msgstr ""
 
 #. module: web_tour
 #. openerp-web
+#: code:addons/web_tour/static/src/js/tip.js:0
+#, python-format
+msgid "Click here to go to the next step."
+msgstr "Fai clic qui per passare alla prossima fase."
+
+#. module: web_tour
+#. openerp-web
 #: code:addons/web_tour/static/src/js/tour_step_utils.js:0
 #, python-format
 msgid "Click on the <i>Home icon</i> to navigate across apps."
-msgstr "Fare clic sull'<i>icona Home</i> per navigare tra le applicazioni."
+msgstr ""
+"Fai clic sull'<i>icona principale</i> per navigare tra le applicazioni."
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
 msgid "Consumed by"
-msgstr "Completato da"
+msgstr "Utilizzato da"
 
 #. module: web_tour
 #. openerp-web
@@ -84,14 +94,14 @@ msgstr "Nome"
 #: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Onboarding tours"
-msgstr ""
+msgstr "Tour di Onboarding"
 
 #. module: web_tour
 #. openerp-web
 #: code:addons/web_tour/static/src/js/tour_step_utils.js:0
 #, python-format
 msgid "Open bugger menu."
-msgstr ""
+msgstr "Apri menù a tendina."
 
 #. module: web_tour
 #. openerp-web
@@ -105,7 +115,7 @@ msgstr "Percorso"
 #: code:addons/web_tour/static/src/js/tip.js:0
 #, python-format
 msgid "Scroll to reach the next step."
-msgstr ""
+msgstr "Scorri per raggiungere la fase successiva."
 
 #. module: web_tour
 #. openerp-web
@@ -134,7 +144,7 @@ msgstr "Inizia tour"
 #: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Start tour"
-msgstr "Inizia Tour"
+msgstr "Inizia tour"
 
 #. module: web_tour
 #. openerp-web
@@ -149,19 +159,19 @@ msgstr "Prova"
 #: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Test tour"
-msgstr ""
+msgstr "Collauda tour"
 
 #. module: web_tour
 #. openerp-web
 #: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Testing tours"
-msgstr ""
+msgstr "Tour di prova"
 
 #. module: web_tour
 #: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
 msgid "Tip"
-msgstr "Consiglio"
+msgstr "Suggerimento"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name

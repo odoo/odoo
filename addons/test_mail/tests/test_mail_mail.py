@@ -2,13 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
+import pytz
+
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from unittest.mock import call
 
-from odoo import api
+from odoo import api, tools
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import common, tagged
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 
 
 @tagged('mail_mail')
@@ -32,7 +36,7 @@ class TestMailMail(TestMailCommon, MockSmtplibCase):
         }).with_context({})
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_mail_message_notify_from_mail_mail(self):
+    def test_mail_mail_notify_from_mail_mail(self):
         # Due ot post-commit hooks, store send emails in every step
         mail = self.env['mail.mail'].sudo().create({
             'body_html': '<p>Test</p>',
@@ -44,6 +48,7 @@ class TestMailMail(TestMailCommon, MockSmtplibCase):
         self.assertSentEmail(mail.env.user.partner_id, ['test@example.com'])
         self.assertEqual(len(self._mails), 1)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_return_path(self):
         # mail without thread-enabled record
         base_values = {
@@ -64,6 +69,57 @@ class TestMailMail(TestMailCommon, MockSmtplibCase):
         with self.mock_mail_gateway():
             mail.send()
         self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s@%s' % (self.alias_bounce, self.alias_domain))
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    def test_mail_mail_schedule(self):
+        """Test that a mail scheduled in the past/future are sent or not"""
+        now = datetime(2022, 6, 28, 14, 0, 0)
+        scheduled_datetimes = [
+            # falsy values
+            False, '', 'This is not a date format',
+            # datetimes (UTC/GMT +10 hours for Australia/Brisbane)
+            now, pytz.timezone('Australia/Brisbane').localize(now),
+            # string
+            (now - timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            (now + timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            (now + timedelta(days=1)).strftime("%H:%M:%S %d-%m-%Y"),
+            # tz: is actually 1 hour before now in UTC
+            (now + timedelta(hours=3)).strftime("%H:%M:%S %d-%m-%Y") + " +0400",
+            # tz: is actually 1 hour after now in UTC
+            (now + timedelta(hours=-3)).strftime("%H:%M:%S %d-%m-%Y") + " -0400",
+        ]
+        expected_datetimes = [
+            False, '', False,
+            now, now - pytz.timezone('Australia/Brisbane').utcoffset(now),
+            now - timedelta(days=1), now + timedelta(days=1), now + timedelta(days=1),
+            now + timedelta(hours=-1),
+            now + timedelta(hours=1),
+        ]
+        expected_states = [
+            # falsy values = send now
+            'sent', 'sent', 'sent',
+            'sent', 'sent',
+            'sent', 'outgoing', 'outgoing',
+            'sent', 'outgoing'
+        ]
+
+        mails = self.env['mail.mail'].create([
+            {'body_html': '<p>Test</p>',
+             'email_to': 'test@example.com',
+             'scheduled_date': scheduled_datetime,
+            } for scheduled_datetime in scheduled_datetimes
+        ])
+
+        for mail, expected_datetime, scheduled_datetime in zip(mails, expected_datetimes, scheduled_datetimes):
+            expected = expected_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) if expected_datetime else expected_datetime
+            self.assertEqual(mail.scheduled_date, expected,
+                             'Scheduled date: %s should be stored as %s, received %s' % (scheduled_datetime, expected, mail.scheduled_date))
+            self.assertEqual(mail.state, 'outgoing')
+
+        with freeze_time(now):
+            self.env['mail.mail'].process_email_queue()
+            for mail, expected_state in zip(mails, expected_states):
+                self.assertEqual(mail.state, expected_state)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_server(self):
@@ -132,7 +188,116 @@ class TestMailMail(TestMailCommon, MockSmtplibCase):
         self.assert_email_sent_smtp(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
         self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_values_email_formatted(self):
+        """ Test outgoing email values, with formatting """
+        customer = self.env['res.partner'].create({
+            'name': 'Tony Customer',
+            'email': '"Formatted Emails" <tony.customer@test.example.com>',
+        })
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': '"Ignasse, le Poilu" <test.cc.1@test.example.com>',
+            'email_to': '"Raoul, le Grand" <test.email.1@test.example.com>, "Micheline, l\'immense" <test.email.2@test.example.com>',
+            'recipient_ids': [(4, self.user_employee.partner_id.id), (4, customer.id)]
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 3, 'Mail: sent 3 emails: 1 for email_to, 1 / recipient')
+        self.assertEqual(
+            sorted(sorted(_mail['email_to']) for _mail in self._mails),
+            sorted([sorted(['"Raoul, le Grand" <test.email.1@test.example.com>', '"Micheline, l\'immense" <test.email.2@test.example.com>']),
+                    [tools.formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    [tools.formataddr(("Tony Customer", 'tony.customer@test.example.com'))]
+                   ]),
+            'Mail: formatting issues should have been removed as much as possible'
+        )
+        # Currently broken: CC are added to ALL emails (spammy)
+        self.assertEqual(
+            [_mail['email_cc'] for _mail in self._mails],
+            [['test.cc.1@test.example.com']] * 3,
+            'Mail: currently always removing formatting in email_cc'
+        )
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_values_email_multi(self):
+        """ Test outgoing email values, with email field holding multi emails """
+        # Multi
+        customer = self.env['res.partner'].create({
+            'name': 'Tony Customer',
+            'email': 'tony.customer@test.example.com, norbert.customer@test.example.com',
+        })
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.cc.1@test.example.com, test.cc.2@test.example.com',
+            'email_to': 'test.email.1@test.example.com, test.email.2@test.example.com',
+            'recipient_ids': [(4, self.user_employee.partner_id.id), (4, customer.id)]
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 3, 'Mail: sent 3 emails: 1 for email_to, 1 / recipient')
+        self.assertEqual(
+            sorted(sorted(_mail['email_to']) for _mail in self._mails),
+            sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
+                    [tools.formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    sorted([tools.formataddr(("Tony Customer", 'tony.customer@test.example.com')),
+                            tools.formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
+                   ]),
+            'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
+            'like separate emails when sending with recipient_ids'
+        )
+        # Currently broken: CC are added to ALL emails (spammy)
+        self.assertEqual(
+            [_mail['email_cc'] for _mail in self._mails],
+            [['test.cc.1@test.example.com', 'test.cc.2@test.example.com']] * 3,
+        )
+
+        # Multi + formatting
+        customer = self.env['res.partner'].create({
+            'name': 'Tony Customer',
+            'email': 'tony.customer@test.example.com, "Norbert Customer" <norbert.customer@test.example.com>',
+        })
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.cc.1@test.example.com, test.cc.2@test.example.com',
+            'email_to': 'test.email.1@test.example.com, test.email.2@test.example.com',
+            'recipient_ids': [(4, self.user_employee.partner_id.id), (4, customer.id)]
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 3, 'Mail: sent 3 emails: 1 for email_to, 1 / recipient')
+        self.assertEqual(
+            sorted(sorted(_mail['email_to']) for _mail in self._mails),
+            sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
+                    [tools.formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    sorted([tools.formataddr(("Tony Customer", 'tony.customer@test.example.com')),
+                            tools.formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
+                   ]),
+            'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
+            'like separate emails when sending with recipient_ids (and partner name is always used as name part)'
+        )
+        # Currently broken: CC are added to ALL emails (spammy)
+        self.assertEqual(
+            [_mail['email_cc'] for _mail in self._mails],
+            [['test.cc.1@test.example.com', 'test.cc.2@test.example.com']] * 3,
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_values_unicode(self):
+        """ Unicode should be fine. """
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.😊.cc@example.com',
+            'email_to': 'test.😊@example.com',
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 1)
+        self.assertEqual(self._mails[0]['email_cc'], ['test.😊.cc@example.com'])
+        self.assertEqual(self._mails[0]['email_to'], ['test.😊@example.com'])
+
+
+@tagged('mail_mail')
 class TestMailMailRace(common.TransactionCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -147,6 +312,8 @@ class TestMailMailRace(common.TransactionCase):
             'state': 'outgoing',
             'recipient_ids': [(4, self.partner.id)]
         })
+        mail_message = mail.mail_message_id
+
         message = self.env['mail.message'].create({
             'subject': 'S',
             'body': 'B',
@@ -193,8 +360,8 @@ class TestMailMailRace(common.TransactionCase):
         self.env['ir.mail_server']._revert_method('send_email')
 
         notif.unlink()
-        message.unlink()
         mail.unlink()
+        (mail_message | message).unlink()
         self.partner.unlink()
         self.env.cr.commit()
 

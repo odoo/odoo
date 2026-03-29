@@ -63,7 +63,7 @@ def snake(s):
 def pascal(s):
     return ''.join(
         ss.capitalize()
-        for ss in re.sub('[_\s]+', ' ', s).split()
+        for ss in re.sub(r'[_\s]+', ' ', s).split()
     )
 
 def directory(p, create=False):

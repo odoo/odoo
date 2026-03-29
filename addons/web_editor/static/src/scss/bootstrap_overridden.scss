@@ -8,15 +8,17 @@ $colors: () !default;
 }
 
 $o-btn-bg-colors: () !default;
-$o-btn-bg-colors: map-merge((
-    'primary': o-color('o-cc1-btn-primary'),
-    'secondary': o-color('o-cc1-btn-secondary'),
-), $o-btn-bg-colors);
 $o-btn-border-colors: () !default;
-$o-btn-border-colors: map-merge((
-    'primary': o-color('o-cc1-btn-primary-border'),
-    'secondary': o-color('o-cc1-btn-secondary-border'),
-), $o-btn-border-colors);
+@if not (variable-exists('prevent-backend-colors-alteration') and $prevent-backend-colors-alteration) {
+    $o-btn-bg-colors: map-merge((
+        'primary': o-color('o-cc1-btn-primary'),
+        'secondary': o-color('o-cc1-btn-secondary'),
+    ), $o-btn-bg-colors);
+    $o-btn-border-colors: map-merge((
+        'primary': o-color('o-cc1-btn-primary-border'),
+        'secondary': o-color('o-cc1-btn-secondary-border'),
+    ), $o-btn-border-colors);
+}
 
 // Automatically extend bootstrap to create theme background/text/button classes
 $theme-colors: () !default;
@@ -29,6 +31,13 @@ $theme-colors: () !default;
 $grays: () !default;
 @each $name, $color in $o-gray-color-palette {
     $grays: map-merge(('#{$name}': o-color($color)), $grays);
+}
+
+// Detach colors that are used for backend UI (see comment linked to the
+// prevent-backend-colors-alteration for more information)
+@if variable-exists('prevent-backend-colors-alteration') and $prevent-backend-colors-alteration {
+    $theme-colors: map-remove($theme-colors, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
+    $grays: map-remove($grays, '100', '200', '300', '400', '500', '600', '700', '800', '900');
 }
 
 // Bootstrap use standard variables to define individual colors which are then

@@ -72,7 +72,7 @@
                 <t t-foreach="partners" t-as="partner">
                     <t t-if="last_grade != partner.grade_id.id">
                         <h3 class="text-center mt-4">
-                            <span t-field="partner.grade_id"/> Partners
+                            <span t-field="partner.grade_id"/>
                             <t t-call="website.publish_management">
                                 <t t-set="object" t-value="partner.grade_id"/>
                                 <t t-set="publish_edit" t-value="True"/>
@@ -154,7 +154,7 @@
 <template id="grade_in_detail" inherit_id="website_partner.partner_detail">
   <xpath expr="//*[@id='partner_name']" position="after">
     <h3 class="col-lg-12 text-center text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
-      <span t-field="partner.grade_id"/> Partner</h3>
+      <span t-field="partner.grade_id"/></h3>
   </xpath>
 </template>
 
@@ -645,7 +645,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-5 pr-0">
                                                         <label>Priority:</label>
                                                         <div class="input-group">
                                                             <label class="radio-inline">

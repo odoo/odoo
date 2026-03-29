@@ -6,6 +6,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
+    const { useValidateCashInput } = require('point_of_sale.custom_hooks');
+    const { parse } = require('web.field_utils');
 
     /**
      * This popup needs to be self-dependent because it needs to be called from different place.
@@ -14,44 +16,27 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         constructor() {
             super(...arguments);
             this.manualInputCashCount = false;
-            this.cashControl = this.env.pos.config.cash_control;
             this.moneyDetailsRef = useRef('moneyDetails');
+            this.closingCashInputRef = useRef('closingCashInput');
             this.closeSessionClicked = false;
             this.moneyDetails = null;
+            Object.assign(this, this.props.info);
             this.state = useState({});
-        }
-        async willStart() {
-            try {
-                const closingData = await this.rpc({
-                    model: 'pos.session',
-                    method: 'get_closing_control_data',
-                    args: [[this.env.pos.pos_session.id]]
-                });
-                this.ordersDetails = closingData.orders_details;
-                this.paymentsAmount = closingData.payments_amount;
-                this.payLaterAmount = closingData.pay_later_amount;
-                this.openingNotes = closingData.opening_notes;
-                this.defaultCashDetails = closingData.default_cash_details;
-                this.otherPaymentMethods = closingData.other_payment_methods;
-                this.isManager = closingData.is_manager;
-                this.amountAuthorizedDiff = closingData.amount_authorized_diff;
-
-                // component state and refs definition
-                const state = {notes: '', acceptClosing: false, payments: {}};
-                if (this.cashControl) {
-                    state.payments[this.defaultCashDetails.id] = {counted: 0, difference: -this.defaultCashDetails.amount, number: 0};
-                }
-                if (this.otherPaymentMethods.length > 0) {
-                    this.otherPaymentMethods.forEach(pm => {
-                        if (pm.type === 'bank') {
-                            state.payments[pm.id] = {counted: this.env.pos.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
-                        }
-                    })
-                }
-                Object.assign(this.state, state);
-            } catch (error) {
-                this.error = error;
+            Object.assign(this.state, this.props.info.state);
+            useValidateCashInput("closingCashInput");
+            if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
+                this.otherPaymentMethods.forEach(pm => {
+                    if (this._getShowDiff(pm)) {
+                        useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
+                    }
+                })
             }
+        }
+        /**
+         * @deprecated Don't remove. There might be overrides.
+         */
+        async willStart() {
+
         }
         /*
          * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.
@@ -80,21 +65,24 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 }
             }
         }
-        handleInputChange(paymentId) {
+        handleInputChange(paymentId, event) {
+            if (event.target.classList.contains('invalid-cash-input')) return;
             let expectedAmount;
-            if (paymentId === this.defaultCashDetails.id) {
+            if (this.defaultCashDetails && paymentId === this.defaultCashDetails.id) {
                 this.manualInputCashCount = true;
                 this.state.notes = '';
                 expectedAmount = this.defaultCashDetails.amount;
             } else {
                 expectedAmount = this.otherPaymentMethods.find(pm => paymentId === pm.id).amount;
             }
+            this.state.payments[paymentId].counted = parse.float(event.target.value);
             this.state.payments[paymentId].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[paymentId].counted - expectedAmount);
             this.state.acceptClosing = false;
         }
         updateCountedCash(event) {
             const { total, moneyDetailsNotes, moneyDetails } = event.detail;
+            this.closingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[[this.defaultCashDetails.id]].counted - this.defaultCashDetails.amount);
@@ -130,6 +118,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             if (this.canCloseSession() && !this.closeSessionClicked) {
                 this.closeSessionClicked = true;
                 let response;
+                // If there are orders in the db left unsynced, we try to sync.
+                await this.env.pos.push_orders_with_closing_popup();
                 if (this.cashControl) {
                      response = await this.rpc({
                         model: 'pos.session',
@@ -156,6 +146,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                         model: 'pos.session',
                         method: 'close_session_from_ui',
                         args: [this.env.pos.pos_session.id, bankPaymentMethodDiffPairs],
+                        context: this.env.session.user_context,
                     });
                     if (!response.successful) {
                         return this.handleClosingError(response);

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, tools, _
-
+from odoo.tools import is_html_empty
 
 class MailActivityType(models.Model):
     _inherit = "mail.activity.type"
@@ -23,12 +23,16 @@ class MailActivity(models.Model):
             'default_res_id': self.env.context.get('default_res_id'),
             'default_res_model': self.env.context.get('default_res_model'),
             'default_name': self.summary or self.res_name,
-            'default_description': self.note and tools.html2plaintext(self.note).strip() or '',
+            'default_description': self.note if not is_html_empty(self.note) else '',
             'default_activity_ids': [(6, 0, self.ids)],
         }
         return action
 
     def _action_done(self, feedback=False, attachment_ids=False):
+        # To avoid the feedback to be included in the activity note (due to the synchronization in event.write
+        # that updates the related activity note each time the event description is updated),
+        # when the activity is written as a note in the chatter in _action_done (leading to duplicate feedback),
+        # we call super before updating the description. As self is deleted in super, we load the related events before.
         events = self.mapped('calendar_event_id')
         messages, activities = super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
         if feedback:

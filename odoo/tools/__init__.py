@@ -2,6 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import _monkeypatches
+from . import _monkeypatches_pytz
+
+from werkzeug import urls
+if not hasattr(urls, 'url_join'):
+    # see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
+    # see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
+    from . import _monkeypatches_urls
+
 from . import pycompat
 from . import win32
 from . import appdirs

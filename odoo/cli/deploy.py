@@ -26,6 +26,7 @@ class Deploy(Command):
 
     def login_upload_module(self, module_file, url, login, password, db, force=False):
         print("Uploading module file...")
+        self.session.get(f'{url}/web/login?db={db}', allow_redirects=False)  # this set the db in the session
         endpoint = url + '/base_import_module/login_upload'
         post_data = {
             'login': login,

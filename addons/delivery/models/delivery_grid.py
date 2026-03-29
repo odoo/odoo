@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -60,20 +59,33 @@ class ProviderGrid(models.Model):
                     'price': 0.0,
                     'error_message': e.args[0],
                     'warning_message': False}
-        if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
-            price_unit = order.company_id.currency_id._convert(
-                price_unit, order.pricelist_id.currency_id, order.company_id, order.date_order or fields.Date.today())
+
+        price_unit = self._compute_currency(order, price_unit, 'company_to_pricelist')
 
         return {'success': True,
                 'price': price_unit,
                 'error_message': False,
                 'warning_message': False}
 
+    def _get_conversion_currencies(self, order, conversion):
+        if conversion == 'company_to_pricelist':
+            from_currency, to_currency = order.company_id.currency_id, order.pricelist_id.currency_id
+        elif conversion == 'pricelist_to_company':
+            from_currency, to_currency = order.currency_id, order.company_id.currency_id
+
+        return from_currency, to_currency
+
+    def _compute_currency(self, order, price, conversion):
+        from_currency, to_currency = self._get_conversion_currencies(order, conversion)
+        if from_currency.id == to_currency.id:
+            return price
+        return from_currency._convert(price, to_currency, order.company_id, order.date_order or fields.Date.today())
+
     def _get_price_available(self, order):
         self.ensure_one()
         self = self.sudo()
         order = order.sudo()
-        total = weight = volume = quantity = 0
+        total = weight = volume = quantity = wv = 0
         total_delivery = 0.0
         for line in order.order_line:
             if line.state == 'cancel':
@@ -87,13 +99,13 @@ class ProviderGrid(models.Model):
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
+            wv += (line.product_id.weight or 0.0) * (line.product_id.volume or 0.0) * qty
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
 
-        total = order.currency_id._convert(
-            total, order.company_id.currency_id, order.company_id, order.date_order or fields.Date.today())
+        total = self._compute_currency(order, total, 'pricelist_to_company')
 
-        return self._get_price_from_picking(total, weight, volume, quantity)
+        return self.with_context(wv=wv)._get_price_from_picking(total, weight, volume, quantity)
 
     def _get_price_dict(self, total, weight, volume, quantity):
         '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
@@ -102,7 +114,7 @@ class ProviderGrid(models.Model):
             'price': total,
             'volume': volume,
             'weight': weight,
-            'wv': volume * weight,
+            'wv': self.env.context.get('wv') or volume * weight,
             'quantity': quantity
         }
 

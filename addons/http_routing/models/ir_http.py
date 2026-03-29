@@ -20,7 +20,7 @@ from odoo import api, models, registry, exceptions, tools, http
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.qweb import QWebException
-from odoo.http import request
+from odoo.http import request, HTTPRequest
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
 
@@ -134,7 +134,7 @@ def unslug_url(s):
 def url_lang(path_or_uri, lang_code=None):
     ''' Given a relative URL, make it absolute and add the required lang or
         remove useless lang.
-        Nothing will be done for absolute URL.
+        Nothing will be done for absolute or invalid URL.
         If there is only one language installed, the lang will not be handled
         unless forced with `lang` parameter.
 
@@ -144,9 +144,13 @@ def url_lang(path_or_uri, lang_code=None):
     Lang = request.env['res.lang']
     location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang_code is not None
-    url = werkzeug.urls.url_parse(location)
+    try:
+        url = werkzeug.urls.url_parse(location)
+    except ValueError:
+        # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+        url = False
     # relative URL with either a path or a force_lang
-    if not url.netloc and not url.scheme and (url.path or force_lang):
+    if url and not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [url_code for _, url_code, *_ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
@@ -173,7 +177,7 @@ def url_lang(path_or_uri, lang_code=None):
 
 def url_for(url_from, lang_code=None, no_rewrite=False):
     ''' Return the url with the rewriting applied.
-        Nothing will be done for absolute URL, or short URL from 1 char.
+        Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
 
         :param url_from: The URL to convert.
         :param lang_code: Must be the lang `code`. It could also be something
@@ -395,7 +399,7 @@ class IrHttp(models.AbstractModel):
             if nearest_lang:
                 lang = Lang._lang_get(nearest_lang)
             else:
-                nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context['lang'])
+                nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context.get('lang'))
                 nearest_ctx_lg = nearest_ctx_lg in lang_codes and nearest_ctx_lg
                 preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg)
                 lang = preferred_lang or cls._get_default_lang()
@@ -515,8 +519,8 @@ class IrHttp(models.AbstractModel):
         result = super(IrHttp, cls)._dispatch()
 
         cook_lang = request.httprequest.cookies.get('frontend_lang')
-        if request.is_frontend and cook_lang != request.lang.code and hasattr(result, 'set_cookie'):
-            result.set_cookie('frontend_lang', request.lang.code)
+        if request.is_frontend and cook_lang != request.lang._get_cached('code') and hasattr(result, 'set_cookie'):
+            result.set_cookie('frontend_lang', request.lang._get_cached('code'))
 
         return result
 
@@ -528,6 +532,10 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def reroute(cls, path):
+        if isinstance(path, str):
+            path = path.encode("utf-8")
+        path = path.decode("latin1", "replace")
+
         if not hasattr(request, 'rerouting'):
             request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
@@ -535,11 +543,8 @@ class IrHttp(models.AbstractModel):
         request.rerouting.append(path)
         if len(request.rerouting) > cls.rerouting_limit:
             raise Exception("Rerouting limit exceeded")
-        request.httprequest.environ['PATH_INFO'] = path
-        # void werkzeug cached_property. TODO: find a proper way to do this
-        for key in ('path', 'full_path', 'url', 'base_url'):
-            request.httprequest.__dict__.pop(key, None)
-
+        environ = dict(request.httprequest._HTTPRequest__environ, PATH_INFO=path)
+        request.httprequest = HTTPRequest(environ)
         return cls._dispatch()
 
     @classmethod
@@ -581,7 +586,7 @@ class IrHttp(models.AbstractModel):
         elif isinstance(exception, QWebException):
             values.update(qweb_exception=exception)
 
-            if type(exception.error) == exceptions.AccessError:
+            if isinstance(exception.error, exceptions.AccessError):
                 code = 403
 
         elif isinstance(exception, werkzeug.exceptions.HTTPException):

@@ -28,7 +28,7 @@ class PurchaseOrder(models.Model):
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
-        self.payment_term_id = payment_term.id,
+        self.payment_term_id = payment_term.id
         self.company_id = requisition.company_id.id
         self.currency_id = requisition.currency_id.id
         if not self.origin or requisition.name not in self.origin.split(', '):
@@ -108,6 +108,12 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
+
+    def _compute_account_analytic_id(self):
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_account_analytic_id()
+
+    def _compute_analytic_tag_ids(self):
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_analytic_tag_ids()
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):

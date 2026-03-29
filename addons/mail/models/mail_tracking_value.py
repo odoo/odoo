@@ -40,7 +40,7 @@ class MailTracking(models.Model):
 
     def _compute_field_groups(self):
         for tracking in self:
-            model = self.env[tracking.mail_message_id.model]
+            model = self.env[tracking.field.model]
             field = model._fields.get(tracking.field.name)
             tracking.field_groups = field.groups if field else 'base.group_system'
 
@@ -71,7 +71,7 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] == 'selection':
             values.update({
-                'old_value_char': initial_value and dict(col_info['selection'])[initial_value] or '',
+                'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
                 'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
             })
         elif col_info['type'] == 'many2one':

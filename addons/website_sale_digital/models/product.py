@@ -25,9 +25,10 @@ class ProductTemplate(models.Model):
             'view_mode': 'kanban,form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
-                <p class="o_view_nocontent_smiling_face">Add attachments for this digital product</p>
-                <p>The attached files are the ones that will be purchased and sent to the customer.</p>
-                """,
+                <p class="o_view_nocontent_smiling_face">%s</p>
+                <p>%s</p>
+                """ % (_("Add attachments for this digital product"),
+                       _("The attached files are the ones that will be purchased and sent to the customer.")),
         }
 
 
@@ -55,7 +56,8 @@ class Product(models.Model):
             'view_mode': 'kanban,form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
-                <p class="o_view_nocontent_smiling_face">Add attachments for this digital product</p>
-                <p>The attached files are the ones that will be purchased and sent to the customer.</p>
-                """,
+                <p class="o_view_nocontent_smiling_face">%s</p>
+                <p>%s</p>
+                """ % (_("Add attachments for this digital product"),
+                       _("The attached files are the ones that will be purchased and sent to the customer.")),
         }

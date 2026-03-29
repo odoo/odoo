@@ -7,6 +7,7 @@ from odoo.tools import mute_logger
 from odoo.addons.http_routing.models.ir_http import slug
 
 from unittest.mock import patch
+from urllib.parse import urlparse
 
 
 @tagged('-at_install', 'post_install')
@@ -83,7 +84,7 @@ class TestRedirect(HttpCase):
             # published
             resp = self.url_open("/test_website/200/name-%s" % rec_published.id, allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), self.base_url + "/test_website/308/name-%s" % rec_published.id)
+            self.assertEqual(urlparse(resp.headers.get('Location', '')).path, f"/test_website/308/name-{rec_published.id}")
 
             resp = self.url_open("/test_website/308/name-%s" % rec_published.id, allow_redirects=False)
             self.assertEqual(resp.status_code, 200)
@@ -94,7 +95,7 @@ class TestRedirect(HttpCase):
 
             resp = self.url_open("/test_website/308/xx-%s" % rec_published.id, allow_redirects=False)
             self.assertEqual(resp.status_code, 301)
-            self.assertEqual(resp.headers.get('Location'), self.base_url + "/test_website/308/name-%s" % rec_published.id)
+            self.assertEqual(urlparse(resp.headers.get('Location'), '').path, f"/test_website/308/name-{rec_published.id}")
 
             resp = self.url_open("/test_website/200/xx-%s" % rec_published.id, allow_redirects=True)
             self.assertEqual(resp.status_code, 200)
@@ -174,3 +175,61 @@ class TestRedirect(HttpCase):
             'href="/empty_controller_test_redirected?a=a"', r.text,
             "Redirection should have been applied, and query string should not have been duplicated.",
         )
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http')  # mute 403 warning
+    def test_04_redirect_301_route_unpublished_record(self):
+        # 1. Accessing published record: Normal case, expecting 200
+        rec1 = self.env['test.model'].create({
+            'name': '301 test record',
+            'is_published': True,
+        })
+        url_rec1 = '/test_website/200/' + slug(rec1)
+        r = self.url_open(url_rec1)
+        self.assertEqual(r.status_code, 200)
+
+        # 2. Accessing unpublished record: expecting 403 by default
+        rec1.is_published = False
+        r = self.url_open(url_rec1)
+        self.assertEqual(r.status_code, 403)
+
+        # 3. Accessing unpublished record with redirect to a 404: expecting 404
+        redirect = self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect route unpublished record',
+            'redirect_type': '301',
+            'url_from': url_rec1,
+            'url_to': '/404',
+        })
+        r = self.url_open(url_rec1)
+        self.assertEqual(r.status_code, 404)
+
+        # 4. Accessing unpublished record with redirect to another published
+        # record: expecting redirect to that record
+        rec2 = rec1.copy({'is_published': True})
+        url_rec2 = '/test_website/200/' + slug(rec2)
+        redirect.url_to = url_rec2
+        r = self.url_open(url_rec1)
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(
+            r.url.endswith(url_rec2),
+            "Unpublished record should redirect to published record set in redirect")
+
+    def test_05_redirect_308_multiple_url_endpoint(self):
+        self.env['website.rewrite'].create({
+            'name': 'Test Multi URL 308',
+            'redirect_type': '308',
+            'url_from': '/test_countries_308',
+            'url_to': '/test_countries_308_redirected',
+        })
+        rec1 = self.env['test.model'].create({
+            'name': '301 test record',
+            'is_published': True,
+        })
+        url_rec1 = f"/test_countries_308/{slug(rec1)}"
+
+        resp = self.url_open("/test_countries_308", allow_redirects=False)
+        self.assertEqual(resp.status_code, 308)
+        self.assertEqual(resp.headers.get('Location'), self.base_url + "/test_countries_308_redirected")
+
+        resp = self.url_open(url_rec1)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp.url.endswith(url_rec1))

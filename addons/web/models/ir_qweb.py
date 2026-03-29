@@ -4,7 +4,7 @@
 import hashlib
 from collections import OrderedDict
 from werkzeug.urls import url_quote
-from markupsafe import Markup as M
+from markupsafe import Markup
 
 from odoo import api, models
 from odoo.tools import pycompat
@@ -39,7 +39,7 @@ class Image(models.AbstractModel):
         sha = hashlib.sha512(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[:7]
         max_size = '' if max_size is None else '/%s' % max_size
 
-        if options.get('filename-field') and getattr(record, options['filename-field'], None):
+        if options.get('filename-field') and options['filename-field'] in record and record[options['filename-field']]:
             filename = record[options['filename-field']]
         elif options.get('filename'):
             filename = options['filename']
@@ -64,16 +64,20 @@ class Image(models.AbstractModel):
             "That is because the image goes into the tag, or it gets the " \
             "hose again."
 
+        src = src_zoom = None
         if options.get('qweb_img_raw_data', False):
-            return super(Image, self).record_to_html(record, field_name, options)
+            value = record[field_name]
+            if value is False:
+                return False
+            src = self._get_src_data_b64(value, options)
+        else:
+            src, src_zoom = self._get_src_urls(record, field_name, options)
 
         aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
         aclasses += options.get('class', '').split()
         classes = ' '.join(map(escape, aclasses))
 
-        src, src_zoom = self._get_src_urls(record, field_name, options)
-
-        if options.get('alt-field') and getattr(record, options['alt-field'], None):
+        if options.get('alt-field') and options['alt-field'] in record and record[options['alt-field']]:
             alt = escape(record[options['alt-field']])
         elif options.get('alt'):
             alt = options['alt']
@@ -106,7 +110,7 @@ class Image(models.AbstractModel):
                 img.append('"')
         img.append('/>')
 
-        return M(''.join(img))
+        return Markup(''.join(img))
 
 class ImageUrlConverter(models.AbstractModel):
     _description = 'Qweb Field Image'

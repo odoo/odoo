@@ -3,6 +3,7 @@ odoo.define('website.wysiwyg', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var snippetsEditor = require('web_editor.snippet.editor');
+const { cloneContentEls } = require("website.utils");
 const weWidgets = require('wysiwyg.widgets');
 
 /**
@@ -36,6 +37,25 @@ function toggleDropdown($toggles, show) {
 }
 
 /**
+ * Checks if the classes that changed during the mutation are all to be ignored.
+ * (The mutation can be discarded if it is the case, when filtering the mutation
+ * records).
+ *
+ * @param {Object} record the current mutation
+ * @param {Array} excludedClasses the classes to ignore
+ * @returns {Boolean}
+ */
+function checkForExcludedClasses(record, excludedClasses) {
+    const classBefore = (record.oldValue && record.oldValue.split(" ")) || [];
+    const classAfter = [...record.target.classList];
+    const changedClasses = [
+        ...classBefore.filter(c => c && !classAfter.includes(c)),
+        ...classAfter.filter(c => c && !classBefore.includes(c)),
+    ];
+    return changedClasses.every(c => excludedClasses.includes(c));
+}
+
+/**
  * HtmlEditor
  * Intended to edit HTML content. This widget uses the Wysiwyg editor
  * improved by odoo.
@@ -48,14 +68,16 @@ Wysiwyg.include({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
+        // Bind the _onPageClick handler to click event: to close the dropdown if clicked outside.
+        this.__onPageClick = this._onPageClick.bind(this);
+        this.el.addEventListener("click", this.__onPageClick, { capture: true });
         this.options.toolbarHandler = $('#web_editor-top-edit');
 
         // Dropdown menu initialization: handle dropdown openings by hand
-        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
+        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle:not(.o_extra_menu_items_toggle)');
         $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
-            this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
@@ -68,8 +90,11 @@ Wysiwyg.include({
             // Then toggle the clicked one
             toggleDropdown($toggle)
                 .then(dispose)
-                .then(() => this._toggleMegaMenu($toggle[0]))
-                .then(() => this.odooEditor.observerActive());
+                .then(() => {
+                    if (!this.options.enableTranslation) {
+                        this._toggleMegaMenu($toggle[0]);
+                    }
+                });
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -80,13 +105,103 @@ Wysiwyg.include({
             }
         }
 
-        return this._super.apply(this, arguments);
+        const ret = await this._super.apply(this, arguments);
+
+        // Overriding the `filterMutationRecords` function so it can be used to
+        // filter website-specific mutations.
+        const webEditorFilterMutationRecords = this.odooEditor.options.filterMutationRecords;
+        Object.assign(this.odooEditor.options, {
+            /**
+             * @override
+             */
+            filterMutationRecords(records) {
+                const filteredRecords = webEditorFilterMutationRecords(records);
+
+                // Dropdown attributes to ignore.
+                const dropdownClasses = ["show", "dropdown-menu-left", "dropdown-menu-right"];
+                const dropdownToggleAttributes = ["aria-expanded"];
+                const dropdownMenuAttributes = ["style"];
+                // Collapse attributes to ignore.
+                const collapseClasses = ["show", "collapse", "collapsing", "collapsed"];
+                const collapseAttributes = ["style", "aria-expanded"];
+                const collapseTogglerAttributes = ["aria-expanded"];
+                // Extra menu attributes to ignore.
+                const extraMenuClasses = ["nav-item", "nav-link", "dropdown-item", "active"];
+                // Carousel attributes to ignore.
+                const carouselSlidingClasses = ["carousel-item-left", "carousel-item-right",
+                    "carousel-item-next", "carousel-item-prev", "active"];
+
+                return filteredRecords.filter(record => {
+                    if (record.type === "attributes") {
+                        if (record.target.closest("header#top")) {
+                            // Do not record when showing/hiding a dropdown.
+                            if (record.target.matches(".dropdown, .dropdown-menu")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, dropdownClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".dropdown-menu")
+                                    && dropdownMenuAttributes.includes(record.attributeName)) {
+                                return false;
+                            } else if (record.target.matches(".dropdown-toggle")
+                                    && dropdownToggleAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+
+                            // Do not record when showing/hiding a collapse.
+                            if (record.target.matches(".navbar-collapse, .navbar-toggler")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, collapseClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".navbar-collapse")
+                                    && collapseAttributes.includes(record.attributeName)) {
+                                return false;
+                            } else if (record.target.matches(".navbar-toggler")
+                                    && collapseTogglerAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+
+                            // Do not record the extra menu changes.
+                            if (record.target.matches("#top_menu li, #top_menu li > a")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, extraMenuClasses)) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // Do not record some carousel attributes changes.
+                        if (record.target.closest(":not(section) > .carousel")) {
+                            if (record.target.matches(".carousel-item, .carousel-indicators > li")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, carouselSlidingClasses)) {
+                                    return false;
+                                }
+                            }
+                        }
+                    } else if (record.type === "childList") {
+                        const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
+                        // Do not record the addition/removal of the extra menu
+                        // and the menus inside it.
+                        if (addedOrRemovedNode.nodeType === Node.ELEMENT_NODE
+                                && addedOrRemovedNode.matches(".o_extra_menu_items, #top_menu li")) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            },
+        });
+
+        return ret;
     },
     /**
      * @override
      * @returns {Promise}
      */
     _saveViewBlocks: async function () {
+        this._restoreCarousels();
         await this._super.apply(this, arguments);
         if (this.isDirty()) {
             return this._restoreMegaMenus();
@@ -97,6 +212,7 @@ Wysiwyg.include({
      */
     destroy: function () {
         this._restoreMegaMenus();
+        this.el.removeEventListener("click", this.__onPageClick, { capture: true });
         this._super.apply(this, arguments);
     },
 
@@ -118,6 +234,13 @@ Wysiwyg.include({
         var resID = parseInt(el.dataset.resId);
         if (!resModel || !resID) {
             throw new Error('There should be a model and id associated to the cover');
+        }
+
+        // The cover might be dirty for another reason than cover properties
+        // values only (like an editable text inside). In that case, do not
+        // update the cover properties values.
+        if (!('coverClass' in el.dataset)) {
+            return;
         }
 
         this.__savedCovers = this.__savedCovers || {};
@@ -150,11 +273,27 @@ Wysiwyg.include({
     /**
      * @override
      */
-    _saveElement: async function ($el, context, withLang) {
+    async _saveElement($el, context, withLang, ...rest) {
         var promises = [];
 
-        // Saving a view content
-        await this._super.apply(this, arguments);
+        // Saving Embed Code snippets with <script> in the database, as these
+        // elements are removed in edit mode.
+        if ($el[0].querySelector(".s_embed_code")) {
+            // Copied so as not to impact the actual DOM and prevent scripts
+            // from loading.
+            const $clonedEl = $el.clone(true, true);
+            for (const embedCodeEl of $clonedEl[0].querySelectorAll(".s_embed_code")) {
+                const embedTemplateEl = embedCodeEl.querySelector(".s_embed_code_saved");
+                if (embedTemplateEl) {
+                    embedCodeEl.querySelector(".s_embed_code_embedded")
+                        .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
+                }
+            }
+            await this._super($clonedEl, context, withLang, ...rest);
+        } else {
+            // Saving a view content
+            await this._super.apply(this, arguments);
+        }
 
         // Saving mega menu options
         if ($el.data('oe-field') === 'mega_menu_content') {
@@ -209,8 +348,57 @@ Wysiwyg.include({
         if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
             return this.snippetsMenu.activateSnippet(false);
         }
+        this.odooEditor.observerUnactive("toggleMegaMenu");
         megaMenuEl.classList.add('o_no_parent_editor');
+        this.odooEditor.observerActive("toggleMegaMenu");
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
+    },
+    /**
+     * Restores all the carousels so their first slide is the active one.
+     *
+     * @private
+     */
+    _restoreCarousels() {
+        this.$editable[0].querySelectorAll(".carousel").forEach(carouselEl => {
+            // Set the first slide as the active one.
+            carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
+                itemEl.classList.remove("next", "prev", "left", "right");
+                itemEl.classList.toggle("active", i === 0);
+            });
+            carouselEl.querySelectorAll(".carousel-indicators li[data-slide-to]").forEach((indicatorEl, i) => {
+                indicatorEl.classList.toggle("active", i === 0);
+            });
+        });
+    },
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.el.querySelectorAll(
+            ".o_mega_menu_toggle, #top_menu_container .dropdown-toggle"
+        )) {
+            $(toggleEl).dropdown("hide");
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest(".dropdown.show")) {
+            return;
+        }
+        this._hideDropdowns();
     },
 });
 

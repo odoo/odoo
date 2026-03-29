@@ -65,7 +65,7 @@ class MrpRoutingWorkcenter(models.Model):
                 ('qty_produced', '>', 0),
                 ('state', '=', 'done')],
                 limit=operation.time_mode_batch,
-                order="date_finished desc")
+                order="date_finished desc, id desc")
             # To compute the time_cycle, we can take the total duration of previous operations
             # but for the quantity, we will take in consideration the qty_produced like if the capacity was 1.
             # So producing 50 in 00:10 with capacity 2, for the time_cycle, we assume it is 25 in 00:10
@@ -93,7 +93,7 @@ class MrpRoutingWorkcenter(models.Model):
         if 'bom_id' in self.env.context:
             bom_id = self.env.context.get('bom_id')
             for operation in self:
-                operation.copy({'name': _("%s (copy)", operation.name), 'bom_id': bom_id})
+                operation.copy({'bom_id': bom_id})
             return {
                 'view_mode': 'form',
                 'res_model': 'mrp.bom',
@@ -110,3 +110,16 @@ class MrpRoutingWorkcenter(models.Model):
         if product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+    def _get_comparison_values(self):
+        if not self:
+            return False
+        self.ensure_one()
+        return tuple(self[key] for key in  ('name', 'company_id', 'workcenter_id', 'time_mode', 'time_cycle_manual', 'bom_product_template_attribute_value_ids'))
+
+    def write(self, values):
+        if 'bom_id' in values:
+            for op in self:
+                op.bom_id.bom_line_ids.filtered(lambda line: line.operation_id == op).operation_id = False
+                op.bom_id.byproduct_ids.filtered(lambda byproduct: byproduct.operation_id == op).operation_id = False
+        return super().write(values)

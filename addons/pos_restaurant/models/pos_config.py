@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class PosConfig(models.Model):
@@ -40,7 +40,8 @@ class PosConfig(models.Model):
     def get_tables_order_count(self):
         """         """
         self.ensure_one()
-        tables = self.env['restaurant.table'].search([('floor_id.pos_config_id', 'in', self.ids)])
+        floors = self.env['restaurant.floor'].search([('pos_config_id', 'in', self.ids)])
+        tables = self.env['restaurant.table'].search([('floor_id', 'in', floors.ids)])
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
         order_stats = self.env['pos.order'].read_group(domain, ['table_id'], 'table_id')
@@ -63,3 +64,29 @@ class PosConfig(models.Model):
         if ('is_order_printer' in vals and vals['is_order_printer'] == False):
             vals['printer_ids'] = [(5, 0, 0)]
         return super(PosConfig, self).write(vals)
+
+    @api.model
+    def add_cash_payment_method(self):
+        companies = self.env['res.company'].search([])
+        for company in companies.filtered('chart_template_id'):
+            pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', True)])
+            journal_counter = 2
+            for pos_config in pos_configs:
+                if pos_config.payment_method_ids.filtered('is_cash_count'):
+                    continue
+                cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False)], limit=1)
+                if not cash_journal:
+                    cash_journal = self.env['account.journal'].create({
+                        'name': _('Cash %s', journal_counter),
+                        'code': 'RCSH%s' % journal_counter,
+                        'type': 'cash',
+                        'company_id': company.id
+                    })
+                    journal_counter += 1
+                payment_methods = pos_config.payment_method_ids
+                payment_methods |= self.env['pos.payment.method'].create({
+                    'name': _('Cash Bar'),
+                    'journal_id': cash_journal.id,
+                    'company_id': company.id,
+                })
+                pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})

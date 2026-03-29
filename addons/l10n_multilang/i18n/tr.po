@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * l10n_multilang
+# 	* l10n_multilang
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2021
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2021
 # Martin Trigaux, 2021
-# Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
-# abc Def <hdogan1974@gmail.com>, 2021
+# abc Def <hdogan1974@gmail.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,9 +38,24 @@ msgid "Account Chart Template"
 msgstr "Hesap Planı Şablonu"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group
+msgid "Account Group"
+msgstr "Hesap Grubu"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+msgid "Account Name"
+msgstr "Hesap Adı"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_tag
 msgid "Account Tag"
 msgstr "Hesap Etiketi"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_tax_report_line
+msgid "Account Tax Report Line"
+msgstr "Vergi Hesabı Bildirim Hattı"
 
 #. module: l10n_multilang
 #: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
@@ -51,6 +68,11 @@ msgstr "Bir ülkenin idari bölümleri. örn. Eyalet, Bölge, Kanton"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
 msgstr "Analitik Hesap"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__name
+msgid "Complete name for this report line, to be used in report."
+msgstr "Raporda kullanılacak bu rapor kaleminin tam adı."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_res_country_state
@@ -99,10 +121,11 @@ msgid "Legal mentions that have to be printed on the invoices."
 msgstr "Faturalara basılması gereken yasal ifadeler."
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_group_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__name
 msgid "Name"
 msgstr "Adı"
 
@@ -111,6 +134,15 @@ msgstr "Adı"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
 msgid "Notes"
 msgstr "Notlar"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_tax_report_line__tag_name
+msgid ""
+"Short name for the tax grid corresponding to this report line. Leave empty "
+"if this report line should not correspond to any such grid."
+msgstr ""
+"Bu rapor satırına karşılık gelen vergi tablosunun kısa adı. Bu rapor satırı "
+"bu tür bir tabloya karşılık gelmiyorsa boş bırakın."
 
 #. module: l10n_multilang
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
@@ -136,6 +168,12 @@ msgstr ""
 "belirtin"
 
 #. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_report_line__tag_name
+msgid "Tag Name"
+msgstr "Etiket Adı"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
 msgid "Tax"
 msgstr "Vergi"
@@ -145,6 +183,11 @@ msgstr "Vergi"
 #: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
 msgid "Tax Name"
 msgstr "Vergi Adı"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_group_template
+msgid "Template for Account Groups"
+msgstr "Hesap Grupları için Şablon"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template

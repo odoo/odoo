@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from unittest.mock import patch
+from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests.common import TransactionCase, RecordCapturer
+from odoo.tests.common import TransactionCase, RecordCapturer, get_db_name
 
 
 class CronMixinCase:
@@ -31,6 +33,14 @@ class CronMixinCase:
 
 
 class TestIrCron(TransactionCase, CronMixinCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        freezer = freeze_time(cls.cr.now())
+        cls.frozen_datetime = freezer.start()
+        cls.addClassCleanup(freezer.stop)
 
     def setUp(self):
         super(TestIrCron, self).setUp()
@@ -66,3 +76,55 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.assertEqual(fields.Datetime.to_string(self.cron.lastcall), '2020-10-22 08:00:00')
         self.assertEqual(self.test_partner.name, 'You have been CRONWNED')
         self.assertEqual(self.test_partner2.name, 'NotTestCronRecord')
+
+    def test_cron_skip_unactive_triggers(self):
+        # Situation: an admin disable the cron and another user triggers
+        # the cron to be executed *now*, the cron shouldn't be ready and
+        # the trigger should not be stored.
+
+        self.cron.active = False
+        self.cron.nextcall = fields.Datetime.now() + timedelta(days=2)
+        self.cron.flush()
+        with self.capture_triggers() as capture:
+            self.cron._trigger()
+
+        ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
+        self.assertNotIn(self.cron.id, [job['id'] for job in ready_jobs],
+            "the cron shouldn't be ready")
+        self.assertFalse(capture.records, "trigger should has been skipped")
+
+    def test_cron_keep_future_triggers(self):
+        # Situation: yesterday an admin disabled the cron, while the
+        # cron was disabled, another user triggered it to run today.
+        # In case the cron as been re-enabled before "today", it should
+        # run.
+
+        # go yesterday
+        self.frozen_datetime.tick(delta=timedelta(days=-1))
+
+        # admin disable the cron
+        self.cron.active = False
+        self.cron.nextcall = fields.Datetime.now() + timedelta(days=10)
+        self.cron.flush()
+
+        # user triggers the cron to run *tomorrow of yesterday (=today)
+        with self.capture_triggers() as capture:
+            self.cron._trigger(at=fields.Datetime.now() + timedelta(days=1))
+
+        # admin re-enable the cron
+        self.cron.active = True
+        self.cron.flush()
+
+        # go today, check the cron should run
+        self.frozen_datetime.tick(delta=timedelta(days=1))
+        ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
+        self.assertIn(self.cron.id, [job['id'] for job in ready_jobs],
+            "cron should be ready")
+        self.assertTrue(capture.records, "trigger should has been kept")
+
+    def test_cron_null_interval(self):
+        self.cron.interval_number = 0
+        with self.assertLogs('odoo.addons.base.models.ir_cron', 'ERROR'):
+            self.cron._process_job(get_db_name(), self.env.cr, self.cron.read(load=False)[0])
+        self.cron.invalidate_cache(['active'], self.cron.ids)
+        self.assertFalse(self.cron.active)

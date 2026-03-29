@@ -3,8 +3,10 @@
 
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestProgramWithCodeOperations(TestSaleCouponCommon):
     # Test the basic operation (apply_coupon) on an coupon program on which we should
     # apply the reward when the code is correct or remove the reward automatically when the reward is
@@ -342,3 +344,105 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
                 'coupon_code': 'test'
             }).process_coupon()
         self.assertEqual(len(order.order_line), 2, "You should get a discount line")
+
+    def test_apply_program_no_reward_link(self):
+        # Tests that applying a promo code that does not generate reward lines
+        #  does not link on the order
+        self.env['coupon.program'].create({
+            'name': 'Code for 10% on orders',
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'test_10pc',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'program_type': 'promotion_program',
+        })
+        self.empty_order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_C.id,
+                'name': '1 Product C',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=self.empty_order.id).create({
+            'coupon_code': 'test_10pc',
+        }).process_coupon()
+        self.assertFalse(self.empty_order.code_promo_program_id, 'The program should not be linked to the order')
+
+        # Same for a coupon's code
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
+            'generation_type': 'nbr_coupon',
+            'nbr_coupons': 1,
+        }).generate_coupon()
+        coupon = self.code_promotion_program_with_discount.coupon_ids
+        self.env['sale.coupon.apply.code'].with_context(active_id=self.empty_order.id).create({
+            'coupon_code': coupon.code,
+        }).process_coupon()
+        self.assertFalse(self.empty_order.applied_coupon_ids, 'No coupon should be linked to the order')
+        self.assertEqual(coupon.state, 'new', 'Coupon should be in a new state')
+
+    def test_delete_all_discount_lines(self):
+        """
+            The goal is to ensure that all discount lines are deleted
+            when we need to update existing reward lines.
+        """
+        program = self.env['coupon.program'].create({
+            'name': '50% Discount on order',
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'test',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 50,
+            'active': True,
+            'discount_apply_on': 'on_order',
+        })
+        product_with_tax, product_without_tax = self.env['product.product'].create([
+            {
+                'name': 'Product with tax',
+                'list_price': 100,
+                'sale_ok': True,
+                'taxes_id': [self.tax_10pc_excl.id],
+            },
+            {
+                'name': 'Product without tax',
+                'list_price': 50,
+                'sale_ok': True,
+                'taxes_id': [],
+            }
+        ])
+        order = self.empty_order.copy()
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': product_with_tax.id,
+                'name': '1 Product with tax',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+            (0, False, {
+                'product_id': product_without_tax.id,
+                'name': '1 Product without tax',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.assertEqual(order.amount_total, 160)
+
+        self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+            'coupon_code': 'test'
+        }).process_coupon()
+        self.assertEqual(order.amount_total, 80)
+        self.assertEqual(order.code_promo_program_id, program)
+        self.assertEqual(len(order.order_line), 4, '2 products and 2 discount lines')
+
+        line_to_remove = order.order_line.filtered(lambda l: l.product_id == product_without_tax)
+        order.write({'order_line': [(3, line_to_remove.id, 0)]})
+        self.assertEqual(order.code_promo_program_id, program)
+        self.assertEqual(order.amount_total, 30)
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 55)
+        self.assertEqual(order.code_promo_program_id, program)
+
+        reward_lines = order.order_line.filtered(lambda l: l.is_reward_line)
+        self.assertTrue(reward_lines)
+        self.assertEqual(order.code_promo_program_id, program)

@@ -11,6 +11,7 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
+from werkzeug.exceptions import NotFound
 
 _logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ class Authenticate(http.Controller):
     # In this case, an exception will be thrown in case of preflight request if only POST is allowed.
     @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='json', auth="none", cors="*",
                 methods=['POST', 'OPTIONS'])
-    def auth_access_token(self, auth_code, **kw):
+    def auth_access_token(self, auth_code='', **kw):
         """
         Called by the external app to exchange an auth code, which is temporary and was passed in a URL, for an
         access token, which is permanent, and can be used in the `Authorization` header to authorize subsequent requests
@@ -63,6 +64,8 @@ class Authenticate(http.Controller):
         old route name "/mail_client_extension/auth/access_token is deprecated as of saas-14.3,it is not needed for newer
         versions of the mail plugin but necessary for supporting older versions
         """
+        if not auth_code:
+            return {"error": "Invalid code"}
         auth_message = self._get_auth_code_data(auth_code)
         if not auth_message:
             return {"error": "Invalid code"}
@@ -90,6 +93,8 @@ class Authenticate(http.Controller):
     # Using UTC explicitly in case of a distributed system where the generation and the signature verification do not
     # necessarily happen on the same server
     def _generate_auth_code(self, scope, name):
+        if not request.env.user._is_internal():
+            raise NotFound()
         auth_dict = {
             'scope': scope,
             'name': name,

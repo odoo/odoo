@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class Users(models.Model):
     _inherit = 'res.users'
 
-    karma = fields.Integer('Karma', default=0)
+    karma = fields.Integer('Karma', default=0, copy=False)
     karma_tracking_ids = fields.One2many('gamification.karma.tracking', 'user_id', string='Karma Changes', groups="base.group_system")
     badge_ids = fields.One2many('gamification.badge.user', 'user_id', string='Badges', copy=False)
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
@@ -180,6 +180,10 @@ WHERE sub.user_id IN %%s""" % {
         """
             Method that can be called on a batch of users with the same new rank
         """
+        if self.env.context.get('install_mode', False):
+            # avoid sending emails in install mode (prevents spamming users when creating data ranks)
+            return
+
         template = self.env.ref('gamification.mail_template_data_new_rank_reached', raise_if_not_found=False)
         if template:
             for u in self:

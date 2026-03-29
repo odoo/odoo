@@ -110,7 +110,7 @@ class Attendee(models.Model):
         ics_files = self.mapped('event_id')._get_ics_file()
 
         for attendee in self:
-            if attendee.email and attendee.partner_id != self.env.user.partner_id:
+            if attendee.email and attendee._should_notify_attendee():
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
@@ -119,6 +119,8 @@ class Attendee(models.Model):
                     attachment_values = [
                         (0, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
+                                'res_id': event_id,
+                                'res_model': 'calendar.event',
                                 'datas': base64.b64encode(ics_file)})
                     ]
                 body = mail_template._render_field(
@@ -138,7 +140,18 @@ class Attendee(models.Model):
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_values,
-                    force_send=force_send)
+                    force_send=force_send,
+                    message_type='auto_comment',
+                )
+
+    def _should_notify_attendee(self):
+        """ Utility method that determines if the attendee should be notified.
+            By default, we do not want to notify (aka no message and no mail) the current user
+            if he is part of the attendees.
+            (Override in appointment to ignore that rule and notify all attendees if it's an appointment)
+        """
+        self.ensure_one()
+        return self.partner_id != self.env.user.partner_id
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """

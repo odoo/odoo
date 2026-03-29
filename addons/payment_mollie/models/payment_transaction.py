@@ -9,6 +9,7 @@ from werkzeug import urls
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment_mollie.const import SUPPORTED_LOCALES
 from odoo.addons.payment_mollie.controllers.main import MollieController
 
@@ -39,7 +40,14 @@ class PaymentTransaction(models.Model):
         # The acquirer reference is set now to allow fetching the payment status after redirection
         self.acquirer_reference = payment_data.get('id')
 
-        return {'api_url': payment_data["_links"]["checkout"]["href"]}
+        # Extract the checkout URL from the payment data and add it with its query parameters to the
+        # rendering values. Passing the query parameters separately is necessary to prevent them
+        # from being stripped off when redirecting the user to the checkout URL, which can happen
+        # when only one payment method is enabled on Mollie and query parameters are provided.
+        checkout_url = payment_data["_links"]["checkout"]["href"]
+        parsed_url = urls.url_parse(checkout_url)
+        url_params = urls.url_decode(parsed_url.query)
+        return {'api_url': checkout_url, 'url_params': url_params}
 
     def _mollie_prepare_payment_request_payload(self):
         """ Create the payload for the payment request based on the transaction values.
@@ -51,12 +59,15 @@ class PaymentTransaction(models.Model):
         base_url = self.acquirer_id.get_base_url()
         redirect_url = urls.url_join(base_url, MollieController._return_url)
         webhook_url = urls.url_join(base_url, MollieController._notify_url)
+        decimal_places = CURRENCY_MINOR_UNITS.get(
+            self.currency_id.name, self.currency_id.decimal_places
+        )
 
         return {
             'description': self.reference,
             'amount': {
                 'currency': self.currency_id.name,
-                'value': f"{self.amount:.2f}",
+                'value': f"{self.amount:.{decimal_places}f}",
             },
             'locale': user_lang if user_lang in SUPPORTED_LOCALES else 'en_US',
 

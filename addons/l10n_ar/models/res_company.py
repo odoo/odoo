@@ -33,7 +33,7 @@ class ResCompany(models.Model):
     def _localization_use_documents(self):
         """ Argentinean localization use documents """
         self.ensure_one()
-        return True if self.country_id.code == "AR" else super()._localization_use_documents()
+        return self.account_fiscal_country_id.code == "AR" or super()._localization_use_documents()
 
     @api.constrains('l10n_ar_afip_responsibility_type_id')
     def _check_accounting_info(self):

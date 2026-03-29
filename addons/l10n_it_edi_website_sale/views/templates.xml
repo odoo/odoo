@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="address_b2b" inherit_id="website_sale.address_b2b" name="Show l10n_it fields" customize_show="True">
+            <xpath expr="//div[contains(@t-attf-class, 'div_vat')]" position="after">
+                <t t-if="res_company.account_fiscal_country_id.code == 'IT'">
+                    <div class="w-100"/>
+                    <div t-attf-class="form-group #{error.get('l10n_it_codice_fiscale') and 'o_has_error' or ''} col-lg-6 div_l10n_it_codice_fiscale mb-0" id="div_l10n_it_codice_fiscale">
+                        <label class="col-form-label font-weight-normal label-optional" for="l10n_it_codice_fiscale">Codice Fiscale</label>
+                        <input type="text" name="l10n_it_codice_fiscale" t-attf-class="form-control #{error.get('l10n_it_codice_fiscale') and 'is-invalid' or ''}" t-att-value="'l10n_it_codice_fiscale' in checkout and checkout['l10n_it_codice_fiscale']"/>
+                    </div>
+                    <div t-attf-class="form-group #{error.get('l10n_it_pa_index') and 'o_has_error' or ''} col-lg-6 div_l10n_it_pa_index mb-0" id="div_l10n_it_pa_index">
+                        <label class="col-form-label font-weight-normal label-optional" for="l10n_it_pa_index">Destination Code (SDI)</label>
+                        <input type="text" name="l10n_it_pa_index" t-attf-class="form-control #{error.get('l10n_it_pa_index') and 'is-invalid' or ''}" t-att-value="'l10n_it_codice_fiscale' in checkout and checkout['l10n_it_codice_fiscale']"/>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

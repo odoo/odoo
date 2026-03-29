@@ -8,6 +8,12 @@ $-seen-urls: ();
     @if $-url and index($-seen-urls, $-url) == null {
         $-seen-urls: append($-seen-urls, $-url);
         @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+    } @else {
+        $-name: o-get-font-info($alias, 'name');
+        $-attachment: o-get-font-info($alias, 'attachment');
+        @if $-attachment {
+            @import url("/web/content/#{$-attachment}/google-font-#{unquote($-name)}");
+        }
     }
 }
 
@@ -94,18 +100,22 @@ $-seen-urls: ();
     @include print-variable('custom-colors', $custom-colors);
 }
 
+@mixin body-image-bg-style() {
+    background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+    background-position: center;
+    background-attachment: fixed;
+    @if o-website-value('body-image-type') == 'pattern' {
+        background-size: auto;
+        background-repeat: repeat;
+    } @else {
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+};
+
 #wrapwrap {
     @if o-website-value('body-image') {
-        background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
-        background-position: center;
-        background-attachment: fixed;
-        @if o-website-value('body-image-type') == 'pattern' {
-            background-size: auto;
-            background-repeat: repeat;
-        } @else {
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
+        @include body-image-bg-style();
     }
 
     @if o-website-value('layout') != 'full' {
@@ -231,7 +241,14 @@ body:not(.o_fullscreen) {
     }
 }
 
-.navbar-light {
+// ":not(.bg-light)" was added as a fix in the stable version because, without
+// it, the two classes ".navbar-light" and ".bg-light" did not work together
+// correctly. For instance, if a ".navbar-light" element had a dark background
+// (resulting in light text), combining it with the "bg-light" class would keep
+// the background light, rendering the light text invisible.
+// TODO: In the Master, we should remove this ':where(:not(.bg-light))' and find
+// a more consistent solution.
+.navbar-light:where(:not(.bg-light)) {
     // Style only navbar-light which Odoo is only supposed to use in standard
     // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
     // Note: this only works because navbar-light is defined before navbar-dark,
@@ -280,6 +297,10 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright', $background: $-footer-color);
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
+    }
+    .s_popup {
+        // The colors of the footer must not impact the "all pages" popup.
+        @include o-apply-colors(1);
     }
 }
 
@@ -425,7 +446,7 @@ font[class*='bg-'] {
 
 // Probably outdated
 // Disable fixed height
-@media (max-width: 400px) {
+@include media-breakpoint-down(sm) {
     section,
     .parallax,
     .row,
@@ -755,7 +776,17 @@ $-transition-duration: 200ms;
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    background: $light;
+
+    // TODO remove me in master, the $light color makes no sense as is visible
+    // if the header uses rounded corners but is impossible to edit / remove.
+    // As a stable fix, it was decided to not remove it if the header uses a
+    // transparent color, in which case mixing it with $light actually alters
+    // the whole menu color. In case there is a background gradient, we suppose
+    // it is opaque and remove the $light color.
+    $-menu-color: o-color('menu-custom') or o-color('menu');
+    @if not o-website-value('menu-gradient') and (not $-menu-color or alpha($-menu-color) < 0.95) {
+        background: $light;
+    }
 
     &:not(.o_header_no_transition) {
         transition: transform $-transition-duration;
@@ -825,6 +856,9 @@ $-transition-duration: 200ms;
             max-width: none;
             flex: auto;
         }
+        > .o_mega_menu_container_size {
+            transform: unset;
+        }
     }
 }
 
@@ -870,6 +904,12 @@ header {
         max-height: 80vh;
         overflow-y: auto;
         overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
+
+        @include media-breakpoint-down(md) {
+            .nav-link, .dropdown-item {
+                white-space: normal;
+            }
+        }
     }
 
     &:not(.o_header_is_scrolled) {
@@ -887,14 +927,17 @@ header {
     #top_menu_container {
         flex-direction: inherit;
     }
-    @if $-hamburger-center {
-        .collapsing, .show {
-            #top_menu {
-                @if not $-off-canvas-hamburger {
+
+    .collapsing, .show {
+        #top_menu {
+            @if $-hamburger-center {
+                @if not $-off-canvas-hamburger and not o-website-value('header-template') == 'magazine' {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
                 text-align: center !important;
+            } @else if $-hamburger-right {
+                text-align: right;
             }
         }
     }
@@ -921,11 +964,8 @@ header {
     #top_menu_collapse {
 
         &.collapsing, &.show {
-            // Note: position relatively to the header instead of the viewport
-            // because fixed position cannot work inside an element whose CSS
-            // transform is different to none, which the header element is
-            // because of header effects.
             @include o-position-absolute(0, 0, 0, 0);
+            position: fixed;
             z-index: $zindex-sticky;
             height: 100vh;
             max-height: 100vh;
@@ -968,9 +1008,16 @@ header {
                 @if $-hamburger-center {
                     width: 100%;
                     max-width: none;
+                    text-align: center !important;
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
+                    // Prevent #top_menu from overflowing the page below the
+                    // maximum width. (e.g. if contains an inline language
+                    // switcher with many elements.)
+                    @media(max-width: 560px) {
+                        max-width: 100%;
+                    }
                 }
                 min-width: 250px;
                 margin: 0 !important;
@@ -1021,27 +1068,43 @@ header {
                     padding-left: .5em;
                     padding-right: .5em;
                 }
+                .js_language_selector .dropdown-toggle {
+                    // Hide the language switcher button because it does not
+                    // make sense to show it if the dropdown is always open.
+                    display: none;
+                }
+                @if o-website-value('header-template') == 'slogan' {
+                    justify-content: unset !important;
+                }
             }
-
+            @if o-website-value('header-template') == 'vertical' {
+                .oe_structure_solo {
+                    // Hide the "oe_structure_solo" because it is outside the
+                    // menu when the off-canvas menu is open.
+                    display: none;
+                }
+                #top_menu {
+                    // This is useful because otherwise, the 'order-first' class
+                    // of the 'template_header_vertical' template puts the menu
+                    // behind the "backdrop" and it's no longer possible to
+                    // click on the menu links (only on Firefox).
+                    order: unset;
+                }
+            }
             .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header & {
-                // TODO this has to be reviewed
-                $-header-template: o-website-value('header-template');
-                @if not index(('Contact', 'boxed', 'magazine'), $-header-template) {
-                    top: -$o-navbar-height;
-                    padding-top: $o-navbar-height;
-                } @else if $-header-template == 'magazine' {
-                    @include media-breakpoint-up(lg) {
-                        padding-top: $o-navbar-height;
-                    }
-                }
+                padding-top: $o-navbar-height;
             }
-
-            .editor_has_snippets:not(.o_fullscreen) header & {
-                @if (o-website-value('header-template') == 'magazine') {
-                    @include media-breakpoint-up(lg) {
-                        right: $o-we-sidebar-width;
-                    }
-                }
+            // The "off-canvas" navbar has a "fixed" position (therefore
+            // relative to the viewport). But when the header is "affixed", the
+            // "fixed" position of the navbar is no longer relative to the
+            // viewport but it is relative to the header (this is due to
+            // "transform" CSS rule of the "affixed" header.
+            .o_connected_user:not(.editor_has_snippets):not(.o_fullscreen) header.o_header_affixed & {
+                top: -$o-navbar-height;
+            }
+            .editor_has_snippets:not(.o_fullscreen) header:not(.o_header_affixed) &.collapsing,
+            .editor_has_snippets:not(.o_fullscreen) header:not(.o_header_affixed) &.show {
+                right: $o-we-sidebar-width;
             }
         }
         &.collapsing #top_menu {
@@ -1086,12 +1149,27 @@ header {
 } @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
-            // Hack: padding is used by layout option (boxed, etc) so use
-            // border here to be able to combine the effect.
+            // Hack: padding is also used by layout option (boxed, etc), need to
+            // combine both options/effects...
             @if $-hamburger-right {
                 border-right: o-website-value('sidebar-width') solid transparent;
             } @else {
                 border-left: o-website-value('sidebar-width') solid transparent;
+            }
+            // ... but don't use it on Safari, it doesn't work, the menu is
+            // somehow broken and not visible.
+            &.o_safari_browser {
+                $padding-size: o-website-value('sidebar-width');
+                @if o-website-value('layout') != 'full' {
+                    $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+                }
+                @if $-hamburger-right {
+                    padding-right: $padding-size;
+                    border-right: none;
+                } @else {
+                    padding-left: $padding-size;
+                    border-left: none;
+                }
             }
 
             > header {
@@ -1152,6 +1230,9 @@ header {
     }
 } @else if o-website-value('header-template') == 'centered_logo' {
     header .o_header_centered_logo {
+        > li.nav-item {
+            align-self: center !important;
+        }
         @include media-breakpoint-up(lg) {
             width: 50%;
         }
@@ -1163,15 +1244,16 @@ header {
                 $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
                 > header {
                     .navbar-collapse {
+                        max-height: 100vh;
                         > .container {
-                            height: calc(100vh - #{$o-navbar-height} - #{$o-hamburger-full-navbar-height});
+                            height: calc(100vh - #{$o-hamburger-full-navbar-height});
                             transition: height .3s ease;
                         }
                         .nav-link {
                             padding-right: $nav-link-padding-x;
                             padding-left: $nav-link-padding-x;
                         }
-                        .dropdown-menu {
+                        .dropdown-menu:not(.o_mega_menu) {
                             position: absolute;
                         }
                     }
@@ -1183,6 +1265,10 @@ header {
                 align-items: center !important;
             }
         }
+    }
+} @else if o-website-value('header-template') == 'slogan' {
+    #top_menu_container > ul.nav > li.nav-item {
+        align-self: center;
     }
 }
 
@@ -1242,7 +1328,7 @@ header {
 }
 
 #wrapwrap.o_header_overlay {
-    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown) {
+    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
         z-index: 1000;
 
@@ -1315,17 +1401,47 @@ header {
             border-color: currentColor;
         }
     }
+
+    // On the "/Help" page (with "website_helpdesk" installed), the navbar for
+    // helpdesk teams uses the both "navbar-nav" and "nav-tabs" BS classes on
+    // the same element, which is not compatible. This results in the text and
+    // background of the active "nav-link" having the same color if the
+    // background of the website is black, and consequently, the text is not
+    // visible.
+    // TODO: In Master, modify the layout of the navbar for helpdesk teams to
+    // avoid using BS Tabs within a BS Navbar.
+    &.nav-tabs > .nav-item.active > .nav-link.active {
+        color: color-yiq($nav-tabs-link-active-bg, $light: $navbar-light-active-color, $dark: $navbar-dark-active-color);
+    }
 }
 
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
     @include media-breakpoint-up(lg) {
-        #wrapwrap.o_footer_effect_enable {
+        // This effect is disabled when a modal is opened. This is the easiest
+        // and probably most stable solution for this problem:
+        // - Add a popup in your page and select it to be for "All pages"
+        //   => In that case it ends up in the footer of your page
+        // - Enable the "Slide Hover" effect for your footer
+        //
+        // => In that case, when the popup opens, it is not visible because of
+        // the footer z-index ("Slide Hover" effect) and it actually also
+        // prevents the user to scroll.
+        //
+        // TODO in master, we may want to put such popups elsewhere than in the
+        // footer. When the footer is hidden, this is also a problem: the popup
+        // for all pages cannot be visible ever. This is considered a limitation
+        // in stable versions though.
+        body:not(.modal-open) #wrapwrap.o_footer_effect_enable {
             > main {
                 @if o-website-value('layout') == 'full' {
                     // Ensure a transparent snippet at the end of the content
                     // still appears with the same background when hovering the
                     // footer during the scroll effect.
-                    background-color: $body-bg;
+                    @if o-website-value('body-image') {
+                        @include body-image-bg-style();
+                    } @else {
+                        background-color: $body-bg;
+                    }
                 }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
@@ -1340,15 +1456,33 @@ header {
 }
 
 // Language selector
-.js_language_selector {
-    .dropdown-menu {
-        min-width: 0;
+#wrapwrap:not(.o_rtl) {
+    .js_language_selector {
+        .dropdown-menu {
+            min-width: 0;
+        }
     }
+}
+.js_language_selector {
     a.list-inline-item {
         padding: 3px 0;
 
         > * {
             vertical-align: middle;
+        }
+    }
+
+    @if index(
+        ('default', 'slogan', 'Contact', 'centered_logo', 'image'),
+        o-website-value('header-template')
+    ) != null {
+        @include media-breakpoint-down(md) {
+            .dropdown-toggle {
+                display: block;
+            }
+            .dropdown-menu {
+                position: static;
+            }
         }
     }
 }
@@ -1357,6 +1491,7 @@ header {
     height: 1em;
     margin-right: 0.2em;
     border-radius: $rounded-pill;
+    object-fit: cover;
 }
 a.js_change_lang:hover, a.o_add_language:hover {
     text-decoration: none;
@@ -1371,6 +1506,10 @@ span.list-inline-item.o_add_language:last-child {
 
 // Footer scrolltop button
 @if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop_wrapper {
+        position: relative;
+        z-index: 1;
+    }
     #o_footer_scrolltop {
         $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
         $-footer-color: mix(rgba($-footer-color, 1.0), $body-bg, percentage(alpha($-footer-color)));
@@ -1506,9 +1645,24 @@ $ribbon-padding: 100px;
 
 // Cookies Bar
 #website_cookies_bar {
+    min-height: 0px;
+    height: 0px;
+
     :not(.o_cookies_popup) {
         bottom: 0;
     }
+    .o_cookies_discrete {
+        .js_close_popup.o_cookies_bar_text_button, .o_cookies_bar_text_policy {
+            @include media-breakpoint-down(md) {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}
+
+.o_cookies_bar_toggle {
+    gap: 0.5rem;
+    pointer-events: auto;
 }
 
 .o_website_btn_loading {
@@ -1531,6 +1685,44 @@ ul.o_checklist > li.o_checked::after {
     display: none !important;
 }
 
+// On translation editor, inputs & textareas with translatable "placeholder" and
+// "value" will get HTML content as translation value for the attributes.
+// The goal here is to hide these values until the editor's code sets the right
+// ones on elements. The `o_text_content_invisible` class is mainly used on JS
+// to have the same behaviour for textareas, since it's not possible to target
+// them on CSS using the "value" attribute unlike inputs.
+.o_text_content_invisible {
+    color: transparent !important;
+}
+[placeholder*="data-oe-translation-id"] {
+    &::-webkit-input-placeholder{ /* WebKit */
+        color: transparent;
+        opacity: 0;
+    }
+    &::-moz-placeholder { /* Firefox */
+        color: transparent;
+        opacity: 0;
+    }
+}
+input[value*="data-oe-translation-id"] {
+    @extend .o_text_content_invisible;
+}
+[data-oe-translation-id] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
+    }
+}
+
 //------------------------------------------------------------------------------
 // Website Animate
 //------------------------------------------------------------------------------
@@ -1543,7 +1735,7 @@ ul.o_checklist > li.o_checked::after {
     text-rendering: geometricPrecision; // take care of animated titles
     visibility: hidden;
 
-    &:not(.o_animating) {
+    &:not(.o_animating):not(.o_animate_in_dropdown) {
         transform: none !important;
     }
 }
@@ -1552,6 +1744,18 @@ ul.o_checklist > li.o_checked::after {
 }
 .o_wanim_overflow_x_hidden {
     overflow-x: hidden !important;
+
+    &.o_rtl, .o_rtl {
+        // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
+        // left-overflowing animations on RTL web pages. Note: using overflow on
+        // the main element hides animated elements outside of it (e.g. "Framed"
+        // page layout). This may not be the ideal solution but could be the
+        // best workaround for now.
+        > main {
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+    }
 }
 .o_animated_text {
     display: inline-block;

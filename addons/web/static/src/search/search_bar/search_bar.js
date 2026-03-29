@@ -190,7 +190,8 @@ export class SearchBar extends Component {
                 // Pass
             }
         }
-        const options = await this.orm.call(field.relation, "name_search", domain, {
+        const options = await this.orm.call(field.relation, "name_search", [], {
+            args: domain,
             context: field.context,
             limit: 8,
             name: query.trim(),
@@ -226,7 +227,7 @@ export class SearchBar extends Component {
     focusFacet(index) {
         const facets = this.el.getElementsByClassName("o_searchview_facet");
         if (facets.length) {
-            if (!index) {
+            if (index === undefined) {
                 facets[facets.length - 1].focus();
             } else {
                 facets[index].focus();

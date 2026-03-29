@@ -14003,7 +14003,7 @@ function () {
       this[i] = translatedData[i];
     }
 
-    this.isEvalSupported = isEvalSupported !== false;
+    this.isEvalSupported = false;
     this.disableFontFace = disableFontFace === true;
     this.ignoreErrors = ignoreErrors === true;
     this._onUnsupportedFeature = onUnsupportedFeature;

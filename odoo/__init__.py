@@ -16,7 +16,9 @@ __path__ = [
 ]
 
 import sys
-assert sys.version_info > (3, 7), "Outdated python version detected, Odoo requires Python >= 3.7 to run."
+MIN_PY_VERSION = (3, 7)
+MAX_PY_VERSION = (3, 12)
+assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Odoo requires Python >= {'.'.join(map(str, MIN_PY_VERSION))} to run."
 
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
@@ -81,9 +83,29 @@ try:
         zobj = zlib.decompressobj()
         return zobj.decompress(data)
 
+    import PyPDF2.filters  # needed after PyPDF2 2.0.0 and before 2.11.0
     PyPDF2.filters.decompress = _decompress
 except ImportError:
     pass # no fix required
+
+#----------------------------------------------------------
+# some charset are known by Python under a different name
+#----------------------------------------------------------
+import encodings.aliases
+
+encodings.aliases.aliases['874'] = 'cp874'
+encodings.aliases.aliases['windows_874'] = 'cp874'
+
+#----------------------------------------------------------
+# alias hebrew iso-8859-8-i and iso-8859-8-e on iso-8859-8
+# https://bugs.python.org/issue18624
+#----------------------------------------------------------
+import codecs
+import re
+
+iso8859_8 = codecs.lookup('iso8859_8')
+iso8859_8ie_re = re.compile(r'iso[-_]?8859[-_]8[-_]?[ei]', re.IGNORECASE)
+codecs.register(lambda charset: iso8859_8 if iso8859_8ie_re.match(charset) else None)
 
 #----------------------------------------------------------
 # Shortcuts
@@ -100,7 +122,7 @@ def registry(database_name=None):
     """
     if database_name is None:
         import threading
-        database_name = threading.currentThread().dbname
+        database_name = threading.current_thread().dbname
     return modules.registry.Registry(database_name)
 
 #----------------------------------------------------------

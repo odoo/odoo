@@ -90,17 +90,19 @@ class SmsSms(models.Model):
           :param auto_commit: commit after each batch of SMS;
           :param raise_exception: raise if there is an issue contacting IAP;
         """
+        self = self.filtered(lambda sms: sms.state == 'outgoing')
         for batch_ids in self._split_batch():
             self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             # auto-commit if asked except in testing mode
-            if auto_commit is True and not getattr(threading.currentThread(), 'testing', False):
+            if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
                 self._cr.commit()
 
     def resend_failed(self):
         sms_to_send = self.filtered(lambda sms: sms.state == 'error')
+        sms_to_send.state = 'outgoing'
         notification_title = _('Warning')
         notification_type = 'danger'
-        notification_message = ''
+
         if sms_to_send:
             sms_to_send.send()
             success_sms = len(sms_to_send) - len(sms_to_send.exists())
@@ -142,7 +144,7 @@ class SmsSms(models.Model):
         res = None
         try:
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.currentThread(), 'testing', False)
+            auto_commit = not getattr(threading.current_thread(), 'testing', False)
             res = self.browse(ids).send(unlink_failed=False, unlink_sent=True, auto_commit=auto_commit, raise_exception=False)
         except Exception:
             _logger.exception("Failed processing SMS queue")

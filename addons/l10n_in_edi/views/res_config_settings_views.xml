@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_in_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_in_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div data-key="account" position="inside">
+                <h2 attrs="{'invisible': [('country_code', '!=', 'IN')]}">Indian Electronic Invoicing</h2>
+                <div class='row mt16 o_settings_container' name="l10n_in_edi_iap" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                    <div class="col-12 col-lg-6 o_setting_box" id="gsp_setting">
+                        <div class="o_setting_right_pane">
+                            <t class="o_form_label">Setup E-invoice</t>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                Check the <a href="https://www.odoo.com/documentation/15.0/applications/finance/accounting/fiscal_localizations/localizations/india.html">documentation</a> to get credentials
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                    <label for="l10n_in_edi_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="l10n_in_edi_username"  nolabel="1"/>
+                                    <label for="l10n_in_edi_password" string="Password" class="col-3 col-lg-3 o_light_label" />
+                                    <field name="l10n_in_edi_password" password="True" nolabel="1"/>
+                                    <label for="l10n_in_edi_production_env" string="Production Environment" class="col-3 col-lg-3 o_light_label"/>
+                                    <field name="l10n_in_edi_production_env" nolabel="1"/>
+                                </div>
+                            </div>
+                            <div class='mt8'>
+                                <button name="l10n_in_edi_test" icon="fa-arrow-right" type="object" string="Verify Username and Password" class="btn-link"/>
+                            </div>
+                            <div class='mt8'>
+                                <button name="l10n_in_edi_buy_iap" title="Costs 1 credit per transaction. Free 200 credits will be available for the first time." icon="fa-arrow-right" type="object" string="Buy credits" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -143,6 +143,38 @@ class ResourceCalendarLeaves(models.Model):
             'company_id': employee_id.company_id.id,
         }
 
+    def _generate_public_time_off_timesheets(self, employees):
+        timesheet_vals_list = []
+        work_hours_data = self._work_time_per_day()
+        timesheet_read_group = self.env['account.analytic.line'].read_group(
+            [('global_leave_id', 'in', self.ids), ('employee_id', 'in', employees.ids)],
+            ['date:array_agg'],
+            ['employee_id']
+        )
+        timesheet_dates_per_employee_id = {
+            res['employee_id'][0]: res['date']
+            for res in timesheet_read_group
+        }
+        for leave in self:
+            for employee in employees:
+                if employee.resource_calendar_id != leave.calendar_id:
+                    continue
+                work_hours_list = work_hours_data[leave.id]
+                timesheet_dates = timesheet_dates_per_employee_id.get(employee.id, [])
+                for index, (day_date, work_hours_count) in enumerate(work_hours_list):
+                    generate_timesheet = day_date not in timesheet_dates
+                    if not generate_timesheet:
+                        continue
+                    timesheet_vals = leave._timesheet_prepare_line_values(
+                        index,
+                        employee,
+                        work_hours_list,
+                        day_date,
+                        work_hours_count
+                    )
+                    timesheet_vals_list.append(timesheet_vals)
+        return self.env['account.analytic.line'].sudo().create(timesheet_vals_list)
+
     @api.model_create_multi
     def create(self, vals_list):
         results = super(ResourceCalendarLeaves, self).create(vals_list)
@@ -151,15 +183,16 @@ class ResourceCalendarLeaves(models.Model):
         return results
 
     def write(self, vals):
-        start_dates = self.mapped('date_from')
-        end_dates = self.mapped('date_to')
+        date_from, date_to, calendar_id = vals.get('date_from'), vals.get('date_to'), vals.get('calendar_id')
+        global_time_off_updated = self.env['resource.calendar.leaves']
+        if date_from or date_to or 'calendar_id' in vals:
+            global_time_off_updated = self.filtered(lambda r: (date_from is not None and r.date_from != date_from) or (date_to is not None and r.date_to != date_to) or (calendar_id is not None and r.calendar_id.id != calendar_id))
+            timesheets = global_time_off_updated.sudo().timesheet_ids
+            if timesheets:
+                timesheets.write({'global_leave_id': False})
+                timesheets.unlink()
         result = super(ResourceCalendarLeaves, self).write(vals)
-        date_from, date_to = vals.get('date_from'), vals.get('date_to')
-        if date_from or date_to:
-            if any(start_date != date_from or end_date != date_to for start_date, end_date in zip(start_dates, end_dates)):
-                timesheets = self.mapped('timesheet_ids')
-                if timesheets:
-                    timesheets.write({'global_leave_id': False})
-                    timesheets.unlink()
-                    self._timesheet_create_lines()
+        if global_time_off_updated:
+            global_time_offs_with_leave_timesheet = global_time_off_updated.filtered(lambda r: not r.resource_id and r.calendar_id.company_id.internal_project_id and r.calendar_id.company_id.leave_timesheet_task_id)
+            global_time_offs_with_leave_timesheet.sudo()._timesheet_create_lines()
         return result

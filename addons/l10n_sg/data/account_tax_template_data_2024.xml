@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="tax_group_9" model="account.tax.group">
+            <field name="name">TAX 9%</field>
+        </record>
+    </data>
+
+    <record id="sg_sale_tax_ds_9" model="account.tax.template">
+        <field name="name">Sales Tax 9% DS</field>
+        <field name="description">9% DS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_std_rated_supplies')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_792'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_output_tax_due')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_std_rated_supplies')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_792'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_output_tax_due')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_sale_tax_sr_9" model="account.tax.template">
+        <field name="name">Sales Tax 9% SR</field>
+        <field name="description">9% SR</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_std_rated_supplies')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_796'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_output_tax_due')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_std_rated_supplies')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_796'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_output_tax_due')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_sale_tax_srca_c_9" model="account.tax.template">
+        <field name="name">Sales Tax 9% SRCA-C</field>
+        <field name="description">9% SRCA-C</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_std_rated_supplies')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_798'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_output_tax_due')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_std_rated_supplies')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_798'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_output_tax_due')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_txn33_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% TX-N33</field>
+        <field name="description">9% TX-N33</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_738'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_738'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_txe33_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% TX-E33</field>
+        <field name="description">9% TX-E33</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_739'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_739'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_bl_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% BL</field>
+        <field name="description">9% BL</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_740'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_740'),
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_im_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% IM</field>
+        <field name="description">9% IM</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_741'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_741'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_txre_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% TX-RE</field>
+        <field name="description">9% TX-RE</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_742'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_742'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_igds_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% IGDS</field>
+        <field name="description">9% IGDS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_743'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_743'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_tx8_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% TX9</field>
+        <field name="description">9% TX9</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_749'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_749'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+    </record>
+
+    <record id="sg_purchase_tax_txca_9" model="account.tax.template">
+        <field name="name">Purchase Tax 9% TXCA</field>
+        <field name="description">9% TXCA</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_750'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('account_tax_report_line_total_taxable_purchases')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_750'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_inp_tax_refund_claim')],
+                }),
+            ]"/>
+    </record>
+
+</odoo>

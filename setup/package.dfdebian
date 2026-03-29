@@ -57,3 +57,5 @@ RUN apt-get update -qq &&  \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
+
+USER odoo

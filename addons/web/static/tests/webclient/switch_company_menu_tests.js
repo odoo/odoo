@@ -14,6 +14,7 @@ import { session } from "@web/session";
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
+const ORIGINAL_TOGGLE_DELAY = SwitchCompanyMenu.toggleDelay;
 async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
     patchWithCleanup(SwitchCompanyMenu, { toggleDelay });
     if (routerParams.onPushState) {
@@ -80,8 +81,6 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
     });
 
     QUnit.test("companies can be toggled: toggle a second company", async (assert) => {
-        assert.expect(10);
-
         const prom = makeDeferred();
         function onPushState(url) {
             assert.step(url.split("#")[1]);
@@ -100,6 +99,18 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsN(scMenu.el, "[data-company-id]", 3);
         assert.containsN(scMenu.el, "[data-company-id] .fa-check-square", 1);
         assert.containsN(scMenu.el, "[data-company-id] .fa-square-o", 2);
+        assert.deepEqual(
+            [...scMenu.el.querySelectorAll("[data-company-id] .toggle_company")].map(
+                (el) => el.ariaChecked
+            ),
+            ["true", "false", "false"]
+        );
+        assert.deepEqual(
+            [...scMenu.el.querySelectorAll("[data-company-id] .log_into")].map(
+                (el) => el.ariaPressed
+            ),
+            ["true", "false", "false"]
+        );
 
         /**
          *   [x] **Hermit**
@@ -110,6 +121,18 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.containsOnce(scMenu.el, ".dropdown-menu", "dropdown is still opened");
         assert.containsN(scMenu.el, "[data-company-id] .fa-check-square", 2);
         assert.containsN(scMenu.el, "[data-company-id] .fa-square-o", 1);
+        assert.deepEqual(
+            [...scMenu.el.querySelectorAll("[data-company-id] .toggle_company")].map(
+                (el) => el.ariaChecked
+            ),
+            ["true", "true", "false"]
+        );
+        assert.deepEqual(
+            [...scMenu.el.querySelectorAll("[data-company-id] .log_into")].map(
+                (el) => el.ariaPressed
+            ),
+            ["true", "false", "false"]
+        );
         await prom;
         assert.verifySteps(["cids=3%2C2"]);
     });
@@ -122,7 +145,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
             assert.step(url.split("#")[1]);
             prom.resolve();
         }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
+        const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
         /**
          *   [x] **Hermit**
@@ -288,7 +311,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        const scMenu = await createSwitchCompanyMenu({ onPushState }, 50);
+        const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 
         /**
          *   [x] **Hermit**

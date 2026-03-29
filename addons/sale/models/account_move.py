@@ -74,16 +74,17 @@ class AccountMove(models.Model):
     def action_post(self):
         #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
-        for line in line_ids:
+        downpayment_lines = self.line_ids.sale_line_ids.filtered('is_downpayment')
+        other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
+        real_invoices = set(other_so_lines.invoice_lines.move_id)
+        for dpl in downpayment_lines:
             try:
-                line.sale_line_ids.tax_id = line.tax_ids
-                if all(line.tax_ids.mapped('price_include')):
-                    line.sale_line_ids.price_unit = line.price_unit
-                else:
-                    #To keep positive amount on the sale order and to have the right price for the invoice
-                    #We need the - before our untaxed_amount_to_invoice
-                    line.sale_line_ids.price_unit = -line.sale_line_ids.untaxed_amount_to_invoice
+                dpl.price_unit = sum(
+                    l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+                    for l in dpl.invoice_lines
+                    if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
+                )
+                dpl.tax_id = dpl.invoice_lines.tax_ids
             except UserError:
                 # a UserError here means the SO was locked, which prevents changing the taxes
                 # just ignore the error - this is a nice to have feature and should not be blocking
@@ -97,7 +98,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
-            payments = invoice.mapped('transaction_ids.payment_id')
+            payments = invoice.mapped('transaction_ids.payment_id').filtered(lambda x: x.state == 'posted')
             move_lines = payments.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)
@@ -130,3 +131,8 @@ class AccountMove(models.Model):
             send_invoice_cron._trigger()
 
         return res
+
+    def _is_downpayment(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False

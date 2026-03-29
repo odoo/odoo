@@ -180,6 +180,7 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             self.trigger_up('action_demand', {
                 actionName: 'close_all_widgets',
                 onSuccess: resolve,
+                onFailure: reject,
             });
         });
         prom.then(function () {

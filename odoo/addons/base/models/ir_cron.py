@@ -12,10 +12,15 @@ import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+from psycopg2 import sql
+
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
+
+# custom function to call instead of NOTIFY postgresql command (opt-in)
+ODOO_NOTIFY_FUNCTION = os.environ.get('ODOO_NOTIFY_FUNCTION')
 
 
 class BadVersion(Exception):
@@ -46,6 +51,7 @@ class ir_cron(models.Model):
     _name = "ir.cron"
     _order = 'cron_name'
     _description = 'Scheduled Actions'
+    _allow_sudo_commands = False
 
     ir_actions_server_id = fields.Many2one(
         'ir.actions.server', 'Server action',
@@ -79,10 +85,23 @@ class ir_cron(models.Model):
             self = self.with_context(default_state='code')
         return super(ir_cron, self).default_get(fields_list)
 
+    @api.onchange('active', 'interval_number')
+    def _onchange_interval_number(self):
+        if self.active and self.interval_number <= 0:
+            self.active = False
+            return {'warning': {
+                'title': _("Scheduled action disabled"),
+                'message': _("This scheduled action has been disabled because its interval number is not a strictly positive value.")}
+            }
+
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
+            cron._try_lock()
+            _logger.info('Manually starting job `%s`.', cron.name)
             cron.with_user(cron.user_id).with_context(lastcall=cron.lastcall).ir_actions_server_id.run()
+            cron.flush()
+            _logger.info('Job `%s` done.', cron.name)
             cron.lastcall = fields.Datetime.now()
         return True
 
@@ -98,17 +117,23 @@ class ir_cron(models.Model):
                 if not jobs:
                     return
                 cls._check_modules_state(cron_cr, jobs)
-                job_ids = tuple([job['id'] for job in jobs])
 
-                while True:
-                    job = cls._acquire_one_job(cron_cr, job_ids)
+                for job_id in (job['id'] for job in jobs):
+                    try:
+                        job = cls._acquire_one_job(cron_cr, (job_id,))
+                    except psycopg2.extensions.TransactionRollbackError:
+                        cron_cr.rollback()
+                        _logger.debug("job %s has been processed by another worker, skip", job_id)
+                        continue
                     if not job:
-                        break
-                    _logger.debug("job %s acquired", job['id'])
+                        _logger.debug("another worker is processing job %s, skip", job_id)
+                        continue
+                    _logger.debug("job %s acquired", job_id)
                     # take into account overridings of _process_job() on that database
                     registry = odoo.registry(db_name)
                     registry[cls._name]._process_job(db, cron_cr, job)
-                    _logger.debug("job %s updated and released", job['id'])
+                    cron_cr.commit()
+                    _logger.debug("job %s updated and released", job_id)
 
         except BadVersion:
             _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
@@ -190,7 +215,17 @@ class ir_cron(models.Model):
 
     @classmethod
     def _acquire_one_job(cls, cr, job_ids):
-        """ Acquire one job for update from the job_ids tuple. """
+        """
+        Acquire for update one job that is ready from the job_ids tuple.
+
+        The jobs that have already been processed in this worker should
+        be excluded from the tuple.
+
+        This function raises a ``psycopg2.errors.SerializationFailure``
+        when the ``nextcall`` of one of the job_ids is modified in
+        another transaction. You should rollback the transaction and try
+        again later.
+        """
 
         # We have to make sure ALL jobs are executed ONLY ONCE no matter
         # how many cron workers may process them. The exlusion mechanism
@@ -203,7 +238,15 @@ class ir_cron(models.Model):
         # the other workers don't select it too.
         # (ii) is implemented via the `WHERE` statement, when a job has
         # been processed, its nextcall is updated to a date in the
-        # future and the optionnal trigger is removed.
+        # future and the optional triggers are removed.
+        #
+        # Note about (ii): it is possible that a job becomes available
+        # again quickly (e.g. high frequency or self-triggering cron).
+        # This function doesn't prevent from acquiring that job multiple
+        # times at different moments. This can block a worker on
+        # executing a same job in loop. To prevent this problem, the
+        # callee is responsible of providing a `job_ids` tuple without
+        # the jobs it has executed already.
         #
         # An `UPDATE` lock type is the strongest row lock, it conflicts
         # with ALL other lock types. Among them the `KEY SHARE` row lock
@@ -216,7 +259,7 @@ class ir_cron(models.Model):
         #
         # Learn more: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
 
-        cr.execute("""
+        query = """
             SELECT *
             FROM ir_cron
             WHERE active = true
@@ -232,7 +275,18 @@ class ir_cron(models.Model):
               AND id in %s
             ORDER BY priority
             LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED
-        """, [job_ids])
+        """
+        try:
+            cr.execute(query, [job_ids], log_exceptions=False)
+        except psycopg2.extensions.TransactionRollbackError:
+            # A serialization error can occur when another cron worker
+            # commits the new `nextcall` value of a cron it just ran and
+            # that commit occured just before this query. The error is
+            # genuine and the job should be skipped in this cron worker.
+            raise
+        except Exception as exc:
+            _logger.error("bad query: %s\nERROR: %s", query, exc)
+            raise
         return cr.dictfetchone()
 
     @classmethod
@@ -253,6 +307,11 @@ class ir_cron(models.Model):
         # *: missed_call, a total of 4 calls are missing
         # 3: now
         # 4: future_nextcall, the cron nextcall as seen from now
+
+        if job['interval_number'] <= 0:
+            _logger.error("Job %s %r has been disabled because its interval number is null or negative.", job['id'], job['cron_name'])
+            cron_cr.execute("UPDATE ir_cron SET active=false WHERE id=%s", [job['id']])
+            return
 
         with cls.pool.cursor() as job_cr:
             lastcall = fields.Datetime.to_datetime(job['lastcall'])
@@ -311,8 +370,6 @@ class ir_cron(models.Model):
               AND call_at < (now() at time zone 'UTC')
         """, [job['id']])
 
-        cron_cr.commit()
-
     @api.model
     def _callback(self, cron_name, server_action_id, job_id):
         """ Run the method associated to a given job. It takes care of logging
@@ -331,6 +388,7 @@ class ir_cron(models.Model):
             if _logger.isEnabledFor(logging.DEBUG):
                 start_time = time.time()
             self.env['ir.actions.server'].browse(server_action_id).run()
+            self.env['ir.actions.server'].flush()
             _logger.info('Job `%s` done.', cron_name)
             if start_time and _logger.isEnabledFor(logging.DEBUG):
                 end_time = time.time()
@@ -399,6 +457,11 @@ class ir_cron(models.Model):
 
     @api.model
     def toggle(self, model, domain):
+        # Prevent deactivated cron jobs from being re-enabled through side effects on
+        # neutralized databases.
+        if self.env['ir.config_parameter'].sudo().get_param('database.is_neutralized'):
+            return True
+
         active = bool(self.env[model].search_count(domain))
         return self.try_write({'active': active})
 
@@ -438,11 +501,15 @@ class ir_cron(models.Model):
         :param list[datetime.datetime] at_list:
             Execute the cron later, at precise moments in time.
         """
-        if not at_list:
-            return
-
         self.ensure_one()
         now = fields.Datetime.now()
+
+        if not self.sudo().active:
+            # skip triggers that would be ignored
+            at_list = [at for at in at_list if at > now]
+
+        if not at_list:
+            return
 
         self.env['ir.cron.trigger'].sudo().create([
             {'cron_id': self.id, 'call_at': at}
@@ -461,13 +528,22 @@ class ir_cron(models.Model):
         ir_cron modification and on trigger creation (regardless of call_at)
         """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
-            cr.execute('NOTIFY cron_trigger, %s', [self.env.cr.dbname])
+            if ODOO_NOTIFY_FUNCTION:
+                query = sql.SQL("SELECT {}('cron_trigger', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
+            else:
+                query = "NOTIFY cron_trigger, %s"
+            cr.execute(query, [self.env.cr.dbname])
         _logger.debug("cron workers notified")
 
 
 class ir_cron_trigger(models.Model):
     _name = 'ir.cron.trigger'
     _description = 'Triggered actions'
+    _allow_sudo_commands = False
 
     cron_id = fields.Many2one("ir.cron", index=True)
     call_at = fields.Datetime()
+
+    @api.autovacuum
+    def _gc_cron_triggers(self):
+        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()

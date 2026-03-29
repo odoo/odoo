@@ -50,7 +50,9 @@
                                         <strong t-att-style="'color: %s;' % o.company_id.primary_color">
                                             <br/>
                                             <span style="line-height: 180%;">RUT:</span>
-                                            <span t-esc="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                            <t t-if="o.company_id.partner_id.vat">
+                                                <span t-esc="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                            </t>
                                             <br/>
                                             <span class="text-uppercase" t-esc="report_name"/>
                                             <br/>

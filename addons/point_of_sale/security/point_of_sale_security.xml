@@ -17,7 +17,18 @@
     </record>
 
     <data noupdate="1">
-
+    <record id="rule_pos_account_move_line" model="ir.rule">
+        <field name="name">Point Of Sale Account move line</field>
+        <field name="model_id" ref="account.model_account_move_line" />
+        <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
+        <field name="domain_force">[('move_id.pos_order_ids','!=',False)]</field>
+    </record>
+    <record id="rule_pos_account_move" model="ir.rule">
+        <field name="name">Point Of Sale Account move</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
+        <field name="domain_force">[('pos_order_ids', '!=', False)]</field>
+    </record>
     <record id="rule_pos_bank_statement_user" model="ir.rule">
         <field name="name">Point Of Sale Bank Statement POS User</field>
         <field name="model_id" ref="account.model_account_bank_statement" />
@@ -66,7 +77,7 @@
     <record id="rule_pos_order_report_multi_company" model="ir.rule">
         <field name="name">Point Of Sale Order Analysis multi-company</field>
         <field name="model_id" ref="model_report_pos_order"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
     <record id="rule_pos_payment_method_multi_company" model="ir.rule">
         <field name="name">PoS Payment Method</field>

@@ -100,6 +100,29 @@ QUnit.test("can get ordered list of entries", function (assert) {
     ]);
 });
 
+QUnit.test("getAll and getEntries returns shallow copies", function (assert) {
+    const registry = new Registry();
+
+    registry.add("foo1", "foo1");
+
+    const all = registry.getAll();
+    const entries = registry.getEntries();
+
+    assert.deepEqual(all, ["foo1"]);
+    assert.deepEqual(entries, [["foo1", "foo1"]]);
+
+    all.push("foo2");
+    entries.push(["foo2", "foo2"]);
+
+    assert.deepEqual(all, ["foo1", "foo2"]);
+    assert.deepEqual(entries, [
+        ["foo1", "foo1"],
+        ["foo2", "foo2"],
+    ]);
+    assert.deepEqual(registry.getAll(), ["foo1"]);
+    assert.deepEqual(registry.getEntries(), [["foo1", "foo1"]]);
+});
+
 QUnit.test("can override element with sequence", function (assert) {
     const registry = new Registry();
 

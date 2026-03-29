@@ -8,9 +8,13 @@ var Dialog = require('web.Dialog');
 var _t = core._t;
 
 var ForumCreateDialog = Dialog.extend({
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/website_forum/static/src/xml/website_forum_templates.xml']
-    ),
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat([
+        // TODO Move the toolbar template out of the website_forum_templates
+        // file in master. This way the unnecessary dependency of the creation
+        // dialog widget on the editor templates can be removed.
+        '/web_editor/static/src/xml/editor.xml',
+        '/website_forum/static/src/xml/website_forum_templates.xml',
+    ]),
     template: 'website_forum.add_new_forum',
     events: _.extend({}, Dialog.prototype.events, {
         'change input[name="privacy"]': '_onPrivacyChanged',

@@ -14,7 +14,7 @@
     <record id="equipment_request_rule_user" model="ir.rule">
         <field name="name">Users are allowed to access their own maintenance requests</field>
         <field name="model_id" ref="model_maintenance_request"/>
-        <field name="domain_force">['|', ('message_partner_ids', 'in', [user.partner_id.id]), ('user_id.id', '=', user.id)]</field>
+        <field name="domain_force">['|', '|', ('owner_user_id', '=', user.id), ('message_partner_ids', 'in', [user.partner_id.id]), ('user_id.id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
@@ -42,25 +42,25 @@
     <record id="maintenance_request_comp_rule" model="ir.rule">
         <field name="name">Maintenance Request Multi-company rule</field>
         <field name="model_id" ref="model_maintenance_request"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="maintenance_equipment_comp_rule" model="ir.rule">
         <field name="name">Maintenance Equipment Multi-company rule</field>
         <field name="model_id" ref="model_maintenance_equipment"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="maintenance_team_comp_rule" model="ir.rule">
         <field name="name">Maintenance Team Multi-company rule</field>
         <field name="model_id" ref="model_maintenance_team"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="maintenance_equipment_category_comp_rule" model="ir.rule">
         <field name="name">Maintenance Equipment Category Multi-company rule</field>
         <field name="model_id" ref="model_maintenance_equipment_category"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="base.user_admin" model="res.users">

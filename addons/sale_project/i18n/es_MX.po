@@ -4,22 +4,22 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco, 2022
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -60,7 +60,7 @@ msgid ""
 "project to track the time spent."
 msgstr ""
 "Facture en cuanto se venda este servicio y cree una tarea en un proyecto "
-"existente para hacer un seguimiento del tiempo empleado."
+"existente con el fin de llevar un seguimiento del tiempo empleado."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -70,9 +70,9 @@ msgid ""
 "project for the order with a task for each sales order line to track the "
 "time spent."
 msgstr ""
-"Facture las cantidades ordenadas en cuanto se venda este servicio, y cree un"
-" proyecto para la orden con una tarea para cada línea de la orden de venta "
-"con el fin de hacer un seguimiento del tiempo empleado."
+"Facture las cantidades ordenadas en cuanto se venda este servicio. Se creará"
+" un proyecto con una tarea para cada línea de la orden de venta para llevar "
+"seguimiento del tiempo usado."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -81,9 +81,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold, and create an "
 "empty project for the order to track the time spent."
 msgstr ""
-"Facture las cantidades ordenadas en cuanto se venda este servicio, y cree un"
-" proyecto vacío para la orden con el fin de hacer un seguimiento del tiempo "
-"empleado."
+"Facture las cantidades ordenadas en cuanto se venda este servicio. Se creará"
+" un proyecto vacío para la orden para llevar seguimiento del tiempo usado."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -199,6 +198,7 @@ msgstr "Orden de venta"
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
@@ -227,8 +227,8 @@ msgid ""
 "Sales Order Item to which the time spent on this task will be added, in "
 "order to be invoiced to your customer."
 msgstr ""
-"Artículo de la orden de ventas al que el tiempo gastado en esta tarea se "
-"agregará para que se le facture al cliente."
+"Artículo de la orden de ventas al que se agregará el tiempo utilizado en "
+"esta tarea para que se le facture al cliente."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -262,7 +262,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr "Orden de venta al que está vinculado el proyecto."
+msgstr "Orden de venta a la que está vinculado el proyecto."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -330,7 +330,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "Recurrencia de tareas"
+msgstr "Recurrencia de la tarea"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id

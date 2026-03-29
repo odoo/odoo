@@ -282,7 +282,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/report/report.js',
         ],
         'web.report_assets_pdf': [
-            'web/static/src/css/reset.min.css',
+            'web/static/src/legacy/js/report/reset.min.css',
         ],
 
         # ---------------------------------------------------------------------
@@ -391,6 +391,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/fullcalendar.js',
             'web/static/src/legacy/js/libs/jquery.js',
+            'web/static/src/legacy/js/libs/moment.js',
             'web/static/src/legacy/js/libs/underscore.js',
             'web/static/src/legacy/js/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/popper.js',
@@ -499,6 +500,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/env_tests.js',
             'web/static/tests/core/**/*.js',
             'web/static/tests/fields/**/*.js',
+            'web/static/tests/l10n/**/*.js',
             'web/static/tests/search/**/*.js',
             ('remove', 'web/static/tests/search/helpers.js'),
             'web/static/tests/views/**/*.js',

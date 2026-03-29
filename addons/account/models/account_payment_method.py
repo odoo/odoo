@@ -23,7 +23,7 @@ class AccountPaymentMethod(models.Model):
         payment_methods = super().create(vals_list)
         methods_info = self._get_payment_method_information()
         for method in payment_methods:
-            information = methods_info.get(method.code)
+            information = methods_info.get(method.code, {})
 
             if information.get('mode') == 'multi':
                 method_domain = method._get_payment_method_domain()
@@ -44,15 +44,15 @@ class AccountPaymentMethod(models.Model):
         self.ensure_one()
         information = self._get_payment_method_information().get(self.code)
 
-        currency_id = information.get('currency_id')
+        currency_ids = information.get('currency_ids')
         country_id = information.get('country_id')
         default_domain = [('type', 'in', ('bank', 'cash'))]
         domains = [information.get('domain', default_domain)]
 
-        if currency_id:
+        if currency_ids:
             domains += [expression.OR([
-                [('currency_id', '=', False), ('company_id.currency_id', '=', currency_id)],
-                [('currency_id', '=', currency_id)]],
+                [('currency_id', '=', False), ('company_id.currency_id', 'in', currency_ids)],
+                [('currency_id', 'in', currency_ids)]],
             )]
 
         if country_id:
@@ -76,6 +76,14 @@ class AccountPaymentMethod(models.Model):
         return {
             'manual': {'mode': 'multi', 'domain': [('type', 'in', ('bank', 'cash'))]},
         }
+
+    @api.model
+    def _get_sdd_payment_method_code(self):
+        """
+        TO OVERRIDE
+        This hook will be used to return the list of sdd payment method codes
+        """
+        return []
 
 
 class AccountPaymentMethodLine(models.Model):
@@ -119,20 +127,7 @@ class AccountPaymentMethodLine(models.Model):
 
     @api.constrains('name')
     def _ensure_unique_name_for_journal(self):
-        self.flush(['name'])
-        self._cr.execute('''
-            SELECT apml.name, apm.payment_type
-            FROM account_payment_method_line apml
-            JOIN account_payment_method apm ON apml.payment_method_id = apm.id
-            WHERE apml.journal_id IS NOT NULL
-            GROUP BY apml.name, journal_id, apm.payment_type
-            HAVING count(apml.id) > 1
-        ''')
-        res = self._cr.fetchall()
-        if res:
-            (name, payment_type) = res[0]
-            raise UserError(_("You can't have two payment method lines of the same payment type (%s) "
-                              "and with the same name (%s) on a single journal.", payment_type, name))
+        self.journal_id._check_payment_method_line_ids_multiplicity()
 
     def unlink(self):
         """
@@ -149,17 +144,26 @@ class AccountPaymentMethodLine(models.Model):
 
         return super(AccountPaymentMethodLine, unused_payment_method_lines).unlink()
 
-    def write(self, vals):
-        if 'payment_account_id' in vals:
-            account = self.env['account.account'].browse(vals['payment_account_id'])
-            if not account.reconcile:
-                account.reconcile = True
-        return super().write(vals)
-
     @api.model
+    def _auto_toggle_account_to_reconcile(self, account_id):
+        """ Automatically toggle the account to reconcile if allowed.
+
+        :param account_id: The id of an account.account.
+        """
+        account = self.env['account.account'].browse(account_id)
+        if not account.reconcile and account.internal_type != 'liquidity' and account.internal_group != 'off_balance':
+            account.reconcile = True
+
+    @api.model_create_multi
     def create(self, vals_list):
-        if 'payment_account_id' in vals_list:
-            account = self.env['account.account'].browse(vals_list['payment_account_id'])
-            if not account.reconcile:
-                account.reconcile = True
+        # OVERRIDE
+        for vals in vals_list:
+            if vals.get('payment_account_id'):
+                self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
         return super().create(vals_list)
+
+    def write(self, vals):
+        # OVERRIDE
+        if vals.get('payment_account_id'):
+            self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
+        return super().write(vals)

@@ -9,7 +9,7 @@
         <div id="toolbar" class="oe-toolbar oe-floating">
             <div id="style" class="btn-group dropdown">
                 <button type="button" class="btn dropdown-toggle"
-                    data-toggle="dropdown" title="Text style" tabindex="-1" data-display="static"
+                    data-toggle="dropdown" title="Text style" tabindex="-1"
                     data-original-title="Style" aria-expanded="false">
                     <span>Normal</span>
                 </button>
@@ -50,6 +50,7 @@
                 <div id="bold" data-call="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
                 <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
                 <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
+                <div id="strikethrough" data-call="strikeThrough" title="Toggle strikethrough" class="btn fa fa-strikethrough fa-fw"></div>
                 <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
             </div>
 
@@ -78,12 +79,12 @@
 
             <div id="font-size" class="btn-group dropdown">
                 <button type="button" class="btn dropdown-toggle"
-                    data-toggle="dropdown" title="Font size" tabindex="-1" data-display="static"
+                    data-toggle="dropdown" title="Font size" tabindex="-1"
                     data-original-title="Font Size" aria-expanded="false">
                     <span id="fontSizeCurrentValue"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="medium">default</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize">default</a></li>
                     <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
                     <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
                     <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
@@ -117,7 +118,7 @@
             <div id="list" class="btn-group">
                 <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
                 <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
-                <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa-fw">
+                <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
                     <div class="small">
                         <div class="fa fa-square-o d-block small"/>
                         <div class="fa fa-check-square d-block small"/>
@@ -265,6 +266,24 @@
                 </div>
             </div>
         </we-customizeblock-options>
+    </t>
+
+    <!-- Collaboration reset dialog -->
+    <t t-name="web_editor.collaboration-reset-dialog">
+        <div>
+            <div style="color: red;">
+                <p>
+                    There is a conflict between your version and the one in the database.
+                </p>
+                <p>
+                    The version from the database will be used.
+                    If you need to keep your changes, copy the content below and edit the new document.
+                </p>
+                <p style="font-weight: bold;">
+                    Warning: after closing this dialog, the version you were working on will be discarded and will never be available anymore.
+                </p>
+            </div>
+        </div>
     </t>
 
     <!--=================-->

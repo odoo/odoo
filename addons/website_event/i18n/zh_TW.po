@@ -3,17 +3,19 @@
 # 	* website_event
 # 
 # Translators:
-# Martin Trigaux, 2021
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Last-Translator: Tony Ng, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,7 +25,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
 msgid "# Registrations"
-msgstr "# 活動報名"
+msgstr "報名數目"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -33,12 +35,12 @@ msgstr "'.顯示結果 '"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "(Ref:"
-msgstr "(Ref:"
+msgstr "（參考編號："
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "(only"
-msgstr "(only"
+msgstr "（只限"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -84,7 +86,7 @@ msgstr "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">介紹
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
-msgstr "<i class=\"fa fa-ban mr-2\"/>已完售"
+msgstr "<i class=\"fa fa-ban mr-2\"/>售完"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -133,7 +135,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
+msgstr "<i class=\"fa fa-github text-github\" aria-label=\"GitHub\" title=\"GitHub\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -181,8 +183,8 @@ msgid ""
 "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
 "title=\"Youtube\"/>"
 msgstr ""
-"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
-"title=\"Youtube\"/>"
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"YouTube\" "
+"title=\"YouTube\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -252,7 +254,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                    <i class=\"fa fa-ban mr-2\"/>完售\n"
+"                                    <i class=\"fa fa-ban mr-2\"/> 售完\n"
 "                                </span>"
 
 #. module: website_event
@@ -292,7 +294,7 @@ msgstr "關於我們"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Add to Calendar"
-msgstr "添加到日曆"
+msgstr "加入至日曆"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:0
@@ -336,7 +338,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendees"
-msgstr "與會者"
+msgstr "參加者"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
@@ -427,7 +429,7 @@ msgstr "自訂範圍"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Date &amp; Time"
-msgstr "日期和時間"
+msgstr "日期及時間"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -477,12 +479,12 @@ msgstr "完成後不要忘記<b>儲存</b>。"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Email"
-msgstr "Email"
+msgstr "電郵"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
-msgstr "結束時間 -"
+msgstr "結束 -"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -604,7 +606,7 @@ msgstr "額外報名按鈕"
 msgid ""
 "Find out what people see and say about this event, and join the "
 "conversation."
-msgstr "瞭解人們對此活動的，並加入對話。"
+msgstr "了解其他人對本活動正談論甚麼，加入對話。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -619,7 +621,7 @@ msgstr "以下內容將出現在所有活動中."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get the direction"
-msgstr "獲取方向"
+msgstr "取得路線"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -672,7 +674,7 @@ msgstr "已發佈"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "John DOE"
-msgstr "John DOE"
+msgstr "陳大文"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu____last_update
@@ -751,7 +753,7 @@ msgstr "不適用"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Name"
-msgstr "名稱"
+msgstr "名字"
 
 #. module: website_event
 #. openerp-web
@@ -791,7 +793,7 @@ msgstr "找不到:"
 #: code:addons/website_event/static/src/xml/event_create.xml:0
 #, python-format
 msgid "On Site"
-msgstr "On Site"
+msgstr "到場"
 
 #. module: website_event
 #. openerp-web
@@ -803,7 +805,7 @@ msgstr "線上"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Organizer"
-msgstr "組織者"
+msgstr "舉辦方"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
@@ -838,7 +840,7 @@ msgstr "照片"
 #: code:addons/website_event/static/src/xml/event_create.xml:0
 #, python-format
 msgid "Please fill in this field"
-msgstr "請填寫這一欄"
+msgstr "請填寫此欄位"
 
 #. module: website_event
 #. openerp-web
@@ -855,7 +857,7 @@ msgstr "問題"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Ref:"
-msgstr "Ref:"
+msgstr "參考編號："
 
 #. module: website_event
 #. openerp-web
@@ -983,7 +985,7 @@ msgstr "選擇場地"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
 msgid "Seo name"
-msgstr "Seo 名稱"
+msgstr "SEO 名稱"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1005,7 +1007,7 @@ msgstr "對不起，請求的活動已經失效。"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Start -"
-msgstr "開始時間 -"
+msgstr "開始 -"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_today
@@ -1016,8 +1018,8 @@ msgstr "從今天開始"
 #. openerp-web
 #: code:addons/website_event/static/src/xml/event_create.xml:0
 #, python-format
-msgid "Start 🠖 End"
-msgstr "開始🠖 結束"
+msgid "Start → End"
+msgstr "開始 → 完結"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -1049,9 +1051,15 @@ msgid "This technical menu displays all event sub-menu items."
 msgstr "此技術選單顯示所有活動子選單細項。"
 
 #. module: website_event
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "This ticket is not available for sale for this event"
+msgstr "此活動門票不作發售"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
-msgstr "票券 #"
+msgstr "門票編號"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -1061,7 +1069,7 @@ msgstr "售票開始於"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Tickets for this Event are <b>Sold Out</b>"
-msgstr "此活動之票券已 <b>完售</b>"
+msgstr "本次活動門票<b>已售完</b>"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
@@ -1183,12 +1191,12 @@ msgstr "網站子選單"
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_url
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_url
 msgid "Website URL"
-msgstr "網站URL"
+msgstr "網站網址"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_visitor
 msgid "Website Visitor"
-msgstr "網站訪問者"
+msgstr "網站訪客"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
@@ -1232,14 +1240,28 @@ msgstr "如果還沒有進行，活動是否會在今天開始"
 msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
 "see when registering."
-msgstr "使用“編輯”按鈕，您可以<b>自訂</b>訪問者在註冊時將看到的網頁。"
+msgstr "使用“編輯”按鈕，您可以<b>自訂</b>訪問者在報名時將看到的網頁。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "available)"
-msgstr "available)"
+msgstr "可用）"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "iCal/Outlook"
-msgstr "iCal/Outlook"
+msgstr "iCal / Outlook"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "on_site"
+msgstr ""
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "online"
+msgstr ""

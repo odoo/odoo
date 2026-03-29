@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,7 +24,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr " '*' ليست نمط باركود صحيح. هل تقصد '.*' ؟"
+msgstr " '*' ليس نمط باركود صحيح. هل تقصد '.*' ؟"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -33,17 +34,17 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
-"تحدد <i>تسمية الباركود</i> كيفية التعرف على الباركود وتصنيفه.\n"
-"                                عند مسح باركود ضوئيًا، يُرفق بالقاعدة الأولى مع نمط\n"
-"                                مُطابق. تركيبة النمط هي تركيبة التعبير النمطي، ويتم التطابق\n"
-"                                بين الباركود إذا طابق التعبير النمطي بادئة الباركود."
+"تحدِّد <i>تسميات الباركود</i> كيفية التعرف على الباركودات وتصنيفها.\n"
+"                                عند مسح باركود ضوئيًا، يتم ربطه بالقاعدة <i>الأولى</i> مع نمط\n"
+"                                مُطابق. تركيبة النمط هي تركيبة التعبير النمطي، وتتم مطابقة\n"
+"                                الباركود إذا طابق التعبير النمطي بادئة الباركود. "
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
-msgstr "تحدد تسمية الباركود كيفية تعرف نقاط البيع على الباركود وتفسره"
+msgstr "تحدد تسمية الباركود كيفية تعرف نقطة البيع على الباركود وكيفية تفسيره "
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -79,7 +80,7 @@ msgstr "أي"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "تعرف داخلي على تسمية هذا الباركود"
+msgstr "Mixin باركود الفعالية "
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -114,7 +115,7 @@ msgstr "الباركود الممسوح ضوئيًا"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
 msgid "Companies"
-msgstr "شركات"
+msgstr "الشركات "
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -139,7 +140,7 @@ msgstr "تجاهل"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
 msgid "Display Name"
-msgstr "الاسم المعروض"
+msgstr "اسم العرض "
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
@@ -161,7 +162,7 @@ msgstr "EAN-8"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Enable edit mode to modify this document"
-msgstr ""
+msgstr "تشغيل وضع التحرير لتعديل هذا المستند "
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
@@ -212,7 +213,7 @@ msgstr "تسمية"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Pager unavailable"
-msgstr ""
+msgstr "جهاز المناداة غير متوفر "
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -225,10 +226,11 @@ msgid ""
 "                                zeroes."
 msgstr ""
 "يمكن أن تحدد الانماط أيضًا كيفية تشفير القيم الرقمية مثل الأوزان أو الأسعار\n"
-"                                داخل الباركود. يتم التعبير عنهم هكذا: <code>{NNN}</code>حيث\n"
-"                                يحدد حرف الـN مكان تشفير خانات الرقم. كما تدعم أنماط الباركود الأرقام الكسرية أيضًا\n"
-"                                ويتم التعبير عن الرقم العشري هكذا: <code>{NNNDD}</code>. في هذه الحالات،\n"
-"                                يجب أن تظهر هذه الخانات في حقل الباركود كأصفار في السجلات المرتبطة."
+"                                داخل الباركود.. يُشار إليها بـ <code>{NNN}</code> حيث يمثل حرف N\n"
+"                                مكان تشفير خانات الرقم. كما تدعم أنماط الباركود الأرقام الكسرية أيضًا \n"
+"                                ويتم التعبير عن الرقم العشري هكذا <code>{NNNDD}</code>. في هذه الحالات، \n"
+"                                <i>يجب</i> أن تظهر هذه الخانات في حقل الباركود كأصفار في السجلات\n"
+"                                المرتبطة. "
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -245,7 +247,7 @@ msgstr "القواعد"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Scan a barcode to set the quantity"
-msgstr ""
+msgstr "امسح الباركود لتحديد الكمية "
 
 #. module: barcodes
 #. openerp-web
@@ -257,19 +259,19 @@ msgstr "اختيار"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
 msgid "Sequence"
-msgstr "المسلسل"
+msgstr "التسلسل "
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Set quantity"
-msgstr "يحدد كمية"
+msgstr "تحديد الكمية "
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
-msgstr "الطاولات"
+msgstr "الجداول "
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -284,7 +286,7 @@ msgstr "قائمة قواعد الباركود"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr "النمط المطابق سيستخدم كلقب لهذا الباركود"
+msgstr "سوف يُستخدَم النمط المطابق كلقب لهذا الباركود "
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcode_rule.py:0
@@ -293,6 +295,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"يوجد خطأ في تركيبة نمط الباركود %(pattern)s: يمكن أن تحتوي القاعدة على زوج "
+"أقواس واحد فقط. "
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcode_rule.py:0
@@ -301,13 +305,15 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"يوجد خطأ في تركيبة نمط الباركود %(pattern)s: يمكن أن تحتوي الأقواس فقط على N"
+" متبوعة بـ D."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr ""
+msgstr "يوجد خطأ في تركيبة نمط الباركود %(pattern)s: أقواس فارغة. "
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -353,7 +359,7 @@ msgstr "التحويل بين UPC وEAN"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Undefined barcode command"
-msgstr ""
+msgstr "أمر باركود غير محدد "
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product

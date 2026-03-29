@@ -9,7 +9,7 @@
         <field name="tax_scope">service</field>
     </record>
     <record id="l10n_es.account_tax_template_s_iva21isp" model="account.tax.template">
-        <field name="l10n_es_type">sujeto_isp</field>
+        <field name="l10n_es_type">sujeto</field>
     </record>
     <record id="l10n_es.account_tax_template_p_iva21_bc" model="account.tax.template">
         <field name="name">21% IVA soportado (bienes corrientes)</field>
@@ -87,7 +87,7 @@
     </record>
     <record id="l10n_es.account_tax_template_s_iva0_sp_i" model="account.tax.template">
         <field name="name">IVA 0% Prestación de servicios intracomunitario</field>
-        <field name="l10n_es_type">no_sujeto</field>
+        <field name="l10n_es_type">no_sujeto_loc</field>
         <field name="tax_scope">service</field>
     </record>
     <record id="l10n_es.account_tax_template_s_iva_ns" model="account.tax.template">
@@ -172,8 +172,20 @@
         <field name="name">IVA Exento Repercutido No Sujeto</field>
         <field name="l10n_es_type">ignore</field>
     </record>
+    <record id="l10n_es.account_tax_template_s_req0" model="account.tax.template">
+        <field name="l10n_es_type">recargo</field>
+    </record>
+    <record id="l10n_es.account_tax_template_p_req0" model="account.tax.template">
+        <field name="l10n_es_type">recargo</field>
+    </record>
     <record id="l10n_es.account_tax_template_s_req05" model="account.tax.template">
         <field name="name">0.50% Recargo Equivalencia Ventas</field>
+        <field name="l10n_es_type">recargo</field>
+    </record>
+    <record id="l10n_es.account_tax_template_s_req062" model="account.tax.template">
+        <field name="l10n_es_type">recargo</field>
+    </record>
+    <record id="l10n_es.account_tax_template_p_req062" model="account.tax.template">
         <field name="l10n_es_type">recargo</field>
     </record>
     <record id="l10n_es.account_tax_template_s_iva4b" model="account.tax.template">
@@ -192,6 +204,10 @@
     </record>
     <record id="l10n_es.account_tax_template_p_iva10_nd" model="account.tax.template">
         <field name="name">10% IVA Soportado no deducible</field>
+        <field name="l10n_es_type">no_deducible</field>
+    </record>
+    <record id="l10n_es.account_tax_template_p_iva5_nd" model="account.tax.template">
+        <field name="name">5% IVA Soportado no deducible</field>
         <field name="l10n_es_type">no_deducible</field>
     </record>
     <record id="l10n_es.account_tax_template_p_iva4_nd" model="account.tax.template">

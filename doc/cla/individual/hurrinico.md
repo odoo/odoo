@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Nicola Malcontenti nicola.malcontenti@agilebg.com https://github.com/hurrinico
+Nicola Malcontenti nicola.malcontenti@agilebg.com (up to 2022-08-26) https://github.com/hurrinico

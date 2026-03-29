@@ -22,9 +22,20 @@ function loadAnchors(url) {
             resolve();
         }
     }).then(function (response) {
-        return _.map($(response).find('[id][data-anchor=true]'), function (el) {
+        const anchors = _.map($(response).find('[id][data-anchor=true]'), function (el) {
             return '#' + el.id;
         });
+        // Always suggest the top and the bottom of the page as internal link
+        // anchor even if the header and the footer are not in the DOM. Indeed,
+        // the "scrollTo" function handles the scroll towards those elements
+        // even when they are not in the DOM.
+        if (!anchors.includes('#top')) {
+            anchors.unshift('#top');
+        }
+        if (!anchors.includes('#bottom')) {
+            anchors.push('#bottom');
+        }
+        return anchors;
     }).catch(error => {
         console.debug(error);
         return [];
@@ -351,6 +362,65 @@ async function svgToPNG(src) {
     }).then(loadedImgEl => toPNGViaCanvas(loadedImgEl));
 }
 
+/**
+ * Generates a Google Maps URL based on the given parameter.
+ *
+ * @param {DOMStringMap} dataset
+ * @returns {string} a Google Maps URL
+ */
+function generateGMapLink(dataset) {
+    return 'https://maps.google.com/maps?q=' + encodeURIComponent(dataset.mapAddress)
+            + '&t=' + encodeURIComponent(dataset.mapType)
+            + '&z=' + encodeURIComponent(dataset.mapZoom)
+            + '&ie=UTF8&iwloc=&output=embed';
+}
+
+/**
+ * Returns the parsed data coming from the data-for element for the given form.
+ *
+ * @param {string} formId
+ * @returns {Object|undefined} the parsed data
+ */
+function getParsedDataFor(formId) {
+    const dataForEl = document.querySelector(`[data-for='${formId}']`);
+    if (!dataForEl) {
+        return;
+    }
+    return JSON.parse(dataForEl.dataset.values
+        // replaces `True` by `true` if they are after `,` or `:` or `[`
+        .replace(/([,:\[]\s*)True/g, '$1true')
+        // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
+        .replace(/([,:\[]\s*)(False|None)/g, '$1""')
+        // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
+        .replace(/'(\s*[,:\]}])/g, '"$1')
+        // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
+        .replace(/([{\[:,]\s*)'/g, '$1"')
+    );
+}
+
+/**
+ * Deep clones children or parses a string into elements, with or without
+ * <script> elements.
+ *
+ * @param {DocumentFragment|HTMLElement|String} content
+ * @param {Boolean} [keepScripts=false] - whether to keep script tags or not.
+ * @returns {DocumentFragment}
+ */
+function cloneContentEls(content, keepScripts = false) {
+    let copyFragment;
+    if (typeof content === "string") {
+        copyFragment = new Range().createContextualFragment(content);
+    } else {
+        copyFragment = new DocumentFragment();
+        const els = [...content.children].map(el => el.cloneNode(true));
+        copyFragment.append(...els);
+    }
+    if (!keepScripts) {
+        copyFragment.querySelectorAll("script").forEach(scriptEl => scriptEl.remove());
+    }
+    return copyFragment;
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -359,5 +429,8 @@ return {
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
     svgToPNG: svgToPNG,
+    generateGMapLink: generateGMapLink,
+    getParsedDataFor: getParsedDataFor,
+    cloneContentEls: cloneContentEls,
 };
 });

@@ -71,7 +71,7 @@
                             class="oe_stat_button"
                             icon="fa-calendar"
                             type="action"
-                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('holiday_type', '!=', 'employee'), ('employee_id', '=', False)]}"
+                            invisible="1"
                             name="%(hr_leave_action_holiday_allocation_id)d"
                             help="Time off Taken/Total Allocated">
                             <div class="o_stat_info">
@@ -485,6 +485,9 @@
         <field name="binding_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
-        <field name="code">action = records.action_validate()</field>
+         <field name="code">
+            if records:
+                records.action_validate()
+        </field>
     </record>
 </odoo>

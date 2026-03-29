@@ -40,7 +40,7 @@ class TestEventSale(TestEventSaleCommon):
         })
 
         cls.sale_order = cls.env['sale.order'].create({
-            'partner_id': cls.env.ref('base.res_partner_2').id,
+            'partner_id': cls.env['res.partner'].create({'name': 'Test Partner'}).id,
             'note': 'Invoice after delivery',
             'payment_term_id': cls.env.ref('account.account_payment_term_end_following_month').id
         })
@@ -279,3 +279,15 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(event.seats_expected, 1)
         self.sale_order.action_cancel()
         self.assertEqual(event.seats_expected, 0)
+
+    @users('user_salesman')
+    def test_compute_payment_status(self):
+        self.register_person.action_make_registration()
+        registration = self.event_0.registration_ids
+        self.assertEqual(registration.payment_status, 'to_pay')
+        registration.sale_order_line_id.price_total = 0.0
+        self.assertEqual(registration.payment_status, 'free', "Price of $0.00 should be free")
+        registration.sale_order_line_id.price_total = 0.01
+        self.assertEqual(registration.payment_status, 'to_pay', "Price of $0.01 should be paid")
+        registration.is_paid = True
+        self.assertEqual(registration.payment_status, 'paid')

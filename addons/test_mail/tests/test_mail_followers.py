@@ -7,6 +7,7 @@ from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import tagged
 from odoo.tests import users
 from odoo.tools.misc import mute_logger
+from odoo.tests.common import users
 
 
 @tagged('mail_followers')
@@ -44,6 +45,17 @@ class BaseFollowersTest(TestMailCommon):
         followed_after = test_record.search([('message_is_follower', '=', True)])
         self.assertTrue(test_record.message_is_follower)
         self.assertEqual(followed_before | test_record, followed_after)
+
+    def test_field_message_partner_ids(self):
+        test_record = self.test_record.with_user(self.user_employee)
+        partner = self.user_employee.partner_id
+        followed_before = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
+        self.assertFalse(partner in test_record.message_partner_ids)
+        self.assertNotIn(test_record, followed_before)
+        test_record.message_subscribe(partner_ids=[partner.id])
+        followed_after = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
+        self.assertTrue(partner in test_record.message_partner_ids)
+        self.assertEqual(followed_before + test_record, followed_after)
 
     def test_field_followers(self):
         test_record = self.test_record.with_user(self.user_employee)
@@ -161,6 +173,33 @@ class BaseFollowersTest(TestMailCommon):
         # works through low-level API
         document._message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | private_address)
+
+    @users('employee')
+    def test_recipients_fetch_pids_only(self):
+        """ Test that _get_recipient_data correctly fetch groups for additional pids
+        """
+        users = self.user_admin + self.user_employee + self.user_portal
+        recipient_data = self.env['mail.followers']._get_recipient_data(self.env['mail.thread'], False, False, pids=users.partner_id.ids)
+        groups = {pid: set(groups) for pid, _, _, _, groups in recipient_data}
+
+        self.assertEqual(groups[self.user_admin.partner_id.id], set(self.user_admin.groups_id.ids), "User Admin groups are not correctly fetched")
+        self.assertEqual(groups[self.user_employee.partner_id.id], set(self.user_employee.groups_id.ids), "User Employee groups are not correctly fetched")
+        self.assertEqual(groups[self.user_portal.partner_id.id], set(self.user_portal.groups_id.ids), "User Portal groups are not correctly fetched")
+
+    @users('employee')
+    def test_subscriptions_data_fetch(self):
+        """ Test that _get_subscription_data gives correct values when modifying followers manually."""
+        test_record = self.test_record
+        test_record_copy = self.test_record.copy()
+        test_records = test_record + test_record_copy
+        test_record.message_subscribe([self.user_employee.partner_id.id])
+        subscription_data = self.env['mail.followers']._get_subscription_data([(test_records._name, test_records.ids)], None)
+        self.assertEqual(len(subscription_data), 1)
+        self.assertEqual(subscription_data[0][1], test_record.id)
+        self.env['mail.followers'].browse(subscription_data[0][0]).sudo().res_id = test_record_copy
+        subscription_data = self.env['mail.followers']._get_subscription_data([(test_records._name, test_records.ids)], None)
+        self.assertEqual(len(subscription_data), 1)
+        self.assertEqual(subscription_data[0][1], test_record_copy.id)
 
 
 @tagged('mail_followers')

@@ -31,7 +31,7 @@
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
                         <div class="col-9">
-                            <a name="%(hr_leave_action_action_approve_department)d" type="action">
+                            <a name="action_open_leave_department" type="object">
                                 Time Off Requests
                             </a>
                         </div>
@@ -41,7 +41,7 @@
                     </div>
                     <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row ml16">
                         <div class="col-9">
-                            <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
+                            <a name="action_open_allocation_department" type="object">
                                 Allocation Requests
                             </a>
                         </div>
@@ -173,7 +173,7 @@
                 <button name="action_time_off_dashboard"
                         type="object"
                         class="oe_stat_button"
-                        context="{'search_default_employee_id': active_id}"
+                        context="{'search_default_employee_id': id}"
                         attrs="{'invisible': [('is_absent', '=', False)]}">
                         <div attrs="{'invisible': [('hr_icon_display', '!=', 'presence_holiday_present')]}"
                               role="img" class="fa fa-fw fa-plane o_button_icon text-success" aria-label="Off Till" title="Off Till"/>
@@ -193,7 +193,7 @@
                         class="oe_stat_button"
                         icon="fa-calendar"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
-                        context="{'search_default_employee_id': active_id}"
+                        context="{'search_default_employee_id': id}"
                         groups="base.group_user"
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">

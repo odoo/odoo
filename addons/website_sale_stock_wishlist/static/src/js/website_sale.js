@@ -26,7 +26,8 @@ publicWidget.registry.WebsiteSale.include({
         loadXml().then(() => {
             if (this.el.querySelector('.o_add_wishlist_dyn')) {
                 const messageEl = this.el.querySelector('div.availability_messages');
-                messageEl.insertAdjacentHTML('beforeend', QWeb.render('website_sale_stock_wishlist.product_availability', combination));
+                if (messageEl)
+                    messageEl.insertAdjacentHTML('beforeend', QWeb.render('website_sale_stock_wishlist.product_availability', combination));
             }
         });
     },

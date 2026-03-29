@@ -27,5 +27,12 @@ class TestWebsiteSaleMail(HttpCase):
         # we override unlink because we don't want the email to be auto deleted
         MailMail = odoo.addons.mail.models.mail_mail.MailMail
 
+        main_website = self.env.ref('website.default_website')
+        other_websites = self.env['website'].search([]) - main_website
+
+        # We change the domain of the website to test that the email that
+        # will be sent uses the correct domain for its links.
+        main_website.domain = "my-test-domain.com"
+        other_websites.domain = "https://domain-not-used.fr"
         with patch.object(MailMail, 'unlink', lambda self: None):
             self.start_tour("/", 'shop_mail', login="admin")

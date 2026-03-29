@@ -4,7 +4,7 @@
     <record model="ir.rule" id="stock_landed_cost_rule">
         <field name="name">stock_landed_cost multi-company</field>
         <field name="model_id" search="[('model','=','stock.landed.cost')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
 </odoo>

@@ -82,6 +82,7 @@ access_account_tax_internal_user,account.tax internal user,model_account_tax,bas
 access_account_tax_readonly,account.tax,model_account_tax,account.group_account_readonly,1,0,0,0
 access_account_tax_invoice,account.tax,model_account_tax,account.group_account_invoice,1,0,0,0
 access_account_tax_manager,account.tax,model_account_tax,account.group_account_manager,1,1,1,1
+access_account_tag_internal_user,account.account.tag internal user,model_account_account_tag,base.group_user,1,0,0,0
 access_account_account_tax,account.account.tag,model_account_account_tag,account.group_account_user,1,1,1,1
 access_account_account_tax_readonly,account.account.tag,model_account_account_tag,account.group_account_readonly,1,0,0,0
 access_account_account_tax_user,account.account.tag,model_account_account_tag,account.group_account_invoice,1,0,0,0
@@ -123,7 +124,7 @@ access_account_payment_term_line_manager,account.payment.term.line,model_account
 access_account_payment_method_line_readonly,account.payment.method.line,model_account_payment_method_line,base.group_user,1,0,0,0
 access_account_payment_method_line,account.payment.method.line,model_account_payment_method_line,account.group_account_invoice,1,1,1,1
 access_account_payment_method_readonly,account.payment.method,model_account_payment_method,base.group_user,1,0,0,0
-access_account_payment_method,account.payment.method,model_account_payment_method,account.group_account_invoice,1,1,1,1
+access_account_payment_method,account.payment.method,model_account_payment_method,account.group_account_invoice,1,1,0,1
 access_account_payment_readonly,account.payment,model_account_payment,account.group_account_readonly,1,0,0,0
 access_account_payment,account.payment,model_account_payment,account.group_account_invoice,1,1,1,1
 

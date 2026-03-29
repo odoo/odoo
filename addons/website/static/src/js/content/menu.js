@@ -6,6 +6,7 @@ var dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
+const weUtils = require('web_editor.utils');
 
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
@@ -26,11 +27,16 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.scrolledPoint = 0;
         this.hasScrolled = false;
         this.closeOpenedMenus = false;
+        this.scrollHeightTooShort = false;
     },
     /**
      * @override
      */
     start: function () {
+        // Used to prevent the editor's unbreakable protection from restoring
+        // the menu's auto-hide updates in edit mode.
+        this.el.addEventListener("autoMoreMenu.willAdapt", () => this.options.wysiwyg
+            && this.options.wysiwyg.odooEditor.unbreakableStepUnactive());
         this.$main = this.$el.next('main');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
@@ -38,7 +44,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
 
         // While scrolling through navbar menus on medium devices, body should not be scrolled with it
         this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
-            if (config.device.size_class <= config.device.SIZES.SM) {
+            if (config.device.size_class < config.device.SIZES.LG) {
                 $(document.body).addClass('overflow-hidden');
             }
         }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
@@ -48,7 +54,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // We can rely on transitionend which is well supported but not on
         // transitionstart, so we listen to a custom odoo event.
         this._transitionCount = 0;
-        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(1));
+        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => {
+            this.el.classList.add('o_transitioning');
+            this._adaptToHeaderChangeLoop(1);
+        });
         this.$el.on('transitionend.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(-1));
 
         return this._super(...arguments);
@@ -58,7 +67,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     destroy: function () {
         this._toggleFixedHeader(false);
-        this.$el.removeClass('o_header_affixed o_header_is_scrolled o_header_no_transition');
+        this.$el.removeClass('o_header_affixed o_header_is_scrolled o_header_no_transition o_transitioning');
         this.$navbarCollapses.off('.BaseAnimatedHeader');
         this.$el.off('.BaseAnimatedHeader');
         this._super(...arguments);
@@ -78,12 +87,16 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _adaptToHeaderChange: function () {
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
         this._updateMainPaddingTop();
-        this.el.classList.toggle('o_top_fixed_element', this.fixedHeader && this._isShown());
+        // Take menu into account when `dom.scrollTo()` is used whenever it is
+        // visible - be it floating, fully displayed or partially hidden.
+        this.el.classList.toggle('o_top_fixed_element', this._isShown());
 
         for (const callback of extraMenuUpdateCallbacks) {
             callback();
         }
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
     },
     /**
      * @private
@@ -112,6 +125,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
             // When we detected all transitionend events, we need to stop the
             // setTimeout fallback.
             clearTimeout(this._changeLoopTimer);
+            this.el.classList.remove('o_transitioning');
         }
     },
     /**
@@ -148,6 +162,33 @@ const BaseAnimatedHeader = animations.Animation.extend({
         }
         this.$main.css('padding-top', this.fixedHeader ? this.headerHeight : '');
     },
+    /**
+     * Checks if the size of the header will decrease by adding the
+     * 'o_header_is_scrolled' class. If so, we do not add this class if the
+     * remaining scroll height is not enough to stay above 'this.scrolledPoint'
+     * after the transition, otherwise it causes the scroll position to move up
+     * again below 'this.scrolledPoint' and trigger an infinite loop.
+     *
+     * @todo header effects should be improved in the future to not ever change
+     * the page scroll-height during their animation. The code would probably be
+     * simpler but also prevent having weird scroll "jumps" during animations
+     * (= depending on the logo height after/before scroll, a scroll step (one
+     * mousewheel event for example) can be bigger than other ones).
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _scrollHeightTooShort() {
+        const scrollEl = $().getScrollingElement()[0];
+        const remainingScroll = (scrollEl.scrollHeight - scrollEl.clientHeight) - this.scrolledPoint;
+        const clonedHeader = this.el.cloneNode(true);
+        scrollEl.append(clonedHeader);
+        clonedHeader.classList.add('o_header_is_scrolled', 'o_header_affixed', 'o_header_no_transition');
+        const endHeaderHeight = clonedHeader.offsetHeight;
+        clonedHeader.remove();
+        const heightDiff = this.headerHeight - endHeaderHeight;
+        return heightDiff > 0 ? remainingScroll <= heightDiff : false;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -174,9 +215,12 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // Indicates the page is scrolled, the logo size is changed.
         const headerIsScrolled = (scroll > this.scrolledPoint);
         if (this.headerIsScrolled !== headerIsScrolled) {
-            this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
-            this.$el.trigger('odoo-transitionstart');
-            this.headerIsScrolled = headerIsScrolled;
+            this.scrollHeightTooShort = headerIsScrolled && this._scrollHeightTooShort();
+            if (!this.scrollHeightTooShort) {
+                this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
+                this.$el.trigger('odoo-transitionstart');
+                this.headerIsScrolled = headerIsScrolled;
+            }
         }
 
         if (this.closeOpenedMenus) {
@@ -192,7 +236,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
     _updateHeaderOnResize: function () {
         this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
-                && config.device.size_class > config.device.SIZES.SM) {
+                && config.device.size_class >= config.device.SIZES.LG) {
             document.body.classList.remove('overflow-hidden');
             this.$el.find('.navbar-collapse').removeClass('show');
         }
@@ -217,6 +261,13 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         this.headerHeight = this.$el.outerHeight();
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$el.css('transform', '');
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -231,14 +282,14 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     /**
      * Called when the window is scrolled
      *
-     * @private
+     * @override
      * @param {integer} scroll
      */
     _updateHeaderOnScroll: function (scroll) {
         this._super(...arguments);
 
         const mainPosScrolled = (scroll > this.headerHeight + this.topGap);
-        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap);
+        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap) && !this.scrollHeightTooShort;
         const fixedUpdate = (this.fixedHeader !== mainPosScrolled);
         const showUpdate = (this.fixedHeaderShow !== reachPosScrolled);
 
@@ -438,7 +489,10 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.ml-auto, .ml-auto ~ *') ? 'right' : 'left';
+        const isRTL = !!this.el.closest('#wrapwrap.o_rtl');
+        this.right = isRTL ? 'left' : 'right';
+        this.left = isRTL ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ml-auto, .ml-auto ~ *') ? this.right : this.left;
         return this._super.apply(this, arguments);
     },
 
@@ -456,7 +510,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @returns {boolean}
      */
     _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
-        if (alignment === 'left') {
+        if (alignment === this.left) {
             // Check if ok to open the dropdown to the right (no window overflow)
             return (liOffset + menuWidth <= pageWidth);
         } else {
@@ -484,8 +538,9 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
         var alignment = this.defaultAlignment;
         if ($li.nextAll(':visible').length === 0) {
-            // The dropdown is the last menu item, open to the left
-            alignment = 'right';
+            // The dropdown is the last menu item, open to the left side
+            // (right side with rtl languages).
+            alignment = this.right;
         }
 
         // If can't open in the current direction because it would overflow the
@@ -493,7 +548,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         // same, change back the direction.
         for (var i = 0; i < 2; i++) {
             if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, pageWidth)) {
-                alignment = (alignment === 'left' ? 'right' : 'left');
+                alignment = (alignment === this.left ? this.right : this.left);
             }
         }
 
@@ -531,7 +586,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @private
      */
     _dropdownHover: function () {
-        if (config.device.size_class > config.device.SIZES.SM) {
+        if (config.device.size_class >= config.device.SIZES.LG) {
             this.$dropdownMenus.css('margin-top', '0');
             this.$dropdownMenus.css('top', 'unset');
         } else {
@@ -549,36 +604,75 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        // The user must click on the dropdown if he is on mobile (no way to
+        // hover) or if the dropdown is the extra menu ('+').
+        if (config.device.size_class < config.device.SIZES.LG ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.addClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'true');
-        $dropdown.find(this.$dropdownMenus).addClass('show');
+        $(ev.currentTarget.querySelector('.dropdown-toggle')).dropdown('show');
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (config.device.size_class < config.device.SIZES.LG ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.removeClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
-        $dropdown.find(this.$dropdownMenus).removeClass('show');
+        $(ev.currentTarget.querySelector('.dropdown-toggle')).dropdown('hide');
     },
 });
 
 publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
     selector: 'header#top',
+    disabledInEditableMode: false,
     events: {
         'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        // This is a fix in stable to move the language switcher in the navbar
+        // when the "off-canvas" mobile menu is enabled. Without this the
+        // language switcher is inaccessible in the "off-canvas" mobile menu.
+        // TODO: Remove this in master and make the adaptations only in the XML
+        // templates.
+        this.languageSelectorMustBeMoved = false;
+        // If mobile menu is "off-canvas".
+        if (this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
+            this.navbarEl = this.$target[0].querySelector('#top_menu');
+            this.languageSelectorEl = this.$target[0].querySelectorAll('#top_menu_collapse .js_language_selector');
+            // As there are 2 language selectors in 'template_header_vertical',
+            // we have to do this to be sure to move the last of the 2 (the one
+            // displayed on mobile).
+            this.languageSelectorEl = this.languageSelectorEl[this.languageSelectorEl.length - 1];
+            this.languageSelectorMustBeMoved = this.languageSelectorEl
+                && !this.navbarEl.contains(this.languageSelectorEl);
+            // Specific case with the "hamburger full" header template where
+            // there is the same bug with the call to action.
+            if (this.$target[0].querySelector('.o_header_hamburger_full_toggler')) {
+                const callToActionEl = this.$target[0].querySelector('.oe_structure_solo');
+                if (callToActionEl) {
+                    this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+                    callToActionEl.classList.add('nav-item');
+                    this.navbarEl.append(callToActionEl);
+                    this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+                }
+            }
+            // Specific case with the "boxed" header template where the "call to
+            // action" button is inaccessible in the "off-canvas" mobile menu.
+            this.offcanvasAndBoxedHeader = false;
+            if (weUtils.getCSSVariableValue('header-template').includes('boxed')) {
+                this.boxedHeaderCallToActionEl = this.$target[0].querySelector('#top_menu_collapse .oe_structure_solo');
+                this.offcanvasAndBoxedHeader = !!this.boxedHeaderCallToActionEl;
+            }
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -590,12 +684,32 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
      */
     _onCollapseShow() {
         this.el.classList.add('o_top_menu_collapse_shown');
+        if (this.languageSelectorMustBeMoved) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.languageSelectorEl.classList.add('nav-item');
+            this.navbarEl.append(this.languageSelectorEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.add('nav-item');
+            this.navbarEl.append(this.boxedHeaderCallToActionEl);
+        }
     },
     /**
      * @private
      */
     _onCollapseHidden() {
         this.el.classList.remove('o_top_menu_collapse_shown');
+        if (this.languageSelectorMustBeMoved) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+            this.languageSelectorEl.classList.remove('nav-item');
+            this.navbarEl.after(this.languageSelectorEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.remove('nav-item');
+            this.navbarEl.after(this.boxedHeaderCallToActionEl);
+        }
     },
 });
 

@@ -451,11 +451,11 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     'other':   ['other_field', ...],
                 }
         """
-        IrModule = self.env['ir.module.module']
+        IrModule = self.env['ir.module.module'].sudo()
         Groups = self.env['res.groups']
         ref = self.env.ref
 
-        defaults, groups, modules, configs, others = [], [], [], [], []
+        defaults, groups, module_names, configs, others = [], [], [], [], []
         for name, field in self._fields.items():
             if name.startswith('default_'):
                 if not hasattr(field, 'default_model'):
@@ -472,14 +472,16 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             elif name.startswith('module_'):
                 if field.type not in ('boolean', 'selection'):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
-                module = IrModule.sudo().search([('name', '=', name[7:])], limit=1)
-                modules.append((name, module))
+                module_names.append(name[7:])
             elif hasattr(field, 'config_parameter'):
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
                     raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection', 'many2one' or 'datetime'" % field)
                 configs.append((name, field.config_parameter))
             else:
                 others.append(name)
+        # retrieve all modules at once, and build the list 'modules' from it
+        name2module = {module.name: module for module in IrModule.search([('name', 'in', module_names)])}
+        modules = [('module_' + name, name2module.get(name, IrModule)) for name in module_names]
 
         return {'default': defaults, 'group': groups, 'module': modules, 'config': configs, 'other': others}
 
@@ -721,7 +723,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         What if there is another substitution in the message already?
         -------------------------------------------------------------
         You could have a situation where the error message you want to upgrade already contains a substitution. Example:
-            Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.
+            Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\\Journals\\Journals.
         What you want to do here is simply to replace the path by %menu:account.menu_account_config)s, and leave the rest alone.
         In order to do that, you can use the double percent (%%) to escape your new substitution, like so:
             Cannot find any account journal of %s type for this company.\n\nYou can create one in the %%(menu:account.menu_account_config)s.

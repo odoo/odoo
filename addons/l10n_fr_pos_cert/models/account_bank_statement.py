@@ -15,7 +15,7 @@ class AccountBankStatement(models.Model):
                 continue
             if statement.state != 'open':
                 raise UserError(_('You cannot modify anything on a bank statement (name: %s) that was created by point of sale operations.') % statement.name)
-        return super().unlink()
+
 
 
 class AccountBankStatementLine(models.Model):
@@ -25,8 +25,7 @@ class AccountBankStatementLine(models.Model):
     def _unlink_except_created_by_pos(self):
         for st_line in self:
             statement = st_line.statement_id
-            if not statement.company_id._is_accounting_unalterable() or not statement.s.journal_id.pos_payment_method_ids:
+            if not statement.company_id._is_accounting_unalterable() or not statement.journal_id.pos_payment_method_ids:
                 continue
             if statement.state != 'open':
                 raise UserError(_('You cannot modify anything on a bank statement (name: %s) that was created by point of sale operations.') % statement.name)
-        return super().unlink()

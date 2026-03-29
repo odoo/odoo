@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,12 +29,12 @@ msgstr "%(car_name)s (поїхав з: %(date_start)s до %(date_end)s)"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_form_inherit_hr
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Співробітник</span>"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Application Settings"
-msgstr ""
+msgstr "Налаштування модуля"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
@@ -46,6 +46,7 @@ msgstr "Прикріплення"
 #, python-format
 msgid "Cannot remove address from employees with linked cars."
 msgstr ""
+"Не можна видалити адресу у співробітників із пов’язаними автомобілями."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -67,7 +68,7 @@ msgstr "Авто компанії"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
 msgid "Current Driver (Employee)"
-msgstr ""
+msgstr "Поточний водій (Співробітник)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
@@ -87,7 +88,7 @@ msgstr "Водій"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Водій (Співробітник)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
@@ -108,13 +109,13 @@ msgstr "Ім'я співробітника"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Fleet Mobility Card"
-msgstr ""
+msgstr "Картка пересування авто"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
 msgid "Future Driver (Employee)"
-msgstr ""
+msgstr "Майбутній водій (Співробітник)"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_filter
@@ -147,7 +148,7 @@ msgstr "Зовнішній користувач"
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "Related Employee"
-msgstr ""
+msgstr "Пов'язаний співробітник"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
@@ -157,12 +158,18 @@ msgstr "Випуск службового автомобіля"
 #. module: hr_fleet
 #: model:ir.model.fields,help:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release the company car."
-msgstr ""
+msgstr "Випустіть службовий автомобіль."
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
 msgstr "Послуги для транспорту"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/controllers/main.py:0
+#, python-format
+msgid "There is no pdf attached to generate a claim report."
+msgstr "Немає прикріпленого PDF-файлу для створення звіту про претензію."
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
@@ -173,11 +180,6 @@ msgid ""
 msgstr ""
 "Цей звіт буде містити лише файли PDF. Якщо вам потрібні всі документи, будь "
 "ласка, перейдіть на сторінку автомобіля. Ви хочете продовжити?"
-
-#. module: hr_fleet
-#: code:addons/hr_fleet/controllers/main.py:0
-msgid "There is no pdf attached to generate a claim report."
-msgstr "Немає прикріпленого PDF-файлу для створення звіту про претензію."
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_res_users
@@ -197,4 +199,4 @@ msgstr "Договір на транспортний засіб"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Автотранспорт (приватний)"

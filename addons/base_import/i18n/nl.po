@@ -4,16 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -308,6 +311,27 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Fout bij maken datum [%s:L%d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+"Fout bij het importeren van records: Tekstscheidingsteken moet een enkel "
+"teken zijn."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Fout bij het importeren van records: alle rijen moeten even groot zijn, maar"
+" de titelrij heeft %d invoeren terwijl de eerste rij er %d heeft. Mogelijk "
+"moet je het scheidingsteken wijzigen."
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
@@ -526,21 +550,7 @@ msgstr "Import voorbeeld mislukt omdat:"
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 #, python-format
 msgid "Import records"
-msgstr "Importeer records"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js:0
-#, python-format
-msgid ""
-"Import timed out. Please retry. If you still encounter this issue, the file "
-"may be too big for the system's configuration, try to split it (import less "
-"records per file)."
-msgstr ""
-"Import time-out. Probeer het opnieuw. Als je dit probleem nog steeds "
-"tegenkomt, is het bestand mogelijk te groot voor de systeemconfiguratie en "
-"kun je het bestand best proberen op te splitsen (minder records per bestand "
-"importeren)."
+msgstr "Records importeren"
 
 #. module: base_import
 #. openerp-web
@@ -557,6 +567,7 @@ msgid "Importing"
 msgstr "Importeren"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -734,7 +745,7 @@ msgstr "Voorbeeld"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
-msgstr "Relatie velden"
+msgstr "Relatievelden"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -817,7 +828,7 @@ msgstr "Stel waarde in als leeg"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr "Vel:"
+msgstr "Tabblad:"
 
 #. module: base_import
 #. openerp-web
@@ -1152,7 +1163,7 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "Je dient minstens een veld te confituren om te importeren"
+msgstr "Je dient minstens een veld te configureren om te importeren"
 
 #. module: base_import
 #. openerp-web
@@ -1174,6 +1185,20 @@ msgstr "op rij"
 #, python-format
 msgid "batch"
 msgstr "partij"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "create"
+msgstr "maken"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "false"
+msgstr "onwaar"
 
 #. module: base_import
 #. openerp-web
@@ -1203,6 +1228,34 @@ msgstr "meer)"
 #, python-format
 msgid "out of"
 msgstr "uit"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "prevent"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "set_empty"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "skip_record"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "true"
+msgstr "waar"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

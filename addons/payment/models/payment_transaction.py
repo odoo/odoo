@@ -130,16 +130,18 @@ class PaymentTransaction(models.Model):
 
     @api.depends('invoice_ids')
     def _compute_invoices_count(self):
-        self.env.cr.execute(
-            '''
-            SELECT transaction_id, count(invoice_id)
-            FROM account_invoice_transaction_rel
-            WHERE transaction_id IN %s
-            GROUP BY transaction_id
-            ''',
-            [tuple(self.ids)]
-        )
-        tx_data = dict(self.env.cr.fetchall())  # {id: count}
+        tx_data = {}
+        if self.ids:
+            self.env.cr.execute(
+                '''
+                SELECT transaction_id, count(invoice_id)
+                FROM account_invoice_transaction_rel
+                WHERE transaction_id IN %s
+                GROUP BY transaction_id
+                ''',
+                [tuple(self.ids)]
+            )
+            tx_data = dict(self.env.cr.fetchall())  # {id: count}
         for tx in self:
             tx.invoices_count = tx_data.get(tx.id, 0)
 
@@ -180,7 +182,8 @@ class PaymentTransaction(models.Model):
             # Duplicate partner values
             partner = self.env['res.partner'].browse(values['partner_id'])
             values.update({
-                'partner_name': partner.name,
+                # Use the parent partner as fallback if the invoicing address has no name.
+                'partner_name': partner.name or partner.parent_id.name,
                 'partner_lang': partner.lang,
                 'partner_email': partner.email,
                 'partner_address': payment_utils.format_partner_address(
@@ -193,11 +196,14 @@ class PaymentTransaction(models.Model):
                 'partner_phone': partner.phone,
             })
 
-            # Compute fees
-            currency = self.env['res.currency'].browse(values.get('currency_id')).exists()
-            values['fees'] = acquirer._compute_fees(
-                values.get('amount', 0), currency, partner.country_id
-            )
+            # Compute fees, for validation transactions fees are zero
+            if values.get('operation') == 'validation':
+                values['fees'] = 0
+            else:
+                currency = self.env['res.currency'].browse(values.get('currency_id')).exists()
+                values['fees'] = acquirer._compute_fees(
+                    values.get('amount', 0), currency, partner.country_id,
+                )
 
             # Include acquirer-specific create values
             values.update(self._get_specific_create_values(acquirer.provider, values))
@@ -298,16 +304,20 @@ class PaymentTransaction(models.Model):
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be captured."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_capture_request()
+            # In sudo mode because we need to be able to read on acquirer fields.
+            tx.sudo()._send_capture_request()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be voided."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_void_request()
+            # In sudo mode because we need to be able to read on acquirer fields.
+            tx.sudo()._send_void_request()
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
@@ -318,8 +328,10 @@ class PaymentTransaction(models.Model):
         if any(tx.state != 'done' for tx in self):
             raise ValidationError(_("Only confirmed transactions can be refunded."))
 
+        payment_utils.check_rights_on_recordset(self)
         for tx in self:
-            tx._send_refund_request(amount_to_refund)
+            # In sudo mode because we need to be able to read on acquirer fields.
+            tx.sudo()._send_refund_request(amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -385,7 +397,7 @@ class PaymentTransaction(models.Model):
             # For instance, the prefix 'example' is a valid match for the existing references
             # 'example', 'example-1' and 'example-ref', in that order. Trusting the order to infer
             # the sequence number would lead to a collision with 'example-1'.
-            search_pattern = re.compile(rf'^{prefix}{separator}(\d+)$')
+            search_pattern = re.compile(rf'^{re.escape(prefix)}{separator}(\d+)$')
             max_sequence_number = 0  # If no match is found, start the sequence with this reference
             for existing_reference in same_prefix_references:
                 search_result = re.search(search_pattern, existing_reference)
@@ -590,13 +602,14 @@ class PaymentTransaction(models.Model):
         :return: The refund transaction
         :rtype: recordset of `payment.transaction`
         """
-        self.ensure_one
+        self.ensure_one()
 
         return self.create({
             'acquirer_id': self.acquirer_id.id,
             'reference': self._compute_reference(self.provider, prefix=f'R-{self.reference}'),
             'amount': -(amount_to_refund or self.amount),
             'currency_id': self.currency_id.id,
+            'token_id': self.token_id.id,
             'operation': 'refund',
             'source_transaction_id': self.id,
             'partner_id': self.partner_id.id,
@@ -671,7 +684,7 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        allowed_states = ('draft', 'pending', 'authorized', 'error')
+        allowed_states = ('draft', 'pending', 'authorized', 'error', 'cancel')  # 'cancel' for Payulatam
         target_state = 'done'
         txs_to_process = self._update_state(allowed_states, target_state, state_message)
         txs_to_process._log_received_message()
@@ -861,8 +874,9 @@ class PaymentTransaction(models.Model):
         if not txs_to_post_process:
             # Let the client post-process transactions so that they remain available in the portal
             client_handling_limit_date = datetime.now() - relativedelta.relativedelta(minutes=10)
-            # Don't try forever to post-process a transaction that doesn't go through
-            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
+            # Don't try forever to post-process a transaction that doesn't go through. Set the limit
+            # to 4 days because some providers (PayPal) need that much for the payment verification.
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # Retrieve all transactions matching the criteria for post-processing
             txs_to_post_process = self.search([
                 ('state', '=', 'done'),
@@ -914,7 +928,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         payment_method_line = self.acquirer_id.journal_id.inbound_payment_method_line_ids\
-            .filtered(lambda l: l.code == self.provider)
+            .filtered(lambda l: l.payment_acquirer_id == self.acquirer_id)
         payment_values = {
             'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',

@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -79,6 +80,9 @@ msgid ""
 "'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
 "class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -92,7 +96,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\"> if 0, no limit</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\"> якщо 0, без обмежень</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -100,6 +104,8 @@ msgid ""
 "<span> Days</span>\n"
 "                    <span class=\"oe_grey\"> if 0, coupon doesn't expire</span>"
 msgstr ""
+"<span> Дні</span>\n"
+"                    <span class=\"oe_grey\"> якщо 0, купон немає терміну дії</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -332,7 +338,7 @@ msgstr "Правило купону"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Coupon Validity"
-msgstr ""
+msgstr "Термін дії купону"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
@@ -764,6 +770,11 @@ msgstr ""
 "Сума - буде надана знижка на фіксовану суму"
 
 #. module: coupon
+#: model:ir.model,name:coupon.model_product_product
+msgid "Product"
+msgstr "Товар"
+
+#. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
 msgid "Product used in the sales order to apply the discount."
 msgstr ""
@@ -951,12 +962,14 @@ msgstr "Послідовність"
 msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
-msgstr "Деякі обрані клієнти не мають email-адреси та не отримаю купон."
+msgstr "Деякі обрані клієнти не мають email-адреси та не отримають купон."
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Specify a mail template to send the generated coupons as email."
 msgstr ""
+"Визначііть шаблон листів, щоби відправляти створені купони як електронні "
+"листи."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -1014,10 +1027,9 @@ msgid "The program code must be unique!"
 msgstr "Код програми повинен бути унікальним!"
 
 #. module: coupon
-#: code:addons/coupon/models/coupon_rules.py:0
-#, python-format
-msgid "The start date must be before the end date"
-msgstr "Дата початку повинна бути до дати завершення"
+#: model:ir.model.constraint,message:coupon.constraint_coupon_rule_check_coupon_rule_dates
+msgid "The start date must be before the end date!"
+msgstr ""
 
 #. module: coupon
 #: code:addons/coupon/models/coupon.py:0
@@ -1047,7 +1059,7 @@ msgstr "Цей купон протермінований (%s)."
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
 msgid "Total Order Count"
-msgstr ""
+msgstr "Підрахунок всіх замовлень"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
@@ -1111,9 +1123,19 @@ msgid "You can not delete a program in active state"
 msgstr "Ви не можете видалити програму в активному стані"
 
 #. module: coupon
+#: code:addons/coupon/models/product_product.py:0
+#, python-format
+msgid ""
+"You cannot delete a product that is linked with Coupon or Promotion program."
+" Archive it instead."
+msgstr ""
+"Ви не можете видалити товар, який пов’язано з купоном або програмою "
+"промоції. Натомість заархівуйте його."
+
+#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "e.g. 10% Discount"
-msgstr ""
+msgstr "напр. 10% Знижки"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon

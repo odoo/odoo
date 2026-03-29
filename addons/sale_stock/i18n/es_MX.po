@@ -3,22 +3,24 @@
 # 	* sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco, 2023
+# Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Martin Trigaux, 2024\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -94,8 +96,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona sus existencias. Debe tener instalada la aplicación de inventario.\n"
-"Un producto consumible es un producto para el que no se gestionan sus existencias.\n"
+"Un producto almacenable es un producto para el que gestionan las existencias. Debe instalar la aplicación de Inventario.\n"
+"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
 #. module: sale_stock
@@ -107,7 +109,7 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Según la configuración del producto, el mecanismo puede calcular automáticamente la cantidad enviada:\n"
+"Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
 "  - Manual: la cantidad se establece de forma manual en la línea.\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados.\n"
 "  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
@@ -116,7 +118,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr "Postventa"
+msgstr "Posventa"
 
 #. module: sale_stock
 #. openerp-web
@@ -159,8 +161,7 @@ msgstr "Existencias disponibles"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
-"Elija para aplicar líneas con rutas específicas en la orden de ventas."
+msgstr "Elija para aplicar líneas con rutas específicas en la orden de venta."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -210,10 +211,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Fecha de entrega que puede prometer al cliente, en el caso de los productos "
-"de servicio, se calcula a partir del plazo mínimo de las líneas de orden. En"
-" el caso de los envíos, se tendrá en cuenta la política de envíos de la "
-"orden para utilizar el plazo mínimo o máximo de las líneas de orden."
+"Fecha de entrega que puede prometer al cliente, en el caso de los servicios,"
+" se calcula a partir del plazo mínimo de las líneas de orden. En el caso de "
+"los envíos, se tendrá en cuenta la política de envíos de la orden para "
+"utilizar el plazo mínimo o máximo de las líneas de orden."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -311,13 +312,13 @@ msgid ""
 "shortest."
 msgstr ""
 "Si entrega todos los productos a la vez, se programará la orden de entrega "
-"en base al mayor plazo de entrega del producto. En caso contrario, se basará"
-" en el más corto."
+"con base en el mayor plazo de entrega del producto. En caso contrario, se "
+"basará en el más corto."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr "Transferencia(s) impactada(s):"
+msgstr "Traslados impactados:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -383,12 +384,12 @@ msgstr "Número de lote/serie"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Fabricación sobre pedido (MTO)"
+msgstr "Fabricación sobre pedido"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "Se pueden necesitar acciones manuales."
+msgstr "Puede que se necesiten acciones manuales."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -447,15 +448,9 @@ msgid "On"
 msgstr "En"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid "Ordered quantity decreased!"
-msgstr "Se ha reducido la cantidad ordenada."
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr "Política de la recolección"
+msgstr "Política de recolección"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
@@ -526,6 +521,11 @@ msgstr "Órdenes de venta"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
 msgstr "Cantidad de órdenes de venta"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Factura de anticipo de ventas"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -729,21 +729,11 @@ msgstr "Cuando comenzar el envío"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the delivery order if needed."
+"You cannot decrease the ordered quantity of a sale order line below its delivered quantity.\n"
+"Create a return in your inventory first."
 msgstr ""
-"Está reduciendo la cantidad ordenada. No olvide actualizar la orden de "
-"entrega de forma manual si es necesario."
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:0
-#, python-format
-msgid ""
-"You cannot decrease the ordered quantity below the delivered quantity.\n"
-"Create a return first."
-msgstr ""
-"No puede disminuir la cantidad ordenada por debajo de la cantidad entregada.\n"
-"Cree un retorno primero."
+"No puede disminuir la cantidad ordenada de una línea de la orden de venta por debajo de la cantidad entregada. \n"
+"Primero cree una devolución en su inventario."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

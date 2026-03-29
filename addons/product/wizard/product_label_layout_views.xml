@@ -14,7 +14,7 @@
                         <field name="print_format" widget="radio"/>
                     </group>
                     <group>
-                        <field name="extra_html" widget="html" attrs="{'invisible': [('print_format', 'not in', ('dymo', '2x7xprice'))]}"/>
+                        <field name="extra_html" widget="html" attrs="{'invisible': [('print_format', '!=', '2x7xprice')]}"/>
                     </group>
                 </group>
                 <footer>

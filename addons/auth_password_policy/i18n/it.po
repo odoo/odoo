@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,18 +12,18 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -41,7 +42,7 @@ msgstr ""
 #: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr "La password deve avere almeno %d caratteri, ne sono stati usati%d."
+msgstr "Le password devono avere almeno %d caratteri, trovati %d."
 
 #. module: auth_password_policy
 #. openerp-web
@@ -52,9 +53,9 @@ msgid ""
 "\n"
 "Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
 msgstr ""
-"Necessario: %s.\n"
+"Obbligatorio: %s.\n"
 "\n"
-"Suggerimento: aumentare la lunghezza, usare più parole e caratteri diversi dalle lettere per rendere più robusta la password."
+"Suggerimento: per rendere più robusta la password, aumentarne la lunghezza con più parole e usare caratteri diversi dalle lettere."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users

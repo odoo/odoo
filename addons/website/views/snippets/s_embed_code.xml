@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!-- TODO adapt in master: this is patched in JS to remove the min-height -->
+<!-- class and use padding classes -->
 <template name="Embed Code" id="s_embed_code">
     <section class="s_embed_code o_half_screen_height text-center">
         <div class="s_embed_code_embedded container o_not_editable">
@@ -26,6 +28,9 @@
         </div>
     </xpath>
 </template>
+
+<!-- Snippet assets -->
+<!-- TODO: create a new ir.asset for s_embed_code_000_js in master. -->
 
 <record id="website.s_embed_code_000_scss" model="ir.asset">
     <field name="name">Embed Code 000 SCSS</field>

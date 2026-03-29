@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import socket
+from unittest.mock import patch
 
+from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMultiCompanyWithActivity
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
 from odoo.tests.common import users
@@ -63,7 +65,9 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
     @users('employee_c2')
     def test_notify_reply_to_computation_mc(self):
         """ Test reply-to computation in multi company mode. Add notably tests
-        depending on user company_id / company_ids. """
+        depending on user and records company_id / company_ids. """
+        company_3 = self.env['res.company'].sudo().create({'name': 'ELIT'})
+
         # Test1: no company_id field
         test_record = self.env['mail.test.gateway'].browse(self.test_record.ids)
         res = test_record._notify_get_reply_to()
@@ -74,7 +78,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
                 "%s@%s" % (self.alias_catchall, self.alias_domain)))
         )
 
-        # Test2: company_id field, MC environment
+        # Test2: MC environment get default value from env
         self.user_employee_c2.write({'company_ids': [(4, self.user_employee.company_id.id)]})
         test_records = self.env['mail.test.multi.company'].create([
             {'name': 'Test',
@@ -90,3 +94,91 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
                     "%s %s" % (self.user_employee_c2.company_id.name, test_record.name),
                     "%s@%s" % (self.alias_catchall, self.alias_domain)))
             )
+
+        # Test3: get company from record (company_id field)
+        test_records = self.env['mail.test.multi.company'].create([
+            {'name': 'Test1',
+            'company_id': company_3.id},
+            {'name': 'Test2',
+            'company_id': company_3.id},
+        ])
+        res = test_records._notify_get_reply_to()
+        for test_record in test_records:
+            self.assertEqual(
+                res[test_record.id],
+                formataddr((
+                    "%s %s" % (company_3.name, test_record.name),
+                    "%s@%s" % (self.alias_catchall, self.alias_domain)))
+            )
+
+    def test_systray_get_activities(self):
+        self.env["mail.activity"].search([]).unlink()
+        user_admin = self.user_admin.with_user(self.user_admin)
+        test_records = self.env["mail.test.multi.company.with.activity"].create(
+            [
+                {"name": "Test1", "company_id": user_admin.company_id.id},
+                {"name": "Test2", "company_id": self.company_2.id},
+            ]
+        )
+        test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        test_activity = next(
+            a for a in user_admin.systray_get_activities()
+            if a['model'] == 'mail.test.multi.company.with.activity'
+        )
+        self.assertEqual(
+            test_activity,
+            {
+                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
+                "icon": "/base/static/description/icon.png",
+                "model": "mail.test.multi.company.with.activity",
+                "name": "Test Multi Company Mail With Activity",
+                "overdue_count": 0,
+                "planned_count": 0,
+                "today_count": 2,
+                "total_count": 2,
+                "type": "activity",
+            }
+        )
+
+        test_activity = next(
+            a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+            if a['model'] == 'mail.test.multi.company.with.activity'
+        )
+        self.assertEqual(
+            test_activity,
+            {
+                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
+                "icon": "/base/static/description/icon.png",
+                "model": "mail.test.multi.company.with.activity",
+                "name": "Test Multi Company Mail With Activity",
+                "overdue_count": 0,
+                "planned_count": 0,
+                "today_count": 1,
+                "total_count": 1,
+                "type": "activity",
+            }
+        )
+
+        test_record_no_company = self.env["mail.test.activity"].create({"name": "Test3"})
+        test_record_no_company.activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        with patch.object(MailTestMultiCompanyWithActivity, 'check_access_rights', return_value=False):
+            test_activity = [
+                a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+                if a['model'] in ['mail.test.multi.company.with.activity', 'mail.test.activity']
+            ]
+        self.assertEqual(
+            test_activity,
+            [{
+                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
+                "icon": "/base/static/description/icon.png",
+                "model": "mail.test.activity",
+                "name": "Activity Model",
+                "overdue_count": 0,
+                "planned_count": 0,
+                "today_count": 1,
+                "total_count": 1,
+                "type": "activity",
+            }],
+            "Only activities related to model the user has access to are returned."
+        )

@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import groupby
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
 
@@ -69,7 +70,17 @@ class Location(models.Model):
         help='Let this field empty if this location is shared between companies')
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
-    removal_strategy_id = fields.Many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
+    removal_strategy_id = fields.Many2one(
+        'product.removal', 'Removal Strategy',
+        help="Defines the default method used for suggesting the exact location (shelf) "
+             "where to take the products from, which lot etc. for this location. "
+             "This method can be enforced at the product category level, "
+             "and a fallback is made on the parent locations if none is set here.\n\n"
+             "FIFO: products/lots that were stocked first will be moved out first.\n"
+             "LIFO: products/lots that were stocked last will be moved out first.\n"
+             "Closet location: products/lots closest to the target location will be moved out first.\n"
+             "FEFO: products/lots with the closest removal date will be moved out first "
+             "(the availability of this method depends on the \"Expiration Dates\" setting).")
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
@@ -92,18 +103,10 @@ class Location(models.Model):
                  'outgoing_move_line_ids.product_id.weight', 'outgoing_move_line_ids.product_id.weight',
                  'quant_ids.quantity', 'quant_ids.product_id.weight')
     def _compute_weight(self):
+        weight_by_location = self._get_weight()
         for location in self:
-            location.net_weight = 0
-            quants = location.quant_ids.filtered(lambda q: q.product_id.type != 'service')
-            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
-            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'])
-            for quant in quants:
-                location.net_weight += quant.product_id.weight * quant.quantity
-            location.forecast_weight = location.net_weight
-            for line in incoming_move_lines:
-                location.forecast_weight += line.product_id.weight * line.product_qty
-            for line in outgoing_move_lines:
-                location.forecast_weight -= line.product_id.weight * line.product_qty
+            location.net_weight = weight_by_location[location]['net_weight']
+            location.forecast_weight = weight_by_location[location]['forecast_weight']
 
     @api.depends('name', 'location_id.complete_name', 'usage')
     def _compute_complete_name(self):
@@ -123,7 +126,7 @@ class Location(models.Model):
                         if days_until_next_inventory <= 0:
                             location.next_inventory_date = fields.Date.today() + timedelta(days=1)
                         else:
-                            location.next_inventory_date = location.last_inventory_date + timedelta(days=days_until_next_inventory)
+                            location.next_inventory_date = location.last_inventory_date + timedelta(days=location.cyclic_inventory_frequency)
                     else:
                         location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
                 except OverflowError:
@@ -137,6 +140,8 @@ class Location(models.Model):
         view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
         self.warehouse_id = False
         for loc in self:
+            if not loc.parent_path:
+                continue
             path = set(int(loc_id) for loc_id in loc.parent_path.split('/')[:-1])
             for view_location_id in view_by_wh:
                 if view_location_id in path:
@@ -200,6 +205,19 @@ class Location(models.Model):
         self.invalidate_cache(['warehouse_id'])
         return res
 
+    @api.model
+    def name_create(self, name):
+        if name:
+            name_split = name.split('/')
+            parent_location = self.env['stock.location'].search([
+                ('complete_name', '=', '/'.join(name_split[:-1])),
+            ], limit=1)
+            return self.create({
+                'name': name.split('/')[-1],
+                'location_id': parent_location.id if parent_location else False,
+            }).name_get()[0]
+        return super().name_create(name)
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
@@ -224,6 +242,8 @@ class Location(models.Model):
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
         """
+        products = self.env.context.get('products', self.env['product.product'])
+        products |= product
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -231,14 +251,22 @@ class Location(models.Model):
         elif packaging:
             package_type = packaging.package_type_id
 
-        putaway_rules = self.env['stock.putaway.rule']
-        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
-        categ = product.categ_id
-        while categ:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+        categ = products.categ_id if len(products.categ_id) == 1 else self.env['product.category']
+        categs = categ
+        while categ.parent_id:
             categ = categ.parent_id
-        if package_type:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            categs |= categ
+
+        putaway_rules = self.putaway_rule_ids.filtered(lambda rule:
+                                                       (not rule.product_id or rule.product_id in products) and
+                                                       (not rule.category_id or rule.category_id in categs) and
+                                                       (not rule.package_type_ids or package_type in rule.package_type_ids))
+
+        putaway_rules = putaway_rules.sorted(lambda rule: (rule.package_type_ids,
+                                                           rule.product_id,
+                                                           rule.category_id == categs[:1],  # same categ, not a parent
+                                                           rule.category_id),
+                                             reverse=True)
 
         putaway_location = None
         locations = self.child_internal_location_ids
@@ -248,6 +276,7 @@ class Location(models.Model):
             if locations.storage_category_id:
                 if package and package.package_type_id:
                     move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
                         ('result_package_id.package_type_id', '=', package_type.id),
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['result_package_id:count_distinct'], ['location_dest_id'])
@@ -261,6 +290,7 @@ class Location(models.Model):
                         qty_by_location[values['location_id'][0]] += values['package_id']
                 else:
                     move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
@@ -326,15 +356,21 @@ class Location(models.Model):
         specified."""
         self.ensure_one()
         if self.storage_category_id:
-            # check weight
-            if self.storage_category_id.max_weight < self.forecast_weight + product.weight * quantity:
-                return False
+            forecast_weight = self._get_weight(self.env.context.get('exclude_sml_ids', set()))[self]['forecast_weight']
             # check if enough space
             if package and package.package_type_id:
+                # check weight
+                package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id)])
+                if self.storage_category_id.max_weight < forecast_weight + sum(package_smls.mapped(lambda sml: sml.product_qty * sml.product_id.weight)):
+                    return False
+                # check if enough space
                 package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
                 if package_capacity and location_qty >= package_capacity.quantity:
                     return False
             else:
+                # check weight
+                if self.storage_category_id.max_weight < forecast_weight + product.weight * quantity:
+                    return False
                 product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
                 # To handle new line without quantity in order to avoid suggesting a location already full
                 if product_capacity and location_qty >= product_capacity.quantity:
@@ -346,9 +382,39 @@ class Location(models.Model):
             if self.storage_category_id.allow_new_product == "empty" and positive_quant:
                 return False
             # check if only allow same product
-            if self.storage_category_id.allow_new_product == "same" and positive_quant and positive_quant.product_id != product:
-                return False
+            if self.storage_category_id.allow_new_product == "same":
+                # In case it's a package, `product` is not defined, so try to get
+                # the package products from the context
+                product = product or self._context.get('products')
+                if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
+                    return False
+                if self.env['stock.move.line'].search([
+                    ('product_id', '!=', product.id),
+                    ('state', 'not in', ('done', 'cancel')),
+                    ('location_dest_id', '=', self.id),
+                ], limit=1):
+                    return False
         return True
+
+    def _get_weight(self, excluded_sml_ids=False):
+        """Returns a dictionary with the net and forecasted weight of the location.
+        param excluded_sml_ids: set of stock.move.line ids to exclude from the computation
+        """
+        result = defaultdict(lambda: defaultdict(float))
+        if not excluded_sml_ids:
+            excluded_sml_ids = set()
+        for location in self:
+            quants = location.quant_ids
+            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
+            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
+            for quant in quants:
+                result[location]['net_weight'] += quant.product_id.weight * quant.quantity
+            result[location]['forecast_weight'] = result[location]['net_weight']
+            for line in incoming_move_lines:
+                result[location]['forecast_weight'] += line.product_id.weight * line.product_qty
+            for line in outgoing_move_lines:
+                result[location]['forecast_weight'] -= line.product_id.weight * line.product_qty
+        return result
 
 
 class Route(models.Model):

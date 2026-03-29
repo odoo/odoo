@@ -18,6 +18,7 @@ from odoo import api, models
 from odoo import registry, SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
@@ -38,7 +39,7 @@ def sitemap_qs2dom(qs, route, field='name'):
         if len(needles) == 1:
             dom = [(field, 'ilike', needles[0])]
         else:
-            dom = FALSE_DOMAIN
+            dom = list(FALSE_DOMAIN)
     return dom
 
 
@@ -220,14 +221,17 @@ class Http(models.AbstractModel):
             except pytz.UnknownTimeZoneError:
                 context.pop('tz')
 
-        request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
+        request.website = request.env(context=clean_context(request.context))['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id
         # This is mainly to avoid access errors in website controllers where there is no
         # context (eg: /shop), and it's not going to propagate to the global context of the tab
         # If the company of the website is not in the allowed companies of the user, set the main
         # company of the user.
         website_company_id = request.website._get_cached('company_id')
-        if website_company_id in request.env.user.company_ids.ids:
+        if request.website.is_public_user():
+            # avoid a read on res_company_user_rel in case of public user
+            context['allowed_company_ids'] = [website_company_id]
+        elif website_company_id in request.env.user.company_ids.ids:
             context['allowed_company_ids'] = [website_company_id]
         else:
             context['allowed_company_ids'] = request.env.user.company_id.ids
@@ -238,7 +242,7 @@ class Http(models.AbstractModel):
         super(Http, cls)._add_dispatch_parameters(func)
 
         if request.routing_iteration == 1:
-            request.website = request.website.with_context(request.context)
+            request.website = request.website.with_context(clean_context(request.context))
 
     @classmethod
     def _get_frontend_langs(cls):
@@ -262,13 +266,22 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
-        page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
-        published_domain = page_domain
+        def _search_page(comparator='='):
+            page_domain = [('url', comparator, req_page)] + request.website.website_domain()
+            return request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+
         # specific page first
-        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        page = _search_page()
 
-        # redirect withtout trailing /
+        # case insensitive search
+        if not page:
+            page = _search_page('=ilike')
+            if page:
+                logger.info("Page %r not found, redirecting to existing page %r", req_page, page.url)
+                return request.redirect(page.url)
+
+        # redirect without trailing /
         if not page and req_page != "/" and req_page.endswith("/"):
             # mimick `_postprocess_args()` redirect
             path = request.httprequest.path[:-1]
@@ -280,6 +293,8 @@ class Http(models.AbstractModel):
 
         if page:
             # prefetch all menus (it will prefetch website.page too)
+            menu_pages_ids = request.website._get_menu_page_ids()
+            page.browse([page.id] + menu_pages_ids).mapped('view_id.name')
             request.website.menu_id
 
         if page and (request.website.is_publisher() or page.is_visible):
@@ -409,7 +424,7 @@ class Http(models.AbstractModel):
             obj = self._xmlid_to_obj(self.env, xmlid)
         elif id and model in self.env:
             obj = self.env[model].browse(int(id))
-        if obj and 'website_published' in obj._fields:
+        if obj and 'website_published' in obj._fields and field in obj._fields and not obj._fields[field].groups:
             if self.env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
                 self = self.sudo()
         return super(Http, self).binary_content(
@@ -437,6 +452,7 @@ class Http(models.AbstractModel):
         session_info = super(Http, self).get_frontend_session_info()
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
+            'lang_url_code': request.lang._get_cached('url_code'),
             'geoip_country_code': request.session.get('geoip', {}).get('country_code'),
         })
         if request.env.user.has_group('website.group_website_publisher'):

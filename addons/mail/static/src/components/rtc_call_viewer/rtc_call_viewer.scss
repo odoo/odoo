@@ -8,12 +8,12 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 50%;
+    height: 50%; // ensures that the view returns to the right height when resized
     min-height: 50%;
 
     &.o-isMinimized {
-        height: 20%;
-        min-height: 20%;
+        height: 20%; // ensures that the view returns to the right height when resized
+        min-height: #{"max(20%, 130px)"};
     }
 
     &.o-fullScreen {

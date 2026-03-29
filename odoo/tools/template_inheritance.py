@@ -7,6 +7,7 @@ import logging
 
 from odoo.tools.translate import _
 from odoo.tools import SKIPPED_ELEMENT_TYPES, html_escape
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -57,9 +58,8 @@ def locate_node(arch, spec):
         expr = spec.get('expr')
         try:
             xPath = etree.ETXPath(expr)
-        except etree.XPathSyntaxError:
-            _logger.error("XPathSyntaxError while parsing xpath %r", expr)
-            raise
+        except etree.XPathSyntaxError as e:
+            raise ValidationError(_("Invalid Expression while parsing xpath %r", expr)) from e
         nodes = xPath(arch)
         return nodes[0] if nodes else None
     elif spec.tag == 'field':
@@ -159,19 +159,25 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                             comment.tail = text
                             source.insert(0, comment)
                     else:
-                        replaced_node_tag = None
+                        # TODO ideally the notion of 'inherit_branding' should
+                        # not exist in this function. Given the current state of
+                        # the code, it is however necessary to know where nodes
+                        # were removed when distributing branding. As a stable
+                        # fix, this solution was chosen: the location is marked
+                        # with a "ProcessingInstruction" which will not impact
+                        # the "Element" structure of the resulting tree.
+                        # Exception: if we happen to replace a node that already
+                        # has xpath branding (root level nodes), do not mark the
+                        # location of the removal as it will mess up the branding
+                        # of siblings elements coming from other views, after the
+                        # branding is distributed (and those processing instructions
+                        # removed).
+                        if inherit_branding and not node.get('data-oe-xpath'):
+                            node.addprevious(etree.ProcessingInstruction('apply-inheritance-specs-node-removal', node.tag))
+
                         for child in spec:
                             if child.get('position') == 'move':
                                 child = extract(child)
-                            if inherit_branding and not replaced_node_tag and child.tag is not etree.Comment:
-                                # To make a correct branding, we need to
-                                # - know exactly which node has been replaced
-                                # - store it before anything else has altered the Tree
-                                # Do it exactly here :D
-                                child.set('meta-oe-xpath-replacing', node.tag)
-                                # We just store the replaced node tag on the first
-                                # child of the xpath replacing it
-                                replaced_node_tag = node.tag
                             node.addprevious(child)
                         node.getparent().remove(node)
                 elif mode == "inner":
@@ -220,6 +226,9 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 # spec before the sentinel, then remove the sentinel element
                 sentinel = E.sentinel()
                 node.addnext(sentinel)
+                if node.tail is not None:  # for lxml >= 5.1
+                    sentinel.tail = node.tail
+                    node.tail = None
                 add_text_before(sentinel, spec.text)
                 for child in spec:
                     if child.get('position') == 'move':

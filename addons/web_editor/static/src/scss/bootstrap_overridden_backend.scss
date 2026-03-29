@@ -1,14 +1,15 @@
-
-$o-theme-color-palette: map-remove($o-theme-color-palette, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
-$o-gray-color-palette: map-remove($o-gray-color-palette, '100', '200', '300', '400', '500', '600', '700', '800', '900');
-
-$o-btn-bg-colors: () !default;
-$o-btn-bg-colors: map-merge((
-    'primary': null,
-    'secondary': null,
-), $o-btn-bg-colors);
-$o-btn-border-colors: () !default;
-$o-btn-border-colors: map-merge((
-    'primary': null,
-    'secondary': null,
-), $o-btn-border-colors);
+// TODO the code linked to this variable should not be needed, this needs a lot
+// of refactoring. Basically, "frontend" color (complex) maps are available
+// in all assets (via the variables parts that all assets have in common). The
+// original plan was for them to be used in shared "frontend" environment like
+// the mass_mailing application. The web_editor SCSS generation uses those
+// variables to customize bootstrap variables... but it conflicts with the
+// backend also customizing those. In master it should be reviewed so that the
+// web_editor probably does not touch any bootstrap variable when in a backend
+// environment and/or some code should simply be moved to the website app only.
+// In stable, this next code was made to "clean" what the web_editor alters when
+// in a backend environment.
+// See also web_editor.common.scss where many CSS rules depends on this and are
+// available in the backend... while they probably should not. But in stable,
+// we wanted to avoid changing too many things.
+$prevent-backend-colors-alteration: true;

@@ -11,7 +11,6 @@ from odoo import fields
 from odoo import http
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
@@ -34,10 +33,19 @@ class WebsiteAccount(CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
+        CrmLead = request.env['crm.lead']
         if 'lead_count' in counters:
-            values['lead_count'] = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
+            values['lead_count'] = (
+                CrmLead.search_count(self.get_domain_my_lead(request.env.user))
+                if CrmLead.check_access_rights('read', raise_exception=False)
+                else 0
+            )
         if 'opp_count' in counters:
-            values['opp_count'] = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
+            values['opp_count'] = (
+                CrmLead.search_count(self.get_domain_my_opp(request.env.user))
+                if CrmLead.check_access_rights('read', raise_exception=False)
+                else 0
+            )
         return values
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
@@ -176,19 +184,20 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
     def sitemap_partners(env, rule, qs):
         if not qs or qs.lower() in '/partners':
             yield {'loc': '/partners'}
-
-        Grade = env['res.partner.grade']
-        dom = [('website_published', '=', True)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/grade/', field=Grade._rec_name)
-        for grade in env['res.partner.grade'].search(dom):
-            loc = '/partners/grade/%s' % slug(grade)
+        base_partner_domain = [
+            ('is_company', '=', True),
+            ('grade_id', '!=', False),
+            ('website_published', '=', True),
+            ('grade_id.website_published', '=', True),
+            ('grade_id.active', '=', True),
+        ]
+        grades = env['res.partner'].sudo().read_group(base_partner_domain, fields=['id', 'grade_id'], groupby='grade_id')
+        for grade in grades:
+            loc = '/partners/grade/%s' % slug(grade['grade_id'])
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
-
-        partners_dom = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True),
-                        ('grade_id.website_published', '=', True), ('country_id', '!=', False)]
-        dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
-        countries = env['res.partner'].sudo().read_group(partners_dom, fields=['id', 'country_id'], groupby='country_id')
+        country_partner_domain = base_partner_domain + [('country_id', '!=', False)]
+        countries = env['res.partner'].sudo().read_group(country_partner_domain, fields=['id', 'country_id'], groupby='country_id')
         for country in countries:
             loc = '/partners/country/%s' % slug(country['country_id'])
             if not qs or qs.lower() in loc:
@@ -213,7 +222,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         country_obj = request.env['res.country']
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
+        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
         if not request.env['res.users'].has_group('website.group_website_publisher'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
@@ -311,6 +320,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
     # Do not use semantic controller due to sudo()
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
+        current_slug = partner_id
         _, partner_id = unslug(partner_id)
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
@@ -323,6 +333,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             partner = request.env['res.partner'].sudo().browse(partner_id)
             is_website_publisher = request.env['res.users'].has_group('website.group_website_publisher')
             if partner.exists() and (partner.website_published or is_website_publisher):
+                if slug(partner) != current_slug:
+                    return request.redirect('/partners/%s' % slug(partner))
                 values = {
                     'main_object': partner,
                     'partner': partner,
@@ -330,4 +342,4 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
                     'current_country': current_country
                 }
                 return request.render("website_crm_partner_assign.partner", values)
-        return self.partners(**post)
+        raise request.not_found()

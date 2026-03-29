@@ -6,6 +6,8 @@
 # Martin Trigaux, 2021
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
+# Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2021\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,6 +31,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -73,7 +77,7 @@ msgstr "เพิ่มผู้ติดตาม"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
 msgid "Apply on"
-msgstr ""
+msgstr "ใช้เมื่อ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
@@ -84,7 +88,7 @@ msgstr "เก็บถาวร"
 #: model:ir.model,name:base_automation.model_base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 msgid "Automated Action"
-msgstr ""
+msgstr "การดำเนินการอัตโนมัติ"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -117,7 +121,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "ก่อนอัปเดตโดเมน"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
@@ -132,7 +136,7 @@ msgstr "ประเภท"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr ""
+msgstr "ประเภทมุมองการผูก"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -170,16 +174,19 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"ความล่าช้าหลังจากวันที่เปิดใช้งาน\n"
+"                                    คุณสามารถใส่ตัวเลขติดลบได้หากต้องการความล่าช้าก่อน\n"
+"                                   วันที่เปิดใช้งาน เช่น ส่งการเตือนล่วงหน้า 15 นาทีก่อนการประชุม"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "ความล่าช้าหลังจากวันเปิดใช้งาน"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay type"
-msgstr ""
+msgstr "ประเภทการล่าช้า"
 
 #. module: base_automation
 #. openerp-web
@@ -207,12 +214,12 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "วันครบกำหนดเมื่อ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "ประเภทวันครบกำหนด"
 
 #. module: base_automation
 #. openerp-web
@@ -234,7 +241,7 @@ msgstr "รหัสจากภายนอก"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr ""
+msgstr "ฟิลด์ที่ทริกเกอร์การเปลี่ยนแปลง"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -262,13 +269,14 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
+"หากมี ต้องปฏิบัติตามเงื่อนไขนี้ก่อนที่จะดำเนินการในส่วนของกฎการดำเนินการ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "หากมี จะต้องเป็นไปตามเงื่อนไขนี้ก่อนที่จะอัปเดตบันทึก"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
@@ -278,7 +286,7 @@ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
 msgid "Last Run"
-msgstr ""
+msgstr "รันครั้งสุดท้าย"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
@@ -293,12 +301,12 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
 msgid "Least Delay Msg"
-msgstr ""
+msgstr "ข้อความที่เกี่ยวกับความล่าช้าน้อยที่สุด"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "ฟิลด์ลิงก์"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -327,7 +335,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "โมเดลที่การดำเนินการของเซิร์ฟเวอร์ที่ทำงาน"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -349,7 +357,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "เมื่อเปลี่ยนทริกเกอร์ฟิลด์"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -386,6 +394,7 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
+"ระบุฟิลด์ที่ใช้เชื่อมโยงบันทึกที่สร้างขึ้นใหม่บนบันทึกที่ใช้โดยการดำเนินการของเซิร์ฟเวอร์"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -438,12 +447,12 @@ msgstr "Target Model"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model Name"
-msgstr ""
+msgstr "ชื่อโมเดลเป้าหมาย"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "ชื่อทางเทคนิคของผู้ใช้ในบันทึก"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -452,6 +461,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s ใช้ได้กับประเภทการกระทำ "
+"\"%(state_value)s\" เท่านั้น"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -459,6 +470,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"การดำเนินการจะถูกเปิดใช้หากมีการอัปเดตหนึ่งในฟิลด์เหล่านี้เท่านั้น "
+"หากว่างเปล่า ฟิลด์ทั้งหมดจะถูกเรียกดู"
 
 #. module: base_automation
 #. openerp-web
@@ -477,13 +490,13 @@ msgstr "ตัวกระตุ้น"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr ""
+msgstr "วันที่เปิดใช้งาน"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Trigger Fields"
-msgstr ""
+msgstr "ทริกเกอร์ฟิลด์"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
@@ -497,6 +510,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"ประเภทของการดำเนินการกับเซิร์ฟเวอร์ มีค่าต่อไปนี้:\n"
+"- 'Execute Python Code': บล็อกของรหัส python ที่จะดำเนินการ\n"
+"- 'สร้าง': สร้างบันทึกใหม่ด้วยค่าใหม่\n"
+"- 'อัปเดตบันทึก': อัปเดตค่าของบันทึก\n"
+"- 'ดำเนินการหลายอย่าง': กำหนดการกระทำที่เรียกการกระทำอื่น ๆ ของเซิร์ฟเวอร์\n"
+"- 'ส่งอีเมล': ส่งอีเมลโดยอัตโนมัติ (พูดคุย)\n"
+"- 'เพิ่มผู้ติดตาม': เพิ่มผู้ติดตามในบันทึก (พูดคุย)\n"
+"- 'สร้างกิจกรรมถัดไป': สร้างกิจกรรม (พูดคุย)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -512,11 +533,13 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"ใช้ 'ผู้ใช้เฉพาะ' เพื่อกำหนดผู้ใช้รายเดียวกันในกิจกรรมถัดไปเสมอ ใช้ "
+"'ผู้ใช้ทั่วไปจากบันทึก' เพื่อระบุชื่อฟิลด์ของผู้ใช้ที่จะเลือกในบันทึก"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr ""
+msgstr "ใช้ปฏิทิน"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -531,7 +554,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "ชื่อฟิลด์ผู้ใช้"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -551,6 +574,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"หากมีอยู่จะถูกตรวจสอบโดยผู้จัดกำหนดการ "
+"หากว่างเปล่าจะถูกตรวจสอบเมื่อสร้างและอัปเดต"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -567,11 +592,13 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"เมื่อใดควรเปิดใช้เงื่อนไข\n"
+"                                 หากมีอยู่จะถูกตรวจสอบโดยผู้จัดกำหนดการ หากว่างเปล่าจะถูกตรวจสอบเมื่อสร้างและอัปเดต"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "เมื่อยกเลิกการเลือก กฎจะถูกซ่อนและจะไม่ถูกดำเนินการ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
@@ -579,6 +606,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"เขียนโค้ด Python ที่การดำเนินการจะดำเนินการ ตัวแปรบางตัวพร้อมใช้งาน "
+"ความช่วยเหลือเกี่ยวกับนิพจน์ python มีให้ในแท็บช่วยเหลือ"
 
 #. module: base_automation
 #. openerp-web
@@ -602,3 +631,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"คุณไม่สามารถส่งอีเมล เพิ่มผู้ติดตาม หรือสร้างกิจกรรมสำหรับบันทึกที่ถูกลบได้ "
+"มันก็ไม่ได้ผล"

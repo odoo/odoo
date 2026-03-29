@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import _, fields, models, tools
 
 
@@ -37,9 +39,9 @@ class TestMassMailing(models.TransientModel):
         # Downside: Qweb syntax is only tested when there is atleast one record of the mailing's model
         if record:
             # Returns a proper error if there is a syntax error with Qweb
-            body = mailing._render_field('body_html', record.ids, post_process=True)[record.id]
+            body = mailing.with_context(preserve_comments=True)._render_field('body_html', record.ids, post_process=True)[record.id]
             preview = mailing._render_field('preview', record.ids, post_process=True)[record.id]
-            full_body = mailing._prepend_preview(body, preview)
+            full_body = mailing._prepend_preview(Markup(body), preview)
             subject = mailing._render_field('subject', record.ids)[record.id]
         else:
             full_body = mailing._prepend_preview(mailing.body_html, mailing.preview)
@@ -47,7 +49,6 @@ class TestMassMailing(models.TransientModel):
 
         # Convert links in absolute URLs before the application of the shortener
         full_body = self.env['mail.render.mixin']._replace_local_links(full_body)
-        full_body = tools.html_sanitize(full_body, sanitize_attributes=True, sanitize_style=True)
 
         for valid_email in valid_emails:
             mail_values = {

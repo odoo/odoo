@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="ubl_21_InvoiceLineType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceLineType" primary="True">
+        <xpath expr="//*[local-name()='Item']" position="before">
+            <t t-if="invoice.move_type == 'out_refund'">
+                <!-- AllowanceCharge and TaxTotal are swapped in the CreditLine
+                w.r.t InvoiceLine. see: http://www.datypic.com/sc/ubl21/e-cac_InvoiceLine.html
+                vs http://www.datypic.com/sc/ubl21/e-cac_CreditNoteLine.html-->
+                <t t-foreach="vals.get('allowance_charge_vals', [])" t-as="foreach_vals">
+                    <cac:AllowanceCharge
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                        <t t-call="{{AllowanceChargeType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:AllowanceCharge>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceType" primary="True">
+        <xpath expr="//*[local-name()='IssueDate']" position="after">
+            <cbc:DueDate
+                    xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    t-if="invoice.move_type == 'out_invoice'"
+                    t-out="vals.get('due_date')"/>
+            <cbc:CreditNoteTypeCode
+                    xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    t-if="invoice.move_type == 'out_refund'"
+                    t-att="vals.get('invoice_type_code_attrs', {})"
+                    t-out="vals.get('credit_note_type_code')"
+            />
+        </xpath>
+        <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="after">
+            <cbc:BuyerReference
+                    xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    t-out="vals.get('buyer_reference')"/>
+        </xpath>
+        <xpath expr="//*[@id='delivery_foreach']" position="after">
+            <t t-if="invoice.move_type == 'out_refund'">
+                <t t-foreach="vals.get('payment_means_vals_list', [])" t-as="foreach_vals">
+                    <cac:PaymentMeans
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                        <t t-call="{{PaymentMeansType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:PaymentMeans>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

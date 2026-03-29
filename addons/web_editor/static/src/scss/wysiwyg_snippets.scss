@@ -176,16 +176,17 @@ body.editor_enable.editor_has_snippets {
 
 %we-generic-tab-button {
     @extend %we-generic-link;
-    @include o-text-overflow(inline-flex);
+    display: inline-flex;
     flex: 1 1 auto;
     justify-content: center;
+    min-width: 0;
     border: none;
     background-color: transparent;
     color: inherit;
     font-weight: normal;
 
     > span {
-        display: inline-block;
+        @include o-text-overflow(inline-block);
         $-r: $o-we-sidebar-tabs-size-ratio;
         padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
     }
@@ -245,6 +246,14 @@ body.editor_enable.editor_has_snippets {
 
     &.o_loaded {
         transform: none;
+        > .o_we_customize_panel .oe-toolbar {
+            #style.dropdown, #font-size.dropdown {
+                > .dropdown-menu {
+                    overflow-y: scroll;
+                    max-height: 280px;
+                }
+            }
+        }
     }
 
     *::selection {
@@ -271,10 +280,12 @@ body.editor_enable.editor_has_snippets {
             border-radius: 0;
             padding: 0.375rem 0.75rem;
             font-size: $o-we-font-size;
-            font-family: $o-we-font-family;
             font-weight: 400;
             line-height: 1;
 
+            &:not(.fa) {
+                font-family: $o-we-font-family;
+            }
             &.btn-primary {
                 @include button-variant($o-brand-primary, $o-brand-primary);
             }
@@ -374,7 +385,8 @@ body.editor_enable.editor_has_snippets {
                 @include o-grab-cursor;
 
                 .oe_snippet_thumbnail_title {
-                    display: block;
+                    @include o-text-overflow(block);
+                    white-space: normal;
                     padding: $o-we-sidebar-blocks-content-spacing / 2;
                     text-align: center;
                 }
@@ -416,7 +428,7 @@ body.editor_enable.editor_has_snippets {
                 min-width: 0; // Ensure text-overflow on flex children
             }
             .oe_snippet_thumbnail_title {
-                @include o-text-overflow(block);
+                white-space: nowrap;
             }
             .oe_snippet_thumbnail_img {
                 flex-shrink: 0;
@@ -508,8 +520,7 @@ body.editor_enable.editor_has_snippets {
             .btn {
                 @extend %we-generic-button;
                 display: flex;
-                padding-top: $o-we-sidebar-content-field-height * .12;
-                padding-bottom: $o-we-sidebar-content-field-height * .12;
+                padding: ($o-we-sidebar-content-field-height * .12) ($o-we-sidebar-content-field-button-group-button-spacing - 2);
             }
 
             we-customizeblock-option {
@@ -548,7 +559,7 @@ body.editor_enable.editor_has_snippets {
                         position: absolute !important;
                         padding: 0;
 
-                        we-button {
+                        we-button:not(.fa) {
                             text-align: left;
                             font-family: Roboto, "Montserrat", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
                             font-size: 12px;
@@ -575,6 +586,7 @@ body.editor_enable.editor_has_snippets {
             }
 
             #colorInputButtonGroup {
+                position: static;
                 grid-area: colors;
 
                 .dropdown-toggle:after {
@@ -584,7 +596,7 @@ body.editor_enable.editor_has_snippets {
                 .colorpicker-group {
                     display: flex;
                     align-items: stretch;
-                    position: initial;
+                    position: static;
                 }
 
                 #oe-text-color {
@@ -666,12 +678,17 @@ body.editor_enable.editor_has_snippets {
             }
 
             .dropdown-menu.colorpicker-menu {
+                min-width: 0;
                 max-height: none;
-                left: auto;
-                right: 0;
+                left: $o-we-sidebar-content-indent;
+                right: $o-we-sidebar-content-padding-base;
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
                 border-radius: $o-we-item-border-radius;
                 padding: 0;
+            }
+
+            :not(.dropup) > .dropdown-menu.colorpicker-menu {
+                top: 2em; // TODO Ugly and not precise, conflict with row-gap of grid
             }
         }
 
@@ -749,6 +766,13 @@ body.editor_enable.editor_has_snippets {
 
         we-title {
             display: block;
+        }
+
+        // TODO in master, remove the text-transform rule entirely and rely on
+        // developers writing their label with the intended "design". The
+        // "where" change here was added as a way to minimize the impact of this
+        // fix in stable. That CSS style was breaking translations.
+        :where(html[lang^="en-"]) & we-title {
             text-transform: capitalize;
         }
 
@@ -993,6 +1017,9 @@ body.editor_enable.editor_has_snippets {
                 background: none;
             }
 
+            we-toggler:empty::before {
+                content: '/';
+            }
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
@@ -1002,7 +1029,17 @@ body.editor_enable.editor_has_snippets {
                     max-height: 600px;
                     overflow-y: auto;
                 }
+                &:empty {
+                    line-height: $o-we-sidebar-content-field-dropdown-item-height;
+                    background-color: $o-we-sidebar-content-field-dropdown-item-bg;
+                    color: $o-we-sidebar-content-field-dropdown-item-color;
+                    // Padding from we-icon-button mixin.
+                    padding-left: 2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size;
 
+                    &::before {
+                        content: '/';
+                    }
+                }
                 > we-title {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
                 }
@@ -1256,13 +1293,8 @@ body.editor_enable.editor_has_snippets {
                         width: 28px;
                     }
                 }
-                &.o_we_matrix_five_col {
-                    width: auto;
-                    td, th {
-                        input {
-                            width: 43px;
-                        }
-                    }
+                tr:last-child we-button {
+                    overflow: visible;
                 }
             }
         }
@@ -1422,13 +1454,20 @@ body.editor_enable.editor_has_snippets {
                         font-family: $o-we-sidebar-content-field-input-font-family;
                     }
                     tr {
+                        // Since the sortable list's <tr> loses its connection with
+                        // the table when dragged, the <td> with the input no longer
+                        // takes up the full width, causing a visual issue. To solve
+                        // this problem, we added the 'flex' display property.
+                        display: flex;
+                        align-items: center;
                         border: none;
                     }
                     td {
+                        flex-grow: 1;
                         padding-bottom: $o-we-sidebar-content-field-spacing / 2;
 
                         &:not(.o_we_list_record_name) {
-                            width: 1px;
+                            flex-grow: 0;
                         }
 
                         we-button.o_we_checkbox_wrapper {
@@ -1509,6 +1548,7 @@ body.editor_enable.editor_has_snippets {
         .o_we_m2m {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
+                max-width: 100%;
             }
         }
 
@@ -1611,6 +1651,11 @@ body.editor_enable.editor_has_snippets {
                     position: static;
                     transform: none;
                 }
+
+                &.o_we_collapse_toggler_rtl::after {
+                    scale: -1 1;
+                }
+
                 &.active {
 
                     &::after {
@@ -1670,6 +1715,21 @@ body.editor_enable.editor_has_snippets {
                 background-color: $o-we-sidebar-bg;
             }
         }
+
+        div.o_we_invisible_root_parent {
+            padding-bottom: 3px;
+        }
+
+        ul {
+            list-style: none;
+            padding-inline-start: 15px;
+            margin-bottom: $o-we-sidebar-content-field-spacing - 3px;
+
+            div.o_we_invisible_entry {
+                padding-top: 3px;
+                padding-bottom: 3px;
+            }
+        }
     }
 
     &.o_we_backdrop {
@@ -1680,8 +1740,14 @@ body.editor_enable.editor_has_snippets {
 
             &::after {
                 content: "";
-                @include o-position-absolute(0, 0, 0, 0);
+                // We use a "sticky" position because it ensures that the
+                // backdrop covers the entire "customize panel" element, even
+                // when it has a vertical scrollbar and is scrolled to the
+                // bottom.
+                @include o-position-sticky(auto, 0, 0, 0);
                 display: block;
+                height: 100vh;
+                margin-top: -100vh;
                 pointer-events: none;
                 background: $o-we-sidebar-content-backdrop-bg;
             }
@@ -1744,6 +1810,7 @@ body.editor_enable.editor_has_snippets {
 
     .o_we_colorpicker_switch_pane_btn {
         @extend %we-generic-tab-button;
+        flex: 0 1 auto;
     }
     .o_colorpicker_reset {
         @extend %we-generic-button;
@@ -1912,6 +1979,11 @@ body.editor_enable.editor_has_snippets {
             margin: 0 (-$o-we-dropzone-size/2);
         }
     }
+    &.oe_drop_zone_danger {
+        background-color: rgba($o-we-color-danger, 0.15);
+        color: $o-we-color-danger;
+        border-color: $o-we-color-danger;
+    }
 }
 
 // MANIPULATORS
@@ -2065,6 +2137,7 @@ body.editor_enable.editor_has_snippets {
 
                 &.readonly {
                     cursor: auto !important;
+                    pointer-events: none;
 
                     &:after {
                         display: none !important;
@@ -2092,8 +2165,13 @@ body.editor_enable.editor_has_snippets {
                     min-width: 22px;
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
                     color: $o-we-fg-lighter;
-                    &.oe_snippet_remove {
+                    // TODO In master: restore `.oe_snippet_remove`.
+                    &.fa-trash {
                         background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
+                        // TODO In master: use `.o_disabled`.
+                        &:not(.oe_snippet_remove) {
+                            opacity: 0.5;
+                        }
                     }
                 }
                 > .o_overlay_move_options > .o_move_handle {
@@ -2111,6 +2189,16 @@ body.editor_enable.editor_has_snippets {
                         &:hover {
                             border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
                             background-color: $o-we-sidebar-content-field-pressed-bg;
+
+                            // TODO In master: restore `.oe_snippet_remove`.
+                            &.fa-trash {
+                                border-color: mix($o-we-color-danger, $o-we-sidebar-content-field-pressed-bg, .4);
+                                background-color: $o-we-color-danger;
+                                // TODO In master: use `.o_disabled`.
+                                &:not(.oe_snippet_remove) {
+                                    opacity: 0.5;
+                                }
+                            }
                         }
                     }
                 }

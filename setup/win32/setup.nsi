@@ -87,9 +87,9 @@ Unicode True
 
 Name '${DISPLAY_NAME}'
 Caption "${PRODUCT_NAME} ${VERSION} Setup"
-OutFile "odoo_setup_${VERSION}.exe"
-SetCompressor /FINAL lzma
-ShowInstDetails show
+OutFile "${TOOLSDIR}\server\odoo_setup_${VERSION}.exe"
+SetCompressor /SOLID /FINAL lzma
+ShowInstDetails hide
 
 BrandingText '${PRODUCT_NAME} ${VERSION}'
 
@@ -112,6 +112,11 @@ Var HWNDPostgreSQLPort
 Var HWNDPostgreSQLUsername
 Var HWNDPostgreSQLPassword
 
+Var ProxyTokenDialog
+Var ProxyTokenLabel
+Var ProxyTokenText
+Var ProxyTokenPwd
+
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
 
@@ -131,9 +136,10 @@ Var HWNDPostgreSQLPassword
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ComponentLeave
 !insertmacro MUI_PAGE_COMPONENTS
 Page Custom ShowPostgreSQL LeavePostgreSQL
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE dir_leave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-
+Page Custom ShowProxyTokenDialogPage
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_CHECKED
@@ -167,11 +173,14 @@ LangString DESC_PostgreSQL_Hostname ${LANG_ENGLISH} "Hostname"
 LangString DESC_PostgreSQL_Port ${LANG_ENGLISH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_ENGLISH} "Username"
 LangString DESC_PostgreSQL_Password ${LANG_ENGLISH} "Password"
-LangString Profile_AllInOne ${LANG_ENGLISH} "All In One"
-LangString Profile_Server ${LANG_ENGLISH} "Server only"
+LangString Profile_AllInOne ${LANG_ENGLISH} "Odoo Server And PostgreSQL Server"
+LangString Profile_Server ${LANG_ENGLISH} "Odoo Server Only"
+LangString Profile_LocalProxyMode ${LANG_ENGLISH} "Local Proxy Mode"
 LangString TITLE_Odoo_Server ${LANG_ENGLISH} "Odoo Server"
 LangString TITLE_PostgreSQL ${LANG_ENGLISH} "PostgreSQL Database"
+LangString TITLE_LocalProxyMode ${LANG_ENGLISH} "Local Proxy Mode"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
+LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
 ; French
 LangString DESC_Odoo_Server ${LANG_FRENCH} "Installation du Serveur Odoo avec tous les modules Odoo standards."
@@ -188,45 +197,42 @@ LangString DESC_PostgreSQL_Hostname ${LANG_FRENCH} "Hôte"
 LangString DESC_PostgreSQL_Port ${LANG_FRENCH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
-LangString Profile_AllInOne ${LANG_FRENCH} "All In One"
-LangString Profile_Server ${LANG_FRENCH} "Seulement le serveur"
+LangString Profile_AllInOne ${LANG_FRENCH} "Serveur Odoo Et Serveur PostgreSQL"
+LangString Profile_Server ${LANG_FRENCH} "Seulement Le Serveur Odoo"
+LangString Profile_LocalProxyMode ${LANG_FRENCH} "Mode Proxy Local"
 LangString TITLE_Odoo_Server ${LANG_FRENCH} "Serveur Odoo"
 LangString TITLE_PostgreSQL ${LANG_FRENCH} "Installation du serveur de base de données PostgreSQL"
+LangString TITLE_LocalProxyMode ${LANG_FRENCH} "Mode Proxy Local"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
+LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 n'est pas recommandé.$\nVoulez-vous continuer ?"
 
+InstType /NOCUSTOM
 InstType $(Profile_AllInOne)
 InstType $(Profile_Server)
+InstType $(Profile_LocalProxyMode)
 
 Section $(TITLE_Odoo_Server) SectionOdoo_Server
-    SectionIn 1 2
+    SectionIn 1 2 3
 
     # Installing winpython
     SetOutPath "$INSTDIR\python"
-    ${If} ${RunningX64}
-        File /r /x "__pycache__" "${TOOLSDIR}\WinPy64\python-${PYTHONVERSION}.amd64\*"
-    ${Else}
-        File /r /x "__pycache__" "${TOOLSDIR}\WinPy32\python-${PYTHONVERSION}\*"
-    ${EndIf}
+    File /r /x "__pycache__" "${TOOLSDIR}\WinPy64\python-${PYTHONVERSION}.amd64\*"
 
     SetOutPath "$INSTDIR\nssm"
     File /r /x "src" "${TOOLSDIR}\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r /x "wkhtmltopdf" "..\..\*"
+    File /r /x "wkhtmltopdf" /x "enterprise" "${TOOLSDIR}\server\*"
 
     SetOutPath "$INSTDIR\vcredist"
     File /r "${TOOLSDIR}\vcredist\*.exe"
 
     # Install Visual C redistribuable files
     DetailPrint "Installing Visual C++ redistributable files"
-    ${If} ${RunningX64}
-        nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
-    ${Else}
-        nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x86.exe" /q'
-    ${EndIf}
+    nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
 
     SetOutPath "$INSTDIR\thirdparty"
-    File /r "${STATIC_PATH}\wkhtmltopdf\*"
+    File /r "${TOOLSDIR}\wkhtmltopdf\*"
 
     # If there is a previous install of the Odoo Server, keep the login/password from the config file
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_host" $TextPostgreSQLHostname
@@ -244,39 +250,27 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     ${EndIf}
 
     DetailPrint "Installing Windows service"
-    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    ${If} ${RunningX64}
-      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
-      nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\server$\""'
-    ${Else}
-      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
-      nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\server$\""'
-    ${EndIf}
+    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init -c "$INSTDIR\server\odoo.conf" --logfile "$INSTDIR\server\odoo.log" -s'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\server\odoo.conf\"'
 
-    nsExec::Exec "net stop ${SERVICENAME}"
-    sleep 2
-
-    nsExec::Exec "net start ${SERVICENAME}"
-    sleep 2
-
+    Call RestartOdooService
 SectionEnd
 
 Section $(TITLE_PostgreSQL) SectionPostgreSQL
-    SectionIn 1 2
+    SectionIn 1
     SetOutPath '$TEMP'
     VAR /GLOBAL postgresql_exe_filename
     VAR /GLOBAL postgresql_url
 
-    ${If} ${RunningX64}
-        StrCpy $postgresql_exe_filename "postgresql-12.4-1-windows-x64.exe"
-    ${Else}
-        StrCpy $postgresql_exe_filename "postgresql-10.14-1-windows.exe"
-    ${EndIf}
+    StrCpy $postgresql_exe_filename "postgresql-12.4-1-windows-x64.exe"
 
     StrCpy $postgresql_url "https://get.enterprisedb.com/postgresql/$postgresql_exe_filename"
     nsExec::Exec 'net user openpgsvc /delete'
 
-	inetc::get "$postgresql_url" "$TEMP/$postgresql_exe_filename" /POPUP
+    DetailPrint "Downloading PostgreSQl"
+    NScurl::http get "$postgresql_url" "$TEMP/$postgresql_exe_filename" /PAGE /END
     pop $0
 
     ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ActiveComputerName" "ComputerName"
@@ -286,6 +280,7 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
         ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ComputerName" "ComputerName"
     done:
     Rmdir /r "$INSTDIR\PostgreSQL"
+    DetailPrint "Installing PostgreSQL"
     ExecWait '"$TEMP\$postgresql_exe_filename" \
         --mode unattended \
         --prefix "$INSTDIR\PostgreSQL" \
@@ -294,6 +289,18 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
         --serviceaccount "openpgsvc" --servicepassword "0p3npgsvcPWD" \
         --superaccount "$TextPostgreSQLUsername" --superpassword "$TextPostgreSQLPassword" \
         --serverport $TextPostgreSQLPort'
+SectionEnd
+
+Section $(TITLE_LocalProxyMode) LocalProxy
+    SectionIn 3
+    DetailPrint "Configuring Local Proxy Mode"
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "server_wide_modules" "base,web,hw_l10n_eg_eta"
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "list_db" "False"
+    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "max_cron_thread" "0"
+    nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" genproxytoken'
+    pop $0
+    pop $ProxyTokenPwd
+    Call RestartOdooService
 SectionEnd
 
 Section -Post
@@ -336,16 +343,10 @@ SectionEnd
 
 Function .onInit
     VAR /GLOBAL previous_install_dir
-    ${If} ${RunningX64}
-        SetRegView 64
-    ${EndIf}
+    SetRegView 64
     ReadRegStr $previous_install_dir HKLM "${REGISTRY_KEY}" "Install_Dir"
     ${If} $previous_install_dir == ""
-        ${If} ${RunningX64}
-            StrCpy $INSTDIR "$PROGRAMFILES64\Odoo ${VERSION}"
-        ${Else}
-            StrCpy $INSTDIR "$PROGRAMFILES\Odoo ${VERSION}"
-        ${EndIf}
+        StrCpy $INSTDIR "$PROGRAMFILES64\Odoo ${VERSION}"
         WriteRegStr HKLM "${REGISTRY_KEY}" "Install_dir" "$INSTDIR"
     ${EndIf}
 
@@ -399,11 +400,9 @@ Function PostgreSQLOnBack
 FunctionEnd
 
 Function ShowPostgreSQL
-    SectionGetFlags ${SectionOdoo_Server} $0
-    IntOp $0 $0 & ${SF_SELECTED}
-    IntCmp $0 ${SF_SELECTED} LaunchPostgreSQLConfiguration
-    Abort
-    LaunchPostgreSQLConfiguration:
+    GetCurInstType $R0
+    IntCmp $R0 1 bypassPostgresConfig
+    Intcmp $R0 2 bypassPostgresConfig
 
     nsDialogs::Create /NOUNLOAD 1018
     Pop $0
@@ -437,6 +436,7 @@ Function ShowPostgreSQL
     Pop $HWNDPostgreSQLPassword
 
     nsDialogs::Show
+    bypassPostgresConfig:
 FunctionEnd
 
 Function LeavePostgreSQL
@@ -469,6 +469,27 @@ Function LeavePostgreSQL
     ${EndIf}
 FunctionEnd
 
+Function ShowProxyTokenDialogPage
+    GetCurInstType $R0
+    IntCmp $R0 2 doProxyToken bypassProxyToken
+    doProxyToken:
+        nsDialogs::Create 1018
+        Pop $ProxyTokenDialog
+        ${IF} $ProxyTokenDialog == !error
+            Abort
+        ${EndIf}
+
+        ${NSD_CreateLabel} 0 0 100% 25% "Here is your access token for the Odoo Local Proxy, please write it down in a safe place, you will need it to configure the proxy"
+        Pop $ProxyTokenLabel
+
+        ${NSD_CreateText} 0 30% 100% 13u $ProxyTokenPwd
+        Pop $ProxyTokenText
+        ${NSD_Edit_SetreadOnly} $ProxyTokenText 1
+        ${NSD_AddStyle}  $ProxyTokenText ${SS_CENTER}
+        nsDialogs::Show
+    bypassProxyToken:
+FunctionEnd
+
 Function ComponentLeave
     SectionGetFlags ${SectionOdoo_Server} $0
     IntOp $0 $0 & ${SF_SELECTED}
@@ -486,4 +507,20 @@ FunctionEnd
 
 Function LaunchLink
     ExecShell "open" "http://localhost:8069/"
+FunctionEnd
+
+Function RestartOdooService
+    DetailPrint "Restarting Odoo Service"
+    ExecWait "net stop ${SERVICENAME}"
+    ExecWait "net start ${SERVICENAME}"
+FunctionEnd
+
+Function dir_leave
+    StrLen $0 $PROGRAMFILES64
+    StrCpy $0 $INSTDIR $0
+    StrCmp $0 $PROGRAMFILES64 continue
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION "$(UnsafeDirText)" IDYES continue IDNO aborting
+    aborting:
+        Abort
+    continue:
 FunctionEnd

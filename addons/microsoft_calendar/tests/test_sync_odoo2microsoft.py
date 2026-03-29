@@ -47,12 +47,13 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         self.env.user.stop_microsoft_synchronization()
         self.assertTrue(self.env.user.microsoft_synchronization_stopped, "The microsoft synchronization flag should be switched on")
         self.assertFalse(self.env.user._sync_microsoft_calendar(self.microsoft_service), "The microsoft synchronization should be stopped")
+        year = date.today().year - 1
 
         # If synchronization stopped, creating a new event should not call _google_insert.
         self.env['calendar.event'].create({
             'name': "Event",
-            'start': datetime(2020, 1, 15, 8, 0),
-            'stop': datetime(2020, 1, 15, 18, 0),
+            'start': datetime(year, 1, 15, 8, 0),
+            'stop': datetime(year, 1, 15, 18, 0),
             'privacy': 'private',
         })
         self.assertMicrosoftEventNotInserted()
@@ -62,6 +63,7 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         # Test new event created after stopping synchronization are correctly patched when restarting sync.
         self.maxDiff = None
         microsoft_id = 'aaaaaaaaa'
+        year = date.today().year
         partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
         user = self.env['res.users'].create({
             'name': 'Test user Calendar',
@@ -73,8 +75,8 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         event = self.env['calendar.event'].with_user(user).create({
             'microsoft_id': microsoft_id,
             'name': "Event",
-            'start': datetime(2021, 1, 15, 8, 0),
-            'stop': datetime(2021, 1, 15, 18, 0),
+            'start': datetime(year, 1, 15, 8, 0),
+            'stop': datetime(year, 1, 15, 18, 0),
             'partner_ids': [(4, partner.id)],
         })
 
@@ -83,10 +85,10 @@ class TestSyncOdoo2Microsoft(TransactionCase):
         microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
         self.assertMicrosoftEventPatched(event.microsoft_id, {
             'id': event.microsoft_id,
-            'start': {'dateTime': '2021-01-15T08:00:00+00:00', 'timeZone': 'Europe/London'},
-            'end': {'dateTime': '2021-01-15T18:00:00+00:00', 'timeZone': 'Europe/London'},
+            'start': {'dateTime': '%s-01-15T08:00:00+00:00' % year, 'timeZone': 'Europe/London'},
+            'end': {'dateTime': '%s-01-15T18:00:00+00:00' % year, 'timeZone': 'Europe/London'},
             'subject': 'Event',
-            'body': {'content': '', 'contentType': 'text'},
+            'body': {'content': '', 'contentType': 'html'},
             'attendees': [],
             'isAllDay': False,
             'isOrganizer': True,

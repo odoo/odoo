@@ -130,3 +130,48 @@ class TestRepairTraceability(TestMrpCommon):
         mo = produce_one(finished, component)
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+        # Now, we will test removing the component and putting it back in stock,
+        # then placing it back into the product and removing it a second time.
+        # The user should be able to use the component in a new MO.
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = finished
+        with ro_form.operations.new() as ro_line:
+            ro_line.type = 'remove'
+            ro_line.product_id = component
+            ro_line.lot_id = sn_lot
+            ro_line.location_dest_id = stock_location
+        ro = ro_form.save()
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+        self.assertEqual(ro.state, 'done')
+        # Add the component into the product
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = finished
+        with ro_form.operations.new() as ro_line:
+            ro_line.type = 'add'
+            ro_line.product_id = component
+            ro_line.lot_id = sn_lot
+            ro_line.location_id = stock_location
+        ro = ro_form.save()
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+        self.assertEqual(ro.state, 'done')
+        # Removing it a second time
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = finished
+        with ro_form.operations.new() as ro_line:
+            ro_line.type = 'remove'
+            ro_line.product_id = component
+            ro_line.lot_id = sn_lot
+            ro_line.location_dest_id = stock_location
+        ro = ro_form.save()
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+        self.assertEqual(ro.state, 'done')
+        # check if the removed component can be used in a new MO
+        mo = produce_one(finished, component)
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)

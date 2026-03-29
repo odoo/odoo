@@ -2,8 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.exceptions
+import werkzeug.urls
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.http import request
 from odoo.tools.translate import html_translate
 
 
@@ -96,7 +99,7 @@ class Menu(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        if 'website_id' in values or 'group_ids' in values or 'sequence' in values:
+        if 'website_id' in values or 'group_ids' in values or 'sequence' in values or 'page_id' in values:
             self.clear_caches()
         return res
 
@@ -110,14 +113,21 @@ class Menu(models.Model):
                                                                 ('id', '!=', menu.id)])
         return super(Menu, menus_to_remove).unlink()
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_master_tags(self):
+        main_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        if main_menu and main_menu in self:
+            raise UserError(_("You cannot delete this website menu as this serves as the default parent menu for new websites (e.g., /shop, /event, ...)."))
+
     def _compute_visible(self):
         for menu in self:
             visible = True
-            if menu.page_id and not menu.user_has_groups('base.group_user') and \
-                (not menu.page_id.sudo().is_visible or
-                 (not menu.page_id.view_id._handle_visibility(do_raise=False) and
-                 menu.page_id.view_id.visibility != "password")):
-                visible = False
+            if menu.page_id and not menu.user_has_groups('base.group_user'):
+                page_sudo = menu.page_id.sudo()
+                if (not page_sudo.is_visible
+                    or (not page_sudo.view_id._handle_visibility(do_raise=False)
+                        and page_sudo.view_id.visibility != "password")):
+                    visible = False
             menu.is_visible = visible
 
     @api.model
@@ -179,11 +189,20 @@ class Menu(models.Model):
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
-            # if the url match a website.page, set the m2o relation
-            # except if the menu url is '#', meaning it will be used as a menu container, most likely for a dropdown
-            if menu['url'] == '#':
+            # Check if the url match a website.page (to set the m2o relation),
+            # except if the menu url contains '#', we then unset the page_id
+            if '#' in menu['url']:
+                # Multiple case possible
+                # 1. `#` => menu container (dropdown, ..)
+                # 2. `#anchor` => anchor on current page
+                # 3. `/url#something` => valid internal URL
+                # 4. https://google.com#smth => valid external URL
                 if menu_id.page_id:
                     menu_id.page_id = None
+                if request and menu['url'].startswith('#') and len(menu['url']) > 1:
+                    # Working on case 2.: prefix anchor with referer URL
+                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
+                    menu['url'] = referer_url + menu['url']
             else:
                 domain = self.env["website"].website_domain(website_id) + [
                     "|",

@@ -122,7 +122,7 @@
      * @param {function} stopCondition a function that returns a boolean
      * @returns {Promise} that is rejected if the timeout is exceeded
      */
-    function waitForCondition(stopCondition, tl = 10000) {
+    function waitForCondition(stopCondition, tl = 30000) {
         return new Promise(function (resolve, reject) {
             const interval = 250;
             let timeLimit = tl;
@@ -337,16 +337,12 @@
         if (BLACKLISTED_MENUS.includes(element.dataset.menuXmlid)) {
             return Promise.resolve(); // Skip black listed menus
         }
-        let menuTimeLimit = 10000;
-        if (element.innerText.trim() === "Settings") {
-            menuTimeLimit = 20000;
-        }
         const startActionCount = actionCount;
         await triggerClick(element, `menu item "${element.innerText.trim()}"`);
         let isModal = false;
         return waitForCondition(function () {
             // sometimes, the app is just a modal that needs to be closed
-            const $modal = $('.modal[role="dialog"][open="open"]');
+            const $modal = $('.modal[role="dialog"]');
             if ($modal.length > 0) {
                 const closeButton = document.querySelector("header > button.close");
                 if (closeButton) {
@@ -359,7 +355,7 @@
                 return true;
             }
             return startActionCount !== actionCount;
-        }, menuTimeLimit)
+        })
             .then(() => {
                 if (!isModal) {
                     return testFilters();

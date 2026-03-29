@@ -188,8 +188,11 @@ function factory(dependencies) {
                     // partners (livechat guests), public partners (technical)
                     continue;
                 }
+                if (!partner.name) {
+                    continue;
+                }
                 if (
-                    (partner.nameOrDisplayName && cleanSearchTerm(partner.nameOrDisplayName).includes(cleanedSearchTerm)) ||
+                    (cleanSearchTerm(partner.name).includes(cleanedSearchTerm)) ||
                     (partner.email && cleanSearchTerm(partner.email).includes(cleanedSearchTerm))
                 ) {
                     if (partner.user) {
@@ -302,8 +305,8 @@ function factory(dependencies) {
                         return 1;
                     }
                 }
-                const cleanedAName = cleanSearchTerm(a.nameOrDisplayName || '');
-                const cleanedBName = cleanSearchTerm(b.nameOrDisplayName || '');
+                const cleanedAName = cleanSearchTerm(a.name || '');
+                const cleanedBName = cleanSearchTerm(b.name || '');
                 if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
                     return -1;
                 }
@@ -371,9 +374,6 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeAvatarUrl() {
-            if (this === this.messaging.partnerRoot) {
-                return '/mail/static/src/img/odoobot.png';
-            }
             return `/web/image/res.partner/${this.id}/avatar_128`;
         }
 

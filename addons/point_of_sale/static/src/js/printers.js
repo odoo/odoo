@@ -30,7 +30,11 @@ class PrintResultGenerator {
             successful: false,
             message: {
                 title: _t('Connection to the printer failed'),
-                body: _t('Please check if the printer is still connected.'),
+                body: _t('Please check if the printer is still connected. \n' +
+                    'Some browsers don\'t allow HTTP calls from websites to devices in the network (for security reasons). ' +
+                    'If it is the case, you will need to follow Odoo\'s documentation for ' +
+                    '\'Self-signed certificate for ePOS printers\' and \'Secure connection (HTTPS)\' to solve the issue'
+                ),
             },
         });
     }
@@ -42,10 +46,10 @@ class PrintResultGenerator {
 }
 
 var PrinterMixin = {
-    init: function() {
+    init: function (pos) {
         this.receipt_queue = [];
         this.printResultGenerator = new PrintResultGenerator();
-        this.htmlToImgLetterRendering = false; // Whether to render each letter seperately. Necessary if letter-spacing is used.
+        this.pos = pos;
     },
 
     /**
@@ -73,7 +77,7 @@ var PrinterMixin = {
             // IoT box can't find a printer.
             if (!sendPrintResult || sendPrintResult.result === false) {
                 this.receipt_queue.length = 0;
-                return this.printResultGenerator.IoTResultError();
+                return this.printResultGenerator.IoTResultError(sendPrintResult.printerErrorCode);
             }
         }
         return this.printResultGenerator.Successful();
@@ -99,12 +103,13 @@ var PrinterMixin = {
             html2canvas(self.receipt[0], {
                 onparsed: function(queue) {
                     queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
+                    queue.stack.ctx.width = Math.ceil(self.receipt.outerWidth() + 2 * self.receipt.offset().left);
                 },
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));
                 },
-                letterRendering: self.htmlToImgLetterRendering,
+                letterRendering: self.pos.htmlToImgLetterRendering(),
             })
         });
         return promise;
@@ -131,9 +136,7 @@ var PrinterMixin = {
 
 var Printer = core.Class.extend(PrinterMixin, {
     init: function (url, pos) {
-        PrinterMixin.init.call(this, arguments);
-        this.pos = pos;
-        this.htmlToImgLetterRendering = pos.htmlToImgLetterRendering();
+        PrinterMixin.init.call(this, pos);
         this.connection = new Session(undefined, url || 'http://localhost:8069', { use_cors: true});
     },
 

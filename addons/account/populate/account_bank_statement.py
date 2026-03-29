@@ -28,6 +28,8 @@ class AccountBankStatement(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+        if not company_ids:
+            return []
         journal_ids = self.env['account.journal'].search([
             ('company_id', 'in', company_ids.ids),
             ('type', 'in', ('cash', 'bank')),
@@ -110,6 +112,13 @@ class AccountBankStatementLine(models.Model):
             journal = self.env['account.bank.statement'].browse(values['statement_id']).journal_id
             currency = random.choice(self.env['res.currency'].search([('active', '=', True)]).ids)
             return currency if currency != (journal.currency_id or journal.company_id.currency_id).id else False
+
+        company_ids = self.env['res.company'].search([
+            ('chart_template_id', '!=', False),
+            ('id', 'in', self.env.registry.populated_models['res.company']),
+        ])
+        if not company_ids:
+            return []
 
         # Because we are accessing related fields of bank statements, a prefetch can improve the performances.
         self = self.with_prefetch(self.env.registry.populated_models['account.bank.statement'])

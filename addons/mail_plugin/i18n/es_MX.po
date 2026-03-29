@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
+# Wil Odoo, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,13 +15,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: mail_plugin
 #. openerp-web
@@ -78,7 +79,7 @@ msgstr ""
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "Bad Email."
-msgstr "Correo malo."
+msgstr "Correo erróneo."
 
 #. module: mail_plugin
 #. openerp-web
@@ -106,7 +107,7 @@ msgstr "No se puede guardar el contacto"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Clear Translations Cache"
-msgstr "Limpiar el caché de traducciones1"
+msgstr "Limpiar el caché de traducciones"
 
 #. module: mail_plugin
 #. openerp-web
@@ -135,7 +136,7 @@ msgstr "Empresa creada."
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Company Insights"
-msgstr "Visión de la empresa"
+msgstr "Información de la empresa"
 
 #. module: mail_plugin
 #. openerp-web
@@ -172,7 +173,7 @@ msgstr "Contacto"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Contact Details"
-msgstr "Detalles del contacto"
+msgstr "Detalles de contacto"
 
 #. module: mail_plugin
 #. openerp-web
@@ -197,7 +198,7 @@ msgstr "Contactos encontrados ( %(count)s )"
 #. module: mail_plugin
 #: model:ir.model.fields,help:mail_plugin.field_res_partner_iap__partner_id
 msgid "Corresponding partner"
-msgstr "Partner correspondiente"
+msgstr "Contacto correspondiente"
 
 #. module: mail_plugin
 #. openerp-web
@@ -205,8 +206,7 @@ msgstr "Partner correspondiente"
 #, python-format
 msgid "Could not autocomplete the company. Internal error. Try again later..."
 msgstr ""
-"No se pudo autocompletar la empresa. Error interno. Intente de nuevo más "
-"tarde..."
+"No se pudo autocompletar la empresa. Error interno. Inténtelo más tarde..."
 
 #. module: mail_plugin
 #. openerp-web
@@ -229,8 +229,7 @@ msgstr "Su base de datos no se pudo conectar. Inténtelo de nuevo."
 #, python-format
 msgid "Could not display image %(attachmentName)s, size is over limit."
 msgstr ""
-"No se pudo mostrar la imagen %(attachmentName)s, el tamaño sobre pasa el "
-"límite"
+"No se pudo mostrar la imagen %(attachmentName)s, el tamaño supera el límite."
 
 #. module: mail_plugin
 #. openerp-web
@@ -268,21 +267,21 @@ msgstr "Creado el"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Debug"
-msgstr "Debug"
+msgstr "Depurar"
 
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Debug Zone"
-msgstr "Zona de debug"
+msgstr "Zona de depuración"
 
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Debug zone for development purpose."
-msgstr "Zona de debug para propósitos de desarrollo"
+msgstr "Zona de depuración con fines de desarrollo."
 
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
@@ -311,7 +310,7 @@ msgstr "Dominio que se usa para encontrar la empresa"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Email already logged on the contact"
-msgstr "El correo ya se cargó en el contacto"
+msgstr "Correo ya registrado en el contacto"
 
 #. module: mail_plugin
 #. openerp-web
@@ -374,26 +373,28 @@ msgstr "Enrutamiento HTTP"
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__iap_enrich_info
 #: model:ir.model.fields,field_description:mail_plugin.field_res_users__iap_enrich_info
 msgid "IAP Enrich Info"
-msgstr "Información de enriquecimiento IAP"
+msgstr "Enriquecer información mediante compras dentro de la aplicación"
 
 #. module: mail_plugin
 #: model:ir.actions.act_window,name:mail_plugin.res_partner_iap_action
 #: model_terms:ir.ui.view,arch_db:mail_plugin.res_partner_iap_view_form
 #: model_terms:ir.ui.view,arch_db:mail_plugin.res_partner_iap_view_tree
 msgid "IAP Partner"
-msgstr "Partner IAP"
+msgstr "Contacto de compras dentro de la aplicación"
 
 #. module: mail_plugin
 #: model:ir.ui.menu,name:mail_plugin.res_partner_iap_menu
 msgid "IAP Partners"
-msgstr "Partners IAP"
+msgstr "Contactos de compras dentro de la aplicación"
 
 #. module: mail_plugin
 #: model:ir.model.fields,help:mail_plugin.field_res_partner__iap_enrich_info
 #: model:ir.model.fields,help:mail_plugin.field_res_partner_iap__iap_enrich_info
 #: model:ir.model.fields,help:mail_plugin.field_res_users__iap_enrich_info
 msgid "IAP response stored as a JSON string"
-msgstr "La respuesta IAP se guardó como una string JSON"
+msgstr ""
+"La respuesta de compras dentro de la aplicación se guardó como una cadena "
+"JSON"
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__id
@@ -413,7 +414,7 @@ msgstr "Sector"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Invalid URL"
-msgstr "URL inválida"
+msgstr "URL no válida"
 
 #. module: mail_plugin
 #. openerp-web
@@ -482,6 +483,12 @@ msgid "Logout"
 msgstr "Cerrar sesión"
 
 #. module: mail_plugin
+#: code:addons/mail_plugin/controllers/mail_plugin.py:0
+#, python-format
+msgid "No Access"
+msgstr "Sin acceso"
+
+#. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
@@ -523,21 +530,21 @@ msgstr ""
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "No contact found."
-msgstr "No se encontró contacto"
+msgstr "No se encontró ningún contacto."
 
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "No data found for this email address."
-msgstr "No se encontró información para esta dirección de correo"
+msgstr "No se encontró información para esta dirección de correo."
 
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "No extra information found"
-msgstr "No se encontró información extra"
+msgstr "No se encontró información adicional"
 
 #. module: mail_plugin
 #. openerp-web
@@ -558,7 +565,7 @@ msgstr "No se encontró información para esta dirección."
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Not enough credits to enrich."
-msgstr "No hay créditos suficientes para enriquecer"
+msgstr "No hay créditos suficientes para enriquecer."
 
 #. module: mail_plugin
 #. openerp-web
@@ -577,7 +584,7 @@ msgstr "URL de servidor Odoo"
 #. module: mail_plugin
 #: model:ir.model.constraint,message:mail_plugin.constraint_res_partner_iap_unique_partner_id
 msgid "Only one partner IAP is allowed for one partner"
-msgstr "Solo se permite un IAP de partner para un partner"
+msgstr "Solo se permite una compra dentro de la aplicación por contacto"
 
 #. module: mail_plugin
 #. openerp-web
@@ -587,15 +594,17 @@ msgid ""
 "Oops, looks like you have exhausted your free enrichment requests. Please "
 "log in to try again."
 msgstr ""
-"Uy, parece que ya se gastó sus solicitudes gratis de enriquecimiento. Inicie"
-" sesión para intentar de nuevo."
+"Parece que ya no cuenta con solicitudes de enriquecimiento gratuitas. Inicie"
+" sesión para intentarlo de nuevo."
 
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Our IAP server is down, please come back later."
-msgstr "Nuestro servidor de IAP se calló, vuelva más tarde."
+msgstr ""
+"Nuestro servidor de compras dentro de la aplicación no está disponible, "
+"vuelva más tarde."
 
 #. module: mail_plugin
 #. openerp-web
@@ -607,12 +616,12 @@ msgstr "Bandeja de entrada de Outlook"
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: mail_plugin
 #: model:ir.model,name:mail_plugin.model_res_partner_iap
 msgid "Partner IAP"
-msgstr "Partner IAP"
+msgstr "Contacto de compras dentro de la aplicación"
 
 #. module: mail_plugin
 #. openerp-web
@@ -661,7 +670,14 @@ msgstr "Ingresos"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Save in Odoo"
-msgstr "Guardar en odoo"
+msgstr "Guardar en Odoo"
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "Save the contact to create the company"
+msgstr "Guarde el contacto para crear la empresa"
 
 #. module: mail_plugin
 #. openerp-web
@@ -675,7 +691,7 @@ msgstr "Búsqueda"
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__iap_search_domain
 #: model:ir.model.fields,field_description:mail_plugin.field_res_users__iap_search_domain
 msgid "Search Domain / Email"
-msgstr "Buscar dominio / dirección de correo"
+msgstr "Buscar dominio/correo electrónico"
 
 #. module: mail_plugin
 #. openerp-web
@@ -711,13 +727,13 @@ msgstr "Buscar contacto en Odoo..."
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Something bad happened. Please, try again later."
-msgstr "Pasó algo malo, inténtelo de nuevo más tarde."
+msgstr "Ocurrió un error, inténtelo de nuevo más tarde."
 
 #. module: mail_plugin
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "The partner already has a company related to him"
-msgstr "Este partner ya está relacionado a una empresa"
+msgstr "Este contacto ya está relacionado a una empresa"
 
 #. module: mail_plugin
 #. openerp-web
@@ -747,7 +763,7 @@ msgstr ""
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "This partner does not exist"
-msgstr "Este partner no existe"
+msgstr "Este contacto no existe"
 
 #. module: mail_plugin
 #. openerp-web
@@ -769,8 +785,7 @@ msgid ""
 "bigger then the maximum size of %(size)sMB per each attachment."
 msgstr ""
 "Advertencia: No se pudieron obtener los archivos adjuntos %(attachments)s ya"
-" que el tamaño es más grande que el tamaño máximo de %(size)s MB por archivo"
-" adjunto."
+" que el tamaño supera el tamaño máximo de %(size)s MB por archivo adjunto."
 
 #. module: mail_plugin
 #. openerp-web
@@ -785,7 +800,7 @@ msgstr "Sitio web"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Year founded"
-msgstr "Año fundado"
+msgstr "Año de fundación"
 
 #. module: mail_plugin
 #. openerp-web
@@ -798,16 +813,16 @@ msgstr "No tiene los créditos suficientes para enriquecer."
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "You need to specify at least the partner_id or the name and the email"
-msgstr "Tiene que especificar al menos el partner_id o el nombre y el correo"
+msgstr "Debe especificar al menos el partner_id o el nombre y el correo"
 
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
 msgid "access your Odoo database?"
-msgstr "¿Acceder a su base de datos de Odoo?"
+msgstr "acceso a su base de datos de Odoo?"
 
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "employees"
-msgstr "employees"
+msgstr "empleados"

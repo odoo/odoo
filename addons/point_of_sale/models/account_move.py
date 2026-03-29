@@ -39,6 +39,7 @@ class AccountMove(models.Model):
                             'quantity': line.qty if lot.product_id.tracking == 'lot' else 1.0,
                             'uom_name': line.product_uom_id.name,
                             'lot_name': lot.lot_name,
+                            'pos_lot_id': lot.id,
                         })
 
         return lot_values

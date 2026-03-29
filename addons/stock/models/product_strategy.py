@@ -89,12 +89,26 @@ class StockPutawayRule(models.Model):
         if not child_location_count or not self.location_out_id:
             self.location_out_id = self.location_in_id
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        rules = super().create(vals_list)
+        rules._enable_show_reserved()
+        return rules
+
     def write(self, vals):
         if 'company_id' in vals:
             for rule in self:
                 if rule.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+        self._enable_show_reserved()
         return super(StockPutawayRule, self).write(vals)
+
+    def _enable_show_reserved(self):
+        out_locations = self.location_out_id
+        if out_locations:
+            self.env['stock.picking.type'].with_context(active_test=False)\
+                .search([('default_location_dest_id', 'in', out_locations.ids), ('show_reserved', '=', False)])\
+                .write({'show_reserved': True})
 
     def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):
         # find package type on package or packaging
@@ -107,6 +121,7 @@ class StockPutawayRule(models.Model):
         checked_locations = set()
         for putaway_rule in self:
             location_out = putaway_rule.location_out_id
+            child_locations = location_out.child_internal_location_ids
 
             if not putaway_rule.storage_category_id:
                 if location_out in checked_locations:
@@ -114,8 +129,9 @@ class StockPutawayRule(models.Model):
                 if location_out._check_can_be_used(product, quantity, package, qty_by_location[location_out.id]):
                     return location_out
                 continue
+            else:
+                child_locations = child_locations.filtered(lambda loc: loc.storage_category_id == putaway_rule.storage_category_id)
 
-            child_locations = location_out.child_internal_location_ids
             # check if already have the product/package type stored
             for location in child_locations:
                 if location in checked_locations:

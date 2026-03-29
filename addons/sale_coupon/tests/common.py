@@ -7,13 +7,13 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleCouponCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
-        pricelist = cls.env.ref('product.list0')
-        pricelist.currency_id = cls._setup_currency(cls.currency_ratio)
+        cls.pricelist = cls.env.ref('product.list0')
+        cls.pricelist.currency_id = cls._setup_currency(cls.currency_ratio)
 
         # Set all the existing programs to active=False to avoid interference
         cls.env['coupon.program'].search([]).write({'active': False})
@@ -22,6 +22,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
         cls.steve = cls.env['res.partner'].create({
             'name': 'Steve Bucknor',
             'email': 'steve.bucknor@example.com',
+            'property_product_pricelist': cls.pricelist.id,
         })
 
         cls.empty_order = cls.env['sale.order'].create({
@@ -43,6 +44,28 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
             'amount_type': 'percent',
             'amount': 10,
             'price_include': True,
+        })
+
+        cls.tax_10pc_base_incl = cls.env['account.tax'].create({
+            'name': "10% Tax incl base amount",
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        cls.tax_10pc_excl = cls.env['account.tax'].create({
+            'name': "10% Tax excl",
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': False,
+        })
+
+        cls.tax_20pc_excl = cls.env['account.tax'].create({
+            'name': "20% Tax excl",
+            'amount_type': 'percent',
+            'amount': 20,
+            'price_include': False,
         })
 
         #products

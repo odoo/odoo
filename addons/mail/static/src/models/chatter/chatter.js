@@ -65,6 +65,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickActivityBoxTitle(ev) {
+            ev.preventDefault();
             this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
         }
 
@@ -320,6 +321,7 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
+        component: attr(),
         /**
          * States the OWL component of this chatter top bar.
          */

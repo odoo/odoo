@@ -4,6 +4,7 @@
 import time
 from psycopg2 import IntegrityError
 
+from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -14,6 +15,7 @@ class TestProductAttributeValueCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestProductAttributeValueCommon, cls).setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',
@@ -214,7 +216,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
     def test_product_filtered_exclude_for(self):
         """
             Super Computer has 18 variants total (2 ssd * 3 ram * 3 hdd)
-            RAM 16 excudes HDD 1, that matches 2 variants:
+            RAM 16 excludes HDD 1, that matches 2 variants:
             - SSD 256 RAM 16 HDD 1
             - SSD 512 RAM 16 HDD 1
 
@@ -230,8 +232,8 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self._add_ram_exclude_for()
         self.assertEqual(len(self.computer._get_possible_variants()), 16)
         self.assertTrue(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_8 + computer_hdd_1)._is_variant_possible())
-        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_16 + computer_hdd_1)._is_variant_possible())
-        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_512 + computer_ram_16 + computer_hdd_1)._is_variant_possible())
+        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_16 + computer_hdd_1))
+        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_512 + computer_ram_16 + computer_hdd_1))
 
     def test_children_product_filtered_exclude_for(self):
         """
@@ -387,8 +389,26 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self._add_exclude(computer_ram_32, computer_ssd_256)
         self.assertEqual(self.computer._get_first_possible_combination(), computer_ssd_512 + computer_ram_32 + computer_hdd_4)
 
-        # No possible combination (test helper and iterator)
-        self._add_exclude(computer_ram_32, computer_hdd_4)
+        # Not possible to add an exclusion when only one variant is left -> it deletes the product template associated to it
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self._add_exclude(computer_ram_32, computer_hdd_4)
+
+        # If an exclusion rule deletes all variants at once it does not delete the template.
+        # Here we can test `_get_first_possible_combination` with a product template with no variants
+        # Deletes all exclusions
+        for exclusion in computer_ram_32.exclude_for:
+            computer_ram_32.write({
+                'exclude_for': [(2, exclusion.id, 0)]
+            })
+
+        # Activates all exclusions at once
+        computer_ram_32.write({
+            'exclude_for': [(0, computer_ram_32.exclude_for.id, {
+                'product_tmpl_id': self.computer.id,
+                'value_ids': [(6, 0, [computer_hdd_1.id, computer_hdd_2.id, computer_hdd_4.id, computer_ssd_256.id, computer_ssd_512.id])]
+            })]
+        })
+
         self.assertEqual(self.computer._get_first_possible_combination(), self.env['product.template.attribute.value'])
         gen = self.computer._get_possible_combinations()
         self.assertIsNone(next(gen, None))
@@ -647,3 +667,48 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
                 'name': '32 GB',
                 'attribute_id': self.ram_attribute.id,
             })
+
+    def test_inactive_related_product_update(self):
+        """
+            Create a product and give it a product attribute then archive it, delete the product attribute,
+            unarchive the product and check that the product is not related to the product attribute.
+        """
+        product_attribut = self.env['product.attribute'].create({
+            'name': 'PA',
+            'sequence': 1,
+            'create_variant': 'no_variant',
+        })
+        a1 = self.env['product.attribute.value'].create({
+            'name': 'pa_value',
+            'attribute_id': product_attribut.id,
+            'sequence': 1,
+        })
+        product = self.env['product.template'].create({
+            'name': 'P1',
+            'type': 'consu',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': product_attribut.id,
+                'value_ids': [(6, 0, [a1.id])],
+            })]
+        })
+        self.assertEqual(product_attribut.number_related_products, 1, 'The product attribute must have an associated product')
+        product.action_archive()
+        self.assertFalse(product.active, 'The product should be archived.')
+        product.write({'attribute_line_ids': [[5, 0, 0]]})
+        product.action_unarchive()
+        self.assertTrue(product.active, 'The product should be unarchived.')
+        self.assertEqual(product_attribut.number_related_products, 0, 'The product attribute must not have an associated product')
+
+    def test_copy_extra_prices_of_product_attribute_values(self):
+        """
+        Check that the extra price of attributes are copied along the duplication of a product.
+        """
+        product_template = self.computer
+        extra_prices = product_template.attribute_line_ids.product_template_value_ids.mapped(
+            'price_extra'
+        )
+        copied_template = product_template.copy()
+        copied_extra_prices = copied_template.attribute_line_ids.product_template_value_ids.mapped(
+            'price_extra'
+        )
+        self.assertEqual(extra_prices, copied_extra_prices)

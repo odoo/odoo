@@ -162,6 +162,11 @@ function factory(dependencies) {
             _newOrdered[index + 1] = chatWindow;
             this.update({ allOrdered: replace(_newOrdered) });
             chatWindow.focus();
+            for (const loopedChatWindow of [chatWindow, otherChatWindow]) {
+                if (loopedChatWindow.threadView) {
+                    loopedChatWindow.threadView.addComponentHint('adjust-scroll');
+                }
+            }
         }
 
         /**
@@ -183,6 +188,11 @@ function factory(dependencies) {
             _newOrdered[index - 1] = chatWindow;
             this.update({ allOrdered: replace(_newOrdered) });
             chatWindow.focus();
+            for (const loopedChatWindow of [chatWindow, otherChatWindow]) {
+                if (loopedChatWindow.threadView) {
+                    loopedChatWindow.threadView.addComponentHint('adjust-scroll');
+                }
+            }
         }
 
         /**
@@ -200,6 +210,11 @@ function factory(dependencies) {
             _newOrdered[index1] = chatWindow2;
             _newOrdered[index2] = chatWindow1;
             this.update({ allOrdered: replace(_newOrdered) });
+            for (const chatWindow of [chatWindow1, chatWindow2]) {
+                if (chatWindow.threadView) {
+                    chatWindow.threadView.addComponentHint('adjust-scroll');
+                }
+            }
         }
 
         //----------------------------------------------------------------------
@@ -297,7 +312,7 @@ function factory(dependencies) {
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
             const START_GAP_WIDTH = device.isMobile ? 0 : 10;
             const chatWindows = this.allOrdered;
-            if (!device.isMobile && discuss.isOpen) {
+            if ((!device.isMobile && discuss.isOpen) || this.messaging.discussPublicView) {
                 return visual;
             }
             if (!chatWindows.length) {

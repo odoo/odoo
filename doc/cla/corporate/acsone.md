@@ -31,3 +31,6 @@ Benoit Aimont benoit.aimont@acsone.eu https://github.com/baimont
 Bejaoui Souheil souheil.bejaoui@acsone.eu https://github.com/sbejaoui
 Nans Lefebvre nans.lefebvre@acsone.eu https://github.com/len-foss
 Régis Pirard regis.pirard@acsone.eu https://github.com/regispirard
+Doutreloux Justine justine.doutreloux@acsone.eu https://github.com/jdoutreloux
+Maxime Franco maxime.franco@acsone.eu https://github.com/FrancoMaxime
+Laurent Stukkens laurent.stukkens@acsone.eu https://github.com/it-ideas

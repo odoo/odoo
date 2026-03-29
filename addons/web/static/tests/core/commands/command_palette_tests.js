@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { CommandPalette } from "@web/core/commands/command_palette";
 import { CommandPaletteDialog } from "@web/core/commands/command_palette_dialog";
 import { commandService } from "@web/core/commands/command_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -1069,4 +1070,42 @@ QUnit.test("navigate in the command palette with an empty list", async (assert) 
     await nextTick();
     assert.containsNone(target, ".o_command");
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
+});
+
+QUnit.test("generate new session id when opened", async (assert) => {
+    assert.expect(4);
+
+    let lastSessionId;
+    CommandPalette.lastSessionId = 0;
+    testComponent = await mount(TestComponent, { env, target });
+    const providers = [
+        {
+            provide: (env, {sessionId}) => {
+                lastSessionId = sessionId;
+                return [];
+            },
+        },
+    ];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+
+    await nextTick();
+    assert.equal(lastSessionId, 0);
+
+    await editSearchBar("a");
+    assert.equal(lastSessionId, 0);
+
+    window.dispatchEvent(new MouseEvent("mousedown"));
+    await nextTick();
+    assert.equal(lastSessionId, 0);
+
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+    await nextTick();
+    assert.equal(lastSessionId, 1);
 });

@@ -79,12 +79,19 @@ $(function () {
                 });
             },
             previous: function () {
+                const slideSuggestOverlay = this.$("#slide_suggest");
+                if (!slideSuggestOverlay.hasClass('d-none')) {
+                    // Hide suggested slide overlay before changing page nb.
+                    slideSuggestOverlay.addClass('d-none');
+                    this.$('#next, #last').removeClass('disabled');
+                    return;
+                }
                 var self = this;
                 this.pdf_viewer.previousPage().then(function (pageNum) {
                     if (pageNum) {
                         self.on_rendered_page(pageNum);
                     }
-                    self.$("#slide_suggest").addClass('d-none');
+                    slideSuggestOverlay.addClass('d-none');
                 });
             },
             first: function () {

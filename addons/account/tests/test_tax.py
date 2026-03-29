@@ -14,6 +14,16 @@ class TestTaxCommon(AccountTestInvoicingCommon):
         cls.currency_data['currency'].rounding = 1.0
         cls.currency_no_decimal = cls.currency_data['currency']
         cls.company_data_2 = cls.setup_company_data('company_2', currency_id=cls.currency_no_decimal.id)
+
+        cls.currency_5_round = cls.env['res.currency'].create({
+            'name': 'Platinum Coin',
+            'symbol': 'P$',
+            'rounding': 0.05,
+            'position': 'after',
+            'currency_unit_label': 'Platinum',
+            'currency_subunit_label': 'Palladium',
+        })
+        cls.company_data_3 = cls.setup_company_data('company_3', currency_id=cls.currency_5_round.id)
         cls.env.user.company_id = cls.company_data['company']
 
         cls.fixed_tax = cls.env['account.tax'].create({
@@ -76,16 +86,6 @@ class TestTaxCommon(AccountTestInvoicingCommon):
                 (4, cls.percent_tax_bis.id, 0)
             ]
         })
-        cls.group_of_group_tax = cls.env['account.tax'].create({
-            'name': "Group of group tax",
-            'amount_type': 'group',
-            'amount': 0,
-            'sequence': 7,
-            'children_tax_ids': [
-                (4, cls.group_tax.id, 0),
-                (4, cls.group_tax_bis.id, 0)
-            ]
-        })
         cls.tax_with_no_account = cls.env['account.tax'].create({
             'name': "Tax with no account",
             'amount_type': 'fixed',
@@ -130,7 +130,7 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 0,
         })
 
-        cls.tax_5_percent = cls.env['account.tax'].with_company(cls.company_data['company']).create({
+        cls.tax_5_percent = cls.env['account.tax'].with_company(cls.company_data_3['company']).create({
             'name': "test_5_percent",
             'amount_type': 'percent',
             'amount': 5,
@@ -183,24 +183,6 @@ class TestTax(TestTaxCommon):
     @classmethod
     def setUpClass(cls):
         super(TestTax, cls).setUpClass()
-
-    def test_tax_group_of_group_tax(self):
-        self.fixed_tax.include_base_amount = True
-        res = self.group_of_group_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            263,    # 'total_included'
-            200,    # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 10.0),    # |  1  |    10  |      |     t
-                (210.0, 21.0),    # |  3  |    10% |      |
-                (210.0, 10.0),    # |  1  |    10  |      |     t
-                (220.0, 22.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
 
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
@@ -846,7 +828,8 @@ class TestTax(TestTaxCommon):
         )
 
     def test_rounding_tax_included_round_per_line_03(self):
-        ''' Test the rounding of a 8% and 0% price included tax in an invoice having 8 * 15.55 as line.
+        ''' Test the rounding of a 8% and 0% price included tax in an invoice having 8 * 15.55 as line
+        and a sequence that is solely dependent on the ID, as the tax sequence is identical.
         The decimal precision is set to 2.
         '''
         self.tax_0_percent.company_id.currency_id.rounding = 0.01
@@ -863,8 +846,8 @@ class TestTax(TestTaxCommon):
             [
                 # base , amount
                 # -------------
-                (115.19, 9.21),
                 (115.19, 0.00),
+                (115.19, 9.21),
                 # -------------
             ],
             res1

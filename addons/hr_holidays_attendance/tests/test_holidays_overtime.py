@@ -134,6 +134,11 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertTrue(leave.overtime_id.exists(), "Overtime should be created")
         self.assertEqual(self.employee.total_overtime, 0)
 
+        overtime = leave.overtime_id
+        leave.unlink()
+        self.assertFalse(overtime.exists(), "Overtime should be deleted along with the leave")
+        self.assertEqual(self.employee.total_overtime, 8)
+
     def test_leave_check_overtime_write(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
         self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 16))
@@ -227,3 +232,14 @@ class TestHolidaysOvertime(TransactionCase):
 
         alloc.number_of_days = 2
         self.assertEqual(self.employee.total_overtime, 0)
+
+    def test_public_leave_overtime(self):
+        self.env['resource.calendar.leaves'].create([{
+            'name': 'Public Holiday',
+            'date_from': datetime(2022, 5, 5, 6),
+            'date_to': datetime(2022, 5, 5, 18),
+            'time_type': 'leave',
+        }])
+
+        self.new_attendance(check_in=datetime(2022, 5, 5, 8), check_out=datetime(2022, 5, 5, 16))
+        self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')

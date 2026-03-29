@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
 EXTRA_REQUEST = 5
 """ During tests, the query on 'base_registry_signaling, base_cache_signaling'
@@ -16,10 +16,11 @@ EXTRA_REQUEST = 5
         ROLLBACK TO SAVEPOINT "test_cursor_5"
 """
 
-
-class UtilPerf(HttpCase):
-    def _get_url_hot_query(self, url):
-        url += ('?' not in url and '?' or '') + '&nocache'
+class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
+    def _get_url_hot_query(self, url, cache=True):
+        url += ('?' not in url and '?' or '')
+        if not cache:
+            url += '&nocache'
 
         # ensure worker is in hot state
         self.url_open(url)
@@ -31,16 +32,31 @@ class UtilPerf(HttpCase):
 
 
 class TestStandardPerformance(UtilPerf):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.users'].browse(2).image_1920 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+
     def test_10_perf_sql_img_controller(self):
         self.authenticate('demo', 'demo')
         url = '/web/image/res.users/2/image_256'
         self.assertEqual(self._get_url_hot_query(url), 6)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 6)
+
+    def test_11_perf_sql_img_controller(self):
+        self.authenticate('demo', 'demo')
+        self.env['res.users'].sudo().browse(2).website_published = True
+        url = '/web/image/res.users/2/image_256'
+        self.assertEqual(self._get_url_hot_query(url), 6)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 6)
 
     def test_20_perf_sql_img_controller_bis(self):
         url = '/web/image/website/1/favicon'
         self.assertEqual(self._get_url_hot_query(url), 4)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 4)
         self.authenticate('portal', 'portal')
         self.assertEqual(self._get_url_hot_query(url), 4)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 4)
 
 
 class TestWebsitePerformance(UtilPerf):
@@ -77,25 +93,31 @@ class TestWebsitePerformance(UtilPerf):
 
     def test_10_perf_sql_queries_page(self):
         # standard untracked website.page
-        self.assertEqual(self._get_url_hot_query(self.page.url), 11)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 13)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
 
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
         self.page.track = True
-        self.assertEqual(self._get_url_hot_query(self.page.url), 19)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 18)
         self.menu.unlink()
-        self.assertEqual(self._get_url_hot_query(self.page.url), 21)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 14)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 18)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
-        self.assertEqual(self._get_url_hot_query('/'), 18)
+        self.assertEqual(self._get_url_hot_query('/'), 13)
+        self.assertEqual(self._get_url_hot_query('/', cache=False), 17)
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # website.page with no call to layout templates
         self.page.arch = '<div>I am a blank page</div>'
-        self.assertEqual(self._get_url_hot_query(self.page.url), 9)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 7)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
@@ -113,10 +135,12 @@ class TestWebsitePerformance(UtilPerf):
         menu_bb.parent_id = menu_b
         menu_aa.parent_id = menu_a
 
-        self.assertEqual(self._get_url_hot_query(self.page.url), 11)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
 
     def test_50_perf_sql_web_assets(self):
         # assets route /web/assets/..
         self.url_open('/')  # create assets attachments
         assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_common%.js')], limit=1).url
         self.assertEqual(self._get_url_hot_query(assets_url), 2)
+        self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 2)

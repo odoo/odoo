@@ -24,7 +24,7 @@ from PIL import Image
 from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat, parse_version
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -55,10 +55,22 @@ try:
 except ImportError:
     odf_ods_reader = None
 
+try:
+    os.environ['OPENPYXL_DEFUSEDXML'] = 'False'
+    from openpyxl import load_workbook
+except ImportError:
+    load_workbook = None
+
+
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),
     'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 1.0.0'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': (
+        'xlsx',
+        load_workbook or xlsx,
+        # if xlrd 2.x then xlsx is not available, so don't suggest it
+        'openpyxl' if xlrd and parse_version(xlrd.__VERSION__) >= parse_version("2.0") else 'openpyxl or xlrd >= 1.0.0 < 2.0',
+    ),
     'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
 }
 EXTENSIONS = {
@@ -352,6 +364,10 @@ class Import(models.TransientModel):
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
+            except ValueError as e:
+                raise e
+            except ImportValidationError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
 
@@ -360,6 +376,10 @@ class Import(models.TransientModel):
         if handler:
             try:
                 return getattr(self, '_read_' + file_extension)(options)
+            except ValueError as e:
+                raise e
+            except ImportValidationError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
 
@@ -371,6 +391,8 @@ class Import(models.TransientModel):
             if ext in EXTENSIONS:
                 try:
                     return getattr(self, '_read_' + ext[1:])(options)
+                except ValueError as e:
+                    raise e
                 except Exception:
                     _logger.warning("Failed to read file '%s' (transient id %s) using file extension", self.file_name, self.id)
 
@@ -426,7 +448,48 @@ class Import(models.TransientModel):
         return sheet.nrows, rows
 
     # use the same method for xlsx and xls files
-    _read_xlsx = _read_xls
+    def _read_xlsx(self, options):
+        if xlsx:
+            return self._read_xls(options)
+
+        import openpyxl.cell.cell as types
+        import openpyxl.styles.numbers as styles  # noqa: PLC0415
+        book = load_workbook(io.BytesIO(self.file or b''), data_only=True)
+        sheets = options['sheets'] = book.sheetnames
+        sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
+        sheet = book[sheet_name]
+        rows = []
+        for rowx, row in enumerate(sheet.rows, 1):
+            values = []
+            for colx, cell in enumerate(row, 1):
+                if cell.data_type is types.TYPE_ERROR:
+                    raise ValueError(
+                        _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s", row=rowx, col=colx, cell_value=cell.value)
+                    )
+
+                if cell.value is None:
+                    values.append('')
+                elif isinstance(cell.value, float):
+                    if cell.value % 1 == 0:
+                        values.append(str(int(cell.value)))
+                    else:
+                        values.append(str(cell.value))
+                elif cell.is_date:
+                    d_fmt = styles.is_datetime(cell.number_format)
+                    if d_fmt == "datetime":
+                        values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                    elif d_fmt == "date":
+                        values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                    else:
+                        raise ValueError(
+                        _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
+                        )
+                else:
+                    values.append(str(cell.value))
+
+            if any(x.strip() for x in values):
+                rows.append(values)
+        return sheet.max_row, rows
 
     def _read_ods(self, options):
         doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
@@ -484,6 +547,9 @@ class Import(models.TransientModel):
                 else: # nobreak
                     separator = options['separator'] = candidate
                     break
+
+        if not len(options['quoting']) == 1:
+            raise ImportValidationError(_("Error while importing records: Text Delimiter should be a single character."))
 
         csv_iterator = pycompat.csv_reader(
             io.BytesIO(csv_data),
@@ -553,6 +619,9 @@ class Import(models.TransientModel):
                 val = self._remove_currency_symbol(val)
                 if val:
                     if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
+                        if options['float_decimal_separator'] == '.' and val.count('.') > 1:
+                            # This is not a float so exit this try
+                            float('a')
                         val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
                     # We are now sure that this is a float, but we still need to find the
                     # thousand and decimal separator
@@ -1033,6 +1102,10 @@ class Import(models.TransientModel):
         import_fields = [f for f in fields if f]
 
         _file_length, rows_to_import = self._read_file(options)
+        if len(rows_to_import[0]) != len(fields):
+            raise ImportValidationError(
+                _("Error while importing records: all rows should be of the same size, but the title row has %d entries while the first row has %d. You may need to change the separator character.", len(fields), len(rows_to_import[0]))
+            )
 
         if options.get('has_headers'):
             rows_to_import = rows_to_import[1:]
@@ -1171,7 +1244,7 @@ class Import(models.TransientModel):
                         else:
                             try:
                                 base64.b64decode(line[index], validate=True)
-                            except binascii.Error:
+                            except ValueError:
                                 raise ImportValidationError(
                                     _("Found invalid image data, images should be imported as either URLs or base64-encoded data."),
                                     field=name, field_type=field['type']
@@ -1182,8 +1255,8 @@ class Import(models.TransientModel):
     def _parse_date_from_data(self, data, index, name, field_type, options):
         dt = datetime.datetime
         fmt = fields.Date.to_string if field_type == 'date' else fields.Datetime.to_string
-        d_fmt = options.get('date_format')
-        dt_fmt = options.get('datetime_format')
+        d_fmt = options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT
+        dt_fmt = options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT
         for num, line in enumerate(data):
             if not line[index]:
                 continue
@@ -1252,14 +1325,13 @@ class Import(models.TransientModel):
 
             return base64.b64encode(content)
         except Exception as e:
-            _logger.exception(e)
-            raise ImportValidationError(
-                _(
-                    "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s",
-                    url=url, field_name=field, line_number=line_number + 1, error=e
-                ),
-                field=field
-            )
+            _logger.warning(e, exc_info=True)
+            raise ImportValidationError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
+                'url': url,
+                'field_name': field,
+                'line_number': line_number + 1,
+                'error': e
+            })
 
     def execute_import(self, fields, columns, options, dryrun=False):
         """ Actual execution of the import
@@ -1509,7 +1581,7 @@ class Import(models.TransientModel):
 
         return input_file_data
 
-_SEPARATORS = [' ', '/', '-', '']
+_SEPARATORS = [' ', '/', '-', '.', '']
 _PATTERN_BASELINE = [
     ('%m', '%d', '%Y'),
     ('%d', '%m', '%Y'),

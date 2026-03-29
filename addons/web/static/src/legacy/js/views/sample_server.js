@@ -480,6 +480,14 @@
                     const relatedRecord = relatedRecords.find(r => r.id === groupByValue);
                     groupByValue = relatedRecord.display_name;
                 }
+                // special case for bool values: rpc call response with capitalized strings
+                if (!(groupByValue in data)) {
+                    if (groupByValue === true) {
+                        groupByValue = "True";
+                    } else if (groupByValue === false) {
+                        groupByValue = "False";
+                    }
+                }
                 if (!(groupByValue in data)) {
                     data[groupByValue] = {};
                     for (const key in progress_bar.colors) {

@@ -17,6 +17,8 @@ function factory(dependencies) {
             const res = super._created(...arguments);
             this._timeoutIds = {};
             this._loadLocalSettings();
+            this._onStorage = this._onStorage.bind(this);
+            browser.addEventListener('storage', this._onStorage);
             return res;
         }
 
@@ -24,6 +26,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
+            browser.removeEventListener('storage', this._onStorage);
             for (const timeoutId of Object.values(this._timeoutIds)) {
                 browser.clearTimeout(timeoutId);
             }
@@ -72,30 +75,47 @@ function factory(dependencies) {
 
         /**
          * @param {event} ev
-         * @param {Object} param1
-         * @param {boolean} param1.ignoreModifiers
          */
-        isPushToTalkKey(ev, { ignoreModifiers = false } = {}) {
+        isPushToTalkKey(ev) {
             if (!this.usePushToTalk || !this.pushToTalkKey) {
                 return;
             }
-            const { key, shiftKey, ctrlKey, altKey } = this.pushToTalkKeyFormat();
-            if (ignoreModifiers) {
-                return ev.key === key;
+            const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
+            const settingsKeySet = this.buildKeySet({ shiftKey, ctrlKey, altKey, key });
+            const eventKeySet = this.buildKeySet({
+                shiftKey: ev.shiftKey,
+                ctrlKey: ev.ctrlKey,
+                altKey: ev.altKey,
+                key: ev.key,
+            });
+            if (ev.type === "keydown") {
+                return [...settingsKeySet].every((key) => eventKeySet.has(key));
             }
-            return (
-                ev.key === key &&
-                ev.shiftKey === shiftKey &&
-                ev.ctrlKey === ctrlKey &&
-                ev.altKey === altKey
-            );
+            return settingsKeySet.has(ev.key === "Meta" ? "Alt" : ev.key);
+        }
+
+        buildKeySet({ shiftKey, ctrlKey, altKey, key }) {
+            const keys = new Set();
+            if (key) {
+                keys.add(key === "Meta" ? "Alt" : key);
+            }
+            if (shiftKey) {
+                keys.add("Shift");
+            }
+            if (ctrlKey) {
+                keys.add("Control");
+            }
+            if (altKey) {
+                keys.add("Alt");
+            }
+            return keys;
         }
 
         pushToTalkKeyFormat() {
             if (!this.pushToTalkKey) {
                 return;
             }
-            const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split('.');
+            const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
             return {
                 shiftKey: !!shiftKey,
                 ctrlKey: !!ctrlKey,
@@ -107,7 +127,10 @@ function factory(dependencies) {
         pushToTalkKeyToString() {
             const { shiftKey, ctrlKey, altKey, key } = this.pushToTalkKeyFormat();
             const f = (k, name) => k ? name : '';
-            return `${f(ctrlKey, 'Ctrl + ')}${f(altKey, 'Alt + ')}${f(shiftKey, 'Shift + ')}${key}`;
+            const keys = [
+                f(ctrlKey, 'Ctrl'), f(altKey, 'Alt'), f(shiftKey, 'Shift'), key === " " ? "Space": key
+            ].filter(Boolean);
+            return keys.join(" + ");
         }
 
         /**
@@ -136,7 +159,11 @@ function factory(dependencies) {
          * @param {event} ev
          */
         async setPushToTalkKey(ev) {
-            const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
+            const nonElligibleKeys = new Set(['Shift', 'Control', 'Alt', 'Meta']);
+            let pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}`;
+            if (!nonElligibleKeys.has(ev.key)) {
+                pushToTalkKey += `.${ev.key}`;
+            }
             this.update({ pushToTalkKey });
             if (!this.messaging.isCurrentUserGuest) {
                 this._saveSettings();
@@ -227,13 +254,10 @@ function factory(dependencies) {
             const audioInputDeviceId = this.env.services.local_storage.getItem(
                 "mail_user_setting_audio_input_device_id"
             );
-            const voiceActivationThreshold = parseFloat(voiceActivationThresholdString);
-            if (voiceActivationThreshold > 0) {
-                this.update({
-                    voiceActivationThreshold,
-                    audioInputDeviceId,
-                });
-            }
+            this.update({
+                voiceActivationThreshold: voiceActivationThresholdString ? parseFloat(voiceActivationThresholdString) : undefined,
+                audioInputDeviceId: audioInputDeviceId || undefined,
+            });
         }
 
         /**
@@ -254,6 +278,17 @@ function factory(dependencies) {
                     { shadow: true },
                 ));
             }, 2000, 'globalSettings');
+        }
+
+        /**
+         * @private
+         * @param {Event} ev
+         */
+        async _onStorage(ev) {
+            if (ev.key === 'mail_user_setting_voice_threshold') {
+                this.update({ voiceActivationThreshold: ev.newValue });
+                await this.messaging.rtc.updateVoiceActivation();
+            }
         }
 
     }

@@ -58,7 +58,8 @@ class PaymentTransaction(models.Model):
         res = super()._get_specific_rendering_values(processing_values)
         if self.provider != 'payulatam':
             return res
-
+        
+        base_url = self.acquirer_id.get_base_url()
         api_url = 'https://checkout.payulatam.com/ppp-web-gateway-payu/' \
             if self.acquirer_id.state == 'enabled' \
             else 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/'
@@ -73,7 +74,8 @@ class PaymentTransaction(models.Model):
             'accountId': self.acquirer_id.payulatam_account_id,
             'buyerFullName': self.partner_name,
             'buyerEmail': self.partner_email,
-            'responseUrl': urls.url_join(self.get_base_url(), PayuLatamController._return_url),
+            'responseUrl': urls.url_join(base_url, PayuLatamController._return_url),
+            'confirmationUrl': urls.url_join(base_url, PayuLatamController._webhook_url),
             'api_url': api_url,
         }
         if self.acquirer_id.state != 'enabled':

@@ -91,7 +91,7 @@ class GeoCoder(models.AbstractModel):
             response = requests.get(url, headers=headers, params={'format': 'json', 'q': addr})
             _logger.info('openstreetmap nominatim service called')
             if response.status_code != 200:
-                _logger.error('Request to openstreetmap failed.\nCode: %s\nContent: %s' % (response.status_code, response.content))
+                _logger.warning('Request to openstreetmap failed.\nCode: %s\nContent: %s', response.status_code, response.content)
             result = response.json()
         except Exception as e:
             self._raise_query_error(e)

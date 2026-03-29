@@ -10,7 +10,8 @@ from odoo.tests import tagged
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def setUp(self):
-        super(TestUi, self).setUp()
+        super().setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         # create a template
         product_template = self.env['product.template'].create({
             'name': 'Test Product',
@@ -53,6 +54,11 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                 ptav.price_extra = 0
             else:
                 ptav.price_extra = 50.4
+
+        # Update the pricelist currency regarding env.company_id currency_id in case company has changed currency with COA installation.
+        website = self.env['website'].get_current_website()
+        pricelist = website.get_current_pricelist()
+        pricelist.write({'currency_id': self.env.company.currency_id.id})
 
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
@@ -312,3 +318,15 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         config.execute()
 
         self.start_tour("/", 'shop_list_view_b2c', login="admin")
+
+    def test_07_editor_shop(self):
+        self.env["product.pricelist"].create({
+            "name": "EUR Pricelist",
+            "selectable": True,
+            "website_id": self.env.ref("website.default_website").id,
+            "country_group_ids": [(4, self.env.ref('base.europe').id)],
+            "sequence": 3,
+            "currency_id": self.env.ref("base.EUR").id,
+        })
+
+        self.start_tour("/", 'shop_editor', login="admin")

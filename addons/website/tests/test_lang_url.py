@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
+from urllib.parse import urlparse
+
 from odoo.addons.http_routing.models.ir_http import url_lang
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import HttpCase, tagged
-from odoo.tests.common import HOST
 
 
 @tagged('-at_install', 'post_install')
@@ -22,7 +22,7 @@ class TestLangUrl(HttpCase):
 
     def test_01_url_lang(self):
         with MockRequest(self.env, website=self.website):
-            self.assertEqual(url_lang('', '[lang]'), '/[lang]/hello/', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
+            self.assertEqual(url_lang('', '[lang]'), '/[lang]/hello', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
 
     def test_02_url_redirect(self):
         url = '/fr_WHATEVER/contactus'
@@ -63,6 +63,10 @@ class TestLangUrl(HttpCase):
         self.assertEqual(r.status_code, 200)
         self.assertTrue('lang="fr-FR"' in r.text, "Ensure contactus did not soft crash + loaded in correct lang")
 
+    def test_05_reroute_unicode(self):
+        res = self.url_open('/fr/привет')
+        self.assertEqual(res.status_code, 404, "Rerouting didn't crash because of non latin-1 characters")
+
 
 @tagged('-at_install', 'post_install')
 class TestControllerRedirect(TestLangUrl):
@@ -83,14 +87,15 @@ class TestControllerRedirect(TestLangUrl):
         """
 
         def assertUrlRedirect(url, expected_url, msg="", code=301):
-            if expected_url.startswith('/'):
-                expected_url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], expected_url)
             if not msg:
                 msg = 'Url <%s> differ from <%s>.' % (url, expected_url)
 
             r = self.url_open(url, head=True)
             self.assertEqual(r.status_code, code)
-            self.assertEqual(r.headers.get('Location'), expected_url, msg)
+            parsed_location = urlparse(r.headers.get('Location', ''))
+            parsed_expected_url = urlparse(expected_url)
+            self.assertEqual(parsed_location.path, parsed_expected_url.path, msg)
+            self.assertEqual(parsed_location.query, parsed_expected_url.query, msg)
 
         self.authenticate('admin', 'admin')
 

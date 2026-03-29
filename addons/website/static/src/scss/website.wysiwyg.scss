@@ -3,6 +3,12 @@
     $url: map-get($font-config, 'url');
     @if $url {
         @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
+    } @else {
+        $name: map-get($font-config, 'name');
+        $attachment: map-get($font-config, 'attachment');
+        @if $attachment {
+            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
+        }
     }
 }
 
@@ -79,13 +85,17 @@
 }
 
 html[lang] > body.editor_enable [data-oe-translation-state] {
-    background: rgba($o-we-content-to-translate-color, 0.5) !important;
-
-    &[data-oe-translation-state="translated"] {
-        background: rgba($o-we-translated-content-color, 0.5) !important;
+    &, .o_translation_select_option {
+        background: rgba($o-we-content-to-translate-color, 0.5) !important;
     }
 
-    &.o_dirty {
+    &[data-oe-translation-state="translated"] {
+        &, .o_translation_select_option {
+            background: rgba($o-we-translated-content-color, 0.5) !important;
+        }
+    }
+
+    &.o_dirty, &.oe_translated, .oe_translated {
         background: rgba($o-we-translated-content-color, 0.25) !important;
     }
 }
@@ -103,7 +113,8 @@ $i: 1;
         font-family: o-safe-get($font-config, 'family', $font-family-base);
 
         &::before {
-            content: $font-name;
+            // Must prevail against the '/' for missing values.
+            content: $font-name !important;
         }
     }
     $i: $i + 1;

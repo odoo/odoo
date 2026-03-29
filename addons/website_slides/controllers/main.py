@@ -69,7 +69,7 @@ class WebsiteSlides(WebsiteProfile):
     def _set_completed_slide(self, slide):
         # quiz use their specific mechanism to be marked as done
         if slide.slide_type == 'quiz' or slide.question_ids:
-            raise werkzeug.exceptions.Forbidden(_("Slide with questions must be marked as done when submitting all good answers "))
+            raise UserError(_("Slide with questions must be marked as done when submitting all good answers "))
         if slide.website_published and slide.channel_id.is_member:
             slide.action_set_completed()
         return True
@@ -131,7 +131,7 @@ class WebsiteSlides(WebsiteProfile):
                     'id': answer.id,
                     'text_value': answer.text_value,
                     'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None,
-                    'comment': answer.comment if request.website.is_publisher else None
+                    'comment': answer.comment if request.website.is_publisher() else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
@@ -563,12 +563,13 @@ class WebsiteSlides(WebsiteProfile):
         }
 
         if not request.env.user._is_public():
+            subtype_comment_id = request.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             last_message = request.env['mail.message'].search([
                 ('model', '=', channel._name),
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('is_internal', '=', False)
+                ('subtype_id', '=', subtype_comment_id)
             ], order='write_date DESC', limit=1)
 
             if last_message:
@@ -677,7 +678,12 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):
-        return request.env['slide.channel'].browse(channel_id).message_subscribe(partner_ids=[request.env.user.partner_id.id])
+        # Presentation Published subtype
+        subtype = request.env.ref("website_slides.mt_channel_slide_published", raise_if_not_found=False)
+        if subtype:
+            return request.env['slide.channel'].browse(channel_id).message_subscribe(
+                partner_ids=[request.env.user.partner_id.id], subtype_ids=subtype.ids)
+        return True
 
     @http.route(['/slides/channel/unsubscribe'], type='json', auth='user', website=True)
     def slide_channel_unsubscribe(self, channel_id):
@@ -692,6 +698,9 @@ class WebsiteSlides(WebsiteProfile):
     def slide_view(self, slide, **kwargs):
         if not slide.channel_id.can_access_from_current_website() or not slide.active:
             raise werkzeug.exceptions.NotFound()
+        # redirection to channel's homepage for category slides
+        if slide.is_category:
+            return request.redirect(slide.channel_id.website_url)
         self._set_viewed_slide(slide)
 
         values = self._get_slide_detail(slide)
@@ -769,7 +778,7 @@ class WebsiteSlides(WebsiteProfile):
         if fetch_res.get('error'):
             return fetch_res
         return {
-            'html_content': fetch_res['slide'].html_content
+            'html_content': request.env['ir.qweb.field.html'].record_to_html(fetch_res['slide'], 'html_content', {'template_options': {}})
         }
 
     @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
@@ -1144,6 +1153,8 @@ class WebsiteSlides(WebsiteProfile):
             referrer_url = request.httprequest.headers.get('Referer', '')
             base_url = slide.get_base_url()
             is_embedded = referrer_url and not bool(base_url in referrer_url) or False
+            if not slide.active:
+                raise werkzeug.exceptions.NotFound()
             if is_embedded:
                 request.env['slide.embed'].sudo()._add_embed_url(slide.id, referrer_url)
             values = self._get_slide_detail(slide)

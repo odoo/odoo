@@ -22,6 +22,8 @@ DEFAULT_EXCLUDE = [
 
 STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
+MAX_LINE_SIZE = 100000
+VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
 
 class Cloc(object):
     def __init__(self):
@@ -29,6 +31,7 @@ class Cloc(object):
         self.code = {}
         self.total = {}
         self.errors = {}
+        self.excluded = {}
         self.max_width = 70
 
     #------------------------------------------------------
@@ -56,25 +59,55 @@ class Cloc(object):
         except Exception:
             return (-1, "Syntax Error")
 
-    def parse_js(self, s):
+    def parse_c_like(self, s, regex):
         # Based on https://stackoverflow.com/questions/241327
         s = s.strip() + "\n"
         total = s.count("\n")
+        # To avoid to use too much memory we don't try to count file
+        # with very large line, usually minified file
+        if max(len(l) for l in s.split('\n')) > MAX_LINE_SIZE:
+            return -1, "Max line size exceeded"
+
         def replacer(match):
             s = match.group(0)
             return " " if s.startswith('/') else s
-        comments_re = re.compile(r'//.*?$|(?<!\\)/\*.*?\*/|\'(\\.|[^\\\'])*\'|"(\\.|[^\\"])*"', re.DOTALL|re.MULTILINE)
+
+        comments_re = re.compile(regex, re.DOTALL | re.MULTILINE)
         s = re.sub(comments_re, replacer, s)
         s = re.sub(r"\s*\n\s*", r"\n", s).lstrip()
         return s.count("\n"), total
 
+    def parse_js(self, s):
+        return self.parse_c_like(s, r'//.*?$|(?<!\\)/\*.*?\*/|\'(\\.|[^\\\'])*\'|"(\\.|[^\\"])*"')
+
+    def parse_scss(self, s):
+        return self.parse_c_like(s, r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"')
+
+    def parse_css(self, s):
+        return self.parse_c_like(s, r'/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"')
+
+    def parse(self, s, ext):
+        if ext == '.py':
+            return self.parse_py(s)
+        elif ext == '.js':
+            return self.parse_js(s)
+        elif ext == '.xml':
+            return self.parse_xml(s)
+        elif ext == '.css':
+            return self.parse_css(s)
+        elif ext == '.scss':
+            return self.parse_scss(s)
+
     #------------------------------------------------------
     # Enumeration
     #------------------------------------------------------
-    def book(self, module, item='', count=(0, 0)):
+    def book(self, module, item='', count=(0, 0), exclude=False):
         if count[0] == -1:
             self.errors.setdefault(module, {})
             self.errors[module][item] = count[1]
+        elif exclude and item:
+            self.excluded.setdefault(module, {})
+            self.excluded[module][item] = count
         else:
             self.modules.setdefault(module, {})
             if item:
@@ -99,7 +132,7 @@ class Cloc(object):
                 pass
         if not exclude:
             exclude = set()
-        for i in exclude_list:
+        for i in filter(None, exclude_list):
             exclude.update(str(p) for p in pathlib.Path(path).glob(i))
 
         module_name = os.path.basename(path)
@@ -112,19 +145,18 @@ class Cloc(object):
                     continue
 
                 ext = os.path.splitext(file_path)[1].lower()
-                if ext in ['.py', '.js', '.xml']:
-                    if os.path.getsize(file_path) > MAX_FILE_SIZE:
-                        self.book(module_name, file_path, (-1, "Max file size exceeded"))
-                        continue
+                if ext not in VALID_EXTENSION:
+                    continue
 
-                    with open(file_path, 'rb') as f:
-                        content = f.read().decode('latin1')
-                    if ext == '.py':
-                        self.book(module_name, file_path, self.parse_py(content))
-                    elif ext == '.js':
-                        self.book(module_name, file_path, self.parse_js(content))
-                    elif ext == '.xml':
-                        self.book(module_name, file_path, self.parse_xml(content))
+                if os.path.getsize(file_path) > MAX_FILE_SIZE:
+                    self.book(module_name, file_path, (-1, "Max file size exceeded"))
+                    continue
+
+                with open(file_path, 'rb') as f:
+                    # Decode using latin1 to avoid error that may raise by decoding with utf8
+                    # The chars not correctly decoded in latin1 have no impact on how many lines will be counted
+                    content = f.read().decode('latin1')
+                self.book(module_name, file_path, self.parse(content, ext))
 
     def count_modules(self, env):
         # Exclude standard addons paths
@@ -145,30 +177,110 @@ class Cloc(object):
                 self.count_path(module_path)
 
     def count_customization(self, env):
-        imported_module = ""
+        imported_module_sa = ""
         if env['ir.module.module']._fields.get('imported'):
-            imported_module = "OR (m.imported = TRUE AND m.state = 'installed')"
+            imported_module_sa = "OR (m.imported = TRUE AND m.state = 'installed')"
         query = """
-            SELECT s.id, m.name FROM ir_act_server AS s
-                LEFT JOIN ir_model_data AS d ON (d.res_id = s.id AND d.model = 'ir.actions.server')
-                LEFT JOIN ir_module_module AS m ON m.name = d.module
-            WHERE s.state = 'code' AND (m.name IS null {})
-        """.format(imported_module)
+                SELECT s.id, min(m.name), array_agg(d.module)
+                  FROM ir_act_server AS s
+             LEFT JOIN ir_model_data AS d
+                    ON (d.res_id = s.id AND d.model = 'ir.actions.server')
+             LEFT JOIN ir_module_module AS m
+                    ON m.name = d.module
+                 WHERE s.state = 'code' AND (m.name IS null {})
+              GROUP BY s.id
+        """.format(imported_module_sa)
         env.cr.execute(query)
-        data = {r[0]: r[1] for r in env.cr.fetchall()}
+        data = {r[0]: (r[1], r[2]) for r in env.cr.fetchall()}
         for a in env['ir.actions.server'].browse(data.keys()):
-            self.book(data[a.id] or "odoo/studio", "ir.actions.server/%s: %s" % (a.id, a.name), self.parse_py(a.code))
+            self.book(
+                data[a.id][0] or "odoo/studio",
+                "ir.actions.server/%s: %s" % (a.id, a.name),
+                self.parse_py(a.code),
+                '__cloc_exclude__' in data[a.id][1]
+            )
 
-        query = """
-            SELECT f.id, m.name FROM ir_model_fields AS f
-                LEFT JOIN ir_model_data AS d ON (d.res_id = f.id AND d.model = 'ir.model.fields')
-                LEFT JOIN ir_module_module AS m ON m.name = d.module
-            WHERE f.compute IS NOT null AND (m.name IS null {})
-        """.format(imported_module)
+        imported_module_field = ("'odoo/studio'", "")
+        if env['ir.module.module']._fields.get('imported'):
+            imported_module_field = ("min(m.name)", "AND m.imported = TRUE AND m.state = 'installed'")
+        # We always want to count manual compute field unless they are generated by studio
+        # the module should be odoo/studio unless it comes from an imported module install
+        # because manual field get an external id from the original module of the model
+        query = r"""
+                SELECT f.id, f.name, {}, array_agg(d.module)
+                  FROM ir_model_fields AS f
+             LEFT JOIN ir_model_data AS d ON (d.res_id = f.id AND d.model = 'ir.model.fields')
+             LEFT JOIN ir_module_module AS m ON m.name = d.module {}
+                 WHERE f.compute IS NOT null AND f.state = 'manual'
+              GROUP BY f.id, f.name
+        """.format(*imported_module_field)
         env.cr.execute(query)
-        data = {r[0]: r[1] for r in env.cr.fetchall()}
+        # Do not count field generated by studio
+        all_data = env.cr.fetchall()
+        data = {r[0]: (r[2], r[3]) for r in all_data if not ("studio_customization" in r[3] and not r[1].startswith('x_studio'))}
         for f in env['ir.model.fields'].browse(data.keys()):
-            self.book(data[f.id] or "odoo/studio", "ir.model.fields/%s: %s" % (f.id, f.name), self.parse_py(f.compute))
+            self.book(
+                data[f.id][0] or "odoo/studio",
+                "ir.model.fields/%s: %s" % (f.id, f.name),
+                self.parse_py(f.compute),
+                '__cloc_exclude__' in data[f.id][1]
+            )
+
+        if not env['ir.module.module']._fields.get('imported'):
+            return
+
+        # Count qweb view only from imported module and not studio
+        query = """
+            SELECT view.id, min(mod.name), array_agg(data.module)
+              FROM ir_ui_view view
+        INNER JOIN ir_model_data data ON view.id = data.res_id AND data.model = 'ir.ui.view'
+         LEFT JOIN ir_module_module mod ON mod.name = data.module AND mod.imported = True
+             WHERE view.type = 'qweb' AND data.module != 'studio_customization'
+          GROUP BY view.id
+            HAVING count(mod.name) > 0
+        """
+        env.cr.execute(query)
+        custom_views = {r[0]: (r[1], r[2]) for r in env.cr.fetchall()}
+        for view in env['ir.ui.view'].browse(custom_views.keys()):
+            module_name = custom_views[view.id][0]
+            self.book(
+                module_name,
+                "/%s/views/%s.xml" % (module_name, view.name),
+                self.parse_xml(view.arch_base),
+                '__cloc_exclude__' in custom_views[view.id][1]
+            )
+
+        # Count js, xml, css/scss file from imported module
+        query = r"""
+            SELECT attach.id, min(mod.name), array_agg(data.module)
+              FROM ir_attachment attach
+        INNER JOIN ir_model_data data ON attach.id = data.res_id AND data.model = 'ir.attachment'
+         LEFT JOIN ir_module_module mod ON mod.name = data.module AND mod.imported = True
+             WHERE attach.name ~ '.*\.(js|xml|css|scss)$'
+          GROUP BY attach.id
+            HAVING count(mod.name) > 0
+        """
+        env.cr.execute(query)
+        uploaded_file = {r[0]: (r[1], r[2]) for r in env.cr.fetchall()}
+        for attach in env['ir.attachment'].browse(uploaded_file.keys()):
+            module_name = uploaded_file[attach.id][0]
+            ext = os.path.splitext(attach.url)[1].lower()
+            if ext not in VALID_EXTENSION:
+                continue
+
+            if len(attach.datas) > MAX_FILE_SIZE:
+                self.book(module_name, attach.url, (-1, "Max file size exceeded"))
+                continue
+
+            # Decode using latin1 to avoid error that may raise by decoding with utf8
+            # The chars not correctly decoded in latin1 have no impact on how many lines will be counted
+            content = attach.raw.decode('latin1')
+            self.book(
+                module_name,
+                attach.url,
+                self.parse(content, ext),
+                '__cloc_exclude__' in uploaded_file[attach.id][1],
+            )
 
     def count_env(self, env):
         self.count_modules(env)
@@ -184,6 +296,7 @@ class Cloc(object):
     #------------------------------------------------------
     # Report
     #------------------------------------------------------
+    # pylint: disable=W0141
     def report(self, verbose=False, width=None):
         # Prepare format
         if not width:
@@ -205,6 +318,16 @@ class Cloc(object):
         code = sum(self.code.values())
         s += fmt.format(k='', lines=total, other=total - code, code=code)
         print(s)
+
+        if self.excluded and verbose:
+            ex = fmt.format(k="Excluded", lines="Line", other="Other", code="Code")
+            ex += hr
+            for m in sorted(self.excluded):
+                for i in sorted(self.excluded[m], key=lambda i: self.excluded[m][i][0], reverse=True):
+                    code, total = self.excluded[m][i]
+                    ex += fmt.format(k='    ' + i, lines=total, other=total - code, code=code)
+            ex += hr
+            print(ex)
 
         if self.errors:
             e = "\nErrors\n\n"

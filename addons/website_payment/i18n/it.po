@@ -5,21 +5,23 @@
 # Translators:
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -67,6 +69,11 @@ msgid "<b>Payment Method:</b>"
 msgstr "<b>Metodo di Pagamento:</b>"
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Nazione...</option>"
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
@@ -84,7 +91,7 @@ msgstr "<strong>Attenzione</strong> La valuta manca o non è corretta."
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "A donation has been made on your website"
-msgstr ""
+msgstr "È stata fatta una donazione sul tuo sito web"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -103,7 +110,7 @@ msgstr "Aggiungi una descrizione"
 #: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
 #, python-format
 msgid "Add new pre-filled option"
-msgstr ""
+msgstr "Aggiungi nuova opzione precompilata"
 
 #. module: website_payment
 #. openerp-web
@@ -156,11 +163,6 @@ msgstr ""
 #, python-format
 msgid "Country is required."
 msgstr "Paese è obbligatorio."
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
-msgid "Country..."
-msgstr "Nazione..."
 
 #. module: website_payment
 #. openerp-web
@@ -272,7 +274,7 @@ msgstr "È donazione"
 #: model:ir.model.fields,help:website_payment.field_account_payment__is_donation
 #: model:ir.model.fields,help:website_payment.field_payment_transaction__is_donation
 msgid "Is the payment a donation"
-msgstr ""
+msgstr "Se il pagamento è una donazione"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
@@ -315,6 +317,11 @@ msgstr "Un anno di scuola elementare."
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "One year in high school."
 msgstr "Un anno di scuola superiore."
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_website_page
+msgid "Page"
+msgstr "Pagina"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
@@ -437,7 +444,7 @@ msgstr "effettuata il"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Descriptions"
-msgstr ""
+msgstr "⌙ Descrizioni"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options

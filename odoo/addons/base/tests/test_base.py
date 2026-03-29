@@ -3,11 +3,15 @@
 
 import ast
 
+from textwrap import dedent
+
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
 class TestSafeEval(BaseCase):
@@ -16,12 +20,44 @@ class TestSafeEval(BaseCase):
         expected = (1, {"a": {2.5}}, [None, u"foo"])
         actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
         self.assertEqual(actual, expected)
+        # Test RETURN_CONST
+        self.assertEqual(const_eval('10'), 10)
 
     def test_expr(self):
         # NB: True and False are names in Python 2 not consts
         expected = 3 * 4
         actual = expr_eval('3 * 4')
         self.assertEqual(actual, expected)
+
+    def test_expr_eval_opcodes(self):
+        for expr, expected in [
+            ('3', 3),  # RETURN_CONST
+            ('[1,2,3,4][1:3]', [2, 3]),  # BINARY_SLICE
+        ]:
+            self.assertEqual(expr_eval(expr), expected)
+
+    def test_safe_eval_opcodes(self):
+        for expr, locals_dict, expected in [
+            ('[x for x in (1,2)]', {}, [1, 2]),  # LOAD_FAST_AND_CLEAR
+            ('list(x for x in (1,2))', {}, [1, 2]),  # END_FOR, CALL_INTRINSIC_1
+            ('v if v is None else w', {'v': False, 'w': 'foo'}, 'foo'),  # POP_JUMP_IF_NONE
+            ('v if v is not None else w', {'v': None, 'w': 'foo'}, 'foo'),  # POP_JUMP_IF_NOT_NONE
+            ('{a for a in (1, 2)}', {}, {1, 2}),  # RERAISE
+        ]:
+            self.assertEqual(safe_eval(expr, locals_dict=locals_dict), expected)
+
+    def test_safe_eval_exec_opcodes(self):
+        for expr, locals_dict, expected in [
+            ("""
+                def f(v):
+                    if v:
+                        x = 1
+                    return x
+                result = f(42)
+            """, {}, 1),  # LOAD_FAST_CHECK
+        ]:
+            safe_eval(dedent(expr), locals_dict=locals_dict, mode="exec", nocopy=True)
+            self.assertEqual(locals_dict['result'], expected)
 
     def test_01_safe_eval(self):
         """ Try a few common expressions to verify they work with safe_eval """
@@ -73,7 +109,8 @@ SAMPLES = [
 ]
 
 
-class TestBase(TransactionCase):
+@tagged('res_partner')
+class TestBase(TransactionCaseWithUserDemo):
 
     def _check_find_or_create(self, test_string, expected_name, expected_email, check_partner=False, should_create=False):
         partner = self.env['res.partner'].find_or_create(test_string)
@@ -88,12 +125,13 @@ class TestBase(TransactionCase):
     def test_00_res_partner_name_create(self):
         res_partner = self.env['res.partner']
         parse = res_partner._parse_partner_name
-        for text, name, mail in SAMPLES:
-            self.assertEqual((name, mail.lower()), parse(text))
-            partner_id, dummy = res_partner.name_create(text)
-            partner = res_partner.browse(partner_id)
-            self.assertEqual(name or mail.lower(), partner.name)
-            self.assertEqual(mail.lower() or False, partner.email)
+        for text, expected_name, expected_mail in SAMPLES:
+            with self.subTest(text=text):
+                self.assertEqual((expected_name, expected_mail.lower()), parse(text))
+                partner_id, dummy = res_partner.name_create(text)
+                partner = res_partner.browse(partner_id)
+                self.assertEqual(expected_name or expected_mail.lower(), partner.name)
+                self.assertEqual(expected_mail.lower() or False, partner.email)
 
         # name_create supports default_email fallback
         partner = self.env['res.partner'].browse(
@@ -511,7 +549,7 @@ class TestBase(TransactionCase):
         with self.assertRaises(RedirectWarning):
             test_partner.with_user(self.env.ref('base.user_admin')).toggle_active()
         with self.assertRaises(ValidationError):
-            test_partner.with_user(self.env.ref('base.user_demo')).toggle_active()
+            test_partner.with_user(self.user_demo).toggle_active()
 
         # Can archive the user but the partner stays active
         test_user.toggle_active()
@@ -563,6 +601,14 @@ class TestPartnerRecursion(TransactionCase):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
         ps = self.p1 + self.p2 + self.p3
         self.assertTrue(ps.write({'phone': '123456'}))
+
+    def test_111_res_partner_recursion_infinite_loop(self):
+        """ The recursion check must not loop forever """
+        self.p2.parent_id = False
+        self.p3.parent_id = False
+        self.p1.parent_id = self.p2
+        with self.assertRaises(ValidationError):
+            (self.p3|self.p2).write({'parent_id': self.p1.id})
 
 
 class TestParentStore(TransactionCase):
@@ -663,6 +709,35 @@ class TestGroups(TransactionCase):
         a = self.env['res.groups'].with_context(lang='en_US').create({'name': 'A'})
         b = a.copy()
         self.assertFalse(a.name == b.name)
+
+    def test_apply_groups(self):
+        a = self.env['res.groups'].create({'name': 'A'})
+        b = self.env['res.groups'].create({'name': 'B'})
+        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)]})
+
+        # C already implies A, we want both B+C to imply A
+        (b + c)._apply_group(a)
+
+        self.assertIn(a, b.implied_ids)
+        self.assertIn(a, c.implied_ids)
+
+    def test_remove_groups(self):
+        u = self.env['res.users'].create({'login': 'u', 'name': 'U'})
+
+        a = self.env['res.groups'].create({'name': 'A', 'users': [Command.set(u.ids)]})
+        b = self.env['res.groups'].create({'name': 'B', 'users': [Command.set(u.ids)]})
+        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)]})
+
+        # C already implies A, we want none of B+C to imply A
+        (b + c)._remove_group(a)
+
+        self.assertNotIn(a, b.implied_ids)
+        self.assertNotIn(a, c.implied_ids)
+
+        # Since B didn't imply A, removing A from the implied groups of (B+C)
+        # should not remove user U from A, even though C implied A, since C does
+        # not have U as a user
+        self.assertIn(u, a.users)
 
 
 class TestUsers(TransactionCase):

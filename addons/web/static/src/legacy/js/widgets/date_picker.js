@@ -31,7 +31,7 @@ var DateWidget = Widget.extend({
             locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
             minDate: moment({ y: 1000 }),
-            maxDate: moment({ y: 9999, M: 11, d: 31 }),
+            maxDate: moment({ y: 9999, M: 11, d: 31, h: 23, m: 59, s: 59 }),
             useCurrent: false,
             icons: {
                 time: 'fa fa-clock-o',
@@ -98,7 +98,7 @@ var DateWidget = Widget.extend({
             this.trigger("datetime_changed");
             return;
         }
-        var oldValue = this.getValue();
+        var oldValue = this.getValue() || this.options.defaultDate;
         if (this.isValid()) {
             this._setValueFromUi();
             var newValue = this.getValue();

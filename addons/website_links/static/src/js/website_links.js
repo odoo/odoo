@@ -49,6 +49,7 @@ var SelectBox = publicWidget.Widget.extend({
         this.$el.select2({
             placeholder: self.placeholder,
             allowClear: true,
+            formatNoMatches: false,
             createSearchChoice: function (term) {
                 if (self._objectExists(term)) {
                     return null;

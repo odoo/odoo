@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.misc import OrderedSet
 
 
 class StockMove(models.Model):
@@ -15,6 +16,17 @@ class StockMove(models.Model):
     show_subcontracting_details_visible = fields.Boolean(
         compute='_compute_show_subcontracting_details_visible'
     )
+
+    def _compute_display_assign_serial(self):
+        super(StockMove, self)._compute_display_assign_serial()
+        for move in self:
+            if not move.is_subcontract:
+                continue
+            productions = move._get_subcontract_production()
+            if not productions or move.has_tracking != 'serial':
+                continue
+            if productions._has_tracked_component() or productions[:1].consumption != 'strict':
+                move.display_assign_serial = False
 
     def _compute_show_subcontracting_details_visible(self):
         """ Compute if the action button in order to see moves raw is visible """
@@ -37,7 +49,8 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if not move._get_subcontract_production()._has_tracked_component():
+            productions = move._get_subcontract_production()
+            if not productions._has_tracked_component() and productions[:1].consumption == 'strict':
                 continue
             move.show_details_visible = True
         return res
@@ -73,7 +86,7 @@ class StockMove(models.Model):
         subcontracted product. Otherwise use standard behavior.
         """
         self.ensure_one()
-        if self._subcontrating_should_be_record() or self._subcontrating_can_be_record():
+        if self.state != 'done' and (self._subcontrating_should_be_record() or self._subcontrating_can_be_record()):
             return self._action_record_components()
         action = super(StockMove, self).action_show_details()
         if self.is_subcontract and all(p._has_been_recorded() for p in self._get_subcontract_production()):
@@ -105,12 +118,18 @@ class StockMove(models.Model):
         return super(StockMove, self - move_untouchable)._set_quantities_to_reservation()
 
     def _action_cancel(self):
+        productions_to_cancel_ids = OrderedSet()
         for move in self:
             if move.is_subcontract:
                 active_production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
                 moves = self.env.context.get('moves_todo')
                 if not moves or active_production not in moves.move_orig_ids.production_id:
-                    active_production.with_context(skip_activity=True).action_cancel()
+                    productions_to_cancel_ids.update(active_production.ids)
+
+        if productions_to_cancel_ids:
+            productions_to_cancel = self.env['mrp.production'].browse(productions_to_cancel_ids)
+            productions_to_cancel.with_context(skip_activity=True).action_cancel()
+
         return super()._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):
@@ -132,6 +151,10 @@ class StockMove(models.Model):
                 'is_subcontract': True,
                 'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
             })
+            if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
+                # We don't care if the MO decreases even when done since everything is handled through picking
+                continue
             move_to_not_merge |= move
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
@@ -141,12 +164,15 @@ class StockMove(models.Model):
         res |= super(StockMove, self - move_to_not_merge)._action_confirm(merge=merge, merge_into=merge_into)
         if subcontract_details_per_picking:
             self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
-        return res
+        return res.exists()
 
     def _action_record_components(self):
         self.ensure_one()
         production = self._get_subcontract_production()[-1:]
         view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
+        context = dict(self._context)
+        context.pop('default_picking_id', False)
+        context.pop('skip_consumption', False)
         return {
             'name': _('Subcontract'),
             'type': 'ir.actions.act_window',
@@ -156,7 +182,7 @@ class StockMove(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': production.id,
-            'context': self.env.context,
+            'context': context,
         }
 
     def _get_subcontract_bom(self):
@@ -221,3 +247,12 @@ class StockMove(models.Model):
                         'mo_id': production.id,
                         'product_qty': production.product_uom_qty - quantity_to_remove
                     }).change_prod_qty()
+
+    def _is_subcontract_return(self):
+        self.ensure_one()
+        subcontracting_location = self.picking_id.partner_id.with_company(self.company_id).property_stock_subcontractor
+        return (
+                not self.is_subcontract
+                and self.origin_returned_move_id.is_subcontract
+                and self.location_dest_id.id == subcontracting_location.id
+        )

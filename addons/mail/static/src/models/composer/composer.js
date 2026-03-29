@@ -119,6 +119,7 @@ function factory(dependencies) {
         _reset() {
             this.update({
                 attachments: clear(),
+                cannedResponses: clear(),
                 isLastStateChangeProgrammatic: true,
                 mentionedChannels: clear(),
                 mentionedPartners: clear(),
@@ -147,6 +148,7 @@ function factory(dependencies) {
             compute: '_computeCanPostMessage',
             default: false,
         }),
+        cannedResponses: one2many('mail.canned_response'),
         composerViews: one2many('mail.composer_view', {
             inverse: 'composer',
             isCausal: true,

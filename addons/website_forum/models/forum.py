@@ -159,7 +159,7 @@ class Forum(models.Model):
             self.update(default_stats)
             return
 
-        result = dict.fromkeys(self.ids, default_stats)
+        result = {cid: dict(default_stats) for cid in self.ids}
         read_group_res = self.env['forum.post'].read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id', 'views', 'child_count', 'favourite_count'],
@@ -226,7 +226,7 @@ class Forum(models.Model):
         self._update_website_count()
         return super(Forum, self).unlink()
 
-    @api.model
+    @api.model  # TODO: Remove me, this is not an `api.model` method
     def _tag_to_write_vals(self, tags=''):
         Tag = self.env['forum.tag']
         post_tags = []
@@ -235,7 +235,7 @@ class Forum(models.Model):
         for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
                 # check that not already created meanwhile or maybe excluded by the limit on the search
-                tag_ids = Tag.search([('name', '=', tag[1:])])
+                tag_ids = Tag.search([('name', '=', tag[1:]), ('forum_id', '=', self.id)])
                 if tag_ids:
                     existing_keep.append(int(tag_ids[0]))
                 else:
@@ -345,7 +345,7 @@ class Post(models.Model):
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
     parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', '=', self.forum_id.id)])
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', 'in', self.forum_id.ids)])
     child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
@@ -487,6 +487,7 @@ class Post(models.Model):
             post.karma_unlink = post.forum_id.karma_unlink_own if is_creator else post.forum_id.karma_unlink_all
             post.karma_comment = post.forum_id.karma_comment_own if is_creator else post.forum_id.karma_comment_all
             post.karma_comment_convert = post.forum_id.karma_comment_convert_own if is_creator else post.forum_id.karma_comment_convert_all
+            post.karma_flag = post.forum_id.karma_flag
 
             post.can_ask = is_admin or user.karma >= post.forum_id.karma_ask
             post.can_answer = is_admin or user.karma >= post.forum_id.karma_answer
@@ -498,7 +499,7 @@ class Post(models.Model):
             post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote or post.user_vote == 1
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
-            post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid == user))
+            post.can_view = post.can_close or post_sudo.active and (post_sudo.create_uid.karma > 0 or post_sudo.create_uid == user)
             post.can_display_biography = is_admin or post_sudo.create_uid.karma >= post.forum_id.karma_user_bio
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
@@ -508,10 +509,12 @@ class Post(models.Model):
         forum = self.env['forum.forum'].browse(forum_id)
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
-                match = re.escape(match)  # replace parenthesis or special char in regex
-                content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
+                escaped_match = re.escape(match)  # replace parenthesis or special char in regex
+                url_match = re.match(r'^.*href="(.*)".*', match) # extracting the link allows to rebuild a clean link tag
+                url = url_match.group(1)
+                content = re.sub(escaped_match, f'<a rel="nofollow" href="{url}">', content)
 
-        if self.env.user.karma <= forum.karma_editor:
+        if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
             content_match = re.search(filter_regexp, content, re.I)
             if content_match:
@@ -567,6 +570,9 @@ class Post(models.Model):
 
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
+        if 'forum_id' in vals:
+            forum = self.env['forum.forum'].browse(vals['forum_id'])
+            forum.check_access_rule('write')
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
 
@@ -793,22 +799,19 @@ class Post(models.Model):
         return False
 
     def vote(self, upvote=True):
+        self.ensure_one()
         Vote = self.env['forum.post.vote']
-        vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
-        new_vote = '1' if upvote else '-1'
-        voted_forum_ids = set()
-        if vote_ids:
-            for vote in vote_ids:
-                if upvote:
-                    new_vote = '0' if vote.vote == '-1' else '1'
-                else:
-                    new_vote = '0' if vote.vote == '1' else '-1'
-                vote.vote = new_vote
-                voted_forum_ids.add(vote.post_id.id)
-        for post_id in set(self._ids) - voted_forum_ids:
-            for post_id in self._ids:
-                Vote.create({'post_id': post_id, 'vote': new_vote})
-        return {'vote_count': self.vote_count, 'user_vote': new_vote}
+        existing_vote = Vote.search([('post_id', '=', self.id), ('user_id', '=', self._uid)])
+        new_vote_value = '1' if upvote else '-1'
+        if existing_vote:
+            if upvote:
+                new_vote_value = '0' if existing_vote.vote == '-1' else '1'
+            else:
+                new_vote_value = '0' if existing_vote.vote == '1' else '-1'
+            existing_vote.vote = new_vote_value
+        else:
+            Vote.create({'post_id': self.id, 'vote': new_vote_value})
+        return {'vote_count': self.vote_count, 'user_vote': new_vote_value}
 
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
@@ -1155,10 +1158,10 @@ class Tags(models.Model):
         ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
-    @api.depends("post_ids.tag_ids", "post_ids.state")
+    @api.depends("post_ids", "post_ids.tag_ids", "post_ids.state", "post_ids.active")
     def _get_posts_count(self):
         for tag in self:
-            tag.posts_count = len(tag.post_ids)
+            tag.posts_count = len(tag.post_ids)  # state filter is in field domain
 
     @api.model
     def create(self, vals):

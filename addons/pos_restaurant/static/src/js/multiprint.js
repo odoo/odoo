@@ -87,7 +87,7 @@ models.Orderline = models.Orderline.extend({
         json.mp_skip  = this.mp_skip;
         return json;
     },
-    set_quantity: function(quantity) {
+    set_quantity: function(quantity, keep_price) {
         if (this.pos.config.iface_printers && quantity !== this.quantity && this.printable()) {
             this.mp_dirty = true;
         }
@@ -122,6 +122,16 @@ models.Orderline = models.Orderline.extend({
             return '' + this.id;
         }
     },
+    getProductResumeKey: function(){
+        return this.get_product().id + " - " + this.get_full_product_name();
+    },
+    getLineResume: function(){
+        return {
+            pid: this.get_product().id,
+            product_name_wrapped: this.generate_wrapped_product_name(),
+            qties: {},
+        };
+    },
 });
 
 var _super_order = models.Order.prototype;
@@ -134,19 +144,22 @@ models.Order = models.Order.extend({
             }
             var qty  = Number(line.get_quantity());
             var note = line.get_note();
-            var product_id = line.get_product().id;
-            var product_name = line.get_full_product_name();
-            var p_key = product_id + " - " + product_name;
-            var product_resume = p_key in resume ? resume[p_key] : {
-                pid: product_id,
-                product_name_wrapped: line.generate_wrapped_product_name(),
-                qties: {},
-            };
+            const p_key = line.getProductResumeKey()
+            let product_resume = p_key in resume ? resume[p_key] : line.getLineResume();
             if (note in product_resume['qties']) product_resume['qties'][note] += qty;
             else product_resume['qties'][note] = qty;
             resume[p_key] = product_resume;
         });
         return resume;
+    },
+    getResumeInfo: function(pid, curr, note, qty){
+        return {
+            'id': pid,
+            'name': this.pos.db.get_product_by_id(pid).display_name,
+            'name_wrapped': curr.product_name_wrapped,
+            'note': note,
+            'qty': qty,
+        }
     },
     saveChanges: function(){
         this.saved_resume = this.build_line_resume();
@@ -154,6 +167,13 @@ models.Order = models.Order.extend({
             line.set_dirty(false);
         });
         this.trigger('change',this);
+        // We sync if the caller is not the current order.
+        // Otherwise, cached "changes" fields (mp_dirty, saved_resume)
+        // will be invalidated without reaching the server
+        const isTheCurrentOrder = this.pos.get_order() && this.pos.get_order().uid === this.uid;
+        if (!isTheCurrentOrder && this.server_id) {
+            this.pos.sync_from_server(null, [this], [this.uid]);
+        }
     },
     computeChanges: function(categories){
         var current_res = this.build_line_resume();
@@ -169,31 +189,12 @@ models.Order = models.Order.extend({
                 var old  = old_res[p_key] || {};
                 var pid = curr.pid;
                 var found = p_key in old_res && note in old_res[p_key]['qties'];
-
                 if (!found) {
-                    add.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': curr.product_name_wrapped,
-                        'note':     note,
-                        'qty':      curr['qties'][note],
-                    });
+                    add.push(this.getResumeInfo(pid, curr, note, curr['qties'][note]));
                 } else if (old['qties'][note] < curr['qties'][note]) {
-                    add.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': curr.product_name_wrapped,
-                        'note':     note,
-                        'qty':      curr['qties'][note] - old['qties'][note],
-                    });
+                    add.push(this.getResumeInfo(pid, curr, note, curr['qties'][note] - old['qties'][note]));
                 } else if (old['qties'][note] > curr['qties'][note]) {
-                    rem.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': curr.product_name_wrapped,
-                        'note':     note,
-                        'qty':      old['qties'][note] - curr['qties'][note],
-                    });
+                    rem.push(this.getResumeInfo(pid, curr, note, old['qties'][note] - curr['qties'][note]));
                 }
             }
         }
@@ -204,13 +205,7 @@ models.Order = models.Order.extend({
                 if (!found) {
                     var old = old_res[p_key];
                     var pid = old.pid;
-                    rem.push({
-                        'id':       pid,
-                        'name':     this.pos.db.get_product_by_id(pid).display_name,
-                        'name_wrapped': old.product_name_wrapped,
-                        'note':     note,
-                        'qty':      old['qties'][note],
-                    });
+                    rem.push(this.getResumeInfo(pid, old, note, old['qties'][note]));
                 }
             }
         }
@@ -300,13 +295,6 @@ models.Order = models.Order.extend({
     init_from_JSON: function(json){
         _super_order.init_from_JSON.apply(this,arguments);
         this.saved_resume = json.multiprint_resume && JSON.parse(json.multiprint_resume);
-        // Since the order summary structure has changed, we need to remove the old lines
-        // Otherwise, this fix deployment will lead to some errors
-        for (var key in this.saved_resume) {
-            if (this.saved_resume[key].pid == undefined) {
-                delete this.saved_resume[key];
-            }
-        }
     },
 });
 

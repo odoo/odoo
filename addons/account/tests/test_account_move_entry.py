@@ -11,6 +11,7 @@ from functools import reduce
 import json
 import psycopg2
 
+from collections import defaultdict
 
 @tagged('post_install', '-at_install')
 class TestAccountMove(AccountTestInvoicingCommon):
@@ -134,6 +135,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
         with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -241,6 +245,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can't remove the journal entry from a locked period.
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.date = fields.Date.from_string('2018-01-01')
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
 
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
@@ -479,6 +486,29 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
         ])
 
+    def test_misc_custom_tags(self):
+        tag = self.env['account.account.tag'].create({
+            'name': "test_misc_custom_tags",
+            'applicability': 'taxes',
+            'country_id': self.env.ref('base.us').id,
+        })
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'debit_line'
+            debit_line.account_id = self.company_data['default_account_revenue']
+            debit_line.debit = 1000
+            debit_line.tax_tag_ids.add(tag)
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'credit_line'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.credit = 1000
+        move = move_form.save()
+        self.assertRecordValues(move.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'debit': 1000.0,   'credit': 0.0,      'tax_tag_ids': tag.ids},
+            {'debit': 0.0,      'credit': 1000.0,   'tax_tag_ids': []},
+        ])
+
     def test_misc_prevent_unlink_posted_items(self):
         # You cannot remove journal items if the related journal entry is posted.
         self.test_move.action_post()
@@ -510,3 +540,304 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move.action_post()
 
         self.assertEqual(move.state, 'posted')
+
+    def test_invoice_like_entry_reverse_caba(self):
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'reconcile': True,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_final_account = self.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_base_amount_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
+        tax_tags = defaultdict(dict)
+        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                'name': '%s %s tag' % (line_type, repartition_type),
+                'applicability': 'taxes',
+                'country_id': self.env.ref('base.us').id,
+            })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],
+                }),
+            ],
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2016-01-01'),
+            'line_ids': [
+                (0, None, {
+                    'name': 'revenue line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                    'tax_ids': [(6, 0, tax.ids)],
+                    'tax_tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+                }),
+                (0, None, {
+                    'name': 'tax line 1',
+                    'account_id': tax_waiting_account.id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'tax_tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+                    'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                }),
+                (0, None, {
+                    'name': 'counterpart line',
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'debit': 1100.0,
+                    'credit': 0.0,
+                }),
+            ]
+        })
+        move.action_post()
+        # make payment
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'amount': 1100,
+            'date': move.date,
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment.action_post()
+        (payment.move_id + move).line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).reconcile()
+        # check caba move
+        partial_rec = move.mapped('line_ids.matched_credit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        expected_values = [
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_base_amount_account.id,
+                'debit': 1000.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': tax.ids,
+                'tax_tag_ids': tax_tags['invoice']['base'].ids,
+                'account_id': tax_base_amount_account.id,
+                'debit': 0.0,
+                'credit': 1000.0,
+            },
+
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_waiting_account.id,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': tax.id,
+                'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_ids': [],
+                'tax_tag_ids': tax_tags['invoice']['tax'].ids,
+                'account_id': tax_final_account.id,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+        ]
+        self.assertRecordValues(caba_move.line_ids, expected_values)
+        # unreconcile
+        debit_aml = move.line_ids.filtered('debit')
+        debit_aml.remove_move_reconcile()
+        # check caba move reverse is same as caba move with only debit/credit inverted
+        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', '=', caba_move.id)])
+        for value in expected_values:
+            value.update({
+                'debit': value['credit'],
+                'credit': value['debit'],
+            })
+        self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def _get_cache_count(self, model_name='account.move', field_name='name'):
+        model = self.env[model_name]
+        field = model._fields[field_name]
+        return len(self.env.cache.get_records(model, field))
+
+    def test_cache_invalidation(self):
+        self.env['account.move'].invalidate_cache()
+        lines = self.test_move.line_ids
+        # prefetch
+        lines.mapped('move_id.name')
+        # check account.move cache
+        self.assertEqual(self._get_cache_count(), 1)
+        self.env['account.move.line'].invalidate_cache(ids=lines.ids)
+        self.assertEqual(self._get_cache_count(), 0)
+
+    def test_misc_prevent_edit_tax_on_posted_moves(self):
+        # You cannot remove journal items if the related journal entry is posted.
+        self.test_move.action_post()
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
+             self.cr.savepoint():
+            self.test_move.line_ids.filtered(lambda l: l.tax_ids).tax_ids = False
+
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
+             self.cr.savepoint():
+            self.test_move.line_ids.filtered(lambda l: l.tax_line_id).tax_line_id = False
+
+        # You can remove journal items if the related journal entry is draft.
+        self.test_move.button_draft()
+        self.assertTrue(self.test_move.line_ids.unlink())
+
+    def test_account_root_multiple_companies(self):
+        account = self.env['account.account'].create({
+            'name': 'account',
+            'code': 'ZZ',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.env.company.id,
+        })
+        other_company = self.env['res.company'].create({'name': 'other company'})
+        self.env['account.account'].create({
+            'name': 'other account',
+            'code': 'ZZ',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': other_company.id,
+        })
+        self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2016-01-01'),
+            'line_ids': [
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': account.id,
+                    'debit': 500.0,
+                    'credit': 0.0,
+                }),
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                }),
+            ]
+        })
+        balance = self.env["account.move.line"].read_group(
+            [("account_id", "=", account.id)], ["balance:sum"], ["account_root_id"]
+        )[0]["balance"]
+        self.assertEqual(balance, 500)
+
+    def test_validate_move_wizard_with_auto_post_entry(self):
+        """ Test that the wizard to validate a move with auto_post is working fine. """
+        self.test_move.date = fields.Date.today() + relativedelta(months=3)
+        self.test_move.auto_post = True
+        wizard = self.env['validate.account.move'].with_context(active_model='account.move', active_ids=self.test_move.ids).create({})
+        wizard.force_post = True
+        wizard.validate_move()
+        self.assertTrue(self.test_move.state == 'posted')
+
+    def test_misc_with_taxes_reverse(self):
+        test_account = self.company_data['default_account_revenue']
+
+        # With a sale tax
+        sale_tax = self.company_data['default_tax_sale']
+
+        move_form = Form(self.env['account.move'])
+
+        with move_form.line_ids.new() as debit_line_form:
+            debit_line_form.name = 'debit'
+            debit_line_form.account_id = test_account
+            debit_line_form.debit = 115
+
+        with move_form.line_ids.new() as credit_line_form:
+            credit_line_form.name = 'credit'
+            credit_line_form.account_id = test_account
+            credit_line_form.credit = 100
+            credit_line_form.tax_ids.clear()
+            credit_line_form.tax_ids.add(sale_tax)
+
+        sale_move = move_form.save()
+
+        sale_invoice_rep_line = sale_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+
+        self.assertRecordValues(sale_move.line_ids.sorted(lambda x: -x.balance), [
+            # pylint: disable=C0326
+            {'name': 'debit', 'debit': 115.0, 'credit': 0.0, 'account_id': test_account.id, 'tax_ids': [],
+             'tax_base_amount': 0, 'tax_tag_invert': False, 'tax_repartition_line_id': False},
+            {'name': 'Tax 15.00%', 'debit': 0.0, 'credit': 15.0,
+             'account_id': self.company_data['default_account_tax_sale'].id, 'tax_ids': [], 'tax_base_amount': 100,
+             'tax_tag_invert': True, 'tax_repartition_line_id': sale_invoice_rep_line.id},
+            {'name': 'credit', 'debit': 0.0, 'credit': 100.0, 'account_id': test_account.id, 'tax_ids': sale_tax.ids,
+             'tax_base_amount': 0, 'tax_tag_invert': True, 'tax_repartition_line_id': False},
+        ])
+
+        # Same with a purchase tax
+        purchase_tax = self.company_data['default_tax_purchase']
+
+        move_form = Form(self.env['account.move'])
+
+        with move_form.line_ids.new() as credit_line_form:
+            credit_line_form.name = 'credit'
+            credit_line_form.account_id = test_account
+            credit_line_form.credit = 115
+
+        with move_form.line_ids.new() as debit_line_form:
+            debit_line_form.name = 'debit'
+            debit_line_form.account_id = test_account
+            debit_line_form.debit = 100
+            debit_line_form.tax_ids.clear()
+            debit_line_form.tax_ids.add(purchase_tax)
+
+        purchase_move = move_form.save()
+
+        purchase_invoice_rep_line = purchase_tax.invoice_repartition_line_ids.filtered(
+            lambda x: x.repartition_type == 'tax')
+        self.assertRecordValues(purchase_move.line_ids.sorted(lambda x: x.balance), [
+            # pylint: disable=C0326
+            {'name': 'credit', 'credit': 115.0, 'debit': 0.0, 'account_id': test_account.id, 'tax_ids': [],
+             'tax_base_amount': 0, 'tax_tag_invert': False, 'tax_repartition_line_id': False},
+            {'name': 'Tax 15.00%', 'credit': 0.0, 'debit': 15.0,
+             'account_id': self.company_data['default_account_tax_purchase'].id, 'tax_ids': [], 'tax_base_amount': 100,
+             'tax_tag_invert': False, 'tax_repartition_line_id': purchase_invoice_rep_line.id},
+            {'name': 'debit', 'credit': 0.0, 'debit': 100.0, 'account_id': test_account.id, 'tax_ids': purchase_tax.ids,
+             'tax_base_amount': 0, 'tax_tag_invert': False, 'tax_repartition_line_id': False},
+        ])

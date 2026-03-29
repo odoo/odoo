@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase
@@ -155,10 +156,10 @@ class TestInventory(TransactionCase):
         stock_confirmation_wizard.action_confirm()
 
         # check
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=False), 11.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 10.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 11.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=lot1, strict=True)), 1.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=lot1, strict=True).filtered(lambda q: q.lot_id)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, strict=True)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 2.0)
 
@@ -505,7 +506,10 @@ class TestInventory(TransactionCase):
         # quant without a cyclic inventory location should default to the company's annual inventory date
         quant_non_cyclic_loc = self.env['stock.quant'].search([('location_id', '=', no_cyclic_loc.id)])
         self.assertEqual(quant_non_cyclic_loc.inventory_date.month, int(no_cyclic_loc.company_id.annual_inventory_month))
-        self.assertEqual(quant_non_cyclic_loc.inventory_date.day, no_cyclic_loc.company_id.annual_inventory_day)
+        # in case of leap year, ensure we select a feasiable day for next year since inventory_date should default to last
+        # day of the month if annual_inventory_day is greater than number of days in that month
+        next_annual_inventory_day = min((today + relativedelta(years=1)).day, no_cyclic_loc.company_id.annual_inventory_day)
+        self.assertEqual(quant_non_cyclic_loc.inventory_date.day, next_annual_inventory_day)
 
         quant_new_loc.inventory_quantity = 10
         (quant_new_loc | quant_existing_loc | quant_non_cyclic_loc).action_apply_inventory()
@@ -517,4 +521,4 @@ class TestInventory(TransactionCase):
         self.assertEqual(existing_loc2.next_inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_new_loc.inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_existing_loc.inventory_date, date.today() + timedelta(days=2))
-        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + timedelta(days=365))
+        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + relativedelta(years=1))

@@ -542,6 +542,9 @@ var NumericField = InputField.extend({
         const kbdEvt = ev.originalEvent;
         if (kbdEvt && utils.isNumpadDecimalSeparatorKey(kbdEvt)) {
             const inputField = this.$input[0];
+            if (inputField.type === 'number') {
+                return this._super(...arguments);
+            }
             const curVal = inputField.value;
             const from = inputField.selectionStart;
             const to = inputField.selectionEnd;
@@ -780,16 +783,7 @@ var FieldDateRange = InputField.extend({
     _renderEdit: function () {
         this._super.apply(this, arguments);
         var self = this;
-        var startDate;
-        var endDate;
-        if (this.relatedEndDate) {
-            startDate = this._formatValue(this.value);
-            endDate = this._formatValue(this.recordData[this.relatedEndDate]);
-        }
-        if (this.relatedStartDate) {
-            startDate = this._formatValue(this.recordData[this.relatedStartDate]);
-            endDate = this._formatValue(this.value);
-        }
+        const [startDate, endDate] = this._getDateRangeFromInputField();
         this.dateRangePickerOptions.startDate = startDate || moment();
         this.dateRangePickerOptions.endDate = endDate || moment();
 
@@ -840,16 +834,47 @@ var FieldDateRange = InputField.extend({
     },
     /**
      * Bind the scroll event handle when the daterangepicker is open.
+     * Update the begin and end date with the dates from the input values
      *
      * @private
      */
     _onDateRangePickerShow() {
+        const daterangepicker = this.$el.data('daterangepicker');
         this._onScroll = ev => {
             if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
-                this.$el.data('daterangepicker').hide();
+                daterangepicker.hide();
             }
         };
         window.addEventListener('scroll', this._onScroll, true);
+        const [startDate, endDate] = this._getDateRangeFromInputField();
+        if (this.formatType == 'datetime') {
+            if (startDate) {
+                startDate.utcOffset(session.getTZOffset(startDate));
+            }
+            if (endDate) {
+                endDate.utcOffset(session.getTZOffset(endDate));
+            }
+        }
+        daterangepicker.setStartDate(startDate || moment());
+        daterangepicker.setEndDate(endDate || moment());
+        daterangepicker.updateView();
+    },
+    /**
+     * Get the startDate and endDate of the daterangepicker from the input fields
+     * @returns [Date (moment object), Date (moment object)]
+     * @private
+     */
+    _getDateRangeFromInputField() {
+        let startDate, endDate;
+        if (this.relatedEndDate) {
+            startDate = this._getValue();
+            endDate = field_utils.parse[this.formatType](this.recordData[this.relatedEndDate]);
+        }
+        if (this.relatedStartDate) {
+            startDate = field_utils.parse[this.formatType](this.recordData[this.relatedStartDate]);
+            endDate = this._getValue();
+        }
+        return [startDate, endDate];
     },
 });
 
@@ -988,6 +1013,7 @@ var FieldDate = InputField.extend({
 
     /**
      * Confirm the value on hit enter and re-render
+     * It will also remove the offset to get the UTC value
      *
      * @private
      * @override
@@ -996,7 +1022,14 @@ var FieldDate = InputField.extend({
     async _onKeydown(ev) {
         this._super(...arguments);
         if (ev.which === $.ui.keyCode.ENTER) {
-            await this._setValue(this.$input.val());
+            let value = this.$input.val();
+            try {
+                value = this._parseValue(value);
+                if (this.datewidget.type_of_date === "datetime") {
+                    value.add(-this.getSession().getTZOffset(value), "minutes");
+                }
+            } catch (err) {}
+            await this._setValue(value);
             this._render();
         }
     },
@@ -1683,7 +1716,7 @@ var FieldEmail = InputField.extend({
     description: _lt("Email"),
     className: 'o_field_email',
     events: _.extend({}, InputField.prototype.events, {
-        'click': '_onClick',
+        'click': '_onClickLink',
     }),
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
@@ -1758,8 +1791,10 @@ var FieldEmail = InputField.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClick: function (ev) {
-        ev.stopPropagation();
+    _onClickLink: function (ev) {
+        if (ev.target.matches("a")) {
+            ev.stopImmediatePropagation();
+        }
     },
 });
 
@@ -1777,7 +1812,15 @@ var FieldPhone = FieldEmail.extend({
      * @private
      */
     _renderReadonly: function () {
-        this._super();
+        if (this.value) {
+            this.el.innerHTML = '';
+            this.el.classList.add("o_form_uri", "o_text_overflow");
+            const anchorEl = Object.assign(document.createElement('a'), {
+                text: this.value,
+                href: `${this.prefix}:${this.value.replace(/\s+/g, "")}`,
+            });
+            this.el.appendChild(anchorEl);
+        }
 
         // This class should technically be there in case of a very very long
         // phone number, but it breaks the o_row mechanism, which is more
@@ -2134,10 +2177,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         if (width) {
             $img.attr('width', width);
             $img.css('max-width', width + 'px');
+            if (!height) {
+                $img.css('height', 'auto');
+                $img.css('max-height', '100%');
+            }
         }
         if (height) {
             $img.attr('height', height);
             $img.css('max-height', height + 'px');
+            if (!width) {
+                $img.css('width', 'auto');
+                $img.css('max-width', '100%');
+            }
         }
         this.$('> img').remove();
         this.$el.prepend($img);
@@ -2235,10 +2286,18 @@ var CharImageUrl = AbstractField.extend({
             if (width) {
                 $img.attr('width', width);
                 $img.css('max-width', width + 'px');
+                if (!height) {
+                    $img.css('height', 'auto');
+                    $img.css('max-height', '100%');
+                }
             }
             if (height) {
                 $img.attr('height', height);
                 $img.css('max-height', height + 'px');
+                if (!width) {
+                    $img.css('width', 'auto');
+                    $img.css('max-width', '100%');
+                }
             }
             this.$('> img').remove();
             this.$el.prepend($img);
@@ -2466,7 +2525,7 @@ var PriorityWidget = AbstractField.extend({
     events: {
         'mouseover > a': '_onMouseOver',
         'mouseout > a': '_onMouseOut',
-        'click > a': '_onClick',
+        'click > a': '_onPriorityClick',
         'keydown > a': '_onKeydown',
     },
     supportedFieldTypes: ['selection'],
@@ -2589,7 +2648,7 @@ var PriorityWidget = AbstractField.extend({
      * @param {MouseEvent} event
      * @private
      */
-    _onClick: function (event) {
+    _onPriorityClick: function (event) {
         event.preventDefault();
         event.stopPropagation();
         var index = $(event.currentTarget).data('index');
@@ -2945,6 +3004,9 @@ var BooleanToggle = FieldBoolean.extend({
      * Adds the icon fa-check-circle if value is true else adds icon
      * fa-times-circle
      *
+     * The boolean_toggle should only be disabled when there is a readonly modifier
+     * not when the view is in readonly mode
+     *
      * @override
      */
     async _render() {
@@ -2956,6 +3018,8 @@ var BooleanToggle = FieldBoolean.extend({
         const i = document.createElement("i");
         i.setAttribute('class', `fa ${classToApply}`);
         this.el.querySelector('label').appendChild(i);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly || false;
+        this.$input.prop('disabled', isReadonly);
     },
 
     //--------------------------------------------------------------------------
@@ -2970,8 +3034,10 @@ var BooleanToggle = FieldBoolean.extend({
      */
     _onClick: async function (event) {
         event.stopPropagation();
-        await this._setValue(!this.value);
-        this._render();
+        if (!this.$input.prop('disabled')) {
+            await this._setValue(!this.value);
+            this._render();
+        }
     },
 });
 
@@ -3529,16 +3595,6 @@ var FieldDomain = AbstractField.extend({
         this.lastCountFetchKey = null; // used to prevent from unnecessary fetching the count
         this.debugEdition = false; // true iff the domain was edited with the textarea (in debug only)
     },
-    /**
-     * We use the on_attach_callback hook here when widget is attached to the DOM, so that
-     * the inline 'DomainSelector' widget allows field selector to overflow if widget is
-     * attached within a modal.
-     */
-    on_attach_callback() {
-        if (this.domainSelector && !this.inDialog) {
-            this.domainSelector.on_attach_callback();
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -4043,7 +4099,7 @@ var FieldColorPicker = FieldInteger.extend({
         _t('Green'),
         _t('Purple'),
     ],
-
+    widthInList: '1',
     /**
      * Prepares the rendering, since we are based on an input but not using it
      * setting tagName after parent init force the widget to not render an input

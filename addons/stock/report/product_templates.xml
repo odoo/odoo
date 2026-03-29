@@ -4,33 +4,32 @@
         <template id="label_product_product_view">
 		<t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
                 <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
-                <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">
-                    <t t-set="barcode" t-value="barcode_and_qty[0]"/>
-                    <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
+                <t t-foreach="barcode_and_qty_by_product[1]" t-as="product_info">
+                    <t t-set="barcode" t-value="product_info['barcode']"/>
+                    <t t-foreach="range(product_info['quantity'])" t-as="qty">
                         <t t-translation="off">
-^XA
-^FT100,80^A0N,40,30^FD<t t-esc="product.display_name"/>^FS
+^XA^CI28
+^FT100,80^A0N,40,30^FD<t t-out="product_info['display_name_markup']"/>^FS
 <t t-if="product.default_code and len(product.default_code) &gt; 15">
-^FT100,115^A0N,30,24^FD<t t-esc="product.default_code[:15]"/>^FS
-^FT100,150^A0N,30,24^FD<t t-esc="product.default_code[15:30]"/>^FS
+^FT100,115^A0N,30,24^FD<t t-out="product_info['default_code'][0]"/>^FS
+^FT100,150^A0N,30,24^FD<t t-out="product_info['default_code'][1]"/>^FS
 </t>
 <t t-else="">
-^FT100,150^A0N,30,24^FD<t t-esc="product.default_code"/>^FS
+^FT100,150^A0N,30,24^FD<t t-out="product_info['default_code'][0]"/>^FS
 </t>
 <t t-if="price_included">
 ^FO600,100,1
-^CI28
 <t t-if="product.currency_id.position == 'after'">
-^A0N,66,48^FH^FD<t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/><t t-esc="product.currency_id.symbol"/>^FS
+^A0N,66,48^FH^FD<t t-esc="product.lst_price if 'lst_price' in product else product.list_price" t-options='{"widget": "float", "precision": 2}'/><t t-esc="product.currency_id.symbol"/>^FS
 </t>
 <t t-if="product.currency_id.position == 'before'">
-^A0N,66,48^FH^FD<t t-esc="product.currency_id.symbol"/><t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
+^A0N,66,48^FH^FD<t t-esc="product.currency_id.symbol"/><t t-esc="product.lst_price if 'lst_price' in product else product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
 </t>
 </t>
 <t t-if="barcode">
 ^FO100,160^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="barcode"/>^FS
+^FD<t t-out="barcode"/>^FS
 </t>
 ^XZ
                         </t>
@@ -41,14 +40,14 @@
         <template id="label_lot_template_view">
             <t t-foreach="docs" t-as="lot">
                 <t t-translation="off">
-^XA
+^XA^CI28
 ^FO100,50
-^A0N,44,33^FD<t t-esc="lot.product_id.display_name"/>^FS
+^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
 ^FO100,100
-^A0N,44,33^FDLN/SN: <t t-esc="lot.name"/>^FS
+^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
 ^FO100,150^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="lot.name"/>^FS
+^FD<t t-out="lot['name']"/>^FS
 ^XZ
                 </t>
             </t>

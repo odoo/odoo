@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website.contactus" customize_show="True">
+        <!-- TODO review in master, many of the values added in the dict are -->
+        <!-- already in there initially -->
+        <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website.contactus">
             <xpath expr="//span[@data-for='contactus_form']" position="before">
                 <t t-set="contactus_form_values" t-value="dict(contactus_form_values, **{
                     'contact_name': request.params.get('contact_name', ''),

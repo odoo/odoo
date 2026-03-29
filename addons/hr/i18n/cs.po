@@ -13,16 +13,18 @@
 # Michal Veselý <michal@veselyberanek.net>, 2021
 # milda dvorak <milda.dvorak@optimal4.cz>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
+# Marek Reichstädter, 2022
+# Jiří Podhorecký, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -154,17 +156,17 @@ msgstr "<span class=\"ml8 mr-2\">Minimální počet odeslaných e-mailů </span>
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Close Activities</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_hr_form_label\">Zavřít Aktivity</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Detailed Reason</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_hr_form_label\">Podrobný důvod</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "<span class=\"o_form_label o_hr_form_label\">Personal Info</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_hr_form_label\">Osobní informace</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -201,7 +203,7 @@ msgstr "<span class=\"o_stat_text\">Připojen od</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee(s)</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Zaměstnanci</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -325,12 +327,12 @@ msgstr "Přidat nového zaměstnance"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_action
 msgid "Add a new plan"
-msgstr ""
+msgstr "Přidejte nový plán"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
 msgid "Add a new planning activity"
-msgstr ""
+msgstr "Přidejte novou plánovací aktivitu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -467,6 +469,13 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
+"Jako zaměstnanec naší společnosti budete <b>spolupracovat s každým oddělením na vytváření a nasazování\n"
+"                                převratných produktů.</b> Přijďte pracovat do rostoucí společnosti, která nabízí skvělé výhody s příležitostmi\n"
+"                                posouvat se kupředu a učit se spolu po boku uznávaných lídrů. Hledáme zkušeného a vynikajícího člena personálu.\n"
+"                                <br><br>\n"
+"                                Tato pozice je ze své podstaty <b>kreativní a přísná</b> a musíte na ni myslet mimo rámec.\n"
+"                                Očekáváme, že kandidát bude proaktivní a bude mít ducha \"udělej to\". Abyste byli úspěšní, budete\n"
+"                                mít pevné dovednosti řešit problémy."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -483,7 +492,7 @@ msgstr "Docházka"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance/Point of Sale"
-msgstr ""
+msgstr "Účast/Místo prodeje"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -710,7 +719,7 @@ msgstr "Firma"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Země společnosti"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -863,7 +872,7 @@ msgstr "Datum narození"
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
-msgstr ""
+msgstr "Výchozí důvody odchodu nemůžou být smazány."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -920,7 +929,7 @@ msgstr "Důvod odchodu"
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr ""
+msgstr "Důvody odchodu"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -1010,6 +1019,11 @@ msgid ""
 "                        Several activities are often organized all over the year, such as weekly\n"
 "                        sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Každý zaměstnanec má možnost vidět dopad svojí práce.\n"
+"                        Můžete se podílet na úspěchu firmy.\n"
+"                        <br>\n"
+"                        Často organizujeme v průběhu roku aktivity, například\n"
+"                        sportovní události jednou za týden, teambuildingy, společné drinky jednou za měsíc a mnoho dalšího"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1116,7 +1130,7 @@ msgstr "Štítky zaměstnanců"
 #: code:addons/hr/static/src/js/hr_employee.js:0
 #, python-format
 msgid "Employee Termination"
-msgstr ""
+msgstr "Výpověď zaměstnance"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
@@ -1187,7 +1201,7 @@ msgstr "Zaměstnanci"
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr ""
+msgstr "Počet zaměstnanců"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -1366,7 +1380,7 @@ msgstr "HR oddělení"
 #: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
 #: model:ir.cron,name:hr.ir_cron_data_check_work_permit_validity
 msgid "HR Employee: check work permit validity"
-msgstr ""
+msgstr "HR zaměstnanec: zkontrolujte platnost pracovního povolení"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1446,7 +1460,7 @@ msgstr "ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
 msgid "ID Card Copy"
-msgstr ""
+msgstr "Kopie občanského průkazu"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
@@ -1552,7 +1566,7 @@ msgstr "Je sledující"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
 msgid "Is System"
-msgstr ""
+msgstr "Je systém"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1716,7 +1730,7 @@ msgstr "Místo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
 msgid "Location Number"
-msgstr ""
+msgstr "Číslo místa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
@@ -1824,7 +1838,7 @@ msgstr "Termín mé aktivity"
 
 #. module: hr
 #. openerp-web
-#: code:addons/hr/static/src/xml/hr_templates.xml:0
+#: code:addons/hr/static/src/js/user_menu.js:0
 #, python-format
 msgid "My Profile"
 msgstr "Můj profil"
@@ -2003,6 +2017,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
+"Odoo struktura oddělení slouží ke správě všech dokumentů\n"
+"                    vztahujících se na zaměstnance oddělení: náklady, pracovní výkazy,\n"
+"                   pracovní volno, nábory atd."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -2011,6 +2028,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
+"Odoo struktura oddělení slouží ke správě všech dokumentů\n"
+"                vztahujících se na zaměstnance oddělení: náklady, pracovní výkazy,\n"
+"                pracovní volno, nábory atd."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -2054,6 +2074,9 @@ msgid ""
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
+"PIN slouží na přihlášení/odhlášení k kioskovém režimu aplikace Docházka "
+"(pokud je povoleno v Konfiguraci) a na změnu pokladníka v aplikaci Místo "
+"prodeje."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2238,7 +2261,7 @@ msgstr "Soukromá adresa"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
-msgstr ""
+msgstr "Soukromé město"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2248,7 +2271,7 @@ msgstr "Soukromý kontakt"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
-msgstr ""
+msgstr "Soukromá země"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
@@ -2271,22 +2294,22 @@ msgstr "Soukromý telefon"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
-msgstr ""
+msgstr "Stav soukromí"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
-msgstr ""
+msgstr "Soukromá ulice"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
-msgstr ""
+msgstr "Soukromá ulice 2"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
-msgstr ""
+msgstr "Soukromé PSČ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2346,7 +2369,7 @@ msgstr "Zaregistrujte si odjezd"
 #: code:addons/hr/models/res_partner.py:0
 #, python-format
 msgid "Related Employees"
-msgstr ""
+msgstr "Spříznění zaměstnanci"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2361,7 +2384,7 @@ msgstr "Spřízněný zaměstnanec"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee_ids
 msgid "Related employees based on their private address"
-msgstr ""
+msgstr "Příbuzní zaměstnanci na základě jejich soukromé adresy"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -2682,7 +2705,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
 msgid "The expected number of new employees must be positive."
-msgstr ""
+msgstr "Očekávaný počet nových zaměstnanců musí být kladný."
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2718,7 +2741,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The work permit of %(employee)s expires at %(date)s."
-msgstr ""
+msgstr "Pracovní povolení z %(employee)s vyprší za %(date)s."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -2886,7 +2909,7 @@ msgstr "Platné pracovní povolení pro Belgii"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
+msgid "Visa Expiration Date"
 msgstr "Datum vypršení víza"
 
 #. module: hr
@@ -2947,6 +2970,9 @@ msgid ""
 "               can easily find all the information you need for each person;\n"
 "               contact data, job position, availability, etc."
 msgstr ""
+"Stačí krátký pohled na obrazovku zaměstnance Odoo, abyste\n"
+"               mohli snadno najít všechny potřebné informace o každé osobě;\n"
+"               kontaktní údaje, pracovní pozici, dostupnost atd."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -2988,7 +3014,7 @@ msgstr "Místo práce"
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
-msgstr ""
+msgstr "Umístění"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
@@ -3013,7 +3039,7 @@ msgstr "Pracovní povolení"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
 msgid "Work Permit Expiration Date"
-msgstr ""
+msgstr "Konec pracovního povolení"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
@@ -3024,7 +3050,7 @@ msgstr "Č. pracovního povolení"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
 msgid "Work Permit Scheduled Activity"
-msgstr ""
+msgstr "Pracovní povolení plánované činnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -3064,10 +3090,17 @@ msgid "You cannot create recursive departments."
 msgstr "Nelze vytvořit rekurzivní oddělení."
 
 #. module: hr
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "You do not have access to this document."
+msgstr "K tomuto dokumentu nemáte přístup."
+
+#. module: hr
 #: code:addons/hr/models/res_config_settings.py:0
 #, python-format
 msgid "You should select at least one Advanced Presence Control option."
 msgstr ""
+"Měli byste vybrat alespoň jednu možnost rozšířeného ovládání přítomnosti."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3078,7 +3111,7 @@ msgstr "PSČ"
 #: code:addons/hr/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered employees"
-msgstr ""
+msgstr "adresy spojené s registrovanými zaměstnanci"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form

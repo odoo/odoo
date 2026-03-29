@@ -3,17 +3,17 @@
 # 	* google_recaptcha
 # 
 # Translators:
-# trendspotter <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
 "Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,6 +23,13 @@ msgstr ""
 #. module: google_recaptcha
 #: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
 msgid "<i class=\"fa fa-arrow-right\"/> Generate reCAPTCHA v3 keys"
+msgstr ""
+
+#. module: google_recaptcha
+#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
+msgid ""
+"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
+"1.0 is very likely a good interaction, 0.0 is very likely a bot"
 msgstr ""
 
 #. module: google_recaptcha
@@ -70,15 +77,6 @@ msgstr "Chráněno reCAPTCHA,"
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_private_key
 msgid "Secret Key"
 msgstr "Tajný klíč"
-
-#. module: google_recaptcha
-#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
-msgid ""
-"Should be between 0.0 and 1.0.\n"
-"1.0 is very likely a good interaction, 0.0 is very likely a bot"
-msgstr ""
-"Měla by se pohybovat mezi 0,0 a 1,0.\n"
-"1,0 je velmi pravděpodobně dobrá interakce, 0,0 je velmi pravděpodobně bot."
 
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key

@@ -128,7 +128,7 @@ class Lang(models.Model):
             except locale.Error:
                 continue
         if fail:
-            lc = locale.getdefaultlocale()[0]
+            lc = locale.getlocale()[0]
             msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
             _logger.warning(msg, lang, lc)
 
@@ -256,10 +256,6 @@ class Lang(models.Model):
         langs = self.with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
-    def action_archive(self):
-        self.ensure_one()
-        self.active = False
-
     def toggle_active(self):
         super().toggle_active()
         # Automatically load translation
@@ -281,10 +277,12 @@ class Lang(models.Model):
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
             raise UserError(_("Language code cannot be modified."))
         if vals.get('active') == False:
-            if self.env['res.users'].search_count([('lang', 'in', lang_codes)]):
+            if self.env['res.users'].with_context(active_test=True).search_count([('lang', 'in', lang_codes)]):
                 raise UserError(_("Cannot deactivate a language that is currently used by users."))
-            if self.env['res.partner'].search_count([('lang', 'in', lang_codes)]):
+            if self.env['res.partner'].with_context(active_test=True).search_count([('lang', 'in', lang_codes)]):
                 raise UserError(_("Cannot deactivate a language that is currently used by contacts."))
+            if self.env['res.users'].with_context(active_test=False).search_count([('lang', 'in', lang_codes)]):
+                raise UserError(_("You cannot archive the language in which Odoo was setup as it is used by automated processes."))
             # delete linked ir.default specifying default partner's language
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
@@ -334,6 +332,16 @@ class Lang(models.Model):
 
         return formatted
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+
+        if "name" not in default:
+            default["name"] = _("%s (copy)", self.name)
+        if "code" not in default:
+            default["code"] = _("%s (copy)", self.code)
+        if "url_code" not in default:
+            default["url_code"] = _("%s (copy)", self.url_code)
+        return super().copy_data(default=default)
 
 def split(l, counts):
     """

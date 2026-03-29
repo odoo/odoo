@@ -22,6 +22,14 @@ $spacer: 1rem !default; // Need to predefine as used below
 //
 // Settings for the `<body>` element.
 
+// Bootstrap uses $body-bg as default value for multiple variables but also in
+// the creation of CSS rules (not controlled by variables), which is wrong in
+// case of Odoo boxed layouts. In stable versions, this is fixed for default
+// variable values of critical components only. In 16.0, the problem increased
+// as $body-bg was even more used in BS 5.1.3. That will be fixed entirely in a
+// slightly less stable way: $body-bg will now be the boxed-layout color instead
+// of the behind-the-box color. In future bootstrap version (> 5.1.3), this
+// changed again so this logic may change again too.
 $body-bg: if(o-website-value('layout') != 'full', o-color('body'), o-color('o-cc1-bg')) !default;
 $body-color: o-color('o-cc1-text') or color-yiq(o-color('o-cc1-bg')) !default;
 
@@ -108,6 +116,10 @@ $input-border-width: o-website-value('input-border-width') !default;
 $input-border-radius: o-website-value('input-border-radius') !default;
 $input-border-radius-lg: o-website-value('input-border-radius-lg') !default;
 $input-border-radius-sm: o-website-value('input-border-radius-sm') !default;
+
+// Navs
+
+$nav-tabs-link-active-bg: o-color('o-cc1-bg') !default;
 
 // Navbar
 

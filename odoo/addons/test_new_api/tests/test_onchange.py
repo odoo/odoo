@@ -537,6 +537,20 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         self.assertFalse(called[0], "discussion.messages has been read")
 
+    def test_onchange_one2many_many2one_in_form(self):
+        order = self.env['test_new_api.monetary_order'].create({
+            'currency_id': self.env.ref('base.USD').id,
+        })
+
+        # this call to onchange() is made when creating a new line in field
+        # order.line_ids; check what happens when the line's form view contains
+        # the inverse many2one field
+        values = {'order_id': {'id': order.id, 'currency_id': order.currency_id.id}}
+        field_onchange = dict.fromkeys(['order_id', 'subtotal'], '')
+        result = self.env['test_new_api.monetary_order_line'].onchange(values, [], field_onchange)
+
+        self.assertEqual(result['value']['order_id'], (order.id, order.display_name))
+
     def test_onchange_inherited(self):
         """ Setting an inherited field should assign the field on the parent record. """
         foo, bar = self.env['test_new_api.multi.tag'].create([{'name': 'Foo'}, {'name': 'Bar'}])
@@ -584,6 +598,36 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(payment.tag_name, 'Bar')
         self.assertEqual(payment.tag_repeat, 3)
         self.assertEqual(payment.tag_string, 'BarBarBar')
+
+    @patch('odoo.fields.html_sanitize', return_value='<p>comment</p>')
+    def test_onchange_sanitize(self, patch):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment2.sanitize)
+
+        record = self.env['test_new_api.mixed'].create({
+            'comment2': '<p>comment</p>',
+        })
+
+        # in a perfect world this should be 1, but at the moment the value is
+        # sanitized twice during creation of the record
+        self.assertEqual(patch.call_count, 2)
+
+        # new value needs to be validated, so it is sanitized once more
+        record.comment2 = '<p>comment</p>'
+        self.assertEqual(patch.call_count, 3)
+
+        # the value is already sanitized for flushing
+        record.flush()
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db does not need to be sanitized
+        record.invalidate_cache()
+        record.comment2
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db during an onchange does not need to be sanitized
+        new_record = record.new(origin=record)
+        new_record.comment2
+        self.assertEqual(patch.call_count, 3)
 
 
 class TestComputeOnchange(common.TransactionCase):

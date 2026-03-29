@@ -42,14 +42,14 @@ class WebsiteVisitor(models.Model):
     country_flag = fields.Char(related="country_id.image_url", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
     timezone = fields.Selection(_tz_get, string='Timezone')
-    email = fields.Char(string='Email', compute='_compute_email_phone')
-    mobile = fields.Char(string='Mobile', compute='_compute_email_phone')
+    email = fields.Char(string='Email', compute='_compute_email_phone', compute_sudo=True)
+    mobile = fields.Char(string='Mobile', compute='_compute_email_phone', compute_sudo=True)
 
     # Visit fields
     visit_count = fields.Integer('# Visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
-    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics", groups="website.group_website_designer")
+    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics", groups="website.group_website_designer", search="_search_page_ids")
     page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
     last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
 
@@ -109,6 +109,11 @@ class WebsiteVisitor(models.Model):
             visitor.page_ids = [(6, 0, visitor_info['page_ids'])]
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
+
+    def _search_page_ids(self, operator, value):
+        if operator not in ('like', 'ilike', 'not like', 'not ilike', '=like', '=ilike', '=', '!='):
+            raise ValueError(_('This operator is not supported'))
+        return [('website_track_ids.page_id.name', operator, value)]
 
     @api.depends('website_track_ids.page_id')
     def _compute_last_visited_page_id(self):

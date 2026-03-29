@@ -50,7 +50,8 @@ class MrpWorkorder(models.Model):
             mo_account = wo.production_id.analytic_account_id
             wc_account = wo.workcenter_id.costs_hour_account_id
             if mo_account:
-                is_zero = float_is_zero(value, precision_rounding=mo_account.currency_id.rounding)
+                mo_currency = mo_account.currency_id or wo.company_id.currency_id
+                is_zero = float_is_zero(value, precision_rounding=mo_currency.rounding)
                 if wo.mo_analytic_account_line_id:
                     wo.mo_analytic_account_line_id.write({
                         'unit_amount': hours,
@@ -60,7 +61,8 @@ class MrpWorkorder(models.Model):
                     wo_to_link_mo_analytic_line += wo
                     mo_analytic_line_vals_list.append(wo._prepare_analytic_line_values(mo_account, hours, value))
             if wc_account and wc_account != mo_account:
-                is_zero = float_is_zero(value, precision_rounding=wc_account.currency_id.rounding)
+                wc_currency = wc_account.currency_id or wo.company_id.currency_id
+                is_zero = float_is_zero(value, precision_rounding=wc_currency.rounding)
                 if wo.wc_analytic_account_line_id:
                     wo.wc_analytic_account_line_id.write({
                         'unit_amount': hours,

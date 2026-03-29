@@ -127,6 +127,28 @@
     font-style: italic;
 }
 
+@media screen and (max-width: 768px) {
+    .pos .close-pos-popup {
+        overflow-y: auto;
+    }
+
+    .pos .close-pos-popup .footer {
+        display: flex;
+        flex-direction: column;
+        height: unset;
+    }
+
+    .pos .close-pos-popup .footer .button {
+        width: 90% !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .pos .close-pos-popup .footer .button:last-of-type {
+        margin-bottom: 10px;
+    }
+}
+
 .pos .close-pos-popup .footer .button {
     width: 150px;
 }

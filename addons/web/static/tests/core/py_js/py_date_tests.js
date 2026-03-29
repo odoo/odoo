@@ -16,15 +16,15 @@ QUnit.module("py", {}, () => {
         }
         const format = (n) => String(n).padStart(2, "0");
         const formatDate = (d) => {
-            const year = d.getUTCFullYear();
-            const month = format(d.getUTCMonth() + 1);
-            const day = format(d.getUTCDate());
+            const year = d.getFullYear();
+            const month = format(d.getMonth() + 1);
+            const day = format(d.getDate());
             return `${year}-${month}-${day}`;
         };
         const formatDateTime = (d) => {
-            const h = format(d.getUTCHours());
-            const m = format(d.getUTCMinutes());
-            const s = format(d.getUTCSeconds());
+            const h = format(d.getHours());
+            const m = format(d.getMinutes());
+            const s = format(d.getSeconds());
             return `${formatDate(d)} ${h}:${m}:${s}`;
         };
 
@@ -39,12 +39,12 @@ QUnit.module("py", {}, () => {
         QUnit.module("datetime.datetime");
 
         QUnit.test("datetime.datetime.now", (assert) => {
-            assert.ok(check("datetime.datetime.now().year", (d) => d.getUTCFullYear()));
-            assert.ok(check("datetime.datetime.now().month", (d) => d.getUTCMonth() + 1));
-            assert.ok(check("datetime.datetime.now().day", (d) => d.getUTCDate()));
-            assert.ok(check("datetime.datetime.now().hour", (d) => d.getUTCHours()));
-            assert.ok(check("datetime.datetime.now().minute", (d) => d.getUTCMinutes()));
-            assert.ok(check("datetime.datetime.now().second", (d) => d.getUTCSeconds()));
+            assert.ok(check("datetime.datetime.now().year", (d) => d.getFullYear()));
+            assert.ok(check("datetime.datetime.now().month", (d) => d.getMonth() + 1));
+            assert.ok(check("datetime.datetime.now().day", (d) => d.getDate()));
+            assert.ok(check("datetime.datetime.now().hour", (d) => d.getHours()));
+            assert.ok(check("datetime.datetime.now().minute", (d) => d.getMinutes()));
+            assert.ok(check("datetime.datetime.now().second", (d) => d.getSeconds()));
         });
 
         QUnit.test("various operations", (assert) => {
@@ -69,6 +69,24 @@ QUnit.module("py", {}, () => {
                 "datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()";
 
             assert.strictEqual(JSON.stringify(evaluateExpr(expr)), `"2021-09-16 18:00:00"`);
+        });
+
+        QUnit.test("to_utc in october with winter/summer change", (assert) => {
+            patchDate(2021, 9, 17, 10, 0, 0);
+            patchWithCleanup(Date.prototype, {
+                getTimezoneOffset() {
+                    const month = this.getMonth() // starts at 0;
+                    if (10 <= month || month <= 2) {
+                        //rough approximation
+                        return -60;
+                    } else {
+                        return -120;
+                    }
+                },
+            });
+            const expr =
+                "datetime.datetime(2022, 10, 17).to_utc()";
+            assert.strictEqual(JSON.stringify(evaluateExpr(expr)), `"2022-10-16 22:00:00"`);
         });
 
         QUnit.test("datetime.datetime.combine", (assert) => {

@@ -28,6 +28,9 @@ class EventMailScheduler(models.Model):
     def _selection_template_model(self):
         return super(EventMailScheduler, self)._selection_template_model() + [('sms.template', 'SMS')]
 
+    def _selection_template_model_get_mapping(self):
+        return {**super(EventMailScheduler, self)._selection_template_model_get_mapping(), 'sms': 'sms.template'}
+
     notification_type = fields.Selection(selection_add=[('sms', 'SMS')], ondelete={'sms': 'set default'})
 
     @api.depends('notification_type')
@@ -56,10 +59,18 @@ class EventMailScheduler(models.Model):
                     )
                     scheduler.update({
                         'mail_done': True,
-                        'mail_count_done': scheduler.event_id.seats_reserved + scheduler.event_id.seats_used,
+                        'mail_count_done': scheduler.event_id.seats_expected,
                     })
 
         return super(EventMailScheduler, self).execute()
+
+    @api.onchange('notification_type')
+    def set_template_ref_model(self):
+        super().set_template_ref_model()
+        mail_model = self.env['sms.template']
+        if self.notification_type == 'sms':
+            record = mail_model.search([('model', '=', 'event.registration')], limit=1)
+            self.template_ref = "{},{}".format('sms.template', record.id) if record else False
 
 
 class EventMailRegistration(models.Model):

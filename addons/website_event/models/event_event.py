@@ -62,7 +62,7 @@ class Event(models.Model):
         readonly=False, store=True)
     location_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Location Menus",
-        domain=[("menu_type", "=", "location_menu")])
+        domain=[("menu_type", "=", "location")])
     register_menu = fields.Boolean(
         "Register Menu", compute="_compute_website_menu_data",
         readonly=False, store=True)
@@ -400,10 +400,10 @@ class Event(models.Model):
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'is_published' in init_values and self.is_published:
-            return self.env.ref('website_event.mt_event_published')
-        elif 'is_published' in init_values and not self.is_published:
-            return self.env.ref('website_event.mt_event_unpublished')
+        if init_values.keys() & {'is_published', 'website_published'}:
+            if self.is_published:
+                return self.env.ref('website_event.mt_event_published', raise_if_not_found=False)
+            return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
         return super(Event, self)._track_subtype(init_values)
 
     def _get_event_resource_urls(self):

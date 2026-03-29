@@ -28,11 +28,15 @@
                     <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
                     <field name="repartition_type"/>
                     <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), '|', ('country_id', '=', parent.country_id), ('country_id', '=', False)]"/>
+                    <field name="tag_ids"
+                           widget="many2many_tags"
+                           options="{'no_create': True}"
+                           domain="tag_ids_domain"/>
                     <field name="use_in_tax_closing"
                            optional="hidden"
                            attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="tag_ids_domain" invisible="1"/>
                 </tree>
             </field>
         </record>

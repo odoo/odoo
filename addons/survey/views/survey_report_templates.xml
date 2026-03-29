@@ -17,7 +17,7 @@
                             <p>This certificate is presented to
                                 <br/>
                                 <t t-set="certif_style" t-value="''"/>
-                                <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email"/>
+                                <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email or ''"/>
                                 <t t-if="certified_name.isupper()">
                                     <t t-set="certif_style" t-value="certif_style + 'font-family: certification-serif;'"/>
                                 </t>
@@ -68,7 +68,7 @@
                         <div t-if="user_input.scoring_success">
                             <p>This certificate is presented to
                                  <t t-set="certif_style" t-value="''"/>
-                                <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email"/>
+                                <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email or ''"/>
                                 <t t-if="certified_name.isupper()">
                                     <t t-set="certif_style" t-value="certif_style + 'font-family: certification-serif;'"/>
                                 </t>
@@ -78,6 +78,7 @@
                                 <t t-elif="len(certified_name) > 20">
                                     <t t-set="certif_style" t-value="certif_style + 'font-size: 30px; line-height: 4;'"/>
                                 </t>
+                                <br/>
                                 <span t-att-style="certif_style" class="user-name" t-esc="certified_name"/>
 
                                 <br/>by <span class="certification-company" t-field="user_input.env.company.display_name"/>

@@ -42,15 +42,6 @@ class Partner(models.Model):
             WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.id,))
         return self.env.cr.dictfetchall()[0].get('needaction_count')
 
-    def _get_starred_count(self):
-        """ compute the number of starred of the current partner """
-        self.ensure_one()
-        self.env.cr.execute("""
-            SELECT count(*) as starred_count
-            FROM mail_message_res_partner_starred_rel R
-            WHERE R.res_partner_id = %s """, (self.id,))
-        return self.env.cr.dictfetchall()[0].get('starred_count')
-
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
@@ -83,6 +74,8 @@ class Partner(models.Model):
             raise ValueError(_('An email is required for find_or_create to work'))
 
         parsed_name, parsed_email = self._parse_partner_name(email)
+        if not parsed_email and assert_valid_email:
+            raise ValueError(_('%(email)s is not recognized as a valid email. This is required to create a new customer.'))
         if parsed_email:
             email_normalized = tools.email_normalize(parsed_email)
             if email_normalized:
@@ -118,12 +111,12 @@ class Partner(models.Model):
                 "user_id": main_user.id,
                 "is_internal_user": not partner.partner_share,
             }
-            if 'guest' in self.env.context:
+            if not self.env.user._is_internal():
                 partners_format[partner].pop('email')
         return partners_format
 
     def _message_fetch_failed(self):
-        """Returns all messages, sent by the current partner, that have errors, in
+        """Returns first 100 messages, sent by the current partner, that have errors, in
         the format expected by the web client."""
         self.ensure_one()
         messages = self.env['mail.message'].search([
@@ -132,7 +125,7 @@ class Partner(models.Model):
             ('res_id', '!=', 0),
             ('model', '!=', False),
             ('message_type', '!=', 'user_notification')
-        ])
+        ], limit=100)
         return messages._message_notification_format()
 
     def _get_channels_as_member(self):

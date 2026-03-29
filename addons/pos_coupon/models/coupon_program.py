@@ -28,7 +28,7 @@ class CouponProgram(models.Model):
         "This is automatically generated when promo_code is changed.",
     )
     pos_order_ids = fields.Many2many(
-        "pos.order", help="The PoS orders where this program is applied.",
+        "pos.order", help="The PoS orders where this program is applied.", copy=False
     )
     pos_order_count = fields.Integer(
         "PoS Order Count", compute="_compute_pos_order_count"
@@ -69,15 +69,27 @@ class CouponProgram(models.Model):
 
     @api.depends("rule_products_domain")
     def _compute_valid_product_ids(self):
+        domain_products = {}
         for program in self:
-            domain = ast.literal_eval(program.rule_products_domain) if program.rule_products_domain else []
-            program.valid_product_ids = self.env["product.product"].search(domain).ids
+            product_ids = domain_products.get(program.rule_products_domain)
+            if product_ids is None:
+                domain = ast.literal_eval(program.rule_products_domain) if program.rule_products_domain else []
+                product_ids = self.env["product.product"].search(domain, order="id").ids
+                domain_products[program.rule_products_domain] = product_ids
+            program.valid_product_ids = product_ids
 
     @api.depends("rule_partners_domain")
     def _compute_valid_partner_ids(self):
+        domain_partners = {}
         for program in self:
-            domain = ast.literal_eval(program.rule_partners_domain) if program.rule_partners_domain else []
-            program.valid_partner_ids = self.env["res.partner"].search(domain).ids
+            partner_ids = []
+            if program.rule_partners_domain and program.rule_partners_domain != "[]":
+                partner_ids = domain_partners.get(program.rule_partners_domain)
+                if partner_ids is None:
+                    domain = ast.literal_eval(program.rule_partners_domain)
+                    partner_ids = self.env["res.partner"].search(domain, order="id").ids
+                    domain_partners[program.rule_partners_domain] = partner_ids
+            program.valid_partner_ids = partner_ids
 
     @api.depends('pos_order_ids')
     def _compute_total_order_count(self):

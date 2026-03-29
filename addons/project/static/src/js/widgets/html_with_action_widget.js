@@ -15,9 +15,8 @@ export const FieldHtmlWithAction = FieldHtml.extend({
             bus.on("DOM_updated", this, () => {
                 const $editable = this.$el.find('.note-editable');
                 if ($editable.length) {
-                    const resizerHeight = this.$el.find('.o_wysiwyg_resizer').outerHeight();
-                    const newHeight = window.innerHeight - $editable.offset().top - resizerHeight - 1;
-                    $editable.outerHeight(newHeight);
+                    const minHeight = window.innerHeight - $editable.offset().top - 30;
+                    $editable.css('min-height', minHeight + 'px');
                 }
             });
         }

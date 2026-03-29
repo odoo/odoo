@@ -53,7 +53,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_61')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_eu_7_purchase_skr03" model="account.tax.template">
@@ -108,7 +108,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_61')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_eu_19_purchase_no_vst_skr03" model="account.tax.template">
@@ -229,6 +229,7 @@
                 (0,0, {
                     'factor_percent': -100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_96')],
                     'account_id': ref('account_1772'),
                 }),
 
@@ -249,6 +250,7 @@
                 (0,0, {
                     'factor_percent': -100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_96')],
                     'account_id': ref('account_1772'),
                 }),
 
@@ -259,7 +261,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_59')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_eu_sale_skr03" model="account.tax.template">
@@ -594,7 +596,7 @@
             <field name="description">19% USt</field>
             <field name="amount_type">percent</field>
             <field name="amount">19</field>
-            <field name="l10n_de_datev_code">13</field>
+            <field name="l10n_de_datev_code">3</field>
             <field name="type_tax_use">sale</field>
             <field name="price_include">False</field>
             <field name="active">True</field>
@@ -636,7 +638,7 @@
             <field name="description">7% USt</field>
             <field name="amount_type">percent</field>
             <field name="amount">7</field>
-            <field name="l10n_de_datev_code">12</field>
+            <field name="l10n_de_datev_code">2</field>
             <field name="type_tax_use">sale</field>
             <field name="price_include">False</field>
             <field name="active">True</field>
@@ -685,6 +687,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_87')],
                 }),
 
                 (0,0, {
@@ -696,6 +699,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_87')],
                 }),
 
                 (0,0, {
@@ -877,7 +881,7 @@
             <field name="amount">19</field>
             <field name="type_tax_use">sale</field>
             <field name="price_include">False</field>
-            <field name="active">True</field>
+            <field name="active">False</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -888,6 +892,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_80')],
                     'account_id': ref('account_1776'),
                 }),
             ]"/>
@@ -901,6 +906,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_80')],
                     'account_id': ref('account_1776'),
                 }),
             ]"/>
@@ -916,7 +922,7 @@
             <field name="amount">0</field>
             <field name="type_tax_use">sale</field>
             <field name="price_include">False</field>
-            <field name="active">True</field>
+            <field name="active">False</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -927,6 +933,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('account_1770'),
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_36')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -939,6 +947,8 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('account_1770'),
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_36')],
                 }),
             ]"/>
             <field name="tax_group_id" ref="tax_group_x"/>
@@ -951,7 +961,7 @@
             <field name="description">19% VSt</field>
             <field name="amount_type">percent</field>
             <field name="amount">19</field>
-            <field name="l10n_de_datev_code">19</field>
+            <field name="l10n_de_datev_code">9</field>
             <field name="type_tax_use">purchase</field>
             <field name="price_include">False</field>
             <field name="active">True</field>
@@ -991,7 +1001,7 @@
             <field name="description">7% VSt</field>
             <field name="amount_type">percent</field>
             <field name="amount">7</field>
-            <field name="l10n_de_datev_code">18</field>
+            <field name="l10n_de_datev_code">8</field>
             <field name="type_tax_use">purchase</field>
             <field name="price_include">False</field>
             <field name="active">True</field>
@@ -1253,7 +1263,7 @@
                     'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_26')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_ust_eu_skr03" model="account.tax.template">
@@ -1294,7 +1304,7 @@
                     'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_27')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_ust_19_13b_ausland_ohne_vst_skr03" model="account.tax.template">
@@ -1311,12 +1321,13 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1787'),
                 }),
             ]"/>
@@ -1324,16 +1335,17 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1787'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_ust_7_13b_ausland_ohne_vst_skr03" model="account.tax.template">
@@ -1350,12 +1362,13 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1785'),
                 }),
             ]"/>
@@ -1363,16 +1376,17 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1785'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_ust_19_13b_eu_ohne_vst_skr03" model="account.tax.template">
@@ -1395,6 +1409,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_47')],
                     'account_id': ref('account_1787'),
                 }),
             ]"/>
@@ -1408,10 +1423,11 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_47')],
                     'account_id': ref('account_1787'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_ust_7_13b_eu_ohne_vst_skr03" model="account.tax.template">
@@ -1434,6 +1450,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_47')],
                     'account_id': ref('account_1785'),
                 }),
             ]"/>
@@ -1447,10 +1464,11 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_47')],
                     'account_id': ref('account_1785'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_ust_19_13b_bau_ohne_vst_skr03" model="account.tax.template">
@@ -1473,6 +1491,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1787'),
                 }),
             ]"/>
@@ -1486,10 +1505,11 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1787'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_ust_7_13b_bau_ohne_vst_skr03" model="account.tax.template">
@@ -1512,6 +1532,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1785'),
                 }),
             ]"/>
@@ -1525,10 +1546,11 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                     'account_id': ref('account_1785'),
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_free_eu_skr03" model="account.tax.template">
@@ -1730,7 +1752,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_68')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60')],
                 }),
 
                 (0,0, {
@@ -1742,7 +1764,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_68')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60')],
                 }),
 
                 (0,0, {
@@ -1805,7 +1827,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_47')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_eu_7_purchase_goods_skr03" model="account.tax.template">
@@ -1860,7 +1882,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_47')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_ust_vst_19_purchase_13b_bau_skr03" model="account.tax.template">
@@ -1877,7 +1899,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60'), ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -1898,7 +1920,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60'), ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -1915,7 +1937,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_ust_vst_7_purchase_13b_bau_skr03" model="account.tax.template">
@@ -1932,7 +1954,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60'), ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -1953,7 +1975,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60'), ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -1970,7 +1992,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_vst_ust_19_purchase_13b_mobil_skr03" model="account.tax.template">
@@ -1987,7 +2009,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_78')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60'), ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -2001,14 +2023,14 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_1787'),
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_79')]
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_78')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_60'), ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -2022,10 +2044,10 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_1787'),
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_79')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_vst_ust_19_purchase_3eck_last_skr03" model="account.tax.template">
@@ -2078,7 +2100,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_69')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_vst_ust_19_purchase_13b_werk_ausland_skr03" model="account.tax.template">
@@ -2095,7 +2117,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -2109,14 +2131,14 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_1783'),
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_53')]
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -2130,10 +2152,10 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_1783'),
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_53')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_vst_ust_7_purchase_13b_werk_ausland_skr03" model="account.tax.template">
@@ -2150,7 +2172,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -2164,14 +2186,14 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_1783'),
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_53')]
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')]
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_52')],
+                    'minus_report_line_ids': [ref('l10n_de.tax_report_de_tag_84')],
                 }),
 
                 (0,0, {
@@ -2185,10 +2207,10 @@
                     'factor_percent': -100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_1783'),
-                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_53')],
+                    'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_85')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="tax_vst_ust_19_purchase_13a_auslagerung_skr03" model="account.tax.template">
@@ -2241,7 +2263,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_69')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_19"/>
         </record>
 
         <record id="tax_vst_ust_7_purchase_13a_auslagerung_skr03" model="account.tax.template">
@@ -2294,7 +2316,7 @@
                     'plus_report_line_ids': [ref('l10n_de.tax_report_de_tag_69')],
                 }),
             ]"/>
-            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="tax_group_id" ref="tax_group_7"/>
         </record>
 
         <record id="fiscal_position_domestic_skr03" model="account.fiscal.position.template">
@@ -2322,6 +2344,7 @@
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
             <field name="name">Geschäftspartner EU (mit USt-ID)</field>
             <field name="auto_apply" eval="True" />
+            <field name="vat_required" eval="True" />
             <field name="country_group_id" ref="base.europe"></field>
         </record>
 

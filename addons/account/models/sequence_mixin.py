@@ -104,7 +104,7 @@ class SequenceMixin(models.AbstractModel):
                     return ret_val
         raise ValidationError(_(
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
-            '^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+            r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
         ))
 
     def _get_last_sequence_domain(self, relaxed=False):
@@ -133,7 +133,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None):
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -158,27 +158,29 @@ class SequenceMixin(models.AbstractModel):
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
             raise ValidationError(_('%s is not a stored field', self._sequence_field))
         where_string, param = self._get_last_sequence_domain(relaxed)
-        if self.id or self.id.origin:
+        if self._origin.id:
             where_string += " AND id != %(id)s "
-            param['id'] = self.id or self.id.origin
-        if with_prefix:
+            param['id'] = self._origin.id
+        if with_prefix is not None:
             where_string += " AND sequence_prefix = %(with_prefix)s "
             param['with_prefix'] = with_prefix
 
-        query = """
-            UPDATE {table} SET write_date = write_date WHERE id = (
-                SELECT id FROM {table}
+        query = f"""
+                SELECT {{field}} FROM {self._table}
                 {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {table} {where_string} ORDER BY id DESC LIMIT 1)
+                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
                 ORDER BY sequence_number DESC
                 LIMIT 1
+        """
+        if lock:
+            query = f"""
+            UPDATE {self._table} SET write_date = write_date WHERE id = (
+                {query.format(field='id')}
             )
-            RETURNING {field};
-        """.format(
-            table=self._table,
-            where_string=where_string,
-            field=self._sequence_field,
-        )
+            RETURNING {self._sequence_field};
+            """
+        else:
+            query = query.format(field=self._sequence_field)
 
         self.flush([self._sequence_field, 'sequence_number', 'sequence_prefix'])
         self.env.cr.execute(query, param)
@@ -268,7 +270,7 @@ class SequenceMixin(models.AbstractModel):
             seq = format_values.pop('seq')
             batch = batched[(format, frozendict(format_values))]
             batch['seq_list'].append(seq)
-            if batch['last_rec'].sequence_number < record.sequence_number:
+            if batch['last_rec'].sequence_number <= record.sequence_number:
                 batch['last_rec'] = record
 
         for values in batched.values():

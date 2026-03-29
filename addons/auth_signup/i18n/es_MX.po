@@ -4,27 +4,23 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:0
-#, python-format
-msgid "%s connected"
-msgstr "%s conectado"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -107,7 +103,7 @@ msgstr ""
 "                </td>\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Estimado <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
+"                        Apreciable <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br/> <br/>\n"
 "                        Agregó a los siguientes usuarios a su base de datos pero aún no se han registrado:\n"
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
@@ -226,7 +222,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Bienvenido a Odoo</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Le damos la bienvenida a Odoo</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
 "                    </span>\n"
@@ -245,8 +241,8 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Estimado <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"                        <t t-out=\"object.create_uid.name or ''\">OdooBot</t> de <t t-out=\"object.company_id.name or ''\">YourCompany</t> le invitó a conectarse con Odoo.\n"
+"                        Apreciable <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                        <t t-out=\"object.create_uid.name or ''\">OdooBot</t> de <t t-out=\"object.company_id.name or ''\">YourCompany</t> le está invitando a conectarse a Odoo.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Aceptar invitación\n"
@@ -255,11 +251,11 @@ msgstr ""
 "                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
 "                        Su dominio de Odoo es: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br/>\n"
 "                        Su correo electrónico de inicio de sesión es: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br/><br/>\n"
-"                        ¿Nunca ha escuchado de Odoo? Es un software empresarial todo-en-uno que le encanta a más de 7 millones de usuarios. Mejorará considerablemente su experiencia en el trabajo e incrementará su productividad.\n"
+"                        ¿No sabe qué es Odoo? Es un software empresarial todo en uno con una comunidad de más de 7 millones de usuarios que mejorará su experiencia en el trabajo de forma significativa e incrementará su productividad.\n"
 "                        <br/><br/>\n"
-"                        Eche un vistazo al <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Recorrido de Odoo</a> para descubrir nuestra herramienta.\n"
+"                        Siga el <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Recorrido de Odoo</a> para descubrir esta herramienta.\n"
 "                        <br/><br/>\n"
-"                        ¡Disfrute de Odoo!<br/>\n"
+"                        ¡Disfrute Odoo!<br/>\n"
 "                        --<br/>El equipo de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -291,11 +287,11 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- CON TECNOLOGÍA DE -->\n"
+"<!-- CON LA TECNOLOGÍA DE -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Con tecnología de <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Con la tecnología de <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -414,7 +410,7 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Estimado <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                        Apreciable <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
 "                        Se solicitó restablecer la contraseña de la cuenta de Odoo vinculada a este correo electrónico.\n"
 "                        Puede cambiar su contraseña al dar clic en este enlace, el cual será valido durante 24 horas:<br/>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
@@ -583,7 +579,7 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Estimado <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                        Apreciable <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
 "                        ¡Se creó con éxito su cuenta!<br/>\n"
 "                        Su cuenta es <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br/>\n"
 "                        Puede utilizar el siguiente enlace para obtener acceso a su cuenta:\n"
@@ -656,8 +652,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
-"Otro usuario ya se ha registrado usando esta dirección de correo electrónico"
+msgstr "Otro usuario ya se registró con esta dirección de correo electrónico."
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
@@ -748,7 +743,7 @@ msgstr "Cuenta de cliente"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr "Derechos de acceso predeterminados"
+msgstr "Permisos de acceso predeterminados"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -760,7 +755,7 @@ msgstr "¿No tiene una cuenta?"
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr ""
-"Habilitar restablecimiento de la contraseña desde la página de inicio de "
+"Habilite el restablecimiento de contraseñas desde la página de inicio de "
 "sesión"
 
 #. module: auth_signup
@@ -782,12 +777,18 @@ msgstr "Token de acceso inválido"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Deje que sus clientes inicien sesión para ver sus documentos"
+msgstr "Permita que sus clientes inicien sesión para ver sus documentos"
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this email"
+msgstr "Se encontraron varias cuentas para este correo electrónico."
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
-msgstr "Nunca se conecta"
+msgstr "Nunca se conectó"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -808,12 +809,12 @@ msgstr "Contraseña"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr "Restablecer contraseña"
+msgstr "Restablecimiento de contraseña"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Restablecer contraseña"
+msgstr "Se restableció la contraseña"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -936,13 +937,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr "No se llenó el formulario de forma correcta. "
-
-#. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:0
-#, python-format
-msgid "This is their first connection. Wish them luck."
-msgstr "Esta es su primera conexión. Deséeles suerte."
+msgstr "No se completó el formulario de forma correcta. "
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -970,13 +965,13 @@ msgstr "Usuarios: notificar sobre usuarios no registrados"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr "¡Bienvenido {{ object.company_id.name }}!"
+msgstr "¡Le damos la bienvenida a {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr "Un usuario archivado no puede realizar esta acción."
+msgstr "No puede realizar esta acción en un usuario archivado."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -992,7 +987,7 @@ msgstr "Su nombre"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "Ej. John Doe"
+msgstr "Por ejemplo, Juan Pérez"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -1001,4 +996,4 @@ msgid ""
 "to connect to Odoo"
 msgstr ""
 "{{ object.create_uid.name }} de {{ object.company_id.name }} le invita a "
-"conectarse con Odoo"
+"conectarse a Odoo"

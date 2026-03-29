@@ -6,12 +6,7 @@
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 385,
-    'description': """
-Worldline SIPS Payment Acquirer for online payments
-
-Implements the Worldline SIPS API for payment acquirers.
-Other SIPS providers may be compatible, though this is
-not guaranteed.""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

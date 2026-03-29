@@ -250,3 +250,28 @@ class TestHasGroup(TransactionCase):
 
         with self.assertRaises(ValidationError):
             user_b.write({"groups_id": [Command.link(group_C.id)]})
+
+    def test_has_group_cleared_cache_on_write(self):
+        self.registry._clear_cache()
+        self.assertFalse(self.registry._Registry__cache, "Ensure ormcache is empty")
+
+        def populate_cache():
+            self.test_user.has_group('test_user_has_group.group0')
+            self.assertTrue(self.registry._Registry__cache, "user.has_group cache must be populated")
+
+        populate_cache()
+
+        self.env.ref(self.group0).write({"share": True})
+        self.assertFalse(self.registry._Registry__cache, "Writing on group must invalidate user.has_group cache")
+
+        populate_cache()
+        # call_cache_clearing_methods is called in res.groups.write to invalidate
+        # cache before calling its parent class method (`odoo.models.Model.write`)
+        # as explain in the `res.group.write` comment.
+        # This verifies that calling `call_cache_clearing_methods()` invalidates
+        # the ormcache of method `user.has_group()`
+        self.env['ir.model.access'].call_cache_clearing_methods()
+        self.assertFalse(
+            self.registry._Registry__cache,
+            "call_cache_clearing_methods() must invalidate user.has_group cache"
+        )

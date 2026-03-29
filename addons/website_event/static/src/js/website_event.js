@@ -15,12 +15,13 @@ var EventRegistrationForm = Widget.extend({
      */
     start: function () {
         var self = this;
-        var res = this._super.apply(this.arguments).then(function () {
+        var res = this._super.apply(this, arguments).then(function () {
             $('#registration_form .a-submit')
                 .off('click')
                 .click(function (ev) {
                     self.on_click(ev);
-                });
+                })
+                .prop('disabled', false);
         });
         return res;
     },
@@ -51,7 +52,8 @@ var EventRegistrationForm = Widget.extend({
             return new Promise(function () {});
         } else {
             $button.attr('disabled', true);
-            return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
+            var action = $form.data('action') || $form.attr('action');
+            return ajax.jsonRpc(action, 'call', post).then(function (modal) {
                 var $modal = $(modal);
                 $modal.modal({backdrop: 'static', keyboard: false});
                 $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19

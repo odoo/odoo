@@ -5,11 +5,11 @@
 # Translators:
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
-# Trần Hà <tranthuha13590@gmail.com>, 2021
+# Vo Thanh Thuy, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Vo Thanh Thuy, 2022\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -33,31 +33,33 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
 msgid "Action Description"
-msgstr "Mô tả hành động"
+msgstr "Mô tả tác vụ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Action Name"
-msgstr "Tên hành động"
+msgstr "Tên tác vụ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "Cần thực hiện"
+msgstr "Tác vụ cần làm"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
 msgid "Action Type"
-msgstr "Kiểu Hành động"
+msgstr "Kiểu tác vụ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Đang hoạt động"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
@@ -67,12 +69,12 @@ msgstr "Hoạt động"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr "Kiểu tài khoản hoạt động"
+msgstr "Kiểu người dùng hoạt động"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
 msgid "Add Followers"
-msgstr "Thêm theo dõi"
+msgstr "Thêm người theo dõi"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -88,13 +90,13 @@ msgstr "Đã lưu"
 #: model:ir.model,name:base_automation.model_base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 msgid "Automated Action"
-msgstr "Thực hiện tự động"
+msgstr "Tác vụ tự động"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
 #: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
-msgstr "Hành động tự động"
+msgstr "Tác vụ tự động"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -106,7 +108,7 @@ msgstr "Tự động hoá"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr "Quy tắc thực thi cơ bản: kiểm tra và thực thi"
+msgstr "Quy tắc tác vụ cơ sở: kiểm tra và thực thi"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
@@ -126,22 +128,22 @@ msgstr "Trước khi cập nhật miền"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
 msgid "Binding Model"
-msgstr "Đối tượng Binding"
+msgstr "Mô hình gắn kết "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
-msgstr "Loại Binding"
+msgstr "Loại gắn kết"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
 msgid "Binding View Types"
-msgstr "Loại giao diện Binding"
+msgstr "Kiểu xem gắn kết "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
 msgid "Child Actions"
-msgstr "Hành động con"
+msgstr "Tác vụ con"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
@@ -149,8 +151,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Child server actions that will be executed. Note that the last return "
-"returned action value will be used as global return value."
+"Tác vụ máy chủ con sẽ không được thực thi. Lưu ý rằng giá trị tác vụ được "
+"trả lại cuối cùng sẽ được sử dụng làm giá trị trả lại toàn cục. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -175,7 +177,7 @@ msgid ""
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 "Trì hoãn sau ngày kích hoạt.\n"
-"                                     Bạn có thể đặt số âm nếu bạn cần độ trễ trước\n"
+"                                     Bạn có thể đặt số âm nếu bạn cần trì hoãn trước\n"
 "                                     ngày kích hoạt, như gửi lời nhắc 15 phút trước cuộc họp."
 
 #. module: base_automation
@@ -193,7 +195,7 @@ msgstr "Dạng trì hoãn"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr "Disable Action"
+msgstr "Tắt tác vụ"
 
 #. module: base_automation
 #. openerp-web
@@ -205,6 +207,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Tắt tác vụ tự động hóa này sẽ cho bạn tiếp tục luồng công việc\n"
+"                nhưng bất kỳ dữ liệu nào được tạo sau đây cũng có thể bị hỏng,\n"
+"                vì bạn đã tắt một tùy chỉnh có thể đã đặt \n"
+"                trường quan trọng và/hoặc trường bắt buộc."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -214,7 +220,7 @@ msgstr "Tên hiển thị"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "Ngày đáo hạn"
+msgstr "Hạn chót"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
@@ -226,7 +232,7 @@ msgstr "Loại thời hạn"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr "Edit action"
+msgstr "Sửa tác vụ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -236,7 +242,7 @@ msgstr "Mẫu email"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
-msgstr "External ID"
+msgstr "ID ngoài"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -261,7 +267,7 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr "ID của hành động nếu được xác định trong tệp XML"
+msgstr "ID của tác vụ nếu được xác định trong tệp XML"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -269,8 +275,8 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
-"Nếu có, điều kiện này phải được thỏa mãn trước khi thực hiện quy tắc hành "
-"động."
+"Nếu có, điều kiện này phải được thỏa mãn trước khi thực hiện quy tắc tác vụ."
+" "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -287,7 +293,7 @@ msgstr "Sửa lần cuối vào"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
 msgid "Last Run"
-msgstr "Chạy gần nhất"
+msgstr "Chạy lần cuối"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
@@ -302,7 +308,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
 msgid "Least Delay Msg"
-msgstr "Ít chậm trễ nhất Msg"
+msgstr "Tin nhắn ít trễ nhất"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
@@ -317,12 +323,12 @@ msgstr "Phút"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "Đối tượng"
+msgstr "Mô hình"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
 msgid "Model Name"
-msgstr "Tên đối tượng"
+msgstr "Tên mô hình"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__crud_model_id
@@ -330,13 +336,13 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Đối tượng để tạo / cập nhật hồ sơ. Chỉ chọn trường này để chỉ định một đối "
-"tượng khác với đối tượng gốc."
+"Mô hình để tạo / cập nhật hồ sơ. Chỉ đặt trường này để chỉ định mô hình khác"
+" với mô hình cơ sở. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the server action runs."
-msgstr "Đối tượng chạy trên máy chủ."
+msgstr "Mô hình chạy tác vụ máy chủ. "
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -354,12 +360,12 @@ msgstr "Ghi chú"
 msgid ""
 "Note that this action can be trigged up to %d minutes after its schedule."
 msgstr ""
-"Note that this action can be trigged up to %d minutes after its schedule."
+"Lưu ý là tác vụ này có thể được kích hoạt lên tới %d phút sau lịch trình."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr "Bật trình kích hoạt trường thay đổi"
+msgstr "Kích hoạt trường thay đổi"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -388,7 +394,7 @@ msgid ""
 " as its usage and purpose."
 msgstr ""
 "Văn bản trợ giúp tùy chọn cho người dùng có mô tả về chế độ xem mục tiêu, "
-"chẳng hạn như mục đích sử dụng và mục đích của nó."
+"chẳng hạn như cách sử dụng và mục đích của chế độ xem."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
@@ -396,8 +402,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
-"Cung cấp trường được sử dụng để liên kết bản ghi mới được tạo trên bản ghi "
-"được sử dụng bởi hành động máy chủ."
+"Cung cấp trường được sử dụng để liên kết hồ sơ mới được tạo với hồ sơ được "
+"sử dụng bởi tác vụ máy chủ. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -407,22 +413,22 @@ msgstr "Mã Python"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 msgid "Responsible"
-msgstr "Người phụ trách"
+msgstr "Phụ trách"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr "Quy tắc mã"
+msgstr "Trình tự"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "Hành động phía Máy chủ"
+msgstr "Tác vụ máy chủ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
 msgid "Server Actions"
-msgstr "Hành động Phía máy chủ"
+msgstr "Tác vụ máy chủ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
@@ -430,7 +436,7 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
-"Đặt giá trị làm cho hành động này có sẵn trong thanh bên cho mô hình đã cho."
+"Đặt giá trị làm cho tác vụ này có sẵn trong thanh bên cho mô hình đã cho."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -440,22 +446,22 @@ msgstr "Thiết lập tự động hóa mới"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
 msgid "Summary"
-msgstr "Tổng kết"
+msgstr "Tóm tắt"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Target Model"
-msgstr "Model mục tiêu"
+msgstr "Mô hình mục tiêu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model Name"
-msgstr "Target Model Name"
+msgstr "Tên mô hình mục tiêu"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr "Tên kĩ thuật của người dùng trên dữ liệu"
+msgstr "Tên kĩ thuật của người dùng trong hồ sơ"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -464,8 +470,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s chỉ có thể được dùng với loại "
-"\"%(state_value)s\" "
+"\"%(trigger_value)s\" %(trigger_label)s chỉ có thể được dùng với loại tác vụ"
+" \"%(state_value)s\" "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -473,8 +479,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
-"Hành động sẽ được kích hoạt nếu và chỉ khi một trong các trường này được cập"
-" nhật. Nếu trống, tất cả các trường đều được theo dõi."
+"Tác vụ sẽ được kích hoạt nếu và chỉ nếu một trong các trường này được cập "
+"nhật. Nếu để trống, mọi trường sẽ được theo dõi. "
 
 #. module: base_automation
 #. openerp-web
@@ -484,11 +490,13 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"Lỗi đã xuất hiện trong quá trình thực thi tác vụ tự động hóa\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger"
-msgstr "Bộ khởi động"
+msgstr "Kích hoạt"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
@@ -514,13 +522,13 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
 "Loại tác vụ của máy chủ. Dưới đây là các giá trị hiện có:\n"
-"- 'Dùng mã Python': thực thi một đoạn mã python\n"
-"- 'Tạo': tạo dữ liệu mới với giá trị mới\n"
+"- 'Thực thi mã python': thực thi một đoạn mã python\n"
+"- 'Tạo': tạo hồ sơ mới với giá trị mới\n"
 "- 'Cập nhật dữ liệu': cập nhật dữ liệu\n"
-"- 'Thực thi các tác vụ khác': quy định một hành động Kích hoạt các hoạt động khác\n"
-"- 'Gửi Email': tự động gửi email (trong Thảo luận)\n"
-"- 'Thêm người theo dõi': thêm người theo dõi (trong Thảo luận)\n"
-"- 'Tạo hoạt động kế tiếp': tạo hoạt động ( trong Thảo luận)"
+"- 'Thực thi các tác vụ khác': quy định một tác vụ kích hoạt các tác vụ khác\n"
+"- 'Gửi email': tự động gửi email (Thảo luận)\n"
+"- 'Thêm người theo dõi': thêm người theo dõi (Thảo luận)\n"
+"- 'Tạo hoạt động kế tiếp': tạo hoạt động (Thảo luận)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -537,8 +545,8 @@ msgid ""
 "on the record."
 msgstr ""
 "Dùng thông tin 'Người dùng cụ thể' để luôn chỉ định cùng một người dùng cho "
-"hoạt động tiếp theo. Sử dụng 'Người dùng chung từ dữ liệu' để chỉ định tên "
-"trường của người dùng sẽ chọn trên dữ liệu."
+"hoạt động tiếp theo. Sử dụng 'Người dùng chung từ hồ sơ' để chỉ định tên "
+"trường của người dùng để chọn trong hồ sơ. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -554,21 +562,21 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"Sử dụng các hành động tự động để tự động kích hoạt các hành động cho\n"
-"                 màn hình khác nhau. Ví dụ: một khách hàng tiềm năng được tạo bởi một người dùng cụ thể có thể\n"
-"                 được tự động đặt thành Nhóm bán hàng cụ thể hoặc một\n"
-"                 cơ hội vẫn còn tình trạng chờ xử lý sau 14 ngày\n"
-"                 kích hoạt một email nhắc nhở tự động."
+"Sử dụng các tác vụ tự động để tự động kích hoạt tác vụ trong \n"
+"                các màn hình khác nhau. Ví dụ: một lead được tạo bởi một người dùng\n"
+"                có thể được đặt tự động cho một Đội kinh doanh cụ thể, \n"
+"                hoặc một cơ hội vẫn ở trạng thái chờ sau 14 ngày có thể\n"
+"                kích hoạt email nhắc nhở tự động."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr "Tên trường"
+msgstr "Tên trường người dùng"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
-msgstr "Giá trị tương ứng"
+msgstr "Sơ đồ giá trị"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -583,8 +591,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"Khi tính toán điều kiện theo thời gian dựa trên ngày, có thể sử dụng lịch để"
-" tính toán ngày dựa trên ngày làm việc."
+"Khi tính toán điều kiện thời gian theo ngày, có thể sử dụng lịch để tính "
+"toán ngày dựa trên ngày làm việc."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -592,8 +600,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
-"Khi xử lý nhiều hành động, thứ tự thực hiện dựa trên chuỗi. Số thấp có nghĩa"
-" là ưu tiên cao."
+"Khi xử lý nhiều tác vụ, thứ tự thực thi được dựa vào trình tự. Số thấp nghĩa"
+" là ưu tiên cao. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -602,7 +610,7 @@ msgid ""
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "Khi nào thì điều kiện sẽ được kích hoạt.\n"
-"                                  Nếu có, sẽ được ghi nhận bởi công cụ chạy tự động. Nếu trống, sẽ được ghi nhận tại hàm tạo và chỉnh sửa."
+"                                  Nếu có, sẽ được kiểm tra bởi công cụ lập kế hoạch. Nếu trống, sẽ được kiểm tra khi tạo và cập nhật. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -615,8 +623,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
-"Viết mã Python mà hành động sẽ thực thi. Một số biến có sẵn để sử dụng; trợ "
-"giúp về biểu thức python được đưa ra trong tab trợ giúp."
+"Viết mã Python mà tác vụ sẽ thực thi. Có thể sử dụng một số biến có sẵn; trợ"
+" giúp về biểu thức python được cung cấp trong tab trợ giúp. "
 
 #. module: base_automation
 #. openerp-web
@@ -624,15 +632,15 @@ msgstr ""
 #, python-format
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
-msgstr ""
-"You can ask an administrator to disable or correct this automated action."
+msgstr "Bạn có thể yêu cầu quản trị viên tắt hoặc sửa tác vụ tự động hóa này."
 
 #. module: base_automation
 #. openerp-web
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
-msgstr "You can disable this automated action or edit it to solve the issue."
+msgstr ""
+"Bạn có thể tắt tác vụ tự động hóa hoặc chỉnh sửa để giải quyết vấn đề này."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -641,3 +649,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Bạn không thể gửi email, thêm người theo dõi hoặc tạo một hoạt động cho hồ "
+"sơ đã xóa. Việc này là hoàn toàn không thể."

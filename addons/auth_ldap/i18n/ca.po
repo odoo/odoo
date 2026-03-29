@@ -8,6 +8,7 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
 # Arnau Ros, 2021
 # jabelchi, 2021
+# AncesLatino2004, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: jabelchi, 2021\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: AncesLatino2004, 2022\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,6 +40,17 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filtre utilitzat per cercar comptes d'usuari a la base de dades LDAP. És un filtre LDAP arbitrari en la representació de cadena. Qualsevol marcador de posició \"%s\" serà substituït per l'inici de sessió (identificador) proporcionat per l'usuari, el filtre hauria de contenir almenys un marcador de posició.\n"
+"\n"
+"El filtre ha de donar com a resultat exactament un (1) resultat, en cas contrari, l'inici de sessió es considerarà no vàlid.\n"
+"\n"
+"Exemple (els atributs reals depenen del servidor LDAP i la configuració):\n"
+"\n"
+"(&(objectCategory=persona)(objectClass=usuari)(sAMAccountName=%s))\n"
+"\n"
+"o\n"
+"\n"
+"(|(correu=%s)(uid=%s))"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -90,6 +102,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN de l'àmbit de cerca d'usuaris: es buscaran usuaris a tots els descendents"
+" d'aquesta base."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name

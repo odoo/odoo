@@ -54,9 +54,36 @@ class TestEventData(TestEventCommon):
         event.write({
             'date_begin': datetime(2020, 1, 31, 14, 30, 0),
             'date_end': datetime(2020, 2, 1, 2, 0, 0),
-            'date_tz': 'Mexico/General'
+            'date_tz': 'America/Mexico_City'
         })
         self.assertTrue(event.is_one_day)
+
+        # Checks case when mocked today changes date before event, when event.date_tz considered
+        self.mock_datetime.now.return_value = datetime(2020, 6, 20, 20, 0, 0)
+        event.write({
+            'date_begin': datetime(2020, 6, 27, 1, 0, 0),
+            'date_end': datetime(2020, 7, 8, 2, 0, 0),
+            'date_tz': 'America/Los_Angeles'
+        })
+        # event_date_tz = 2020-06-26 18:00
+        # today_tz = 2020-06-20 13:00
+        # event_date_tz.date() - today_tz.date() = 6 days
+        self.assertEqual(registration.get_date_range_str(), u'in 6 days')
+
+        # Checks case when event changes date before mocked today, when event.date_tz considered
+        self.mock_datetime.now.return_value = datetime(2020, 6, 20, 13, 0, 0)
+        event.write({
+            'date_begin': datetime(2020, 6, 25, 20, 0, 0),
+            'date_end': datetime(2020, 7, 8, 2, 0, 0),
+            'date_tz': 'Australia/Sydney'
+        })
+        # event_date_tz = 2020-06-26 06:00
+        # today_tz = 2020-06-20 23:00
+        # event_date_tz.date() - today_tz.date() = 6 days
+        self.assertEqual(registration.get_date_range_str(), u'in 6 days')
+
+        # Resets mocked 'Today' value back to original
+        self.mock_datetime.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
 
     @users('user_eventmanager')
     def test_event_date_timezone(self):
@@ -65,7 +92,7 @@ class TestEventData(TestEventCommon):
         event.write({
             'date_begin': datetime(2020, 1, 31, 14, 30, 0),
             'date_end': datetime(2020, 2, 1, 2, 0, 0),
-            'date_tz': 'Mexico/General'
+            'date_tz': 'America/Mexico_City'
         })
         self.assertTrue(event.is_one_day)
         self.assertFalse(event.is_ongoing)

@@ -4,13 +4,20 @@
 from dateutil.relativedelta import relativedelta
 from odoo.fields import Datetime
 from odoo import tests
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.website_slides.tests.test_ui_wslides import TestUICommon
 
+
 @tests.common.tagged('post_install', '-at_install')
-class TestUi(TestUICommon):
+class TestUi(AccountTestInvoicingCommon, TestUICommon):
 
     def test_course_certification_employee(self):
         user_demo = self.user_demo
+        self.user_demo.write({
+            'company_id': self.env.company.id,
+            'company_ids': [(4, self.env.company.id)],
+        })
+        self.user_demo.sudo().partner_id.company_id = self.env.company
         user_demo.flush()
         # Avoid Billing/Shipping address page
         user_demo.write({
@@ -26,10 +33,21 @@ class TestUi(TestUICommon):
 
         # Specify Accounting Data
         cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env['payment.acquirer'].search([('provider', '=', 'test')]).write({
+        self.env['payment.acquirer'].create({
+            'name': 'Test',
+            'sequence': 40,
+            'provider': 'test',
+            'module_id': self.env.ref('base.module_payment_test').id,
+            'inline_form_view_id': self.env.ref('payment_test.inline_form').id,
+            'support_authorization': False,
+            'support_fees_computation': False,
+            'support_refund': False,
+            'support_tokenization': True,
+            'allow_tokenization': True,
             'journal_id': cash_journal.id,
-            'state': 'test'
+            'state': 'test',
         })
+        self.env.ref('website.default_website').company_id = self.env.company
         a_recv = self.env['account.account'].create({
             'code': 'X1012',
             'name': 'Debtors - (test)',

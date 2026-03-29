@@ -44,6 +44,10 @@
         display: block;
     }
 
+    .availability_messages {
+        display: none;
+    }
+
     .js_add,
     .oe_price,
     .oe_default_price,
@@ -195,9 +199,6 @@ label.css_attribute_color.css_not_available {
         &:not(.active) {
             color: gray('600');
             background-color: gray('200');
-        }
-        &.css_not_available {
-            pointer-events: none;
         }
     }
 }

@@ -1,11 +1,12 @@
 odoo.define('point_of_sale.OrderWidget', function(require) {
     'use strict';
 
-    const { useState, useRef, onPatched } = owl.hooks;
+    const { useState, useRef } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
     const { onChangeOrder } = require('point_of_sale.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+    const { useEffect } = require('@web/core/utils/hooks');
 
     class OrderWidget extends PosComponent {
         constructor() {
@@ -14,16 +15,15 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
             useListener('edit-pack-lot-lines', this._editPackLotLines);
             onChangeOrder(this._onPrevOrder, this._onNewOrder);
             this.scrollableRef = useRef('scrollable');
-            this.scrollToBottom = false;
-            onPatched(() => {
-                // IMPROVEMENT
-                // This one just stays at the bottom of the orderlines list.
-                // Perhaps it is better to scroll to the added or modified orderline.
-                if (this.scrollToBottom) {
-                    this.scrollableRef.el.scrollTop = this.scrollableRef.el.scrollHeight;
-                    this.scrollToBottom = false;
-                }
-            });
+            useEffect(
+                () => {
+                    const selectedLineEl = this.scrollableRef.el && this.scrollableRef.el.querySelector(".orderline.selected");
+                    if(selectedLineEl) {
+                        selectedLineEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                },
+                () => [this.order.selected_orderline]
+            );
             this.state = useState({ total: 0, tax: 0 });
             this._updateSummary();
         }
@@ -76,7 +76,6 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
                 order.orderlines.on(
                     'add remove',
                     () => {
-                        this.scrollToBottom = true;
                         this._updateSummary();
                     },
                     this

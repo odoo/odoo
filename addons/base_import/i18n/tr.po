@@ -3,7 +3,6 @@
 # 	* base_import
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021
@@ -11,19 +10,20 @@
 # Cem Uygur <cemuygur.beb@gmail.com>, 2021
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
+# Martin Trigaux, 2024
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2024\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -46,7 +46,7 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Dosyada tek bir satır bulunmuştur, bu ayırıcının yanlış olduğu anlamına "
+"Dosyada tek bir sütun bulunmuştur, bu ayırıcının yanlış olduğu anlamına "
 "gelir"
 
 #. module: base_import
@@ -54,7 +54,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Additional Fields"
-msgstr "İlaveten Alanlar"
+msgstr "Ek Alanlar"
 
 #. module: base_import
 #. openerp-web
@@ -316,6 +316,22 @@ msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Tarihi ayrıştırma hatası [%s: L %d]: %s"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
@@ -327,7 +343,7 @@ msgstr "Tahmini kalan süre:"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Everything seems valid."
-msgstr "Herşey geçerli görünüyor"
+msgstr "Her şey geçerli görünüyor"
 
 #. module: base_import
 #. openerp-web
@@ -384,14 +400,14 @@ msgstr "Dosya boyutu maksimum miktarı aşıyor (%s byte)"
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
 msgstr ""
-"Denetlenecek ve/veya içeaktarılacak dosya, ikili sıralı (temel64 değil)"
+"Denetlenecek ve/veya içeaktarılacak dosya, ikili sıralı (base64 değil)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Kesintiye uğramadan önce mevcut parti sonlandırılıyor..."
 
 #. module: base_import
 #. openerp-web
@@ -469,6 +485,9 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Dosya sütun adlarını içeriyorsa, Odoo sütuna karşılık gelen alanı otomatik "
+"olarak algılamayı deneyebilir. Bu, özellikle dosyada çok sayıda sütun "
+"olduğunda içe aktarmayı kolaylaştırır."
 
 #. module: base_import
 #. openerp-web
@@ -488,6 +507,8 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Görüntü boyutu çok yüksek, içe aktarılan görüntüler 42 milyon pikselden "
+"küçük olmalıdır"
 
 #. module: base_import
 #. openerp-web
@@ -532,19 +553,6 @@ msgstr "Kayıtları içe Aktar"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js:0
-#, python-format
-msgid ""
-"Import timed out. Please retry. If you still encounter this issue, the file "
-"may be too big for the system's configuration, try to split it (import less "
-"records per file)."
-msgstr ""
-"İçe aktarma zaman aşımına uğradı. Lütfen tekrar deneyiniz. Bu sorunla "
-"karşılaşmaya devam ediyorsanız, dosya sistem yapılandırması için çok büyük "
-"olabilir, bölmeyi deneyin (dosya başına daha az kayıt alın)."
-
-#. module: base_import
-#. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
@@ -555,9 +563,10 @@ msgstr "İçe aktarılan dosya"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "içe aktarılıyor"
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -770,7 +779,7 @@ msgstr "Olası değerleri görün"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Selected Sheet:"
-msgstr "Selected Sheet:"
+msgstr "Seçilen Sayfa:"
 
 #. module: base_import
 #. openerp-web
@@ -897,7 +906,7 @@ msgstr "Testler: Temel İçe Aktarım Modeli Önizlemesi"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr "Testler: İçe Aktarım Modeli, Character"
+msgstr "Testler: İçe Aktarım Modeli, Karakter"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
@@ -976,21 +985,21 @@ msgstr "Metin Sınırlayıcı:"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "Dosya engelleme hataları içeriyor (aşağıya bakın)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
-msgstr ""
+msgstr "Dosya, engellemeyen uyarılar içeriyor (aşağıya bakın)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "Dosya toplu olarak içe aktarılacak"
 
 #. module: base_import
 #. openerp-web
@@ -1032,7 +1041,7 @@ msgstr "İçe aktarmak için bir alan seçin..."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
-msgstr "İçeaktarma sırasında geçmişi izle"
+msgstr "İçe aktarma sırasında geçmişi izle"
 
 #. module: base_import
 #. openerp-web
@@ -1175,7 +1184,21 @@ msgstr "satır"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
+msgstr "batch"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "create"
 msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "false"
+msgstr "yanlış"
 
 #. module: base_import
 #. openerp-web
@@ -1183,7 +1206,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "alanda"
 
 #. module: base_import
 #. openerp-web
@@ -1197,14 +1220,42 @@ msgstr "dakika"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "more)"
-msgstr ""
+msgstr "daha)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "out of"
+msgstr "out of"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "prevent"
 msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "set_empty"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "skip_record"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "true"
+msgstr "doğru"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

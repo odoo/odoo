@@ -62,28 +62,34 @@ class Holidays(models.Model):
             timesheet_task_id are set on the corresponding leave type. The generated timesheet will
             be attached to this project/task.
         """
-        # create the timesheet on the vacation project
-        for holiday in self.filtered(
-                lambda request: request.holiday_type == 'employee' and
-                                request.holiday_status_id.timesheet_project_id and
-                                request.holiday_status_id.timesheet_task_id and
-                                request.holiday_status_id.timesheet_project_id.sudo().company_id == (request.holiday_status_id.company_id or self.env.company)):
-            holiday._timesheet_create_lines()
+        holidays = self.filtered(
+            lambda l: l.holiday_type == 'employee' and
+            l.holiday_status_id.timesheet_project_id and
+            l.holiday_status_id.timesheet_task_id and
+            l.holiday_status_id.timesheet_project_id.sudo().company_id == (l.holiday_status_id.company_id or self.env.company))
 
-        return super(Holidays, self)._validate_leave_request()
+        # Unlink previous timesheets do avoid doublon (shouldn't happen on the interface but meh)
+        old_timesheets = holidays.sudo().timesheet_ids
+        if old_timesheets:
+            old_timesheets.holiday_id = False
+            old_timesheets.unlink()
+
+        # create the timesheet on the vacation project
+        holidays._timesheet_create_lines()
+
+        return super()._validate_leave_request()
 
     def _timesheet_create_lines(self):
-        self.ensure_one()
         vals_list = []
-        if self.employee_id:
-            work_hours_data = self.employee_id.list_work_time_per_day(
-                self.date_from,
-                self.date_to,
-            )
+        for leave in self:
+            if not leave.employee_id:
+                continue
+            work_hours_data = leave.employee_id.list_work_time_per_day(
+                leave.date_from,
+                leave.date_to)
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
-                vals_list.append(self._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count))
-        timesheets = self.env['account.analytic.line'].sudo().create(vals_list)
-        return timesheets
+                vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count))
+        return self.env['account.analytic.line'].sudo().create(vals_list)
 
     def _timesheet_prepare_line_values(self, index, work_hours_data, day_date, work_hours_count):
         self.ensure_one()
@@ -100,10 +106,28 @@ class Holidays(models.Model):
             'company_id': self.holiday_status_id.timesheet_task_id.company_id.id or self.holiday_status_id.timesheet_project_id.company_id.id,
         }
 
+    def _check_missing_global_leave_timesheets(self):
+        if not self:
+            return
+        min_date = min([leave.date_from for leave in self])
+        max_date = max([leave.date_to for leave in self])
+
+        global_leaves = self.env['resource.calendar.leaves'].search([
+            ("resource_id", "=", False),
+            ("date_to", ">=", min_date),
+            ("date_from", "<=", max_date),
+            ("calendar_id", "!=", False),
+            ("company_id.internal_project_id", "!=", False),
+            ("company_id.leave_timesheet_task_id", "!=", False),
+        ])
+        if global_leaves:
+            global_leaves._generate_public_time_off_timesheets(self.employee_ids)
+
     def action_refuse(self):
         """ Remove the timesheets linked to the refused holidays """
         result = super(Holidays, self).action_refuse()
         timesheets = self.sudo().mapped('timesheet_ids')
         timesheets.write({'holiday_id': False})
         timesheets.unlink()
+        self._check_missing_global_leave_timesheets()
         return result

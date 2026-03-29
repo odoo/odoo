@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Web_Unsplash(http.Controller):
 
     def _get_access_key(self):
-        if request.env.user._has_unsplash_key_rights():
+        if request.env.user._has_unsplash_key_rights(mode='read'):
             return request.env['ir.config_parameter'].sudo().get_param('unsplash.access_key')
         raise werkzeug.exceptions.NotFound()
 
@@ -81,7 +81,7 @@ class Web_Unsplash(http.Controller):
         for key, value in unsplashurls.items():
             url = value.get('url')
             try:
-                if not url.startswith('https://images.unsplash.com/') and not request.env.registry.in_test_mode():
+                if not url.startswith(('https://images.unsplash.com/', 'https://plus.unsplash.com/')) and not request.env.registry.in_test_mode():
                     logger.exception("ERROR: Unknown Unsplash URL!: " + url)
                     raise Exception(_("ERROR: Unknown Unsplash URL!"))
 
@@ -143,7 +143,7 @@ class Web_Unsplash(http.Controller):
 
     @http.route("/web_unsplash/save_unsplash", type='json', auth="user")
     def save_unsplash(self, **post):
-        if request.env.user._has_unsplash_key_rights():
+        if request.env.user._has_unsplash_key_rights(mode='write'):
             request.env['ir.config_parameter'].sudo().set_param('unsplash.app_id', post.get('appId'))
             request.env['ir.config_parameter'].sudo().set_param('unsplash.access_key', post.get('key'))
             return True

@@ -2,8 +2,10 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
     'use strict';
 
     const { useState, useRef } = owl.hooks;
+    const { useValidateCashInput } = require('point_of_sale.custom_hooks');
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { parse } = require('web.field_utils');
 
 
     class CashOpeningPopup extends AbstractAwaitablePopup {
@@ -15,6 +17,8 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
                 openingCash: this.env.pos.bank_statement.balance_start || 0,
             });
             this.moneyDetailsRef = useRef('moneyDetails');
+            this.openingCashInputRef = useRef('openingCashInput');
+            useValidateCashInput("openingCashInput", this.env.pos.bank_statement.balance_start);
         }
         openDetailsPopup() {
             if (this.moneyDetailsRef.comp.isClosed()){
@@ -38,15 +42,17 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
         }
         updateCashOpening(event) {
             const { total, moneyDetailsNotes } = event.detail;
+            this.openingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
             }
             this.manualInputCashCount = false;
         }
-        handleInputChange() {
+        handleInputChange(event) {
+            if (event.target.classList.contains('invalid-cash-input')) return;
             this.manualInputCashCount = true;
-            this.state.notes = "";
+            this.state.openingCash = parse.float(event.target.value);
         }
     }
 

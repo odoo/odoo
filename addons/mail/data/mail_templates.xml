@@ -15,19 +15,22 @@
     <table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
     <tbody><tr>
     <td valign="center">
-        <a t-if="has_button_access"
-                t-att-href="button_access['url']"
-                style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
-            <t t-esc="button_access['title']"/>
-        </a>
-        <t t-if="actions">
-            <t t-foreach="actions" t-as="action">
-                |
-                <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important;">
-                    <t t-esc="action['title']"/>
+        <table cellspacing="0" cellpadding="0" border="0"><tr>
+            <td t-if="has_button_access" style="padding: 8px 12px; border-radius: 3px; background-color: #875A7B;">
+                <a t-att-href="button_access['url']" class="button-a button-a-primary"
+                    style="font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400;">
+                    <t t-esc="button_access['title']"/>
                 </a>
-            </t>
-        </t>
+            </td>
+            <td t-if="actions">
+                <t t-foreach="actions" t-as="action">
+                    |
+                    <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important;">
+                        <t t-esc="action['title']"/>
+                    </a>
+                </t>
+            </td>
+        </tr></table>
     </td>
     <td valign="center" align="right">
         <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>

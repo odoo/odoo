@@ -180,7 +180,6 @@ li > p {
     border-bottom-width: $border-width;
     border-bottom-style: solid;
     border-bottom-color: $border-color;
-    line-height: 2.1rem;
 }
 .o_page_header {
     @extend %o-page-header;
@@ -205,6 +204,7 @@ img, .media_iframe_video, .o_image {
 }
 .oe_search_box {
     padding-right: 23px;
+    text-overflow: ellipsis;
 }
 
 // Kept for (up to) saas-12 compatibility
@@ -343,6 +343,10 @@ img, .media_iframe_video, .o_image {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            &:has(a) {
+                color: $primary;
+            }
         }
     }
 
@@ -470,6 +474,8 @@ form label {
 
     .o_portal_chatter_messages {
         margin-bottom: 15px;
+        overflow-wrap: break-word;
+        word-break: break-word;
 
         .o_portal_chatter_message {
             div.media-body > p:not(.o_portal_chatter_puslished_date):last-of-type {
@@ -479,8 +485,8 @@ form label {
 
         .o_portal_chatter_message_title {
             p {
-                font-size:85%;
-                color:$o-main-color-muted;
+                font-size: 85%;
+                color: $text-muted;
                 margin: 0px;
             }
         }
@@ -560,4 +566,3 @@ form label {
         }
     }
 }
-

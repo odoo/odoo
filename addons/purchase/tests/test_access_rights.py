@@ -142,7 +142,16 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         """Only purchase managers can approve a purchase order when double
         validation is enabled"""
         group_purchase_manager = self.env.ref('purchase.group_purchase_manager')
-        order = self.env.ref("purchase.purchase_order_1")
+        order = self.env['purchase.order'].create({
+            "partner_id": self.vendor.id,
+            "order_line": [
+                (0, 0, {
+                    'product_id': self.product.id,
+                    'name': f'{self.product.name} {1:05}',
+                    'price_unit': 79.80,
+                    'product_qty': 15.0,
+                }),
+            ]})
         company = order.sudo().company_id
         company.po_double_validation = 'two_step'
         company.po_double_validation_amount = 0

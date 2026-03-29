@@ -8,7 +8,6 @@ import json
 import logging
 import pprint
 
-import werkzeug
 from werkzeug import urls
 
 from odoo import _, http
@@ -17,6 +16,7 @@ from odoo.http import request
 from odoo.tools.pycompat import to_text
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS
 
 _logger = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ class AdyenController(http.Controller):
         :param float amount: The transaction amount
         :param int currency_id: The transaction currency, as a `res.currency` id
         :param int partner_id: The partner making the transaction, as a `res.partner` id
-        :return: The JSON-formatted content of the response
+        :return: The JSON-formatted content of the response and formatted amount
         :rtype: dict
         """
         acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id)
@@ -63,22 +63,26 @@ class AdyenController(http.Controller):
         # provide the lang string as is (after adapting the format) and let Adyen find the best fit.
         lang_code = (request.context.get('lang') or 'en-US').replace('_', '-')
         shopper_reference = partner_sudo and f'ODOO_PARTNER_{partner_sudo.id}'
+        amount_formatted = {
+            'value': converted_amount,
+            'currency': request.env['res.currency'].browse(currency_id).name,  # ISO 4217
+        }
         data = {
             'merchantAccount': acquirer_sudo.adyen_merchant_account,
-            'amount': converted_amount,
+            'amount': amount_formatted,
             'countryCode': partner_sudo.country_id.code or None,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
             'shopperLocale': lang_code,  # IETF language tag (e.g.: 'fr-BE')
             'shopperReference': shopper_reference,
             'channel': 'Web',
         }
-        response_content = acquirer_sudo._adyen_make_request(
+        payment_methods_data = acquirer_sudo._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/paymentMethods',
             payload=data,
             method='POST'
         )
-        _logger.info("paymentMethods request response:\n%s", pprint.pformat(response_content))
-        return response_content
+        _logger.info("paymentMethods request response:\n%s", pprint.pformat(payment_methods_data))
+        return {'payment_methods_data': payment_methods_data, 'amount_formatted': amount_formatted}
 
     @http.route('/payment/adyen/payments', type='json', auth='public')
     def adyen_payments(
@@ -101,7 +105,7 @@ class AdyenController(http.Controller):
         # Check that the transaction details have not been altered. This allows preventing users
         # from validating transactions by paying less than agreed upon.
         if not payment_utils.check_access_token(
-            access_token, reference, converted_amount, partner_id
+            access_token, reference, converted_amount, currency_id, partner_id
         ):
             raise ValidationError("Adyen: " + _("Received tampered payment request data."))
 
@@ -120,6 +124,9 @@ class AdyenController(http.Controller):
             'recurringProcessingModel': 'CardOnFile',  # Most susceptible to trigger a 3DS check
             'shopperIP': payment_utils.get_customer_ip_address(),
             'shopperInteraction': 'Ecommerce',
+            'shopperEmail': tx_sudo.partner_email or "",
+            'shopperName': adyen_utils.format_partner_name(tx_sudo.partner_name),
+            'telephoneNumber': tx_sudo.partner_phone or "",
             'storePaymentMethod': tx_sudo.tokenize,  # True by default on Adyen side
             'additionalData': {
                 'allow3DS2': True
@@ -134,6 +141,7 @@ class AdyenController(http.Controller):
                 # by the /payments endpoint of Adyen.
                 f'/payment/adyen/return?merchantReference={reference}'
             ),
+            **adyen_utils.include_partner_addresses(tx_sudo),
         }
         response_content = acquirer_sudo._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
@@ -241,6 +249,11 @@ class AdyenController(http.Controller):
                 acquirer_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
                     'adyen', notification_data
                 ).acquirer_id  # Find the acquirer based on the transaction
+            except ValidationError:
+                # Warn rather than log the traceback to avoid noise when a POS payment notification
+                # is received and the corresponding `payment.transaction` record is not found.
+                _logger.warning("unable to find the transaction; skipping to acknowledge")
+            else:
                 if not self._verify_notification_signature(
                     received_signature, notification_data, acquirer_sudo.adyen_hmac_key
                 ):
@@ -259,11 +272,13 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Authorised' if success else 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-
-                # Handle the notification data as a regular feedback
-                PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                _logger.exception("unable to handle the notification data; skipping to acknowledge")
+                try:
+                    # Handle the notification data as a regular feedback
+                    PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
+                except ValidationError:  # Acknowledge the notification to avoid getting spammed
+                    _logger.exception(
+                        "unable to handle the notification data;skipping to acknowledge"
+                    )
 
         return '[accepted]'  # Acknowledge the notification
 

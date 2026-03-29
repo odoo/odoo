@@ -6,10 +6,12 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
+from odoo import tools
 
 @tagged('odoo2google')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
@@ -17,6 +19,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
     def setUp(self):
         super().setUp()
+        self.env.user.partner_id.tz = "Europe/Brussels"
         self.google_service = GoogleCalendarService(self.env['google.service'])
         # Make sure this test will work for the next 30 years
         self.env['ir.config_parameter'].set_param('google_calendar.sync.range_days', 10000)
@@ -30,6 +33,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'interval': 'minutes',
             'duration': 18,
         })
+        description = '<script>alert("boom")</script><p style="white-space: pre"><h1>HELLO</h1></p><ul><li>item 1</li><li>item 2</li></ul>'
         event = self.env['calendar.event'].create({
             'name': "Event",
             'start': datetime(2020, 1, 15, 8, 0),
@@ -38,6 +42,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'alarm_ids': [(4, alarm.id)],
             'privacy': 'private',
             'need_sync': False,
+            'description': description,
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
@@ -45,7 +50,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
             'summary': 'Event',
-            'description': '',
+            'description': tools.html_sanitize(description),
             'location': '',
             'visibility': 'private',
             'guestsCanModify': True,
@@ -85,7 +90,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
             events._sync_odoo2google(self.google_service)
 
-        with self.assertQueryCount(__system__=129):
+        with self.assertQueryCount(__system__=130):
             events.unlink()
 
 
@@ -102,7 +107,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         partner_model = self.env.ref('base.model_res_partner')
         partner = self.env['res.partner'].search([], limit=1)
-        with self.assertQueryCount(__system__=3635):
+        with self.assertQueryCount(__system__=3634):
             event = self.env['calendar.event'].create({
                 'name': "Event",
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -119,7 +124,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'res_id': partner.id,
             })
 
-        with self.assertQueryCount(__system__=2191):
+        with self.assertQueryCount(__system__=35):
             event.unlink()
 
     def test_event_without_user(self):
@@ -133,6 +138,40 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         values = event._google_values()
         self.assertFalse('%s_owner_id' % self.env.cr.dbname in values.get('extendedProperties', {}).get('shared', {}))
+
+    @patch_api
+    def test_event_without_attendee_state(self):
+        partner_1 = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        partner_2 = self.env['res.partner'].create({'name': 'Phineas', 'email': 'phineas@opoo.com'})
+        partner_3 = self.env['res.partner'].create({'name': 'Ferb'})
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner_1.id), (4, partner_2.id), (4, partner_3.id)],
+            'privacy': 'private',
+            'need_sync': False,
+        })
+        attendee_2 = event.attendee_ids.filtered(lambda a: a.partner_id.id == partner_2.id)
+        attendee_2.write({
+            'state': False,
+        })
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
+            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'visibility': 'private',
+            'guestsCanModify': True,
+            'reminders': {'useDefault': False, 'overrides': []},
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'needsAction'},
+                          {'email': 'phineas@opoo.com', 'responseStatus': 'needsAction'}],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}}
+        })
 
     @patch_api
     def test_event_allday_creation(self):
@@ -555,3 +594,32 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
         }, timeout=3)
+
+    @patch.object(GoogleService, '_do_request')
+    def test_send_update_do_request(self, mock_do_request):
+        self.env.cr.postcommit.clear()
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'allday': True,
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False,
+        })
+
+        event.with_context(send_updates=True)._sync_odoo2google(self.google_service)
+        self.call_post_commit_hooks()
+        self.assertGoogleEventSendUpdates('all')
+
+    @patch.object(GoogleService, '_do_request')
+    def test_not_send_update_do_request(self, mock_do_request):
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'allday': True,
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False,
+        })
+
+        event.with_context(send_updates=False)._sync_odoo2google(self.google_service)
+        self.call_post_commit_hooks()
+        self.assertGoogleEventSendUpdates('none')

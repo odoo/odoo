@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 
+from uuid import uuid4
 
 class Coupon(models.Model):
     _name = 'coupon.coupon'
@@ -22,9 +23,9 @@ class Coupon(models.Model):
         Generate 8 bytes (64 bits) barcodes as 16 bytes barcodes are not
         compatible with all scanners.
          """
-        return str(random.getrandbits(64))
+        return str(uuid4())[:22]
 
-    code = fields.Char(default=_generate_code, required=True, readonly=True)
+    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True)
     expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')
     state = fields.Selection([
         ('reserved', 'Pending'),

@@ -33,7 +33,7 @@ odoo.define('web.sample_server_tests', function (require) {
         }
     }
 
-    QUnit.module("Sample Server", {
+    QUnit.module("Sample Server (legacy)", {
         beforeEach() {
             this.fields = {
                 'res.users': {
@@ -111,8 +111,8 @@ odoo.define('web.sample_server_tests', function (require) {
             }
             function assertBetween(fieldName, min, max, isFloat = false) {
                 const val = rec[fieldName];
-                assert.ok(
-                    min <= val && val < max && (isFloat || parseInt(val, 10) === val),
+                const isInRange = min <= val && (isFloat ? val <= max : val < max);
+                assert.ok(isInRange && (isFloat || parseInt(val, 10) === val),
                     `Field "${fieldName}" is between ${min} and ${max} ${!isFloat ? 'and is an integer ' : ''}: ${val}`
                 );
             }

@@ -5,7 +5,6 @@ var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
 var core = require('web.core');
-var rpc = require('web.rpc');
 const utils = require('web.utils');
 
 var QWeb = core.qweb;
@@ -43,7 +42,7 @@ var IAPBuyMoreCreditsWidget = Widget.extend({
     //--------------------------------------------------------------------------
     _getLink: function () {
         var self = this;
-        return rpc.query({
+        return this._rpc({
             model: 'iap.account',
             method: 'get_credits_url',
             args: [this.service_name],

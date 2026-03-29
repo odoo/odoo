@@ -281,6 +281,11 @@ var ModelFieldSelector = Widget.extend({
         this._isOpen = false;
         this.$popover.addClass('d-none');
 
+        let $modalBodyEl = this.$el.closest('.modal-body');
+        if ($modalBodyEl.length !== 0) {
+            $modalBodyEl.css('overflow', '');
+        }
+
         if (this.dirty) {
             this.dirty = false;
             this.trigger_up("field_chain_changed", {chain: this.chain});
@@ -415,6 +420,11 @@ var ModelFieldSelector = Widget.extend({
      */
     _showPopover: function () {
         if (this._isOpen) return;
+
+        let $modalBodyEl = this.$el.closest('.modal-body');
+        if ($modalBodyEl.length !== 0) {
+            $modalBodyEl.css('overflow', 'visible');
+        }
 
         this._isOpen = true;
         this.$popover.removeClass('d-none');

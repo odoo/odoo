@@ -19,29 +19,26 @@ class StockSchedulerCompute(models.TransientModel):
     _description = 'Run Scheduler Manually'
 
     def _procure_calculation_orderpoint(self):
-        # As this function is in a new thread, I need to open a new cursor, because the old one may be closed
-        new_cr = self.pool.cursor()
-        self = self.with_env(self.env(cr=new_cr))
-        scheduler_cron = self.sudo().env.ref('stock.ir_cron_scheduler_action')
-        # Avoid to run the scheduler multiple times in the same time
-        try:
-            with tools.mute_logger('odoo.sql_db'):
-                self._cr.execute("SELECT id FROM ir_cron WHERE id = %s FOR UPDATE NOWAIT", (scheduler_cron.id,))
-        except Exception:
-            _logger.info('Attempt to run procurement scheduler aborted, as already running')
-            self._cr.rollback()
-            self._cr.close()
-            return {}
+        with self.pool.cursor() as new_cr:
+            self = self.with_env(self.env(cr=new_cr))
+            scheduler_cron = self.sudo().env.ref('stock.ir_cron_scheduler_action')
+            # Avoid to run the scheduler multiple times in the same time
+            try:
+                with tools.mute_logger('odoo.sql_db'):
+                    self._cr.execute("SELECT id FROM ir_cron WHERE id = %s FOR UPDATE NOWAIT", (scheduler_cron.id,))
+            except Exception:
+                _logger.info('Attempt to run procurement scheduler aborted, as already running')
+                self._cr.rollback()
+                return {}
 
-        for company in self.env.user.company_ids:
-            cids = (self.env.user.company_id | self.env.user.company_ids).ids
-            self.env['procurement.group'].with_context(allowed_company_ids=cids).run_scheduler(
-                use_new_cursor=self._cr.dbname,
-                company_id=company.id)
-        new_cr.close()
+            for company in self.env.user.company_ids:
+                cids = (self.env.user.company_id | self.env.user.company_ids).ids
+                self.env['procurement.group'].with_context(allowed_company_ids=cids).run_scheduler(
+                    use_new_cursor=self._cr.dbname,
+                    company_id=company.id)
+            self._cr.rollback()
         return {}
 
     def procure_calculation(self):
-        threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=())
-        threaded_calculation.start()
+        self._procure_calculation_orderpoint()
         return {'type': 'ir.actions.client', 'tag': 'reload'}

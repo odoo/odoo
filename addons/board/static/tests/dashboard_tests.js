@@ -27,7 +27,7 @@ odoo.define("board.dashboard_tests", function (require) {
     const { mouseEnter, triggerEvent } = require("@web/../tests/helpers/utils");
     const LegacyFavoriteMenu = require("web.FavoriteMenu");
     const LegacyAddToBoard = require("board.AddToBoardMenu");
-    const { AddToBoard } = require("@board/add_to_board/add_to_board");
+    const { addToBoardItem } = require("@board/add_to_board/add_to_board");
 
     const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
     var createView = testUtils.createView;
@@ -58,6 +58,10 @@ odoo.define("board.dashboard_tests", function (require) {
                             type: "integer",
                             group_operator: "sum",
                         },
+                        date_field: {
+                            string: "Date field",
+                            type: "date",
+                        },
                     },
                     records: [
                         {
@@ -65,18 +69,21 @@ odoo.define("board.dashboard_tests", function (require) {
                             display_name: "first record",
                             foo: "yop",
                             int_field: 3,
+                            date_field: "2024-04-27 10:00:00",
                         },
                         {
                             id: 2,
                             display_name: "second record",
                             foo: "lalala",
                             int_field: 5,
+                            date_field: "2024-04-27 10:00:00",
                         },
                         {
                             id: 4,
                             display_name: "aaa",
                             foo: "abc",
                             int_field: 2,
+                            date_field: "2024-04-27 10:00:00",
                         },
                     ],
                 },
@@ -85,11 +92,7 @@ odoo.define("board.dashboard_tests", function (require) {
             LegacyFavoriteMenu.registry.add("add-to-board-menu", LegacyAddToBoard, 10);
             favoriteMenuRegistry.add(
                 "add-to-board",
-                {
-                    Component: AddToBoard,
-                    groupNumber: 4,
-                    isDisplayed: ({ config }) => config.actionType === "ir.actions.act_window",
-                },
+                addToBoardItem,
                 { sequence: 10 }
             );
             serverData = { models: this.data };
@@ -906,6 +909,36 @@ odoo.define("board.dashboard_tests", function (require) {
         testUtils.mock.unpatch(ListController);
     });
 
+    QUnit.test("add to dashboard with no action id", async function (assert) {
+        assert.expect(2);
+
+        serverData.views = {
+            "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
+            "partner,false,search": '<search/>',
+        };
+        registry.category("services").add("user", makeFakeUserService());
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, {
+            id: false,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "pivot"]],
+        });
+        await toggleFavoriteMenu(webClient.el);
+        assert.containsNone(webClient, ".o_add_to_board");
+
+        // Sanity check
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "pivot"]],
+        });
+        await toggleFavoriteMenu(webClient.el);
+        assert.containsOnce(webClient, ".o_add_to_board");
+    });
+
     QUnit.test("save two searches to dashboard", async function (assert) {
         // the second search saved should not be influenced by the first
         assert.expect(2);
@@ -1287,7 +1320,7 @@ odoo.define("board.dashboard_tests", function (require) {
 
         const mockRPC = (route) => {
             if (route === "/board/add_to_dashboard") {
-                assert.step("add to board")
+                assert.step("add to board");
                 return Promise.resolve(true);
             }
         };
@@ -1416,5 +1449,64 @@ odoo.define("board.dashboard_tests", function (require) {
         const input = webClient.el.querySelector(".o_add_to_board .dropdown-menu input");
         await testUtils.fields.editInput(input, "Pipeline");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
+    });
+
+    QUnit.test("can have multiple calendars in dashboard", async function (assert) {
+        assert.expect(3);
+
+        const unpatchDate = patchDate(2024, 3, 27, 20, 0, 0);
+
+        var form = await createView({
+            View: BoardView,
+            model: "board",
+            data: this.data,
+            arch:
+                '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                "<column>" +
+                '<action view_mode="calendar" string="Calendar1" name="51"></action>' +
+                '<action view_mode="calendar" string="Calendar2" name="51"></action>' +
+                "</column>" +
+                "</board>" +
+                "</form>",
+            mockRPC: function (route) {
+                if (route === "/web/action/load") {
+                    return Promise.resolve({
+                        res_model: "partner",
+                        views: [
+                            [9, "calendar"],
+                        ],
+                    });
+                }
+                if (route.includes("check_access_rights")) {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
+            archs: {
+                "partner,9,calendar": '<calendar date_start="date_field"></calendar>',
+            },
+        });
+
+        var $firstAction = form.$(".oe_action:contains(Calendar1)");
+        assert.strictEqual(
+            $firstAction.find(".o_calendar_view").length,
+            1,
+            "calendar view should be displayed in 'Calendar1' block"
+        );
+        var $secondAction = form.$(".oe_action:contains(Calendar2)");
+        assert.strictEqual(
+            $secondAction.find(".o_calendar_view").length,
+            1,
+            "calendar view should be displayed in 'Calendar2' block"
+        );
+
+        await testUtils.dom.click(form.$(".fc-event")[0]);
+
+        // only one popover in whole board
+        assert.containsOnce(form, ".popover", "should only have one popover");
+
+        form.destroy();
+        unpatchDate();
     });
 });

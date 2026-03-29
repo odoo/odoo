@@ -3,8 +3,10 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
+from odoo.osv.query import Query
 
 
 class Project(models.Model):
@@ -92,12 +94,53 @@ class Project(models.Model):
         self.ensure_one()
         return {
             'icon': 'dollar',
-            'text': _('Sales Order'),
+            'text': _lt('Sales Order'),
             'action_type': 'object',
             'action': 'action_view_so',
             'show': bool(self.sale_order_id),
             'sequence': 1,
         }
+
+    def _fetch_sale_order_items(self, domain_per_model=None, limit=None, offset=None):
+        return self.env['sale.order.line'].browse(self._fetch_sale_order_item_ids(domain_per_model, limit, offset))
+
+    def _fetch_sale_order_item_ids(self, domain_per_model=None, limit=None, offset=None):
+        if not self:
+            return []
+        query = self._get_sale_order_items_query(domain_per_model)
+        query.limit = limit
+        query.offset = offset
+        query_str, params = query.select('DISTINCT sale_line_id')
+        self._cr.execute(query_str, params)
+        return [row[0] for row in self._cr.fetchall()]
+
+    def _get_sale_orders(self):
+        return self._get_sale_order_items().order_id
+
+    def _get_sale_order_items(self):
+        return self._fetch_sale_order_items()
+
+    def _get_sale_order_items_query(self, domain_per_model=None):
+        if domain_per_model is None:
+            domain_per_model = {}
+        project_domain = [('id', 'in', self.ids), ('sale_line_id', '!=', False)]
+        if 'project.project' in domain_per_model:
+            project_domain = expression.AND([project_domain, domain_per_model['project.project']])
+        project_query = self.env['project.project']._where_calc(project_domain)
+        self._apply_ir_rules(project_query, 'read')
+        project_query_str, project_params = project_query.select('id', 'sale_line_id')
+
+        Task = self.env['project.task']
+        task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
+        if Task._name in domain_per_model:
+            task_domain = expression.AND([task_domain, domain_per_model[Task._name]])
+        task_query = Task._where_calc(task_domain)
+        Task._apply_ir_rules(task_query, 'read')
+        task_query_str, task_params = task_query.select(f'{Task._table}.project_id AS id', f'{Task._table}.sale_line_id')
+
+        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str]))
+        query._where_params = project_params + task_params
+        return query
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()

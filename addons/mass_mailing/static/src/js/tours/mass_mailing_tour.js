@@ -28,7 +28,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     }, {
         trigger: 'input[name="subject"]',
         content: Markup(_t('Pick the <b>email subject</b>.')),
-        position: 'right',
+        position: 'bottom',
         run: 'text ' + now.format("MMMM") + " Newsletter",
     }, {
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
@@ -51,7 +51,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         edition: 'community',
         run: 'click',
     }, {
-        trigger: 'div[name="body_arch"] iframe div.o_mail_block_text',
+        trigger: 'div[name="body_arch"] iframe div.s_text_block',
         content: _t('Click on this paragraph to edit it.'),
         position: 'top',
         edition: 'enterprise',

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import werkzeug
 import itertools
 import pytz
@@ -74,8 +75,9 @@ class WebsiteBlog(http.Controller):
             active_tags = BlogTag.browse(active_tag_ids).exists()
             fixed_tag_slug = ",".join(slug(t) for t in active_tags)
             if fixed_tag_slug != tags:
-                new_url = request.httprequest.full_path.replace("/tag/%s" % tags, "/tag/%s" % fixed_tag_slug, 1)
-                if new_url != request.httprequest.full_path:  # check that really replaced and avoid loop
+                path = request.httprequest.full_path
+                new_url = path.replace("/tag/%s" % tags, fixed_tag_slug and "/tag/%s" % fixed_tag_slug or "", 1)
+                if new_url != path:  # check that really replaced and avoid loop
                     return request.redirect(new_url, 301)
             domain += [('tag_ids', 'in', active_tags.ids)]
 
@@ -96,9 +98,8 @@ class WebsiteBlog(http.Controller):
 
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
-        if not blog:
-            if use_cover and not fullwidth_cover:
-                offset += 1
+        if not blog and use_cover and not fullwidth_cover and not tags and not date_begin and not date_end and not search:
+            offset += 1
 
         options = {
             'displayDescription': True,
@@ -117,15 +118,25 @@ class WebsiteBlog(http.Controller):
             limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         first_post = BlogPost
-        if posts and not blog and posts[0].website_published:
+        # TODO adapt next line in master.
+        if posts and not blog and posts[0].website_published and not search:
             first_post = posts[0]
         posts = posts[offset:offset + self._blog_post_per_page]
+
+        url_args = dict()
+        if search:
+            url_args["search"] = search
+
+        if date_begin and date_end:
+            url_args["date_begin"] = date_begin
+            url_args["date_end"] = date_end
 
         pager = request.website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             total=total,
             page=page,
             step=self._blog_post_per_page,
+            url_args=url_args,
         )
 
         if not blogs:
@@ -173,10 +184,30 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=True)
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
+
+        # TODO adapt in master. This is a fix for templates wrongly using the
+        # 'blog_url' QueryURL which is defined below. Indeed, in the case where
+        # we are rendering a blog page where no specific blog is selected we
+        # define(d) that as `QueryURL('/blog', ['tag'], ...)` but then some
+        # parts of the template used it like this: `blog_url(blog=XXX)` thus
+        # generating an URL like "/blog?blog=blog.blog(2,)". Adding "blog" to
+        # the list of params would not be right as would create "/blog/blog/2"
+        # which is still wrong as we want "/blog/2". And of course the "/blog"
+        # prefix in the QueryURL definition is needed in case we only specify a
+        # tag via `blog_url(tab=X)` (we expect /blog/tag/X). Patching QueryURL
+        # or making blog_url a custom function instead of a QueryURL instance
+        # could be a solution but it was judged not stable enough. We'll do that
+        # in master. Here we only support "/blog?blog=blog.blog(2,)" URLs.
+        if isinstance(blog, str):
+            blog = Blog.browse(int(re.search(r'\d+', blog)[0]))
+            if not blog.exists():
+                raise werkzeug.exceptions.NotFound()
+
         blogs = Blog.search(request.website.website_domain(), order="create_date asc, id asc")
 
         if not blog and len(blogs) == 1:
-            return request.redirect('/blog/%s' % slug(blogs[0]), code=302)
+            url = QueryURL('/blog/%s' % slug(blogs[0]), search=search, **opt)()
+            return request.redirect(url, code=302)
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
 
@@ -213,11 +244,11 @@ class WebsiteBlog(http.Controller):
         return r
 
     @http.route([
-        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
+        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post"):blog_post>''',
     ], type='http', auth="public", website=True, sitemap=False)
-    def old_blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
+    def old_blog_post(self, blog, blog_post, **post):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/blog/%s/%s" % (slug(blog), slug(blog_post)), request.params), code=301)
+        return request.redirect("/blog/%s/%s" % (slug(blog), slug(blog_post)), code=301)
 
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',

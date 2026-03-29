@@ -8,7 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
-
+from odoo.tools import sql
 class SignupError(Exception):
     pass
 
@@ -24,11 +24,16 @@ def now(**kwargs):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
+    signup_token = fields.Char(copy=False, groups="base.group_erp_manager", compute='_compute_token', inverse='_inverse_token')
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
     signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
+
+    def init(self):
+        super().init()
+        if not sql.column_exists(self.env.cr, self._table, "signup_token"):
+            self.env.cr.execute("ALTER TABLE res_partner ADD COLUMN signup_token varchar")
 
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
@@ -43,7 +48,18 @@ class ResPartner(models.Model):
         for partner in self:
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
+            if any(u.has_group('base.group_portal') for u in partner.user_ids if u != self.env.user):
+                self.env['res.partner'].check_access_rights('write')
             partner.signup_url = result.get(partner.id, False)
+
+    def _compute_token(self):
+        for partner in self.filtered('id'):
+            self.env.cr.execute('SELECT signup_token FROM res_partner WHERE id=%s', (partner._origin.id,))
+            partner.signup_token = self.env.cr.fetchone()[0]
+
+    def _inverse_token(self):
+        for partner in self.filtered('id'):
+            self.env.cr.execute('UPDATE res_partner SET signup_token = %s WHERE id=%s', (partner.signup_token or None, partner.id))
 
     def _get_signup_url_for_action(self, url=None, action=None, view_type=None, menu_id=None, res_id=None, model=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
@@ -143,7 +159,9 @@ class ResPartner(models.Model):
             :param raise_exception: if True, raise exception instead of returning False
             :return: partner (browse record) or False (if raise_exception is False)
         """
-        partner = self.search([('signup_token', '=', token)], limit=1)
+        self.env.cr.execute("SELECT id FROM res_partner WHERE signup_token = %s AND active", (token,))
+        partner_id = self.env.cr.fetchone()
+        partner = self.browse(partner_id[0]) if partner_id else None
         if not partner:
             if raise_exception:
                 raise exceptions.UserError(_("Signup token '%s' is not valid", token))

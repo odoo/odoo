@@ -6,6 +6,7 @@ var core = require('web.core');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
+var { Markup } = require('web.utils');
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -13,6 +14,9 @@ var _t = core._t;
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
     xmlDependencies: [
+        // TODO Move the toolbar template out of the website_forum_templates
+        // file in master, as explained by the comment in the creation dialog
+        // widget.
         '/web_editor/static/src/xml/editor.xml',
         '/website_forum/static/src/xml/website_forum_templates.xml',
         '/website_forum/static/src/xml/website_forum_share_templates.xml',
@@ -29,7 +33,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .o_js_validation_queue a[href*="/validate"]': '_onValidationQueueClick',
         'click .o_wforum_validate_toggler:not(.karma_required)': '_onAcceptAnswerClick',
         'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
-        'click .comment_delete': '_onDeleteCommentClick',
+        'click .comment_delete:not(.karma_required)': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
         'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
     },
@@ -48,7 +52,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
             window.location.origin,
-            escape(window.location.href)
+            encodeURIComponent(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
 
@@ -91,6 +95,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     return {
                         query: term,
                         limit: 50,
+                        forum_id: $('#wrapwrap').data('forum_id'),
                     };
                 },
                 results: function (data) {
@@ -132,6 +137,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 },
                 resizable: true,
                 userGeneratedContent: true,
+                height: 350,
             };
             if (!hasFullEdit) {
                 options.plugins = {
@@ -184,7 +190,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         let $title = $form.find('input[name=post_name]');
         let $textarea = $form.find('textarea[name=content]');
         // It's not really in the textarea that the user write at first
-        let textareaContent = $form.find('.o_wysiwyg_textarea_wrapper').text().trim();
+        const fillableTextAreaEl = $form[0].querySelector(".o_wysiwyg_textarea_wrapper");
+        const isTextAreaFilled = fillableTextAreaEl &&
+            (fillableTextAreaEl.innerText.trim() || fillableTextAreaEl.querySelector("img"));
 
         if ($title.length && $title[0].required) {
             if ($title.val()) {
@@ -198,7 +206,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // Because the textarea is hidden, we add the red or green border to its container
         if ($textarea[0] && $textarea[0].required) {
             let $textareaContainer = $form.find('.o_wysiwyg_textarea_wrapper');
-            if (!textareaContent.length) {
+            if (!isTextAreaFilled) {
                 $textareaContainer.addClass('border border-danger rounded-top');
                 validForm = false;
             } else {
@@ -250,11 +258,10 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             // translation, to fix in the appropriate version
             notifOptions.message = `${karma} ${_t("karma is required to perform this action. ")}`;
             if (forumID) {
-                notifOptions.messageIsHtml = true;
-                const linkLabel = _.escape(_t("Read the guidelines to know how to gain karma."));
-                notifOptions.message = `
-                    ${_.escape(notifOptions.message)}<br/>
-                    <a class="alert-link" href="/forum/${forumID}/faq">${linkLabel}</a>
+                const linkLabel = _t("Read the guidelines to know how to gain karma.");
+                notifOptions.message = Markup`
+                    ${notifOptions.message}<br/>
+                    <a class="alert-link" href="/forum/${encodeURIComponent(forumID)}/faq">${linkLabel}</a>
                 `;
             }
         }
@@ -355,7 +362,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 } else if (data.error === 'anonymous_user') {
                     message = _t('Sorry you must be logged to vote');
                 }
-                this.displayNotification({
+                self.displayNotification({
                     message: message,
                     title: _t("Access Denied"),
                     sticky: false,

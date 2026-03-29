@@ -308,6 +308,11 @@ function removeSrcAttribute(el, rpc) {
     }
     var node;
     while (node = nodes.pop()) {
+        const dataSrc = node.dataset.src;
+        if (dataSrc && dataSrc !== "about:blank" && rpc) {
+            rpc(dataSrc, []);
+            $(node).trigger("load");
+        }
         var src = node.attributes.src && node.attributes.src.value;
         if (src && src !== 'about:blank') {
             node.setAttribute('data-src', src);

@@ -36,7 +36,7 @@ class MailMail(models.Model):
         body = super(MailMail, self)._send_prepare_body()
 
         if self.mailing_id and body and self.mailing_trace_ids:
-            for match in re.findall(tools.URL_REGEX, self.body_html):
+            for match in set(re.findall(tools.URL_REGEX, self.body_html)):
                 href = match[0]
                 url = match[1]
 
@@ -61,19 +61,35 @@ class MailMail(models.Model):
     def _send_prepare_values(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         res = super(MailMail, self)._send_prepare_values(partner)
-        if self.mailing_id and res.get('body') and res.get('email_to'):
+        if self.mailing_id and res.get('email_to'):
             base_url = self.mailing_id.get_base_url()
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
 
-            urls_to_replace = [
-                (base_url + '/unsubscribe_from_list', self.mailing_id._get_unsubscribe_url(email_to, self.res_id)),
-                (base_url + '/view', self.mailing_id._get_view_url(email_to, self.res_id))
-            ]
+            unsubscribe_url = self.mailing_id._get_unsubscribe_url(email_to, self.res_id)
+            unsubscribe_oneclick_url = self.mailing_id._get_unsubscribe_oneclick_url(email_to, self.res_id)
+            view_url = self.mailing_id._get_view_url(email_to, self.res_id)
 
-            for url_to_replace, new_url in urls_to_replace:
-                if url_to_replace in res['body']:
-                    res['body'] = res['body'].replace(url_to_replace, new_url if new_url else '#')
+            # replace links in body
+            if not tools.is_html_empty(res.get('body')):
+                if f'{base_url}/unsubscribe_from_list' in res['body']:
+                    res['body'] = res['body'].replace(
+                        f'{base_url}/unsubscribe_from_list',
+                        unsubscribe_url,
+                    )
+                if f'{base_url}/view' in res.get('body'):
+                    res['body'] = res['body'].replace(
+                        f'{base_url}/view',
+                        view_url,
+                    )
+
+            # add headers
+            res.setdefault("headers", {}).update({
+                'List-Unsubscribe': f'<{unsubscribe_oneclick_url}>',
+                'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+                'Precedence': 'list',
+                'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
+            })
         return res
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):

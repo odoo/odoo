@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -120,7 +121,7 @@ msgstr "Description"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
@@ -130,7 +131,7 @@ msgstr "Afficher les dates d'expiration sur les bons de livraison"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
@@ -152,7 +153,7 @@ msgstr "Date de fin de validité"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
 msgid "Expiration Time"
-msgstr "Durée d'expiration"
+msgstr "Délai d'expiration"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
@@ -212,8 +213,8 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
-"Nombre de jours après réception des produits (depuis un fournisseur ou "
-"depuis la production) après lesquels les marchandises peuvent devenir "
+"Nombre de jours après réception des produits (d'un fournisseur ou en stock "
+"après la production) après lesquels les marchandises peuvent devenir "
 "dangereuses et ne doivent plus être consommées. Calculé à partir du "
 "lot/numéro de série."
 
@@ -225,7 +226,7 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
-"Nombre de jours avant la Date d'Expiration pour lever une alerte sur le "
+"Nombre de jours avant la date d'expiration pour lever une alerte sur le "
 "lot/numéro de série. Calculé à partir du lot/numéro de série."
 
 #. module: product_expiry
@@ -235,7 +236,7 @@ msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
-"Nombre de jours avant la Date d'Expiration pour retirer les marchandises du "
+"Nombre de jours avant la date d'expiration pour retirer les marchandises du "
 "stock. Calculé à partir du lot/numéro de série."
 
 #. module: product_expiry
@@ -246,7 +247,7 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
-"Nombre de jours avant la Date d'Expiration pour que les marchandises "
+"Nombre de jours avant la date d'expiration pour que les marchandises "
 "commencent à se détériorer, sans pour autant être dangereuses. Calculé à "
 "partir du lot/numéro de série."
 
@@ -321,7 +322,7 @@ msgstr "La date d'expiration a été atteinte."
 #: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr "La date d'alerte est atteinte pour ce numéro de lot/série"
+msgstr "La date d'alerte est atteinte pour ce lot/numéro de série"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
@@ -342,7 +343,7 @@ msgid ""
 msgstr ""
 "Il s'agit de la date à laquelle les marchandises portant ce numéro de série "
 "doivent être retirées du stock. Cette date sera utilisée dans la stratégie "
-"de suppression FEFO."
+"d'enlèvement FEFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -381,7 +382,7 @@ msgid ""
 "numbers"
 msgstr ""
 "Quand cette case est cochée, vous avez la possibilité de renseigner des "
-"dates pour gérer l'expiration des articles, sur l'article et sur les "
+"dates pour gérer l'expiration des produits, sur le produit et sur les "
 "lots/numéros de série correspondants"
 
 #. module: product_expiry

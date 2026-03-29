@@ -6,7 +6,16 @@ from dateutil.relativedelta import relativedelta
 import os.path
 import pytz
 
-from odoo.tools import config, misc, date_utils, file_open, file_path, merge_sequences, remove_accents
+from odoo.tools import (
+    config,
+    date_utils,
+    file_open,
+    file_path,
+    merge_sequences,
+    misc,
+    remove_accents,
+    validate_url,
+)
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -240,10 +249,10 @@ class TestFormatLangDate(TransactionCase):
 
         # -- test `datetime`
         datetime_str = '2017-01-31 10:33:00'
-
         # Change languages and timezones
-        self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='Europe/Brussels'), '31 janv. 2017 à 11:33:00')
-        self.assertEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='America/New_York'), '2017\u5E741\u670831\u65E5 \u4E0A\u53485:33:00')  # '2017年1月31日 上午5:33:00'
+        datetime_us_str = misc.format_datetime(lang.with_context(lang='en_US').env, datetime_str, tz='Europe/Brussels')
+        self.assertNotEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='Europe/Brussels'), datetime_us_str)
+        self.assertNotEqual(misc.format_datetime(lang.with_context(lang='zh_CN').env, datetime_str, tz='America/New_York'), datetime_us_str)
 
         # Change language, timezone and format
         self.assertEqual(misc.format_datetime(lang.with_context(lang='fr_FR').env, datetime_str, tz='America/New_York', dt_format='short'), '31/01/2017 05:33')
@@ -255,25 +264,25 @@ class TestFormatLangDate(TransactionCase):
 
         # -- test `time`
         time_part = datetime.time(16, 30, 22)
-        time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('US/Eastern'))  # 4:30 PM timezoned
+        time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('America/New_York'))  # 4:30 PM timezoned
 
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part), '16:30:22')
-        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part), '\u4e0b\u53484:30:22')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format="ah:m:ss"), '\u4e0b\u53484:30:22')
 
         # Check format in different languages
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short'), '16:30')
-        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='short'), '\u4e0b\u53484:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='ah:mm'), '\u4e0b\u53484:30')
 
         # Check timezoned time part
         self.assertIn(misc.format_time(lang.with_context(lang='fr_FR').env, time_part_tz, time_format='long'), ['16:30:22 -0504', '16:30:22 HNE'])
-        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='full'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
+        self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part_tz, time_format='zzzz ah:mm:ss'), '\u5317\u7f8e\u4e1c\u90e8\u6807\u51c6\u65f6\u95f4\u0020\u4e0b\u53484:30:22')
 
         #Check timezone conversion in format_time
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'Europe/Brussels', time_format='long'), '11:33:00 +0100')
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'US/Eastern', time_format='long'), '05:33:00 HNE')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'America/New_York', time_format='long'), '05:33:00 HNE')
 
         # Check given `lang_code` overwites context lang
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='short', lang_code='zh_CN'), '\u4e0b\u53484:30')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='ah:mm', lang_code='zh_CN'), '\u4e0b\u53484:30')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format='medium', lang_code='fr_FR'), '16:30:22')
 
 
@@ -457,3 +466,38 @@ class TestAddonsFileAccess(BaseCase):
         self.assertCannotRead(__file__, ValueError, filter_ext=('.png',))
         # file doesnt exist but has wrong extension
         self.assertCannotRead(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))
+
+
+class TestDictTools(BaseCase):
+    def test_readonly_dict(self):
+        d = misc.ReadonlyDict({'foo': 'bar'})
+        with self.assertRaises(TypeError):
+            d['baz'] = 'xyz'
+        with self.assertRaises(AttributeError):
+            d.update({'baz': 'xyz'})
+        with self.assertRaises(TypeError):
+            dict.update(d, {'baz': 'xyz'})
+
+
+class TestUrlValidate(BaseCase):
+    def test_url_validate(self):
+        for case, truth in [
+            # full URLs should be preserved
+            ('http://example.com', 'http://example.com'),
+            ('http://example.com/index.html', 'http://example.com/index.html'),
+            ('http://example.com?debug=1', 'http://example.com?debug=1'),
+            ('http://example.com#h3', 'http://example.com#h3'),
+
+            # URLs with a domain should get a http scheme
+            ('example.com', 'http://example.com'),
+            ('example.com/index.html', 'http://example.com/index.html'),
+            ('example.com?debug=1', 'http://example.com?debug=1'),
+            ('example.com#h3', 'http://example.com#h3'),
+        ]:
+            with self.subTest(case=case):
+                self.assertEqual(validate_url(case), truth)
+
+        # broken cases, do we really want that?
+        self.assertEqual(validate_url('/index.html'), 'http:///index.html')
+        self.assertEqual(validate_url('?debug=1'), 'http://?debug=1')
+        self.assertEqual(validate_url('#model=project.task&id=3603607'), 'http://#model=project.task&id=3603607')

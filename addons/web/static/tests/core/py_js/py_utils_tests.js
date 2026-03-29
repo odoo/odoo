@@ -2,6 +2,7 @@
 
 import { evaluateExpr, formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
+import { PyDate, PyDateTime } from '@web/core/py_js/py_date';
 
 QUnit.module("py", {}, () => {
     QUnit.module("formatAST");
@@ -130,5 +131,77 @@ QUnit.module("py", {}, () => {
 
     QUnit.test("null value", function (assert) {
         assert.strictEqual(formatAST(toPyValue(null)), "None");
+    });
+
+    QUnit.module('toPyValue');
+
+    QUnit.test('toPyValue a string', function (assert) {
+        const ast = toPyValue('test');
+        assert.strictEqual(ast.type, 1);
+        assert.strictEqual(ast.value, 'test');
+        assert.strictEqual(formatAST(ast), '"test"');
+    });
+
+    QUnit.test('toPyValue a number', function (assert) {
+        const ast = toPyValue(1);
+        assert.strictEqual(ast.type, 0);
+        assert.strictEqual(ast.value, 1);
+        assert.strictEqual(formatAST(ast), "1");
+    });
+
+    QUnit.test('toPyValue a boolean', function (assert) {
+        let ast = toPyValue(true);
+        assert.strictEqual(ast.type, 2);
+        assert.strictEqual(ast.value, true);
+        assert.strictEqual(formatAST(ast), "True");
+
+        ast = toPyValue(false);
+        assert.strictEqual(ast.type, 2);
+        assert.strictEqual(ast.value, false);
+        assert.strictEqual(formatAST(ast), "False");
+    });
+
+    QUnit.test('toPyValue a object', function (assert) {
+        const ast = toPyValue({a: 1});
+        assert.strictEqual(ast.type, 11);
+        assert.ok('a' in ast.value);
+        assert.ok(['type', 'value'].every(prop => prop in ast.value.a));
+        assert.strictEqual(ast.value.a.type, 0);
+        assert.strictEqual(ast.value.a.value, 1);
+        assert.strictEqual(formatAST(ast), '{"a": 1}');
+    });
+
+    QUnit.test('toPyValue a date', function (assert) {
+        const date = new Date(Date.UTC(2000, 0, 1));
+        const ast = toPyValue(date);
+        assert.strictEqual(ast.type, 1);
+        const expectedValue = PyDateTime.convertDate(date);
+        assert.ok(ast.value.isEqual(expectedValue));
+        assert.strictEqual(formatAST(ast), JSON.stringify(expectedValue));
+    });
+
+    QUnit.test('toPyValue a dateime', function (assert) {
+        const datetime = new Date(Date.UTC(2000, 0, 1, 1, 0, 0, 0));
+        const ast = toPyValue(datetime);
+        assert.strictEqual(ast.type, 1);
+        const expectedValue = PyDateTime.convertDate(datetime);
+        assert.ok(ast.value.isEqual(expectedValue));
+        assert.strictEqual(formatAST(ast), JSON.stringify(expectedValue));
+    });
+
+    QUnit.test('toPyValue a PyDate', function (assert) {
+        const value = new PyDate(2000, 1, 1);
+        const ast = toPyValue(value);
+        assert.strictEqual(ast.type, 1);
+        assert.strictEqual(ast.value, value);
+        assert.strictEqual(formatAST(ast), JSON.stringify(value));
+    });
+
+    QUnit.test('toPyValue a PyDateTime', function (assert) {
+        const value = new PyDateTime(2000, 1, 1, 1, 0, 0, 0);
+        const ast = toPyValue(value);
+        assert.strictEqual(ast.type, 1);
+        assert.strictEqual(ast.value, value);
+        assert.strictEqual(formatAST(ast), JSON.stringify(value));
     });
 });

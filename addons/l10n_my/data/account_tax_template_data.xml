@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="l10n_my_tax_sale_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_my_chart_template" />
+        <field name="name">SST 5%</field>
+        <field name="sequence">1</field>
+        <field name="description">5%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount">5.0</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_sst" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_my_tax_sale_6" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_my_chart_template" />
+        <field name="name">SST 6%</field>
+        <field name="sequence">1</field>
+        <field name="description">6%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_scope">service</field>
+        <field name="amount">6.0</field>
+        <field name="active" eval="False"/>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_sst" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_my_tax_sale_8" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_my_chart_template" />
+        <field name="name">SST 8%</field>
+        <field name="sequence">1</field>
+        <field name="description">8%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_scope">service</field>
+        <field name="amount">8.0</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_sst" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_my_tax_sale_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_my_chart_template" />
+        <field name="name">SST 10%</field>
+        <field name="sequence">1</field>
+        <field name="description">10%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount">10.0</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_sst" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_my_2213'),
+                }),
+            ]"/>
+    </record>
+</odoo>

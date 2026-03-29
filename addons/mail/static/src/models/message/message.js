@@ -79,6 +79,7 @@ function factory(dependencies) {
             }
             if ('message_type' in data) {
                 data2.message_type = data.message_type;
+                data2.is_automated_message = data.message_type === 'auto_message';
             }
             if ('model' in data && 'res_id' in data && data.model && data.res_id) {
                 const originThreadData = {
@@ -112,7 +113,10 @@ function factory(dependencies) {
                 }
             }
             if ('partner_ids' in data && this.messaging.currentPartner) {
-                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.messaging.currentPartner.id);
+                data2.recipients = insertAndReplace(data.partner_ids.map(partner_id => ({ id: partner_id })));
+            }
+            if ('recipients' in data) {
+                data2.recipients = insertAndReplace(data.recipients);
             }
             if ('starred_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
@@ -291,13 +295,16 @@ function factory(dependencies) {
          *
          * @param {Object} param0
          * @param {string} param0.body the new body of the message
+         * @param {number[]} param0.attachment_ids
+         * @param {string[]} param0.attachment_tokens
          */
-        async updateContent({ body, attachment_ids }) {
+        async updateContent({ body, attachment_ids, attachment_tokens }) {
             const messageData = await this.env.services.rpc({
                 route: '/mail/message/update_content',
                 params: {
                     body,
                     attachment_ids,
+                    attachment_tokens,
                     message_id: this.id,
                 },
             });
@@ -457,6 +464,14 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsCurrentPartnerMentioned() {
+            return this.recipients.includes(this.messaging.currentPartner);
+        }
+
+        /**
          * The method does not attempt to cover all possible cases of empty
          * messages, but mostly those that happen with a standard flow. Indeed
          * it is preferable to be defensive and show an empty message sometimes
@@ -524,6 +539,23 @@ function factory(dependencies) {
                 }
             }
             return false;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeMessageTypeText() {
+            if (this.message_type === 'notification') {
+                return this.env._t("System notification");
+            }
+            if (this.message_type === "auto_comment") {
+                return this.env._t("Automated Targeted Notification");
+            }
+            if (!this.is_discussion && !this.is_notification) {
+                return this.env._t("Note");
+            }
+            return this.env._t("Message");
         }
 
         /**
@@ -720,6 +752,9 @@ function factory(dependencies) {
         isTransient: attr({
             default: false,
         }),
+        is_automated_message: attr({
+            default: false,
+        }),
         is_discussion: attr({
             default: false,
         }),
@@ -747,6 +782,7 @@ function factory(dependencies) {
          * Determine whether the current partner is mentioned.
          */
         isCurrentPartnerMentioned: attr({
+            compute: '_computeIsCurrentPartnerMentioned',
             default: false,
         }),
         /**
@@ -761,6 +797,9 @@ function factory(dependencies) {
          */
         isStarred: attr({
             default: false,
+        }),
+        messageTypeText: attr({
+            compute: '_computeMessageTypeText',
         }),
         /**
          * Groups of reactions per content allowing to know the number of
@@ -809,6 +848,7 @@ function factory(dependencies) {
             compute: '_computePrettyBody',
             default: "",
         }),
+        recipients: many2many('mail.partner'),
         subject: attr(),
         subtype_description: attr(),
         subtype_id: attr(),

@@ -8,10 +8,12 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2021
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2021
 # Jakub Snášel <jakub@potisk-tricek.cz>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Jakub Smolka, 2023
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Katerina Horylova, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -82,6 +84,8 @@ msgstr "Typy aktivit"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Přidejte členy, aby se jejich dokumenty automaticky přiřadily k tomuto "
+"prodejnímu týmu."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -90,6 +94,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"Přidání %(user_name)sdo tohoto týmu by ho vyřadilo z jeho současného "
+"týmu%(team_name)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -98,6 +104,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"Přidání %(user_name)sdo tohoto týmu by ho vyřadilo z jeho současných "
+"týmů%(team_names)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -106,6 +114,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"Přidání %(user_names)stohoto týmu by je vyřadilo z jejich současných týmů "
+"(%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -141,13 +151,13 @@ msgstr "Velké hezké tlačítko :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "CRM štítek"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Nelze odstranit výchozí tým \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
@@ -184,12 +194,12 @@ msgstr "Kontakt"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "Vytvoření štítků CRM"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Vytvořit prodejní tým"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
@@ -199,7 +209,7 @@ msgstr "Vytvořte nového prodejce"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Vytvořit typ aktivity"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -263,6 +273,8 @@ msgstr "Oblíbení členové"
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
+"Oblíbené týmy, které se zobrazují na hlavním panelu a je k nim snadný "
+"přístup."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -315,6 +327,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Pokud je to pravda, mohou uživatelé patřit do několika prodejních týmů. V "
+"opačném případě je členství omezeno na jeden prodejní tým."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -346,6 +360,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Pokud je aktivní pole nastaveno na hodnotu false, umožní vám to skrýt "
+"prodejní tým, aniž byste jej odstranili."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -355,7 +371,7 @@ msgstr "Obrázek"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Obrázek (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -408,16 +424,18 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Hlavní prodejní tým uživatelů. Používá se zejména pro pipeline nebo pro "
+"nastavení prodejního týmu při fakturaci nebo předplatném."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Členská firma"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Upozornění pro členy"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -427,7 +445,7 @@ msgstr "Členové"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Upozornění na problém s členstvím"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -450,7 +468,7 @@ msgstr "Mobilní"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Povolení více členství"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -505,7 +523,7 @@ msgstr "Prodejní místo"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Předprodejní služby"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -521,7 +539,7 @@ msgstr "Prodej"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_tree
 msgid "Sales Men"
-msgstr ""
+msgstr "Prodejci"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
@@ -549,12 +567,12 @@ msgstr "Člen prodejního týmu"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Členové prodejního týmu"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Členové prodejního týmu (včetně neaktivních)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -576,7 +594,7 @@ msgstr "Obchodníci"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_search
 msgid "Salesteams Search"
-msgstr ""
+msgstr "Vyhledávání prodejních týmů"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -624,7 +642,7 @@ msgstr "Tagy"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Informace o týmu"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -658,6 +676,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Ty představují různé kategorie věcí, které musíte udělat (např. \"Volat\" "
+"nebo \"Připravit schůzku\")."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -666,6 +686,8 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"Chcete-li přidat prodejce do více týmů, aktivujte v nastavení možnost Více "
+"týmů."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -677,12 +699,16 @@ msgstr "Tréning"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: Dejte uživatelům možnost nepřidávat do aktuálně zvoleného týmu, aby se "
+"zabránilo duplicitám."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
 msgstr ""
+"UX: Omezit na týmovou společnost nebo na všechny, pokud žádná společnost "
+"neexistuje"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -708,6 +734,8 @@ msgstr "Počítadlo nepřečtených zpráv"
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Pomocí prodejních týmů můžete organizovat svá prodejní oddělení a sestavovat"
+" přehledy."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -716,6 +744,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Pomocí prodejních týmů můžete organizovat svá prodejní oddělení.\n"
+"Každý tým bude pracovat se samostatným prodejním plánem."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -723,6 +753,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Pomocí štítků můžete spravovat a sledovat příležitosti (struktura produktu, "
+"typ prodeje, ...)."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -732,7 +764,7 @@ msgstr "Společnost uživatele"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Uživatel v týmech"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -757,7 +789,7 @@ msgstr "Uživatelé"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Uživatelé přiřazení k tomuto týmu."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -771,16 +803,18 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
+"Snažíte se vytvořit duplicitní členství. Zjistili jsme, že%(duplicates)s již"
+" členství existuje/existují."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "např. Severní Amerika"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "např. služby"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

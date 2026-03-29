@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
@@ -31,13 +30,13 @@ class AccountTaxReport(models.Model):
 
                         new_tags = tags_cache[cache_key]
 
-                        if new_tags:
+                        if len(new_tags) == 2:
                             line._remove_tags_used_only_by_self()
                             line.write({'tag_ids': [(6, 0, new_tags.ids)]})
 
                         elif line.mapped('tag_ids.tax_report_line_ids.report_id').filtered(lambda x: x not in self):
                             line._remove_tags_used_only_by_self()
-                            line.write({'tag_ids': [(5, 0, 0)] + line._get_tags_create_vals(line.tag_name, vals['country_id'])})
+                            line.write({'tag_ids': [(5, 0, 0)] + line._get_tags_create_vals(line.tag_name, vals['country_id'], existing_tag=new_tags)})
                             tags_cache[cache_key] = line.tag_ids
 
                         else:
@@ -54,11 +53,7 @@ class AccountTaxReport(models.Model):
         copied_report = super(AccountTaxReport, self).copy(default=copy_default) #This copies the report without its lines
 
         lines_map = {} # maps original lines to their copies (using ids)
-        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id))
-        while lines_to_treat:
-            line = lines_to_treat.pop()
-            lines_to_treat += list(line.children_line_ids)
-
+        for line in self.get_lines_in_hierarchy():
             copy = line.copy({'parent_id': lines_map.get(line.parent_id.id, None), 'report_id': copied_report.id})
             lines_map[line.id] = copy.id
 
@@ -69,10 +64,10 @@ class AccountTaxReport(models.Model):
         ar all directly followed by their children.
         """
         self.ensure_one()
-        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id).sorted(lambda x: x.sequence)) # Used as a stack, whose index 0 is the top
+        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id)) # Used as a stack, whose index 0 is the top
         while lines_to_treat:
             to_yield = lines_to_treat[0]
-            lines_to_treat = list(to_yield.children_line_ids.sorted(lambda x: x.sequence)) + lines_to_treat[1:]
+            lines_to_treat = list(to_yield.children_line_ids) + lines_to_treat[1:]
             yield to_yield
 
     def get_checks_to_perform(self, amounts, carried_over):
@@ -95,7 +90,7 @@ class AccountTaxReport(models.Model):
 class AccountTaxReportLine(models.Model):
     _name = "account.tax.report.line"
     _description = 'Account Tax Report Line'
-    _order = 'sequence'
+    _order = 'sequence, id'
     _parent_store = True
 
     name = fields.Char(string="Name", required=True, help="Complete name for this report line, to be used in report.")
@@ -165,17 +160,23 @@ class AccountTaxReportLine(models.Model):
 
             existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
 
-            if existing_tags:
+            if len(existing_tags) < 2:
+                # We create new one(s)
+                # We can have only one tag in case we archived it and deleted its unused complement sign
+                vals['tag_ids'] = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
+            else:
                 # We connect the new report line to the already existing tags
                 vals['tag_ids'] = [(6, 0, existing_tags.ids)]
-            else:
-                # We create new ones
-                vals['tag_ids'] = self._get_tags_create_vals(tag_name, country.id)
 
         return super(AccountTaxReportLine, self).create(vals)
 
     @api.model
-    def _get_tags_create_vals(self, tag_name, country_id):
+    def _get_tags_create_vals(self, tag_name, country_id, existing_tag=None):
+        """
+            We create the plus and minus tags with tag_name.
+            In case there is an existing_tag (which can happen if we deleted its unused complement sign)
+            we only recreate the missing sign.
+        """
         minus_tag_vals = {
           'name': '-' + tag_name,
           'applicability': 'taxes',
@@ -188,23 +189,31 @@ class AccountTaxReportLine(models.Model):
           'tax_negate': False,
           'country_id': country_id,
         }
-        return [(0, 0, minus_tag_vals), (0, 0, plus_tag_vals)]
+        res = []
+        if not existing_tag or not existing_tag.tax_negate:
+            res.append((0, 0, minus_tag_vals))
+        if not existing_tag or existing_tag.tax_negate:
+            res.append((0, 0, plus_tag_vals))
+        return res
 
     def write(self, vals):
-        tag_name_postponed = None
-
         # If tag_name was set, but not tag_ids, we postpone the write of
         # tag_name, and perform it only after having generated/retrieved the tags.
         # Otherwise, tag_name and tags' name would not match, breaking
         # _validate_tags constaint.
-        postpone_tag_name = 'tag_name' in vals and not 'tag_ids' in vals
+        postponed_vals = {}
 
-        if postpone_tag_name:
-            tag_name_postponed = vals.pop('tag_name')
+        if 'tag_name' in vals and 'tag_ids' not in vals:
+            postponed_vals = {'tag_name': vals.pop('tag_name')}
+            tag_name_postponed = postponed_vals['tag_name']
+            # if tag_name is posponed then we also postpone formula to avoid
+            # breaking _validate_formula constraint
+            if 'formula' in vals:
+                postponed_vals['formula'] = vals.pop('formula')
 
         rslt = super(AccountTaxReportLine, self).write(vals)
 
-        if postpone_tag_name:
+        if postponed_vals:
             # If tag_name modification has been postponed,
             # we need to search for existing tags corresponding to the new tag name
             # (or create them if they don't exist yet) and assign them to the records
@@ -225,19 +234,19 @@ class AccountTaxReportLine(models.Model):
                         minus_child_tags.write({'name': '-' + tag_name_postponed})
                         plus_child_tags = tags_to_update.filtered(lambda x: not x.tax_negate)
                         plus_child_tags.write({'name': '+' + tag_name_postponed})
-                        super(AccountTaxReportLine, to_update).write({'tag_name': tag_name_postponed})
+                        super(AccountTaxReportLine, to_update).write(postponed_vals)
 
                     else:
                         existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name_postponed, country_id)
                         records_to_link = records
                         tags_to_remove = self.env['account.account.tag']
 
-                        if not existing_tags and records_to_link:
-                            # If the tag does not exist yet, we first create it by
-                            # linking it to the first report line of the record set
+                        if len(existing_tags) < 2 and records_to_link:
+                            # If the tag does not exist yet (or if we only have one of the two +/-),
+                            # we first create it by linking it to the first report line of the record set
                             first_record = records_to_link[0]
                             tags_to_remove += first_record.tag_ids
-                            first_record.write({'tag_name': tag_name_postponed, 'tag_ids': [(5, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id)})
+                            first_record.write({**postponed_vals, 'tag_ids': [(5, 0, 0)] + self._get_tags_create_vals(tag_name_postponed, country_id, existing_tag=existing_tags)})
                             existing_tags = first_record.tag_ids
                             records_to_link -= first_record
 
@@ -245,7 +254,7 @@ class AccountTaxReportLine(models.Model):
                         tags_to_remove += records_to_link.mapped('tag_ids')
                         records_to_link = tags_to_remove.mapped('tax_report_line_ids')
                         tags_to_remove.mapped('tax_report_line_ids')._remove_tags_used_only_by_self()
-                        records_to_link.write({'tag_name': tag_name_postponed, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
+                        records_to_link.write({**postponed_vals, 'tag_ids': [(2, tag.id) for tag in tags_to_remove] + [(6, 0, existing_tags.ids)]})
 
                 else:
                     # tag_name was set empty, so we remove the tags on current lines
@@ -256,7 +265,7 @@ class AccountTaxReportLine(models.Model):
                     if not other_lines_same_tag:
                         self._delete_tags_from_taxes(line_tags.ids)
                     orm_cmd_code = other_lines_same_tag and 3 or 2
-                    records.write({'tag_name': None, 'tag_ids': [(orm_cmd_code, tag.id) for tag in line_tags]})
+                    records.write({**postponed_vals, 'tag_ids': [(orm_cmd_code, tag.id) for tag in line_tags]})
 
         return rslt
 
@@ -270,12 +279,22 @@ class AccountTaxReportLine(models.Model):
     def _remove_tags_used_only_by_self(self):
         """ Deletes and removes from taxes and move lines all the
         tags from the provided tax report lines that are not linked
-        to any other tax report lines.
+        to any other tax report lines nor move lines.
+        The tags that are used by at least one move line will be archived instead, to avoid loosing history.
         """
         all_tags = self.mapped('tag_ids')
         tags_to_unlink = all_tags.filtered(lambda x: not (x.tax_report_line_ids - self))
         self.write({'tag_ids': [(3, tag.id, 0) for tag in tags_to_unlink]})
-        self._delete_tags_from_taxes(tags_to_unlink.ids)
+
+        for tag in tags_to_unlink:
+            aml_using_tags = self.env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
+            # if the tag is still referenced in move lines we archive the tag, else we delete it.
+            if aml_using_tags:
+                rep_lines_with_archived_tags = self.env['account.tax.repartition.line'].sudo().search([('tag_ids', 'in', tag.id)])
+                rep_lines_with_archived_tags.write({'tag_ids': [(3, tag.id)]})
+                tag.active = False
+            else:
+                self._delete_tags_from_taxes([tag.id])
 
     @api.model
     def _delete_tags_from_taxes(self, tag_ids_to_delete):
@@ -312,10 +331,10 @@ class AccountTaxReportLine(models.Model):
             neg_tags = record.tag_ids.filtered(lambda x: x.tax_negate)
             pos_tags = record.tag_ids.filtered(lambda x: not x.tax_negate)
 
-            if (len(neg_tags) != 1 or len(pos_tags) != 1):
-                raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and a negative one."))
+            if (len(neg_tags) > 1 or len(pos_tags) > 1):
+                raise ValidationError(_("If tags are defined for a tax report line, only two are allowed on it: a positive and/or a negative one."))
 
-            if neg_tags.name != '-'+record.tag_name or pos_tags.name != '+'+record.tag_name:
+            if (neg_tags and neg_tags.name != '-'+record.tag_name) or (pos_tags and pos_tags.name != '+'+record.tag_name):
                 raise ValidationError(_("The tags linked to a tax report line should always match its tag name."))
 
     def action_view_carryover_lines(self, options):

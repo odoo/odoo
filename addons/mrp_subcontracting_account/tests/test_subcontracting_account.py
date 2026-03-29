@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests.common import Form
 from odoo.tools.float_utils import float_round, float_compare
 
@@ -51,9 +51,11 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
-        picking_receipt.move_lines.price_unit = 30.0
+        picking_receipt.move_lines.price_unit = 15.0
 
         picking_receipt.action_confirm()
+        # Suppose the additional cost changes:
+        picking_receipt.move_lines.price_unit = 30.0
         picking_receipt.move_lines.quantity_done = 1.0
         picking_receipt._action_done()
 
@@ -157,6 +159,59 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         for layer in f_layers:
             self.assertEqual(layer.value, 100 + 50)
 
+    def test_tracked_compo_and_backorder(self):
+        """
+        Suppose a subcontracted product P with two tracked components, P is FIFO
+        Create a receipt for 10 x P, receive 5, then 3 and then 2
+        """
+        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.comp1.tracking = 'lot'
+        self.comp1.standard_price = 10
+        self.comp2.tracking = 'lot'
+        self.comp2.standard_price = 20
+
+        lot01, lot02 = self.env['stock.production.lot'].create([{
+            'name': "Lot of %s" % product.name,
+            'product_id': product.id,
+            'company_id': self.env.company.id,
+        } for product in (self.comp1, self.comp2)])
+
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        receipt_form.partner_id = self.subcontractor_partner1
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 10
+        receipt = receipt_form.save()
+        # add an extra cost
+        receipt.move_lines.price_unit = 50
+        receipt.action_confirm()
+
+        for qty_producing in (5, 3, 2):
+            action = receipt.action_record_components()
+            mo = self.env['mrp.production'].browse(action['res_id'])
+            mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
+            mo_form.qty_producing = qty_producing
+            with mo_form.move_line_raw_ids.edit(0) as ml:
+                ml.lot_id = lot01
+            with mo_form.move_line_raw_ids.edit(1) as ml:
+                ml.lot_id = lot02
+            mo = mo_form.save()
+            mo.subcontracting_record_component()
+
+            action = receipt.button_validate()
+            if isinstance(action, dict):
+                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+                wizard.process()
+                receipt = receipt.backorder_ids
+
+        self.assertRecordValues(self.finished.stock_valuation_layer_ids, [
+            {'quantity': 5, 'value': 5 * (10 + 20 + 50)},
+            {'quantity': 3, 'value': 3 * (10 + 20 + 50)},
+            {'quantity': 2, 'value': 2 * (10 + 20 + 50)},
+        ])
+
+
 class TestBomPriceSubcontracting(TestBomPrice):
 
     def test_01_compute_price_subcontracting_cost(self):
@@ -211,3 +266,48 @@ class TestBomPriceSubcontracting(TestBomPrice):
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
         self.assertEqual(float_compare(self.table_head.standard_price, 478.75, precision_digits=2), 0, "After computing price from BoM price should be 878.75")
         self.assertEqual(float_compare(self.dining_table.standard_price, 878.75, precision_digits=2), 0, "After computing price from BoM price should be 878.75")
+
+    def test_02_compute_price_subcontracting_cost(self):
+        """Test calculation of bom cost with subcontracting and supplier in different currency."""
+        currency_a = self.env['res.currency'].create({
+            'name': 'ZEN',
+            'symbol': 'Z',
+            'rounding': 0.01,
+            'currency_unit_label': 'Zenny',
+            'rate_ids': [(0, 0, {
+                'name': fields.Date.today(),
+                'company_rate': 0.5,
+            })],
+        })
+
+        partner = self.env['res.partner'].create({
+            'name': 'supplier',
+        })
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'standard_price': 100,
+            'company_id': self.env.company.id,
+        })
+        supplier = self.env['product.supplierinfo'].create([{
+                'name': partner.id,
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'price': 120.0,
+                'currency_id': currency_a.id,
+        }])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(partner.id)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.table_head.id, 'product_qty': 1}),
+            ],
+        })
+        self.table_head.standard_price = 100
+        self.assertEqual(supplier.is_subcontractor, True)
+        self.assertEqual(product.standard_price, 100, "Initial price of the Product should be 100")
+        product.button_bom_cost()
+        # 120 Zen = 240 USD (120 * 2)
+        # price = 240 + 100 (1 unit of component "table_head") = 340
+        self.assertEqual(product.standard_price, 340, "After computing price from BoM price should be 340")

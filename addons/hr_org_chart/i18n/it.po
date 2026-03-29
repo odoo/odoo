@@ -5,20 +5,21 @@
 # Translators:
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_base
@@ -29,14 +30,14 @@ msgstr "Dipendente base"
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr "Sottoposti diretti e indiretti"
+msgstr "Subordinati diretti e indiretti"
 
 #. module: hr_org_chart
 #. openerp-web
 #: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Direct subordinates"
-msgstr "Sottoposti diretti"
+msgstr "Subordinati diretti"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee
@@ -56,14 +57,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Indirect Subordinates Count"
-msgstr "Numero sottoposti indiretti"
+msgstr "Numero subordinati indiretti"
 
 #. module: hr_org_chart
 #. openerp-web
 #: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "Indirect subordinates"
-msgstr "Sottoposti indiretti"
+msgstr "Subordinati indiretti"
 
 #. module: hr_org_chart
 #. openerp-web
@@ -102,7 +103,7 @@ msgstr "Reindirizza"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:108
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "See All"
 msgstr "Vedi tutto"
@@ -115,7 +116,7 @@ msgstr "Subordinati"
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:181
+#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:0
 #, python-format
 msgid "Team"
 msgstr "Team"
@@ -125,7 +126,7 @@ msgstr "Team"
 #: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:0
 #, python-format
 msgid "This employee has no manager or subordinate."
-msgstr "Questo dipendente non ha supervisori o sottoposti."
+msgstr "Questo dipendente non ha supervisori o subordinati."
 
 #. module: hr_org_chart
 #. openerp-web

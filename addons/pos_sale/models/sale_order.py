@@ -26,6 +26,14 @@ class SaleOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
+    def get_order_amount_unpaid(self):
+        order_amount_unpaid = {}
+        for sale_order in self:
+            total_invoice_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('invoice_lines').filtered(lambda l: l.parent_state != 'cancel').mapped('price_total'))
+            total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
+            order_amount_unpaid[sale_order.id] = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
+        return order_amount_unpaid
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -44,7 +52,7 @@ class SaleOrderLine(models.Model):
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
     def read_converted(self):
-        field_names = ["product_id", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
+        field_names = ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
         results = []
         for sale_line in self:
             if sale_line.product_type:
@@ -65,7 +73,11 @@ class SaleOrderLine(models.Model):
 
             elif sale_line.display_type == 'line_note':
                 if results:
-                    results[-1]['customer_note'] = sale_line.name
+                    if results[-1].get('customer_note'):
+                        results[-1]['customer_note'] += "--" + sale_line.name
+                    else:
+                        results[-1]['customer_note'] = sale_line.name
+
 
         return results
 
@@ -82,3 +94,14 @@ class SaleOrderLine(models.Model):
             return sale_line_uom._compute_quantity(qty, product_uom, False)
         elif direction == 'p2s':
             return product_uom._compute_quantity(qty, sale_line_uom, False)
+
+    def unlink(self):
+        # do not delete downpayment lines created from pos
+        pos_downpayment_lines = self.filtered(lambda line: line.is_downpayment and line.sudo().pos_order_line_ids)
+        return super(SaleOrderLine, self - pos_downpayment_lines).unlink()
+
+    @api.depends('pos_order_line_ids')
+    def _compute_untaxed_amount_invoiced(self):
+        super()._compute_untaxed_amount_invoiced()
+        for line in self:
+            line.untaxed_amount_invoiced += sum(line.pos_order_line_ids.mapped('price_subtotal'))

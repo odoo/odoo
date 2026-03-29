@@ -32,7 +32,7 @@
     <div name="o_wesession_track_main"
          t-att-class="'col-12 o_wevent_online_page_main o_wesession_track_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- LIVE INFORMATIONS -->
-        <div t-if="not track.event_id.is_ongoing" class="pt-3">
+        <div t-if="not track.event_id.is_ongoing and track.event_id.start_remaining" class="pt-3">
             <div class="mx-3 alert alert-warning">
                 Event <span t-esc="track.event_id.name" class="font-weight-bold"/>
                 <span t-if="track.event_id.start_today">

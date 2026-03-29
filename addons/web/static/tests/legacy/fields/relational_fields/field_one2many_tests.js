@@ -2143,6 +2143,40 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('sorting one2many char field with falsy values', async function (assert) {
+            assert.expect(3);
+
+            this.data.partner.fields.foo.sortable = true;
+            this.data.partner.records.push({ id: 23, foo: "abc" });
+            this.data.partner.records.push({ id: 24, foo: false });
+            this.data.partner.records.push({ id: 25, foo: "def" });
+            this.data.partner.records[0].p = [23, 24, 25];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                debug: 1,
+            });
+
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["abc", "", "def"]);
+            await testUtils.dom.click(form.$('table thead th:contains(Foo)'));
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["", "abc", "def"]);
+            await testUtils.dom.click(form.$('table thead th:contains(Foo)'));
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["def", "abc", ""]);
+
+            form.destroy();
+        });
+
         QUnit.test('one2many list field edition', async function (assert) {
             assert.expect(6);
 
@@ -5899,7 +5933,6 @@ QUnit.module('fields', {}, function () {
             // click all buttons
             await testUtils.dom.click(form.$(btn1Disabled));
             await testUtils.dom.click(form.$(btn1Warn));
-            await testUtils.dom.click(form.$(btn2Disabled));
             await testUtils.dom.click(form.$(btn2Warn));
 
             // save the form
@@ -10089,6 +10122,155 @@ QUnit.module('fields', {}, function () {
             assert.verifySteps(["mounted 0", "willUnmount 0", "mounted 1", "onSuccess"]);
             form.destroy();
             assert.verifySteps(["willUnmount 1"]);
+        });
+
+        QUnit.test('nested one2manys, multi page, onchange', async function (assert) {
+            assert.expect(5);
+
+            this.data.partner.records[2].int_field = 5;
+            this.data.partner.records[0].p = [2, 4]; // limit 1 -> record 4 will be on second page
+            this.data.partner.records[1].turtles = [1];
+            this.data.partner.records[2].turtles = [2];
+            this.data.turtle.records[0].turtle_int = 1;
+            this.data.turtle.records[1].turtle_int = 2;
+
+            this.data.partner.onchanges.int_field = function (obj) {
+               assert.step('onchange')
+               obj.p = [[5]]
+               obj.p.push([1, 2, { turtles: [[5], [1, 1, { turtle_int: obj.int_field }]] }]);
+               obj.p.push([1, 4, { turtles: [[5], [1, 2, { turtle_int: obj.int_field }]] }]);
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form string="Partner">' +
+                    '<field name="int_field"/>' +
+                    '<field name="p">' +
+                    '<tree editable="bottom" limit="1" default_order="display_name">' +
+                        '<field name="display_name" />' +
+                        '<field name="int_field" />' +
+                        '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_int"/>' +
+                        '</tree>' +
+                        '</field>' +
+                    '</tree>' +
+                    '</field>' +
+                    '</form>',
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            await testUtils.fields.editInput(form.$('.o_field_widget[name="int_field"]'), '5');
+            assert.verifySteps(['onchange'])
+
+            await testUtils.form.clickSave(form);
+
+            assert.strictEqual(this.data.partner.records[0].int_field, 5, 'Value should have been updated')
+            assert.strictEqual(this.data.turtle.records[1].turtle_int, 5, 'Shown data should have been updated');
+            assert.strictEqual(this.data.turtle.records[0].turtle_int, 5, 'Hidden data should have been updated');
+
+            form.destroy();
+        });
+
+        QUnit.test('add a row to an x2many and ask canBeRemoved twice', async function (assert) {
+            // This test simulates that the view is asked twice to save its changes because the user
+            // is leaving. Before the corresponding fix, the changes in the x2many field weren't
+            // removed after the save, and as a consequence they were saved twice (i.e. the row was
+            // created twice).
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                async mockRPC(route, args) {
+                    if (args.method === "write") {
+                        assert.step("write");
+                        assert.deepEqual(args.args[1], {
+                            p: [[0, args.args[1].p[0][1], { display_name: "a name" }]],
+                        });
+                    }
+                    return this._super(route, args);
+                },
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // click add food
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_input[name="display_name"]'), 'a name');
+            assert.containsOnce(form, ".o_data_row");
+
+            form.canBeRemoved();
+            form.canBeRemoved();
+            await testUtils.nextTick();
+            assert.containsOnce(form, ".o_data_row");
+            assert.verifySteps(["write"]);
+
+            form.destroy();
+        });
+
+        QUnit.test('add a row to an x2many and ask canBeRemoved twice (new record)', async function (assert) {
+            // This test simulates that the view is asked twice to save its changes because the user
+            // is leaving. Before the corresponding fix, the changes in the x2many field weren't
+            // removed after the save, and as a consequence they were saved twice (i.e. the row was
+            // created twice).
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, args) {
+                    if (args.method === "create") {
+                        assert.step("create");
+                        assert.deepEqual(args.args[0], {
+                            p: [[0, args.args[0].p[0][1], { display_name: "a name" }]],
+                        });
+                    }
+                    if (args.method === "write") {
+                        assert.step("write"); // should not be called
+                    }
+                    return this._super(route, args);
+                },
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // click add food
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_input[name="display_name"]'), 'a name');
+            assert.containsOnce(form, ".o_data_row");
+
+            form.canBeRemoved();
+            form.canBeRemoved();
+            await testUtils.nextTick();
+            assert.containsOnce(form, ".o_data_row");
+            assert.verifySteps(["create"]);
+
+            form.destroy();
         });
     });
 });

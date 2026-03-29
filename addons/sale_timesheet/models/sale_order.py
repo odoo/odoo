@@ -46,18 +46,21 @@ class SaleOrder(models.Model):
             self.update({'timesheet_total_duration': 0})
             return
         group_data = self.env['account.analytic.line'].sudo().read_group([
-            ('order_id', 'in', self.ids)
+            ('order_id', 'in', self.ids), ('project_id', '!=', False)
         ], ['order_id', 'unit_amount'], ['order_id'])
         timesheet_unit_amount_dict = defaultdict(float)
         timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
         for sale_order in self:
-            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
+            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(
+                timesheet_unit_amount_dict[sale_order.id],
+                sale_order.timesheet_encode_uom_id,
+                rounding_method='HALF-UP',
+            )
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
-        super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
-            return
+            return super()._compute_field_value(field)
 
         # Get SOs which their state is not equal to upselling or invoied and if at least a SOL has warning prepaid service upsell set to True and the warning has not already been displayed
         upsellable_orders = self.filtered(lambda so:
@@ -65,12 +68,14 @@ class SaleOrder(models.Model):
             and so.invoice_status not in ('upselling', 'invoiced')
             and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
         )
+        super(SaleOrder, upsellable_orders.with_context(mail_activity_automation_skip=True))._compute_field_value(field)
         for order in upsellable_orders:
             upsellable_lines = order._get_prepaid_service_lines_to_upsell()
             if upsellable_lines:
                 order._create_upsell_activity()
                 # We want to display only one time the warning for each SOL
                 upsellable_lines.write({'has_displayed_warning_upsell': True})
+        super(SaleOrder, self - upsellable_orders)._compute_field_value(field)
 
     def _get_prepaid_service_lines_to_upsell(self):
         """ Retrieve all sols which need to display an upsell activity warning in the SO
@@ -99,21 +104,19 @@ class SaleOrder(models.Model):
             'search_default_billable_timesheet': True
         }  # erase default filters
         if self.timesheet_count > 0:
-            action['domain'] = [('so_line', 'in', self.order_line.ids)]
+            action['domain'] = [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)]
         else:
             action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    def _create_invoices(self, grouped=False, final=False, start_date=None, end_date=None):
-        """ Override the _create_invoice method in sale.order model in sale module
-            Add new parameter in this method, to invoice sale.order with a date. This date is used in sale_make_invoice_advance_inv into this module.
-            :param start_date: the start date of the period
-            :param end_date: the end date of the period
-            :return {account.move}: the invoices created
+    def _create_invoices(self, grouped=False, final=False, date=None):
+        """Link timesheets to the created invoices. Date interval is injected in the
+        context in sale_make_invoice_advance_inv wizard.
         """
-        moves = super(SaleOrder, self)._create_invoices(grouped, final)
-        moves._link_timesheets_to_invoice(start_date, end_date)
+        moves = super()._create_invoices(grouped=grouped, final=final, date=date)
+        moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
         return moves
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -122,7 +125,7 @@ class SaleOrderLine(models.Model):
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
     remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
-    has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
+    has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell', copy=False)
 
     def name_get(self):
         res = super(SaleOrderLine, self).name_get()
@@ -233,10 +236,15 @@ class SaleOrderLine(models.Model):
 
     def _convert_qty_company_hours(self, dest_company):
         company_time_uom_id = dest_company.project_time_mode_id
-        if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
-            planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
-        else:
-            planned_hours = self.product_uom_qty
+        planned_hours = 0.0
+        product_uom = self.product_uom
+        if product_uom == self.env.ref('uom.product_uom_unit'):
+            product_uom = self.env.ref('uom.product_uom_hour')
+        if product_uom.category_id == company_time_uom_id.category_id:
+            if product_uom != company_time_uom_id:
+                planned_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
+            else:
+                planned_hours = self.product_uom_qty
         return planned_hours
 
     def _timesheet_create_project(self):
@@ -278,4 +286,10 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
-            line.qty_to_invoice = mapping.get(line.id, 0.0)
+            qty_to_invoice = mapping.get(line.id, 0.0)
+            if qty_to_invoice:
+                line.qty_to_invoice = qty_to_invoice
+            else:
+                prev_inv_status = line.invoice_status
+                line.qty_to_invoice = qty_to_invoice
+                line.invoice_status = prev_inv_status

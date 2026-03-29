@@ -28,3 +28,8 @@ class PosOrder(models.Model):
             'employee_id': order.employee_id.id,
         })
         return result
+
+    def _get_fields_for_draft_order(self):
+        fields = super(PosOrder, self)._get_fields_for_draft_order()
+        fields.append('employee_id')
+        return fields

@@ -16,7 +16,7 @@ class PosPayment(models.Model):
     _order = "id desc"
 
     name = fields.Char(string='Label', readonly=True)
-    pos_order_id = fields.Many2one('pos.order', string='Order', required=True)
+    pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True)
     amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', readonly=True, help="Total amount of the payment.")
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
@@ -33,7 +33,6 @@ class PosPayment(models.Model):
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move')
 
-    @api.model
     def name_get(self):
         res = []
         for payment in self:

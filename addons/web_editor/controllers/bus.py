@@ -18,8 +18,8 @@ class EditorCollaborationController(BusController):
             channels = list(channels)
             for channel in channels:
                 if isinstance(channel, str):
-                    match = re.match(r'editor_collaboration:(\w+(?:.\w+)*):(\w+):([\d]+)', channel)
-                    if (match):
+                    match = re.match(r'editor_collaboration:(\w+(?:\.\w+)*):(\w+):(\d+)', channel)
+                    if match:
                         model_name = match[1]
                         field_name = match[2]
                         res_id = int(match[3])

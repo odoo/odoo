@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -80,6 +81,16 @@ class EventMailScheduler(models.Model):
     def _selection_template_model(self):
         return [('mail.template', 'Mail')]
 
+    def _selection_template_model_get_mapping(self):
+        return {'mail': 'mail.template'}
+
+    @api.onchange('notification_type')
+    def set_template_ref_model(self):
+        mail_model = self.env['mail.template']
+        if self.notification_type == 'mail':
+            record = mail_model.search([('model', '=', 'event.registration')], limit=1)
+            self.template_ref = "{},{}".format('mail.template', record.id) if record else False
+
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
     notification_type = fields.Selection([('mail', 'Mail')], string='Send', default='mail', required=True)
@@ -139,6 +150,14 @@ class EventMailScheduler(models.Model):
             else:
                 scheduler.mail_state = 'running'
 
+    @api.constrains('notification_type', 'template_ref')
+    def _check_template_ref_model(self):
+        model_map = self._selection_template_model_get_mapping()
+        for record in self.filtered('template_ref'):
+            model = model_map[record.notification_type]
+            if record.template_ref._name != model:
+                raise ValidationError(_('The template which is referenced should be coming from %(model_name)s model.', model_name=model))
+
     def execute(self):
         for scheduler in self:
             now = fields.Datetime.now()
@@ -165,9 +184,10 @@ class EventMailScheduler(models.Model):
                 # do not send emails if the mailing was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
                     scheduler.event_id.mail_attendees(scheduler.template_ref.id)
+                    # Mail is sent to all attendees (unconfirmed as well), so count all attendees
                     scheduler.update({
                         'mail_done': True,
-                        'mail_count_done': scheduler.event_id.seats_reserved + scheduler.event_id.seats_used,
+                        'mail_count_done': scheduler.event_id.seats_expected,
                     })
         return True
 
@@ -229,6 +249,7 @@ You receive this email because you are:
     @api.model
     def schedule_communications(self, autocommit=False):
         schedulers = self.search([
+            ('event_id.active', '=', True),
             ('mail_done', '=', False),
             ('scheduled_date', '<=', fields.Datetime.now())
         ])
@@ -242,7 +263,7 @@ You receive this email because you are:
                 self.invalidate_cache()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit and not getattr(threading.currentThread(), 'testing', False):
+                if autocommit and not getattr(threading.current_thread(), 'testing', False):
                     self.env.cr.commit()
         return True
 
@@ -269,18 +290,19 @@ class EventMailRegistration(models.Model):
         for reg_mail in todo:
             organizer = reg_mail.scheduler_id.event_id.organizer_id
             company = self.env.company
-            author = self.env.ref('base.user_root')
+            author = self.env.ref('base.user_root').partner_id
             if organizer.email:
                 author = organizer
             elif company.email:
                 author = company.partner_id
             elif self.env.user.email:
-                author = self.env.user
-            
+                author = self.env.user.partner_id
+
             email_values = {
-                'email_from': author.email_formatted,
                 'author_id': author.id,
             }
+            if not reg_mail.scheduler_id.template_ref.email_from:
+                email_values['email_from'] = author.email_formatted
             reg_mail.scheduler_id.template_ref.send_mail(reg_mail.registration_id.id, email_values=email_values)
         todo.write({'mail_sent': True})
 

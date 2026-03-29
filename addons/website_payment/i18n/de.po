@@ -3,17 +3,19 @@
 # 	* website_payment
 # 
 # Translators:
-# Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -43,7 +45,7 @@ msgstr "<b>Kommentar:</b>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donation Date:</b>"
-msgstr "<b>Spendendatum:</b>"
+msgstr "<b>Datum der Spende:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -66,13 +68,18 @@ msgid "<b>Payment Method:</b>"
 msgstr "<b>Zahlungsmethode:</b>"
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
+msgid "<option value=\"\">Country...</option>"
+msgstr "<option value=\"\">Land ...</option>"
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "<strong>Es konnte keine geeignete Zahlungsmethode gefunden werden.</strong><br/>\n"
-"                                Wenn Sie dies für einen Fehler halten, kontaktieren Sie bitte den Website Administrator."
+"                                Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an den Administrator der Website."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -102,7 +109,7 @@ msgstr "Hier eine Beschreibung hinzufügen"
 #: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
 #, python-format
 msgid "Add new pre-filled option"
-msgstr ""
+msgstr "Neue vorausgefüllte Option hinzufügen"
 
 #. module: website_payment
 #. openerp-web
@@ -157,11 +164,6 @@ msgid "Country is required."
 msgstr "Land ist erforderlich."
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
-msgid "Country..."
-msgstr "Bitte Land auswählen..."
-
-#. module: website_payment
 #. openerp-web
 #: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
 #: code:addons/website_payment/static/src/snippets/s_donation/000.xml:0
@@ -209,12 +211,12 @@ msgstr "Mindestspendenbetrag ist %.2f."
 #: code:addons/website_payment/models/payment_transaction.py:0
 #, python-format
 msgid "Donation confirmation"
-msgstr "Spendenbestätigung"
+msgstr "Bestätigung der Spende"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Donation notification"
-msgstr "Spendenbenachrichtigung"
+msgstr "Benachrichtigung über Spende"
 
 #. module: website_payment
 #. openerp-web
@@ -250,7 +252,7 @@ msgstr "E-Mail ist erforderlich."
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Field '%s' is mandatory"
-msgstr "Feld '%s' ist erforderlich"
+msgstr "Feld „%s“ ist erforderlich"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -271,7 +273,7 @@ msgstr "Ist Spende"
 #: model:ir.model.fields,help:website_payment.field_account_payment__is_donation
 #: model:ir.model.fields,help:website_payment.field_payment_transaction__is_donation
 msgid "Is the payment a donation"
-msgstr ""
+msgstr "Ist die Zahlung eine Spende"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
@@ -313,7 +315,12 @@ msgstr "Ein Jahr in der Grundschule."
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "One year in high school."
-msgstr "Ein Jahr Highschool"
+msgstr "Ein Jahr in der Sekundarschule."
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_website_page
+msgid "Page"
+msgstr "Seite"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
@@ -363,12 +370,12 @@ msgstr "Empfänger-E-Mail"
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Server Error"
-msgstr "Server fehler"
+msgstr "Serverfehler"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Slider"
-msgstr ""
+msgstr "Schieberegler"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
@@ -404,7 +411,7 @@ msgstr "Es gibt keine ausstehenden Zahlungen."
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Validation Error"
-msgstr "Prüfungsfehler"
+msgstr "Validierungsfehler"
 
 #. module: website_payment
 #. openerp-web
@@ -431,7 +438,7 @@ msgstr "Ihr Kommentar"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
-msgstr ""
+msgstr "gemacht am"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -451,4 +458,4 @@ msgstr "⌙ Minimum"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "⌙ Step"
-msgstr ""
+msgstr "⌙ Schritt"

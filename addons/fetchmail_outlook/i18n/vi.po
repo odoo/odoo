@@ -1,0 +1,128 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fetchmail_outlook
+# 
+# Translators:
+# Vo Thanh Thuy, 2022
+# Thin Tran <trvathin@gmail.com>, 2022
+# Duy BQ <duybq86@gmail.com>, 2022
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-30 10:59+0000\n"
+"PO-Revision-Date: 2022-05-17 12:41+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Outlook account"
+msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Kết nối tài khoản Outlook của bạn"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Sửa cài đặt"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+msgstr ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
+msgid "Authentication URI"
+msgstr "URI xác thực"
+
+#. module: fetchmail_outlook
+#: model:ir.model,name:fetchmail_outlook.model_fetchmail_server
+msgid "Incoming Mail Server"
+msgstr "Máy chủ nhận thư"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__is_microsoft_outlook_configured
+msgid "Is Outlook Credential Configured"
+msgstr "Chứng thực Outlook đã được cấu hình"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid "Outlook"
+msgstr "Outlook"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token
+msgid "Outlook Access Token"
+msgstr "Outlook Access Token"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
+msgid "Outlook Access Token Expiration Timestamp"
+msgstr "Dấu thời gian hết hạn token truy cập Outlook"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__use_microsoft_outlook_service
+msgid "Outlook Authentication"
+msgstr "Xác thực Outlook"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
+msgid "Outlook Refresh Token"
+msgstr "Làm mới Khóa chức thực Outlook"
+
+#. module: fetchmail_outlook
+#: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid "Outlook mail server %r only supports IMAP server type."
+msgstr ""
+
+#. module: fetchmail_outlook
+#: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid ""
+"Please leave the password field empty for Outlook mail server %r. The OAuth "
+"process does not require it"
+msgstr ""
+"Vui lòng để trống trường mật khẩu cho máy chủ thư Outlook %r. Quá trình "
+"OAuth không yêu cầu mật khẩu."
+
+#. module: fetchmail_outlook
+#: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid "SSL is required ."
+msgstr "SSL là bắt buộc."
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"Setup your Outlook API credentials in the general settings to link a Outlook"
+" account."
+msgstr ""
+"Thiết lập thông tin đăng nhập Outlook API trong cài đặt chung để liên kết "
+"tài khoản Outlook."
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,help:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
+msgid "The URL to generate the authorization code from Outlook"
+msgstr "Đường dẫn URL để tạo mã chứng thực từ Outlook"

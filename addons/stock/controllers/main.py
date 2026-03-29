@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+import werkzeug
+from werkzeug.exceptions import InternalServerError
 
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.main import _serialize_exception
-from odoo.tools import html_escape
+from odoo.tools.misc import html_escape
 
 import json
 
@@ -33,4 +35,5 @@ class StockReportController(http.Controller):
                 'message': 'Odoo Server Error',
                 'data': se
             }
-            return request.make_response(html_escape(json.dumps(error)))
+            res = request.make_response(html_escape(json.dumps(error)))
+            raise InternalServerError(response=res) from e

@@ -69,12 +69,20 @@ class AccountMove(models.Model):
         # number for Vendor bank accounts:
         # - validation of format xx-yyyyy-c
         # - validation of checksum
-        self.ensure_one()
         return self.partner_bank_id.l10n_ch_postal or ''
 
     @api.depends('name', 'partner_bank_id.l10n_ch_postal')
     def _compute_l10n_ch_isr_number(self):
-        """Generates the ISR or QRR reference
+        for record in self:
+            if (record.partner_bank_id.l10n_ch_qr_iban or record.l10n_ch_isr_subscription) and record.name:
+                invoice_ref = re.sub(r'\D', '', record.name)
+                record.l10n_ch_isr_number = record._compute_isr_number(invoice_ref)
+            else:
+                record.l10n_ch_isr_number = False
+
+    @api.model
+    def _compute_isr_number(self, invoice_ref):
+        r"""Generates the ISR or QRR reference
 
         An ISR references are 27 characters long.
         QRR is a recycling of ISR for QR-bills. Thus works the same.
@@ -118,22 +126,18 @@ class AccountMove(models.Model):
                 (2) 12345678901234567890 | reference
                 (3) 1: control digit for identification number and reference
         """
-        for record in self:
-            if (record.partner_bank_id.l10n_ch_qr_iban or record.l10n_ch_isr_subscription) and record.name:
-                id_number = record._get_isrb_id_number()
-                if id_number:
-                    id_number = id_number.zfill(l10n_ch_ISR_ID_NUM_LENGTH)
-                invoice_ref = re.sub('[^\d]', '', record.name)
-                # keep only the last digits if it exceed boundaries
-                full_len = len(id_number) + len(invoice_ref)
-                ref_payload_len = l10n_ch_ISR_NUMBER_LENGTH - 1
-                extra = full_len - ref_payload_len
-                if extra > 0:
-                    invoice_ref = invoice_ref[extra:]
-                internal_ref = invoice_ref.zfill(ref_payload_len - len(id_number))
-                record.l10n_ch_isr_number = mod10r(id_number + internal_ref)
-            else:
-                record.l10n_ch_isr_number = False
+        id_number = self._get_isrb_id_number()
+        if id_number:
+            id_number = id_number.zfill(l10n_ch_ISR_ID_NUM_LENGTH)
+        # keep only the last digits if it exceed boundaries
+        full_len = len(id_number) + len(invoice_ref)
+        ref_payload_len = l10n_ch_ISR_NUMBER_LENGTH - 1
+        extra = full_len - ref_payload_len
+        if extra > 0:
+            invoice_ref = invoice_ref[extra:]
+        internal_ref = invoice_ref.zfill(ref_payload_len - len(id_number))
+
+        return mod10r(id_number + internal_ref)
 
     @api.depends('l10n_ch_isr_number')
     def _compute_l10n_ch_isr_number_spaced(self):
@@ -173,7 +177,7 @@ class AccountMove(models.Model):
         'partner_bank_id.l10n_ch_isr_subscription_eur',
         'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_optical_line(self):
-        """ Compute the optical line to print on the bottom of the ISR.
+        r""" Compute the optical line to print on the bottom of the ISR.
 
         This line is read by an OCR.
         It's format is:
@@ -242,7 +246,7 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'partner_bank_id', 'payment_reference')
     def _compute_l10n_ch_isr_needs_fixing(self):
         for inv in self:
-            if inv.move_type == 'in_invoice' and inv.company_id.account_fiscal_country_id.code == "CH":
+            if inv.move_type == 'in_invoice' and inv.company_id.account_fiscal_country_id.code in ('CH', 'LI'):
                 partner_bank = inv.partner_bank_id
                 needs_isr_ref = partner_bank.l10n_ch_qr_iban or partner_bank._is_isr_issuer()
                 if needs_isr_ref and not inv._has_isr_ref():
@@ -280,6 +284,8 @@ class AccountMove(models.Model):
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.
+        This button isn't available anymore and will be removed in 16.2.
+        This function is kept for stable policy.
         """
         self.ensure_one()
         if self.l10n_ch_isr_valid:
@@ -297,6 +303,9 @@ class AccountMove(models.Model):
         """ Triggered by the 'Print QR-bill' button.
         """
         self.ensure_one()
+
+        if not self.partner_bank_id:
+            raise UserError(_("QR-Bill can not be generated on paid invoices. If the invoice is not fully paid, please make sure Recipient Bank field is not empty and try again."))
 
         if not self.partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
             raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
@@ -345,3 +354,11 @@ class AccountMove(models.Model):
             i -= 5
 
         return spaced_qrr_ref
+
+    @api.model
+    def space_scor_reference(self, iso11649_ref):
+        """ Makes the provided SCOR reference human-friendly, spacing its elements
+        by blocks of 5 from right to left.
+        """
+
+        return ' '.join(iso11649_ref[i:i + 4] for i in range(0, len(iso11649_ref), 4))

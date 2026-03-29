@@ -10,6 +10,9 @@ class AccountAnalyticAccount(models.Model):
     invoice_count = fields.Integer("Invoice Count", compute='_compute_invoice_count')
     vendor_bill_count = fields.Integer("Vendor Bill Count", compute='_compute_vendor_bill_count')
 
+    debit = fields.Monetary(groups='account.group_account_readonly')
+    credit = fields.Monetary(groups='account.group_account_readonly')
+
     @api.constrains('company_id')
     def _check_company_consistency(self):
         analytic_accounts = self.filtered('company_id')
@@ -33,7 +36,7 @@ class AccountAnalyticAccount(models.Model):
     def _compute_invoice_count(self):
         sale_types = self.env['account.move'].get_sale_types()
         domain = [
-            ('move_id.state', '=', 'posted'),
+            ('parent_state', '=', 'posted'),
             ('move_id.move_type', 'in', sale_types),
             ('analytic_account_id', 'in', self.ids)
         ]
@@ -46,7 +49,7 @@ class AccountAnalyticAccount(models.Model):
     def _compute_vendor_bill_count(self):
         purchase_types = self.env['account.move'].get_purchase_types()
         domain = [
-            ('move_id.state', '=', 'posted'),
+            ('parent_state', '=', 'posted'),
             ('move_id.move_type', 'in', purchase_types),
             ('analytic_account_id', 'in', self.ids)
         ]
@@ -61,8 +64,8 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [('id', 'in', self.line_ids.move_id.move_id.ids), ('move_type', 'in', self.env['account.move'].get_sale_types())],
-            "context": {"create": False},
-            "name": "Customer Invoices",
+            "context": {"create": False, 'default_move_type': 'out_invoice'},
+            "name": _("Customer Invoices"),
             'view_mode': 'tree,form',
         }
         return result
@@ -73,8 +76,8 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [('id', 'in', self.line_ids.move_id.move_id.ids), ('move_type', 'in', self.env['account.move'].get_purchase_types())],
-            "context": {"create": False},
-            "name": "Vendor Bills",
+            "context": {"create": False, 'default_move_type': 'in_invoice'},
+            "name": _("Vendor Bills"),
             'view_mode': 'tree,form',
         }
         return result

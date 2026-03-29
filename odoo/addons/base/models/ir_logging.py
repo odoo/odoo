@@ -6,6 +6,7 @@ class IrLogging(models.Model):
     _name = 'ir.logging'
     _description = 'Logging'
     _order = 'id DESC'
+    _allow_sudo_commands = False
 
     # The _log_access fields are defined manually for the following reasons:
     #

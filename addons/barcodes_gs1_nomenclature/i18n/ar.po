@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
 msgid "Alpha-Numeric Name"
-msgstr ""
+msgstr "اسم يحتوي على أحرف وأرقام "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
@@ -31,11 +32,13 @@ msgid ""
 " ASCII 29 char). The separator must not match the begin/end of any related "
 "rules pattern."
 msgstr ""
+"حد التعبير النمطي البديل لـ FNC1 (بشكل افتراضي، وإلا، فسيكون <GS> ASCII 29 "
+"خانة). يجب ألا يطابق الفاصل بداية/نهاية نمط أي قواعد ذات صلة. "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
 msgid "Associated Uom"
-msgstr ""
+msgstr "وحدة القياس المرتبطة "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
@@ -60,12 +63,12 @@ msgstr "التاريخ"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid "Decimal"
-msgstr ""
+msgstr "عشري "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
 msgid "Destination location"
-msgstr "مكان الوجهة"
+msgstr "موقع الوجهة "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
@@ -75,58 +78,60 @@ msgstr "التشفير"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__expiration_date
 msgid "Expiration Date"
-msgstr "تاريخ الصلاحية"
+msgstr "تاريخ الانتهاء "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "فاصل FNC1 "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid "GS1 Content Type"
-msgstr ""
+msgstr "نوع محتوى GS1 "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
 msgid "GS1-128"
-msgstr ""
+msgstr "GS1-128"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid ""
 "If True, use the last digit of AI to dertermine where the first decimal is"
 msgstr ""
+"إذا كانت القيمة صحيحة، استخدم الرقم الأخير من الذكاء الاصطناعي لتحديد مكان "
+"وضع الفاصلة الأولى "
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
-msgstr ""
+msgstr "الباركود غير صالح: لا يمكن صياغته كتاريخ "
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
-msgstr ""
+msgstr "الباركود غير صالح: رقم التحقق غير صحيح "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
 msgid "Is GS1 Nomenclature"
-msgstr ""
+msgstr "تسمية GS1 "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
 msgid "Location"
-msgstr "المكان"
+msgstr "الموقع "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
 msgid "Lot"
-msgstr "التشغيلة"
+msgstr "الدفعة "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
@@ -136,7 +141,7 @@ msgstr "المقياس"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
 msgid "Numeric Identifier"
-msgstr ""
+msgstr "المعرف الرقمي  "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
@@ -146,12 +151,12 @@ msgstr "حزمة"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__packaging_date
 msgid "Packaging Date"
-msgstr ""
+msgstr "تاريخ التغليف  "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
 msgid "Packaging Type"
-msgstr ""
+msgstr "نوع التغليف "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity
@@ -162,7 +167,7 @@ msgstr "الكمية"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
-msgstr ""
+msgstr "بديل فاصل FNC1 ليس تعبيراً نمطياً صالحاً: "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -173,12 +178,17 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"يحدد نوع محتوى GS1 نوع البيانات التي سوف تقوم القاعدة بمعالجة البيانات "
+"الباركود على هيئتها:        * التاريخ: سوف يتم تحويل الباركود بتوقيت وتاريخ "
+"أودو؛        * القياس: قيمة الباركود مرتبطة بوحدة قياس محددة؛        * "
+"المعرف الرقمي: باركود ذو طول ثابت يتبع ترميزاً محدداً;        *اسم يحتوي على"
+" أحرف وأرقام: باركود ذو أطوال متفاوتة. "
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
-msgstr ""
+msgstr "نمط القاعدة \"%s\" ليس تعبيراً نمطياً صالحاً: "
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
@@ -188,6 +198,9 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"نمط القاعدة \"%s\" غير صالح، يحتاج إلى مجموعتين:\n"
+"\t- الأولى لمعرّف التطبيق (عادة ما يكون من رقمين 2 أو 4)؛\n"
+"\t- والثانية لرصد القيمة. "
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
@@ -197,6 +210,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"هناك خطأ ما في نمط قاعدة الباركود \"%s\".\n"
+"إذا كانت هذه القائمة تستخدم الفواصل العشرية، تحقق من أن الخانة الأخيرة تتكون من رقم وليس أي شيء آخر لمعرّف التطبيق.\n"
+"تأكد أيضاً من كون القيم المتطابقة المحتملة أرقاماً فقط، وإلا فلن تتم صياغة القيمة كوحدة قياس. "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -205,20 +221,22 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
+"تستخدم هذه التسمية مواصفات GS1. وحدها قواعد ترميز GS1-128 المقبولة في هذا "
+"النوع من التسمية. "
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr ""
+msgstr "لا يمكن تحليل الباركود من قِبَل أي قواعد باركود. "
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."
-msgstr ""
+msgstr "لا يمكن تحليل هذا الباركود جزئياً أو كلياً. "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding
@@ -226,7 +244,7 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
-"ستُطبق هذه القاعدة فقط إذا كان الباركود مُشفرًا بطريقة التشفير المحددة"
+"سوف تنطبق هذه القاعدة فقط إذا كان الباركود مُشفرًا بطريقة التشفير المحددة "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type

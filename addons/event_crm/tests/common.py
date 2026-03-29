@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import tools
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.event.tests.common import TestEventCommon
 
@@ -99,8 +100,8 @@ class TestEventCrmCommon(TestCrmCommon, TestEventCommon):
 
         self.assertEqual(lead.contact_name, expected_contact_name)
         self.assertEqual(lead.partner_name, expected_partner_name)
-        self.assertEqual(lead.email_from, partner.email if partner else registrations._find_first_notnull('email'))
-        self.assertEqual(lead.phone, partner.phone if partner else registrations._find_first_notnull('phone'))
+        self.assertEqual(lead.email_from, partner.email if partner and partner.email else registrations._find_first_notnull('email'))
+        self.assertEqual(lead.phone, partner.phone if partner and partner.phone else registrations._find_first_notnull('phone'))
         self.assertEqual(lead.mobile, partner.mobile if partner and partner.mobile else registrations._find_first_notnull('mobile'))
 
         # description: to improve
@@ -111,7 +112,10 @@ class TestEventCrmCommon(TestCrmCommon, TestEventCommon):
             elif registration.partner_id.name:
                 self.assertIn(registration.partner_id.name, lead.description)
             if registration.email:
-                self.assertIn(registration.email, lead.description)
+                if tools.email_normalize(registration.email) == registration.partner_id.email_normalized:
+                    self.assertIn(registration.partner_id.email, lead.description)
+                else:
+                    self.assertIn(tools.email_normalize(registration.email), lead.description)
             if registration.phone:
                 self.assertIn(registration.phone, lead.description)
 

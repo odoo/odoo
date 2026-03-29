@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, exceptions, fields, models, modules
 from odoo.addons.base.models.res_users import is_selection_groups
 
@@ -137,55 +139,65 @@ class Users(models.Model):
             'current_partner': self.partner_id.mail_partner_format().get(self.partner_id),
             'current_user_id': self.id,
             'current_user_settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),
-            'mail_failures': self.partner_id._message_fetch_failed(),
+            'mail_failures': [],
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
             'partner_root': partner_root.sudo().mail_partner_format().get(partner_root),
             'public_partners': list(self.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id.mail_partner_format().values()),
             'shortcodes': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
-            'starred_counter': self.partner_id._get_starred_count(),
+            'starred_counter': self.env['mail.message'].search_count([('starred_partner_ids', 'in', self.partner_id.ids)]),
         }
         return values
 
     @api.model
     def systray_get_activities(self):
-        query = """SELECT m.id, count(*), act.res_model as model,
-                        CASE
-                            WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'
-                            WHEN %(today)s::date - act.date_deadline::date > 0 Then 'overdue'
-                            WHEN %(today)s::date - act.date_deadline::date < 0 Then 'planned'
-                        END AS states
-                    FROM mail_activity AS act
-                    JOIN ir_model AS m ON act.res_model_id = m.id
-                    WHERE user_id = %(user_id)s
-                    GROUP BY m.id, states, act.res_model;
-                    """
+        query = """SELECT array_agg(res_id) as res_ids, m.id, count(*),
+                    CASE
+                        WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'
+                        WHEN %(today)s::date - act.date_deadline::date > 0 Then 'overdue'
+                        WHEN %(today)s::date - act.date_deadline::date < 0 Then 'planned'
+                    END AS states
+                FROM mail_activity AS act
+                JOIN ir_model AS m ON act.res_model_id = m.id
+                WHERE user_id = %(user_id)s
+                GROUP BY m.id, states;
+                """
         self.env.cr.execute(query, {
             'today': fields.Date.context_today(self),
             'user_id': self.env.uid,
         })
         activity_data = self.env.cr.dictfetchall()
-        model_ids = [a['id'] for a in activity_data]
-        model_names = {n[0]: n[1] for n in self.env['ir.model'].sudo().browse(model_ids).name_get()}
-
+        records_by_state_by_model = defaultdict(lambda: {"today": set(), "overdue": set(), "planned": set(), "all": set()})
+        for data in activity_data:
+            records_by_state_by_model[data["id"]][data["states"]] = set(data["res_ids"])
+            records_by_state_by_model[data["id"]]["all"] = records_by_state_by_model[data["id"]]["all"] | set(data["res_ids"])
         user_activities = {}
-        for activity in activity_data:
-            if not user_activities.get(activity['model']):
-                module = self.env[activity['model']]._original_module
-                icon = module and modules.module.get_module_icon(module)
-                user_activities[activity['model']] = {
-                    'name': model_names[activity['id']],
-                    'model': activity['model'],
-                    'type': 'activity',
-                    'icon': icon,
-                    'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
-                }
-            user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
-            if activity['states'] in ('today', 'overdue'):
-                user_activities[activity['model']]['total_count'] += activity['count']
-
-            user_activities[activity['model']]['actions'] = [{
-                'icon': 'fa-clock-o',
-                'name': 'Summary',
-            }]
+        for model_id in records_by_state_by_model:
+            model_dic = records_by_state_by_model[model_id]
+            model = self.env["ir.model"].sudo().browse(model_id).with_prefetch(tuple(records_by_state_by_model.keys()))
+            if not self.env[model.model].check_access_rights('read', raise_exception=False):
+                continue
+            allowed_records = self.env[model.model].search([("id", "in", tuple(model_dic["all"]))])
+            if not allowed_records:
+                continue
+            module = self.env[model.model]._original_module
+            icon = module and modules.module.get_module_icon(module)
+            today = len(model_dic["today"] & set(allowed_records.ids))
+            overdue = len(model_dic["overdue"] & set(allowed_records.ids))
+            user_activities[model.model] = {
+                "name": model.name,
+                "model": model.model,
+                "type": "activity",
+                "icon": icon,
+                "total_count": today + overdue,
+                "today_count": today,
+                "overdue_count": overdue,
+                "planned_count": len(model_dic["planned"] & set(allowed_records.ids)),
+                "actions": [
+                    {
+                        "icon": "fa-clock-o",
+                        "name": "Summary",
+                    }
+                ],
+            }
         return list(user_activities.values())

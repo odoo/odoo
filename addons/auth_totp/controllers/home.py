@@ -14,7 +14,7 @@ class Home(odoo.addons.web.controllers.main.Home):
     @http.route(
         '/web/login/totp',
         type='http', auth='public', methods=['GET', 'POST'], sitemap=False,
-        website=True, # website breaks the login layout...
+        website=True, multilang=False # website breaks the login layout...
     )
     def web_totp(self, redirect=None, **kwargs):
         if request.session.uid:
@@ -35,12 +35,12 @@ class Home(odoo.addons.web.controllers.main.Home):
                     request.session.finalize()
                     return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
 
-        elif user and request.httprequest.method == 'POST':
+        elif user and request.httprequest.method == 'POST' and kwargs.get('totp_token'):
             try:
                 with user._assert_can_auth():
                     user._totp_check(int(re.sub(r'\s', '', kwargs['totp_token'])))
-            except AccessDenied:
-                error = _("Verification failed, please double-check the 6-digit code")
+            except AccessDenied as e:
+                error = str(e)
             except ValueError:
                 error = _("Invalid authentication code format.")
             else:
@@ -66,6 +66,7 @@ class Home(odoo.addons.web.controllers.main.Home):
                 return response
 
         return request.render('auth_totp.auth_totp_form', {
+            'user': user,
             'error': error,
             'redirect': redirect,
         })

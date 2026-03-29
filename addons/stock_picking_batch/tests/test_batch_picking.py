@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -320,6 +320,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_lines.product_uom_qty, 5, 'initial demand should be 5 after picking split')
         self.assertFalse(self.picking_client_2.batch_id)
+
     def test_put_in_pack(self):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
@@ -359,3 +360,177 @@ class TestBatchPicking(TransactionCase):
 
         # final package location should be correctly set based on wizard
         self.assertEqual(package.location_id.id, self.customer_location.id)
+
+    def test_put_in_pack_within_single_picking(self):
+        """ Test that when `action_put_in_pack` is called on a picking that is also in a batch,
+        only that picking's moves are put in the pack """
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
+
+        self.batch.action_confirm()
+        self.batch.action_assign()
+        self.batch.move_line_ids.qty_done = 5
+        package = self.picking_client_1.action_put_in_pack()
+        self.assertEqual(self.picking_client_1.move_line_ids.result_package_id, package)
+        self.assertFalse(self.picking_client_2.move_line_ids.result_package_id, "Other picking in batch shouldn't have been put in a package")
+
+    def test_remove_all_transfers_from_confirmed_batch(self):
+        """
+            Check that the batch is canceled when all transfers are deleted
+        """
+        self.batch.action_confirm()
+        self.assertEqual(self.batch.state, 'in_progress', 'Batch Transfers should be in progress.')
+        self.batch.write({'picking_ids': [[5, 0, 0]]})
+        self.assertEqual(self.batch.state, 'cancel', 'Batch Transfers should be cancelled when there are no transfers.')
+
+
+@tagged('-at_install', 'post_install')
+class TestBatchPicking02(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        if not self.stock_location.child_ids:
+            self.stock_location.create([{
+                'name': 'Shelf 1',
+                'location_id': self.stock_location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': self.stock_location.id,
+            }])
+        self.picking_type_internal = self.env.ref('stock.picking_type_internal')
+        self.productA = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.productB = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+    def test_same_package_several_pickings(self):
+        """
+        A batch with two transfers, source and destination are the same. The
+        first picking contains 3 x P, the second one 7 x P. The 10 P are in a
+        package. It should be possible to transfer the whole package across the
+        two pickings
+        """
+        package = self.env['stock.quant.package'].create({
+            'name': 'superpackage',
+        })
+
+        loc1, loc2 = self.stock_location.child_ids
+        self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10, package_id=package)
+
+        pickings = self.env['stock.picking'].create([{
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'move_lines': [(0, 0, {
+                'name': 'test_put_in_pack_from_multiple_pages',
+                'location_id': loc1.id,
+                'location_dest_id': loc2.id,
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': qty,
+            })]
+        } for qty in (3, 7)])
+        pickings.action_confirm()
+        pickings.action_assign()
+
+        batch_form = Form(self.env['stock.picking.batch'])
+        batch_form.picking_ids.add(pickings[0])
+        batch_form.picking_ids.add(pickings[1])
+        batch = batch_form.save()
+        batch.action_confirm()
+
+        pickings.move_line_ids[0].qty_done = 3
+        pickings.move_line_ids[1].qty_done = 7
+        pickings.move_line_ids.result_package_id = package
+
+        batch.action_done()
+        self.assertRecordValues(pickings.move_lines, [
+            {'state': 'done', 'quantity_done': 3},
+            {'state': 'done', 'quantity_done': 7},
+        ])
+        self.assertEqual(pickings.move_line_ids.result_package_id, package)
+
+    def test_add_batch_move_line(self):
+        """
+        Adding a stock move line in a batch form triggers a calculation of the
+        default dest location. This test checks if that calculation doesn't
+        raise any exceptions for a new, empty StockMoveLine object.
+        """
+        loc1, loc2 = self.stock_location.child_ids
+        picking = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+        })
+        batch_form = Form(self.env['stock.picking.batch'])
+        batch_form.picking_ids.add(picking)
+        batch = batch_form.save()
+        batch.action_confirm()
+        confirmed_form = Form(batch)
+        # Adding a new line should not raise an error
+        confirmed_form.move_line_ids.new()
+        # Adding a line should work also for users in storage categories group
+        self.env.user.groups_id += self.env.ref('stock.group_stock_storage_categories')
+        batch_form = Form(self.env['stock.picking.batch'])
+        batch_form.picking_ids.add(picking)
+        batch = batch_form.save()
+        batch.action_confirm()
+        confirmed_form = Form(batch)
+        confirmed_form.move_line_ids.new()
+
+    def test_batch_validation_without_backorder(self):
+        loc1, loc2 = self.stock_location.child_ids
+        self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10)
+        self.env['stock.quant']._update_available_quantity(self.productB, loc1, 10)
+        picking_1 = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+        })
+
+        picking_2 = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+        })
+        (picking_1 | picking_2).action_confirm()
+        (picking_1 | picking_2).action_assign()
+        picking_2.move_lines.move_line_ids.write({'qty_done': 1})
+
+        batch = self.env['stock.picking.batch'].create({
+            'name': 'Batch 1',
+            'company_id': self.env.company.id,
+            'picking_ids': [(4, picking_1.id), (4, picking_2.id)]
+        })
+        batch.action_confirm()
+        action = batch.action_done()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
+        self.assertEqual(batch.state, 'done')

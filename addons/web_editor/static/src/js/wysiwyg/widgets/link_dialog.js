@@ -10,6 +10,7 @@ const _DialogLinkWidget = Link.extend({
     template: 'wysiwyg.widgets.link',
     events: _.extend({}, Link.prototype.events || {}, {
         'change [name="link_style_color"]': '_onTypeChange',
+        'input input[name="label"]': '_adaptPreview',
     }),
 
     /**
@@ -74,13 +75,22 @@ const _DialogLinkWidget = Link.extend({
             href: data.url && data.url.length ? data.url : '#',
             class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
         };
-        this.$("#link-preview").attr(attrs).html((data.content && data.content.length) ? data.content : data.url);
+
+        const $linkPreview = this.$("#link-preview");
+        $linkPreview.attr(attrs);
+        this._updateLinkContent($linkPreview, data, { force: true });
     },
     /**
      * @override
      */
     _doStripDomain: function () {
         return this.$('#o_link_dialog_url_strip_domain').prop('checked');
+    },
+    /**
+     * @override
+     */
+    _getIsNewWindowFormRow() {
+        return this.$('input[name="is_new_window"]').closest('.form-group');
     },
     /**
      * @override
@@ -172,6 +182,7 @@ const _DialogLinkWidget = Link.extend({
     _onURLInput: function () {
         this._super(...arguments);
         this.$('#o_link_dialog_url_input').closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        this._adaptPreview();
     },
 });
 

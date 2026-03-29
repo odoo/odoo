@@ -3,8 +3,9 @@
 # 	* auth_totp_mail
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2021
+# Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -42,15 +43,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo<t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> fordert Sie dazu auf, Zwei-Faktor-Authentisierung zu aktivieren, um Ihr Konto zu schützen.<br/><br/>\n"
-"        Zwei-Faktor-Authentisierung (\"2FA\") ist ein System der doppelten Authentifizierung.\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> fordert Sie dazu auf, Zwei-Faktor-Authentifizierung zu aktivieren, um Ihr Konto zu schützen.<br/><br/>\n"
+"        Zwei-Faktor-Authentifizierung („2FA“) ist ein System der doppelten Authentifizierung.\n"
 "        Die erste erfolgt mit Ihrem Passwort, die zweite mit einem Code, den Sie über eine spezielle mobile App erhalten.\n"
 "        Zu den beliebtesten gehören Authy, Google Authenticator oder Microsoft Authenticator.\n"
 "\n"
 "        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                Meine 2-Faktor-Authentisierung aktivieren\n"
+"                Meine 2-Faktor-Authentifizierung aktivieren\n"
 "            </a>\n"
 "        </p>\n"
 "    </p>\n"
@@ -61,7 +62,7 @@ msgstr ""
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
-msgstr "Account Sicherheit"
+msgstr "Kontosicherheit"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
@@ -77,8 +78,8 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
-"Aufforderung zur Verwendung der Zwei-Faktor-Authentifizierung für "
-"folgende(n) Benutzer gesendet: %s"
+"Einladung zur Verwendung der Zwei-Faktor-Authentifizierung für folgende(n) "
+"Benutzer gesendet: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form

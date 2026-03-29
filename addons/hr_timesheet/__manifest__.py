@@ -58,6 +58,9 @@ up a management by affair.
             'hr_timesheet/static/src/js/timesheet_graph_view.js',
             'hr_timesheet/static/src/js/timesheet_graph_model.js',
         ],
+        "web.assets_backend_legacy_lazy": [
+            'hr_timesheet/static/src/js/*_legacy.js',
+        ],
         'web.qunit_suite_tests': [
             'hr_timesheet/static/tests/**/*',
         ],

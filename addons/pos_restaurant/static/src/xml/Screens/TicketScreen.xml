@@ -8,8 +8,10 @@
         </xpath>
         <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
             <div t-if="env.pos.config.iface_floorplan" class="col" name="table">
-                <div t-if="env.isMobile">Table</div>
-                <div><t t-esc="getTable(order)"></t></div>
+                <t t-if="order.table">
+                    <div t-if="env.isMobile">Table</div>
+                    <div><t t-esc="getTable(order)"></t></div>
+                </t>
             </div>
             <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">
                 <div t-if="env.isMobile">Tip</div>

@@ -21,13 +21,14 @@ Countries that use OHADA are the following:
 
     Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, Niger,
 
-    Replica of Democratic Congo, Senegal, Chad, Togo.
+    Democratic Republic of the Congo, Senegal, Chad, Togo.
     """,
     'website': 'http://www.baamtu.com',
     'depends' : [
         'account',
     ],
     'data': [
+        'data/menuitem_data.xml',
         'data/account_tax_group_data.xml',
         'data/l10n_syscohada_chart_data.xml',
         'data/account.account.template.csv',

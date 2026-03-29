@@ -3,7 +3,7 @@
 # 	* account_lock
 # 
 # Translators:
-# Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,8 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,29 +26,32 @@ msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
 msgstr ""
+"يجب أن تكون تواريخ الإقفال الجديدة لكافة المستخدمين بعد (أو مكافئة) لما "
+"قبلها. "
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
 msgid "Companies"
-msgstr "شركات"
+msgstr "الشركات "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr "لا رجعة في تاريخ القفل للاستشاريين ولا يمكن حذفه."
+msgstr "لا يمكن عكس تاريخ الإقفال للمرشدين ولا يمكن إزالته. "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
+"يجب أن يتم تعيين تاريخ إقفال الضريبة الجديد بعد تاريخ إقفال الضريبة السابق. "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "لا يمكن عكس أو إزالة تاريخ إقفال الضريبة "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -57,6 +60,8 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"لا يمكنك إقفال فترة لم تنته بعد، ولذلك، يجب أن يكون تاريخ إقفال كافة "
+"المستخدِمين سابقاً (أو مكافئاً) لتاريخ آخر يوم من الشهر الماضي. "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -65,6 +70,8 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"لا يمكنك إقفال فترة لم تنته بعد، ولذلك، يجب أن يكون تاريخ إقفال الضريبة "
+"سابقاً (أو مكافئاً) لتاريخ آخر يوم من الشهر الماضي. "
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -74,3 +81,6 @@ msgid ""
 "the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
 "Lock Date."
 msgstr ""
+"لا يمكن أن تكون التقييدات التي تضعها على المرشدين أكثر شدة من المستخدمين، "
+"ولذلك، يجب أن يكون تاريخ إقفال كافة المستخدِمين سابقاً (أو مكافئاً) لتاريخ "
+"آخر يوم من الشهر الماضي. "

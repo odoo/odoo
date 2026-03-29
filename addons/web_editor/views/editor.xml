@@ -2,9 +2,8 @@
 <odoo>
 
 <template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content" groups="base.group_user">
-    <t t-call-assets="web.assets_common"/>
-    <t t-call-assets="web.assets_frontend" t-js="false"/>
-    <t t-call-assets="web_editor.assets_wysiwyg"/>
+    <t t-call-assets="web.assets_common" t-css="false" />
+    <t t-call-assets="web_editor.assets_wysiwyg" t-css="false" />
 </template>
 
 <template id="compiled_assets_wysiwyg" name="Wysiwyg Editor" groups="base.group_public,base.group_portal,base.group_user">
@@ -85,7 +84,7 @@
                 <t t-set="input_classes" t-value="'p-0 border-0 text-center text-monospace bg-transparent text-white'" />
                 <div class="d-flex justify-content-between my-2 o_type_row">
                     <we-title>Type</we-title>
-                    <span class="d-flex justify-content-between">
+                    <span class="d-flex justify-content-between bg-black-50">
                         <we-button data-gradient-type="linear-gradient" class="d-flex align-items-baseline active">Linear</we-button>
                         <we-button data-gradient-type="radial-gradient" class="d-flex align-items-baseline">Radial</we-button>
                     </span>

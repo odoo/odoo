@@ -28,10 +28,7 @@ class ResCompany(models.Model):
         default_chart_templates = self.env['account.chart.template'].search([], limit=1)
         if not default_chart_templates:
             # TODO install l10n_generic_coa ?
-            raise UserError(_(
-                "At least one localization is needed to be installed in order to populate the "
-                "database with accounting"
-            ))
+            return records
         random = populate.Random('res.company+chart_template_selector')
 
         # Load the a chart of accounts matching the currency of the company for the 3 first created companies

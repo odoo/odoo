@@ -5,17 +5,18 @@
 # Translators:
 # Martin Trigaux, 2021
 # Dorin Hongu <dhongu@gmail.com>, 2021
-# Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Corina Calin, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Last-Translator: Corina Calin, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,7 +32,7 @@ msgstr "Crează factura"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Creare la comandă"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -51,7 +52,7 @@ msgstr "Sarcini Generate"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "Are comandă de vânzare de facturat"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -83,6 +84,7 @@ msgstr ""
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr ""
+"Facturați cantitățile comandate de îndată ce acest serviciu este vândut."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -108,7 +110,7 @@ msgstr "Nimic"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Număr de proiecte"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
@@ -122,6 +124,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"La confirmarea comenzii de vânzare, acest produs poate genera un proiect și/sau o sarcină. Din acestea, puteți urmări serviciul pe care îl vindeți.\n"
+"\"În proiectul comenzii de vânzare\": Va utiliza proiectul configurat al comenzii de vânzare, dacă este definit, sau va reveni la crearea unui proiect nou pe baza modelului selectat."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
@@ -145,7 +149,7 @@ msgstr "Proiect"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Proiect și sarcină"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -161,7 +165,7 @@ msgstr "Proiect generat de articolul din comanda de vânzare"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Comanda de vânzare a proiectului"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -190,6 +194,7 @@ msgstr "Comadă vânzare"
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
@@ -397,6 +402,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Nu puteți lega elementul de comandă %(order_id)s - %(product_id)s la această"
+" sarcină deoarece este o cheltuială refacturată."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0

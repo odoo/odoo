@@ -14,7 +14,13 @@ def _configure_journals(cr, registry):
 
     # if we already have a coa installed, create journal and set property field
     company_ids = env['res.company'].search([('chart_template_id', '!=', False)])
-
+    todo_list = [
+        'property_stock_account_input_categ_id',
+        'property_stock_account_output_categ_id',
+        'property_stock_valuation_account_id',
+    ]
+    # Property Stock Accounts
+    categ_values = {category.id: False for category in env['product.category'].search([])}
     for company_id in company_ids:
         # Check if property exists for stock account journal exists
         field = env['ir.model.fields']._get("product.category", "property_stock_journal")
@@ -22,10 +28,10 @@ def _configure_journals(cr, registry):
             ('fields_id', '=', field.id),
             ('company_id', '=', company_id.id)])
 
-        # If not, check if you can find a journal that is already there with the same name, otherwise create one
+        # If not, check if you can find a journal that is already there with the same code, otherwise create one
         if not properties:
             journal_id = env['account.journal'].search([
-                ('name', '=', _('Inventory Valuation')),
+                ('code', '=', 'STJ'),
                 ('company_id', '=', company_id.id),
                 ('type', '=', 'general')], limit=1).id
             if not journal_id:
@@ -43,13 +49,6 @@ def _configure_journals(cr, registry):
                 company_id,
             )
 
-        # Property Stock Accounts
-        todo_list = [
-            'property_stock_account_input_categ_id',
-            'property_stock_account_output_categ_id',
-            'property_stock_valuation_account_id',
-        ]
-
         for name in todo_list:
             account = getattr(company_id, name)
             if account:
@@ -59,3 +58,4 @@ def _configure_journals(cr, registry):
                     account,
                     company_id,
                 )
+            env['ir.property'].with_company(company_id.id)._set_multi(name, 'product.category', categ_values, True)

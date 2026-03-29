@@ -4,7 +4,7 @@
   <t t-name="web.CommandPalette" owl="1">
     <div>
       <div class="o_command_palette_search">
-        <input type="text" t-model="state.searchValue" t-on-input="onDebouncedSearchInput" autofocus="" t-att-placeholder="state.placeholder"/>
+        <input type="text" data-allow-hotkeys="true" t-model="state.searchValue" t-on-input="onDebouncedSearchInput" autofocus="" t-att-placeholder="state.placeholder"/>
         <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
       </div>
 

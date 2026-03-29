@@ -103,7 +103,7 @@ QUnit.module('Chatter', {
 });
 
 QUnit.test('list activity widget with no activity', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     const { widget: list } = await start({
         hasView: true,
@@ -112,7 +112,9 @@ QUnit.test('list activity widget with no activity', async function (assert) {
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
-            assert.step(route);
+            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+                assert.step(route);
+            }
             return this._super(...arguments);
         },
         session: { uid: 2 },
@@ -121,16 +123,13 @@ QUnit.test('list activity widget with no activity', async function (assert) {
     assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
     assert.strictEqual(list.$('.o_activity_summary').text(), '');
 
-    assert.verifySteps([
-        '/web/dataset/search_read',
-        '/mail/init_messaging',
-    ]);
+    assert.verifySteps(['/web/dataset/search_read']);
 
     list.destroy();
 });
 
 QUnit.test('list activity widget with activities', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     const currentUser = this.data['res.users'].records.find(user =>
         user.id === this.data.currentUserId
@@ -158,7 +157,9 @@ QUnit.test('list activity widget with activities', async function (assert) {
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
-            assert.step(route);
+            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+                assert.step(route);
+            }
             return this._super(...arguments);
         },
     });
@@ -171,16 +172,13 @@ QUnit.test('list activity widget with activities', async function (assert) {
     assert.containsOnce($secondRow, '.o_mail_activity .o_activity_color_planned.fa-clock-o');
     assert.strictEqual($secondRow.find('.o_activity_summary').text(), 'Type 2');
 
-    assert.verifySteps([
-        '/web/dataset/search_read',
-        '/mail/init_messaging',
-    ]);
+    assert.verifySteps(['/web/dataset/search_read']);
 
     list.destroy();
 });
 
 QUnit.test('list activity widget with exception', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     const currentUser = this.data['res.users'].records.find(user =>
         user.id === this.data.currentUserId
@@ -201,7 +199,9 @@ QUnit.test('list activity widget with exception', async function (assert) {
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
-            assert.step(route);
+            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+                assert.step(route);
+            }
             return this._super(...arguments);
         },
     });
@@ -209,16 +209,13 @@ QUnit.test('list activity widget with exception', async function (assert) {
     assert.containsOnce(list, '.o_activity_color_today.text-warning.fa-warning');
     assert.strictEqual(list.$('.o_activity_summary').text(), 'Warning');
 
-    assert.verifySteps([
-        '/web/dataset/search_read',
-        '/mail/init_messaging',
-    ]);
+    assert.verifySteps(['/web/dataset/search_read']);
 
     list.destroy();
 });
 
 QUnit.test('list activity widget: open dropdown', async function (assert) {
-    assert.expect(10);
+    assert.expect(9);
 
     const currentUser = this.data['res.users'].records.find(user =>
         user.id === this.data.currentUserId
@@ -263,7 +260,9 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
                 <field name="activity_ids" widget="list_activity"/>
             </list>`,
         mockRPC: function (route, args) {
-            assert.step(args.method || route);
+            if (!['/mail/init_messaging', '/mail/load_message_failures'].includes(route)) {
+                assert.step(args.method || route);
+            }
             if (args.method === 'action_feedback') {
                 const currentUser = this.data['res.users'].records.find(user =>
                     user.id === this.currentUserId
@@ -301,7 +300,6 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
 
     assert.verifySteps([
         '/web/dataset/search_read',
-        '/mail/init_messaging',
         'switch_view',
         'open dropdown',
         'activity_format',
@@ -369,6 +367,43 @@ QUnit.test('list activity exception widget with activity', async function (asser
         "there is no any exception activity on record");
     assert.hasClass(list.$('.o_data_row:eq(1) .o_activity_exception_cell div'), 'fa-warning',
         "there is an exception on a record");
+
+    list.destroy();
+});
+
+QUnit.test("list activity widget : displays notification to save record before scheduling activity", async function (assert) {
+    const currentUser = this.data["res.users"].records.find(
+        (user) => user.id === this.data.currentUserId
+    );
+    Object.assign(currentUser, {
+        activity_state: "today",
+        activity_type_id: 3,
+    });
+    const { widget: list } = await start({
+        hasView: true,
+        View: ListView,
+        model: "res.users",
+        data: this.data,
+        arch: `
+            <list editable='bottom'>
+                <field name='foo'/>
+                <field name='activity_ids' widget='list_activity'/>
+            </list>`,
+        services: {
+            notification: {
+                notify(notification) {
+                    assert.step("notification");
+                    assert.strictEqual(
+                        notification.message,
+                        "Save the record before scheduling an activity!",
+                    );
+                },
+            },
+        },
+    });
+    await testUtils.dom.click($(".o_list_button_add"));
+    await testUtils.dom.click($(".o_selected_row .fa-clock-o"));
+    assert.verifySteps(["notification"]);
 
     list.destroy();
 });

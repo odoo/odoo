@@ -96,12 +96,13 @@ ProductConfiguratorWidget.include({
         var self = this;
         this._super.apply(this, arguments);
         var parentList = self.getParent();
-        var unselectRow = (parentList.unselectRow || function() {}).bind(parentList); // form view on mobile
+        var unselectRow = (parentList && parentList.unselectRow || function() {}).bind(parentList); // form view on mobile
         if (self.optionalProducts && self.optionalProducts.length !== 0) {
             self.trigger_up('add_record', {
                 context: self._productsToRecords(self.optionalProducts),
                 forceEditable: 'bottom',
                 allowWarning: true,
+                isDirty: true,
                 onSuccess: function () {
                     // Leave edit mode of one2many list.
                     unselectRow();
@@ -198,6 +199,7 @@ ProductConfiguratorWidget.include({
             this._super.apply(this, arguments);
             return;
         }
+        this.restoreProductTemplateId = this.recordData.product_template_id;
         // If line has been set up through the product_configurator:
         this._openProductConfigurator({
                 configuratorMode: 'edit',

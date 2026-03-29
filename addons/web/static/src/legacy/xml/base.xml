@@ -135,6 +135,7 @@
             t-ref="input"
             t-on-change="_onInputChange"
             t-on-click="_onInputClick"
+            autocomplete="off"
         />
         <span t-if="props.warn_future and state.warning" class="fa fa-exclamation-triangle text-danger o_tz_warning o_datepicker_warning">
             <t>This date is on the future. Make sure it is what you expected.</t>
@@ -402,19 +403,19 @@
 <t t-name="web.ActionMenus" owl="1">
     <div class="o_cp_action_menus" t-on-item-selected.stop="_onItemSelected">
         <DropdownMenu t-if="printItems.length"
-            title="env._t('Print')"
+            title="printButtonStrings.title"
             items="printItems"
             icon="'fa fa-print'"
             hotkey="'shift+u'"
-            hotkeyTitle="'Printing options'"
+            hotkeyTitle="printButtonStrings.hotkey"
         />
         <DropdownMenu t-if="actionItems.length"
-            title="env._t('Action')"
+            title="actionButtonStrings.title"
             items="actionItems"
             icon="'fa fa-cog'"
             closeOnSelected="true"
             hotkey="'u'"
-            hotkeyTitle="'Additional actions'"
+            hotkeyTitle="actionButtonStrings.hotkey"
         />
     </div>
 </t>
@@ -599,11 +600,11 @@
 
 <t t-name="ListView.selection">
     <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center pl-0 px-lg-2 py-0 mb-0 ml-2" role="alert">
-        <span t-if="isDomainSelected">All <span class="text-monospace" t-esc="nbTotal"/> selected</span>
+        <span t-if="isDomainSelected">All <t t-if="isTotalTrustable"><span class="text-monospace" t-esc="nbTotal"/> </t>selected</span>
         <t t-else="">
             <span class="text-monospace mr-1" t-esc="nbSelected"/> selected
-            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal">
-                <i class="fa fa-arrow-right"/> Select all <span class="text-monospace" t-esc="nbTotal"/>
+            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal" title="Select all records matching the search">
+                <i class="fa fa-arrow-right"/> Select all <span t-if="isTotalTrustable" class="text-monospace" t-esc="nbTotal"/>
             </a>
         </t>
     </div>
@@ -1075,11 +1076,11 @@
             </t>
             <t t-if="hasDropdown">
                 <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
-                    <span t-out="_badge_text"/>
+                    <t t-out="_badge_text"/>
                 </a>
             </t>
             <t t-else="">
-                <span t-out="_badge_text"/>
+                <t t-out="_badge_text"/>
             </t>
             <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </div>
@@ -1360,13 +1361,13 @@
         <div class="o_attachment_wrap">
             <t t-set="ext" t-value="file.name.replace(/^.*\./, '')"/>
             <div class="o_image_box float-left" t-att-data-id="file.id">
-                <a t-att-href="url" t-att-title="'Download ' + file.name" aria-label="Download">
+                <a t-att-href="url" t-att-title="'Download ' + file.name" aria-label="Download" target="_blank">
                     <span class="o_image o_hover" t-att-data-mimetype="mimetype" t-att-data-ext="ext" role="img"/>
                 </a>
             </div>
 
             <div class="caption">
-                <a class="ml4" t-att-href="url" t-att-title="'Download ' + file.name"><t t-esc='file.name'/></a>
+                <a class="ml4" t-att-href="url" t-att-title="'Download ' + file.name" target="_blank"><t t-esc='file.name'/></a>
             </div>
             <div class="caption small">
                 <a class="ml4 small text-uppercase" t-att-href="url" t-att-title="'Download ' + file.name"><b><t t-esc='ext'/></b></a>

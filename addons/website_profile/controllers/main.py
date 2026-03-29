@@ -58,7 +58,6 @@ class WebsiteProfile(http.Controller):
             'validation_email_sent': request.session.get('validation_email_sent', False),
             'validation_email_done': request.session.get('validation_email_done', False),
         }
-        values.update(kwargs)
         return values
 
     def _prepare_user_profile_parameters(self, **post):
@@ -242,7 +241,8 @@ class WebsiteProfile(http.Controller):
         if user_count:
             page_count = math.ceil(user_count / self._users_per_page)
             pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
-                                          scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
+                                          scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
+                                          url_args=kwargs)
 
             users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
             user_values = self._prepare_all_users_values(users)

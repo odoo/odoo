@@ -98,7 +98,7 @@ class ForecastModelExtension extends ActionModel.Extension {
                 startMoment = moment.utc(startMoment);
             }
             const format = DATE_FORMAT[type];
-            this.state.forecastStart = startMoment.format(format);
+            this.state.forecastStart = startMoment.locale("en").format(format);
         }
         return this.state.forecastStart;
     }

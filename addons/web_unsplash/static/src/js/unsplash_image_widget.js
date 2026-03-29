@@ -159,7 +159,7 @@ widgetsMedia.ImageWidget.include({
      * @private
      */
     _loadMoreImages: function (forceSearch) {
-        if (!this.$('.o_we_search').val()) {
+        if (!this.$('.o_we_search').val() || this.searchService === "database") {
             return this._super(forceSearch);
         }
         this.numberOfAttachmentsToDisplay += 10;

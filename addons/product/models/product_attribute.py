@@ -46,7 +46,7 @@ class ProductAttribute(models.Model):
     @api.depends('attribute_line_ids.active', 'attribute_line_ids.product_tmpl_id')
     def _compute_products(self):
         for pa in self:
-            pa.product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
+            pa.with_context(active_test=False).product_tmpl_ids = pa.attribute_line_ids.product_tmpl_id
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pa: pa.create_variant != 'no_variant')
@@ -165,9 +165,22 @@ class ProductAttributeValue(models.Model):
         for pav in self:
             if pav.is_used_on_products:
                 raise UserError(
-                    _("You cannot delete the value %s because it is used on the following products:\n%s") %
-                    (pav.display_name, ", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')))
+                    _("You cannot delete the value %s because it is used on the following products:"
+                      "\n%s\n If the value has been associated to a product in the past, you will "
+                      "not be able to delete it.") %
+                    (pav.display_name, ", ".join(
+                        pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')
+                    ))
                 )
+            linked_products = pav.env['product.template.attribute.value'].search(
+                [('product_attribute_value_id', '=', pav.id)]
+            ).with_context(active_test=False).ptav_product_variant_ids
+            unlinkable_products = linked_products._filter_to_unlink()
+            if linked_products != unlinkable_products:
+                raise UserError(_(
+                    "You cannot delete value %s because it was used in some products.",
+                    pav.display_name
+                ))
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
@@ -381,7 +394,8 @@ class ProductTemplateAttributeLine(models.Model):
             # re-use a value that was archived at a previous step.
             ptav_to_activate.write({'ptav_active': True})
             ptav_to_unlink.write({'ptav_active': False})
-        ptav_to_unlink.unlink()
+        if ptav_to_unlink:
+            ptav_to_unlink.unlink()
         ProductTemplateAttributeValue.create(ptav_to_create)
         self.product_tmpl_id._create_variant_ids()
 
@@ -502,7 +516,10 @@ class ProductTemplateAttributeValue(models.Model):
                         _("You cannot change the product of the value %s set on product %s.") %
                         (ptav.display_name, ptav.product_tmpl_id.display_name)
                     )
-        return super(ProductTemplateAttributeValue, self).write(values)
+        res = super(ProductTemplateAttributeValue, self).write(values)
+        if 'exclude_for' in values:
+            self.product_tmpl_id._create_variant_ids()
+        return res
 
     def unlink(self):
         """Override to:
@@ -554,7 +571,9 @@ class ProductTemplateAttributeValue(models.Model):
 
     def _get_combination_name(self):
         """Exclude values from single value lines or from no_variant attributes."""
-        return ", ".join([ptav.name for ptav in self._without_no_variant_attributes()._filter_single_value_lines()])
+        ptavs = self._without_no_variant_attributes().with_prefetch(self._prefetch_ids)
+        ptavs = ptavs._filter_single_value_lines().with_prefetch(self._prefetch_ids)
+        return ", ".join([ptav.name for ptav in ptavs])
 
     def _filter_single_value_lines(self):
         """Return `self` with values from single value lines filtered out

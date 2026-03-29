@@ -199,14 +199,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     }
                     if (Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
                         // Display depending question
+                        const selectedAnswerId = parseInt($target.val());
                         this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
                             if (!treatedQuestionIds.includes(questionId)) {
                                 var dependingQuestion = $('.js_question-wrapper#' + questionId);
                                 dependingQuestion.removeClass('d-none');
+                                if (!self.selectedAnswers.includes(selectedAnswerId)) {
+                                    // Add answer to selected answer
+                                    self.selectedAnswers.push(selectedAnswerId);
+                                }
                             }
                         });
-                        // Add answer to selected answer
-                        this.selectedAnswers.push(parseInt($target.val()));
                     }
                 }
             }

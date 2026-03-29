@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.osv import expression
 
 
@@ -31,7 +31,7 @@ class MassMailingContactListRel(models.Model):
     def create(self, vals_list):
         now = fields.Datetime.now()
         for vals in vals_list:
-            if 'opt_out' in vals and 'unsubscription_date' not in vals:
+            if 'opt_out' in vals and not vals.get('unsubscription_date'):
                 vals['unsubscription_date'] = now if vals['opt_out'] else False
             if vals.get('unsubscription_date'):
                 vals['opt_out'] = True
@@ -169,11 +169,12 @@ class MassMailingContact(models.Model):
         return contact.name_get()[0]
 
     def _message_get_default_recipients(self):
-        return {r.id: {
-            'partner_ids': [],
-            'email_to': r.email_normalized,
-            'email_cc': False}
-            for r in self
+        return {
+            r.id: {
+                'partner_ids': [],
+                'email_to': ','.join(tools.email_normalize_all(r.email)) or r.email,
+                'email_cc': False,
+            } for r in self
         }
 
     def action_add_to_mailing_list(self):

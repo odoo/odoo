@@ -4,8 +4,9 @@
 import werkzeug
 
 from werkzeug.exceptions import NotFound, Forbidden
+from odoo.exceptions import ValidationError
 
-from odoo import http
+from odoo import _, http
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
@@ -15,12 +16,18 @@ class SlidesPortalChatter(PortalChatter):
 
     @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, **kw):
+        previous_post = request.env['mail.message'].search([('res_id', '=', res_id),
+                                                            ('author_id', '=', request.env.user.partner_id.id),
+                                                            ('model', '=', 'slide.channel'),
+                                                            ('subtype_id', '=', request.env.ref('mail.mt_comment').id)])
+        if previous_post:
+            raise ValidationError(_("Only a single review can be posted per course."))
+
         result = super(SlidesPortalChatter, self).portal_chatter_post(res_model, res_id, message, **kw)
         if res_model == 'slide.channel':
             rating_value = kw.get('rating_value', False)
             slide_channel = request.env[res_model].sudo().browse(int(res_id))
             if rating_value and slide_channel and request.env.user.partner_id.id == int(kw.get('pid')):
-                # apply karma gain rule only once
                 request.env.user.add_karma(slide_channel.karma_gen_channel_rank)
             result.update({
                 'default_rating_value': rating_value,
@@ -50,10 +57,11 @@ class SlidesPortalChatter(PortalChatter):
         # fetch and update mail.message
         message_id = int(message_id)
         message_body = plaintext2html(message)
+        subtype_comment_id = request.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         domain = [
             ('model', '=', res_model),
             ('res_id', '=', res_id),
-            ('is_internal', '=', False),
+            ('subtype_id', '=', subtype_comment_id),
             ('author_id', '=', request.env.user.partner_id.id),
             ('message_type', '=', 'comment'),
             ('id', '=', message_id)
@@ -68,7 +76,7 @@ class SlidesPortalChatter(PortalChatter):
 
         # update rating
         if post.get('rating_value'):
-            domain = [('res_model', '=', res_model), ('res_id', '=', res_id), ('is_internal', '=', False), ('message_id', '=', message.id)]
+            domain = [('res_model', '=', res_model), ('res_id', '=', res_id), ('message_id', '=', message.id)]
             rating = request.env['rating.rating'].sudo().search(domain, order='write_date DESC', limit=1)
             rating.write({
                 'rating': float(post['rating_value']),

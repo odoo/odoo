@@ -154,9 +154,9 @@ class Team(models.Model):
         leads_done_ids = set()
         counter = 0
         # auto-commit except in testing mode
-        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        auto_commit = not getattr(threading.current_thread(), 'testing', False)
         commit_bundle_size = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
-        while population:
+        while population and any(weights):
             counter += 1
             member_id = random.choices(population, weights=weights, k=1)[0]
             member_index = population.index(member_id)

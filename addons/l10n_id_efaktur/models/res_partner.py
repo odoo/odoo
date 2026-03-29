@@ -17,11 +17,16 @@ class ResPartner(models.Model):
             ('02', '02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)'),
             ('03', '03 Kepada Pemungut Selain Bendaharawan (BUMN)'),
             ('04', '04 DPP Nilai Lain (PPN 1%)'),
+            ('05', '05 Besaran Tertentu'),
             ('06', '06 Penyerahan Lainnya (Turis Asing)'),
             ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
             ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
-        ], string='Kode Transaksi', help='Dua digit pertama nomor pajak')
+        ],
+        string='Kode Transaksi',
+        help='Dua digit pertama nomor pajak',
+        default='01',
+    )
 
     @api.depends('vat', 'country_code')
     def _compute_l10n_id_pkp(self):

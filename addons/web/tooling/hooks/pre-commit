@@ -1,0 +1,5 @@
+#!/bin/bash
+# run tooling only on branches that start with master to avoid linting noise in stable
+if [[ $(git branch --show-current) == master* ]]; then
+    npm run format-staged
+fi

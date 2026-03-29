@@ -3,29 +3,34 @@
     <template id="report_ddt_view">
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <t t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.location_dest_id.usage == 'customer' and o.location_id.usage == 'supplier'">
+              <t t-set="delivery_from" t-value="o.partner_id"/>
+              <t t-set="delivery_to" t-value="o.move_ids_without_package[0].partner_id"/>
+            </t>
+            <t t-elif="o.picking_type_id.warehouse_id.partner_id">
+              <t t-set="delivery_from" t-value="o.picking_type_id.warehouse_id.partner_id"/>
+              <t t-set="delivery_to" t-value="o.partner_id"/>
+            </t>
+            <t t-else="">
+              <t t-set="delivery_from" t-value="o.company_id.partner_id"/>
+              <t t-set="delivery_to" t-value="o.partner_id"/>
+            </t>
             <div class="page">
                 <div class="row">
                     <div class="col-6">
                        <span><strong>Warehouse Address:</strong></span>
-                        <t t-set="delivery_from" t-value="o.picking_type_id.warehouse_id.partner_id or o.company_id.partner_id"/>
-                        <t t-if="o.picking_type_id.warehouse_id.partner_id">
-                            <div t-field="o.picking_type_id.warehouse_id.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        </t>
-                        <t t-else="">
-                            <div t-field="o.company_id.partner_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        </t>
+                        <div t-esc="delivery_from"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         <p t-if="delivery_from.vat">VAT: <span t-field="delivery_from.vat"/></p>
                     </div>
                     <div class="col-5 offset-1">
                         <div>
                             <span><strong>Customer Address:</strong></span>
-                            <div t-field="o.partner_id"
+                            <div t-esc="delivery_to"
                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                            <p t-if="o.partner_id.vat">
+                            <p t-if="delivery_to.vat">
                                 <t t-set="default_vat_label">VAT</t>
-                                <t t-esc="o.company_id.account_fiscal_country_id.vat_label or default_vat_label"/>: <span t-field="o.partner_id.vat"/>
+                                <t t-esc="delivery_to.country_id.vat_label or default_vat_label"/>: <span t-esc="delivery_to.vat"/>
                             </p>
                         </div>
                     </div>
@@ -119,7 +124,12 @@
                                         <span t-field="move.product_uom" groups="uom.group_uom"/>
                                     </td>
                                     <td>
-                                        <t t-set="lst_price" t-value="move.product_id.lst_price * move.quantity_done"/>
+                                        <t t-if="move.sale_line_id">
+                                            <t t-set="lst_price" t-value="move.sale_line_id.price_unit * move.quantity_done"/>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)"/>
+                                        </t>
                                         <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                         <t t-set="total_value" t-value="total_value + lst_price"/>
                                     </td>
@@ -172,7 +182,7 @@
     <template id="report_ddt">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-set="lang" t-value="o.partner_id.lang if o.partner_id.lang else o.env.lang"/>
+                <t t-set="lang" t-value="o._get_report_lang()"/>
                 <t t-call="l10n_it_stock_ddt.report_ddt_view" t-lang="lang"/>
             </t>
         </t>

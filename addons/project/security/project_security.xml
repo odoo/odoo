@@ -82,10 +82,12 @@
         <field name="name">Project/Task: employees: follow required for follower-only projects</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
-        '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '&amp;',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', '!=', 'followers'),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
                     # to subscribe check access to the record, follower is not enough at creation
@@ -235,5 +237,30 @@
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
+    <record model="ir.rule" id="milestone_comp_rule">
+        <field name="name">Project/Milestone: multi-company</field>
+        <field name="model_id" ref="model_project_milestone"/>
+        <field name="domain_force">[('project_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="milestone_visibility_rule">
+        <field name="name">Project/Milestone: employees: follow required for follower-only projects</field>
+        <field name="model_id" ref="model_project_milestone"/>
+        <field name="domain_force">[
+        '|',
+            ('project_id.privacy_visibility', '!=', 'followers'),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.user_id', '=', user.id),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="milestone_visibility_project_admin" model="ir.rule">
+        <field name="name">Project/Milestone: Project manager can see all project milestones</field>
+        <field name="model_id" ref="project.model_project_milestone"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+    </record>
 </data>
 </odoo>

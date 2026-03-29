@@ -126,11 +126,17 @@ def init_logger():
 
     # enable deprecation warnings (disabled by default)
     warnings.simplefilter('default', category=DeprecationWarning)
-    # ignore deprecation warnings from invalid escape (there's a ton and it's
-    # pretty likely a super low-value signal)
-    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
     # recordsets are both sequence and set so trigger warning despite no issue
     warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
+    # https://github.com/urllib3/urllib3/issues/2680
+    warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
+    # ofxparse use an html parser to parse ofx xml files and triggers a warning since bs4 4.11.0
+    # https://github.com/jseutter/ofxparse/issues/170
+    try:
+        from bs4 import XMLParsedAsHTMLWarning
+        warnings.filterwarnings('ignore', category=XMLParsedAsHTMLWarning)
+    except ImportError:
+        pass
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
         'babel.util', # deprecated parser module, no release yet
@@ -146,6 +152,11 @@ def init_logger():
     warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
     # reportlab does a bunch of bytes/str mixing in a hashmap
     warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
+    # difficult to fix in 3.7, will be fixed in 16.0 with python 3.8+
+    warnings.filterwarnings('ignore', r'^Attribute .* is deprecated and will be removed in Python 3.14; use .* instead', category=DeprecationWarning)
+    warnings.filterwarnings('ignore', r'^.* is deprecated and will be removed in Python 3.14; use .* instead', category=DeprecationWarning)
+    # need to be adapted later but too muchwork for this pr.
+    warnings.filterwarnings('ignore', r'^datetime.datetime.utcnow\(\) is deprecated and scheduled for removal in a future version.*', category=DeprecationWarning)
 
     from .tools.translate import resetlocale
     resetlocale()

@@ -12,6 +12,8 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super(TestUi, cls).setUpClass()
+        cls.env.user.partner_id.property_product_pricelist = cls.env.ref('product.list0')
+        cls.env['website'].get_current_website().company_id = cls.env.company
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
         pricelist = cls.env.ref('product.list0')
@@ -19,9 +21,17 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
         pricelist.currency_id = new_currency
         pricelist.flush()
 
-
     def test_01_admin_shop_sale_coupon_tour(self):
         # pre enable "Show # found" option to avoid race condition...
+        self.env.user.write({
+            'street': '215 Vine St',
+            'phone': '+1 555-555-5555',
+            'city': 'Scranton',
+            'zip': '18503',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_39').id,
+        })
+        self.env.ref('payment.payment_acquirer_transfer').sudo().company_id = self.env.company
         public_category = self.env['product.public.category'].create({'name': 'Public Category'})
 
         large_cabinet = self.env['product.product'].create({
@@ -86,7 +96,7 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
         })
 
         self.env.ref("website_sale.search_count_box").write({"active": True})
-        self.start_tour("/", 'shop_sale_coupon', login="admin")
+        self.start_tour("/", 'shop_sale_coupon', login=self.env.user.login)
 
 
 @tagged('post_install', '-at_install')

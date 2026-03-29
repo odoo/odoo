@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import re
 
 from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
-from odoo.tools import float_compare
 
 
 _logger = logging.getLogger(__name__)
@@ -23,11 +21,16 @@ class PaymentTransaction(models.Model):
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.acquirer_id.so_reference_type == 'so_name':
-            return order.name
+            order_reference = order.name
         else:
             # self.acquirer_id.so_reference_type == 'partner'
             identification_number = order.partner_id.id
-            return '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+            order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+
+        invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+        order_reference = invoice_journal._process_reference_for_sale_order(order_reference)
+
+        return order_reference
 
     @api.depends('sale_order_ids')
     def _compute_sale_order_ids_nbr(self):
@@ -92,11 +95,12 @@ class PaymentTransaction(models.Model):
 
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
+        draft_orders = self.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent'))
         for tx in self:
             tx._check_amount_and_confirm_order()
+        confirmed_sales_orders = draft_orders.filtered(lambda so: so.state in ('sale', 'done'))
         # send order confirmation mail
-        sales_orders._send_order_confirmation_mail()
+        confirmed_sales_orders._send_order_confirmation_mail()
         # invoice the sale orders if needed
         self._invoice_sale_orders()
         res = super()._reconcile_after_done()
@@ -109,6 +113,8 @@ class PaymentTransaction(models.Model):
         if not default_template:
             return
 
+        template_id = int(default_template)
+        template = self.env['mail.template'].browse(template_id)
         for trans in self:
             trans = trans.with_company(trans.acquirer_id.company_id).with_context(
                 company_id=trans.acquirer_id.company_id.id,
@@ -117,8 +123,13 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            for invoice in invoice_to_send.with_user(SUPERUSER_ID):
-                invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
+            for invoice in invoice_to_send:
+                lang = template._render_lang(invoice.ids)[invoice.id]
+                model_desc = invoice.with_context(lang=lang).type_name
+                invoice.with_context(model_description=model_desc).with_user(
+                    SUPERUSER_ID
+                ).message_post_with_template(
+                    template_id=template_id, email_layout_xmlid='mail.mail_notification_paynow')
 
     def _cron_send_invoice(self):
         """

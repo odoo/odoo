@@ -26,7 +26,6 @@ Wysiwyg.include({
         if (this.options.inIframe) {
             this._onUpdateIframeId = 'onLoad_' + this.id;
         }
-        this.__extraAssetsForIframe = [];
     },
     /**
      * Load assets to inject into iframe.
@@ -69,6 +68,16 @@ Wysiwyg.include({
             await this._loadIframe();
             return _super();
         }
+    },
+
+    /**
+     * @override
+     **/
+    destroy: function() {
+        if (this.options.inIframe && this.options.document) {
+            this.options.document.removeEventListener('scroll', this._onScroll, true);
+        }
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -151,7 +160,7 @@ Wysiwyg.include({
                 }
 
                 var iframeContent = qweb.render('wysiwyg.iframeContent', {
-                    assets: assets.concat(self.__extraAssetsForIframe),
+                    assets: assets,
                     updateIframeId: self._onUpdateIframeId,
                     avoidDoubleLoad: _avoidDoubleLoad
                 });
@@ -172,6 +181,42 @@ Wysiwyg.include({
             return this.snippetsMenu.appendTo(this.$utilsZone);
         } else {
             return this._super.apply(this, arguments);
+        }
+    },
+
+    /**
+     * When the editable is inside an iframe, we want to update the toolbar
+     * position in 2 scenarios:
+     * 1. scroll event in the top document, if the iframe is a descendant of
+     * the scroll container.
+     * 2. scroll event in the iframe's document.
+     * 
+     * @override
+     **/
+    _onScroll: function(ev) {
+        if (this.options.inIframe) {
+            const iframeDocument = this.$iframe[0].contentDocument;
+            const scrollInIframe = ev.target === iframeDocument || ev.target.ownerDocument === iframeDocument;
+            if (ev.target.contains(this.$iframe[0]))  {
+                this.scrollContainer = ev.target;
+                this.odooEditor.updateToolbarPosition();
+            } else if (scrollInIframe) {
+                // UpdateToolbarPosition needs a scroll container in the top document.
+                this.scrollContainer = this.$iframe[0];
+                this.odooEditor.updateToolbarPosition();
+            }
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+
+    /**
+     * @override
+     **/
+    _configureToolbar: function () {
+        this._super.apply(this, arguments);
+        if (this.options.inIframe && !this.options.snippets) {
+            this.options.document.addEventListener('scroll', this._onScroll, true);
         }
     },
 });

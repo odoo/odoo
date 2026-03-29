@@ -12,13 +12,16 @@ from ..controllers.main import BuckarooController
 class BuckarooTest(BuckarooCommon):
 
     def test_redirect_form_values(self):
+        self.patch(self, 'base_url', 'http://localhost:8069')
+        self.patch(type(self.env['base']), 'get_base_url', lambda _: 'http://localhost:8069')
+
         return_url = self._build_url(BuckarooController._return_url)
         expected_values = {
             'Brq_websitekey': self.buckaroo.buckaroo_website_key,
             'Brq_amount': str(self.amount),
             'Brq_currency': self.currency.name,
             'Brq_invoicenumber': self.reference,
-            'Brq_signature': '04c26578116990496770687a8bf225200e0f56e6',
+            'Brq_signature': '669d4f64ea9cbb58cfefba9b802389667e4eef39',
             'Brq_return': return_url,
             'Brq_returncancel': return_url,
             'Brq_returnerror': return_url,
@@ -54,7 +57,7 @@ class BuckarooTest(BuckarooCommon):
             'BRQ_SERVICE_PAYPAL_PAYERLASTNAME': u'Tester',
             'BRQ_SERVICE_PAYPAL_PAYERMIDDLENAME': u'de',
             'BRQ_SERVICE_PAYPAL_PAYERSTATUS': u'verified',
-            'Brq_signature': u'e439f3af06b9752197631715628d6a198a25900f',
+            'Brq_signature': u'e67e32ee1be1030a86c7764adfcc01856e00f9a7',
             'BRQ_STATUSCODE': u'190',
             'BRQ_STATUSCODE_DETAIL': u'S001',
             'BRQ_STATUSMESSAGE': u'Transaction successfully processed',
@@ -86,7 +89,7 @@ class BuckarooTest(BuckarooCommon):
 
         # simulate an error
         buckaroo_post_data['BRQ_STATUSCODE'] = '2'
-        buckaroo_post_data['Brq_signature'] = 'b8e54e26b2b5a5e697b8ed5085329ea712fd48b2'
+        buckaroo_post_data['Brq_signature'] = '3e67da5181b1a895d322987303e42bab2a376eec'
 
         # Avoid warning log bc of unknown status code
         with mute_logger('odoo.addons.payment_buckaroo.models.payment_transaction'):
@@ -94,3 +97,18 @@ class BuckarooTest(BuckarooCommon):
 
         self.assertEqual(tx.state, 'error',
             'Buckaroo: unexpected status code should put tx in error state')
+
+    def test_signature_is_computed_based_on_lower_case_data_keys(self):
+        """ Test that lower case keys are used to execute the case-insensitive sort. """
+        computed_signature = self.acquirer._buckaroo_generate_digital_sign({
+            'brq_a': '1',
+            'brq_b': '2',
+            'brq_c_first': '3',
+            'brq_csecond': '4',
+            'brq_D': '5',
+        }, incoming=False)
+        self.assertEqual(
+            computed_signature,
+            '937cca8f486b75e93df1e9811a5ebf43357fc3f2',
+            msg="The signing string items should be ordered based on a lower-case copy of the keys",
+        )

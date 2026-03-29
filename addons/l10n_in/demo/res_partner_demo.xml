@@ -25,7 +25,21 @@
         <field name="zip">382007</field>
         <field name="state_id" ref="base.state_in_gj"/>
         <field name="country_id" ref="base.in"/>
-        <field name="vat">12GEOPS0823BBZH</field>
+        <field name="vat">24AACCT6304M1ZB</field>
+    </record>
+
+    <record id="res_partner_registered_customer_intra_state" model="res.partner">
+        <field name="name">Registered Customer Intra State</field>
+        <field eval="[(6, 0, [ref('l10n_in.res_partner_category_registered')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="l10n_in_gst_treatment">regular</field>
+        <field name="street">floor-1, Maddikunta-Ankanpally Village</field>
+        <field name="street2">Post box No 2, NH-65</field>
+        <field name="city">Sangareddy</field>
+        <field name="zip">500002</field>
+        <field name="state_id" ref="base.state_in_ts"/>
+        <field name="country_id" ref="base.in"/>
+        <field name="vat">36AAACM4154G1ZO</field>
     </record>
 
     <!-- Unregistered Customer -->
@@ -65,7 +79,7 @@
         <field name="zip">382007</field>
         <field name="state_id" ref="base.state_in_gj"/>
         <field name="country_id" ref="base.in"/>
-        <field name="vat">12GEOPS0823BBZ1</field>
+        <field name="vat">24GEOPS0823BBZ1</field>
     </record>
 
     <!-- Unregistered Customer -->

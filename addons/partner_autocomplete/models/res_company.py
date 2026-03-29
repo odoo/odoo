@@ -27,7 +27,7 @@ class ResCompany(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        if not getattr(threading.currentThread(), 'testing', False):
+        if not getattr(threading.current_thread(), 'testing', False):
             res.iap_enrich_auto()
         return res
 
@@ -118,7 +118,7 @@ class ResCompany(models.Model):
         self.ensure_one()
 
         company_domain = tools.email_domain_extract(self.email) if self.email else False
-        if company_domain and company_domain not in iap_tools._MAIL_DOMAIN_BLACKLIST:
+        if company_domain and company_domain not in iap_tools._MAIL_PROVIDERS:
             return company_domain
 
         company_domain = tools.url_domain_extract(self.website) if self.website else False

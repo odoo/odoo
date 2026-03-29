@@ -5,8 +5,8 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, format_datetime
-from odoo.tools.misc import get_lang
+from odoo.tools import format_datetime
+from odoo.tools.misc import formatLang, get_lang
 
 
 class Pricelist(models.Model):
@@ -94,7 +94,7 @@ class Pricelist(models.Model):
     def _compute_price_rule_get_items(self, products_qty_partner, date, uom_id, prod_tmpl_ids, prod_ids, categ_ids):
         self.ensure_one()
         # Load all rules
-        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id'])
+        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id', 'active'])
         self.env.cr.execute(
             """
             SELECT
@@ -109,6 +109,7 @@ class Pricelist(models.Model):
                 AND (item.pricelist_id = %s)
                 AND (item.date_start IS NULL OR item.date_start<=%s)
                 AND (item.date_end IS NULL OR item.date_end>=%s)
+                AND (item.active = TRUE)
             ORDER BY
                 item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc
             """,
@@ -191,24 +192,25 @@ class Pricelist(models.Model):
                 if not rule._is_applicable_for(product, qty_in_product_uom):
                     continue
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
-                    price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.company, date, round=False)
+                    price = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
+                    src_currency = rule.base_pricelist_id.currency_id
                 else:
                     # if base option is public price take sale price else cost price of product
                     # price_compute returns the price in the context UoM, i.e. qty_uom_id
                     price = product.price_compute(rule.base)[product.id]
+                    if rule.base == 'standard_price':
+                        src_currency = product.cost_currency_id
+                    else:
+                        src_currency = product.currency_id
+
+                if src_currency != self.currency_id:
+                    price = src_currency._convert(
+                        price, self.currency_id, self.env.company, date, round=False)
 
                 if price is not False:
                     price = rule._compute_price(price, price_uom, product, quantity=qty, partner=partner)
                     suitable_rule = rule
                 break
-            # Final price conversion into pricelist currency
-            if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                if suitable_rule.base == 'standard_price':
-                    cur = product.cost_currency_id
-                else:
-                    cur = product.currency_id
-                price = cur._convert(price, self.currency_id, self.env.company, date, round=False)
 
             if not suitable_rule:
                 cur = product.currency_id
@@ -395,7 +397,7 @@ class PricelistItem(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade', required=True, default=_default_pricelist_id)
     price_surcharge = fields.Float(
         'Price Surcharge', digits='Product Price',
-        help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')
+        help='Specify the fixed amount to add or subtract(if negative) to the amount calculated with the discount.')
     price_discount = fields.Float(
         'Price Discount', default=0, digits=(16, 2),
         help="You can apply a mark-up by setting a negative discount.")
@@ -480,23 +482,7 @@ class PricelistItem(models.Model):
                 item.name = _("All Products")
 
             if item.compute_price == 'fixed':
-                decimal_places = self.env['decimal.precision'].precision_get('Product Price')
-                if item.currency_id.position == 'after':
-                    item.price = "%s %s" % (
-                        float_repr(
-                            item.fixed_price,
-                            decimal_places,
-                        ),
-                        item.currency_id.symbol,
-                    )
-                else:
-                    item.price = "%s %s" % (
-                        item.currency_id.symbol,
-                        float_repr(
-                            item.fixed_price,
-                            decimal_places,
-                        ),
-                    )
+                item.price = formatLang(item.env, item.fixed_price, monetary=True, dp="Product Price", currency_obj=item.currency_id)
             elif item.compute_price == 'percentage':
                 item.price = _("%s %% discount", item.percent_price)
             else:
@@ -574,6 +560,11 @@ class PricelistItem(models.Model):
             template_rules.update({'applied_on': '1_product'})
             (self-variants_rules-template_rules).update({'applied_on': '3_global'})
 
+    @api.onchange('price_round')
+    def _onchange_price_round(self):
+        if any(item.price_round and item.price_round < 0.0 for item in self):
+            raise ValidationError(_("The rounding method must be strictly positive."))
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
@@ -605,9 +596,12 @@ class PricelistItem(models.Model):
         res = super(PricelistItem, self).write(values)
         # When the pricelist changes we need the product.template price
         # to be invalided and recomputed.
-        self.flush()
-        self.invalidate_cache()
+        self.env['product.template'].invalidate_cache(['price'])
+        self.env['product.product'].invalidate_cache(['price'])
         return res
+
+    def toggle_active(self):
+        raise ValidationError(_("You cannot disable a pricelist rule, please delete it or archive its pricelist instead."))
 
     def _is_applicable_for(self, product, qty_in_product_uom):
         """Check whether the current rule is valid for the given product & qty.
@@ -625,30 +619,27 @@ class PricelistItem(models.Model):
         if self.min_quantity and qty_in_product_uom < self.min_quantity:
             res = False
 
-        elif self.categ_id:
-            # Applied on a specific category
-            cat = product.categ_id
-            while cat:
-                if cat.id == self.categ_id.id:
-                    break
-                cat = cat.parent_id
-            if not cat:
+        elif self.applied_on == "2_product_category":
+            if (
+                product.categ_id != self.categ_id
+                and not product.categ_id.parent_path.startswith(self.categ_id.parent_path)
+            ):
                 res = False
         else:
             # Applied on a specific product template/variant
             if is_product_template:
-                if self.product_tmpl_id and product.id != self.product_tmpl_id.id:
+                if self.applied_on == "1_product" and product.id != self.product_tmpl_id.id:
                     res = False
-                elif self.product_id and not (
+                elif self.applied_on == "0_product_variant" and not (
                     product.product_variant_count == 1
                     and product.product_variant_id.id == self.product_id.id
                 ):
                     # product self acceptable on template if has only one variant
                     res = False
             else:
-                if self.product_tmpl_id and product.product_tmpl_id.id != self.product_tmpl_id.id:
+                if self.applied_on == "1_product" and product.product_tmpl_id.id != self.product_tmpl_id.id:
                     res = False
-                elif self.product_id and product.id != self.product_id.id:
+                elif self.applied_on == "0_product_variant" and product.id != self.product_id.id:
                     res = False
 
         return res
@@ -667,12 +658,12 @@ class PricelistItem(models.Model):
             # complete formula
             price_limit = price
             price = (price - (price * (self.price_discount / 100))) or 0.0
+
             if self.price_round:
                 price = tools.float_round(price, precision_rounding=self.price_round)
 
             if self.price_surcharge:
-                price_surcharge = convert_to_price_uom(self.price_surcharge)
-                price += price_surcharge
+                price += convert_to_price_uom(self.price_surcharge)
 
             if self.price_min_margin:
                 price_min_margin = convert_to_price_uom(self.price_min_margin)
@@ -681,4 +672,5 @@ class PricelistItem(models.Model):
             if self.price_max_margin:
                 price_max_margin = convert_to_price_uom(self.price_max_margin)
                 price = min(price, price_limit + price_max_margin)
+
         return price

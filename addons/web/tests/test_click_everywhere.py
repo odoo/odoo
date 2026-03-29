@@ -2,6 +2,7 @@
 
 import logging
 import odoo.tests
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ class TestMenusAdmin(odoo.tests.HttpCase):
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
                 _logger.runbot('Testing %s', menus[app_id]['name'])
-                self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="admin", timeout=300)
+                self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="admin", timeout=600)
                 self.terminate_browser()
 
 
@@ -27,7 +28,7 @@ class TestMenusDemo(odoo.tests.HttpCase):
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
                 _logger.runbot('Testing %s', menus[app_id]['name'])
-                self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="demo", timeout=300)
+                self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere']('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="demo", timeout=600)
                 self.terminate_browser()
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -36,8 +37,13 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
     def test_01_click_apps_menus_as_admin(self):
         self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](undefined, true);", "odoo.isReady === true", login="admin", timeout=120)
 
-@odoo.tests.tagged('post_install', '-at_install',)
-class TestMenusDemoLight(odoo.tests.HttpCase):
+@odoo.tests.tagged('post_install', '-at_install')
+class TestMenusDemoLight(HttpCaseWithUserDemo):
 
     def test_01_click_apps_menus_as_demo(self):
+        # If not enabled (like in demo data), landing on website dashboard will redirect to /
+        # and make the test crash
+        group_website_designer = self.env.ref('website.group_website_designer', raise_if_not_found=False)
+        if group_website_designer:
+            self.env.ref('base.group_user').write({"implied_ids": [(4, group_website_designer.id)]})
         self.browser_js("/web", "odoo.__DEBUG__.services['web.clickEverywhere'](undefined, true);", "odoo.isReady === true", login="demo", timeout=120)

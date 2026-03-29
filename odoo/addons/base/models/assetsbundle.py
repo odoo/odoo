@@ -102,8 +102,8 @@ class AssetNotFound(AssetError):
 
 class AssetsBundle(object):
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
-    rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
-    rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
+    rx_preprocess_imports = re.compile(r"""(@import\s?['"]([^'"]+)['"](;?))""")
+    rx_css_split = re.compile(r"\/\*\! ([a-f0-9-]+) \*\/")
 
     TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
 
@@ -183,9 +183,11 @@ class AssetsBundle(object):
     @func.lazy_property
     def last_modified(self):
         """Returns last modified date of linked files"""
+        assets = [WebAsset(self, url=f['url'], filename=f['filename'], inline=f['content'])
+            for f in self.files
+            if f['atype'] in ['text/sass', "text/scss", "text/less", "text/css", "text/javascript"]]
         return max(itertools.chain(
-            (asset.last_modified for asset in self.javascripts),
-            (asset.last_modified for asset in self.stylesheets),
+            (asset.last_modified for asset in assets),
         ))
 
     @func.lazy_property
@@ -222,6 +224,18 @@ class AssetsBundle(object):
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
         return f"/web/assets/debug/{extra}{name}{extension}"
 
+    def _unlink_attachments(self, attachments):
+        """ Unlinks attachments without actually calling unlink, so that the ORM cache is not cleared.
+
+        Specifically, if an attachment is generated while a view is rendered, clearing the ORM cache
+        could unload fields loaded with a sudo(), and expected to be readable by the view.
+        Such a view would be website.layout when main_object is an ir.ui.view.
+        """
+        to_delete = set(attach.store_fname for attach in attachments if attach.store_fname)
+        self.env.cr.execute(f"DELETE FROM {attachments._table} WHERE id IN %s", [tuple(attachments.ids)])
+        for file_path in to_delete:
+            attachments._file_delete(file_path)
+
     def clean_attachments(self, extension):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
@@ -248,7 +262,7 @@ class AssetsBundle(object):
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
         if attachments:
-            attachments.unlink()
+            self._unlink_attachments(attachments)
             # force bundle invalidation on other workers
             self.env['ir.qweb'].clear_caches()
 
@@ -282,6 +296,9 @@ class AssetsBundle(object):
                FROM ir_attachment
               WHERE create_uid = %s
                 AND url like %s
+                AND res_model = 'ir.ui.view'
+                AND res_id = 0
+                AND public = true
            GROUP BY name
            ORDER BY name
          """, [SUPERUSER_ID, url_pattern])
@@ -591,7 +608,7 @@ class AssetsBundle(object):
                 compiled = self.run_rtlcss(compiled)
 
             if not self.css_errors and old_attachments:
-                old_attachments.unlink()
+                self._unlink_attachments(old_attachments)
                 old_attachments = None
 
             fragments = self.rx_css_split.split(compiled)
@@ -654,8 +671,8 @@ class AssetsBundle(object):
                 rtlcss = misc.find_in_path('rtlcss.cmd')
             except IOError:
                 rtlcss = 'rtlcss'
-        cmd = [rtlcss, '-']
 
+        cmd = [rtlcss, '-c', get_resource_path("base", "data/rtlcss.json"), '-']
 
         try:
             rtlcss = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
@@ -675,16 +692,18 @@ class AssetsBundle(object):
             self.css_errors.append(msg)
             return ''
 
-        result = rtlcss.communicate(input=source.encode('utf-8'))
-        if rtlcss.returncode:
-            cmd_output = ''.join(misc.ustr(result))
-            if not cmd_output:
+        stdout, stderr = rtlcss.communicate(input=source.encode('utf-8'))
+        if rtlcss.returncode or (source and not stdout):
+            cmd_output = ''.join(misc.ustr(stderr))
+            if not cmd_output and rtlcss.returncode:
                 cmd_output = "Process exited with return code %d\n" % rtlcss.returncode
+            elif not cmd_output:
+                cmd_output = "rtlcss: error processing payload\n"
             error = self.get_rtlcss_error(cmd_output, source=source)
             _logger.warning(error)
             self.css_errors.append(error)
             return ''
-        rtlcss_result = result[0].strip().decode('utf8')
+        rtlcss_result = stdout.strip().decode('utf8')
         return rtlcss_result
 
     def get_preprocessor_error(self, stderr, source=None):

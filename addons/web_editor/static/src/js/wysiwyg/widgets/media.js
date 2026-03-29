@@ -2,6 +2,7 @@ odoo.define('wysiwyg.widgets.media', function (require) {
 'use strict';
 
 var concurrency = require('web.concurrency');
+const config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -64,6 +65,7 @@ var MediaWidget = Widget.extend({
 
 var SearchableMediaWidget = MediaWidget.extend({
     events: _.extend({}, MediaWidget.prototype.events || {}, {
+        'keydown .o_we_search': '_onSearchKeydown',
         'input .o_we_search': '_onSearchInput',
     }),
 
@@ -107,9 +109,26 @@ var SearchableMediaWidget = MediaWidget.extend({
     /**
      * @private
      */
+    _onSearchKeydown: function (ev) {
+        // If the template contains a form that has only one input, the enter
+        // will reload the page as the html 2.0 specify this behavior.
+        if (ev.originalEvent && (ev.originalEvent.code === "Enter" || ev.originalEvent.key === "Enter")) {
+            ev.preventDefault();
+        }
+    },
+    /**
+     * @private
+     */
     _onSearchInput: function (ev) {
         this.attachments = [];
-        this.search($(ev.currentTarget).val() || '').then(() => this._renderThumbnails());
+        // Disable user interactions with attachments while updating results.
+        this.$('.o_we_existing_attachments').css('pointer-events', 'none');
+        this.search($(ev.currentTarget).val() || "")
+            .then(() => this._renderThumbnails())
+            .then(() => {
+                // Re-enable user interactions after updating results.
+                this.$(".o_we_existing_attachments").css("pointer-events", "");
+            });
         this.hasSearched = true;
     },
 });
@@ -427,7 +446,7 @@ var FileWidget = SearchableMediaWidget.extend({
             return this.media;
         }
 
-        if (!img.public && !img.access_token) {
+        if (!img.public && !img.access_token && !img.url) {
             await this._rpc({
                 model: 'ir.attachment',
                 method: 'generate_access_token',
@@ -440,7 +459,7 @@ var FileWidget = SearchableMediaWidget.extend({
         if (img.image_src) {
             var src = img.image_src;
             if (!img.public && img.access_token) {
-                src += _.str.sprintf('?access_token=%s', img.access_token);
+                src += _.str.sprintf('?access_token=%s', encodeURIComponent(img.access_token));
             }
             if (!this.$media.is('img')) {
 
@@ -601,9 +620,11 @@ var FileWidget = SearchableMediaWidget.extend({
                         'is_image': this.widgetType === 'image',
                         'width': 0,
                         'quality': 0,
+                        'generate_access_token': true,
                     }
                 }, index);
                 if (!attachment.error) {
+                    this.trigger_up('wysiwyg_attachment', attachment);
                     this._handleNewAttachment(attachment);
                 }
             });
@@ -915,6 +936,38 @@ var ImageWidget = FileWidget.extend({
                 .addClass("o_we_attachment_selected");
         });
     },
+    /**
+     * @override
+     */
+    _getAttachmentsDomain(needle) {
+        const domain = this._super(...arguments);
+
+        // Optimized images (meaning they are related to an `original_id`) can
+        // only be shown in debug mode as the toggler to make those images
+        // appear is hidden when not in debug mode.
+        // There is thus no point to fetch those optimized images outside debug
+        // mode. Worst, it leads to bugs: it might fetch only optimized images
+        // when clicking on "load more" which will look like it's bugged as no
+        // images will appear on screen (they all will be hidden).
+        if (!config.isDebug()) {
+            const subDomain = [false];
+
+            // Particular exception: if the edited image is an optimized
+            // image, we need to fetch it too so it's displayed as the
+            // selected image when opening the media dialog.
+            // We might get a few more optimized image than necessary if the
+            // original image has multiple optimized images but it's not a
+            // big deal.
+            const originalId = this.$media.length && this.$media[0].dataset.originalId;
+            if (originalId) {
+                subDomain.push(originalId);
+            }
+
+            domain.push(['original_id', 'in', subDomain]);
+        }
+
+        return domain;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1015,7 +1068,7 @@ var ImageWidget = FileWidget.extend({
      */
     _clear: function (type) {
         // Not calling _super: we don't want to call the document widget's _clear method on images
-        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow|w-25|w-50|w-75|w-100|o_modified_image_to_save)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allImgClasses, ' ');
     },
 });
@@ -1100,12 +1153,27 @@ var IconWidget = SearchableMediaWidget.extend({
     /**
      * @override
      */
-    save: function () {
+    save: async function () {
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
         if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
-            $span.data(this.$media.data());
+            if (this.$media.length) {
+                // Make sure jquery data() is clean by signaling the removal
+                // (e.g. website wants to remove SnippetEditor references from
+                // the data).
+                // TODO make sure copying the data is in fact useful at all, but
+                // in stable it did not feel safe to remove anyway.
+                //
+                // Note: done with an array of promises filled by the event
+                // handler instead of a Promise created here to be resolved by
+                // the event handler as the event handler does not necessarily
+                // exists (in simple HTML fields for example).
+                const data = { proms: [] };
+                this.$media.trigger('before_replace_target', data);
+                await Promise.all(data.proms);
+                $span.data(this.$media.data());
+            }
             this.$media = $span;
             this.media = this.$media[0];
             style = style.replace(/\s*width:[^;]+/, '');
@@ -1149,7 +1217,7 @@ var IconWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|img-thumbnail|shadow)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
     },
     /**
@@ -1240,7 +1308,6 @@ var VideoWidget = MediaWidget.extend({
             this.$('input#o_video_hide_controls').prop('checked', src.indexOf('controls=0') >= 0);
             this.$('input#o_video_loop').prop('checked', src.indexOf('loop=1') >= 0);
             this.$('input#o_video_hide_fullscreen').prop('checked', src.indexOf('fs=0') >= 0);
-            this.$('input#o_video_hide_yt_logo').prop('checked', src.indexOf('modestbranding=1') >= 0);
             this.$('input#o_video_hide_dm_logo').prop('checked', src.indexOf('ui-logo=0') >= 0);
             this.$('input#o_video_hide_dm_share').prop('checked', src.indexOf('sharing-enable=0') >= 0);
 
@@ -1254,7 +1321,7 @@ var VideoWidget = MediaWidget.extend({
             if (!videoId) {
                 return;
             }
-            fetch(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${videoId}`)
+            fetch(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`)
                 .then(response=>response.json())
                 .then((response) => {
                     $node.append($('<img>', {
@@ -1383,7 +1450,6 @@ var VideoWidget = MediaWidget.extend({
             'hide_controls': this.isForBgVideo || this.$('input#o_video_hide_controls').is(':checked'),
             'loop': this.isForBgVideo || this.$('input#o_video_loop').is(':checked'),
             'hide_fullscreen': this.isForBgVideo || this.$('input#o_video_hide_fullscreen').is(':checked'),
-            'hide_yt_logo': this.isForBgVideo || this.$('input#o_video_hide_yt_logo').is(':checked'),
             'hide_dm_logo': this.isForBgVideo || this.$('input#o_video_hide_dm_logo').is(':checked'),
             'hide_dm_share': this.isForBgVideo || this.$('input#o_video_hide_dm_share').is(':checked'),
         });
@@ -1407,23 +1473,26 @@ var VideoWidget = MediaWidget.extend({
 
         if (query.type === 'youtube') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'
-            // and 'youtube logo' options too
-            this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
+            // options too.
+            this.$('input#o_video_hide_fullscreen').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
         }
 
+        this.error = false;
         var $content = query.$video;
         if (!$content) {
             switch (query.errorCode) {
                 case 0:
+                    this.error = _t("The provided url is not valid");
                     $content = $('<div/>', {
                         class: 'alert alert-danger o_video_dialog_iframe mb-2 mt-2',
-                        text: _t("The provided url is not valid"),
+                        text: this.error,
                     });
                     break;
                 case 1:
+                    this.error = _t("The provided url does not reference any supported video");
                     $content = $('<div/>', {
                         class: 'alert alert-warning o_video_dialog_iframe mb-2 mt-2',
-                        text: _t("The provided url does not reference any supported video"),
+                        text: this.error,
                     });
                     break;
             }
@@ -1453,7 +1522,7 @@ var VideoWidget = MediaWidget.extend({
     _onSampleVideoClick(ev) {
         const vimeoId = ev.currentTarget.getAttribute('data-vimeo');
         if (vimeoId) {
-            this.$('#o_video_text').val(`https://player.vimeo.com/video/${vimeoId}`);
+            this.$('#o_video_text').val(`https://player.vimeo.com/video/${encodeURIComponent(vimeoId)}`);
             this._updateVideo();
         }
     },
@@ -1504,25 +1573,31 @@ var VideoWidget = MediaWidget.extend({
         let type;
         if (matches.youtube && matches.youtube[2].length === 11) {
             const fullscreen = options.hide_fullscreen ? '&fs=0' : '';
-            const ytLoop = loop ? loop + `&playlist=${matches.youtube[2]}` : '';
-            const logo = options.hide_yt_logo ? '&modestbranding=1' : '';
-            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${matches.youtube[2]}${autoplay}&rel=0${ytLoop}${controls}${fullscreen}${logo}`;
+            const ytLoop = loop ? loop + `&playlist=${encodeURIComponent(matches.youtube[2])}` : '';
+            // The youtube js api is needed for autoplay on mobile. Note: this
+            // was added as a fix, old customers may have autoplay videos
+            // without this, which will make their video autoplay on desktop
+            // but not in mobile (so no behavior change was done in stable,
+            // this should not be migrated).
+            const enablejsapi = options.autoplay ? '&enablejsapi=1' : '';
+            embedURL = `//www.youtube${matches.youtube[1] || ''}.com/embed/${encodeURIComponent(matches.youtube[2])}${autoplay}${enablejsapi}&rel=0${ytLoop}${controls}${fullscreen}`;
             type = 'youtube';
         } else if (matches.instagram && matches.instagram[2].length) {
-            embedURL = `//www.instagram.com/p/${matches.instagram[2]}/embed/`;
+            embedURL = `//www.instagram.com/p/${encodeURIComponent(matches.instagram[2])}/embed/`;
             type = 'instagram';
         } else if (matches.vine && matches.vine[0].length) {
             embedURL = `${matches.vine[0]}/embed/simple`;
             type = 'vine';
         } else if (matches.vimeo && matches.vimeo[3].length) {
-            const vimeoAutoplay = autoplay.replace('mute', 'muted');
-            embedURL = `//player.vimeo.com/video/${matches.vimeo[3]}${vimeoAutoplay}${loop}`;
+            const vimeoAutoplay = autoplay.replace('mute', 'muted')
+                .replace('autoplay=1', 'autoplay=1&autopause=0');
+            embedURL = `//player.vimeo.com/video/${encodeURIComponent(matches.vimeo[3])}${vimeoAutoplay}${loop}${controls}`;
             type = 'vimeo';
         } else if (matches.dailymotion && matches.dailymotion[2].length) {
             const videoId = matches.dailymotion[2].replace('video/', '');
             const logo = options.hide_dm_logo ? '&ui-logo=0' : '';
             const share = options.hide_dm_share ? '&sharing-enable=0' : '';
-            embedURL = `//www.dailymotion.com/embed/video/${videoId}${autoplay}${controls}${logo}${share}`;
+            embedURL = `//www.dailymotion.com/embed/video/${encodeURIComponent(videoId)}${autoplay}${controls}${logo}${share}`;
             type = 'dailymotion';
         } else if (matches.youku && matches.youku[3].length) {
             const videoId = matches.youku[3].indexOf('.html?') >= 0 ? matches.youku[3].substring(0, matches.youku[3].indexOf('.html?')) : matches.youku[3];

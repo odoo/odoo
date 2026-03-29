@@ -79,12 +79,26 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
             return sale_orders;
         }
         async _getOrderIdsForCurrentPage(limit, offset) {
-            return await this.rpc({
+            let domain = [['currency_id', '=', this.comp.env.pos.currency.id]].concat(this.searchDomain || []);
+            const saleOrders = await this.rpc({
                 model: 'sale.order',
                 method: 'search_read',
-                args: [this.searchDomain ? this.searchDomain : [], ['name', 'partner_id', 'amount_total', 'date_order', 'state', 'user_id'], offset, limit],
+                args: [domain, ['name', 'partner_id', 'amount_total', 'date_order', 'state', 'user_id'], offset, limit],
                 context: this.comp.env.session.user_context,
             });
+
+            const saleOrderIds = saleOrders.flatMap((saleOrder) => saleOrder.id);
+            const saleOrdersAmountUnpaid = await this.rpc({
+                model: 'sale.order',
+                method: 'get_order_amount_unpaid',
+                args: [saleOrderIds],
+                context: this.comp.env.session.user_context,
+            });
+            for (const saleOrder of saleOrders) {
+                saleOrder.amount_unpaid = saleOrdersAmountUnpaid[saleOrder.id];
+            }
+
+            return saleOrders;
         }
 
         nextPage() {

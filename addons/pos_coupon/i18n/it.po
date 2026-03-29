@@ -7,20 +7,22 @@
 # Léonie Bouchat <lbo@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-08 06:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_coupon
 #: model:coupon.program,name:pos_coupon.15_pc_on_next_order
@@ -116,6 +118,91 @@ msgid ""
 "</tbody></table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object.partner_id.name\">\n"
+"            Congratulazioni <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        </t>\n"
+"\n"
+"        ecco il premio da parte di <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"\n"
+"        <t t-if=\"object.program_id.reward_type == 'discount'\">\n"
+"            <t t-if=\"object.program_id.discount_type == 'fixed_amount'\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-out=\"'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id) or ''\">$ 10.0</span><br/>\n"
+"                <strong style=\"font-size: 24px;\">di sconto sul prossimo ordine</strong><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
+"                    <t t-out=\"object.program_id.discount_percentage or ''\">10.0</t> %\n"
+"                </span>\n"
+"                <t t-if=\"object.program_id.discount_apply_on == 'specific_products'\">\n"
+"                    <br/>\n"
+"                    <t t-if=\"len(object.program_id.discount_specific_product_ids) != 1\">\n"
+"                        <t t-set=\"display_specific_products\" t-value=\"True\"/>\n"
+"                        <strong style=\"font-size: 24px;\">\n"
+"                            su alcuni prodotti*\n"
+"                        </strong>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <strong style=\"font-size: 24px;\" t-out=\"'on %s' % object.program_id.discount_specific_product_ids.name or ''\">Proteggi pavimento per sedia</strong>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-elif=\"object.program_id.discount_apply_on == 'cheapest_product'\">\n"
+"                    <br/><strong style=\"font-size: 24px;\">\n"
+"                        di sconto sul prodotto meno caro\n"
+"                    </strong>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <br/><strong style=\"font-size: 24px;\">\n"
+"                        di sconto sul prossimo ordine\n"
+"                    </strong>\n"
+"                </t>\n"
+"                <br/>\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-elif=\"object.program_id.reward_type == 'product'\">\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\" t-out=\"'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name) or ''\">Proteggi pavimento per sedia</span><br/>\n"
+"            <strong style=\"font-size: 24px;\">sul prossimo ordine</strong><br/>\n"
+"        </t>\n"
+"        <t t-elif=\"object.program_id.reward_type == 'free_shipping'\">\n"
+"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
+"                ottieni la spedizione gratuita\n"
+"            </span><br/>\n"
+"            <strong style=\"font-size: 24px;\">sul prossimo ordine</strong><br/>\n"
+"        </t>\n"
+"    </td></tr>\n"
+"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        Utilizza il codice promozionale\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            prima del <t t-out=\"object.expiration_date or ''\">05-06-2021</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">13996301932606901095</strong>\n"
+"        </p>\n"
+"        <t t-if=\"object.program_id.rule_min_quantity not in [0, 1]\">\n"
+"            <span style=\"font-size: 14px;\">\n"
+"                Acquisto minimo di <t t-out=\"object.program_id.rule_min_quantity or ''\">10</t> prodotti\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.program_id.rule_minimum_amount != 0.00\">\n"
+"            <span style=\"font-size: 14px;\">\n"
+"                Valido per acquisti superiori a <t t-out=\"object.program_id.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(object.program_id.rule_minimum_amount) or ''\">10.00</t>\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <t t-if=\"display_specific_products\">\n"
+"            <span>\n"
+"                *Valido per i seguenti prodotti: <t t-out=\"', '.join(object.program_id.discount_specific_product_ids.mapped('name')) or ''\">Sedia da ufficio nera</t>\n"
+"            </span><br/>\n"
+"        </t>\n"
+"        <br/>\n"
+"        Grazie,\n"
+"        <t t-if=\"object.source_pos_order_id.user_id.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"object.source_pos_order_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </td></tr>\n"
+"</tbody></table>\n"
+"            "
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon.py:0
@@ -173,7 +260,7 @@ msgstr "Regola codice a barre"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__used_coupon_ids
 msgid "Consumed Coupons"
-msgstr ""
+msgstr "Coupon consumati"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_coupon
@@ -187,7 +274,7 @@ msgstr "Buono sconto"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Coupon Codes"
-msgstr ""
+msgstr "Codici Coupon"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_program
@@ -270,9 +357,16 @@ msgid "No"
 msgstr "No"
 
 #. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "No tax"
+msgstr "Nessuna tassa"
+
+#. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "Order lines where this program is applied."
-msgstr ""
+msgstr "Righe d'ordine in cui viene applicato questo programma."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_count
@@ -287,7 +381,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr ""
+msgstr "Riferimento ordine POS"
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon_program.py:0
@@ -370,7 +464,14 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/ResetProgramsButton.xml:0
 #, python-format
 msgid "Reset Programs"
-msgstr ""
+msgstr "Ripristina programmi"
+
+#. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr "Tassa: %s"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids
@@ -454,7 +555,7 @@ msgstr "Il tuo codice buono sconto"
 #. module: pos_coupon
 #: model:mail.template,subject:pos_coupon.mail_coupon_template
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr "Il tuo buono premio da {{ object.program_id.company_id.name }} "
 
 #. module: pos_coupon
 #: model:mail.template,name:pos_coupon.mail_coupon_template
@@ -466,4 +567,4 @@ msgstr "Coupon [POS]: Invia per e-mail"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr ""
+msgstr "senza scadenza"

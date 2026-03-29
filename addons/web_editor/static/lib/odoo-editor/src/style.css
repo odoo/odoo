@@ -1,11 +1,19 @@
+.odoo-editor-editable .btn {
+    user-select: auto;
+    cursor: text !important;
+}
+
+.odoo-editor-editable a.o_link_in_selection:not(.btn) {
+    background-color: #a6e3e2;
+    color: black !important;
+    border: 1px dashed #008f8c;
+    margin: -1px;
+}
+
 .oe-floating {
     box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
     border-radius: 4px;
     position: absolute;
-}
-
-.oe-noscroll {
-    overflow: hidden !important;
 }
 
 /* toolbar styling */
@@ -89,11 +97,11 @@
     width: 19px;
     height: 19px;
     padding: 0;
-    margin-right: 3px;
+    margin-inline-end: 3px;
     margin-bottom: 3px;
 }
 .oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell:last-of-type {
-    margin-right: 0;
+    margin-inline-end: 0;
 }
 .oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell.active {
     background: #d3d1cb;
@@ -198,9 +206,6 @@
 }
 /* Content styling */
 
-li.oe-nested {
-    display: block;
-}
 .oe-commandbar-wrapper {
     position: absolute;
     z-index: 1051;
@@ -218,6 +223,7 @@ li.oe-nested {
     flex: 1 1 auto;
     overflow: auto;
     padding: 5px 0;
+    overscroll-behavior: contain;
 }
 
 .oe-commandbar-groupName,  .oe-commandbar-noResult {

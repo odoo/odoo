@@ -287,6 +287,104 @@ QUnit.module("utils", () => {
         assert.verifySteps(["ok (44) [2]", "ok (44) [3]"]);
     });
 
+    QUnit.test("Race: catch rejected promise", async function (assert) {
+        const race = new Race();
+        const def = makeDeferred();
+
+        race.add(def).catch((v) => assert.step(`not ok (${v})`));
+
+        assert.verifySteps([]);
+
+        def.reject(44);
+        await nextTick();
+
+        assert.verifySteps(["not ok (44)"]);
+    });
+
+    QUnit.test("Race: first promise rejects first", async function (assert) {
+        const race = new Race();
+        const def1 = makeDeferred();
+        const def2 = makeDeferred();
+
+        race.add(def1).catch((v) => assert.step(`not ok (${v}) [1]`));
+        race.add(def2).catch((v) => assert.step(`not ok (${v}) [2]`));
+
+        assert.verifySteps([]);
+
+        def1.reject(44);
+        await nextTick();
+
+        assert.verifySteps(["not ok (44) [1]", "not ok (44) [2]"]);
+
+        def2.resolve();
+        await nextTick();
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("Race: second promise rejects after", async function (assert) {
+        const race = new Race();
+        const def1 = makeDeferred();
+        const def2 = makeDeferred();
+
+        race.add(def1).then((v) => assert.step(`ok (${v}) [1]`));
+        race.add(def2).then((v) => assert.step(`ok (${v}) [2]`));
+
+        assert.verifySteps([]);
+
+        def1.resolve(44);
+        await nextTick();
+
+        assert.verifySteps(["ok (44) [1]", "ok (44) [2]"]);
+
+        def2.reject();
+        await nextTick();
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("Race: second promise rejects first", async function (assert) {
+        const race = new Race();
+        const def1 = makeDeferred();
+        const def2 = makeDeferred();
+
+        race.add(def1).catch((v) => assert.step(`not ok (${v}) [1]`));
+        race.add(def2).catch((v) => assert.step(`not ok (${v}) [2]`));
+
+        assert.verifySteps([]);
+
+        def2.reject(44);
+        await nextTick();
+
+        assert.verifySteps(["not ok (44) [1]", "not ok (44) [2]"]);
+
+        def1.resolve();
+        await nextTick();
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("Race: first promise rejects after", async function (assert) {
+        const race = new Race();
+        const def1 = makeDeferred();
+        const def2 = makeDeferred();
+
+        race.add(def1).then((v) => assert.step(`ok (${v}) [1]`));
+        race.add(def2).then((v) => assert.step(`ok (${v}) [2]`));
+
+        assert.verifySteps([]);
+
+        def2.resolve(44);
+        await nextTick();
+
+        assert.verifySteps(["ok (44) [1]", "ok (44) [2]"]);
+
+        def1.reject();
+        await nextTick();
+
+        assert.verifySteps([]);
+    });
+
     QUnit.test("Race: getCurrentProm", async function (assert) {
         assert.expect(7);
 

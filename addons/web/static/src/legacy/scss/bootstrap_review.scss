@@ -97,6 +97,17 @@
     cursor: pointer;
 }
 
+// Disable RTL for the dropdown position
+.dropdown-menu {
+    &[x-placement^="top"],
+    &[x-placement^="right"],
+    &[x-placement^="bottom"],
+    &[x-placement^="left"] {
+        /*rtl:ignore*/
+        right: auto;
+    }
+}
+
 // Disable RTL for the popover position
 .popover {
     right: auto#{"/*rtl:ignore*/"};
@@ -186,4 +197,55 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
 
 .carousel-control-next .sr-only {
     left: 50%; // Avoid horizontal scrollbar in Chrome
+}
+
+// Modal
+.modal-content {
+    // If the text color of the body (used for the text color in modals) is not
+    // visible due to insufficient contrast with the modal background, we adjust
+    // the text color in the modal using the following code. For example, if the
+    // user sets a black background for its website and the text color of the
+    // body is white, the text will not be visible on modals with a white
+    // background.
+
+    @if $modal-content-color == null {
+        color: adjust-color-to-background($body-color, $modal-content-bg);
+    }
+
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $modal-content-bg, mute-color($yiq-text-light), mute-color($yiq-text-dark)) !important;
+    }
+}
+
+// Popover
+.popover {
+    // The popover can have a different background color than that of the body.
+    // Here, we adjust the text color of the popover in case the body color
+    // (used by default for the text color of popovers) is not visible inside a
+    // popover due to a lack of contrast (e.g. on a website with a dark
+    // background).
+    @if $popover-header-color == null {
+        .popover-header {
+            color: adjust-color-to-background($body-color, $popover-header-bg);
+        }
+    }
+    @if $popover-body-color == $body-color {
+        .popover-body {
+            color: adjust-color-to-background($body-color, $popover-bg);
+        }
+    }
+}
+
+// Badge
+.badge-light {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $light, mute-color($yiq-text-light), mute-color($yiq-text-dark)) !important;
+    }
+}
+
+// Dropdown
+.dropdown .dropdown-menu {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($yiq-text-light), mute-color($yiq-text-dark)) !important;
+    }
 }

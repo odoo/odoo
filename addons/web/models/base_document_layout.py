@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import markupsafe
-from PIL import Image
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.modules import get_resource_path
+from odoo.tools import is_html_empty
 
 try:
     import sass as libsass
@@ -14,6 +14,10 @@ except ImportError:
     # If the `sass` python library isn't found, we fallback on the
     # `sassc` executable in the path.
     libsass = None
+try:
+    from PIL.Image import Resampling
+except ImportError:
+    from PIL import Image as Resampling
 
 DEFAULT_PRIMARY = '#000000'
 DEFAULT_SECONDARY = '#000000'
@@ -37,11 +41,19 @@ class BaseDocumentLayout(models.TransientModel):
     def _default_company_details(self):
         company = self.env.company
         address_format, company_data = company.partner_id._prepare_display_address()
+        address_format = self._clean_address_format(address_format, company_data)
         # company_name may *still* be missing from prepared address in case commercial_company_name is falsy
         if 'company_name' not in address_format:
             address_format = '%(company_name)s\n' + address_format
             company_data['company_name'] = company_data['company_name'] or company.name
         return Markup(nl2br(address_format)) % company_data
+
+    def _clean_address_format(self, address_format, company_data):
+        missing_company_data = [k for k, v in company_data.items() if not v]
+        for key in missing_company_data:
+            if key in address_format:
+                address_format = address_format.replace(f'%({key})s\n', '')
+        return address_format
 
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, required=True)
@@ -120,7 +132,11 @@ class BaseDocumentLayout(models.TransientModel):
                     wizard_with_logo = wizard
                 preview_css = markupsafe.Markup(self._get_css_for_preview(styles, wizard_with_logo.id))
                 ir_ui_view = wizard_with_logo.env['ir.ui.view']
-                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {'company': wizard_with_logo, 'preview_css': preview_css})
+                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {
+                    'company': wizard_with_logo,
+                    'preview_css': preview_css,
+                    'is_html_empty': is_html_empty,
+                })
             else:
                 wizard.preview = False
 
@@ -191,7 +207,7 @@ class BaseDocumentLayout(models.TransientModel):
         if not logo:
             return False, False
         # The "===" gives different base64 encoding a correct padding
-        logo += b'===' if type(logo) == bytes else '==='
+        logo += b'===' if isinstance(logo, bytes) else '==='
         try:
             # Catches exceptions caused by logo not being an image
             image = tools.image_fix_orientation(tools.base64_to_image(logo))
@@ -204,7 +220,7 @@ class BaseDocumentLayout(models.TransientModel):
 
         # Converts to RGBA (if already RGBA, this is a noop)
         image_converted = image.convert('RGBA')
-        image_resized = image_converted.resize((w, h), resample=Image.NEAREST)
+        image_resized = image_converted.resize((w, h), resample=Resampling.NEAREST)
 
         colors = []
         for color in image_resized.getcolors(w * h):

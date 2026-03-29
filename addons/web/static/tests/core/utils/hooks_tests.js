@@ -42,6 +42,33 @@ QUnit.module("utils", () => {
             comp.destroy();
         });
 
+        QUnit.test("useAutofocus: simple usecase when input type is number", async function (assert) {
+            class MyComponent extends Component {
+                setup() {
+                    useAutofocus();
+                }
+            }
+            MyComponent.template = tags.xml`
+                <span>
+                    <input type="number" autofocus="" />
+                </span>
+            `;
+
+            registry.category("services").add("ui", uiService);
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, { env, target });
+
+            assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.render();
+            await nextTick();
+            assert.strictEqual(document.activeElement, comp.el.querySelector("input"));
+
+            comp.destroy();
+        });
+
         QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
             class MyComponent extends Component {
                 setup() {

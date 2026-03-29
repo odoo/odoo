@@ -6,6 +6,10 @@ import {
     parseDate,
     parseDateTime,
     strftimeToLuxonFormat,
+    serializeDate,
+    serializeDateTime,
+    deserializeDate,
+    deserializeDateTime,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
@@ -88,6 +92,16 @@ QUnit.module(
             assert.strictEqual(formatted, expected);
 
             unpatch(localization, "dateformat");
+        });
+
+        QUnit.test("formatDate: input timezone does not matter", async (assert) => {
+            patchWithCleanup(localization, defaultLocalization);
+            const utcDate = DateTime.utc(2009, 5, 4, 0, 0, 0);
+            const localDate = DateTime.local(2009, 5, 4, 0, 0, 0);
+            assert.equal(utcDate.zone.name, "UTC");
+            assert.strictEqual(formatDate(utcDate), "05/04/2009");
+            assert.equal(localDate.zone.name, "Europe/Brussels");
+            assert.strictEqual(formatDate(localDate), "05/04/2009");
         });
 
         QUnit.test("formatDate (with different timezone offset)", async (assert) => {
@@ -297,6 +311,24 @@ QUnit.module(
             unpatch(localization, "patch loc");
         });
 
+        QUnit.test("parseDateTime with escaped characters (eg. Basque locale)", async (assert) => {
+            const dateFormat = strftimeToLuxonFormat("%a, %Y.eko %bren %da");
+            const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
+            patch(localization, "patch loc", {
+                dateFormat,
+                timeFormat,
+                dateTimeFormat: `${dateFormat} ${timeFormat}`,
+            });
+
+            const dateTimeFormat = `${dateFormat} ${timeFormat}`;
+            assert.equal(dateTimeFormat, "ccc, yyyy.'e''k''o' MMM'r''e''n' dd'a' HH:mm:ss");
+            assert.equal(
+                parseDateTime("1985-01-31 08:30:00").toFormat(dateTimeFormat),
+                "Thu, 1985.eko Janren 31a 08:30:00"
+            );
+            unpatch(localization, "patch loc");
+        });
+
         QUnit.test("parse smart date input", async (assert) => {
             const format = "dd MM yyyy";
             assert.strictEqual(
@@ -357,6 +389,80 @@ QUnit.module(
             );
 
             unpatch(localization, "default loc");
+        });
+
+        QUnit.test("serializeDate", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd"), "2022-02-21");
+            assert.strictEqual(serializeDate(date), "2022-02-21");
+        });
+
+        QUnit.test("serializeDate with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd"), "٢٠٢٢-٠٢-٢١");
+            assert.strictEqual(serializeDate(date), "2022-02-21");
+        });
+
+        QUnit.test("serializeDateTime", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd HH:mm:ss"), "2022-02-21 16:11:42");
+            assert.strictEqual(serializeDateTime(date), "2022-02-21 16:11:42");
+        });
+
+        QUnit.test("serializeDateTime with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(date.toFormat("yyyy-MM-dd HH:mm:ss"), "٢٠٢٢-٠٢-٢١ ١٦:١١:٤٢");
+            assert.strictEqual(serializeDateTime(date), "2022-02-21 16:11:42");
+        });
+
+        QUnit.test("deserializeDate", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21);
+            assert.strictEqual(
+                DateTime.fromFormat("2022-02-21", "yyyy-MM-dd", { zone: "utc" }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(deserializeDate("2022-02-21").toMillis(), date.toMillis());
+        });
+
+        QUnit.test("deserializeDate with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21);
+            assert.strictEqual(
+                DateTime.fromFormat("٢٠٢٢-٠٢-٢١", "yyyy-MM-dd", { zone: "utc" }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(deserializeDate("2022-02-21").toMillis(), date.toMillis());
+        });
+
+        QUnit.test("deserializeDateTime", async (assert) => {
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(
+                DateTime.fromFormat("2022-02-21 16:11:42", "yyyy-MM-dd HH:mm:ss", {
+                    zone: "utc",
+                }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(
+                deserializeDateTime("2022-02-21 16:11:42").toMillis(),
+                date.toMillis()
+            );
+        });
+
+        QUnit.test("deserializeDateTime with different numbering system", async (assert) => {
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+            const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
+            assert.strictEqual(
+                DateTime.fromFormat("٢٠٢٢-٠٢-٢١ ١٦:١١:٤٢", "yyyy-MM-dd HH:mm:ss", {
+                    zone: "utc",
+                }).toMillis(),
+                date.toMillis()
+            );
+            assert.strictEqual(
+                deserializeDateTime("2022-02-21 16:11:42").toMillis(),
+                date.toMillis()
+            );
         });
 
         QUnit.module("dates utils compatibility with legacy", {
@@ -679,15 +785,15 @@ QUnit.module(
              * Type of testSet key: string
              * Type of testSet value: [newExpected: string, legacyExpected: string]
              */
-            const testSet = new Map([
-                ["932-10-10", [undefined, "2000-10-10T00:00:00.000Z"]], // weird behaviour in legacy
-                ["1932-10-10", ["1932-10-10T00:00:00.000Z", "2000-10-10T00:00:00.000Z"]], // weird behaviour in legacy
-                ["09990101", [undefined, "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
-                ["19993012", [undefined, "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+            let testSet = new Map([
+                ["932-10-10", [undefined]],
+                ["1932-10-10", ["1932-10-10T00:00:00.000Z"]],
+                ["09990101", [undefined]],
+                ["19993012", [undefined]],
 
-                ["19990101", ["1999-01-01T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
-                ["19990130", ["1999-01-30T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
-                ["19991230", ["1999-12-30T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                ["19990101", ["1999-01-01T00:00:00.000Z", undefined]], // weird behaviour in legacy
+                ["19990130", ["1999-01-30T00:00:00.000Z", undefined]], // weird behaviour in legacy
+                ["19991230", ["1999-12-30T00:00:00.000Z", undefined]], // weird behaviour in legacy
                 ["2016-01-03 09:24:15.123", ["2016-01-03T09:24:15.123Z"]],
                 ["2016-01-03T09:24:15.123", ["2016-01-03T09:24:15.123Z"]],
                 ["2016-01-03 09:24:15.123+06:00", ["2016-01-03T03:24:15.123Z", undefined]],
@@ -697,6 +803,30 @@ QUnit.module(
                 ["2016-01-03 09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
                 ["2016-01-03T09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
             ]);
+            // ****************************************************************************************
+            // TODO: remove this conditional assignation once Chrome has been upgraded to 97+ on Runbot
+            // ****************************************************************************************
+            const chromeVersionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
+            if (chromeVersionMatch && parseInt(chromeVersionMatch[1], 10) < 97) {
+                testSet = new Map([
+                    ["932-10-10", [undefined, "2000-10-10T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["1932-10-10", ["1932-10-10T00:00:00.000Z", "2000-10-10T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["09990101", [undefined, "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["19993012", [undefined, "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+
+                    ["19990101", ["1999-01-01T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["19990130", ["1999-01-30T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["19991230", ["1999-12-30T00:00:00.000Z", "2000-01-01T00:00:00.000Z"]], // weird behaviour in legacy
+                    ["2016-01-03 09:24:15.123", ["2016-01-03T09:24:15.123Z"]],
+                    ["2016-01-03T09:24:15.123", ["2016-01-03T09:24:15.123Z"]],
+                    ["2016-01-03 09:24:15.123+06:00", ["2016-01-03T03:24:15.123Z", undefined]],
+                    ["2016-01-03T09:24:15.123+06:00", ["2016-01-03T03:24:15.123Z", undefined]],
+                    ["2016-01-03 09:24:15.123+16:00", ["2016-01-02T17:24:15.123Z", undefined]],
+                    ["2016-01-03T09:24:15.123+16:00", ["2016-01-02T17:24:15.123Z", undefined]],
+                    ["2016-01-03 09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
+                    ["2016-01-03T09:24:15.123Z", ["2016-01-03T09:24:15.123Z", undefined]], // weird behaviour in legacy
+                ]);
+            }
 
             runTestSet(assert, testSet, {
                 newFn: (input) => parseDateTime(input, { format: "YYYY-MM-DD HH:mm:ss" }).toISO(),

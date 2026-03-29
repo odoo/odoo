@@ -52,6 +52,16 @@ QUnit.module("domain", {}, () => {
         );
     });
 
+    QUnit.test("support of '=?' operator", function (assert) {
+        const record = { a: 3 };
+        assert.ok(new Domain([["a", "=?", null]]).contains(record));
+        assert.ok(new Domain([["a", "=?", false]]).contains(record));
+        assert.notOk(new Domain(["!", ["a", "=?", false]]).contains(record));
+        assert.notOk(new Domain([["a", "=?", 1]]).contains(record));
+        assert.ok(new Domain([["a", "=?", 3]]).contains(record));
+        assert.notOk(new Domain(["!", ["a", "=?", 3]]).contains(record));
+    });
+
     QUnit.test("or", function (assert) {
         const currentDomain = [
             "|",
@@ -161,6 +171,16 @@ QUnit.module("domain", {}, () => {
             '[("name", "=", "true")]'
         );
         assert.strictEqual(new Domain().toString(), "[]");
+        assert.strictEqual(new Domain([['name', 'in', [true, false]]]).toString(), '[("name", "in", [True, False])]');
+        assert.strictEqual(new Domain([['name', 'in', [null]]]).toString(), '[("name", "in", [None])]');
+        assert.strictEqual(new Domain([['name', 'in', ["foo", "bar"]]]).toString(), '[("name", "in", ["foo", "bar"])]');
+        assert.strictEqual(new Domain([['name', 'in', [1, 2]]]).toString(), '[("name", "in", [1, 2])]');
+        assert.strictEqual(new Domain(['&', ['name', '=', 'foo'], ['type', '=', 'bar']]).toString(), '["&", ("name", "=", "foo"), ("type", "=", "bar")]');
+        assert.strictEqual(new Domain(['|', ['name', '=', 'foo'], ['type', '=', 'bar']]).toString(), '["|", ("name", "=", "foo"), ("type", "=", "bar")]');
+        assert.strictEqual(new Domain().toString(), "[]");
+
+        // string domains are only reformatted
+        assert.strictEqual(new Domain('[("name","ilike","foo")]').toString(), '[("name", "ilike", "foo")]');
     });
 
     QUnit.test("implicit &", function (assert) {
@@ -250,9 +270,16 @@ QUnit.module("domain", {}, () => {
                 return new PyDate(2013, 4, 24);
             },
         });
-        const domainStr =
+        let domainStr =
             "[('date','>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]";
         assert.deepEqual(new Domain(domainStr).toList(), [["date", ">=", "2013-03-25"]]);
+        domainStr = "[('date', '>=', context_today() - relativedelta(days=30))]";
+        const domainList = new Domain(domainStr).toList(); // domain creation using `parseExpr` function since the parameter is a string.
+        assert.deepEqual(domainList[0][2], PyDate.create({ day: 25, month: 3, year: 2013 }), 'The right item in the rule in the domain should be a PyDate object');
+        assert.deepEqual(JSON.stringify(domainList), '[["date",">=","2013-03-25"]]');
+        const domainList2 = new Domain(domainList).toList(); // domain creation using `toAST` function since the parameter is a list.
+        assert.deepEqual(domainList2[0][2], PyDate.create({ day: 25, month: 3, year: 2013 }), 'The right item in the rule in the domain should be a PyDate object');
+        assert.deepEqual(JSON.stringify(domainList2), '[["date",">=","2013-03-25"]]');
     });
 
     QUnit.test("Check that there is no dependency between two domains", function (assert) {

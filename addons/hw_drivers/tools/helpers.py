@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from enum import Enum
 from importlib import util
 import io
 import json
@@ -25,6 +26,13 @@ _logger = logging.getLogger(__name__)
 # Helper
 #----------------------------------------------------------
 
+
+class CertificateStatus(Enum):
+    OK = 1
+    NEED_REFRESH = 2
+    ERROR = 3
+
+
 class IoTRestart(Thread):
     """
     Thread to restart odoo server in IoT Box when we must return a answer before
@@ -47,24 +55,37 @@ def add_credential(db_uuid, enterprise_code):
 def check_certificate():
     """
     Check if the current certificate is up to date or not authenticated
+    :return CheckCertificateStatus
     """
     server = get_odoo_server_url()
-    if server:
-        path = Path('/etc/ssl/certs/nginx-cert.crt')
-        if path.exists():
-            with path.open('r') as f:
-                cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
-                cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
-                for key in cert.get_subject().get_components():
-                    if key[0] == b'CN':
-                        cn = key[1].decode('utf-8')
-                if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
-                    _logger.info(_('Your certificate %s must be updated') % (cn))
-                    load_certificate()
-                else:
-                    _logger.info(_('Your certificate %s is valid until %s') % (cn, cert_end_date))
-        else:
-            load_certificate()
+    if not server:
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
+
+    path = Path('/etc/ssl/certs/nginx-cert.crt')
+    if not path.exists():
+        return {"status": CertificateStatus.NEED_REFRESH}
+
+    try:
+        with path.open('r') as f:
+            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
+    except EnvironmentError:
+        _logger.exception("Unable to read certificate file")
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+
+    cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
+    for key in cert.get_subject().get_components():
+        if key[0] == b'CN':
+            cn = key[1].decode('utf-8')
+    if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
+        message = _('Your certificate %s must be updated') % (cn)
+        _logger.info(message)
+        return {"status": CertificateStatus.NEED_REFRESH}
+    else:
+        message = _('Your certificate %s is valid until %s') % (cn, cert_end_date)
+        _logger.info(message)
+        return {"status": CertificateStatus.OK, "message": message}
 
 def check_git_branch():
     """
@@ -91,6 +112,7 @@ def check_git_branch():
                     db_branch = 'master'
 
                 local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+                _logger.info("Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s", local_branch, db_branch)
 
                 if db_branch != local_branch:
                     subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
@@ -128,6 +150,27 @@ def check_image():
         return False
     version = checkFile.get(valueLastest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
     return {'major': version[0], 'minor': version[1]}
+
+def get_certificate_status(is_first=True):
+    """
+    Will get the HTTPS certificate details if present. Will load the certificate if missing.
+
+    :param is_first: Use to make sure that the recursion happens only once
+    :return: (bool, str)
+    """
+    check_certificate_result = check_certificate()
+    certificateStatus = check_certificate_result["status"]
+
+    if certificateStatus == CertificateStatus.ERROR:
+        return False, check_certificate_result["error_code"]
+
+    if certificateStatus == CertificateStatus.NEED_REFRESH and is_first:
+        certificate_process = load_certificate()
+        if certificate_process is not True:
+            return False, certificate_process
+        return get_certificate_status(is_first=False)  # recursive call to attempt certificate read
+    return True, check_certificate_result.get("message",
+                                              "The HTTPS certificate was generated correctly")
 
 def get_img_name():
     major, minor = get_version().split('.')
@@ -199,35 +242,48 @@ def load_certificate():
     """
     db_uuid = read_file_first_line('odoo-db-uuid.conf')
     enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
-    if db_uuid and enterprise_code:
-        url = 'https://www.odoo.com/odoo-enterprise/iot/x509'
-        data = {
-            'params': {
-                'db_uuid': db_uuid,
-                'enterprise_code': enterprise_code
-            }
+    if not (db_uuid and enterprise_code):
+        return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
+
+    url = 'https://www.odoo.com/odoo-enterprise/iot/x509'
+    data = {
+        'params': {
+            'db_uuid': db_uuid,
+            'enterprise_code': enterprise_code
         }
-        urllib3.disable_warnings()
-        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+    }
+    urllib3.disable_warnings()
+    http = urllib3.PoolManager(cert_reqs='CERT_NONE', retries=urllib3.Retry(4))
+    try:
         response = http.request(
             'POST',
             url,
             body = json.dumps(data).encode('utf8'),
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         )
-        result = json.loads(response.data.decode('utf8'))['result']
-        if result:
-            write_file('odoo-subject.conf', result['subject_cn'])
-            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
-            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"])
-            Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
-            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
-            Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
-            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
-            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
-            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
-            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
-            subprocess.check_call(["sudo", "service", "nginx", "restart"])
+    except Exception as e:
+        _logger.exception("An error occurred while trying to reach odoo.com servers.")
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
+
+    if response.status != 200:
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
+
+    result = json.loads(response.data.decode('utf8'))['result']
+    if not result:
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    write_file('odoo-subject.conf', result['subject_cn'])
+    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
+    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"])
+    Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+    Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+    Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+    Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+    subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
+    subprocess.call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
+    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+    subprocess.check_call(["sudo", "service", "nginx", "restart"])
+    return True
 
 def download_iot_handlers(auto=True):
     """
@@ -251,6 +307,11 @@ def download_iot_handlers(auto=True):
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
 
+def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
+    # TODO: replace with `removesuffix` (for Odoo version using an IoT image that use Python >= 3.9)
+    return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
+        format(handler_kind=handler_kind, handler_name=handler_file_name.replace('.py', ''))
+
 def load_iot_handlers():
     """
     This method loads local files: 'odoo/addons/hw_drivers/iot_handlers/drivers' and
@@ -262,7 +323,7 @@ def load_iot_handlers():
         filesList = os.listdir(path)
         for file in filesList:
             path_file = os.path.join(path, file)
-            spec = util.spec_from_file_location(file, path_file)
+            spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), path_file)
             if spec:
                 module = util.module_from_spec(spec)
                 spec.loader.exec_module(module)

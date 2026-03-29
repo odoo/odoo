@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import os
 from collections import OrderedDict
 
 from odoo import api, fields, models
@@ -75,6 +74,9 @@ class IrModuleModule(models.Model):
 
                     -> We want to upgrade every website using this theme.
         """
+        if request and request.context.get('apply_new_theme'):
+            self = self.with_context(apply_new_theme=True)
+
         for module in self:
             if module.name.startswith('theme_') and vals.get('state') == 'installed':
                 _logger.info('Module %s has been loaded as theme template (%s)' % (module.name, module.state))
@@ -207,7 +209,15 @@ class IrModuleModule(models.Model):
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
-            self.env['theme.utils'].with_context(website_id=website.id)._post_copy(module)
+            if self._context.get('apply_new_theme'):
+                # Both the theme install and upgrade flow ends up here.
+                # The _post_copy() is supposed to be called only when the theme
+                # is installed for the first time on a website.
+                # It will basically select some header and footer template.
+                # We don't want the system to select again the theme footer or
+                # header template when that theme is updated later. It could
+                # erase the change the user made after the theme install.
+                self.env['theme.utils'].with_context(website_id=website.id)._post_copy(module)
 
     def _theme_unload(self, website):
         """
@@ -361,6 +371,10 @@ class IrModuleModule(models.Model):
         website.theme_id = self
 
         # this will install 'self' if it is not installed yet
+        if request:
+            context = dict(request.context)
+            context['apply_new_theme'] = True
+            request.context = context
         self._theme_upgrade_upstream()
 
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
@@ -407,17 +421,19 @@ class IrModuleModule(models.Model):
         for theme in themes:
             terp = self.get_module_info(theme.name)
             images = terp.get('images', [])
-            for image in images:
-                image_path = '/' + os.path.join(theme.name, image)
-                if image_path not in existing_urls:
-                    image_name = os.path.basename(image_path)
-                    IrAttachment.create({
-                        'type': 'url',
-                        'name': image_name,
-                        'url': image_path,
-                        'res_model': self._name,
-                        'res_id': theme.id,
-                    })
+            image_paths = ['/%s/%s' % (theme.name, image) for image in images]
+            if all(image_path in existing_urls for image_path in image_paths):
+                continue
+            # Images creation order must be the order specified in the manifest
+            for image_path in image_paths:
+                image_name = image_path.split('/')[-1]
+                IrAttachment.create({
+                    'type': 'url',
+                    'name': image_name,
+                    'url': image_path,
+                    'res_model': self._name,
+                    'res_id': theme.id,
+                })
 
     def get_themes_domain(self):
         """Returns the 'ir.module.module' search domain matching all available themes."""

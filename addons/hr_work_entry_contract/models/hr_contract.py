@@ -3,9 +3,10 @@
 
 from collections import defaultdict
 from datetime import datetime, date
-from odoo import fields, models
+from odoo import fields, models, _
 from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
 from odoo.osv import expression
+from odoo.exceptions import UserError
 
 import pytz
 
@@ -47,6 +48,17 @@ class HrContract(models.Model):
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
+    def _get_leave_domain(self, start_dt, end_dt):
+        self.ensure_one()
+        return [
+            ('time_type', '=', 'leave'),
+            ('calendar_id', 'in', [False, self.resource_calendar_id.id]),
+            ('resource_id', 'in', [False, self.employee_id.resource_id.id]),
+            ('date_from', '<=', end_dt),
+            ('date_to', '>=', start_dt),
+            ('company_id', 'in', [False, self.company_id.id]),
+        ]
+
     def _get_contract_work_entries_values(self, date_start, date_stop):
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
@@ -68,17 +80,10 @@ class HrContract(models.Model):
             # in master.
             resources_list = [self.env['resource.resource'], resource]
             resource_ids = [False, resource.id]
-            leave_domain = [
-                ('time_type', '=', 'leave'),
-                # ('calendar_id', '=', self.id), --> Get all the time offs
-                ('resource_id', 'in', resource_ids),
-                ('date_from', '<=', datetime_to_string(end_dt)),
-                ('date_to', '>=', datetime_to_string(start_dt)),
-                ('company_id', '=', self.env.company.id),
-            ]
+            leave_domain = contract._get_leave_domain(start_dt, end_dt)
             result = defaultdict(lambda: [])
             tz_dates = {}
-            for leave in self.env['resource.calendar.leaves'].search(leave_domain):
+            for leave in self.env['resource.calendar.leaves'].sudo().search(leave_domain):
                 for resource in resources_list:
                     if leave.resource_id.id not in [False, resource.id]:
                         continue
@@ -135,6 +140,7 @@ class HrContract(models.Model):
                 if interval[0] == interval[1]:  # if start == stop
                     continue
                 leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type_codes)
+                interval_leaves = [leave for leave in leaves if leave[2].work_entry_type_id.id == leave_entry_type.id]
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                 contract_vals += [dict([
@@ -146,7 +152,7 @@ class HrContract(models.Model):
                     ('company_id', contract.company_id.id),
                     ('state', 'draft'),
                     ('contract_id', contract.id),
-                ] + contract._get_more_vals_leave_interval(interval, leaves))]
+                ] + contract._get_more_vals_leave_interval(interval, interval_leaves))]
         return contract_vals
 
     def _get_work_entries_values(self, date_start, date_stop):
@@ -176,6 +182,11 @@ class HrContract(models.Model):
         return contract_vals
 
     def _generate_work_entries(self, date_start, date_stop, force=False):
+        canceled_contracts = self.filtered(lambda c: c.state == 'cancel')
+        if canceled_contracts:
+            raise UserError(
+                _("Sorry, generating work entries from cancelled contracts is not allowed.") + '\n%s' % (
+                    ', '.join(canceled_contracts.mapped('name'))))
         vals_list = []
         date_start = fields.Datetime.to_datetime(date_start)
         date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
@@ -266,19 +277,21 @@ class HrContract(models.Model):
         dependendant_fields = self._get_fields_that_recompute_we()
         if any(key in dependendant_fields for key in vals.keys()):
             for contract in self:
-                date_from = max(self.date_start, self.date_generated_from.date())
-                date_to = min(self.date_end or date.max, self.date_generated_to.date())
+                date_from = max(contract.date_start, contract.date_generated_from.date())
+                date_to = min(contract.date_end or date.max, contract.date_generated_to.date())
                 if date_from != date_to:
                     contract._recompute_work_entries(date_from, date_to)
+        return result
 
     def _recompute_work_entries(self, date_from, date_to):
         self.ensure_one()
-        wizard = self.env['hr.work.entry.regeneration.wizard'].create({
-            'employee_id': self.employee_id.id,
-            'date_from': date_from,
-            'date_to': date_to,
-        })
-        wizard.with_context(work_entry_skip_validation=True).regenerate_work_entries()
+        if self.employee_id:
+            wizard = self.env['hr.work.entry.regeneration.wizard'].create({
+                'employee_id': self.employee_id.id,
+                'date_from': date_from,
+                'date_to': date_to,
+            })
+            wizard.with_context(work_entry_skip_validation=True).regenerate_work_entries()
 
     def _get_fields_that_recompute_we(self):
         # Returns the fields that should recompute the work entries

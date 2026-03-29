@@ -50,6 +50,12 @@ class SaleOrder(models.Model):
             })
         return error
 
+    def _compute_amount_total_without_delivery(self):
+        self.ensure_one()
+        # Add back 'payment' rewards from the total without delivery, they should count towards the delivery price goal.
+        lines = self.order_line.filtered(lambda l: l.gift_card_id)
+        return super()._compute_amount_total_without_delivery() - sum(lines.mapped('price_unit'))
+
     def _send_gift_card_mail(self):
         template = self.env.ref('sale_gift_card.mail_template_gift_card', raise_if_not_found=False)
         if template and self.gift_card_count:

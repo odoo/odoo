@@ -9,8 +9,10 @@ import psycopg2
 import smtplib
 import threading
 import re
+import pytz
 
 from collections import defaultdict
+from dateutil.parser import parse
 
 from odoo import _, api, fields, models
 from odoo import tools
@@ -32,9 +34,9 @@ class MailMail(models.Model):
     def default_get(self, fields):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
-        if self._context.get('default_type') not in type(self).message_type.base_field.selection:
+        if self._context.get('default_type') not in self._fields['message_type'].base_field.selection:
             self = self.with_context(dict(self._context, default_type=None))
-        if self._context.get('default_state') not in type(self).state.base_field.selection:
+        if self._context.get('default_state') not in self._fields['state'].base_field.selection:
             self = self.with_context(dict(self._context, default_state='outgoing'))
         return super(MailMail, self).default_get(fields)
 
@@ -79,7 +81,25 @@ class MailMail(models.Model):
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     scheduled_date = fields.Char('Scheduled Send Date',
-        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
+        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
+
+    @api.model
+    def fields_get(self, *args, **kwargs):
+        # related selection will fetch translations from DB
+        # selections added in stable won't be in DB -> add them on the related model if not already added
+        message_type_field = self.env['mail.message']._fields['message_type']
+        if 'auto_comment' not in {value for value, name in message_type_field.get_description(self.env)['selection']}:
+            self._fields_get_message_type_update_selection(message_type_field.selection)
+        return super().fields_get(*args, **kwargs)
+
+    def _fields_get_message_type_update_selection(self, selection):
+        """Update the field selection for message type on mail.message to match the runtime values.
+
+        DO NOT USE it is only there for a stable fix and should not be used for any reason other than hotfixing.
+        """
+        self.env['ir.model.fields'].invalidate_cache(['selection_ids'])
+        self.env['ir.model.fields.selection'].sudo()._update_selection('mail.message', 'message_type', selection)
+        self.env.registry.clear_caches()
 
     @api.model_create_multi
     def create(self, values_list):
@@ -87,7 +107,12 @@ class MailMail(models.Model):
         for values in values_list:
             if 'is_notification' not in values and values.get('mail_message_id'):
                 values['is_notification'] = True
-
+            if values.get('scheduled_date'):
+                parsed_datetime = self._parse_scheduled_datetime(values['scheduled_date'])
+                if parsed_datetime:
+                    values['scheduled_date'] = parsed_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                else:
+                    values['scheduled_date'] = False
         new_mails = super(MailMail, self).create(values_list)
 
         new_mails_w_attach = self
@@ -100,6 +125,12 @@ class MailMail(models.Model):
         return new_mails
 
     def write(self, vals):
+        if vals.get('scheduled_date'):
+            parsed_datetime = self._parse_scheduled_datetime(vals['scheduled_date'])
+            if parsed_datetime:
+                vals['scheduled_date'] = parsed_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                vals['scheduled_date'] = False
         res = super(MailMail, self).write(vals)
         if vals.get('attachment_ids'):
             for mail in self:
@@ -138,11 +169,13 @@ class MailMail(models.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
-        filters = ['&',
-                   ('state', '=', 'outgoing'),
-                   '|',
-                   ('scheduled_date', '<', datetime.datetime.now()),
-                   ('scheduled_date', '=', False)]
+        filters = [
+            '&',
+                ('state', '=', 'outgoing'),
+                '|',
+                   ('scheduled_date', '=', False),
+                   ('scheduled_date', '<=', datetime.datetime.utcnow()),
+        ]
         if 'filters' in self._context:
             filters.extend(self._context['filters'])
         # TODO: make limit configurable
@@ -156,7 +189,7 @@ class MailMail(models.Model):
         res = None
         try:
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.currentThread(), 'testing', False)
+            auto_commit = not getattr(threading.current_thread(), 'testing', False)
             res = self.browse(ids).send(auto_commit=auto_commit)
         except Exception:
             _logger.exception("Failed processing mail queue")
@@ -201,6 +234,42 @@ class MailMail(models.Model):
             self.browse(mail_to_delete_ids).sudo().unlink()
         return True
 
+    def _parse_scheduled_datetime(self, scheduled_datetime):
+        """ Taking an arbitrary datetime (either as a date, a datetime or a string)
+        try to parse it and return a datetime timezoned to UTC.
+
+        If no specific timezone information is given, we consider it as being
+        given in UTC, as all datetime values given to the server. Trying to
+        guess its timezone based on user or flow would be strange as this is
+        not standard. When manually creating datetimes for mail.mail scheduled
+        date, business code should ensure either a timezone info is set, either
+        it is converted into UTC.
+
+        Using yearfirst when parsing str datetimes eases parser's job when
+        dealing with the hard-to-parse trio (01/04/09 -> ?). In most use cases
+        year will be given first as this is the expected default formatting.
+
+        :return datetime: parsed datetime (or False if parser failed)
+        """
+        if isinstance(scheduled_datetime, datetime.datetime):
+            parsed_datetime = scheduled_datetime
+        elif isinstance(scheduled_datetime, datetime.date):
+            parsed_datetime = datetime.combine(scheduled_datetime, datetime.time.min)
+        else:
+            try:
+                parsed_datetime = parse(scheduled_datetime, yearfirst=True)
+            except (ValueError, TypeError):
+                parsed_datetime = False
+        if parsed_datetime:
+            if not parsed_datetime.tzinfo:
+                parsed_datetime = pytz.utc.localize(parsed_datetime)
+            else:
+                try:
+                    parsed_datetime = parsed_datetime.astimezone(pytz.utc)
+                except Exception:
+                    pass
+        return parsed_datetime
+
     # ------------------------------------------------------
     # mail_mail formatting, tools and send mechanism
     # ------------------------------------------------------
@@ -221,7 +290,14 @@ class MailMail(models.Model):
         body = self._send_prepare_body()
         body_alternative = tools.html2plaintext(body)
         if partner:
-            email_to = [tools.formataddr((partner.name or 'False', partner.email or 'False'))]
+            emails_normalized = tools.email_normalize_all(partner.email)
+            if emails_normalized:
+                email_to = [
+                    tools.formataddr((partner.name or "False", email or "False"))
+                    for email in emails_normalized
+                ]
+            else:
+                email_to = [tools.formataddr((partner.name or "False", partner.email or "False"))]
         else:
             email_to = tools.email_split_and_format(self.email_to)
         res = {
@@ -388,13 +464,27 @@ class MailMail(models.Model):
                     # see rev. 56596e5240ef920df14d99087451ce6f06ac6d36
                     notifs.flush(fnames=['notification_status', 'failure_type', 'failure_reason'], records=notifs)
 
+                # protect against ill-formatted email_from when formataddr was used on an already formatted email
+                emails_from = tools.email_split_and_format(mail.email_from)
+                email_from = emails_from[0] if emails_from else mail.email_from
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 # TDE note: could be great to pre-detect missing to/cc and skip sending it
                 # to go directly to failed state update
                 for email in email_list:
+                    # support headers specific to the specific outgoing email
+                    if email.get('headers'):
+                        email_headers = headers.copy()
+                        try:
+                            email_headers.update(email.get('headers'))
+                        except Exception:
+                            pass
+                    else:
+                        email_headers = headers
+
                     msg = IrMailServer.build_email(
-                        email_from=mail.email_from,
+                        email_from=email_from,
                         email_to=email.get('email_to'),
                         subject=mail.subject,
                         body=email.get('body'),
@@ -407,7 +497,7 @@ class MailMail(models.Model):
                         object_id=mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
                         subtype='html',
                         subtype_alternative='plain',
-                        headers=headers)
+                        headers=email_headers)
                     processing_pid = email.pop("partner_id", None)
                     try:
                         res = IrMailServer.send_email(
@@ -418,7 +508,7 @@ class MailMail(models.Model):
                     except AssertionError as error:
                         if str(error) == IrMailServer.NO_VALID_RECIPIENT:
                             # if we have a list of void emails for email_list -> email missing, otherwise generic email failure
-                            if not email.get('email_to') and failure_type != "RECIPIENT":
+                            if not email.get('email_to') and failure_type != "mail_email_invalid":
                                 failure_type = "mail_email_missing"
                             else:
                                 failure_type = "mail_email_invalid"

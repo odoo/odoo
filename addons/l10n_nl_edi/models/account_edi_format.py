@@ -84,7 +84,8 @@ class AccountEdiFormat(models.Model):
 
     def _check_move_configuration(self, invoice):
         errors = super()._check_move_configuration(invoice)
-        if self.code != 'nlcius_1':
+
+        if self.code != 'nlcius_1' or self._is_account_edi_ubl_cii_available():
             return errors
 
         supplier = invoice.company_id.partner_id.commercial_partner_id
@@ -115,34 +116,35 @@ class AccountEdiFormat(models.Model):
 
     def _is_compatible_with_journal(self, journal):
         self.ensure_one()
-        if self.code != 'nlcius_1':
+        if self.code != 'nlcius_1' or self._is_account_edi_ubl_cii_available():
             return super()._is_compatible_with_journal(journal)
         return journal.type == 'sale' and journal.country_code == 'NL'
 
     def _post_invoice_edi(self, invoices):
         self.ensure_one()
-        if self.code != 'nlcius_1':
+
+        if self.code != 'nlcius_1' or self._is_account_edi_ubl_cii_available():
             return super()._post_invoice_edi(invoices)
 
         invoice = invoices  # no batch ensure that there is only one invoice
         attachment = self._export_nlcius(invoice)
         return {invoice: {'success': True, 'attachment': attachment}}
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         self.ensure_one()
-        if self.code == 'nlcius_1' and self._is_nlcius(filename, tree):
+        if self.code == 'nlcius_1' and self._is_nlcius(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._decode_bis3(tree, self.env['account.move'])
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         self.ensure_one()
-        if self.code == 'nlcius_1' and self._is_nlcius(filename, tree):
+        if self.code == 'nlcius_1' and self._is_nlcius(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._decode_bis3(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
     def _is_required_for_invoice(self, invoice):
         self.ensure_one()
-        if self.code != 'nlcius_1':
+        if self.code != 'nlcius_1' or self._is_account_edi_ubl_cii_available():
             return super()._is_required_for_invoice(invoice)
 
         return invoice.commercial_partner_id.country_code in COUNTRY_EAS

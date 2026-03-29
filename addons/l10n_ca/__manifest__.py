@@ -3,6 +3,7 @@
 
 {
     'name': 'Canada - Accounting',
+    'version': '1.1',
     'author': 'Savoir-faire Linux',
     'website': 'https://www.savoirfairelinux.com',
     'category': 'Accounting/Localizations/Account Charts',

@@ -21,9 +21,10 @@ class AccountMoveLine(models.Model):
     def reconcile(self):
         # OVERRIDE
         not_paid_expenses = self.expense_id.filtered(lambda expense: expense.state != 'done')
-        not_paid_expense_sheets = not_paid_expenses.sheet_id
         res = super().reconcile()
-        paid_expenses = not_paid_expenses.filtered(lambda expense: expense.currency_id.is_zero(expense.amount_residual))
+        # Do not consider expense sheet states if account_move_id is False, it means it has been just canceled
+        not_paid_expense_sheets = not_paid_expenses.sheet_id.filtered(lambda sheet: sheet.account_move_id)
+        paid_expenses = not_paid_expense_sheets.expense_line_ids.filtered(lambda expense: expense.currency_id.is_zero(expense.amount_residual))
         paid_expenses.write({'state': 'done'})
         not_paid_expense_sheets.filtered(lambda sheet: all(expense.state == 'done' for expense in sheet.expense_line_ids)).set_to_paid()
         return res

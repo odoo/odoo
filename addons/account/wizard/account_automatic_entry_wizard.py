@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 
 from collections import defaultdict
@@ -92,7 +92,7 @@ class AutomaticEntryWizard(models.TransientModel):
         for record in self:
             total = (sum(record.move_line_ids.mapped('balance')) or record.total_amount)
             if total != 0:
-                record.percentage = (record.total_amount / total) * 100
+                record.percentage = min((record.total_amount / total) * 100, 100)  # min() to avoid value being slightly over 100 due to rounding error
             else:
                 record.percentage = 100
 
@@ -105,6 +105,17 @@ class AutomaticEntryWizard(models.TransientModel):
     def _compute_display_currency_helper(self):
         for record in self:
             record.display_currency_helper = bool(record.destination_account_id.currency_id)
+
+    @api.constrains('date', 'move_line_ids')
+    def _check_date(self):
+        for wizard in self:
+            if wizard.move_line_ids.move_id._get_violated_lock_dates(wizard.date, False):
+                raise ValidationError(_("The date selected is protected by a lock date"))
+
+            if wizard.action == 'change_period':
+                for move in wizard.move_line_ids.move_id:
+                    if move._get_violated_lock_dates(move.date, False):
+                        raise ValidationError(_("The date of some related entries is protected by a lock date"))
 
     @api.model
     def default_get(self, fields):
@@ -194,9 +205,57 @@ class AutomaticEntryWizard(models.TransientModel):
             'line_ids': [(0, 0, line) for line in line_vals],
         }]
 
+    def _get_move_line_dict_vals_change_period(self, aml, date):
+        # account.move.line data
+        accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
+        reported_debit = aml.company_id.currency_id.round((self.percentage / 100) * aml.debit)
+        reported_credit = aml.company_id.currency_id.round((self.percentage / 100) * aml.credit)
+        reported_amount_currency = aml.currency_id.round((self.percentage / 100) * aml.amount_currency)
+
+        if date == 'new_date':
+            return [
+                (0, 0, {
+                    'name': aml.name or '',
+                    'debit': reported_debit,
+                    'credit': reported_credit,
+                    'amount_currency': reported_amount_currency,
+                    'currency_id': aml.currency_id.id,
+                    'account_id': aml.account_id.id,
+                    'partner_id': aml.partner_id.id,
+                }),
+                (0, 0, {
+                    'name': _('Adjusting Entry'),
+                    'debit': reported_credit,
+                    'credit': reported_debit,
+                    'amount_currency': -reported_amount_currency,
+                    'currency_id': aml.currency_id.id,
+                    'account_id': accrual_account.id,
+                    'partner_id': aml.partner_id.id,
+                }),
+            ]
+        return [
+            (0, 0, {
+                'name': aml.name or '',
+                'debit': reported_credit,
+                'credit': reported_debit,
+                'amount_currency': -reported_amount_currency,
+                'currency_id': aml.currency_id.id,
+                'account_id': aml.account_id.id,
+                'partner_id': aml.partner_id.id,
+            }),
+            (0, 0, {
+                'name': _('Adjusting Entry'),
+                'debit': reported_debit,
+                'credit': reported_credit,
+                'amount_currency': reported_amount_currency,
+                'currency_id': aml.currency_id.id,
+                'account_id': accrual_account.id,
+                'partner_id': aml.partner_id.id,
+            }),
+        ]
+
     def _get_move_dict_vals_change_period(self):
         # set the change_period account on the selected journal items
-        accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
 
         move_data = {'new_date': {
             'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
@@ -214,58 +273,15 @@ class AutomaticEntryWizard(models.TransientModel):
                 'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
                 'move_type': 'entry',
                 'line_ids': [],
-                'ref': self._format_strings(_('Adjusting Entry of {date} ({percent:f}% recognized on {new_date})'), grouped_lines[0].move_id, amount),
+                'ref': self._format_strings(_('Adjusting Entry of {date} ({percent:.2f}% recognized on {new_date})'), grouped_lines[0].move_id, amount),
                 'date': fields.Date.to_string(date),
                 'journal_id': self.journal_id.id,
             }
 
         # compute the account.move.lines and the total amount per move
         for aml in self.move_line_ids:
-            # account.move.line data
-            reported_debit = aml.company_id.currency_id.round((self.percentage / 100) * aml.debit)
-            reported_credit = aml.company_id.currency_id.round((self.percentage / 100) * aml.credit)
-            reported_amount_currency = aml.currency_id.round((self.percentage / 100) * aml.amount_currency)
-
-            move_data['new_date']['line_ids'] += [
-                (0, 0, {
-                    'name': aml.name or '',
-                    'debit': reported_debit,
-                    'credit': reported_credit,
-                    'amount_currency': reported_amount_currency,
-                    'currency_id': aml.currency_id.id,
-                    'account_id': aml.account_id.id,
-                    'partner_id': aml.partner_id.id,
-                }),
-                (0, 0, {
-                    'name': _('Adjusting Entry'),
-                    'debit': reported_credit,
-                    'credit': reported_debit,
-                    'amount_currency': -reported_amount_currency,
-                    'currency_id': aml.currency_id.id,
-                    'account_id': accrual_account.id,
-                    'partner_id': aml.partner_id.id,
-                }),
-            ]
-            move_data[aml.move_id.date]['line_ids'] += [
-                (0, 0, {
-                    'name': aml.name or '',
-                    'debit': reported_credit,
-                    'credit': reported_debit,
-                    'amount_currency': -reported_amount_currency,
-                    'currency_id': aml.currency_id.id,
-                    'account_id': aml.account_id.id,
-                    'partner_id': aml.partner_id.id,
-                }),
-                (0, 0, {
-                    'name': _('Adjusting Entry'),
-                    'debit': reported_debit,
-                    'credit': reported_credit,
-                    'amount_currency': reported_amount_currency,
-                    'currency_id': aml.currency_id.id,
-                    'account_id': accrual_account.id,
-                    'partner_id': aml.partner_id.id,
-                }),
-            ]
+            for date in (aml.move_id.date, 'new_date'):
+                move_data[date]['line_ids'] += self._get_move_line_dict_vals_change_period(aml, date)
 
         move_vals = [m for m in move_data.values()]
         return move_vals
@@ -321,22 +337,31 @@ class AutomaticEntryWizard(models.TransientModel):
         created_moves._post()
 
         destination_move = created_moves[0]
+        destination_move_offset = 0
         destination_messages = []
+        accrual_move_messages = defaultdict(lambda: [])
+        accrual_move_offsets = defaultdict(int)
         for move in self.move_line_ids.move_id:
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
             accrual_move = created_moves[1:].filtered(lambda m: m.date == move.date)
 
-            if accrual_account.reconcile:
-                to_reconcile = (accrual_move + destination_move).mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)
-                to_reconcile.reconcile()
+            if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
+                destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
+                destination_move_offset += 2
+                accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
+                accrual_move_offsets[accrual_move] += 2
+                (accrual_move_lines + destination_move_lines).filtered(lambda line: not line.currency_id.is_zero(line.balance)).reconcile()
             move.message_post(body=self._format_strings(_('Adjusting Entries have been created for this invoice:<ul><li>%(link1)s cancelling '
-                                                          '{percent:f}%% of {amount}</li><li>%(link0)s postponing it to {new_date}</li></ul>',
+                                                          '{percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to {new_date}</li></ul>',
                                                           link0=self._format_move_link(destination_move),
                                                           link1=self._format_move_link(accrual_move),
                                                           ), move, amount))
-            destination_messages += [self._format_strings(_('Adjusting Entry {link}: {percent:f}% of {amount} recognized from {date}'), move, amount)]
-            accrual_move.message_post(body=self._format_strings(_('Adjusting Entry for {link}: {percent:f}% of {amount} recognized on {new_date}'), move, amount))
+            destination_messages += [self._format_strings(_('Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}'), move, amount)]
+            accrual_move_messages[accrual_move] += [self._format_strings(_('Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on {new_date}'), move, amount)]
+
         destination_move.message_post(body='<br/>\n'.join(destination_messages))
+        for accrual_move, messages in accrual_move_messages.items():
+            accrual_move.message_post(body='<br/>\n'.join(messages))
 
         # open the generated entries
         action = {
@@ -410,7 +435,7 @@ class AutomaticEntryWizard(models.TransientModel):
         content = ''
         for account, balance in balances_per_account.items():
             if account != self.destination_account_id:
-                content += self._format_strings(transfer_format, transfer_move, balance) % account.display_name
+                content += self._format_strings(transfer_format % account.display_name, transfer_move, balance)
         return content and '<ul>' + content + '</ul>' or None
 
     def _format_move_link(self, move):

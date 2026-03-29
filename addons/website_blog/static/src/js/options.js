@@ -44,7 +44,6 @@ options.registry.CoverProperties.include({
      * @override
      */
     updateUI: async function () {
-        await this._super(...arguments);
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
         var $coverFull = this.$el.find('[data-select-class*="o_full_screen_height"]');
         var $coverMid = this.$el.find('[data-select-class*="o_half_screen_height"]');
@@ -55,6 +54,7 @@ options.registry.CoverProperties.include({
         $coverFull.children('div').text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
         $coverMid.children('div').text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
         $coverAuto.children('div').text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
+        return this._super(...arguments);
     },
 });
 
@@ -98,6 +98,10 @@ options.registry.BlogPostTagSelection = options.Class.extend({
      * @see this.selectClass for params
      */
     setTags(previewMode, widgetValue, params) {
+        if (this._preventNextSetTagsCall) {
+            this._preventNextSetTagsCall = false;
+            return;
+        }
         this.tagIDs = JSON.parse(widgetValue).map(tag => tag.id);
     },
     /**
@@ -107,7 +111,12 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         if (!widgetValue) {
             return;
         }
-        const existing = Object.values(this.allTagsByID).some(tag => tag.name.toLowerCase() === widgetValue.toLowerCase());
+        const existing = Object.values(this.allTagsByID).some(tag => {
+            // A tag is already existing only if it was already defined (i.e.
+            // id is a number) or if it appears in the current list of tags.
+            return tag.name.toLowerCase() === widgetValue.toLowerCase()
+                && (typeof(tag.id) === 'number' || this.tagIDs.includes(tag.id));
+        });
         if (existing) {
             return this.displayNotification({
                 type: 'warning',
@@ -121,6 +130,11 @@ options.registry.BlogPostTagSelection = options.Class.extend({
             'display_name': widgetValue,
         };
         this.tagIDs.push(newTagID);
+        // TODO Find a smarter way to achieve this.
+        // Because of the invocation order of methods, setTags will be called
+        // after createTag. This would reset the tagIds to the value before
+        // adding the newly created tag. It therefore needs to be prevented.
+        this._preventNextSetTagsCall = true;
     },
 
     //--------------------------------------------------------------------------

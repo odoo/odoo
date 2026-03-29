@@ -38,6 +38,7 @@ class AccountMoveReversal(models.TransientModel):
     )
     company_id = fields.Many2one('res.company', required=True, readonly=True)
     available_journal_ids = fields.Many2many('account.journal', compute='_compute_available_journal_ids')
+    country_code = fields.Char(related='company_id.country_id.code')
 
     # computed fields
     residual = fields.Monetary(compute="_compute_from_moves")
@@ -100,7 +101,7 @@ class AccountMoveReversal(models.TransientModel):
                    if self.reason
                    else _('Reversal of: %s', move.name),
             'date': reverse_date,
-            'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
+            'invoice_date': move.is_invoice(include_receipts=True) and reverse_date or False,
             'journal_id': self.journal_id.id,
             'invoice_payment_term_id': None,
             'invoice_user_id': move.invoice_user_id.id,
@@ -112,9 +113,23 @@ class AccountMoveReversal(models.TransientModel):
         moves = self.move_ids
 
         # Create default values.
+        partners = moves.company_id.partner_id + moves.commercial_partner_id
+
+        bank_ids = self.env['res.partner.bank'].search([
+            ('partner_id', 'in', partners.ids),
+            ('company_id', 'in', moves.company_id.ids + [False]),
+        ], order='sequence DESC')
+        partner_to_bank = {bank.partner_id: bank for bank in bank_ids}
         default_values_list = []
         for move in moves:
-            default_values_list.append(self._prepare_default_reversal(move))
+            if move.is_outbound():
+                partner = move.company_id.partner_id
+            else:
+                partner = move.commercial_partner_id
+            default_values_list.append({
+                'partner_bank_id': partner_to_bank.get(partner, self.env['res.partner.bank']).id,
+                **self._prepare_default_reversal(move),
+            })
 
         batches = [
             [self.env['account.move'], [], True],   # Moves to be cancelled by the reverses.

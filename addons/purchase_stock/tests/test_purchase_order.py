@@ -4,8 +4,10 @@ import re
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
@@ -205,6 +207,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po1.order_line.qty_received, 5)
 
+        with self.assertRaises(UserError, msg="Shouldn't allow ordered qty be lower than received"):
+            po1.order_line.product_qty = po1.order_line.qty_received - 0.01
+
         # Deliver 15 instead of 10.
         po1.write({
             'order_line': [
@@ -215,6 +220,16 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # A new move of 10 unit (15 - 5 units)
         self.assertEqual(po1.order_line.qty_received, 5)
         self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
+
+        # Modify after invoicing
+        po1.action_create_invoice()
+        self.assertEqual(po1.order_line.qty_invoiced, 15)
+        self.assertFalse(po1.invoice_ids.activity_ids)
+        po1.order_line.product_qty = 14.99
+        self.assertTrue(
+            po1.invoice_ids.activity_ids,
+            "Lowering product qty below invoiced qty should schedule an activity",
+        )
 
     def test_04_update_date_planned(self):
         today = datetime.today().replace(hour=9, microsecond=0)
@@ -369,6 +384,54 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking.button_validate()
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
 
+    def test_05_po_update_qty_stock_move_merge(self):
+        """ This test ensures that changing product quantity when unit price has high decimal precision
+            merged with the original instead of creating a new return
+        """
+
+        unit_price_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        unit_price_precision.digits = 6
+
+        tax = self.env["account.tax"].create({
+            "name": "Dummy Tax",
+            "amount": "5.00",
+            "type_tax_use": "purchase",
+        })
+
+        super_product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+            'standard_price': 9.876543,
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'name': super_product.name,
+                'product_id': super_product.id,
+                'product_qty': 7,
+                'product_uom': super_product.uom_id.id,
+                'price_unit': super_product.standard_price,
+                'taxes_id': [(4, tax.id)],
+            })],
+        })
+
+        purchase_order.button_confirm()
+        self.assertEqual(purchase_order.state, 'purchase')
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.product_qty, 7)
+
+
+        purchase_order.order_line.product_qty = 4
+        # updating quantity shouldn't create a seperate stock move
+        # the new stock move (-3) should be merged with the previous
+        purchase_order.button_confirm()
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.product_qty, 4)
+
     def test_message_qty_already_received(self):
         _product = self.env['product.product'].create({
             'name': 'TempProduct',
@@ -452,3 +515,220 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             with po_form.order_line.edit(0) as pol_form:
                 pol_form.product_qty = 25
         self.assertEqual(pol.name, "[C02] Name02")
+
+    def test_packaging_and_qty_decrease(self):
+        packaging = self.env['product.packaging'].create({
+            'name': "Super Packaging",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_confirm()
+
+        self.assertEqual(po.order_line.product_packaging_id, packaging)
+
+        with Form(po) as po_form:
+            with po_form.order_line.edit(0) as line:
+                line.product_qty = 8
+
+        self.assertEqual(po.picking_ids.move_lines.product_uom_qty, 8)
+
+    def test_packaging_propagation(self):
+        """
+        Editing the packaging on an purchase.order.line
+        should propagate to the delivery order, so that
+        when we are editing the packaging, the lines can be merged
+        with the new packaging and quantity.
+        """
+        # set the 3 step route
+        warehouse = self.company_data['default_warehouse']
+        warehouse.reception_steps = 'three_steps'
+        packOf10 = self.env['product.packaging'].create({
+            'name': 'PackOf10',
+            'product_id': self.product_a.id,
+            'qty': 10
+        })
+
+        packOf20 = self.env['product.packaging'].create({
+            'name': 'PackOf20',
+            'product_id': self.product_a.id,
+            'qty': 20
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'product_packaging_id': packOf10.id,
+                })],
+        })
+        po.button_confirm()
+        # the 3 moves for the 3 steps
+        step_1 = po.order_line.move_ids
+        step_2 = step_1.move_dest_ids
+        step_3 = step_2.move_dest_ids
+        self.assertEqual(step_1.product_packaging_id, packOf10)
+        self.assertEqual(step_2.product_packaging_id, packOf10)
+        self.assertEqual(step_3.product_packaging_id, packOf10)
+
+        po.order_line[0].write({
+            'product_packaging_id': packOf20.id,
+            'product_uom_qty': 20
+        })
+        self.assertEqual(step_1.product_packaging_id, packOf20)
+        self.assertEqual(step_2.product_packaging_id, packOf20)
+        self.assertEqual(step_3.product_packaging_id, packOf20)
+
+        po.order_line[0].write({'product_packaging_id': False})
+        self.assertFalse(step_1.product_packaging_id)
+        self.assertFalse(step_2.product_packaging_id)
+        self.assertFalse(step_3.product_packaging_id)
+
+    def test_putaway_strategy_in_backorder(self):
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        sub_loc_01 = self.env['stock.location'].create([{
+            'name': 'Sub Location 1',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        }])
+        self.env["stock.putaway.rule"].create({
+            "location_in_id": stock_location.id,
+            "location_out_id": sub_loc_01.id,
+            "product_id": self.product_a.id,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 2.0,
+                })],
+        })
+        po.button_confirm()
+        picking = po.picking_ids
+        self.assertEqual(po.state, "purchase")
+        self.assertEqual(picking.move_line_ids_without_package.location_dest_id.id, sub_loc_01.id)
+        picking.move_line_ids_without_package.write({'qty_done': 1})
+        res_dict = picking.button_validate()
+        self.env[res_dict['res_model']].with_context(res_dict['context']).process()
+        backorder = picking.backorder_ids
+        self.assertEqual(backorder.move_line_ids_without_package.location_dest_id.id, sub_loc_01.id)
+
+    def test_inventory_adjustments_with_po(self):
+        """ check that the quant created by a PO can be applied in an inventory adjustment correctly """
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 5
+        po = po_form.save()
+        po.button_confirm()
+        po.picking_ids.move_lines.quantity_done = 5
+        po.picking_ids.button_validate()
+        self.assertEqual(po.picking_ids.state, 'done')
+        quant = self.env['stock.quant'].search([('product_id', '=', product.id), ('location_id.usage', '=', 'internal')])
+        wizard = self.env['stock.inventory.adjustment.name'].create({'quant_ids': quant})
+        wizard.action_apply()
+        self.assertEqual(quant.quantity, 5)
+
+    def test_po_edit_after_receive(self):
+        self.po = self.env['purchase.order'].create(self.po_vals)
+        self.po.button_confirm()
+        self.po.picking_ids.move_lines.quantity_done = 5
+        self.po.picking_ids.button_validate()
+        self.assertEqual(self.po.picking_ids.move_lines.mapped('product_uom_qty'), [5.0, 5.0])
+        self.po.with_context(import_file=True).order_line[0].product_qty = 10
+        self.assertEqual(self.po.picking_ids.move_lines.mapped('product_uom_qty'), [5.0, 5.0, 5.0])
+
+    def test_receive_returned_product_without_po_update(self):
+        """
+        Receive again the returned qty, but with the option "Update PO" disabled
+        At the end, the received qty of the POL should be correct
+        """
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_lines.quantity_done = 5
+        receipt01.button_validate()
+
+        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.to_refund = False
+        res = wizard.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.move_lines.quantity_done = 5
+        return_pick.button_validate()
+
+        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=return_pick.ids, active_id=return_pick.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.to_refund = False
+        res = wizard.create_returns()
+
+        receipt02 = self.env['stock.picking'].browse(res['res_id'])
+        receipt02.move_lines.quantity_done = 5
+        receipt02.button_validate()
+
+        self.assertEqual(po.order_line[0].qty_received, 5)
+        self.assertEqual(po.order_line[1].qty_received, 5)
+
+    def test_stock_picking_type_for_deliveries_generated_from_po(self):
+        """
+        Checks that the stock picking type of a PO generated by an orderpoint
+        influence the destination of the delivery, if the stock picking type
+        is more precise than the orderpoint.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Super product',
+            'type': 'product',
+            'seller_ids': [Command.create({
+                'name': self.partner_a.id,
+                'price': 100.0,
+            })]
+        })
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        intermediate_location = self.env['stock.location'].create([{
+            'name': 'intermediate Location',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        }])
+        sub_location = self.env['stock.location'].create([{
+            'name': 'Sub Location',
+            'usage': 'internal',
+            'location_id': intermediate_location.id,
+        }])
+        super_receipt = self.env['stock.picking.type'].create({
+            'name': 'Super receipt',
+            'code': 'incoming',
+            'sequence_code': 'SR',
+            'default_location_src_id': self.env.ref("stock.stock_location_suppliers").id,
+            'default_location_dest_id': sub_location.id,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'qty_to_order': 1.0,
+            'location_id': stock_location.id
+        })
+        orderpoint.action_replenish()
+        po = self.env['purchase.order'].search([("product_id", "=", product.id)], limit=1)
+        po.picking_type_id = super_receipt
+        po.button_confirm()
+        picking = po.picking_ids
+        self.assertEqual(picking.location_dest_id, sub_location)
+        stock_move = picking.move_line_ids
+        self.assertEqual(stock_move.location_dest_id, sub_location)
+        stock_move.qty_done = 1.0
+        picking.button_validate()
+        self.assertEqual(picking.move_line_ids.location_dest_id, sub_location)

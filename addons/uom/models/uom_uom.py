@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, tools, models, _
@@ -35,7 +36,7 @@ class UoMCategory(models.Model):
             else:
                 new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o._origin.uom_type != 'reference')
             if new_reference:
-                other_uoms = self.uom_ids - new_reference
+                other_uoms = self.uom_ids.filtered(lambda u: u._origin.id) - new_reference
                 for uom in other_uoms:
                     uom.factor = uom._origin.factor / (new_reference._origin.factor or 1)
                     if uom.factor > 1:
@@ -87,14 +88,24 @@ class UoM(models.Model):
     ]
 
     def _check_category_reference_uniqueness(self):
+        categ_res = self.read_group(
+            [("category_id", "in", self.category_id.ids)],
+            ["category_id", "uom_type"],
+            ["category_id", "uom_type"],
+            lazy=False,
+        )
+        uom_by_category = defaultdict(int)
+        ref_by_category = {}
+        for res in categ_res:
+            uom_by_category[res["category_id"][0]] += res["__count"]
+            if res["uom_type"] == "reference":
+                ref_by_category[res["category_id"][0]] = res["__count"]
+
         for category in self.category_id:
-            if not category.uom_ids:
-                continue
-            reference_count = sum(
-                uom.uom_type == 'reference' for uom in category.uom_ids)
+            reference_count = ref_by_category.get(category.id, 0)
             if reference_count > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % category.name)
-            elif reference_count == 0:
+            elif reference_count == 0 and uom_by_category.get(category.id, 0) > 0:
                 raise ValidationError(_("UoM category %s should have a reference unit of measure.") % category.name)
 
     @api.depends('factor')
@@ -113,6 +124,8 @@ class UoM(models.Model):
                 uom.ratio = uom.factor
 
     def _set_ratio(self):
+        if self.ratio == 0:
+            raise ValidationError(_("The value of ratio could not be Zero"))
         if self.uom_type == 'reference':
             self.factor = 1
         elif self.uom_type == 'bigger':
@@ -243,7 +256,7 @@ class UoM(models.Model):
 
     def _filter_protected_uoms(self):
         """Verifies self does not contain protected uoms."""
-        linked_model_data = self.env['ir.model.data'].search([
+        linked_model_data = self.env['ir.model.data'].sudo().search([
             ('model', '=', self._name),
             ('res_id', 'in', self.ids),
             ('module', '=', 'uom'),

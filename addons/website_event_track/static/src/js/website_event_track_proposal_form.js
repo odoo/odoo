@@ -175,7 +175,7 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
             const formData = new FormData(this.$el[0]);
 
             const response = await $.ajax({
-                url: `/event/${this.$el.data('eventId')}/track_proposal/post`,
+                url: `/event/${encodeURIComponent(this.$el.data('eventId'))}/track_proposal/post`,
                 data: formData,
                 processData: false,
                 contentType: false,

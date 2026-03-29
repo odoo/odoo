@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { registerClassPatchModel } from '@mail/model/model_core';
+import {
+    registerClassPatchModel,
+    registerInstancePatchModel,
+} from '@mail/model/model_core';
 
 registerClassPatchModel('mail.message', 'im_livechat/static/src/models/message/message.js', {
     /**
@@ -21,5 +24,21 @@ registerClassPatchModel('mail.message', 'im_livechat/static/src/models/message/m
             }
         }
         return data2;
+    },
+});
+registerInstancePatchModel('mail.message', 'im_livechat/static/src/models/message/message.js', {
+
+    //----------------------------------------------------------------------
+    // Private
+    //----------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeHasReactionIcon() {
+        if (this.originThread && this.originThread.channel_type === 'livechat') {
+            return false;
+        }
+        return this._super();
     },
 });

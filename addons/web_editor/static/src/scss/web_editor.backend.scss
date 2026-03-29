@@ -3,7 +3,7 @@
     word-wrap: break-word;
     overflow: hidden;
 
-    .odoo-editor #codeview-btn-group {
+    #codeview-btn-group {
         position: absolute;
         top: 0;
         right: 0;
@@ -14,15 +14,8 @@
         font-family: inherit !important;
         line-height: inherit !important;
         color: inherit !important;
+    }
 
-        p, div {
-            font-family: 'Lucida Grande', Helvetica, Verdana, Arial, sans-serif;
-            font-size: 13px;
-        }
-    }
-    ul > li > p, p {
-        margin: 0px;
-    }
     > iframe {
         display: block;
         width: 100%;
@@ -45,6 +38,10 @@
     table.table.table-bordered {
         table-layout: fixed;
     }
+    a:not(.btn) {
+        // Ensure non-button links are visible enough in the editor.
+        color: #008f8c;
+    }
 }
 
 .o_field_widgetTextHtml_fullscreen {
@@ -56,10 +53,10 @@
         bottom: 0 !important;
         width: 100% !important;
         min-height: 100% !important;
-        z-index: 1001 !important;
+        z-index: $zindex-modal-backdrop + 1 !important;
         border: 0;
     }
-    > :not(.modal):not(.modal-backdrop) {
+    .tooltip-field-info {
         display: none;
     }
     .o_form_fullscreen_ancestor {

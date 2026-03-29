@@ -31,7 +31,7 @@ class AccrualPlanLevel(models.Model):
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True)
     start_count = fields.Integer(
         "Start after",
-        help="The accrual starts after a defined period from the employee start date. This field defines the number of days, months or years after which accrual is used.", default="1")
+        help="The accrual starts after a defined period from the allocation start date. This field defines the number of days, months or years after which accrual is used.", default="1")
     start_type = fields.Selection(
         [('day', 'day(s)'),
          ('month', 'month(s)'),
@@ -43,7 +43,7 @@ class AccrualPlanLevel(models.Model):
 
     # Accrue of
     added_value = fields.Float(
-        "Rate", required=True,
+        "Rate", digits=(16, 5), required=True,
         help="The number of hours/days that will be incremented in the specified Time Off Type for every period")
     added_value_type = fields.Selection(
         [('days', 'Days'),
@@ -226,7 +226,7 @@ class AccrualPlanLevel(models.Model):
             else:
                 return last_call + relativedelta(months=1, day=self.first_day)
         elif self.frequency == 'monthly':
-            date = last_call + relativedelta(self.first_day)
+            date = last_call + relativedelta(day=self.first_day)
             if last_call < date:
                 return date
             else:

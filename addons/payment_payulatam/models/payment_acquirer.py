@@ -3,7 +3,7 @@
 from hashlib import md5
 
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_repr
+from odoo.tools.float_utils import float_split, float_repr
 
 SUPPORTED_CURRENCIES = ('ARS', 'BRL', 'CLP', 'COP', 'MXN', 'PEN', 'USD')
 
@@ -46,16 +46,27 @@ class PaymentAcquirer(models.Model):
         :rtype: str
         """
         if incoming:
+            # "Confirmation" and "Response" pages have a different way to calculate what they call the `new_value`
+            if self.env.context.get('payulatam_is_confirmation_page'):
+                # https://developers.payulatam.com/latam/en/docs/integrations/webcheckout-integration/confirmation-page.html#signature-validation
+                # For confirmation page, PayU Latam round to the first digit if the second one is a zero
+                # to generate their signature.
+                # e.g:
+                #  150.00 -> 150.0
+                #  150.26 -> 150.26
+                # This happens to be Python 3's default behavior when casting to `float`.
+                new_value = "%d.%d" % float_split(float(values.get('TX_VALUE')), 2)
+            else:
+                # https://developers.payulatam.com/latam/en/docs/integrations/webcheckout-integration/response-page.html#signature-validation
+                # PayU Latam use the "Round half to even" rounding method
+                # to generate their signature. This happens to be Python 3's
+                # default rounding method.
+                new_value = float_repr(float(values.get('TX_VALUE')), 1)
             data_string = '~'.join([
                 self.payulatam_api_key,
                 self.payulatam_merchant_id,
                 values['referenceCode'],
-                # http://developers.payulatam.com/en/web_checkout/integration.html
-                # Section: 2. Response page > Signature validation
-                # PayU Latam use the "Round half to even" rounding method
-                # to generate their signature. This happens to be Python 3's
-                # default rounding method.
-                float_repr(float(values.get('TX_VALUE')), 1),
+                new_value,
                 values['currency'],
                 values.get('transactionState'),
             ])
@@ -64,7 +75,7 @@ class PaymentAcquirer(models.Model):
                 self.payulatam_api_key,
                 self.payulatam_merchant_id,
                 values['referenceCode'],
-                float_repr(float(values['amount']), 1),
+                float_repr(float(values['amount']), 2),
                 values['currency'],
             ])
         return md5(data_string.encode('utf-8')).hexdigest()

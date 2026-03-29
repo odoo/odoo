@@ -8,7 +8,8 @@ from unittest.mock import patch
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
-from odoo.tests import common, tagged
+from odoo.exceptions import UserError
+from odoo.tests import common, tagged, HttpCase
 
 
 class MockVisitor(common.BaseCase):
@@ -324,3 +325,123 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         new_visitor = self.env['website.visitor'].search([('id', '=', new_visitor.id)])
         self.assertEqual(len(new_visitor), 0, "The new visitor should be deleted when visitor authenticate once again.")
         self.assertEqual(old_visitor.active, True, "The old visitor should be reactivated when visitor authenticates once again.")
+
+@tagged('-at_install', 'post_install')
+class TestPortalWizardMultiWebsites(HttpCase):
+    def setUp(self):
+        super().setUp()
+        self.website = self.env['website'].create({
+            'name': 'website_specific_user_account',
+            'specific_user_account': True,
+        })
+        self.email_address = 'email_address@example.com'
+        partner_specific = self.env['res.partner'].create({
+            'name': 'partner_specific',
+            'email': self.email_address,
+            'website_id': self.website.id,
+        })
+        partner_all_websites = self.env['res.partner'].create({
+            'name': 'partner_all_websites',
+            'email': self.email_address,
+        })
+        self.portal_user_specific = self._create_portal_user(partner_specific)
+        self.portal_user_specific.action_grant_access()
+        self.assertTrue(self.portal_user_specific.is_portal)
+        self.portal_user_all_websites = self._create_portal_user(partner_all_websites)
+
+    def test_portal_wizard_multi_websites_1(self):
+        # 1)
+        # It should be possible to grant portal access for two partners that
+        # have the same email address but are linked to different websites that
+        # have the "specific user account" characteristic.
+        other_website = self.env['website'].create({
+            'name': 'other_website_specific_user_account',
+            'specific_user_account': True,
+        })
+        partner_specific_other_website = self.env['res.partner'].create({
+            'name': 'partner_specific_other_website',
+            'email': self.email_address,
+            'website_id': other_website.id,
+        })
+        portal_user_specific_other_website = self._create_portal_user(partner_specific_other_website)
+        portal_user_specific_other_website.action_grant_access()
+        self.assertTrue(portal_user_specific_other_website.is_portal)
+
+    def test_portal_wizard_multi_websites_2(self):
+        # 2)
+        # It should not be possible to grant portal access for two partners that
+        # have the same email address and are linked to the same website that
+        # has the "specific user account" characteristic.
+        partner_specific_same_website = self.env['res.partner'].create({
+            'name': 'partner_specific_same_website',
+            'email': self.email_address,
+            'website_id': self.website.id,
+        })
+        portal_user_specific_same_website = self._create_portal_user(partner_specific_same_website)
+        with self.assertRaises(
+                UserError, msg='It should not be possible to grant portal access for two users that have the same email address and are linked to the same website that has the "specific user account" characteristic'):
+            portal_user_specific_same_website.action_grant_access()
+
+    def test_portal_wizard_multi_websites_3(self):
+        # 3)
+        # In this situation, there are two partners with the same email address.
+        # One is linked to a website that has the "specific_user_account"
+        # characteristic and the other is not linked to a website. In this
+        # situation, it should be possible to grant portal access for the second
+        # partner even if the first one is already a portal user.
+        self.portal_user_all_websites.action_grant_access()
+        self.assertTrue(self.portal_user_all_websites.is_portal)
+
+    def test_portal_wizard_multi_websites_4(self):
+        # 4)
+        # In 3), the partner that is linked to a website that has the
+        # "specific_user_account" setting was the first to have the portal
+        # access. This situation is testing the same case than 3) but when the
+        # partner that is not linked to a website is the first to receive the
+        # portal access.
+        self.portal_user_specific.action_revoke_access()
+        self.assertFalse(self.portal_user_specific.is_portal)
+        self.portal_user_all_websites.action_grant_access()
+        self.assertTrue(self.portal_user_all_websites.is_portal)
+        self.portal_user_specific.action_grant_access()
+        self.assertTrue(self.portal_user_specific.is_portal)
+
+    def test_portal_wizard_multi_websites_5(self):
+        # 5)
+        # It should not be possible to grant portal access for two partners that
+        # have the same email address and are not linked to a website.
+        partner_all_websites_second = self.env['res.partner'].create({
+            'name': 'partner_all_websites_second',
+            'email': self.email_address,
+        })
+        portal_user_all_websites_second = self._create_portal_user(partner_all_websites_second)
+        self.portal_user_all_websites.action_grant_access()
+        self.assertTrue(self.portal_user_all_websites.is_portal)
+        with self.assertRaises(
+                UserError, msg='It should not be possible to grant portal access for two users that have the same email address and are not linked to a website'):
+            portal_user_all_websites_second.action_grant_access()
+
+    def test_portal_wizard_multi_websites_6(self):
+        # 6)
+        # It should not be possible to grant portal access for a partner that is
+        # not linked to a website if it exists a user with the same email
+        # address that is linked to the current website.
+        partner_specific_current_website = self.env['res.partner'].create({
+            'name': 'partner_specific_current_website',
+            'email': self.email_address,
+            'website_id': self.env['website'].get_current_website().id,
+        })
+        portal_user_specific_current_website = self._create_portal_user(partner_specific_current_website)
+        portal_user_specific_current_website.action_grant_access()
+        with self.assertRaises(
+                UserError, msg='It should not be possible to grant portal access for a partner that is not linked to a website if it exists a user that has the same email and is linked to the current website'):
+            self.portal_user_all_websites.action_grant_access()
+
+    def _create_portal_user(self, partner):
+        """ Return a portal wizard user from a partner
+        :param partner: the partner from which a portal wizard user has to be
+        created
+        """
+        portal_wizard = self.env['portal.wizard'].with_context(
+            active_ids=[partner.id]).create({})
+        return portal_wizard.user_ids

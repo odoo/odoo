@@ -326,6 +326,44 @@ class TestIrModel(TransactionCase):
         self.assertEqual(self.registry.field_depends[type(record).display_name], ())
         self.assertEqual(record.display_name, f"x_bananas,{record.id}")
 
+    def test_delete_manual_models_with_base_fields(self):
+        model = self.env["ir.model"].create({
+            "model": "x_test_base_delete",
+            "name": "test base delete",
+            "field_id": [
+                Command.create({
+                    "name": "x_my_field",
+                    "ttype": "char",
+                }),
+                Command.create({
+                  "name": "active",
+                  "ttype": "boolean",
+                  "state": "base",
+                })
+            ]
+        })
+        model2 = self.env["ir.model"].create({
+            "model": "x_test_base_delete2",
+            "name": "test base delete2",
+            "field_id": [
+                Command.create({
+                    "name": "x_my_field2",
+                    "ttype": "char",
+                }),
+                Command.create({
+                  "name": "active",
+                  "ttype": "boolean",
+                  "state": "base",
+                })
+            ]
+        })
+        self.assertTrue(model.exists())
+        self.assertTrue(model2.exists())
+
+        self.env["ir.model"].browse(model.ids + model2.ids).unlink()
+        self.assertFalse(model.exists())
+        self.assertFalse(model2.exists())
+
 
 @tagged('test_eval_context')
 class TestEvalContext(TransactionCase):

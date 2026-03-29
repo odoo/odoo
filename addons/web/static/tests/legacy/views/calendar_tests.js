@@ -1504,6 +1504,36 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test("all day event attribute", async function (assert) {
+        assert.expect(5);
+
+        this.data.event.fields.boolfield = { string: "boolean field", type: "boolean" };
+        this.data.event.records[0].boolfield = true;
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="boolfield" mode="month">
+                    <field name="name"/>
+                </calendar>
+            `,
+            archs: archs,
+            viewOptions: { initialDate },
+            session: { getTZOffset: () => 120 },
+        });
+
+        assert.containsOnce(calendar, ".fc-event[data-event-id=1]");
+        assert.containsNone(calendar, ".fc-event[data-event-id=1].o_cw_nobg", "first event is an all day event");
+
+        assert.containsOnce(calendar, ".fc-event[data-event-id=2].o_cw_nobg", "second event is not an all day event");
+
+        assert.containsN(calendar, ".fc-event[data-event-id=5]", 2);
+        assert.containsNone(calendar, ".fc-event[data-event-id=5].o_cw_nobg", 2, "fifth event is an all day event");
+
+        calendar.destroy();
+    });
+
     QUnit.test('create all day event in week mode', async function (assert) {
         assert.expect(3);
 
@@ -2247,11 +2277,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Add filters and specific color', async function (assert) {
-        assert.expect(6);
+        assert.expect(10);
+
+        this.data.event_type.records.push(
+            {id: 4, display_name: "Event Type no color", color: 0},
+        );
 
         this.data.event.records.push(
             {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
             {id: 9, user_id: 4, partner_id: 1, name: "event 9", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
+            {id: 10, user_id: 4, partner_id: 1, name: "event 10", start: "2016-12-11 12:00:00", stop: "2016-12-11 13:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 4, color: 0},
         );
 
         var calendar = await createCalendarView({
@@ -2272,6 +2307,13 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === "search_read" && args.model === "event_type" && args.args[1][0] === "color") {
+                    assert.step('color_search_read');
+                }
+                return result;
+            },
         });
         // By default no filter is selected. We check before continuing.
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
@@ -2282,12 +2324,13 @@ QUnit.module('Views', {
         var $typeFilter =  calendar.$('.o_calendar_filter:has(span:contains(Event Type))');
         assert.ok($typeFilter.length, "should display 'Event Type' filter");
         assert.containsOnce($typeFilter, '#o_cw_filter_collapse_EventType', "Id should be equals to o_cw_filter_collapse_EventType for 'Event Type'");
-        assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'Event Type'");
+        assert.containsN($typeFilter, '.o_calendar_filter_item', 4, "should display 4 filter items for 'Event Type'");
 
         assert.containsOnce($typeFilter, '.o_calendar_filter_item[data-value=3].o_cw_filter_color_4', "Filter for event type 3 must have the color 4");
 
         assert.containsOnce(calendar, '.fc-event[data-event-id=8].o_calendar_color_4', "Event of event type 3 must have the color 4");
-
+        assert.containsOnce(calendar, '.fc-event[data-event-id=10].o_calendar_color_1', "The first color is used when none is provided (default int field value being 0)")
+        assert.verifySteps(['color_search_read', 'color_search_read'], "The color attribute on a field should trigger a search_read")
         calendar.destroy();
     });
 
@@ -4094,12 +4137,9 @@ QUnit.module('Views', {
         var $initCell = calendar.$('.fc-time-grid .fc-minor[data-time="06:30:00"] .fc-widget-content:last-child');
         var $endCell = calendar.$('.fc-time-grid .fc-minor[data-time="10:30:00"] .fc-widget-content:last-child');
 
-        var left = $initCell.offset().left;
-        var top = $initCell.offset().top;
-        testUtils.dom.triggerPositionalMouseEvent(left, top, "mousedown");
-        top = $endCell.offset().top;
-        testUtils.dom.triggerPositionalMouseEvent(left, top, "mousemove");
-        testUtils.dom.triggerPositionalMouseEvent(left, top, "mouseup");
+        testUtils.dom.triggerMouseEvent($initCell, "mousedown");
+        testUtils.dom.triggerMouseEvent($endCell, "mousemove");
+        testUtils.dom.triggerMouseEvent($endCell, "mouseup");
         await testUtils.nextTick();
 
         assert.verifySteps(['do_action']);

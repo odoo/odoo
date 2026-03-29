@@ -9,7 +9,7 @@ class AccountFullReconcile(models.Model):
     name = fields.Char(string='Number', required=True, copy=False, default=lambda self: self.env['ir.sequence'].next_by_code('account.reconcile'))
     partial_reconcile_ids = fields.One2many('account.partial.reconcile', 'full_reconcile_id', string='Reconciliation Parts')
     reconciled_line_ids = fields.One2many('account.move.line', 'full_reconcile_id', string='Matched Journal Items')
-    exchange_move_id = fields.Many2one('account.move')
+    exchange_move_id = fields.Many2one('account.move', index=True)
 
     def unlink(self):
         """ When removing a full reconciliation, we need to revert the eventual journal entries we created to book the
@@ -27,11 +27,11 @@ class AccountFullReconcile(models.Model):
         res = super().unlink()
 
         # Reverse all exchange moves at once.
-        today = fields.Date.context_today(self)
-        default_values_list = [{
-            'date': today,
-            'ref': _('Reversal of: %s') % move.name,
-        } for move in moves_to_reverse]
-        moves_to_reverse._reverse_moves(default_values_list, cancel=True)
+        if moves_to_reverse:
+            default_values_list = [{
+                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
+                'ref': _('Reversal of: %s') % move.name,
+            } for move in moves_to_reverse]
+            moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
         return res

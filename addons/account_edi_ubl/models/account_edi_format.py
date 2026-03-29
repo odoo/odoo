@@ -67,7 +67,7 @@ class AccountEdiFormat(models.Model):
         def _find_value(xpath, element=tree):
             return self._find_value(xpath, element, namespaces)
 
-        with Form(invoice.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
+        with Form(invoice) as invoice_form:
             # Reference
             elements = tree.xpath('//cbc:ID', namespaces=namespaces)
             if elements:
@@ -89,7 +89,7 @@ class AccountEdiFormat(models.Model):
 
             # Currency
             currency = self._retrieve_currency(_find_value('//cbc:DocumentCurrencyCode'))
-            if currency:
+            if currency and currency.active:
                 invoice_form.currency_id = currency
 
             # Incoterm
@@ -199,7 +199,7 @@ class AccountEdiFormat(models.Model):
             'bank_account': invoice.partner_bank_id,
             'note': html2plaintext(invoice.narration) if invoice.narration else False,
             'format_monetary': format_monetary,
-            'customer_vals': {'partner': invoice.commercial_partner_id},
+            'customer_vals': {'partner': invoice.partner_id},
             'supplier_vals': {'partner': invoice.company_id.partner_id.commercial_partner_id},
         }
 
@@ -221,17 +221,17 @@ class AccountEdiFormat(models.Model):
     # Account.edi.format override
     ####################################################
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         # OVERRIDE
         self.ensure_one()
-        if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
+        if self.code == 'ubl_2_1' and self._is_ubl(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._create_invoice_from_ubl(tree)
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         # OVERRIDE
         self.ensure_one()
-        if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
+        if self.code == 'ubl_2_1' and self._is_ubl(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._update_invoice_from_ubl(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
@@ -253,7 +253,7 @@ class AccountEdiFormat(models.Model):
     def _post_invoice_edi(self, invoices):
         # OVERRIDE
         self.ensure_one()
-        if self.code != 'ubl_2_1':
+        if self.code != 'ubl_2_1' or self._is_account_edi_ubl_cii_available():
             return super()._post_invoice_edi(invoices)
         res = {}
         for invoice in invoices:

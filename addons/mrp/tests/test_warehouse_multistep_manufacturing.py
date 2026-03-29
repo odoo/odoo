@@ -472,3 +472,181 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo.action_confirm()
 
         self.assertEqual(self.bom.bom_line_ids.product_id + self.product_2, mo.picking_ids.move_lines.product_id)
+
+    def test_manufacturing_complex_product_3_steps(self):
+        """ Test MO/picking after manufacturing a complex product which uses
+        manufactured components. Ensure that everything is created and picked
+        correctly.
+        """
+
+        self.warehouse.mto_pull_id.route_id.active = True
+        # Creating complex product which trigger another manifacture
+
+        routes = self.warehouse.manufacture_pull_id.route_id + self.warehouse.mto_pull_id.route_id
+        self.complex_product = self.env['product.product'].create({
+            'name': 'Arrow',
+            'type': 'product',
+            'route_ids': [(6, 0, routes.ids)],
+        })
+
+        # Create raw product for manufactured product
+        self.raw_product_2 = self.env['product.product'].create({
+            'name': 'Raw Iron',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+        })
+
+        self.finished_product.route_ids = [(6, 0, routes.ids)]
+
+        # Create bom for manufactured product
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.complex_product
+        bom_product_form.product_tmpl_id = self.complex_product.product_tmpl_id
+        with bom_product_form.bom_line_ids.new() as line:
+            line.product_id = self.finished_product
+            line.product_qty = 1.0
+        with bom_product_form.bom_line_ids.new() as line:
+            line.product_id = self.raw_product_2
+            line.product_qty = 1.0
+
+        self.complex_bom = bom_product_form.save()
+
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.complex_product
+        production_form.picking_type_id = self.warehouse.manu_type_id
+        production = production_form.save()
+        production.action_confirm()
+
+        move_raw_ids = production.move_raw_ids
+        self.assertEqual(len(move_raw_ids), 2)
+        sfp_move_raw_id, raw_move_raw_id = move_raw_ids
+        self.assertEqual(sfp_move_raw_id.product_id, self.finished_product)
+        self.assertEqual(raw_move_raw_id.product_id, self.raw_product_2)
+
+        for move_raw_id in move_raw_ids:
+            self.assertEqual(move_raw_id.picking_type_id, self.warehouse.manu_type_id)
+
+            pbm_move = move_raw_id.move_orig_ids
+            self.assertEqual(len(pbm_move), 1)
+            self.assertEqual(pbm_move.location_id, self.warehouse.lot_stock_id)
+            self.assertEqual(pbm_move.location_dest_id, self.warehouse.pbm_loc_id)
+            self.assertEqual(pbm_move.picking_type_id, self.warehouse.pbm_type_id)
+
+        # Check move locations
+        move_finished_ids = production.move_finished_ids
+        self.assertEqual(len(move_finished_ids), 1)
+        self.assertEqual(move_finished_ids.product_id, self.complex_product)
+        self.assertEqual(move_finished_ids.picking_type_id, self.warehouse.manu_type_id)
+        sam_move = move_finished_ids.move_dest_ids
+        self.assertEqual(len(sam_move), 1)
+        self.assertEqual(sam_move.location_id, self.warehouse.sam_loc_id)
+        self.assertEqual(sam_move.location_dest_id, self.warehouse.lot_stock_id)
+        self.assertEqual(sam_move.picking_type_id, self.warehouse.sam_type_id)
+        self.assertFalse(sam_move.move_dest_ids)
+
+        subproduction = self.env['mrp.production'].browse(production.id+1)
+        sfp_pickings = subproduction.picking_ids.sorted('id')
+
+        # SFP Production: 2 pickings, 1 group
+        self.assertEqual(len(sfp_pickings), 2)
+        self.assertEqual(sfp_pickings.mapped('group_id'), subproduction.procurement_group_id)
+
+        # Move Raw Stick - Stock -> Preprocessing
+        picking = sfp_pickings[0]
+        self.assertEqual(len(picking.move_lines), 1)
+        picking.move_lines[0].product_id = self.raw_product
+
+        # Move SFP - PostProcessing -> Stock
+        picking = sfp_pickings[1]
+        self.assertEqual(len(picking.move_lines), 1)
+        picking.move_lines[0].product_id = self.finished_product
+
+        # Main production 2 pickings, 1 group
+        pickings = production.picking_ids.sorted('id')
+        self.assertEqual(len(pickings), 2)
+        self.assertEqual(pickings.mapped('group_id'), production.procurement_group_id)
+
+        # Move 2 components Stock -> Preprocessing
+        picking = pickings[0]
+        self.assertEqual(len(picking.move_lines), 2)
+        picking.move_lines[0].product_id = self.finished_product
+        picking.move_lines[1].product_id = self.raw_product_2
+
+        # Move FP PostProcessing -> Stock
+        picking = pickings[1]
+        self.assertEqual(len(picking.move_lines), 1)
+        picking.product_id = self.complex_product
+
+    def test_child_parent_relationship_on_backorder_creation(self):
+        """ Test Child Mo and Source Mo in 2/3-step production for reorder
+            rules in backorder using order points with the help of run scheduler """
+
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        rr_form = Form(self.env['stock.warehouse.orderpoint'])
+        rr_form.product_id = self.finished_product
+        rr_form.product_min_qty = 20
+        rr_form.product_max_qty = 40
+        rr_form.save()
+
+        self.env['procurement.group'].run_scheduler()
+
+        mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
+        mo_form = Form(mo)
+        mo_form.qty_producing = 20
+        mo = mo_form.save()
+
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+
+        self.assertEqual(mo.mrp_production_child_count, 0, "Children MOs counted as existing where there should be none")
+        self.assertEqual(mo.mrp_production_source_count, 0, "Source MOs counted as existing where there should be none")
+        self.assertEqual(mo.mrp_production_backorder_count, 2)
+
+    def test_manufacturing_bom_from_reordering_rules(self):
+        """
+            Check that the manufacturing order is created with the BoM set in the reording rule:
+                - Create a product with 2 bill of materials,
+                - Create an orderpoint for this product specifying the 2nd BoM that must be used,
+                - Check that the MO has been created with the 2nd BoM
+        """
+        manufacturing_route = self.env['stock.rule'].search([
+            ('action', '=', 'manufacture')]).route_id
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+        finished_product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+            'route_ids': manufacturing_route,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': finished_product.uom_id.id,
+            'type': 'normal',
+        })
+        bom_2 = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': finished_product.uom_id.id,
+            'type': 'normal',
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Orderpoint for P1',
+            'product_id': self.finished_product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'route_id': manufacturing_route.id,
+            'bom_id': bom_2.id,
+        })
+        self.env['procurement.group'].run_scheduler()
+        mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
+        self.assertEqual(len(mo), 1)
+        self.assertEqual(mo.product_qty, 1.0)
+        self.assertEqual(mo.bom_id, bom_2)

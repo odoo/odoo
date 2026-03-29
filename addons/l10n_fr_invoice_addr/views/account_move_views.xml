@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_form_l10n_fr_invoice_addr" model="ir.ui.view">
+        <field name="name">l10n_fr_invoice_addr.account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                <attribute name="groups"/>
+                <attribute name="t-if">
+                    (o.l10n_fr_is_company_french and o.move_type.startswith('out_')) or o.env.user.has_group('sale.group_delivery_invoice_address')
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

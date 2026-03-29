@@ -22,9 +22,12 @@
                         <span t-if="o.name != '/'" t-field="o.name"/>
                     </h2>
 
-                    <div id="informations" class="row mt32 mb32">
+                    <div id="informations" class="row mt-4 mb-4">
                         <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
-                            <strong>Invoice Date:</strong>
+                            <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date:</strong></t>
+                            <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date:</strong></t>
+                            <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date:</strong></t>
+                            <t t-else=""><strong>Date:</strong></t>
                             <p class="m-0" t-field="o.invoice_date"/>
                         </div>
                         <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
@@ -145,8 +148,8 @@
                                                 </tr>
                                             </t>
                                             <t t-if="len(payments_vals) > 0">
-                                                <tr class="border-black">
-                                                    <td><strong>Amount Due</strong></td>
+                                                <tr class="border-black font-weight-bold">
+                                                    <td>Amount Due</td>
                                                     <td class="text-right">
                                                         <span t-field="o.amount_residual"/>
                                                     </td>
@@ -160,6 +163,10 @@
                     </div>
                     <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
+                        <t t-if="o.partner_bank_id">
+                            <br/>
+                            on this account: <span t-field="o.partner_bank_id" class="font-weight-bold"/>
+                        </t>
                     </p>
                     <p t-if="o.invoice_payment_term_id" name="payment_term">
                         <span t-field="o.invoice_payment_term_id.note"/>
@@ -226,7 +233,7 @@
             -->
             <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                 <tr>
-                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1">
+                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1 or (tax_totals['amount_untaxed'] != amount_by_group['tax_group_base_amount'])">
                         <td>
                             <span t-esc="amount_by_group['tax_group_name']"/>
                             <span class="text-nowrap"> on
@@ -250,7 +257,7 @@
         <template id="report_invoice">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
                     <t t-if="o._get_name_invoice_report() == 'account.report_invoice_document'"
                         t-call="account.report_invoice_document" t-lang="lang"/>
                 </t>
@@ -260,7 +267,7 @@
         <template id="report_invoice_with_payments">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
                     <t t-set="print_with_payments" t-value="True"/>
                     <t t-if="o._get_name_invoice_report() == 'account.report_invoice_document'"
                         t-call="account.report_invoice_document" t-lang="lang"/>

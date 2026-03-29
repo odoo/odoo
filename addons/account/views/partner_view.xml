@@ -50,9 +50,9 @@
                             <field name="auto_apply"/>
                             <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="foreign_vat"/>
-                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '=', False), ('foreign_vat', '=', False)], 'required': [('foreign_vat', '!=', False), ('country_id', '=', False)]}"/>
                             <field name="country_id"
-                                attrs="{'required': [('foreign_vat', '!=', False)]}"
+                                attrs="{'required': [('foreign_vat', '!=', False), ('country_group_id', '=', False)]}"
                                 options="{'no_open': True, 'no_create': True}"/>
                             <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
                                 attrs="{'invisible': ['|', '|', '&amp;', ('auto_apply', '!=', True), ('foreign_vat', '=', False), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
@@ -71,7 +71,8 @@
                         <page name="tax_mapping" string="Tax Mapping">
                         <group>
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
-                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
+                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom" decoration-muted="tax_dest_id and not tax_dest_active">
+                                    <field name="tax_dest_active" invisible="1"/>
                                     <field name="tax_src_id"
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
@@ -113,7 +114,7 @@
                         </group>
                         </page>
                     </notebook>
-                    <field name="note" placeholder="Legal Notes..."/>
+                    <field name="note" class="oe-bordered-editor" placeholder="Legal Notes..."/>
                     </sheet>
                 </form>
             </field>

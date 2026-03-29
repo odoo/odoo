@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import mute_logger
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase, BaseCase
+from odoo.tests.common import TransactionCase, BaseCase, new_test_user
 from psycopg2 import IntegrityError
 
 
@@ -285,6 +286,7 @@ class TestTranslation(TransactionCase):
 
     def test_103_duplicate_record_fr(self):
         category = self.customers.with_context({'lang': 'fr_FR'}).copy({'name': 'Clients (copie)'})
+        self.assertEqual(category.env.context.get('lang'), 'fr_FR')
 
         category_no = category.with_context({})
         self.assertEqual(category_no.name, 'Clients (copie)', "Duplication should set untranslated value")
@@ -569,6 +571,91 @@ class TestTranslationWrite(TransactionCase):
             "VAT", belgium.with_context(lang='en_US').vat_label,
             "Did not fallback to source when reset"
         )
+
+    def test_orphan(self):
+        """ What happens with orphan translations. """
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        # create a user with access rights on partner categories
+        user = new_test_user(self.env, 'deleter')
+        group = self.env.ref('base.group_partner_manager')
+        user.groups_id = [(4, group.id)]
+
+        # this access rule triggers a MissingError
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get_id('res.partner.category'),
+            'groups': [(4, group.id)],
+            'domain_force': "[('name', 'ilike', 'e')]",
+        })
+
+        # create a translation, and delete the record from the database
+        translation = self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'res.partner.category,name',
+            'lang': 'fr_FR',
+            'res_id': self.category.id,
+            'src': 'Reblochon',
+            'value': 'Parfum Exquis',
+            'state': 'translated',
+        })
+        translation.flush()
+        translation.invalidate_cache()
+        self.cr.execute("DELETE FROM res_partner_category WHERE id=%s", [self.category.id])
+
+        # deleting the translation should be possible, provided the user has
+        # access rights on the translation's model
+        user0 = new_test_user(self.env, 'cannot modify category')
+        with self.assertRaises(AccessError):
+            translation.with_user(user0).unlink()
+
+        translation.with_user(user).unlink()
+
+        # however, creating orphan translations should not be possible
+        with self.assertRaises(ValidationError):
+            translation.with_user(user).create({
+                'type': 'model',
+                'name': 'res.partner.category,name',
+                'lang': 'fr_FR',
+                'res_id': self.category.id,
+                'src': 'Reblochon',
+                'value': 'Parfum Exquis',
+                'state': 'translated',
+            })
+
+    def test_write(self):
+        """ What happens with orphan translations. """
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        # create a user with access rights on partner categories
+        user = new_test_user(self.env, 'updater')
+        group = self.env.ref('base.group_system')
+        user.groups_id = [(4, group.id)]
+        action = user.env["ir.actions.act_window"].create({
+            "name": "Dummy Action",
+            "res_model": "res.users",
+            "help": "<p>Cheese</p>",
+        })
+
+        # create a translation, and delete the record from the database
+        translation = user.env['ir.translation'].create({
+            'type': 'model_terms',
+            'name': 'ir.actions.act_window,help',
+            'lang': 'fr_FR',
+            'res_id': action.id,
+            'src': 'Cheese',
+            'value': 'Fromage',
+            'state': 'translated',
+        })
+        translation.flush()
+        translation.invalidate_cache()
+
+        # deleting the translation should be possible, provided the user has
+        # access rights on the translation's model
+        user0 = new_test_user(self.env, 'cannot modify an action')
+        with self.assertRaises(AccessError):
+            translation.with_user(user0).unlink()
+
+        translation.with_user(user).unlink()
 
     def test_field_selection(self):
         """ Test translations of field selections. """

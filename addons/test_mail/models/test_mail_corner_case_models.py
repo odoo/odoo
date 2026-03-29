@@ -86,6 +86,25 @@ class MailTestTrackMonetary(models.Model):
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True, tracking=True)
     revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
 
+class MailTestMultiCompanyWithActivity(models.Model):
+    """ This model can be used in multi company tests with activity"""
+    _name = "mail.test.multi.company.with.activity"
+    _description = "Test Multi Company Mail With Activity"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+
+    name = fields.Char()
+    company_id = fields.Many2one("res.company")
+
+
+class MailTestSelectionTracking(models.Model):
+    """ Test tracking for selection fields """
+    _description = 'Test Selection Tracking'
+    _name = 'mail.test.track.selection'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    type = fields.Selection([('first', 'First'), ('second', 'Second')], tracking=True)
+
 
 class MailTestMultiCompany(models.Model):
     """ This model can be used in multi company tests"""
@@ -95,3 +114,14 @@ class MailTestMultiCompany(models.Model):
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
+
+
+class MailTestNotMailThread(models.Model):
+    """ Models not inheriting from mail.thread but using some cross models
+    capabilities of mail. """
+    _name = 'mail.test.nothread'
+    _description = "NoThread Model"
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+    customer_id = fields.Many2one('res.partner')

@@ -17,4 +17,9 @@
         <field name="payment_type">inbound</field>
     </record>
 
+    <record model="ir.config_parameter" id="payment_ogone_hash_function" forcecreate="False">
+            <field name="key">payment_ogone.hash_function</field>
+            <field name="value">sha1</field>
+    </record>
+
 </odoo>

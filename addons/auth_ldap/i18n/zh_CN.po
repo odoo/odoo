@@ -5,6 +5,8 @@
 # Translators:
 # Martin Trigaux, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: 黎伟杰 <674416404@qq.com>, 2021\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,6 +38,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    用来在LDAP数据库中查找用户账户的过滤器。它是一个任意的LDAP过滤器，用字符串表示。任何`%s`占位符将被用户提供的登录（标识符）所取代，过滤器应该至少包含一个这样的占位符。\n"
+"\n"
+"    过滤器的结果必须正好是一（1）个，否则登录将被认为是无效的。\n"
+"\n"
+"    示例（实际属性取决于LDAP服务器和设置）。\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s)\n"
+"\n"
+"    或\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -84,7 +98,7 @@ msgstr "创建时间"
 msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
-msgstr ""
+msgstr "用户搜索范围的DN：这个基地的所有后代都将被搜索到用户。"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name

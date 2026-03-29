@@ -4,6 +4,8 @@ odoo.define('wysiwyg.widgets.ImageCropWidget', function (require) {
 const core = require('web.core');
 const Widget = require('web.Widget');
 const {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} = require('web_editor.image_processing');
+const { Markup } = require('web.utils');
+const { scrollTo } = require("web.dom");
 
 const _t = core._t;
 
@@ -22,6 +24,7 @@ const ImageCropWidget = Widget.extend({
     init(parent, media) {
         this._super(...arguments);
         this.media = media;
+        this.parent = parent;
         this.$media = $(media);
         // Needed for editors in iframes.
         this.document = media.ownerDocument;
@@ -46,9 +49,12 @@ const ImageCropWidget = Widget.extend({
         await this._super.apply(this, arguments);
         await loadImageInfo(this.media, this._rpc.bind(this));
         const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
+        await this._scrollToInvisibleImage();
         if (this.media.dataset.originalSrc && !isIllustration) {
             this.originalSrc = this.media.dataset.originalSrc;
             this.originalId = this.media.dataset.originalId;
+            const sel = this.parent.odooEditor && this.parent.odooEditor.document.getSelection();
+            sel && sel.removeAllRanges();
             return;
         }
         // Couldn't find an attachment: not croppable.
@@ -62,7 +68,7 @@ const ImageCropWidget = Widget.extend({
             this.displayNotification({
               type: 'warning',
               title: _t("This image is an external image"),
-              message: _t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo."),
+              message: Markup(_t("This type of image is not supported for cropping.<br/>If you want to crop it, please first download it from the original source and upload it in Odoo.")),
             });
             return this.destroy();
         }
@@ -85,9 +91,11 @@ const ImageCropWidget = Widget.extend({
         await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
 
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
+        this._onDocumentKeydown = this._onDocumentKeydown.bind(this);
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
         this.document.addEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+        this.document.addEventListener('keydown', this._onDocumentKeydown, {capture: true});
         return _super(...arguments);
     },
     /**
@@ -97,6 +105,7 @@ const ImageCropWidget = Widget.extend({
         if (this.$cropperImage) {
             this.$cropperImage.cropper('destroy');
             this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
+            this.document.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
         this.$media.trigger('image_cropper_destroyed');
@@ -170,6 +179,41 @@ const ImageCropWidget = Widget.extend({
         this.$cropperImage.cropper('clear');
         this.$cropperImage.cropper('crop');
     },
+    /**
+     * Make sure the targeted image is in the visible viewport before crop.
+     *
+     * @private
+     */
+    async _scrollToInvisibleImage() {
+        const rect = this.media.getBoundingClientRect();
+        const viewportTop = this.document.documentElement.scrollTop || 0;
+        const viewportBottom = viewportTop + window.innerHeight;
+        const closestScrollable = el => {
+            if (!el) {
+                return null;
+            }
+            if (el.scrollHeight > el.clientHeight) {
+                return $(el);
+            } else {
+                return closestScrollable(el.parentElement);
+            }
+        }
+        // Give priority to the closest scrollable element (e.g. for images in
+        // HTML fields, the element to scroll is different from the document's
+        // scrolling element).
+        const $scrollable = closestScrollable(this.media);
+
+        // The image must be in a position that allows access to it and its crop
+        // options buttons. Otherwise, the crop widget container can be scrolled
+        // to allow editing.
+        if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
+            await scrollTo(this.media, {
+                easing: "linear",
+                duration: 500,
+                ...($scrollable && {$scrollable}),
+            });
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -228,6 +272,16 @@ const ImageCropWidget = Widget.extend({
         await new Promise(res => setTimeout(res, 0));
         this._resetCropBox();
     },
+    /**
+     * Save crop if user hits enter.
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onDocumentKeydown(ev) {
+        if(ev.key === 'Enter') {
+            return this._save();
+        }
+    }
 });
 
 return ImageCropWidget;

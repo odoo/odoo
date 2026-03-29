@@ -80,7 +80,7 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'slide_id'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
+    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True, ondelete='cascade')
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
@@ -135,7 +135,7 @@ class Slide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Html('Description', translate=True)
+    description = fields.Html('Description', translate=True, sanitize_attributes=False)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -150,7 +150,8 @@ class Slide(models.Model):
                                    string='Subscribers', groups='website_slides.group_website_slides_officer', copy=False)
     slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='website_slides.group_website_slides_officer', copy=False)
     user_membership_id = fields.Many2one(
-        'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id', compute_sudo=False,
+        'slide.slide.partner', string="Subscriber information",
+        compute='_compute_user_membership_id', compute_sudo=False,
         help="Subscriber information for the current logged in user")
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
@@ -181,9 +182,9 @@ class Slide(models.Model):
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
-    likes = fields.Integer('Likes', compute='_compute_user_info', store=True, compute_sudo=False)
-    dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
-    user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
+    likes = fields.Integer('Likes', compute='_compute_like_info', store=True, compute_sudo=False)
+    dislikes = fields.Integer('Dislikes', compute='_compute_like_info', store=True, compute_sudo=False)
+    user_vote = fields.Integer('User vote', compute='_compute_user_membership_id', compute_sudo=False)
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
@@ -243,6 +244,12 @@ class Slide(models.Model):
         for slide in self:
             slide.questions_count = len(slide.question_ids)
 
+    def _has_additional_resources(self):
+        """Sudo required for public user to know if the course has additional
+        resources that they will be able to access once a member."""
+        self.ensure_one()
+        return bool(self.sudo().slide_resource_ids)
+
     @api.depends('website_message_ids.res_id', 'website_message_ids.model', 'website_message_ids.message_type')
     def _compute_comments_count(self):
         for slide in self:
@@ -254,8 +261,38 @@ class Slide(models.Model):
             record.total_views = record.slide_views + record.public_views
 
     @api.depends('slide_partner_ids.vote')
+    def _compute_like_info(self):
+        if not self.ids:
+            self.update({'likes': 0, 'dislikes': 0})
+            return
+
+        rg_data_like = self.env['slide.slide.partner'].sudo().read_group(
+            [('slide_id', 'in', self.ids), ('vote', '=', 1)],
+            ['slide_id'], ['slide_id']
+        )
+        rg_data_dislike = self.env['slide.slide.partner'].sudo().read_group(
+            [('slide_id', 'in', self.ids), ('vote', '=', -1)],
+            ['slide_id'], ['slide_id']
+        )
+        mapped_data_like = dict(
+            (rg_data['slide_id'][0], rg_data['slide_id_count'])
+            for rg_data in rg_data_like
+        )
+        mapped_data_dislike = dict(
+            (rg_data['slide_id'][0], rg_data['slide_id_count'])
+            for rg_data in rg_data_dislike
+        )
+
+        for slide in self:
+            slide.likes = mapped_data_like.get(slide.id, 0)
+            slide.dislikes = mapped_data_dislike.get(slide.id, 0)
+
+    @api.depends('slide_partner_ids.vote')
     @api.depends_context('uid')
     def _compute_user_info(self):
+        """ Deprecated. Now computed directly by _compute_user_membership_id
+        for user_vote and _compute_like_info for likes / dislikes. Remove me in
+        master. """
         default_stats = {'likes': 0, 'dislikes': 0, 'user_vote': False}
 
         if not self.ids:
@@ -266,6 +303,7 @@ class Slide(models.Model):
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids)
         ])
+
         for slide_partner in slide_partners:
             if slide_partner.vote == 1:
                 slide_data[slide_partner.slide_id.id]['likes'] += 1
@@ -275,6 +313,7 @@ class Slide(models.Model):
                 slide_data[slide_partner.slide_id.id]['dislikes'] += 1
                 if slide_partner.partner_id == self.env.user.partner_id:
                     slide_data[slide_partner.slide_id.id]['user_vote'] = -1
+
         for slide in self:
             slide.update(slide_data[slide.id])
 
@@ -321,7 +360,7 @@ class Slide(models.Model):
                 result[cid]['total_slides'] += slide_type_count
         return result
 
-    @api.depends('slide_partner_ids.partner_id')
+    @api.depends('slide_partner_ids.partner_id', 'slide_partner_ids.vote')
     @api.depends('uid')
     def _compute_user_membership_id(self):
         slide_partners = self.env['slide.slide.partner'].sudo().search([
@@ -334,6 +373,7 @@ class Slide(models.Model):
                 (slide_partner for slide_partner in slide_partners if slide_partner.slide_id == record),
                 self.env['slide.slide.partner']
             )
+            record.user_vote = record.user_membership_id.vote
 
     @api.depends('document_id', 'slide_type', 'mime_type')
     def _compute_embed_code(self):
@@ -437,6 +477,7 @@ class Slide(models.Model):
 
         if slide.is_published and not slide.is_category:
             slide._post_publication()
+            slide.channel_id.channel_partner_ids._recompute_completion()
         return slide
 
     def write(self, values):
@@ -448,14 +489,23 @@ class Slide(models.Model):
             values['is_preview'] = True
             values['is_published'] = True
 
+        # if the slide type is changed, remove incompatible url or html_content
+        # done here to satisfy the SQL constraint
+        # using a stored-computed field in place does not work
+        if 'slide_type' in values:
+            if values['slide_type'] == 'webpage':
+                values = {'url': False, **values}
+            elif values['slide_type'] != 'webpage':
+                values = {'html_content': False, **values}
+
         res = super(Slide, self).write(values)
         if values.get('is_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
 
         if 'is_published' in values or 'active' in values:
-            # if the slide is published/unpublished, recompute the completion for the partners
-            self.slide_partner_ids._set_completed_callback()
+            # recompute the completion for all partners of the channel
+            self.channel_id.channel_partner_ids._recompute_completion()
 
         return res
 
@@ -475,7 +525,9 @@ class Slide(models.Model):
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
+        channel_partner_ids = self.channel_id.channel_partner_ids
         super(Slide, self).unlink()
+        channel_partner_ids._recompute_completion()
 
     def toggle_active(self):
         # archiving/unarchiving a channel does it on its slides, too
@@ -768,7 +820,7 @@ class Slide(models.Model):
         """ If we receive a duration (YT video), we use it to determine the slide duration.
         The received duration is under a special format (e.g: PT1M21S15, meaning 1h 21m 15s). """
 
-        key = self.env['website'].get_current_website().website_slide_google_app_key
+        key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
         fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
         if fetch_res.get('error'):
             return {'error': self._extract_google_error_message(fetch_res.get('error'))}
@@ -845,7 +897,7 @@ class Slide(models.Model):
             if access_token:
                 params['access_token'] = access_token
         if not params.get('access_token'):
-            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
+            params['key'] = self.env['website'].get_current_website().sudo().website_slide_google_app_key
 
         fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):

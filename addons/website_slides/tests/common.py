@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user, MockEmail
 
 
-class SlidesCase(common.TransactionCase):
+class SlidesCase(common.TransactionCase, MockEmail):
 
     @classmethod
     def setUpClass(cls):

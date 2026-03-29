@@ -230,7 +230,6 @@ const ProfilingQwebView = basicFfields.AceEditor.extend({
             displayIndentGuides: true,
             showGutter: true,
         });
-        this.aceEditor.renderer.$gutter.removeAttribute("aria-hidden");
         this.aceEditor.renderer.$cursorLayer.element.style.display = "none";
 
         this.aceEditor.$blockScrolling = true;

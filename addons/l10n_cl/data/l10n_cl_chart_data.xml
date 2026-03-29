@@ -163,7 +163,7 @@
     <record id="account_11320" model="account.account.template">
         <field name="code">110320</field>
         <field name="name">Anticipo Proveedores</field>
-        <field ref="account.data_account_type_current_assets" name="user_type_id"/>
+        <field ref="account.data_account_type_receivable" name="user_type_id"/>
         <field name="reconcile" eval="True"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
@@ -962,9 +962,9 @@
 
     <record id="account_210760" model="account.account.template">
         <field name="code">210760</field>
-        <field name="name">Impuesto Mensuales por Pagar</field>
+        <field name="name">Impuestos Mensuales por Pagar</field>
         <field ref="account.data_account_type_current_liabilities" name="user_type_id"/>
-        <field name="reconcile" eval="False"/>
+        <field name="reconcile" eval="True"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -1205,7 +1205,19 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
         <field name="tag_ids"
                eval="[(6,0,[
-                         ref('tag_cl_sale_mnt_exe'),
+                         ref('tag_cl_sale_mnt_neto'),
+                         ref('tag_cl_sale_valor_neto_comis')
+               ])]"/>
+    </record>
+
+    <record id="account_310122" model="account.account.template">
+        <field name="code">310122</field>
+        <field name="name">Ventas de Pasajes Nacionales/Internacionales y/o Comisiones No Afectas</field>
+        <field ref="account.data_account_type_revenue" name="user_type_id"/>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+        <field name="tag_ids"
+               eval="[(6,0,[
                          ref('tag_cl_sale_valor_comisiones_no_afecto'),
                          ref('tag_cl_sale_exento_vta_pasajes_nacional'),
                          ref('tag_cl_sale_exento_vta_pasajes_internacional')
@@ -1217,6 +1229,10 @@
         <field name="name">Ventas de Exportación</field>
         <field ref="account.data_account_type_revenue" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
+        <field name="tag_ids"
+               eval="[(6,0,[
+                        ref('tag_cl_sale_mnt_exe'),
+               ])]"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -1310,7 +1326,7 @@
 
     <record id="account_320265" model="account.account.template">
         <field name="code">320265</field>
-        <field name="name">Diferencia tipo de cambio</field>
+        <field name="name">Diferencia tipo de cambio (Ganancia)</field>
         <field ref="account.data_account_type_revenue" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1382,7 +1398,7 @@
 
     <record id="account_410130" model="account.account.template">
         <field name="code">410130</field>
-        <field name="name">Honorarios Pagados</field>
+        <field name="name">Honorarios Profesionales</field>
         <field ref="account.data_account_type_expenses" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1486,7 +1502,7 @@
 
     <record id="account_410195" model="account.account.template">
         <field name="code">410195</field>
-        <field name="name">Diferencia Tipo de Cambio</field>
+        <field name="name">Diferencia Tipo de Cambio (Pérdida)</field>
         <field ref="account.data_account_type_expenses" name="user_type_id"/>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1679,7 +1695,7 @@
         <field name="property_account_payable_id" ref="account_210210"/>
         <field name="property_account_expense_categ_id" ref="account_410235"/>
         <field name="property_account_income_categ_id" ref="account_310115"/>
-        <field name="income_currency_exchange_account_id" ref="account_410195"/>
+        <field name="income_currency_exchange_account_id" ref="account_320265"/>
         <field name="expense_currency_exchange_account_id" ref="account_410195"/>
         <field name="default_pos_receivable_account_id" ref="account_110421"/>
         <field name="property_stock_account_input_categ_id" ref="account_210230"/>

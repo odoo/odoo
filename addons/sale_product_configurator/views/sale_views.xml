@@ -5,6 +5,9 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
+            <group name="upsell" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
             <group name="upsell" position="inside">
                 <field name="optional_product_ids"
                     widget="many2many_tags"

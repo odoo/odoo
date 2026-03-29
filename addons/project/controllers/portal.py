@@ -11,7 +11,7 @@ from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
 
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, AND
 
 from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
@@ -21,9 +21,11 @@ class ProjectCustomerPortal(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if 'project_count' in counters:
-            values['project_count'] = request.env['project.project'].search_count([])
+            values['project_count'] = request.env['project.project'].search_count([]) \
+                if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([])
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
+                if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
     # ------------------------------------------------------------
@@ -38,7 +40,7 @@ class ProjectCustomerPortal(CustomerPortal):
         searchbar_groupby = self._task_get_searchbar_groupby()
 
         # default sort by value
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
@@ -59,6 +61,9 @@ class ProjectCustomerPortal(CustomerPortal):
         Task = request.env['project.task']
         if access_token:
             Task = Task.sudo()
+        elif not request.env.user._is_public():
+            domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
+            Task = Task.sudo()
 
         # task count
         task_count = Task.search_count(domain)
@@ -66,7 +71,7 @@ class ProjectCustomerPortal(CustomerPortal):
         url = "/my/project/%s" % project.id
         pager = portal_pager(
             url=url,
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search, 'access_token': access_token},
             total=task_count,
             page=page,
             step=self._items_per_page
@@ -112,7 +117,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
         }
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
@@ -146,13 +151,13 @@ class ProjectCustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_projects", values)
 
-    @http.route(['/my/project/<int:project_id>'], type='http', auth="public", website=True)
+    @http.route(['/my/project/<int:project_id>', '/my/project/<int:project_id>/page/<int:page>'], type='http', auth="public", website=True)
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-        if project_sudo.with_user(request.env.user)._check_project_sharing_access():
+        if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
             return request.render("project.project_sharing_portal", {'project_id': project_id})
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
@@ -164,6 +169,11 @@ class ProjectCustomerPortal(CustomerPortal):
         user_context = request.session.get_context() if request.session.uid else {}
         mods = conf.server_wide_modules or []
         qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="project.assets_qweb")
+        if request.env.lang:
+            lang = request.env.lang
+            session_info['user_context']['lang'] = lang
+            # Update Cache
+            user_context['lang'] = lang
         lang = user_context.get("lang")
         translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
         cache_hashes = {
@@ -238,14 +248,28 @@ class ProjectCustomerPortal(CustomerPortal):
             'user': request.env.user,
             'project_accessible': project_accessible,
         }
-        return self._get_page_view_values(task, access_token, values, history, False, **kwargs)
+
+        values = self._get_page_view_values(task, access_token, values, history, False, **kwargs)
+        if project:
+            history = request.session.get('my_project_tasks_history', [])
+            try:
+                current_task_index = history.index(task.id)
+            except ValueError:
+                return values
+
+            total_task = len(history)
+            task_url = f"{task.project_id.access_url}/task/%s?model=project.project&res_id={values['user'].id}&access_token={access_token}"
+
+            values['prev_record'] = current_task_index != 0 and task_url % history[current_task_index - 1]
+            values['next_record'] = current_task_index < total_task - 1 and task_url % history[current_task_index + 1]
+
+        return values
 
     def _task_get_searchbar_sortings(self):
         return {
             'date': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 1},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 2},
             'project': {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 3},
-            'users': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 4},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 5},
             'status': {'label': _('Status'), 'order': 'kanban_state', 'sequence': 6},
             'priority': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 7},
@@ -328,7 +352,7 @@ class ProjectCustomerPortal(CustomerPortal):
                                          key=lambda item: item[1]["sequence"]))
 
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         searchbar_inputs = self._task_get_searchbar_inputs()
@@ -353,7 +377,7 @@ class ProjectCustomerPortal(CustomerPortal):
             })
 
         # default sort by value
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
@@ -373,8 +397,11 @@ class ProjectCustomerPortal(CustomerPortal):
         if search and search_in:
             domain += self._task_get_search_domain(search_in, search)
 
+        TaskSudo = request.env['project.task'].sudo()
+        domain = AND([domain, request.env['ir.rule']._compute_domain(TaskSudo._name, 'read')])
+
         # task count
-        task_count = request.env['project.task'].search_count(domain)
+        task_count = TaskSudo.search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/tasks",
@@ -386,7 +413,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # content according to pager and archive selected
         order = self._task_get_order(order, groupby)
 
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        tasks = TaskSudo.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_tasks_history'] = tasks.ids[:100]
 
         groupby_mapping = self._task_get_groupby_mapping()
@@ -394,7 +421,7 @@ class ProjectCustomerPortal(CustomerPortal):
         if group:
             grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
         else:
-            grouped_tasks = [tasks]
+            grouped_tasks = [tasks] if tasks else []
 
         task_states = dict(request.env['project.task']._fields['kanban_state']._description_selection(request.env))
         if sortby == 'status':

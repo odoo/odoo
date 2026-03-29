@@ -168,7 +168,7 @@ export class GraphModel extends Model {
         metaData.measures = computeReportMeasures(
             metaData.fields,
             metaData.fieldAttrs,
-            [metaData.measure],
+            [...metaData.viewMeasures, metaData.measure],
             metaData.additionalMeasures
         );
 
@@ -501,9 +501,9 @@ export class GraphModel extends Model {
         const processedGroupBy = [];
         for (const gb of groupBy) {
             const { fieldName, interval } = gb;
-            const { store, type } = fields[fieldName];
+            const { sortable, type } = fields[fieldName];
             if (
-                !store ||
+                !sortable ||
                 ["id", "__count"].includes(fieldName) ||
                 !GROUPABLE_TYPES.includes(type)
             ) {

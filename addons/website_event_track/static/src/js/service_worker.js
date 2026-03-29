@@ -61,8 +61,13 @@ const isCacheFull = async () => {
     if (!("storage" in navigator && "estimate" in navigator.storage)) {
         return false;
     }
-    const { usage, quota } = await navigator.storage.estimate();
-    return usage / quota > MAX_CACHE_QUOTA || usage > MAX_CACHE_SIZE;
+    try {
+        const { usage, quota } = await navigator.storage.estimate();
+        return usage / quota > MAX_CACHE_QUOTA || usage > MAX_CACHE_SIZE;
+    } catch (error) {
+        console.error(`call to storage.estimate failed`, error);
+        return false;
+    }
 };
 
 /**

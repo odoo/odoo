@@ -172,6 +172,40 @@ class TestWarehouse(common.TestMrpCommon):
         self.assertEqual(location_dest.id, self.depot_location.id)
         self.assertNotEqual(location_dest.id, self.stock_location.id)
 
+    def test_backorder_unpacking(self):
+        """ Test that movement of pack in backorder is correctly handled. """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.write({'manufacture_steps': 'pbm'})
+
+        self.product_1.type = 'product'
+        self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo_form.product_qty = 100
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        package = self.env['stock.quant.package'].create({})
+
+        picking = mo.picking_ids
+        picking.move_lines.move_line_ids.write({
+            'qty_done': 20,
+            'result_package_id': package.id,
+        })
+
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        backorder.move_lines.quantity_done = 80
+        backorder.button_validate()
+
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(backorder.state, 'done')
+        self.assertEqual(mo.move_raw_ids.move_line_ids.mapped('product_qty'), [20, 80])
+
 class TestKitPicking(common.TestMrpCommon):
     def setUp(self):
         super(TestKitPicking, self).setUp()
@@ -341,3 +375,46 @@ class TestKitPicking(common.TestMrpCommon):
         self.assertEqual(len(picking.move_lines), 7)
         for move_line in picking.move_lines:
             self.assertEqual(move_line.product_qty, self.expected_quantities[move_line.product_id])
+
+    def test_add_sml_with_kit_to_confirmed_picking(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        customer_location = self.env.ref('stock.stock_location_customers')
+        stock_location = warehouse.lot_stock_id
+        in_type = warehouse.in_type_id
+
+        self.bom_4.type = 'phantom'
+        kit = self.bom_4.product_id
+        compo = self.bom_4.bom_line_ids.product_id
+        product = self.env['product.product'].create({'name': 'Super Product', 'type': 'product'})
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': in_type.id,
+            'location_id': customer_location.id,
+            'location_dest_id': stock_location.id,
+            'move_lines': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'product_uom': product.uom_id.id,
+                'location_id': customer_location.id,
+                'location_dest_id': stock_location.id,
+            })]
+        })
+        receipt.action_confirm()
+
+        receipt.move_line_ids.qty_done = 1
+        receipt.move_line_ids = [(0, 0, {
+            'product_id': kit.id,
+            'qty_done': 1,
+            'product_uom_id': kit.uom_id.id,
+            'location_id': customer_location.id,
+            'location_dest_id': stock_location.id,
+        })]
+
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertRecordValues(receipt.move_lines, [
+            {'product_id': product.id, 'quantity_done': 1, 'state': 'done'},
+            {'product_id': compo.id, 'quantity_done': 1, 'state': 'done'},
+        ])

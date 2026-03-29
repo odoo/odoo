@@ -138,8 +138,9 @@ class ProjectTaskRecurrence(models.Model):
 
     @api.constrains('repeat_unit', 'repeat_on_month', 'repeat_day', 'repeat_type', 'repeat_until')
     def _check_repeat_until_month(self):
-        if self.filtered(lambda r: r.repeat_type == 'until' and r.repeat_unit == 'month' and r.repeat_until and r.repeat_on_month == 'date' and int(r.repeat_day) > r.repeat_until.day):
-            raise ValidationError('The end date should be after the day of the month')
+        if self.filtered(lambda r: r.repeat_type == 'until' and r.repeat_unit == 'month' and r.repeat_until and r.repeat_on_month == 'date'
+           and int(r.repeat_day) > r.repeat_until.day and monthrange(r.repeat_until.year, r.repeat_until.month)[1] != r.repeat_until.day):
+            raise ValidationError('The end date should be after the day of the month or the last day of the month')
 
     @api.model
     def _get_recurring_fields(self):
@@ -177,20 +178,21 @@ class ProjectTaskRecurrence(models.Model):
             rrule_kwargs['freq'] = MONTHLY
             if repeat_on_month == 'date':
                 start = date_start - relativedelta(days=1)
-                if repeat_type == 'until' and repeat_until > date_start:
-                    delta = relativedelta(repeat_until, date_start)
-                    count = delta.years * 12 + delta.months
-                for i in range(count):
+                start = start.replace(day=min(repeat_day, monthrange(start.year, start.month)[1]))
+                if start < date_start:
+                    # Ensure the next recurrence is in the future
+                    start += relativedelta(months=repeat_interval)
                     start = start.replace(day=min(repeat_day, monthrange(start.year, start.month)[1]))
-                    if i == 0 and start < date_start:
-                        # Ensure the next recurrence is in the future
-                        start += relativedelta(months=repeat_interval)
+                can_generate_date = (lambda: start <= repeat_until) if repeat_type == 'until' else (lambda: len(dates) < count)
+                while can_generate_date():
                     dates.append(start)
                     start += relativedelta(months=repeat_interval)
+                    start = start.replace(day=min(repeat_day, monthrange(start.year, start.month)[1]))
                 return dates
         elif repeat_unit == 'year':
             rrule_kwargs['freq'] = YEARLY
-            month = list(MONTHS.keys()).index(repeat_month) + 1
+            month = list(MONTHS.keys()).index(repeat_month) + 1 if repeat_month else date_start.month
+            repeat_month = repeat_month or list(MONTHS.keys())[month - 1]
             rrule_kwargs['bymonth'] = month
             if repeat_on_year == 'date':
                 rrule_kwargs['bymonthday'] = min(repeat_day, MONTHS.get(repeat_month))
@@ -245,7 +247,7 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_task(self):
         for recurrence in self:
-            task = recurrence.sudo().task_ids[-1]
+            task = max(recurrence.sudo().task_ids, key=lambda t: t.id)
             create_values = recurrence._new_task_values(task)
             new_task = self.env['project.task'].sudo().create(create_values)
             recurrence._create_subtasks(task, new_task, depth=3)
@@ -262,7 +264,7 @@ class ProjectTaskRecurrence(models.Model):
             if recurrence.repeat_type == 'after' and recurrence.recurrence_left == 0:
                 recurrence.next_recurrence_date = False
             else:
-                next_date = self._get_next_recurring_dates(tomorrow, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month, count=1)
+                next_date = self._get_next_recurring_dates(tomorrow, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(WEEKS.get(recurrence.repeat_week)), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month, count=1)
                 recurrence.next_recurrence_date = next_date[0] if next_date else False
 
     @api.model

@@ -12,6 +12,8 @@ odoo.define('payment.payment_form_mixin', require => {
          * @override
          */
         start: async function () {
+            this.txContext = {}; // Synchronously initialize txContext before any await.
+            Object.assign(this.txContext, this.$el.data());
             await this._super(...arguments);
             window.addEventListener('pageshow', function (event) {
                 if (event.persisted) {
@@ -19,8 +21,6 @@ odoo.define('payment.payment_form_mixin', require => {
                 }
             });
             this.$('[data-toggle="tooltip"]').tooltip();
-            this.txContext = {};
-            Object.assign(this.txContext, this.$el.data());
             const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
             if ($checkedRadios.length === 1) {
                 const checkedRadio = $checkedRadios[0];
@@ -104,6 +104,7 @@ odoo.define('payment.payment_form_mixin', require => {
                     .scrollIntoView({behavior: 'smooth', block: 'center'});
             }
             this._enableButton(); // Enable button back after it was disabled before processing
+            $('body').unblock(); // The page is blocked at this point, unblock it
         },
 
         /**
@@ -291,7 +292,8 @@ odoo.define('payment.payment_form_mixin', require => {
         _prepareTransactionRouteParams: function (provider, paymentOptionId, flow) {
             return {
                 'payment_option_id': paymentOptionId,
-                'reference_prefix': this.txContext.referencePrefix,
+                'reference_prefix': this.txContext.referencePrefix !== undefined
+                    ? this.txContext.referencePrefix.toString() : null,
                 'amount': this.txContext.amount !== undefined
                     ? parseFloat(this.txContext.amount) : null,
                 'currency_id': this.txContext.currencyId

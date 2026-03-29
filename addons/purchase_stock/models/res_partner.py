@@ -13,20 +13,27 @@ class ResPartner(models.Model):
     purchase_line_ids = fields.One2many('purchase.order.line', 'partner_id', string="Purchase Lines")
     on_time_rate = fields.Float(
         "On-Time Delivery Rate", compute='_compute_on_time_rate',
-        help="Over the past 12 months; the number of products received on time divided by the number of ordered products.")
+        help="Over the past x days; the number of products received on time divided by the number of ordered products."\
+            "x is either the System Parameter purchase_stock.on_time_delivery_days or the default 365")
 
     @api.depends('purchase_line_ids')
     def _compute_on_time_rate(self):
+        date_order_days_delta = int(self.env['ir.config_parameter'].sudo().get_param('purchase_stock.on_time_delivery_days', default='365'))
         order_lines = self.env['purchase.order.line'].search([
             ('partner_id', 'in', self.ids),
-            ('date_order', '>', fields.Date.today() - timedelta(365)),
+            ('date_order', '>', fields.Date.today() - timedelta(date_order_days_delta)),
             ('qty_received', '!=', 0),
-            ('order_id.state', 'in', ['done', 'purchase'])
-        ]).filtered(lambda l: l.product_id.sudo().product_tmpl_id.type != 'service')
+            ('order_id.state', 'in', ['done', 'purchase']),
+            ('product_id', 'in', self.env['product.product'].sudo()._search([('type', '!=', 'service')]))
+        ])
         lines_qty_done = defaultdict(lambda: 0)
         moves = self.env['stock.move'].search([
             ('purchase_line_id', 'in', order_lines.ids),
-            ('state', '=', 'done')]).filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
+            ('state', '=', 'done')])
+        # Fetch fields from db and put them in cache.
+        order_lines.read(['date_planned', 'partner_id', 'product_uom_qty'], load='')
+        moves.read(['purchase_line_id', 'date'], load='')
+        moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
         for move, qty_done in zip(moves, moves.mapped('quantity_done')):
             lines_qty_done[move.purchase_line_id.id] += qty_done
         partner_dict = {}

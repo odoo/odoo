@@ -165,8 +165,8 @@ class TestImage(TransactionCase):
         """Test the verify_resolution parameter of image_process."""
         res = tools.image_process(self.base64_1920x1080_jpeg, verify_resolution=True)
         self.assertNotEqual(res, False, "size ok")
-        base64_image_excessive = tools.image_to_base64(Image.new('RGB', (45001, 1000)), 'PNG')
-        with self.assertRaises(ValueError, msg="size excessive"):
+        base64_image_excessive = tools.image_to_base64(Image.new('RGB', (50001, 1000)), 'PNG')
+        with self.assertRaises(UserError, msg="size excessive"):
             tools.image_process(base64_image_excessive, verify_resolution=True)
 
     def test_13_image_process_quality(self):
@@ -198,6 +198,10 @@ class TestImage(TransactionCase):
         fill = 0
         bg = 1
 
+        # Images with small dimensions
+        small_width = tools.image_to_base64(Image.new('RGBA', (1, 16)), 'PNG')
+        small_height = tools.image_to_base64(Image.new('RGBA', (16, 1)), 'PNG')
+
         # Format of `tests`: (original base64 image, size parameter, crop parameter, res size, res color (top, bottom, left, right), text)
         tests = [
             (self.base64_1920x1080_png, None, None, (1920, 1080), (fill, fill, bg, bg), "horizontal, verify initial"),
@@ -209,6 +213,7 @@ class TestImage(TransactionCase):
             (self.base64_1920x1080_png, (512, 512), 'bottom', (512, 512), (fill, fill, fill, fill), "horizontal, type bottom"),
             (self.base64_1920x1080_png, (512, 512), 'wrong', (512, 512), (fill, fill, fill, fill), "horizontal, wrong crop value, use center"),
             (self.base64_1920x1080_png, (192, 0), None, (192, 108), (fill, fill, bg, bg), "horizontal, not cropped, just do resize"),
+            (small_height, (25, 50), 'center', (1, 1), (fill, fill, fill, fill), "horizontal, small height, size vertical"),
 
             (self.base64_1080x1920_png, None, None, (1080, 1920), (bg, bg, fill, fill), "vertical, verify initial"),
             (self.base64_1080x1920_png, (2000, 2000), 'center', (1080, 1080), (fill, fill, fill, fill), "vertical, crop biggest possible"),
@@ -219,6 +224,7 @@ class TestImage(TransactionCase):
             (self.base64_1080x1920_png, (512, 512), 'bottom', (512, 512), (fill, bg, fill, fill), "vertical, type bottom"),
             (self.base64_1080x1920_png, (512, 512), 'wrong', (512, 512), (fill, fill, fill, fill), "vertical, wrong crop value, use center"),
             (self.base64_1080x1920_png, (108, 0), None, (108, 192), (bg, bg, fill, fill), "vertical, not cropped, just do resize"),
+            (small_width, (50, 25), 'center', (1, 1), (fill, fill, fill, fill), "vertical, small width, size horizontal"),
         ]
 
         count = 0
@@ -244,7 +250,7 @@ class TestImage(TransactionCase):
             px = (right, half_height)
             self.assertEqual(image.getpixel(px), test[4][3], "%s - color right (%s, %s)" % (test[5], px[0], px[1]))
 
-        self.assertEqual(count, 2 * 9, "ensure the loop is ran")
+        self.assertEqual(count, 2 * 10, "ensure the loop is ran")
 
     def test_15_image_process_colorize(self):
         """Test the colorize parameter of image_process."""
@@ -285,6 +291,31 @@ class TestImage(TransactionCase):
         """Test that image_data_uri is working as expected."""
         self.assertEqual(tools.image_data_uri(self.base64_1x1_png), 'data:image/png;base64,' + self.base64_1x1_png.decode('ascii'))
 
+    def test_21_image_guess_size_from_field_name(self):
+        f = tools.image_guess_size_from_field_name
+        # Test case: empty field_name input
+        self.assertEqual(f(''), (0, 0))
+        # Test case: custom field_name input
+        self.assertEqual(f('custom_field'), (0, 0))
+        # Test case: field_name input that starts with 'x_'
+        self.assertEqual(f('x_field'), (0, 0))
+        # Test case: field_name input that starts with 'x_' and ends with a number less than 16
+        self.assertEqual(f('x_studio_image_1'), (0, 0))
+        # Test case: field_name input that starts with 'x_' and ends with a number greater than 16
+        self.assertEqual(f('x_studio_image_32'), (0, 0))
+        # Test case: field_name input that has a suffix less than 16
+        self.assertEqual(f('image_15'), (0, 0))
+        # Test case: field_name input that has a suffix equal to 16
+        self.assertEqual(f('image_16'), (16, 16))
+        # Test case: field_name input that has a suffix greater than 16
+        self.assertEqual(f('image_32'), (32, 32))
+        # Test case: field_name input that has a suffix with 2 numbers
+        self.assertEqual(f('image_1920_1080'), (1080, 1080))
+        # Test case: field_name input that has a float as suffix
+        self.assertEqual(f('image_32.5'), (0, 0))
+        # Test case: field_name input that has a suffix greater than 16 but no underscore
+        self.assertEqual(f('image32'), (0, 0))
+
     def _assertAlmostEqualSequence(self, rgb1, rgb2, delta=10):
         self.assertEqual(len(rgb1), len(rgb2))
         for index, t in enumerate(zip(rgb1, rgb2)):
@@ -314,3 +345,9 @@ class TestImage(TransactionCase):
         self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, 0)), expected[1])         # top/right
         self._assertAlmostEqualSequence(fixed_image.getpixel((0, size - 1)), expected[2])         # bottom/left
         self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, size - 1)), expected[3])  # bottom/right
+
+    def test_ptype_image_to_jpeg(self):
+        """converts to RGB when saving as JPEG"""
+        image1 = Image.new('P', (1, 1), color='red')
+        image2 = Image.new('RGB', (1, 1), color='red')
+        self.assertEqual(tools.image.image_apply_opt(image1, 'JPEG'), tools.image.image_apply_opt(image2, 'JPEG'))

@@ -136,9 +136,9 @@ class AccountAnalyticAccount(models.Model):
     # use auto_join to speed up name_search call
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, check_company=True)
 
-    balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance',  groups='account.group_account_readonly')
-    debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit', groups='account.group_account_readonly')
-    credit = fields.Monetary(compute='_compute_debit_credit_balance', string='Credit', groups='account.group_account_readonly')
+    balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
+    debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')
+    credit = fields.Monetary(compute='_compute_debit_credit_balance', string='Credit')
 
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True)
 
@@ -165,7 +165,10 @@ class AccountAnalyticAccount(models.Model):
             # we have to cut the search in two searches ... https://github.com/odoo/odoo/issues/25175
             partner_ids = self.env['res.partner']._search([('name', operator, name)], limit=limit, access_rights_uid=name_get_uid)
             domain_operator = '&' if operator == 'not ilike' else '|'
-            domain = [domain_operator, domain_operator, ('code', operator, name), ('name', operator, name), ('partner_id', 'in', partner_ids)]
+            partner_domain = [('partner_id', 'in', partner_ids)]
+            if operator == 'not ilike':
+                partner_domain = expression.OR([partner_domain, [('partner_id', '=', False)]])
+            domain = [domain_operator, domain_operator, ('code', operator, name), ('name', operator, name)] + partner_domain
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
 

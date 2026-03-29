@@ -5,9 +5,6 @@
         <xpath expr="//t[@t-set='method']" position="replace">
             <t t-set="method" t-value="'action_open_website_sale_onboarding_payment_acquirer'" />
         </xpath>
-        <xpath expr="//t[@t-set='state']" position="replace">
-            <t t-set="state" t-value="state.get('website_sale_onboarding_payment_acquirer_state')" />
-        </xpath>
     </template>
 
     <record id="action_open_website_sale_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">

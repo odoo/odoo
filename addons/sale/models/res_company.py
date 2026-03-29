@@ -38,6 +38,19 @@ class ResCompany(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_onboarding_payment_acquirer_wizard")
         return action
 
+    def _mark_payment_onboarding_step_as_done(self):
+        """ Override of payment to mark the sale onboarding step as done.
+
+        The payment onboarding step of Sales is only marked as done if it was started from Sales.
+        This prevents incorrectly marking the step as done if another module's payment onboarding
+        step was marked as done.
+
+        :return: None
+        """
+        super()._mark_payment_onboarding_step_as_done()
+        if self.sale_onboarding_payment_method:  # The onboarding step was started from Sales
+            self.set_onboarding_step_done('sale_onboarding_order_confirmation_state')
+
     def _get_sample_sales_order(self):
         """ Get a sample quotation or create one if it does not exist. """
         # use current user as partner

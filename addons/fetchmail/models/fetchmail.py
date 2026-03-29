@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import imaplib
 import logging
 import poplib
-from ssl import SSLError
-from socket import gaierror, timeout
+import socket
+
 from imaplib import IMAP4, IMAP4_SSL
 from poplib import POP3, POP3_SSL
+from socket import gaierror, timeout
+from ssl import SSLError
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -18,6 +21,43 @@ MAIL_TIMEOUT = 60
 
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
+
+# Add timeout to IMAP connections
+# HACK https://bugs.python.org/issue38615
+# TODO: clean in Python 3.9
+IMAP4._create_socket = lambda self, timeout=MAIL_TIMEOUT: socket.create_connection((self.host or None, self.port), timeout)
+
+
+def make_wrap_property(name):
+    return property(
+        lambda self: getattr(self.__obj__, name),
+        lambda self, value: setattr(self.__obj__, name, value),
+    )
+
+
+class IMAP4Connection:
+    """Wrapper around IMAP4 and IMAP4_SSL"""
+    def __init__(self, server, port, is_ssl):
+        self.__obj__ = IMAP4_SSL(server, port) if is_ssl else IMAP4(server, port)
+
+
+class POP3Connection:
+    """Wrapper around POP3 and POP3_SSL"""
+    def __init__(self, server, port, is_ssl, timeout=MAIL_TIMEOUT):
+        self.__obj__ = POP3_SSL(server, port, timeout=timeout) if is_ssl else POP3(server, port, timeout=timeout)
+
+
+IMAP_COMMANDS = [cmd.lower() for cmd in imaplib.Commands]
+IMAP_ATTRIBUTES = ['examine', 'login_cram_md5', 'move', 'recent', 'response', 'shutdown', 'unselect'] + IMAP_COMMANDS
+POP3_ATTRIBUTES = [
+    'apop', 'capa', 'close', 'dele', 'list', 'noop', 'pass_', 'quit', 'retr', 'rpop', 'rset', 'set_debuglevel', 'stat',
+    'stls', 'top', 'uidl', 'user', 'utf8'
+]
+for name in IMAP_ATTRIBUTES:
+    setattr(IMAP4Connection, name, make_wrap_property(name))
+
+for name in POP3_ATTRIBUTES:
+    setattr(POP3Connection, name, make_wrap_property(name))
 
 
 class FetchmailServer(models.Model):
@@ -101,26 +141,29 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
     def connect(self):
         self.ensure_one()
         if self.server_type == 'imap':
-            if self.is_ssl:
-                connection = IMAP4_SSL(self.server, int(self.port))
-            else:
-                connection = IMAP4(self.server, int(self.port))
-            connection.login(self.user, self.password)
+            connection = IMAP4Connection(self.server, int(self.port), self.is_ssl)
+            self._imap_login(connection)
         elif self.server_type == 'pop':
-            if self.is_ssl:
-                connection = POP3_SSL(self.server, int(self.port))
-            else:
-                connection = POP3(self.server, int(self.port))
+            connection = POP3Connection(self.server, int(self.port), self.is_ssl)
             #TODO: use this to remove only unread messages
             #connection.user("recent:"+server.user)
             connection.user(self.user)
             connection.pass_(self.password)
-        # Add timeout on socket
-        connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
+
+    def _imap_login(self, connection):
+        """Authenticate the IMAP connection.
+
+        Can be overridden in other module for different authentication methods.
+
+        :param connection: The IMAP connection to authenticate
+        """
+        self.ensure_one()
+        connection.login(self.user, self.password)
 
     def button_confirm_login(self):
         for server in self:
+            connection = False
             try:
                 connection = server.connect()
                 server.write({'state': 'done'})

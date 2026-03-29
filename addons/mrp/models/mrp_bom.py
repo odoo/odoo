@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS
+from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS, OR
 from odoo.tools import float_round
 
 from collections import defaultdict
@@ -42,7 +42,8 @@ class MrpBom(models.Model):
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits='Unit of Measure', required=True)
+        digits='Unit of Measure', required=True,
+        help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_product_uom_id, required=True,
@@ -99,16 +100,66 @@ class MrpBom(models.Model):
             self.operation_ids.bom_product_template_attribute_value_ids = False
             self.byproduct_ids.bom_product_template_attribute_value_ids = False
 
+    @api.constrains('active', 'product_id', 'product_tmpl_id', 'bom_line_ids')
+    def _check_bom_cycle(self):
+        boms_dict = dict()
+
+        def _check_cycle(components, finished_products):
+            """
+            Check whether the components are part of the finished products (-> cycle). Then, if
+            these components have a BoM, repeat the operation with the subcomponents (recursion).
+            The method will return the list of product variants that creates the cycle
+            """
+            products_to_find = self.env['product.product']
+
+            for component in components:
+                if component in finished_products:
+                    names = finished_products.mapped('display_name')
+                    raise ValidationError(_("The current configuration is incorrect because it would create a cycle "
+                                            "between these products: %s.") % ', '.join(names))
+                if component not in boms_dict:
+                    products_to_find |= component
+
+            bom_find_result = self._bom_find(products_to_find)
+            for component in components:
+                if component not in boms_dict:
+                    bom = bom_find_result[component]
+                    boms_dict[component] = bom
+                bom = boms_dict[component]
+                subcomponents = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(component)).product_id
+                if subcomponents:
+                    _check_cycle(subcomponents, finished_products | component)
+
+        boms_to_check = self
+        domain = []
+        for product in self.bom_line_ids.product_id:
+            domain = OR([domain, self._bom_find_domain(product)])
+        if domain:
+            boms_to_check |= self.env['mrp.bom'].search(domain)
+
+        for bom in boms_to_check:
+            if not bom.active:
+                continue
+            finished_products = bom.product_id or bom.product_tmpl_id.product_variant_ids
+            if bom.bom_line_ids.bom_product_template_attribute_value_ids:
+                grouped_by_components = defaultdict(lambda: self.env['product.product'])
+                for finished in finished_products:
+                    components = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(finished)).product_id
+                    grouped_by_components[components] |= finished
+                for components, finished in grouped_by_components.items():
+                    _check_cycle(components, finished)
+            else:
+                _check_cycle(bom.bom_line_ids.product_id, finished_products)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'sequence' in vals and self and self[-1].id == self._prefetch_ids[-1]:
+            self.browse(self._prefetch_ids)._check_bom_cycle()
+        return res
+
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids', 'byproduct_ids', 'operation_ids')
     def _check_bom_lines(self):
         for bom in self:
-            for bom_line in bom.bom_line_ids:
-                if bom.product_id:
-                    same_product = bom.product_id == bom_line.product_id
-                else:
-                    same_product = bom.product_tmpl_id == bom_line.product_id.product_tmpl_id
-                if same_product:
-                    raise ValidationError(_("BoM line product %s should not be the same as BoM product.") % bom.display_name)
             apply_variants = bom.bom_line_ids.bom_product_template_attribute_value_ids | bom.operation_ids.bom_product_template_attribute_value_ids | bom.byproduct_ids.bom_product_template_attribute_value_ids
             if bom.product_id and apply_variants:
                 raise ValidationError(_("You cannot use the 'Apply on Variant' functionality and simultaneously create a BoM for a specific variant."))
@@ -118,7 +169,7 @@ class MrpBom(models.Model):
                         "The attribute value %(attribute)s set on product %(product)s does not match the BoM product %(bom_product)s.",
                         attribute=ptav.display_name,
                         product=ptav.product_tmpl_id.display_name,
-                        bom_product=bom_line.parent_product_tmpl_id.display_name
+                        bom_product=bom.product_tmpl_id.display_name
                     ))
             for byproduct in bom.byproduct_ids:
                 if bom.product_id:
@@ -131,6 +182,18 @@ class MrpBom(models.Model):
                     raise ValidationError(_("By-products cost shares must be positive."))
             if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
+
+    @api.onchange('bom_line_ids', 'product_qty')
+    def onchange_bom_structure(self):
+        if self.type == 'phantom' and self._origin and self.env['stock.move'].search([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _(
+                        'The product has already been used at least once, editing its structure may lead to undesirable behaviours. '
+                        'You should rather archive the product and create a new one with a new bill of materials.'),
+                }
+            }
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -165,8 +228,9 @@ class MrpBom(models.Model):
         res = super().copy(default)
         for bom_line in res.bom_line_ids:
             if bom_line.operation_id:
-                operation = res.operation_ids.filtered(lambda op: op.name == bom_line.operation_id.name and op.workcenter_id == bom_line.operation_id.workcenter_id)
-                bom_line.operation_id = operation
+                operation = res.operation_ids.filtered(lambda op: op._get_comparison_values() == bom_line.operation_id._get_comparison_values())
+                # Two operations could have the same values so we take the first one
+                bom_line.operation_id = operation[:1]
         return res
 
     @api.model
@@ -207,7 +271,7 @@ class MrpBom(models.Model):
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
-        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids)]
+        domain = ['&', '|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids), ('active', '=', True)]
         if company_id or self.env.context.get('company_id'):
             domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
         if picking_type:

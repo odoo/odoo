@@ -104,6 +104,43 @@ class TestPickShip(TestStockCommon):
         })
         return picking_pick, picking_pack, picking_ship
 
+    def test_unreserve_only_required_quantity(self):
+        product_unreserve = self.env['product.product'].create({
+            'name': 'product unreserve',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(product_unreserve, stock_location, 4.0)
+        quants = self.env['stock.quant']._gather(product_unreserve, stock_location, strict=True)
+        self.assertEqual(quants[0].reserved_quantity, 0)
+        move = self.MoveObj.create({
+            'name': product_unreserve.name,
+            'product_id': product_unreserve.id,
+            'product_uom_qty': 3,
+            'product_uom': product_unreserve.uom_id.id,
+            'state': 'confirmed',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        move._action_assign()
+        self.assertEqual(quants[0].reserved_quantity, 3)
+        move_2 = self.MoveObj.create({
+            'name': product_unreserve.name,
+            'product_id': product_unreserve.id,
+            'product_uom_qty': 2,
+            'quantity_done':2,
+            'product_uom': product_unreserve.uom_id.id,
+            'state': 'confirmed',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        move_2._action_assign()
+        move_2._action_done()
+        quants = self.env['stock.quant']._gather(product_unreserve, stock_location, strict=True)
+        self.assertEqual(quants[0].reserved_quantity, 2)
+
+
     def test_mto_moves(self):
         """
             10 in stock, do pick->ship and check ship is assigned when pick is done, then backorder of ship
@@ -983,14 +1020,18 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(delivery_order.move_lines[1].state, 'cancel')
 
     def test_assign_deadline(self):
-        """ Check if similar items with shorter deadline are prioritized.
-        """
+        """ Check if similar items with shorter deadline are prioritized. """
         delivery_order = self.PickingObj.create({
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
         })
-        self.MoveObj.create({
+        # Avoid to merge move3 and move4 for the test case
+        self.env['ir.config_parameter'].create({
+            'key': 'stock.merge_only_same_date',
+            'value': True
+        })
+        move1 = self.MoveObj.create({
             'name': "move1",
             'product_id': self.productA.id,
             'product_uom_qty': 4,
@@ -1000,7 +1041,7 @@ class TestSinglePicking(TestStockCommon):
             'location_dest_id': self.customer_location,
             'date_deadline': datetime.now() + relativedelta(days=1)
         })
-        self.MoveObj.create({
+        move2 = self.MoveObj.create({
             'name': "move2",
             'product_id': self.productA.id,
             'product_uom_qty': 4,
@@ -1010,6 +1051,26 @@ class TestSinglePicking(TestStockCommon):
             'location_dest_id': self.customer_location,
             'date_deadline': datetime.now() + relativedelta(days=2)
         })
+        move3 = self.MoveObj.create({
+            'name': "move3",
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date': datetime.now() + relativedelta(days=10)
+        })
+        move4 = self.MoveObj.create({
+            'name': "move4",
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date': datetime.now() + relativedelta(days=0)
+        })
 
         # make some stock
         pack_location = self.env['stock.location'].browse(self.pack_location)
@@ -1018,27 +1079,29 @@ class TestSinglePicking(TestStockCommon):
         # assign to partially available
         delivery_order.action_confirm()
         delivery_order.action_assign()
-        reservedMove1 = sum([x.reserved_availability for x in delivery_order.move_lines if x.name == "move1"])
-        reservedMove2 = sum([x.reserved_availability for x in delivery_order.move_lines if x.name == "move2"])
 
-        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
-        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
-
-        delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
-        delivery_order._action_done()
+        self.assertEqual(move1.reserved_availability, 2, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 0, "Later deadline should not have reserved quantity")
 
         # add new stock
         self.StockQuantObj._update_available_quantity(self.productA, pack_location, 2)
+        delivery_order.action_assign()
+        self.assertEqual(move1.reserved_availability, 4, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 0, "Later deadline should not have reserved quantity")
 
-        # assign new stock to backorder
-        backorder = delivery_order.backorder_ids
-        backorder.action_assign()
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 1)
+        delivery_order.action_assign()
+        self.assertEqual(move1.reserved_availability, 4, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 1, "Move with deadline should take priority")
+        self.assertEqual(move3.reserved_availability, 0, "Move without deadline should not have reserved quantity")
+        self.assertEqual(move4.reserved_availability, 0, "Move without deadline should not have reserved quantity")
 
-        reservedMove1 = sum([x.reserved_availability for x in backorder.move_lines if x.name == "move1"])
-        reservedMove2 = sum([x.reserved_availability for x in backorder.move_lines if x.name == "move2"])
-
-        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
-        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 4)
+        delivery_order.action_assign()
+        self.assertEqual(move1.reserved_availability, 4, "Earlier deadline should have reserved quantity")
+        self.assertEqual(move2.reserved_availability, 4, "Move with deadline should take priority")
+        self.assertEqual(move3.reserved_availability, 0, "Latest move without deadline should not have reserved quantity")
+        self.assertEqual(move4.reserved_availability, 1, "Earlier move without deadline should take the priority")
 
     def test_extra_move_1(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase
@@ -1631,6 +1694,71 @@ class TestSinglePicking(TestStockCommon):
         })
         move_line.lot_id = lot1
         delivery_order._action_done()
+
+    def test_use_create_lot_use_existing_lot_5(self):
+        """Check if a quant without lot exist, it will be decrease even if a
+        quant with the right lot exists but is empty"""
+        self.env['stock.picking.type']\
+            .browse(self.picking_type_in)\
+            .write({
+                'use_create_lots': False,
+                'use_existing_lots': False,
+            })
+        self.productA.tracking = 'lot'
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        receipt.action_confirm()
+        receipt.move_lines.quantity_done = 2
+
+        receipt._action_done()
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.productA.id),
+            ('location_id', '=', self.stock_location),
+            ('lot_id', '=', False),
+        ])
+        self.assertTrue(quant, 'A quant without lot should exist')
+        self.assertEqual(quant.quantity, 2, 'The quantity of the quant without lot should be 2')
+        lot = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.productA.id,
+            'company_id': self.env.company.id,
+        })
+        new_quant = self.env['stock.quant'].create({
+            'product_id': self.productA.id,
+            'location_id': self.stock_location,
+            'lot_id': lot.id,
+        })
+        out_move = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.move_line_ids.lot_id = lot
+        out_move.move_line_ids.qty_done = 1
+        out_move._action_done()
+        self.assertEqual(new_quant.quantity, 0, 'The quant with lot should remain untouched  1')
+        self.assertEqual(quant.quantity, 1, 'The quantity of the quant without lot should be 1')
 
     def test_merge_moves_1(self):
         receipt = self.env['stock.picking'].create({

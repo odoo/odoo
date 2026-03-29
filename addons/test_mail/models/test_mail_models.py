@@ -27,6 +27,39 @@ class MailTestGateway(models.Model):
     email_from = fields.Char()
     custom_field = fields.Char()
 
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        """ Check override of 'message_new' allowing to update record values
+        base on incoming email. """
+        defaults = {
+            'email_from': msg_dict.get('from'),
+        }
+        defaults.update(custom_values or {})
+        return super().message_new(msg_dict, custom_values=defaults)
+
+
+class MailTestGatewayGroups(models.Model):
+    """ A model looking like discussion channels / groups (flat thread and
+    alias). Used notably for advanced gatewxay tests. """
+    _description = 'Channel/Group-like Chatter Model for Mail Gateway'
+    _name = 'mail.test.gateway.groups'
+    _inherit = ['mail.thread.blacklist', 'mail.alias.mixin']
+    _mail_flat_thread = False
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    custom_field = fields.Char()
+    customer_id = fields.Many2one('res.partner', 'Customer')
+
+    def _alias_get_creation_values(self):
+        values = super(MailTestGatewayGroups, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.test.gateway.groups').id
+        if self.id:
+            values['alias_force_thread_id'] = self.id
+            values['alias_parent_thread_id'] = self.id
+        return values
+
 
 class MailTestStandard(models.Model):
     """ This model can be used in tests when automatic subscription and simple

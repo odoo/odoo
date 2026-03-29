@@ -22,12 +22,26 @@ odoo.define('payment_stripe.payment_form', require => {
                 return this._super(...arguments);
             }
 
-            const stripeJS = Stripe(processingValues['publishable_key']);
+            const stripeJS = Stripe(processingValues['publishable_key'],
+                this._prepareStripeOptions(processingValues));
             stripeJS.redirectToCheckout({
                 sessionId: processingValues['session_id']
             });
         },
 
+        /**
+         * Prepare the options to init the Stripe JS Object
+         *
+         * Function overriden in internal module
+         *
+         * @param {object} processingValues
+         * @return {object}
+         */
+        _prepareStripeOptions: function (processingValues) {
+            return {
+                'apiVersion': '2019-05-16',  // The API version of Stripe implemented in this module
+            };
+        },
     };
 
     checkoutForm.include(stripeMixin);

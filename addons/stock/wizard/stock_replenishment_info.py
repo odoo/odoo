@@ -49,7 +49,7 @@ class StockReplenishmentInfo(models.TransientModel):
         for replenishment_report in self:
             replenishment_history = []
             today = fields.Datetime.now()
-            first_month = subtract(today, month=2)
+            first_month = subtract(today, months=2)
             date_from, dummy = get_month(first_month)
             dummy, date_to = get_month(today)
             domain = [

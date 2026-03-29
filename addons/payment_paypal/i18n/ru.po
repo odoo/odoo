@@ -8,15 +8,16 @@
 # Oleg Kuryan <oleg@ventor.tech>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,12 +30,6 @@ msgid ""
 "<br/><br/>\n"
 "                Thanks,<br/>\n"
 "                <b>The Odoo Team</b>"
-msgstr ""
-
-#. module: payment_paypal
-#: code:addons/payment_paypal/models/payment_acquirer.py:0
-#, python-format
-msgid "Add your PayPal account to Odoo"
 msgstr ""
 
 #. module: payment_paypal
@@ -67,6 +62,7 @@ msgstr ""
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
 msgstr ""
+"Отсутствует значение для txn_id (%(txn_id)s) или txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/payment_transaction.py:0
@@ -83,12 +79,12 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Маркер удостоверения PDT"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Тип транзакции PayPal"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -150,6 +146,28 @@ msgstr ""
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
+msgstr ""
+"Публичная рабочая электронная почта, используемая исключительно для "
+"идентификации счета в PayPal"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
+msgstr ""
+"Статус транзакции со ссылкой %(ref)s не был синхронизирован, потому что на "
+"панели PayPal не включена опция \"Передача данных платежа\"."
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the PDT Identify Token is not configured on the acquirer "
+"%(acq_link)s."
 msgstr ""
 
 #. module: payment_paypal

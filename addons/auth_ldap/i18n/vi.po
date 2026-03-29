@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,6 +38,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"Bộ lọc dùng để tra cứu tài khoản người dùng trong cơ sở dữ liệu LDAP. Đây là một bộ lọc LDAP tùy ý trong biểu diễn chuỗi. Mọi phần giữ chỗ `%s` sẽ được thay thế bằng thông tin đăng nhập (mã định danh) do người dùng cung cấp, bộ lọc phải chứa ít nhất một phần giữ chỗ như vậy.\n"
+"\n"
+"Bộ lọc phải cho ra chính xác một (1) kết quả, nếu không thông tin đăng nhập sẽ bị coi là không hợp lệ.\n"
+"\n"
+"Ví dụ (thuộc tính thực tế phụ thuộc vào thiết lập và máy chủ LDAP):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    hoặc\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -88,6 +101,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN của phạm vi tìm kiếm người dùng: tất cả các phần phụ thuộc của cơ sở này "
+"sẽ được tìm kiếm cho người dùng."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name

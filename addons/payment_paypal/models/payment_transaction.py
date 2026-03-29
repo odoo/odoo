@@ -52,6 +52,7 @@ class PaymentTransaction(models.Model):
             'item_number': self.reference,
             'last_name': partner_last_name,
             'lc': self.partner_lang,
+            'no_shipping': '1',  # Do not prompt for a delivery address.
             'notify_url': notify_url,
             'return_url': urls.url_join(base_url, PaypalController._return_url),
             'state': self.partner_state_id.name,
@@ -94,6 +95,13 @@ class PaymentTransaction(models.Model):
         if self.provider != 'paypal':
             return
 
+        amount = data.get('amt') or data.get('mc_gross')
+        currency_code = data.get('cc') or data.get('mc_currency')
+        assert amount and currency_code, 'PayPal: missing amount or currency'
+        assert self.currency_id.compare_amounts(float(amount), self.amount + self.fees) == 0, \
+            'PayPal: mismatching amounts'
+        assert currency_code == self.currency_id.name, 'PayPal: mismatching currency codes'
+
         txn_id = data.get('txn_id')
         txn_type = data.get('txn_type')
         if not all((txn_id, txn_type)):
@@ -107,11 +115,6 @@ class PaymentTransaction(models.Model):
         self.paypal_type = txn_type
 
         payment_status = data.get('payment_status')
-
-        if payment_status in PAYMENT_STATUS_MAPPING['pending'] + PAYMENT_STATUS_MAPPING['done'] \
-            and not (self.acquirer_id.paypal_pdt_token and self.acquirer_id.paypal_seller_account):
-            # If a payment is made on an account waiting for configuration, send a reminder email
-            self.acquirer_id._paypal_send_configuration_reminder()
 
         if payment_status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending(state_message=data.get('pending_reason'))

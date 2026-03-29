@@ -15,6 +15,10 @@ class TestMailSchedule(TestEventCommon, MockEmail):
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_mail_schedule(self):
         """ Test mail scheduling for events """
+        self.env.company.write({
+            'name': 'YourCompany',
+            'email': 'info@yourcompany.example.com',
+        })
         event_cron_id = self.env.ref('event.event_mail_scheduler')
 
         # deactivate other schedulers to avoid messing with crons
@@ -273,3 +277,67 @@ class TestMailSchedule(TestEventCommon, MockEmail):
             fields_values={'subject': '%s: today' % test_event.name,
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    def test_archived_event_mail_schedule(self):
+        """ Test mail scheduling for archived events """
+        event_cron_id = self.env.ref('event.event_mail_scheduler')
+
+        # deactivate other schedulers to avoid messing with crons
+        self.env['event.mail'].search([]).unlink()
+
+        # freeze some datetimes, and ensure more than 1D+1H before event starts
+        # to ease time-based scheduler check
+        now = datetime(2023, 7, 24, 14, 30, 15)
+        event_date_begin = datetime(2023, 7, 26, 8, 0, 0)
+        event_date_end = datetime(2023, 7, 28, 18, 0, 0)
+
+        with freeze_time(now):
+            test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
+                'name': 'TestEventMail',
+                'auto_confirm': True,
+                'date_begin': event_date_begin,
+                'date_end': event_date_end,
+                'event_mail_ids': [
+                    (0, 0, {  # right at subscription
+                        'interval_unit': 'now',
+                        'interval_type': 'after_sub',
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                    (0, 0, {  # 3 hours before event
+                        'interval_nbr': 3,
+                        'interval_unit': 'hours',
+                        'interval_type': 'before_event',
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')})
+                ]
+            })
+
+        # check event scheduler
+        scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id)])
+        self.assertEqual(len(scheduler), 2, 'event: wrong scheduler creation')
+
+        event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
+
+        with freeze_time(now), self.mock_mail_gateway():
+            self.env['event.registration'].with_user(self.user_eventuser).create({
+                'event_id': test_event.id,
+                'name': 'Reg1',
+                'email': 'reg1@example.com',
+            })
+            self.env['event.registration'].with_user(self.user_eventuser).create({
+                'event_id': test_event.id,
+                'name': 'Reg2',
+                'email': 'reg2@example.com',
+            })
+        # check emails effectively sent
+        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
+
+        # Archive the Event
+        test_event.action_archive()
+
+        # execute cron to run schedulers
+        now_start = event_date_begin + relativedelta(hours=-3)
+        with freeze_time(now_start), self.mock_mail_gateway():
+            event_cron_id.method_direct_trigger()
+
+        # check that scheduler is not executed
+        self.assertFalse(event_prev_scheduler.mail_done, 'event: reminder scheduler should should have run')

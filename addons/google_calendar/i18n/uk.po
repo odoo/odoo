@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,7 +24,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s та %(length)s наступні"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -48,7 +49,7 @@ msgstr "%(reminder_type)s - %(duration)s хвилин"
 #: code:addons/google_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
 msgid "&nbsp;Google"
-msgstr ""
+msgstr "&nbsp;Google"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -83,6 +84,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"Під час створення токену виникла помилка. Ваш код авторизації може бути "
+"недійсним або вже протермінований [%s]. Вам слід перевірити ваш Client ID та"
+" секретний ключ на платформі Google API або спробуйте зупинити і "
+"перезапустити вашу синхронізацію календаря."
 
 #. module: google_calendar
 #. openerp-web
@@ -218,7 +223,7 @@ msgstr "Google"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_cal_account_id
 msgid "Google Cal Account"
-msgstr ""
+msgstr "Обліковий запис Google Cal"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
@@ -228,7 +233,7 @@ msgstr "Google Календар"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_credentials
 msgid "Google Calendar Account Data"
-msgstr ""
+msgstr "Дані облікового запису Google Календаря"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
@@ -258,13 +263,13 @@ msgstr "Google Calendar: синхронізація"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr ""
+msgstr "Google синхронізація призупинена"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
-msgstr ""
+msgstr "Google дав таке пояснення: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -407,18 +412,20 @@ msgid ""
 "The following event could not be synced with Google Calendar. </br>It will "
 "not be synced as long at it is not updated.</br>%(reason)s"
 msgstr ""
+"Таку подію не вдалося синхронізувати з Google Календарем. </br>Він не буде "
+"синхронізований, поки він не оновлюється.</br>%(reason)s"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "Синхронізація з Google календарем успішно зупинена."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "Користувач уже має обліковий запис Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -461,6 +468,8 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
 msgstr ""
+"Ви збираєтеся припинити синхронізацію свого календаря з Google. Ви впевнені,"
+" що хочете продовжити?"
 
 #. module: google_calendar
 #. openerp-web
@@ -475,11 +484,11 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "невизначений час"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
-msgstr ""
+msgstr "схоже, у вас немає дозволу змінювати цю подію в Google календарі"

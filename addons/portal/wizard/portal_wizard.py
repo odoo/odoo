@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -173,11 +172,7 @@ class PortalWizardUser(models.TransientModel):
 
         # remove the user from the portal group
         if user_sudo and user_sudo.has_group('base.group_portal'):
-            # if user belongs to portal only, deactivate it
-            if len(user_sudo.groups_id) <= 1:
-                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
-            else:
-                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)]})
+            user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
 
         return self.wizard_id._action_open_modal()
 
@@ -236,10 +231,26 @@ class PortalWizardUser(models.TransientModel):
         if not email:
             raise UserError(_('The contact "%s" does not have a valid email.', self.partner_id.name))
 
-        user = self.env['res.users'].sudo().with_context(active_test=False).search([
-            ('id', '!=', self.user_id.id),
-            ('login', '=ilike', email),
-        ])
+        user = self.env['res.users'].sudo().with_context(active_test=False).search(
+            self._get_similar_user_domain(email),
+            limit=1
+        )
 
         if user:
-            raise UserError(_('The contact "%s" has the same email has an existing user (%s).', self.partner_id.name, user.name))
+            raise UserError(self._get_same_email_error_message(user.name))
+
+    def _get_similar_user_domain(self, email):
+        """ Returns the domain needed to find the users that have the same email
+        as the current partner.
+        :param string email: the email of the current partner
+        """
+        return [('id', '!=', self.user_id.id),
+                ('login', '=ilike', email)]
+
+    def _get_same_email_error_message(self, user_name):
+        """ Returns the error message in case the current partner has the same
+        email as an existing user.
+        :param string user_name: the name of the user that has the same email
+        as the current partner
+        """
+        return _('The contact "%s" has the same email has an existing user (%s).', self.partner_id.name, user_name)

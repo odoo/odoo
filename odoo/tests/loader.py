@@ -2,8 +2,10 @@ import importlib
 import inspect
 import itertools
 import logging
+import sys
 import threading
 import unittest
+from pathlib import Path
 
 from .. import tools
 from .common import TagsSelector, OdooSuite
@@ -16,13 +18,7 @@ def get_test_modules(module):
     feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
     results = _get_tests_modules('odoo.addons', module)
-
-    try:
-        importlib.import_module('odoo.upgrade.%s' % module)
-    except ImportError:
-        pass
-    else:
-        results += _get_tests_modules('odoo.upgrade', module)
+    results += list(_get_upgrade_test_modules(module))
 
     return results
 
@@ -50,6 +46,29 @@ def _get_tests_modules(path, module):
               if name.startswith('test_')]
     return result
 
+def _get_upgrade_test_modules(module):
+    upgrade_modules = (
+        f"odoo.upgrade.{module}",
+        f"odoo.addons.{module}.migrations",
+        f"odoo.addons.{module}.upgrades",
+    )
+    for module_name in upgrade_modules:
+        try:
+            upg = importlib.import_module(module_name)
+        except ImportError:
+            continue
+
+        for path in map(Path, upg.__path__):
+            for test in path.glob("tests/test_*.py"):
+                spec = importlib.util.spec_from_file_location(f"{upg.__name__}.tests.{test.stem}", test)
+                if not spec:
+                    continue
+                pymod = importlib.util.module_from_spec(spec)
+                sys.modules[spec.name] = pymod
+                spec.loader.exec_module(pymod)
+                yield pymod
+
+
 def make_suite(module_names, position='at_install'):
     """ Creates a test suite for all the tests in the specified modules,
     filtered by the provided ``position`` and the current test tags
@@ -72,12 +91,12 @@ def run_suite(suite, module_name=None):
     # avoid dependency hell
     from ..modules import module
     module.current_test = module_name
-    threading.currentThread().testing = True
+    threading.current_thread().testing = True
 
     results = OdooTestResult()
     suite(results)
 
-    threading.currentThread().testing = False
+    threading.current_thread().testing = False
     module.current_test = None
     return results
 

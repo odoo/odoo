@@ -124,6 +124,17 @@
     }
 }
 
+// This function checks if the color ($color) has enough contrast to be visible
+// on a background with the color ($background-color). If not, it is replaced
+// with $light (if too dark) or $dark (if too light).
+@function adjust-color-to-background($color, $background-color, $light: $yiq-text-light, $dark: $yiq-text-dark) {
+    @return if(
+        color-yiq($color) == $yiq-text-dark,
+        color-yiq($background-color, $color, $dark),
+        color-yiq($background-color, $light, $color)
+    );
+}
+
 // ------------------------------------------------------------------
 // Padding
 // ------------------------------------------------------------------
@@ -288,6 +299,7 @@
             border-left-color: nth($o-colors, $size);
             &:after {
                 background-color: nth($o-colors, $size);
+                outline: 1px solid nth($o-colors, $size);
             }
         }
     }
@@ -456,7 +468,7 @@
 @mixin print-variable($key, $value) {
     @if $value != null {
         $-type: type-of($value);
-        @if $-type == 'string' {
+        @if $-type == 'string' and str-index($value, 'var(') != 1 {
             --#{$key}: '#{$value}';
         } @else if $-type == 'list' {
             --#{$key}: #{inspect($value)};

@@ -155,6 +155,13 @@ var MediaDialog = Dialog.extend({
         var _super = this._super;
         var args = arguments;
         return this.activeWidget.save().then(function (data) {
+            if (self.activeWidget.error) {
+                self.displayNotification({
+                    type: 'danger',
+                    message: self.activeWidget.error,
+                });
+                return;
+            }
             if (self.activeWidget !== self.initiallyActiveWidget) {
                 self._clearWidgets();
             }
@@ -168,6 +175,7 @@ var MediaDialog = Dialog.extend({
             self.final_data = data;
             _super.apply(self, args);
             $(data).trigger('content_changed');
+            $(data).trigger('replace_target', data);
         });
     },
 

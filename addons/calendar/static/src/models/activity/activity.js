@@ -48,7 +48,7 @@ registerInstancePatchModel('mail.activity', 'calendar/static/src/models/activity
      */
     async edit() {
         if (!this.calendar_event_id){
-            this._super();
+            await this._super();
         } else {
             const action = await this.async(() => this.env.services.rpc({
                 model: 'mail.activity',

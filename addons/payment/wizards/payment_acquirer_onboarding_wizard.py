@@ -19,7 +19,7 @@ class PaymentWizard(models.TransientModel):
         ('new_user', "I don't have a Paypal account"),
         ('existing_user', 'I have a Paypal account')], string="Paypal User Type", default='new_user')
     paypal_email_account = fields.Char("Email", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_email_account'))
-    paypal_seller_account = fields.Char("Merchant Account ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_seller_account'))
+    paypal_seller_account = fields.Char("Merchant Account ID")
     paypal_pdt_token = fields.Char("PDT Identity Token", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_pdt_token'))
 
     stripe_secret_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_secret_key'))
@@ -67,13 +67,16 @@ class PaymentWizard(models.TransientModel):
         ]).mapped('name')
 
         if 'payment_paypal' in installed_modules:
-            acquirer = self.env.ref('payment.payment_acquirer_paypal')
+            acquirer = self.env['payment.acquirer'].search(
+                [('company_id', '=', self.env.company.id), ('name', '=', 'PayPal')], limit=1
+            )
             self._payment_acquirer_onboarding_cache['paypal_email_account'] = acquirer['paypal_email_account'] or self.env.user.email or ''
-            self._payment_acquirer_onboarding_cache['paypal_seller_account'] = acquirer['paypal_seller_account']
             self._payment_acquirer_onboarding_cache['paypal_pdt_token'] = acquirer['paypal_pdt_token']
 
         if 'payment_stripe' in installed_modules:
-            acquirer = self.env.ref('payment.payment_acquirer_stripe')
+            acquirer = self.env['payment.acquirer'].search(
+                [('company_id', '=', self.env.company.id), ('name', '=', 'Stripe')], limit=1
+            )
             self._payment_acquirer_onboarding_cache['stripe_secret_key'] = acquirer['stripe_secret_key']
             self._payment_acquirer_onboarding_cache['stripe_publishable_key'] = acquirer['stripe_publishable_key']
 
@@ -98,6 +101,9 @@ class PaymentWizard(models.TransientModel):
     def add_payment_methods(self):
         """ Install required payment acquiers, configure them and mark the
             onboarding step as done."""
+        if self.payment_method == 'stripe' and not self.stripe_publishable_key:
+            self.env.company.payment_onboarding_payment_method = self.payment_method
+            return self._start_stripe_onboarding()
 
         if self.payment_method == 'paypal':
             self._install_module('payment_paypal')
@@ -112,17 +118,33 @@ class PaymentWizard(models.TransientModel):
             self.env.company.payment_onboarding_payment_method = self.payment_method
 
             # create a new env including the freshly installed module(s)
-            new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
+            new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
             if self.payment_method == 'paypal':
-                new_env.ref('payment.payment_acquirer_paypal').write({
+                acquirer = new_env['payment.acquirer'].search(
+                    [('name', '=', 'PayPal'), ('company_id', '=', self.env.company.id)], limit=1
+                )
+                if not acquirer:
+                    base_acquirer = self.env.ref('payment.payment_acquirer_paypal')
+                    # Use sudo to access payment acquirer record that can be in different company.
+                    acquirer = base_acquirer.sudo().copy(
+                        default={'company_id': self.env.company.id}
+                    )
+                    acquirer.company_id = self.env.company.id
+                default_journal = new_env['account.journal'].search(
+                    [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
+                )
+                acquirer.write({
                     'paypal_email_account': self.paypal_email_account,
                     'paypal_seller_account': self.paypal_seller_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
                     'state': 'enabled',
+                    'journal_id': acquirer.journal_id or default_journal
                 })
             if self.payment_method == 'stripe':
-                new_env.ref('payment.payment_acquirer_stripe').write({
+                new_env['payment.acquirer'].search(
+                    [('name', '=', 'Stripe'), ('company_id', '=', self.env.company.id)], limit=1
+                ).write({
                     'stripe_secret_key': self.stripe_secret_key,
                     'stripe_publishable_key': self.stripe_publishable_key,
                     'state': 'enabled',
@@ -156,3 +178,8 @@ class PaymentWizard(models.TransientModel):
         self._set_payment_acquirer_onboarding_step_done()
         action = self.env["ir.actions.actions"]._for_xml_id("payment.action_payment_acquirer")
         return action
+
+    def _start_stripe_onboarding(self):
+        """ Start Stripe Connect onboarding. """
+        menu_id = self.env.ref('payment.payment_acquirer_menu').id
+        return self.env.company._run_payment_onboarding_step(menu_id)

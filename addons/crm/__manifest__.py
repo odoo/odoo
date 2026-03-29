@@ -85,6 +85,9 @@
             'crm/static/src/scss/crm.scss',
             'crm/static/src/scss/crm_team_member_views.scss',
         ],
+        "web.assets_backend_legacy_lazy": [
+            'crm/static/src/js/*_legacy.js',
+        ],
         'web.assets_tests': [
             'crm/static/tests/tours/**/*',
         ],

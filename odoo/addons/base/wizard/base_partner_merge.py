@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import defaultdict
 import functools
 import itertools
 import logging
@@ -65,7 +66,7 @@ class MergePartnerAutomatic(models.TransientModel):
     number_group = fields.Integer('Group of Contacts', readonly=True)
     current_line_id = fields.Many2one('base.partner.merge.line', string='Current Line')
     line_ids = fields.One2many('base.partner.merge.line', 'wizard_id', string='Lines')
-    partner_ids = fields.Many2many('res.partner', string='Contacts')
+    partner_ids = fields.Many2many('res.partner', string='Contacts', context={'active_test': False})
     dst_partner_id = fields.Many2one('res.partner', string='Destination Contact')
 
     exclude_contact = fields.Boolean('A user associated to the contact')
@@ -152,22 +153,6 @@ class MergePartnerAutomatic(models.TransientModel):
                     with mute_logger('odoo.sql_db'), self._cr.savepoint():
                         query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
                         self._cr.execute(query, (dst_partner.id, tuple(src_partners.ids),))
-
-                        # handle the recursivity with parent relation
-                        if column == Partner._parent_name and table == 'res_partner':
-                            query = """
-                                WITH RECURSIVE cycle(id, parent_id) AS (
-                                        SELECT id, parent_id FROM res_partner
-                                    UNION
-                                        SELECT  cycle.id, res_partner.parent_id
-                                        FROM    res_partner, cycle
-                                        WHERE   res_partner.id = cycle.parent_id AND
-                                                cycle.id != cycle.parent_id
-                                )
-                                SELECT id FROM cycle WHERE id = parent_id AND id = %s
-                            """
-                            self._cr.execute(query, (dst_partner.id,))
-                            # NOTE JEM : shouldn't we fetch the data ?
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
@@ -217,7 +202,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 # unknown model or field => skip
                 continue
 
-            if field.compute is not None:
+            if Model._abstract or field.compute is not None:
                 continue
 
             for partner in src_partners:
@@ -250,8 +235,10 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item.id
             else:
                 return item
+
         # get all fields that are not computed or x2many
         values = dict()
+        values_by_company = defaultdict(dict)   # {company: vals}
         for column in model_fields:
             field = dst_partner._fields[column]
             if field.type not in ('many2many', 'one2many') and field.compute is None:
@@ -261,10 +248,21 @@ class MergePartnerAutomatic(models.TransientModel):
                             values[column] += write_serializer(item[column])
                         else:
                             values[column] = write_serializer(item[column])
+            elif field.company_dependent and column in summable_fields:
+                # sum the values of partners for each company; use sudo() to
+                # compute the sum on all companies, including forbidden ones
+                partners = (src_partners + dst_partner).sudo()
+                for company in self.env['res.company'].sudo().search([]):
+                    values_by_company[company][column] = sum(
+                        partners.with_company(company).mapped(column)
+                    )
+
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
         dst_partner.write(values)
+        for company, vals in values_by_company.items():
+            dst_partner.with_company(company).sudo().write(vals)
         # try to update the parent_id
         if parent_id and parent_id != dst_partner.id:
             try:
@@ -308,10 +306,6 @@ class MergePartnerAutomatic(models.TransientModel):
             dst_partner = ordered_partners[-1]
             src_partners = ordered_partners[:-1]
         _logger.info("dst_partner: %s", dst_partner.id)
-
-        # FIXME: is it still required to make and exception for account.move.line since accounting v9.0 ?
-        if extra_checks and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])]):
-            raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
         # Make the company of all related users consistent with destination partner company
         if dst_partner.company_id:
@@ -391,7 +385,7 @@ class MergePartnerAutomatic(models.TransientModel):
 
         for field_name in self._fields:
             if field_name.startswith(group_by_prefix):
-                if getattr(self, field_name, False):
+                if field_name in self and self[field_name]:
                     groups.append(field_name[len(group_by_prefix):])
 
         if not groups:
@@ -416,7 +410,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param partner_ids : list of partner ids to sort
         """
         return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, (p.create_date or datetime.datetime(1970, 1, 1))),
+            key=lambda p: (not p.active, (p.create_date or datetime.datetime(1970, 1, 1))),
             reverse=True,
         )
 

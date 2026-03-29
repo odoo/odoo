@@ -37,7 +37,7 @@ const ShareWidget = publicWidget.Widget.extend({
                 });
             });
             if ($a.attr('target') && $a.attr('target').match(/_blank/i) && !$a.closest('.o_editable').length) {
-                $a.on('click', function () {
+                $a.on('click.share_widget', function () {
                     window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
                     return false;
                 });
@@ -46,6 +46,10 @@ const ShareWidget = publicWidget.Widget.extend({
 
         return this._super.apply(this, arguments);
     },
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.$('a').off('.share_widget');
+    }
 });
 
 publicWidget.registry.share = ShareWidget;

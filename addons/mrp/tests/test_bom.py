@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions, Command
+from odoo import exceptions, Command, fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, float_repr
+
+from freezegun import freeze_time
 
 
+@freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
     def test_01_explode(self):
@@ -155,14 +158,12 @@ class TestBoM(TestMrpCommon):
                 (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ],
         })
-        test_bom_1_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_1.id,
+        test_bom_1.bom_line_ids = [(0, 0, {
             'product_id': self.product_3.id,
             'product_qty': 3,
-        })
+        })]
 
         test_bom_2 = self.env['mrp.bom'].create({
-            'product_id': self.product_7_3.id,
             'product_tmpl_id': self.product_7_template.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
@@ -174,28 +175,25 @@ class TestBoM(TestMrpCommon):
                 (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
             ]
         })
-        test_bom_2_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_2.id,
             'product_qty': 2,
-        })
-        test_bom_2_l2 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        })]
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_5.id,
             'product_qty': 2,
             'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v1.id)],
-        })
-        test_bom_2_l3 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        })]
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_5.id,
             'product_qty': 2,
             'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)],
-        })
-        test_bom_2_l4 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_2.id,
+        })]
+        test_bom_2.bom_line_ids = [(0, 0, {
             'product_id': self.product_4.id,
             'product_qty': 2,
-        })
+        })]
+        test_bom_2_l1, _test_bom_2_l2, _test_bom_2_l3, test_bom_2_l4 = test_bom_2.bom_line_ids
 
         # check product > product_tmpl
         boms, lines = test_bom_2.explode(self.product_7_1, 4)
@@ -233,18 +231,15 @@ class TestBoM(TestMrpCommon):
             'consumption': 'flexible',
             'type': 'phantom'
         })
-        test_bom_3_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_3.id,
+        test_bom_3.bom_line_ids = [(0, 0, {
             'product_id': self.product_10.id,
             'product_qty': 1.0,
-        })
-        test_bom_4_l1 = self.env['mrp.bom.line'].create({
-            'bom_id': test_bom_4.id,
-            'product_id': self.product_9.id,
-            'product_qty': 1.0,
-        })
+        })]
         with self.assertRaises(exceptions.UserError):
-            test_bom_3.explode(self.product_9, 1)
+            test_bom_4.bom_line_ids = [(0, 0, {
+                'product_id': self.product_9.id,
+                'product_qty': 1.0,
+            })]
 
     def test_12_multi_level_variants2(self):
         """Test skip bom line with same attribute values in bom lines."""
@@ -357,9 +352,75 @@ class TestBoM(TestMrpCommon):
         # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
         # for the components available qty.
         kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
-        self.assertEqual(kit_product_qty, 2)
+        self.assertEqual(kit_product_qty, 8)
 
     def test_14_bom_kit_qty_multi_uom(self):
+        uom_dozens = self.env.ref('uom.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        product_unit = self.env['product.product'].create({
+            'name': 'Test units',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+        })
+        product_dozens = self.env['product.product'].create({
+            'name': 'Test dozens',
+            'type': 'product',
+            'uom_id': uom_dozens.id,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_unit.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': product_dozens.id,
+                    'product_qty': 1,
+                    'product_uom_id': uom_unit.id,
+                })
+            ]
+        })
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(product_dozens, location, 1.0)
+        self.assertEqual(product_unit.qty_available, 12.0)
+
+    def test_13_negative_on_hand_qty(self):
+        # We set the Product Unit of Measure digits to 5.
+        # Because float_round(-384.0, 5) = -384.00000000000006
+        # And float_round(-384.0, 2) = -384.0
+        precision = self.env.ref('product.decimal_product_uom')
+        precision.digits = 5
+
+        # We set the Unit(s) rounding to 0.0001 (digit = 4)
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_unit.rounding = 0.0001
+
+        _ = self.env['mrp.bom'].create({
+            'product_id': self.product_2.id,
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_uom_id': uom_unit.id,
+            'product_qty': 1.00,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_3.id,
+                    'product_qty': 1.000,
+                }),
+            ]
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_3, self.env.ref('stock.stock_location_stock'), -384.0)
+
+        kit_product_qty = self.product_2.qty_available  # Without product_3 in the prefetch
+        # Use the float_repr to remove extra small decimal (and represent the front-end behavior)
+        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
+
+        self.product_2.invalidate_cache(fnames=['qty_available'], ids=self.product_2.ids)
+        kit_product_qty, _ = (self.product_2 + self.product_3).mapped("qty_available")  # With product_3 in the prefetch
+        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
+
+    def test_13_bom_kit_qty_multi_uom(self):
         uom_dozens = self.env.ref('uom.product_uom_dozen')
         uom_unit = self.env.ref('uom.product_uom_unit')
         product_unit = self.env['product.product'].create({
@@ -545,9 +606,9 @@ class TestBoM(TestMrpCommon):
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)
         #Operation time = 15 min * 60 + time_start + time_stop = 925
-        self.assertEqual(report_values['lines']['operations_time'], 2400.0, 'Operation time should be the same for 1 unit or for the batch')
-        # Operation cost is the sum of operation line : 10 min * 60 * 10€/hr = 100€ + 30min * 60 * 20€/hr = 700€
-        self.assertEqual(float_compare(report_values['lines']['operations_cost'], 700, precision_digits=2), 0)
+        self.assertEqual(report_values['lines']['operations_time'], 925.0, 'Operation time should be the same for 1 unit or for the batch')
+        # Operation cost is the sum of operation line : (60 * 10)/60 * 10€ + (10 + 15 + 60 * 5)/60 * 20€ = 208,33€
+        self.assertEqual(float_compare(report_values['lines']['operations_cost'], 208.33, precision_digits=2), 0)
 
         for component_line in report_values['lines']['components']:
             # standard price * bom line quantity * current quantity / bom finished product quantity
@@ -558,8 +619,8 @@ class TestBoM(TestMrpCommon):
                 # 5.4 kg of crumble at the cost of a batch.
                 crumble_cost = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=5.4, searchVariant=False)['lines']['total']
                 self.assertEqual(float_compare(component_line['total'], crumble_cost, precision_digits=2), 0)
-        # total price = Cream (15.51€) + crumble_cost (34.63 €) + operation_cost(700€) = 750.14€
-        self.assertEqual(float_compare(report_values['lines']['total'], 715.51 + crumble_cost, precision_digits=2), 0, 'Product Bom Price is not correct')
+        # total price = Cream (15.51€) + crumble_cost (34.63 €) + operation_cost(208,33) = 258.47€
+        self.assertEqual(float_compare(report_values['lines']['total'], 258.47, precision_digits=2), 0, 'Product Bom Price is not correct')
 
     def test_bom_report_dozens(self):
         """ Simulate a drawer bom with dozens as bom units
@@ -902,7 +963,7 @@ class TestBoM(TestMrpCommon):
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
-        self.assertAlmostEqual(report_values['lines']['total'], 0.58)
+        self.assertAlmostEqual(report_values['lines']['total'], 2.92)
 
     def test_validate_no_bom_line_with_same_product(self):
         """
@@ -1005,18 +1066,218 @@ class TestBoM(TestMrpCommon):
         customer_picking = picking_form.save()
         customer_picking.action_confirm()
 
-        # We check the created orderpoint without manufacturing route manufacturing
-        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        # We check the created orderpoint
+        self.env['report.stock.quantity'].flush()
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
-        self.assertEqual(orderpoint.qty_multiple, 0.0)
-        self.assertEqual(orderpoint.qty_to_order, 2300.0)
-
-        # We select the manufacturing route and check the impact on the quantities
         manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
-        manufacturing_route = self.env['stock.location.route'].search([('id', '=', manufacturing_route_id)])
-        orderpoint_form = Form(orderpoint)
-        orderpoint_form.route_id = manufacturing_route
-        orderpoint_form.save()
+        self.assertEqual(orderpoint.route_id.id, manufacturing_route_id)
         self.assertEqual(orderpoint.qty_multiple, 2000.0)
         self.assertEqual(orderpoint.qty_to_order, 4000.0)
+
+    def test_bom_kit_with_sub_kit(self):
+        p1, p2, p3, p4 = self.make_prods(4)
+        self.make_bom(p1, p2, p3)
+        self.make_bom(p2, p3, p4)
+
+        loc = self.env.ref("stock.stock_location_stock")
+        self.env["stock.quant"]._update_available_quantity(p3, loc, 10)
+        self.env["stock.quant"]._update_available_quantity(p4, loc, 10)
+        self.assertEqual(p1.qty_available, 5.0)
+        self.assertEqual(p2.qty_available, 10.0)
+        self.assertEqual(p3.qty_available, 10.0)
+
+    def test_update_bom_in_routing_workcenter(self):
+        """
+        This test checks the behaviour of updating the BoM associated with a routing workcenter,
+        It verifies that the link between the BOM lines and the operation is correctly deleted.
+        """
+        p1, c1, c2, byproduct = self.make_prods(4)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': p1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': c2.id, 'product_qty': 1.0})
+                ],
+            'byproduct_ids': [
+                Command.create({
+                    'product_id': byproduct.id, 'product_uom_id': byproduct.uom_id.id, 'product_qty': 1.0,
+                }),]
+        })
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Operation',
+            'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+            'bom_id': bom.id,
+        })
+        bom.bom_line_ids.operation_id = operation
+        bom.byproduct_ids.operation_id = operation
+        self.assertEqual(operation.bom_id, bom)
+        operation.bom_id = self.bom_1
+        self.assertEqual(operation.bom_id, self.bom_1)
+        self.assertFalse(bom.bom_line_ids.operation_id)
+        self.assertFalse(bom.byproduct_ids.operation_id)
+
+    def test_cycle_on_line_creation(self):
+        bom_1_finished_product = self.bom_1.product_id
+        bom_2_finished_product = self.bom_2.product_id
+        with self.assertRaises(exceptions.ValidationError):
+            # finished product is one of the components:
+            self.bom_1.bom_line_ids = [(0, 0, {'product_id': bom_1_finished_product.id, 'product_qty': 1.0},)]
+        with self.assertRaises(exceptions.ValidationError):
+            # cycle:
+            self.bom_1.bom_line_ids = [(0, 0, {'product_id': bom_2_finished_product.id, 'product_qty': 1.0},)]
+
+    def test_cycle_on_line_update(self):
+        lines = self.bom_1.bom_line_ids
+        bom_2_finished_product = self.bom_2.product_id
+        with self.assertRaises(exceptions.ValidationError):
+            self.bom_1.bom_line_ids = [(1, lines[0].id, {'product_id': bom_2_finished_product.id})]
+
+    def test_cycle_on_bom_unarchive(self):
+        finished_product = self.bom_1.product_id
+        component = self.bom_1.bom_line_ids.product_id[0]
+        self.bom_1.active = False
+        self.env['mrp.bom'].create({
+            'product_id': component.id,
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'product_uom_id': component.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': finished_product.id, 'product_qty': 1.0}),
+            ],
+        })
+        with self.assertRaises(exceptions.ValidationError):
+            self.bom_1.active = True
+
+    def test_cycle_on_bom_creation(self):
+        finished_product = self.bom_4.product_id
+        component = self.bom_4.bom_line_ids.product_id
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['mrp.bom'].create({
+                'product_id': component.id,
+                'product_tmpl_id': component.product_tmpl_id.id,
+                'product_uom_id': component.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'bom_line_ids': [
+                    (0, 0, {'product_id': finished_product.id, 'product_qty': 1.0}),
+                ],
+            })
+
+    def test_indirect_cycle_on_bom_creation(self):
+        """
+        Three BoMs:
+            A -> D
+            A -> B
+            B -> C
+        Create a new BoM C -> A. At first glance, this new BoM is ok because it
+        does nat have a cycle (C -> A -> D). But there is an indirect cycle:
+        A -> B -> C -> A
+        Hence this new BoM should raise an error.
+        """
+        product_A, product_B, product_C, product_D = self.env['product.product'].create([{
+            'name': '%s' % i
+        } for i in range(4)])
+        self.env['mrp.bom'].create([{
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': finished.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo.id, 'product_qty': 1.0}),
+            ],
+        } for finished, compo, in [
+            (product_A, product_D),
+            (product_A, product_B),
+            (product_B, product_C),
+        ]])
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['mrp.bom'].create({
+                'product_id': product_C.id,
+                'product_tmpl_id': product_C.product_tmpl_id.id,
+                'product_uom_id': product_C.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'bom_line_ids': [
+                    (0, 0, {'product_id': product_A.id, 'product_qty': 1.0}),
+                ],
+            })
+
+    def test_cycle_on_bom_sequencing(self):
+        """
+        Five BoMs:
+            A -> D
+            A -> B
+            C -> D
+            C -> E
+            B -> C
+            C -> A
+        First new sequence: we reverse C->D and C->E, this is ok as it does not
+        create any cycle. Change the sequence again and set C->A before C->D: it
+        should raise an error because C->A becomes the main BoM of C, and this
+        will create a cycle: A -> B -> C -> A
+        """
+        product_A, product_B, product_C, product_D, product_E = self.env['product.product'].create([{
+            'name': '%s' % i
+        } for i in range(5)])
+        boms = self.env['mrp.bom'].create([{
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': finished.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo.id, 'product_qty': 1.0}),
+            ],
+        } for finished, compo, in [
+            (product_A, product_D),
+            (product_A, product_B),
+            (product_C, product_D),
+            (product_C, product_E),
+            (product_B, product_C),
+            (product_C, product_A),
+        ]])
+
+        # simulate resequence from UI (reverse C->D and C->E)
+        # (see odoo/addons/web/controllers/main.py:1352)
+        self.env['mrp.bom'].invalidate_cache(ids=boms.ids)
+        for i, record in enumerate(boms[0] | boms[1] | boms[3] | boms[2] | boms[4] | boms[5]):
+            record.write({'sequence': i})
+
+        # simulate a second resequencing (set C->A before C->D)
+        with self.assertRaises(exceptions.ValidationError):
+            for i, record in enumerate(boms[0] | boms[1] | boms[5] | boms[3] | boms[2] | boms[4]):
+                record.write({'sequence': i})
+
+    def test_cycle_on_legit_apply_variants(self):
+        """ Should not raise anything """
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_7_template.id,
+            'product_uom_id': self.product_7_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_1.id,
+                    'product_qty': 1.0
+                }),
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_qty': 1.0,
+                    'bom_product_template_attribute_value_ids': [(4, self.product_7_attr1_v2.id)]
+                }),
+            ],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_uom_id': self.product_2.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_7_1.id, 'product_qty': 1.0}),
+            ],
+        })

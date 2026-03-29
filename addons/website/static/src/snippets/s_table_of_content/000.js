@@ -12,16 +12,29 @@ const TableOfContent = publicWidget.Widget.extend({
      * @override
      */
     async start() {
+        this._stripNavbarStyles();
+
+        // Those links will be recreated when entering edit mode, see
+        // `_generateNav`. No need to recreate those.
+        this.$target.find('.table_of_content_link:hidden').remove();
+
         await this._super(...arguments);
+        this.$scrollingElement = this.$target.closest(".s_table_of_content").closestScrollable();
+        this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
+        this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
-        extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPosition.bind(this));
+
+        this.boundUpdateNavbar = this._updateTableOfContentNavbarPosition.bind(this);
+        extraMenuUpdateCallbacks.push(this.boundUpdateNavbar);
     },
     /**
      * @override
      */
     destroy() {
+        const indexOfCallback = extraMenuUpdateCallbacks.indexOf(this.boundUpdateNavbar);
+        extraMenuUpdateCallbacks.splice(indexOfCallback, 1);
         this.$target.css('top', '');
-        this.$target.find('.s_table_of_content_navbar').css('top', '');
+        this.$target.find('.s_table_of_content_navbar').css({top: '', maxHeight: ''});
         this._super(...arguments);
     },
 
@@ -29,6 +42,23 @@ const TableOfContent = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _stripNavbarStyles() {
+        // TODO Introduce a `disabledInTranslateMode` flag instead.
+        // Ignore in translation mode.
+        if (this.el.querySelector('[data-oe-translation-id]')) {
+            return;
+        }
+
+        // This is needed for styles added on translations when the master text
+        // has no style.
+        for (const el of this.el.querySelectorAll('.s_table_of_content_navbar .table_of_content_link')) {
+            const text = el.textContent; // Get text from el.
+            el.textContent = text; // Replace all of el's content with that text.
+        }
+    },
     /**
      * @private
      */
@@ -40,9 +70,26 @@ const TableOfContent = publicWidget.Widget.extend({
         this.$target.css('top', isHorizontalNavbar ? position : '');
         this.$target.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
         const $mainNavBar = $('#oe_main_menu_navbar');
-        position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
+        const mainNavBarHidden = document.body.classList.contains('o_fullscreen') || this.editableMode;
+        position += !mainNavBarHidden && $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
-        $().getScrollingElement().scrollspy({target: '.s_table_of_content_navbar', method: 'offset', offset: position + 100, alwaysKeepFirstActive: true});
+        this.$target.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
+        if (this.previousPosition !== position) {
+            // The scrollSpy must be destroyed before calling it again.
+            // Otherwise the call has no effect. We also need to be sure that
+            // a scrollSpy instance exists to avoid targeting elements outside
+            // the table of content navbar on scrollSpy methods.
+            if (this.$scrollingTarget.data('bs.scrollspy')) {
+                this.$scrollingTarget.scrollspy('dispose');
+            }
+            this.$scrollingTarget.scrollspy({
+                target: '.s_table_of_content_navbar',
+                method: 'offset',
+                offset: position + 100,
+                alwaysKeepFirstActive: true,
+            });
+            this.previousPosition = position;
+        }
     },
 });
 

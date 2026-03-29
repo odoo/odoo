@@ -11,13 +11,16 @@ const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
 const wUtils = require('website.utils');
+const {isImageSupportedForStyle} = require('web_editor.image_processing');
 require('website.s_popup_options');
+const {Domain} = require('@web/core/domain');
 
 var _t = core._t;
 var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
+const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
 
 options.UserValueWidget.include({
     loadMethodsData() {
@@ -36,6 +39,28 @@ options.UserValueWidget.include({
                 this._methodsNames[indexView] = 'customizeWebsiteVariable';
             }
         }
+    },
+});
+
+Many2oneUserValueWidget.include({
+    /**
+     * @override
+     */
+    async _getSearchDomain() {
+        // Add the current website's domain if the model has a website_id field.
+        // Note that the `_rpc` method is cached in Many2X user value widget,
+        // see `_rpcCache`.
+        const websiteIdField = await this._rpc({
+            model: this.options.model,
+            method: "fields_get",
+            args: [["website_id"]],
+        });
+        const modelHasWebsiteId = !!websiteIdField["website_id"];
+        if (modelHasWebsiteId && !this.options.domain.find(arr => arr[0] === "website_id")) {
+            this.options.domain =
+                Domain.and([this.options.domain, wUtils.websiteDomain(this)]).toList();
+        }
+        return this.options.domain;
     },
 });
 
@@ -63,12 +88,12 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         this.inputEl.classList.add('text-left');
         const options = {
             position: {
-                collision: 'flip fit',
+                collision: 'flip flipfit',
             },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+        };
         wUtils.autocompleteWithPages(this, $(this.inputEl), options);
     },
 
@@ -113,34 +138,71 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     start: async function () {
         const style = window.getComputedStyle(document.documentElement);
         const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
+        // User fonts served by google server.
         const googleFontsProperty = weUtils.getCSSVariableValue('google-fonts', style);
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
         this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
+        // Local user fonts.
+        const googleLocalFontsProperty = weUtils.getCSSVariableValue('google-local-fonts', style);
+        this.googleLocalFonts = googleLocalFontsProperty ?
+            googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
+        // If a same font exists both remotely and locally, we remove the remote
+        // font to prioritize the local font. The remote one will never be
+        // displayed or loaded as long as the local one exists.
+        this.googleFonts = this.googleFonts.filter(font => {
+            const localFonts = this.googleLocalFonts.map(localFont => localFont.split(":")[0]);
+            return localFonts.indexOf(`'${font}'`) === -1;
+        });
+        this.allFonts = [];
 
         await this._super(...arguments);
 
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
+        const themeFontsNb = nbFonts - (this.googleLocalFonts.length + this.googleFonts.length);
         _.times(nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
             const fontEl = document.createElement('we-button');
             fontEl.classList.add(`o_we_option_font_${realFontNb}`);
             fontEl.dataset.variable = variable;
             fontEl.dataset[methodName] = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
+            const font = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
+            this.allFonts.push(font);
+            fontEl.dataset[methodName] = font;
             fontEl.dataset.font = realFontNb;
+            if (realFontNb <= themeFontsNb) {
+                // Add the "cloud" icon next to the theme's default fonts
+                // because they are served by Google.
+                fontEl.appendChild(Object.assign(document.createElement('i'), {
+                    role: 'button',
+                    className: 'text-info ml-2 fa fa-cloud',
+                    title: _t("This font is hosted and served to your visitors by Google servers"),
+                }));
+            }
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
         });
 
+        if (this.googleLocalFonts.length) {
+            const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
+            googleLocalFontsEls.forEach((el, index) => {
+                $(el).append(core.qweb.render('website.delete_google_font_btn', {
+                    index: index,
+                    local: true,
+                }));
+            });
+        }
+
         if (this.googleFonts.length) {
-            const googleFontsEls = fontEls.slice(-this.googleFonts.length);
+            const googleFontsEls = fontEls.splice(-this.googleFonts.length);
             googleFontsEls.forEach((el, index) => {
                 $(el).append(core.qweb.render('website.delete_google_font_btn', {
                     index: index,
                 }));
             });
         }
+
         $(this.menuEl).append($(core.qweb.render('website.add_google_font_btn', {
             variable: variable,
         })));
@@ -199,7 +261,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         let isValidFamily = false;
 
                         try {
-                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1]+':300,300i,400,400i,700,700i', {method: 'HEAD'});
+                            // Font family is an encoded query parameter:
+                            // "Open+Sans" needs to remain "Open+Sans".
+                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
                             // Google fonts server returns a 400 status code if family is not valid.
                             if (result.ok) {
                                 isValidFamily = true;
@@ -214,10 +278,30 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         }
 
                         const font = m[1].replace(/\+/g, ' ');
-                        this.googleFonts.push(font);
+                        const googleFontServe = dialog.el.querySelector('#google_font_serve').checked;
+                        const fontName = `'${font}'`;
+                        // If the font already exists, it will only be added if
+                        // the user chooses to add it locally when it is already
+                        // imported from the Google Fonts server.
+                        const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
+                        const fontExistsOnServer = this.allFonts.includes(fontName);
+                        const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
+                        if (preventFontAddition) {
+                            inputEl.classList.add('is-invalid');
+                            // Show custom validity error message.
+                            inputEl.setCustomValidity(_t("This font already exists, you can only add it as a local font to replace the server version."));
+                            inputEl.reportValidity();
+                            return;
+                        }
+                        if (googleFontServe) {
+                            this.googleFonts.push(font);
+                        } else {
+                            this.googleLocalFonts.push(`'${font}': ''`);
+                        }
                         this.trigger_up('google_fonts_custo_request', {
                             values: {[variable]: `'${font}'`},
                             googleFonts: this.googleFonts,
+                            googleLocalFonts: this.googleLocalFonts,
                         });
                     },
                 },
@@ -235,6 +319,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onDeleteGoogleFontClick: async function (ev) {
         ev.preventDefault();
+        const values = {};
 
         const save = await new Promise(resolve => {
             Dialog.confirm(this, _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"), {
@@ -248,15 +333,24 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
         // Remove Google font
         const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
-        const googleFont = this.googleFonts[googleFontIndex];
-        this.googleFonts.splice(googleFontIndex, 1);
+        const isLocalFont = ev.target.dataset.localFont;
+        let googleFontName;
+        if (isLocalFont) {
+            const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
+            // Remove double quotes
+            googleFontName = googleFont[0].substring(1, googleFont[0].length - 1);
+            values['delete-font-attachment-id'] = googleFont[1];
+            this.googleLocalFonts.splice(googleFontIndex, 1);
+        } else {
+            googleFontName = this.googleFonts[googleFontIndex];
+            this.googleFonts.splice(googleFontIndex, 1);
+        }
 
         // Adapt font variable indexes to the removal
-        const values = {};
         const style = window.getComputedStyle(document.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
             const value = weUtils.getCSSVariableValue(variable, style);
-            if (value.substring(1, value.length - 1) === googleFont) {
+            if (value.substring(1, value.length - 1) === googleFontName) {
                 // If an element is using the google font being removed, reset
                 // it to the theme default.
                 values[variable] = 'null';
@@ -266,12 +360,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         this.trigger_up('google_fonts_custo_request', {
             values: values,
             googleFonts: this.googleFonts,
+            googleLocalFonts: this.googleLocalFonts,
         });
     },
 });
 
 const GPSPicker = InputUserValueWidget.extend({
-    events: { // Explicitely not consider all InputUserValueWidget events
+    events: { // Explicitly not consider all InputUserValueWidget events
         'blur input': '_onInputBlur',
     },
 
@@ -291,10 +386,20 @@ const GPSPicker = InputUserValueWidget.extend({
             this.trigger_up('gmap_api_request', {
                 editableMode: true,
                 configureIfNecessary: true,
-                onSuccess: key => resolve(!!key),
+                onSuccess: key => {
+                    if (!key) {
+                        resolve(false);
+                        return;
+                    }
+
+                    // TODO see _notifyGMapError, this tries to trigger an error
+                    // early but this is not consistent with new gmap keys.
+                    this._nearbySearch('(50.854975,4.3753899)', !!key)
+                        .then(place => resolve(!!place));
+                },
             });
         });
-        if (!this._gmapLoaded) {
+        if (!this._gmapLoaded && !this._gmapErrorNotified) {
             this.trigger_up('user_value_widget_critical');
             return;
         }
@@ -328,17 +433,36 @@ const GPSPicker = InputUserValueWidget.extend({
      */
     async setValue() {
         await this._super(...arguments);
+        if (!this._gmapLoaded) {
+            return;
+        }
 
-        await new Promise(resolve => {
-            const gps = this._value;
-            if (this._gmapCacheGPSToPlace[gps]) {
-                this._gmapPlace = this._gmapCacheGPSToPlace[gps];
-                resolve();
-                return;
-            }
+        this._gmapPlace = await this._nearbySearch(this._value);
+
+        if (this._gmapPlace) {
+            this.inputEl.value = this._gmapPlace.formatted_address;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} gps
+     * @param {boolean} [notify=true]
+     * @returns {Promise}
+     */
+    async _nearbySearch(gps, notify = true) {
+        if (this._gmapCacheGPSToPlace[gps]) {
+            return this._gmapCacheGPSToPlace[gps];
+        }
+
+        const p = gps.substring(1).slice(0, -1).split(',');
+        const location = new google.maps.LatLng(p[0] || 0, p[1] || 0);
+        return new Promise(resolve => {
             const service = new google.maps.places.PlacesService(document.createElement('div'));
-            const p = gps.substring(1).slice(0, -1).split(',');
-            const location = new google.maps.LatLng(p[0] || 0, p[1] || 0);
             service.nearbySearch({
                 // Do a 'nearbySearch' followed by 'getDetails' to avoid using
                 // GMap Geocoder which the user may not have enabled... but
@@ -353,23 +477,59 @@ const GPSPicker = InputUserValueWidget.extend({
                         placeId: results[0].place_id,
                         fields: ['geometry', 'formatted_address'],
                     }, (place, status) => {
-                        resolve();
                         if (status === google.maps.places.PlacesServiceStatus.OK) {
                             this._gmapCacheGPSToPlace[gps] = place;
-                            this._gmapPlace = place;
+                            resolve(place);
                         } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                            this.trigger_up('user_value_widget_critical');
+                            if (notify) {
+                                this._notifyGMapError();
+                            }
+                            resolve();
                         }
                     });
                 } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
+                    if (notify) {
+                        this._notifyGMapError();
+                    }
                     resolve();
-                    this.trigger_up('user_value_widget_critical');
+                } else {
+                    resolve();
                 }
             });
         });
-        if (this._gmapPlace) {
-            this.inputEl.value = this._gmapPlace.formatted_address;
+    },
+    /**
+     * Indicates to the user there is an error with the google map API and
+     * re-opens the configuration dialog. For good measures, this also notifies
+     * a critical error which normally removes the related snippet entirely.
+     *
+     * @private
+     */
+    _notifyGMapError() {
+        // TODO this should be better to detect all errors. This is random.
+        // When misconfigured (wrong APIs enabled), sometimes Google throw
+        // errors immediately (which then reaches this code), sometimes it
+        // throws them later (which then induces an error log in the console
+        // and random behaviors).
+        if (this._gmapErrorNotified) {
+            return;
         }
+        this._gmapErrorNotified = true;
+
+        this.displayNotification({
+            type: 'danger',
+            sticky: true,
+            message: _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
+        });
+        this.trigger_up('gmap_api_request', {
+            editableMode: true,
+            reconfigure: true,
+            onSuccess: () => {
+                this._gmapErrorNotified = false;
+            },
+        });
+
+        setTimeout(() => this.trigger_up('user_value_widget_critical'));
     },
 
     //--------------------------------------------------------------------------
@@ -385,10 +545,24 @@ const GPSPicker = InputUserValueWidget.extend({
         if (gmapPlace && gmapPlace.geometry) {
             this._gmapPlace = gmapPlace;
             const location = this._gmapPlace.geometry.location;
+            const oldValue = this._value;
             this._value = `(${location.lat()},${location.lng()})`;
             this._gmapCacheGPSToPlace[this._value] = gmapPlace;
-            this._onUserValueChange(ev);
+            if (oldValue !== this._value) {
+                this._onUserValueChange(ev);
+            }
         }
+    },
+    /**
+     * @override
+     */
+    _onInputBlur() {
+        // As a stable fix: do not call the _super as we actually don't want
+        // input focusout messing with the google map API. Because of this,
+        // clicking on google map autocomplete suggestion on Firefox was not
+        // working properly. This is kept as an empty function because of stable
+        // policy (ensures custo can still extend this).
+        // TODO review in master.
     },
 });
 
@@ -736,10 +910,17 @@ options.Class.include({
     _onGoogleFontsCustoRequest: function (ev) {
         const values = ev.data.values ? _.clone(ev.data.values) : {};
         const googleFonts = ev.data.googleFonts;
+        const googleLocalFonts = ev.data.googleLocalFonts;
         if (googleFonts.length) {
             values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
         } else {
             values['google-fonts'] = 'null';
+        }
+        // check undefined, this is a backport, a custo might not pass this key
+        if (googleLocalFonts !== undefined && googleLocalFonts.length) {
+            values['google-local-fonts'] = "(" + googleLocalFonts.join(", ") + ")";
+        } else {
+            values['google-local-fonts'] = 'null';
         }
         this.trigger_up('snippet_edition_request', {exec: async () => {
             return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
@@ -822,7 +1003,16 @@ options.registry.BackgroundShape.include({
             return el;
         }
         return _getLastPreFilterLayerElement(this.$target);
-    }
+    },
+    /**
+     * @override
+     */
+    _removeShapeEl(shapeEl) {
+        this.trigger_up('widgets_stop_request', {
+            $target: $(shapeEl),
+        });
+        return this._super(...arguments);
+    },
 });
 
 options.registry.ReplaceMedia.include({
@@ -1453,7 +1643,7 @@ options.registry.company_data = options.Class.extend({
                     args: [session.uid, ['company_id']],
                 });
             }).then(function (res) {
-                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + (res && res[0] && res[0].company_id[0] || 1);
+                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + encodeURIComponent(res && res[0] && res[0].company_id[0] || 1);
             });
         }
         return Promise.all([this._super.apply(this, arguments), prom]);
@@ -1495,25 +1685,9 @@ options.registry.Carousel = options.Class.extend({
         // the slide overlay) + See "CarouselItem" option.
         this.$controls.addClass('o_we_no_overlay');
 
-        let _slideTimestamp;
-        this.$target.on('slide.bs.carousel.carousel_option', () => {
-            _slideTimestamp = window.performance.now();
-            setTimeout(() => this.trigger_up('hide_overlay'));
-        });
-        this.$target.on('slid.bs.carousel.carousel_option', () => {
-            // slid.bs.carousel is most of the time fired too soon by bootstrap
-            // since it emulates the transitionEnd with a setTimeout. We wait
-            // here an extra 20% of the time before retargeting edition, which
-            // should be enough...
-            const _slideDuration = (window.performance.now() - _slideTimestamp);
-            setTimeout(() => {
-                this.trigger_up('activate_snippet', {
-                    $snippet: this.$target.find('.carousel-item.active'),
-                    ifInactiveOptions: true,
-                });
-                this.$target.trigger('active_slide_targeted');
-            }, 0.2 * _slideDuration);
-        });
+        // Handle the sliding manually.
+        this.__onControlClick = _.throttle(this._onControlClick.bind(this), 1000);
+        this.$controls.on("click.carousel_option", this.__onControlClick);
 
         return this._super.apply(this, arguments);
     },
@@ -1523,6 +1697,7 @@ options.registry.Carousel = options.Class.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         this.$target.off('.carousel_option');
+        this.$controls.off(".carousel_option");
     },
     /**
      * @override
@@ -1539,18 +1714,12 @@ options.registry.Carousel = options.Class.extend({
     /**
      * @override
      */
-    cleanForSave: function () {
-        const $items = this.$target.find('.carousel-item');
-        $items.removeClass('next prev left right active').first().addClass('active');
-        this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
-    },
-    /**
-     * @override
-     */
-    notify: function (name, data) {
+    notify(name, data) {
         this._super(...arguments);
         if (name === 'add_slide') {
-            this._addSlide();
+            this._addSlide().then(data.onSuccess);
+        } else if (name === "slide") {
+            this._slide(data.direction).then(data.onSuccess);
         }
     },
 
@@ -1562,7 +1731,7 @@ options.registry.Carousel = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlide(previewMode, widgetValue, params) {
-        this._addSlide();
+        return this._addSlide();
     },
 
     //--------------------------------------------------------------------------
@@ -1593,20 +1762,93 @@ options.registry.Carousel = options.Class.extend({
      *
      * @private
      */
-    _addSlide() {
+    async _addSlide() {
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
         const $items = this.$target.find('.carousel-item');
         this.$controls.removeClass('d-none');
         const $active = $items.filter('.active');
         this.$indicators.append($('<li>', {
-            'data-target': '#' + $active.attr('id'),
-            'data-slide-to': $items.length,
+            'data-target': '#' + this.$target.attr('id'),
         }));
         this.$indicators.append(' ');
         // Need to remove editor data from the clone so it gets its own.
         $active.clone(false)
             .removeClass('active')
             .insertAfter($active);
-        this.$target.carousel('next');
+        await this._slide("next");
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+    },
+    /**
+     * Slides the carousel in the given direction.
+     *
+     * @private
+     * @param {String|Number} direction the direction in which to slide:
+     *     - "prev": the previous slide;
+     *     - "next": the next slide;
+     *     - number: a slide number.
+     * @returns {Promise}
+     */
+    _slide(direction) {
+        this.trigger_up("disable_loading_effect");
+        let _slideTimestamp;
+        this.$target.one("slide.bs.carousel", () => {
+            _slideTimestamp = window.performance.now();
+            setTimeout(() => this.trigger_up('hide_overlay'));
+        });
+
+        return new Promise(resolve => {
+            this.$target.one("slid.bs.carousel", () => {
+                // slid.bs.carousel is most of the time fired too soon by bootstrap
+                // since it emulates the transitionEnd with a setTimeout. We wait
+                // here an extra 20% of the time before retargeting edition, which
+                // should be enough...
+                const _slideDuration = (window.performance.now() - _slideTimestamp);
+                setTimeout(() => {
+                    this.trigger_up("activate_snippet", {
+                        $snippet: this.$target.find(".carousel-item.active"),
+                        ifInactiveOptions: true,
+                    });
+                    this.$target.trigger("active_slide_targeted"); // TODO remove in master: kept for compatibility.
+                    this.trigger_up("enable_loading_effect");
+                    resolve();
+                }, 0.2 * _slideDuration);
+            });
+
+            this.$target.carousel(direction);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Slides the carousel when clicking on the carousel controls. This handler
+     * allows to put the sliding in the mutex, to avoid race conditions.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onControlClick(ev) {
+        // Compute to which slide the carousel will slide.
+        const controlEl = ev.currentTarget;
+        let direction;
+        if (controlEl.classList.contains("carousel-control-prev")) {
+            direction = "prev";
+        } else if (controlEl.classList.contains("carousel-control-next")) {
+            direction = "next";
+        } else {
+            const indicatorEl = ev.target;
+            if (!indicatorEl.matches("li") || indicatorEl.classList.contains("active")) {
+                return;
+            }
+            direction = [...controlEl.children].indexOf(indicatorEl);
+        }
+
+        // Slide the carousel.
+        this.trigger_up("snippet_edition_request", {exec: async () => {
+            await this._slide(direction);
+        }});
     },
 });
 
@@ -1633,6 +1875,14 @@ options.registry.CarouselItem = options.Class.extend({
      * @override
      */
     destroy: function () {
+        // Activate the active slide after removing a slide.
+        if (this.hasRemovedSlide) {
+            this.trigger_up("activate_snippet", {
+                $snippet: this.$carousel.find(".carousel-item.active"),
+                ifInactiveOptions: true,
+            });
+            this.hasRemovedSlide = false;
+        }
         this._super(...arguments);
         this.$carousel.off('.carousel_item_option');
     },
@@ -1662,9 +1912,14 @@ options.registry.CarouselItem = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlideItem(previewMode, widgetValue, params) {
-        this.trigger_up('option_update', {
-            optionName: 'Carousel',
-            name: 'add_slide',
+        return new Promise(resolve => {
+            this.trigger_up("option_update", {
+                optionName: "Carousel",
+                name: "add_slide",
+                data: {
+                    onSuccess: () => resolve(),
+                },
+            });
         });
     },
     /**
@@ -1672,36 +1927,56 @@ options.registry.CarouselItem = options.Class.extend({
      *
      * @see this.selectClass for parameters.
      */
-    removeSlide: function (previewMode) {
+    async removeSlide(previewMode) {
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
         const $items = this.$carousel.find('.carousel-item');
         const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
-            const $toDelete = $items.filter('.active');
-            this.$carousel.one('active_slide_targeted.carousel_item_option', () => {
-                $toDelete.remove();
-                this.$indicators.find('li:last').remove();
-                this.$controls.toggleClass('d-none', newLength === 1);
-                this.$carousel.trigger('content_changed');
-                this.removing = false;
+            // The active indicator is deleted to ensure that the other
+            // indicators will still work after the deletion.
+            const $toDelete = $items.filter('.active').add(this.$indicators.find('.active'));
+            this.removing = true; // TODO remove in master: kept for stable.
+            // Go to the previous slide.
+            await new Promise(resolve => {
+                this.trigger_up("option_update", {
+                    optionName: "Carousel",
+                    name: "slide",
+                    data: {
+                        direction: "prev",
+                        onSuccess: () => resolve(),
+                    },
+                });
             });
-            this.removing = true;
-            this.$carousel.carousel('prev');
+            // Remove the slide.
+            $toDelete.remove();
+            this.$controls.toggleClass("d-none", newLength === 1);
+            this.$carousel.trigger("content_changed");
+            this.removing = false;
         }
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+        this.hasRemovedSlide = true;
     },
     /**
      * Goes to next slide or previous slide.
      *
      * @see this.selectClass for parameters
      */
-    slide: function (previewMode, widgetValue, params) {
-        switch (widgetValue) {
-            case 'left':
-                this.$controls.filter('.carousel-control-prev')[0].click();
-                break;
-            case 'right':
-                this.$controls.filter('.carousel-control-next')[0].click();
-                break;
-        }
+    slide(previewMode, widgetValue, params) {
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
+        const direction = widgetValue === "left" ? "prev" : "next";
+        return new Promise(resolve => {
+            this.trigger_up("option_update", {
+                optionName: "Carousel",
+                name: "slide",
+                data: {
+                    direction: direction,
+                    onSuccess: () => {
+                        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
+                        resolve();
+                    },
+                },
+            });
+        });
     },
 });
 
@@ -2022,6 +2297,34 @@ options.registry.HeaderNavbar = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        // TODO Remove in master.
+        const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
+        signInOptionEl.dataset.noPreview = 'true';
+    },
+    /**
+     * @private
+     */
+    async updateUI() {
+        await this._super(...arguments);
+        // For all header templates except those in the following array, change
+        // the label of the option to "Mobile Alignment" (instead of
+        // "Alignment") because it only impacts the mobile view.
+        if (!["'default'", "'hamburger'", "'sidebar'", "'magazine'", "'hamburger-full'", "'slogan'"]
+            .includes(weUtils.getCSSVariableValue("header-template"))) {
+            const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
+            alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
+        }
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -2035,11 +2338,19 @@ options.registry.HeaderNavbar = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         switch (widgetName) {
             case 'option_logo_height_scrolled': {
-                return !this.$('.navbar-brand').hasClass('d-none');
+                return !!this.$('.navbar-brand').length;
             }
             case 'no_hamburger_opt': {
                 return !weUtils.getCSSVariableValue('header-template').includes('hamburger');
             }
+        }
+        if (widgetName === 'header_alignment_opt') {
+            if (!this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
+                // If mobile menu is "Default", hides the alignment option for
+                // "hamburger full" and "magazine" header templates.
+                return !["'hamburger-full'", "'magazine'"].includes(weUtils.getCSSVariableValue('header-template'));
+            }
+            return true;
         }
         return this._super(...arguments);
     },
@@ -2055,8 +2366,20 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async start() {
         await this._super(...arguments);
-        const shown = await this._isShown();
-        this.trigger_up('snippet_option_visibility_update', {show: shown});
+        // When entering edit mode via the URL (enable_editor) the WebsiteNavbar
+        // is not yet ReadyForActions because it is waiting for its
+        // sub-component EditPageMenu to start edit mode. Then invisible blocks
+        // options start (so this option too). But for isShown() to work, the
+        // navbar must be ReadyForActions. This is the reason why we can't wait
+        // for isShown here, otherwise we would have a deadlock. On one hand the
+        // navbar waiting for the invisible snippets options to be started to be
+        // ReadyForActions and on the other hand this option which needs the
+        // navbar to be ReadyForActions to be started.
+        // TODO in master: Use the data-invisible system to get rid of this
+        // piece of code.
+        this._isShown().then(isShown => {
+            this.trigger_up('snippet_option_visibility_update', {show: isShown});
+        });
     },
     /**
      * @override
@@ -2086,11 +2409,12 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async visibility(previewMode, widgetValue, params) {
         const show = (widgetValue !== 'hidden');
-        await new Promise(resolve => {
+        await new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'toggle_page_option',
                 params: [{name: this.pageOptionName, value: show}],
                 onSuccess: () => resolve(),
+                onFailure: reject,
             });
         });
         this.trigger_up('snippet_option_visibility_update', {show: show});
@@ -2115,11 +2439,12 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      * @returns {boolean}
      */
     async _isShown() {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'get_page_option',
                 params: [this.pageOptionName],
                 onSuccess: v => resolve(!!v),
+                onFailure: reject,
             });
         });
     },
@@ -2160,21 +2485,23 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
             return;
         }
         const transparent = (widgetValue === 'transparent');
-        await new Promise(resolve => {
+        await new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'toggle_page_option',
                 params: [{name: 'header_overlay', value: transparent}],
                 onSuccess: () => resolve(),
+                onFailure: reject,
             });
         });
         if (!transparent) {
             return;
         }
-        await new Promise(resolve => {
+        await new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'toggle_page_option',
                 params: [{name: 'header_color', value: ''}],
                 onSuccess: () => resolve(),
+                onFailure: reject,
             });
         });
     },
@@ -2184,15 +2511,35 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
     async _computeWidgetState(methodName, params) {
         const _super = this._super.bind(this);
         if (methodName === 'visibility') {
-            this.shownValue = await new Promise(resolve => {
+            this.shownValue = await new Promise((resolve, reject) => {
                 this.trigger_up('action_demand', {
                     actionName: 'get_page_option',
                     params: ['header_overlay'],
                     onSuccess: v => resolve(v ? 'transparent' : 'regular'),
+                    onFailure: reject,
                 });
             });
         }
         return _super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'header_visibility_opt') {
+            return this.$target[0].classList.contains('o_header_sidebar') ? '' : 'true';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _renderCustomXML(uiFragment) {
+        // TODO in master: put this in the XML.
+        const weSelectEl = uiFragment.querySelector('we-select#option_header_visibility');
+        if (weSelectEl) {
+            weSelectEl.dataset.name = 'header_visibility_opt';
+        }
     },
 });
 
@@ -2205,12 +2552,16 @@ options.registry.topMenuColor = options.Class.extend({
     /**
      * @override
      */
-    selectStyle(previewMode, widgetValue, params) {
-        this._super(...arguments);
+    async selectStyle(previewMode, widgetValue, params) {
+        await this._super(...arguments);
         const className = widgetValue ? (params.colorPrefix + widgetValue) : '';
-        this.trigger_up('action_demand', {
-            actionName: 'toggle_page_option',
-            params: [{name: 'header_color', value: className}],
+        await new Promise((resolve, reject) => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{name: 'header_color', value: className}],
+                onSuccess: resolve,
+                onFailure: reject,
+            });
         });
     },
 
@@ -2226,11 +2577,12 @@ options.registry.topMenuColor = options.Class.extend({
         if (!show) {
             return false;
         }
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
                 actionName: 'get_page_option',
                 params: ['header_overlay'],
                 onSuccess: value => resolve(!!value),
+                onFailure: reject,
             });
         });
     },
@@ -2265,7 +2617,12 @@ options.registry.MobileVisibility = options.Class.extend({
      * @see this.selectClass for parameters
      */
     showOnMobile(previewMode, widgetValue, params) {
-        const classes = `d-none d-md-${this.$target.css('display')}`;
+        // For compatibility with former implementation: remove the previously
+        // added `d-md-*` class if any, as it should now be `d-lg-*`.
+        if (widgetValue) {
+            this.$target[0].classList.remove(`d-md-${this.$target.css('display')}`);
+        }
+        const classes = `d-none d-lg-${this.$target.css('display')}`;
         this.$target.toggleClass(classes, !widgetValue);
     },
 
@@ -2280,7 +2637,7 @@ options.registry.MobileVisibility = options.Class.extend({
         if (methodName === 'showOnMobile') {
             const classList = [...this.$target[0].classList];
             return classList.includes('d-none') &&
-                classList.some(className => className.startsWith('d-md-')) ? '' : 'true';
+                classList.some(className => className.match(/^(d-md-|d-lg-)/g)) ? '' : 'true';
         }
         return await this._super(...arguments);
     },
@@ -2313,8 +2670,7 @@ options.registry.anchor = options.Class.extend({
         this.$button = this.$el.find('we-button');
         const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
         clipboard.on('success', () => {
-            const anchor = decodeURIComponent(this._getAnchorLink());
-            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), anchor);
+            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), this._getAnchorLink());
             this.displayNotification({
               type: 'success',
               message: message,
@@ -2523,29 +2879,6 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
 
         $content.empty().append($template);
     },
-    /**
-     * @override
-     */
-    onTargetShow: async function () {
-        // @see this.onTargetHide
-        this.$target.parent('#website_cookies_bar').show();
-        this._super(...arguments);
-
-    },
-    /**
-     * @override
-     */
-    onTargetHide: async function () {
-        // We hide the parent because contenteditable="true" would force the bar to stay visible in hidden mode.
-        this.$target.parent('#website_cookies_bar').hide();
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        this.$target.parent('#website_cookies_bar').show();
-    },
 });
 
 /**
@@ -2674,9 +3007,7 @@ options.registry.CoverProperties = options.Class.extend({
      */
     _updateColorDataset(bgColorStyle = '', bgColorClass = '') {
         this.$target[0].dataset.bgColorStyle = bgColorStyle;
-        if (bgColorClass) {
-            this.$target[0].dataset.bgColorClass = bgColorClass;
-        }
+        this.$target[0].dataset.bgColorClass = bgColorClass;
     },
     /**
      * Updates the cover properties dataset used for saving.
@@ -2685,15 +3016,6 @@ options.registry.CoverProperties = options.Class.extend({
      */
     _updateSavingDataset(colorValue) {
         const [colorPickerWidget, sizeWidget, textAlignWidget] = this._requestUserValueWidgets('bg_color_opt', 'size_opt', 'text_align_opt');
-        if (!colorPickerWidget) {
-            // Saving without closing the color palette, but the last picked
-            // color was already taken into account (we still need to update the
-            // dataset when a custom color is selected).
-            if (colorValue) {
-                this._updateColorDataset(`background-color: ${colorValue};`);
-            }
-            return;
-        }
         // TODO: `o_record_has_cover` should be handled using model field, not
         // resize_class to avoid all of this.
         // Get values from DOM (selected values in options are only available
@@ -2726,7 +3048,7 @@ options.registry.CoverProperties = options.Class.extend({
         if (ccValue) {
             colorNames.push(ccValue);
         }
-        if (!isGradient && !isCSSColor) {
+        if (colorOrGradient && !isGradient && !isCSSColor) {
             colorNames.push(colorOrGradient);
         }
         const bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
@@ -2743,18 +3065,6 @@ options.registry.ScrollButton = options.Class.extend({
     start: async function () {
         await this._super(...arguments);
         this.$button = this.$('.o_scroll_button');
-    },
-    /**
-     * Removes button if the option is not displayed (for example in "fit
-     * content" height).
-     *
-     * @override
-     */
-    updateUIVisibility: async function () {
-        await this._super(...arguments);
-        if (this.$button.length && this.el.offsetParent === null) {
-            this.$button.detach();
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -2805,11 +3115,71 @@ options.registry.ScrollButton = options.Class.extend({
             this.$button.detach();
         }
     },
+    /**
+     * @override
+     */
+    async selectClass(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        // If a "d-lg-block" class exists on the section (e.g., for mobile
+        // visibility option), it should be replaced with a "d-lg-flex" class.
+        // This ensures that the section has the "display: flex" property
+        // applied, which is the default rule for both "height" option classes.
+        if (params.possibleValues.includes("o_half_screen_height")) {
+            if (widgetValue) {
+                this.$target[0].classList.replace("d-lg-block", "d-lg-flex");
+            } else if (this.$target[0].classList.contains("d-lg-flex")) {
+                // There are no known cases, but we still make sure that the
+                // <section> element doesn't have a "display: flex" originally.
+                this.$target[0].classList.remove("d-lg-flex");
+                const sectionStyle = window.getComputedStyle(this.$target[0]);
+                const hasDisplayFlex = sectionStyle.getPropertyValue("display") === "flex";
+                this.$target[0].classList.add(hasDisplayFlex ? "d-lg-flex" : "d-lg-block");
+            }
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _renderCustomXML(uiFragment) {
+        // TODO adapt in master. This sets up a different UI for the image
+        // gallery snippet: for this one, we allow to force a specific height
+        // in auto mode. It was done in stable as without it, the default height
+        // is difficult to understand for the user as it depends on screen
+        // height of the one who edited the website and not on the added images.
+        // It was also a regression as in <= 11.0, this was a possibility.
+        if (this.$target[0].dataset.snippet !== 's_image_gallery') {
+            return;
+        }
+        let minHeightEl = uiFragment.querySelector('[data-name="minheight_auto_opt"]');
+        if (!minHeightEl) {
+            return;
+        }
+        minHeightEl = minHeightEl.parentElement;
+        minHeightEl.setAttribute('string', _t("Min-Height"));
+        const heightEl = document.createElement('we-input');
+        heightEl.setAttribute('string', _t("└ Height"));
+        heightEl.dataset.dependencies = 'minheight_auto_opt';
+        heightEl.dataset.unit = 'px';
+        heightEl.dataset.selectStyle = '';
+        heightEl.dataset.cssProperty = 'height';
+        // For this setting, we need to always force the style (= if the block
+        // is naturally 800px tall and the user enters 800px for this setting,
+        // we set 800px as inline style anyway). Indeed, this snippet's style
+        // is based on the height that is forced but once the related public
+        // widgets are started, the inner carousel items receive a min-height
+        // which makes it so the snippet "natural" height is equal to the
+        // initially forced height... so if the style is not forced, it would
+        // ultimately be removed by mistake thinking it is not necessary.
+        // Note: this is forced as not important as we still need the height to
+        // be reset to 'auto' in mobile (generic css rules).
+        heightEl.dataset.forceStyle = '';
+        uiFragment.appendChild(heightEl);
+    },
     /**
      * @override
      */
@@ -2862,17 +3232,11 @@ options.registry.ConditionalVisibility = options.Class.extend({
     async onTargetShow() {
         this.$target[0].classList.remove('o_conditional_hidden');
     },
+    // Todo: remove me in master.
     /**
      * @override
      */
-    cleanForSave() {
-        // Kinda hacky: the snippet is forced hidden via onTargetHide on save
-        // but should be marked as visible as when entering edit mode later, the
-        // snippet will be shown naturally (as the CSS rules won't apply).
-        // Without this, the "eye" icon of the visibility panel would be shut
-        // when entering edit mode.
-        this.trigger_up('snippet_option_visibility_update', { show: true });
-    },
+    cleanForSave() {},
 
     //--------------------------------------------------------------------------
     // Options
@@ -3036,6 +3400,20 @@ options.registry.ConditionalVisibility = options.Class.extend({
     },
 });
 
+options.registry.ImageTools.include({
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        const result = await this._super(...arguments);
+        if ('transform' in params.optionsPossibleValues) {
+            // TODO adapt in master, use a data-dependencies
+            return result && !this.$target.hasClass('o_animate');
+        }
+        return result;
+    },
+});
+
 options.registry.WebsiteAnimate = options.Class.extend({
     /**
      * @override
@@ -3044,6 +3422,9 @@ options.registry.WebsiteAnimate = options.Class.extend({
         await this._super(...arguments);
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
+        if (this.isAnimatedText) {
+            this.$overlay[0].querySelector(".o_handles").style.pointerEvents = "none";
+        }
     },
     /**
      * @override
@@ -3084,18 +3465,19 @@ options.registry.WebsiteAnimate = options.Class.extend({
     async selectClass(previewMode, widgetValue, params) {
         await this._super(...arguments);
         if (params.isAnimationTypeSelection) {
-            this._forceAnimation();
-            this.$target.toggleClass('o_animate_preview o_animate', !!widgetValue);
+            if (params.name !== "no_animation_opt") {
+                this._forceAnimation();
+                this.$target[0].classList.add("o_animate_preview", "o_animate");
+            } else {
+                this.$target[0].classList.remove("o_animate_preview", "o_animate", "o_animating",
+                    "o_animated", "o_animate_in_dropdown", "o_animate_both_scroll");
+                this.$target[0].style.animationName = "";
+                this.$target[0].style.animationPlayState = "";
+                this.$target[0].style.animationDuration = "";
+                this.$target[0].style.animationDelay = "";
+                this.$target[0].style.visibility = "";
+            }
         }
-    },
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'animation_launch_opt') {
-            return !this.$target[0].closest('.dropdown');
-        }
-        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -3124,6 +3506,24 @@ options.registry.WebsiteAnimate = options.Class.extend({
     _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'no_animation_opt') {
             return !this.isAnimatedText;
+        }
+        if (widgetName === 'animation_launch_opt') {
+            return !this.$target[0].closest('.dropdown');
+        }
+        if (params.isAnimationTypeSelection) {
+            // TODO adapt in master, use a data-dependencies related to the
+            // transform option
+            const transform = this.$target[0].style.transform;
+            return !transform || transform === 'none';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeVisibility(methodName, params) {
+        if (this.$target[0].matches('img')) {
+            return isImageSupportedForStyle(this.$target[0]);
         }
         return this._super(...arguments);
     },
@@ -3185,7 +3585,7 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
 });
 
 /**
- * Hides delete button for Mega Menu block.
+ * Hides delete and clone buttons for Mega Menu block.
  */
 options.registry.MegaMenuNoDelete = options.Class.extend({
     forceNoDeleteButton: true,

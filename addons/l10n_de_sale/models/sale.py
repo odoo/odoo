@@ -28,10 +28,14 @@ class SaleOrder(models.Model):
                 data.append((_('Customer Reference'), record.client_order_ref))
             if record.user_id:
                 data.append((_("Salesperson"), record.user_id.name))
+            if 'incoterm' in record._fields and record.incoterm:
+                data.append((_("Incoterm"), record.incoterm.code))
 
     def _compute_l10n_de_document_title(self):
         for record in self:
-            if record.state in ('draft', 'sent'):
+            if self._context.get('proforma'):
+                record.l10n_de_document_title = _('Pro Forma Invoice')
+            elif record.state in ('draft', 'sent'):
                 record.l10n_de_document_title = _('Quotation')
             else:
                 record.l10n_de_document_title = _('Sales Order')
@@ -44,3 +48,9 @@ class SaleOrder(models.Model):
             else:
                 data.append((_("Shipping Address:"), record.partner_shipping_id))
                 data.append((_("Invoicing Address:"), record.partner_invoice_id))
+
+    def check_field_access_rights(self, operation, field_names):
+        field_names = super().check_field_access_rights(operation, field_names)
+        return [field_name for field_name in field_names if field_name not in {
+            'l10n_de_addresses',
+        }]

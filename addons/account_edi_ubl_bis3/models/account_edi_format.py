@@ -42,7 +42,7 @@ COUNTRY_EAS = {
     'TR': 9952,
     'VA': 9953,
 
-    'SE': 9955,
+    'SE': '0007',
 
     'FR': 9957
 }
@@ -95,7 +95,7 @@ class AccountEdiFormat(models.Model):
         # Misc.
 
         for partner_vals in (values['customer_vals'], values['supplier_vals']):
-            partner = partner_vals['partner']
+            partner = partner_vals['partner'].commercial_partner_id
             if partner.country_id.code in COUNTRY_EAS:
                 partner_vals['bis3_endpoint'] = partner.vat
                 partner_vals['bis3_endpoint_scheme'] = COUNTRY_EAS[partner.country_id.code]
@@ -155,7 +155,7 @@ class AccountEdiFormat(models.Model):
 
             # Currency
             currency = self._retrieve_currency(_find_value('./{*}DocumentCurrencyCode'))
-            if currency:
+            if currency and currency.active:
                 invoice_form.currency_id = currency
 
             # Partner

@@ -333,6 +333,11 @@ class TestDurationExport(TestBasicExport):
         result = converter(72, {'unit': 'second'}, {'lang': 'fr_FR'})
         self.assertEqual(result, u"1 minute 12 secondes")
 
+    def test_negative_digital(self):
+        converter = self.get_converter('float', 'duration')
+        result = converter(-90, {'unit': 'minute', 'round': 'minute', 'digital': True}, {'lang': 'fr_FR'})
+        self.assertEqual(result, u'-01:30')
+
 
 class TestRelativeDatetime(TestBasicExport):
     # not sure how a test based on "current time" should be tested. Even less

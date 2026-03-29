@@ -147,6 +147,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
+            'country_id': cls.env['res.country'].create({
+                'name': 'PoS Land',
+                'code': 'WOW',
+            }),
         })
 
         # Set basic defaults
@@ -230,6 +234,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'name': 'Shelf 1',
             'location_id': cls.company_data['default_warehouse'].lot_stock_id.id,
         })
+
 
     #####################
     ## private methods ##
@@ -358,11 +363,95 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         tax7: 7%, excluded in product price
         tax10: 10%, included in product price
+        tax21: 21%, included in product price
         """
-        tax7 = cls.env['account.tax'].create({'name': 'Tax 7%', 'amount': 7})
-        tax10 = cls.env['account.tax'].create({'name': 'Tax 10%', 'amount': 10, 'price_include': True, 'include_base_amount': False})
-        (tax7 | tax10).mapped('invoice_repartition_line_ids').write({'account_id': cls.tax_received_account.id})
-        (tax7 | tax10).mapped('refund_repartition_line_ids').write({'account_id': cls.tax_received_account.id})
+        def create_tag(name):
+            return cls.env['account.account.tag'].create({
+                'name': name,
+                'applicability': 'taxes',
+                'country_id': cls.env.company.country_id.id
+            })
+
+        cls.tax_tag_invoice_base = create_tag('Invoice Base tag')
+        cls.tax_tag_invoice_tax = create_tag('Invoice Tax tag')
+        cls.tax_tag_refund_base = create_tag('Refund Base tag')
+        cls.tax_tag_refund_tax = create_tag('Refund Tax tag')
+
+        def create_tax(percentage, price_include=False):
+            return cls.env['account.tax'].create({
+                'name': f'Tax {percentage}%',
+                'amount': percentage,
+                'price_include': price_include,
+                'amount_type': 'percent',
+                'include_base_amount': False,
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_tax.ids)],
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_tax.ids)],
+                    }),
+                ],
+            })
+        def create_tax_fixed(amount, price_include=False):
+            return cls.env['account.tax'].create({
+                'name': f'Tax fixed amount {amount}',
+                'amount': amount,
+                'price_include': price_include,
+                'include_base_amount': price_include,
+                'amount_type': 'fixed',
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_invoice_tax.ids)],
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_base.ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': cls.tax_received_account.id,
+                        'tag_ids': [(6, 0, cls.tax_tag_refund_tax.ids)],
+                    }),
+                ],
+            })
+
+        tax_fixed006 = create_tax_fixed(0.06, price_include=True)
+        tax_fixed012 = create_tax_fixed(0.12, price_include=True)
+        tax7 = create_tax(7, price_include=False)
+        tax10 = create_tax(10, price_include=True)
+        tax21 = create_tax(21, price_include=True)
+
 
         tax_group_7_10 = tax7.copy()
         with Form(tax_group_7_10) as tax:
@@ -374,6 +463,9 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         return {
             'tax7': tax7,
             'tax10': tax10,
+            'tax21': tax21,
+            'tax_fixed006': tax_fixed006,
+            'tax_fixed012': tax_fixed012,
             'tax_group_7_10': tax_group_7_10
         }
 
@@ -384,7 +476,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     def create_random_uid(self):
         return ('%05d-%03d-%04d' % (randint(1, 99999), randint(1, 999), randint(1, 9999)))
 
-    def create_ui_order_data(self, product_quantity_pairs, customer=False, is_invoiced=False, payments=None, uid=None):
+    def create_ui_order_data(self, pos_order_lines_ui_args, customer=False, is_invoiced=False, payments=None, uid=None):
         """ Mocks the order_data generated by the pos ui.
 
         This is useful in making orders in an open pos session without making tours.
@@ -399,17 +491,19 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         The above values should be set when `self.open_new_session` is called.
 
-        :param list(tuple) product_quantity_pairs: pair of `ordered product` and `quantity`
+        :param list(tuple) pos_order_lines_ui_args: pairs of `ordered product` and `quantity`
+        or triplet of `ordered product`, `quantity` and discount
         :param list(tuple) payments: pair of `payment_method` and `amount`
         """
         default_fiscal_position = self.config.default_fiscal_position_id
         fiscal_position = customer.property_account_position_id if customer else default_fiscal_position
 
-        def create_order_line(product, quantity):
+        def create_order_line(product, quantity, discount=0.0):
             price_unit = self.pricelist.get_product_price(product, quantity, False)
             tax_ids = fiscal_position.map_tax(product.taxes_id)
+            price_unit_after_discount = price_unit * (1 - discount / 100.0)
             tax_values = (
-                tax_ids.compute_all(price_unit, self.currency, quantity)
+                tax_ids.compute_all(price_unit_after_discount, self.currency, quantity)
                 if tax_ids
                 else {
                     'total_excluded': price_unit * quantity,
@@ -417,7 +511,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 }
             )
             return (0, 0, {
-                'discount': 0,
+                'discount': discount,
                 'id': randint(1, 1000000),
                 'pack_lot_ids': [],
                 'price_unit': price_unit,
@@ -438,7 +532,11 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         uid = uid or self.create_random_uid()
 
         # 1. generate the order lines
-        order_lines = [create_order_line(product, quantity) for product, quantity in product_quantity_pairs]
+        order_lines = [
+            create_order_line(product, quantity, discount and discount[0] or 0.0)
+            for product, quantity, *discount
+            in pos_order_lines_ui_args
+        ]
 
         # 2. generate the payments
         total_amount_incl = sum(line[2]['price_subtotal_incl'] for line in order_lines)

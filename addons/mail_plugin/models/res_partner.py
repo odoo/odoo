@@ -43,7 +43,7 @@ class ResPartner(models.Model):
         return partner
 
     def write(self, vals):
-        super(ResPartner, self).write(vals)
+        res = super(ResPartner, self).write(vals)
 
         if 'iap_enrich_info' in vals or 'iap_search_domain' in vals:
             # Not done with inverse method so we do need to search
@@ -67,3 +67,4 @@ class ResPartner(models.Model):
                         'iap_search_domain': vals.get('iap_search_domain'),
                     } for partner in missing_partners
                 ])
+        return res

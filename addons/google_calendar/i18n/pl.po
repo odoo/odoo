@@ -12,11 +12,12 @@
 # Tomasz Leppich <t.leppich@gmail.com>, 2021
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2021
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2021
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2021
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2021
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2021
 # Maksym <ms@myodoo.pl>, 2021
 # Natalia Gros <nag@odoo.com>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,8 +25,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Natalia Gros <nag@odoo.com>, 2021\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,7 +37,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s i %(length)s następujące"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -96,6 +97,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"Podczas generowania tokena wystąpił błąd. Twój kod autoryzacji może być "
+"nieprawidłowy lub już wygasł [%s]. Powinieneś sprawdzić swój identyfikator i"
+" sekret klienta na platformie Google API lub spróbować zatrzymać i ponownie "
+"uruchomić synchronizację kalendarza."
 
 #. module: google_calendar
 #. openerp-web
@@ -241,7 +246,7 @@ msgstr "Kalendarz Google"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_credentials
 msgid "Google Calendar Account Data"
-msgstr ""
+msgstr "Dane konta kalendarza Google"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
@@ -277,7 +282,7 @@ msgstr "Zatrzymano synchronizację z Google"
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
-msgstr ""
+msgstr "Google podało następujące wyjaśnienie: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -420,6 +425,9 @@ msgid ""
 "The following event could not be synced with Google Calendar. </br>It will "
 "not be synced as long at it is not updated.</br>%(reason)s"
 msgstr ""
+"Następujące wydarzenie nie może być zsynchronizowane z Kalendarzem Google. "
+"</br> Nie będzie ono synchronizowane tak długo, jak długo nie będzie "
+"aktualizowane.</br>%(reason)s"
 
 #. module: google_calendar
 #. openerp-web
@@ -431,7 +439,7 @@ msgstr "Synchronizacja z Kalendarzem Google została pomyślnie zatrzymana."
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "Użytkownik ma już konto Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -493,7 +501,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "nieokreślony czas"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -501,3 +509,5 @@ msgstr ""
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
+"wydaje się, że nie masz uprawnień do modyfikacji tego wydarzenia w "
+"Kalendarzu Google"

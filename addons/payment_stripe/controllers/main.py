@@ -7,12 +7,13 @@ import logging
 import pprint
 from datetime import datetime
 
-import werkzeug
-
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq
+
+from odoo.addons.payment_stripe import utils as stripe_utils
+
 
 _logger = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ _logger = logging.getLogger(__name__)
 class StripeController(http.Controller):
     _checkout_return_url = '/payment/stripe/checkout_return'
     _validation_return_url = '/payment/stripe/validation_return'
+    _webhook_url = '/payment/stripe/webhook'
     WEBHOOK_AGE_TOLERANCE = 10*60  # seconds
 
     @http.route(_checkout_return_url, type='http', auth='public', csrf=False)
@@ -73,7 +75,7 @@ class StripeController(http.Controller):
         # Redirect the user to the status page
         return request.redirect('/payment/status')
 
-    @http.route('/payment/stripe/webhook', type='json', auth='public')
+    @http.route(_webhook_url, type='json', auth='public')
     def stripe_webhook(self):
         """ Process the `checkout.session.completed` event sent by Stripe to the webhook.
 
@@ -91,7 +93,9 @@ class StripeController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
                     'stripe', data
                 )
-                if self._verify_webhook_signature(tx_sudo.acquirer_id.stripe_webhook_secret):
+                if self._verify_webhook_signature(
+                    stripe_utils.get_webhook_secret(tx_sudo.acquirer_id)
+                ):
                     # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
                     if checkout_session.get('payment_intent'):  # Can be None
                         payment_intent = tx_sudo.acquirer_id._stripe_make_request(

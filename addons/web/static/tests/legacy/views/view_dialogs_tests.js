@@ -592,7 +592,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('SelectCreateDialog calls on_selected with every record matching the domain', async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         const parent = await createParent({
             data: this.data,
@@ -613,13 +613,51 @@ QUnit.module('Views', {
         new dialogs.SelectCreateDialog(parent, {
             res_model: 'partner',
             on_selected: function(records) {
-                assert.equal(records.length, 3)
+                assert.equal(records.length, 3);
+                assert.strictEqual(records.map((r) => r.display_name).toString(), "blipblip,macgyver,Jack O'Neill");
+                assert.strictEqual(records.map((r) => r.id).toString(), "1,2,3");
             }
         }).open();
         await testUtils.nextTick();
 
         await testUtils.dom.click($('thead .o_list_record_selector input'));
         await testUtils.dom.click($('.o_list_selection_box .o_list_select_domain'));
+        await testUtils.dom.click($('.modal .o_select_button'));
+
+        parent.destroy();
+    });
+
+    QUnit.test('SelectCreateDialog calls on_selected with every record matching without selecting a domain', async function (assert) {
+        assert.expect(3);
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                'partner,false,list':
+                    '<tree limit="2" string="Partner">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+                'partner,false,search':
+                    '<search>' +
+                        '<field name="foo"/>' +
+                    '</search>',
+            },
+            session: {},
+        });
+
+        new dialogs.SelectCreateDialog(parent, {
+            res_model: 'partner',
+            on_selected: function(records) {
+                assert.equal(records.length, 2);
+                assert.strictEqual(records.map((r) => r.display_name).toString(), "blipblip,macgyver");
+                assert.strictEqual(records.map((r) => r.id).toString(), "1,2");
+            }
+        }).open();
+        await testUtils.nextTick();
+
+        await testUtils.dom.click($('thead .o_list_record_selector input'));
+        await testUtils.dom.click($('.o_list_selection_box '));
         await testUtils.dom.click($('.modal .o_select_button'));
 
         parent.destroy();

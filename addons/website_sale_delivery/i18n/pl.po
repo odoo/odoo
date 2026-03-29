@@ -13,15 +13,18 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2021
 # Maja Stawicka <mjstwck@wp.pl>, 2021
 # Maksym <ms@myodoo.pl>, 2021
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2024-08-14 15:43+0000\n"
 "PO-Revision-Date: 2021-09-14 12:29+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2021\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,9 +32,9 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_shipping_method
 msgid "<b>Shipping Method: </b>"
-msgstr "</b>Sposób Dostawy:</b>"
+msgstr "</b>Sposób Dostawy: </b>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
@@ -62,7 +65,7 @@ msgstr "Kraj"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "DHL Shipping Methods"
-msgstr ""
+msgstr "Sposoby wysyłki DHL"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
@@ -97,7 +100,7 @@ msgstr "Opis dla ofert online"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Easypost Shipping Methods"
-msgstr ""
+msgstr "Sposoby wysyłki Easypost"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -107,7 +110,6 @@ msgstr "Sposoby dostawy FedEx"
 #. module: website_sale_delivery
 #. openerp-web
 #: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 #, python-format
 msgid "Free"
 msgstr "Wolny"
@@ -124,6 +126,18 @@ msgid ""
 "It seems that a delivery method is not compatible with your address. Please "
 "refresh the page and try again."
 msgstr ""
+"Wygląda na to, że sposób dostawy nie jest zgodny z Twoim adresem. Proszę "
+"odświeżyć stronę i spróbować ponownie."
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that there is already a transaction for your order, you can not "
+"change the delivery method anymore"
+msgstr ""
+"Wygląda na to, że dla Twojego zamówienia została już zawarta transakcja, nie"
+" możesz już zmienić sposobu dostawy."
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:0
@@ -134,6 +148,12 @@ msgid ""
 msgstr ""
 "Brak metody wysyłki dla obecnego zamówienia i adresu wysyłki. Skontaktuj się"
 " z nami, aby uzyskać więcej informacji."
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr "Nie wybrano metody wysyłki."
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -181,7 +201,7 @@ msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Shipping Methods"
-msgstr ""
+msgstr "Sposoby wysyłki USPS"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
@@ -191,7 +211,7 @@ msgstr "Widoczne na obecnej stronie"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
 msgid "Website"
-msgstr "Strona WWW"
+msgstr "Strona internetowa"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
@@ -201,4 +221,4 @@ msgstr "Adres strony internetowej"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "bpost Shipping Methods"
-msgstr ""
+msgstr "Sposoby wysyłki bpost"

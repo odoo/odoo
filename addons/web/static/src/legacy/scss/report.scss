@@ -13,6 +13,14 @@ body {
     font-family: $o-default-report-font;
 }
 
+/* Customize and overwrite default settings in the bootstrap.scss
+    to avoid sporadic appearance of image opacity
+ *  See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2135
+ */
+hr {
+    border-top-color: rgb(229, 229, 229);
+}
+
 span.o_force_ltr {
     display: inline;
 }
@@ -103,6 +111,43 @@ ol {
     padding-left: 0;
 }
 
+/* Checklist */
+ul {
+    &.o_checklist {
+        > li {
+            list-style: none;
+            position: relative;
+            margin-left: 20px;
+        }
+        > li:not(.oe-nested):before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            display: block;
+            height: 14px;
+            width: 14px;
+            top: 1px;
+            border: 1px solid;
+            cursor: pointer;
+        }
+        > li.o_checked:after {
+            content: "✓";
+            transition: opacity .5s;
+            position: absolute;
+            left: -18px;
+            top: -1px;
+            opacity: 1;
+        }
+    }
+}
+
+blockquote {
+    padding: $spacer/2 $spacer;
+    border-left: 5px solid;
+    border-color: gray('300');
+    font-style: italic;
+}
+
 // Wkhtmltopdf doesn't handle flexbox properly, both the content
 // of columns and columns themselves does not wrap over new lines
 // when needed: the font of the pdf will reduce to make the content
@@ -114,4 +159,8 @@ ol {
 .col-auto{
     -webkit-box-flex: 1 !important;
     width: 100% !important;
+}
+
+li.oe-nested {
+    display: block;
 }

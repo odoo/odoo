@@ -36,7 +36,10 @@ var WysiwygDialog = Dialog.extend({
 
         var self = this;
         this.opened(function () {
-            self.$('input:visible:first').focus();
+            const selector = options.focusField
+                ? `input[name=${options.focusField}]` 
+                : 'input:visible:first';
+            self.$(selector).focus();
             self.$el.closest('.modal').addClass('o_web_editor_dialog');
             self.$el.closest('.modal').on('hidden.bs.modal', self.options.onClose);
         });

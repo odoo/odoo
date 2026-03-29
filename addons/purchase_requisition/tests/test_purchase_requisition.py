@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
+from odoo.tests import Form
 
 
 class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
@@ -113,3 +114,51 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             ('name', '=', vendor.id)
         ]) - supplier_info
         self.assertEqual(new_si.purchase_requisition_id, requisition_blanket, 'the blanket order is not linked to the supplier info')
+
+    def test_07_purchase_requisition(self):
+        """
+            Check that the analytic account and the account tag defined in the purchase requisition line
+            is used in the purchase order line when creating a PO.
+        """
+        analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account'})
+        analytic_tag = self.env['account.analytic.tag'].create({'name': 'test_analytic_tag'})
+        self.assertEqual(len(self.requisition1.line_ids), 1)
+        self.requisition1.line_ids[0].write({
+            'account_analytic_id': analytic_account,
+            'analytic_tag_ids': analytic_tag,
+        })
+        # Create purchase order from purchase requisition
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=self.requisition1.id))
+        po_form.partner_id = self.res_partner_1
+        po = po_form.save()
+        self.assertEqual(po.order_line.account_analytic_id.id, analytic_account.id, 'The analytic account defined in the purchase requisition line must be the same as the one from the purchase order line.')
+        self.assertEqual(po.order_line.analytic_tag_ids.id, analytic_tag.id, 'The analytic account tag defined in the purchase requisition line must be the same as the one from the purchase order line.')
+
+    def test_08_purchase_requisition_sequence(self):
+        new_company = self.env['res.company'].create({'name': 'Company 2'})
+        self.env['ir.sequence'].create({
+            'code': 'purchase.requisition.purchase.tender',
+            'prefix': 'REQ_',
+            'name': 'Call for Tender sequence',
+            'company_id': new_company.id,
+        })
+        self.requisition1.company_id = new_company
+        self.requisition1.action_in_progress()
+        self.assertTrue(self.requisition1.name.startswith("REQ_"))
+
+    def test_purchase_requisition_with_same_product(self):
+        """
+        Create two requisitions with the same product, but only one of them has a PO linked.
+        Check that the ordered quantity is correctly computed.
+        """
+        requisition_2 = self.requisition1.copy({'name': 'requisition_2'})
+        # Create purchase order from purchase requisition
+        po_form = Form(self.env['purchase.order'].with_context(default_requisition_id=requisition_2.id))
+        po_form.partner_id = self.res_partner_1
+        po = po_form.save()
+        self.assertEqual(po.requisition_id, requisition_2)
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+        (self.requisition1.line_ids | requisition_2.line_ids)._compute_ordered_qty()
+        self.assertEqual(self.requisition1.line_ids.qty_ordered, 0)
+        self.assertEqual(requisition_2.line_ids.qty_ordered, 10)

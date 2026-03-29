@@ -146,13 +146,13 @@
     <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
         id="registration_form"
         class="mb-5"
-        t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+        t-attf-data-action="/event/#{slug(event)}/registration/new" action="javascript:void(0)"
         itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <div id="o_wevent_tickets" class="bg-white shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
-            <t t-if="len(event.event_ticket_ids) &gt; 1 or tickets.description">
+            <t t-if="len(event.event_ticket_ids) &gt; 1">
                 <div class="d-flex align-items-center py-2 pl-3 pr-2 border-bottom">
                     <span class="py-2 o_wevent_registration_title text-left">Tickets</span>
                     <div class="o_wevent_price_range d-none"/>
@@ -221,11 +221,15 @@
             </t>
             <div t-else="" class="o_wevent_registration_single">
                 <div class="row p-2 pl-3">
-                    <div class="col-lg-8 d-flex flex-columns align-items-center" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                    <div class="col-lg-8 d-flex flex-column flex-lg-row align-items-start align-items-lg-center" itemscope="itemscope" itemtype="http://schema.org/Offer">
                         <h6 itemprop="name" class="my-0 pr-3 border-right text-dark o_wevent_single_ticket_name">
                             <span t-if="tickets" t-field="tickets.name"/>
                             <span t-else="">Registration</span>
                         </h6>
+                        <t t-if="tickets.description">
+                            <small t-field="tickets.description" class="text-muted py-2"/>
+                            <br/>
+                        </t>
                         <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on
                             <span itemprop="priceValidUntil" t-esc="tickets.end_sale_datetime"
                                 t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
@@ -254,7 +258,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 pt-3 pt-lg-0 pl-2 pl-lg-0">
-                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">
+                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}" disabled="disabled">
                             Register
                             <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
                                 (only <t t-esc="event.seats_available"/> available)
@@ -405,7 +409,7 @@
 <!-- Button to configure Tickets -->
 <template id="registration_configure_tickets_button" name="Registration Configure Ticket Button">
     <div class="o_not_editable mx-2" role="link">
-        <a class="text-nowrap" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+        <a class="text-nowrap" t-attf-href="/web#id=#{event.id}&amp;menu_id=#{backend_menu_id}&amp;view_type=form&amp;model=event.event">
             <i class="fa fa-gear mr-1" role="img" aria-label="Configure" title="Configure event tickets"/><em>Configure Tickets</em>
         </a>
     </div>

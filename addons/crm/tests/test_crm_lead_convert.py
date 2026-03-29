@@ -242,6 +242,27 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         # self.assertEqual(convert.partner_id, customer)
 
     @users('user_sales_manager')
+    def test_lead_convert_no_lang(self):
+        """ Ensure converting a lead with an archived language correctly falls back on the default partner language. """
+        inactive_lang = self.env["res.lang"].sudo().create({
+            'code': 'en_ZZ',
+            'name': 'Inactive Lang',
+            'active': False,
+        })
+
+        lead = self.lead_1.with_user(self.env.user)
+        lead.lang_id = inactive_lang
+
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': self.lead_1.id,
+            'active_ids': self.lead_1.ids,
+        }).create({'action': 'create'})
+        convert.action_apply()
+        self.assertTrue(lead.partner_id)
+        self.assertEqual(lead.partner_id.lang, 'en_US')
+
+    @users('user_sales_manager')
     def test_lead_convert_internals(self):
         """ Test internals of convert wizard """
         convert = self.env['crm.lead2opportunity.partner'].with_context({
@@ -389,6 +410,40 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
         convert.action_apply()
         self.assertEqual(self.lead_1.type, 'opportunity')
+
+    @users('user_sales_salesman')
+    def test_lead_merge_user(self):
+        """ Test convert wizard working in merge mode with sales user """
+        date = Datetime.from_string('2020-01-20 16:00:00')
+        self.crm_lead_dt_mock.now.return_value = date
+
+        leads = self.env['crm.lead']
+        for x in range(2):
+            leads |= self.env['crm.lead'].create({
+                'name': 'Dup-%02d-%s' % (x+1, self.lead_1.name),
+                'type': 'lead', 'user_id': False, 'team_id': self.lead_1.team_id.id,
+                'contact_name': 'Duplicate %02d of %s' % (x+1, self.lead_1.contact_name),
+                'email_from': self.lead_1.email_from,
+                'probability': 10,
+            })
+
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': leads[0].id,
+            'active_ids': leads[0].ids,
+        }).create({})
+
+        # test internals of convert wizard
+        self.assertEqual(convert.duplicated_lead_ids, leads)
+        self.assertEqual(convert.name, 'merge')
+        self.assertEqual(convert.action, 'create')
+
+        convert.write({'user_id': self.user_sales_salesman.id})
+        self.assertEqual(convert.user_id, self.user_sales_salesman)
+        self.assertEqual(convert.team_id, self.sales_team_convert)
+
+        convert.action_apply()
+        self.assertEqual(leads[0].type, 'opportunity')
 
     @users('user_sales_manager')
     def test_lead_merge_duplicates(self):

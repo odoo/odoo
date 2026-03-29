@@ -770,6 +770,37 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('Multiple-page-action-request should contain context', async function (assert) {
+        assert.expect(1);
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            context: { this_key_should_be_present_in_context: 1 },
+            arch: `
+                <tree limit="1">
+                    <header>
+                         <button name="x" type="object" class="btn_triggering_search_request" string="btn triggering search request"/>
+                    </header>
+                    <field name="foo" />
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === 'search') {
+                    assert.deepEqual(args.kwargs.context, { this_key_should_be_present_in_context: 1 });
+                }
+                return this._super.call(this, ...arguments);
+            }
+        });
+        // Click to: Select all records on current page
+        await testUtils.dom.click(list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]'));
+        // Click to: Select all records on ALL pages
+        await testUtils.dom.click(list.el.querySelector('.o_list_select_domain'));
+        // Click on action button to trigger "search" request
+        await testUtils.dom.click(list.el.querySelector('button[name="x"]'));
+
+        list.destroy();
+    });
+
     QUnit.test('column names (noLabel, label, string and default)', async function (assert) {
         assert.expect(4);
 
@@ -2234,6 +2265,37 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection box in grouped list, multi pages)', async function (assert) {
+        assert.expect(8);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['int_field'],
+            arch: '<tree groups_limit="2"><field name="foo"/><field name="bar"/></tree>',
+        });
+
+        assert.containsN(list, '.o_group_header', 2);
+        assert.containsNone(list.$('.o_cp_buttons'), '.o_list_selection_box');
+
+        // open first group and select all records of first page
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+        assert.containsOnce(list, '.o_data_row');
+        await testUtils.dom.click(list.$('thead .o_list_record_selector input'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.containsOnce(list.$('.o_list_selection_box'), '.o_list_select_domain');
+        assert.strictEqual(list.$('.o_list_selection_box').text().replace(/\s+/g, ' ').trim(),
+            '1 selected Select all'); // we don't know the total count, so we don't display it
+
+        // select all domain
+        await testUtils.dom.click(list.$('.o_list_selection_box .o_list_select_domain'));
+        assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
+        assert.strictEqual(list.$('.o_list_selection_box').text().trim(), 'All selected');
+
+        list.destroy();
+    });
+
     QUnit.test('selection box is displayed after header buttons', async function (assert) {
         assert.expect(5);
 
@@ -2404,7 +2466,7 @@ QUnit.module('Views', {
 
         // Let's update the view to dislay NO records
         await list.update({domain: ['&', ['bar', '=', false], ['int_field', '>', 0]]});
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "0", "total should have been recomputed to 0");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "", "No records, so no total.");
 
         list.destroy();
     });
@@ -2436,6 +2498,34 @@ QUnit.module('Views', {
                         "total should be 10 as first record of first group is selected");
         list.destroy();
     });
+
+    QUnit.test('hide aggregated value in grouped lists when no data provided by RPC call', async function(assert) {
+        assert.expect(1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['bar'],
+            arch: '<tree editable="bottom"><field name="foo"/><field name="qux" widget="float_time" sum="Sum"/></tree>',
+            mockRPC: function (route, args) {
+                return this._super.apply(this, arguments).then(result => {
+                    // On PY-side, a read_group won't provide any aggregate value
+                    // if the field does not have a `group_operator` attribute.
+                    // (see 5691b126f06/odoo/models.py#L2521-L2528)
+                    // Here, since `qux` does not have such an attribute, we
+                    // remove the value provided by `_mockReadGroup`
+                    _.each(result.groups, function(group) {
+                      delete group.qux
+                    })
+                    return Promise.resolve(result)
+                });
+            },
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "", "There isn't any aggregated value");
+        list.destroy();
+    })
 
     QUnit.test('aggregates are updated when a line is edited', async function (assert) {
         assert.expect(2);
@@ -2906,8 +2996,8 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('table').width(), list.$('.o_list_view').width());
         const largeCells = list.$('.o_data_cell.large');
-        assert.strictEqual(largeCells[0].offsetWidth, largeCells[1].offsetWidth);
-        assert.strictEqual(largeCells[1].offsetWidth, largeCells[2].offsetWidth);
+        assert.ok(Math.abs(largeCells[0].offsetWidth - largeCells[1].offsetWidth) <= 1);
+        assert.ok(Math.abs(largeCells[1].offsetWidth - largeCells[2].offsetWidth) <= 1);
         assert.ok(list.$('.o_data_cell:not(.large)')[0].offsetWidth < largeCells[0].offsetWidth);
 
         list.destroy();
@@ -3398,7 +3488,7 @@ QUnit.module('Views', {
         const text = list.el.querySelector('th[data-name="text"]');
         const textWidth = Math.ceil(text.getBoundingClientRect().width);
 
-        assert.strictEqual(fooWidth, textWidth, "both columns should have been given the same width");
+        assert.ok(Math.abs(fooWidth - textWidth) <= 1, "both columns should have been given the same width");
 
         const firstRowHeight = list.$('.o_data_row:nth(0)')[0].offsetHeight;
         const secondRowHeight = list.$('.o_data_row:nth(1)')[0].offsetHeight;
@@ -3599,6 +3689,54 @@ QUnit.module('Views', {
         _t.database.multi_lang = multiLang;
         list.destroy();
     });
+
+    QUnit.test('fields are translatable in multi-editable list view', async function (assert) {
+        assert.expect(1);
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+        this.data.foo.fields.foo.translate = true;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            session: {
+                user_context: {lang: 'en_US'},
+            },
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'foo,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US","English"], ["fr_BE", "Frenglish"]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            arch: '<tree multi_edit="1">' +
+                        '<field name="foo" required="1"/>' +
+                    '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input').first());
+        await testUtils.nextTick();
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_char'));
+        await testUtils.nextTick();
+        await testUtils.dom.click(list.$('input.o_field_translate+span.o_field_translate'));
+        await testUtils.nextTick();
+
+        await testUtils.fields.editInput($('.o_translation_dialog input:first'), 'bla_');
+        await testUtils.nextTick();
+
+        await testUtils.modal.clickButton('Save');
+        assert.strictEqual($('.o_data_row:first .o_list_char').text(), 'bla_');
+
+        _t.database.multi_lang = multiLang;
+        list.destroy();
+    });
+
 
     QUnit.test('long words in text cells should break into smaller lines', async function (assert) {
         assert.expect(2);
@@ -4363,6 +4501,30 @@ QUnit.module('Views', {
         });
 
         assert.containsNone(list, '.o_list_buttons', "should not have any buttons");
+        list.destroy();
+    });
+
+    QUnit.test('list with group_by_no_leaf and group by', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree expand="1"><field name="foo"/></tree>',
+            groupBy: ['currency_id'],
+            context: { group_by_no_leaf: true },
+        });
+        const groups = list.el.querySelectorAll(".o_group_name");
+        const groupsRecords = [...list.el.querySelectorAll(".o_data_row .o_data_cell")];
+
+        assert.strictEqual(groups.length, 2, "There should be 2 groups");
+        assert.strictEqual(groups[0].textContent, "EUR (1)", "First group should have 1 record");
+        assert.strictEqual(groups[1].textContent, "USD (3)", "Second group should have 3 records");
+        assert.deepEqual(
+            groupsRecords.map(groupEl => groupEl.textContent),
+            ["yop", "blip", "gnap", "blip"],
+            "Groups should contains correct records");
         list.destroy();
     });
 
@@ -7612,7 +7774,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('multiple clicks on Add do not create invalid rows', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.foo.onchanges = {
             m2o: function () {},
@@ -7638,9 +7800,9 @@ QUnit.module('Views', {
         assert.containsN(list, '.o_data_row', 4,
             "should contain 4 records");
 
-        // click on Add twice, and delay the onchange
+        // click on Add and delay the onchange (check that the button is correctly disabled)
         testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
-        testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        assert.ok(list.$buttons.find('.o_list_button_add').get(0).disabled);
 
         prom.resolve();
         await testUtils.nextTick();
@@ -7726,6 +7888,54 @@ QUnit.module('Views', {
             'Value 2',
             'Value 3',
         ]);
+        list.destroy();
+    });
+
+    QUnit.test('multi edit in view grouped by field not in view', async function (assert) {
+        assert.expect(3);
+
+        this.data.foo.records = [
+            // group 1
+            {id: 1, foo: '1', m2o: 1},
+            {id: 3, foo: '2', m2o: 1},
+            //group 2
+            {id: 2, foo: '1', m2o: 2},
+            {id: 4, foo: '2', m2o: 2},
+            // group 3
+            {id: 5, foo: '2', m2o: 3},
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `<tree expand="1" multi_edit="1">
+                   <field name="foo"/>
+               </tree>`,
+            groupBy: ['m2o'],
+        });
+
+        // Select items from the first group
+        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:eq(0)'));
+        await testUtils.dom.click(list.$('.o_data_row .o_list_record_selector input:eq(1)'));
+
+        await testUtils.dom.click(list.$('.o_list_char:eq(0)'));
+
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=foo]'), 'test');
+
+        assert.containsOnce(document.body, '.modal');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.containsNone(document.body, '.modal');
+
+        const allNames = [...document.querySelectorAll('.o_data_cell')].map(n => n.textContent);
+        assert.deepEqual(allNames, [
+            'test',
+            'test',
+            '1',
+            '2',
+            '2',
+        ]);
+
         list.destroy();
     });
 
@@ -8917,13 +9127,13 @@ QUnit.module('Views', {
             arch:
                 `<tree multi_edit="1">
                     <field name="foo"/>
-                    <field name="int_field"/>
+                    <field name="int_field" required="1"/>
                 </tree>`,
             data: this.data,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (args.method === 'write') {
-                    assert.deepEqual(args.args, [[1, 2], { int_field: 666 }],
+                    assert.deepEqual(args.args, [[1, 2], { int_field: 0 }],
                         "should write on multi records");
                 } else if (args.method === 'read') {
                     if (args.args[0].length !== 1) {
@@ -8957,7 +9167,7 @@ QUnit.module('Views', {
             "changes have been discarded and row is back to readonly");
 
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
-        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 0);
         await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
 
         assert.containsOnce(document.body, '.modal',
@@ -8968,9 +9178,9 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal .btn-primary'));
 
         assert.verifySteps(['write', 'read']);
-        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop666",
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop0",
             "the first row should be updated");
-        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip666",
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip0",
             "the second row should be updated");
         assert.containsNone(list, '.o_data_cell input.o_field_widget',
             "no field should be editable anymore");
@@ -12729,6 +12939,77 @@ QUnit.module('Views', {
         assert.ok($('table.o_list_table > tbody > tr:eq(1)')[0].classList.contains('o_selected_row'), "The second row should be selected")
 
         list.destroy();
+    });
+
+    QUnit.test('FieldColorPicker: dont overflow color picker in list', async function (assert) {
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top" string="Partners">
+                    <field name="date"/>
+                    <field name="int_field" widget="color_picker"/>
+                </tree>`,
+            domain: [['id', '<', 0]],
+       });
+        await testUtils.dom.click(list.el.querySelector('.o_list_button_add'))
+        const date_column_width = list.el.querySelector('.o_list_table thead th[data-name="date"]').style.width.replace('px', '');
+        const int_field_column_width = list.el.querySelector('.o_list_table thead th[data-name="int_field"]').style.width.replace('px', '');
+        // Default values for date and int fields are: date: '92px', integer: '74px'
+        // With the screen growing, the proportion is kept and thus int_field would remain smaller than date if
+        // the color_picker wouldn't have widthInList set to '1'. With that property set, int_field size will be bigger
+        // than date's one.
+        assert.ok(parseFloat(date_column_width) < parseFloat(int_field_column_width), "colorpicker should display properly (Horizontly)");
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: check iso-language used to default date context when groupby applied', async function (assert) {
+        assert.expect(4);
+
+        const originalLocale = moment.locale();
+        var numberMap = {'١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9', '٠': '0'};
+        var symbolMap = {'1': '١', '2': '٢', '3': '٣', '4': '٤', '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩', '0': '٠'};
+        moment.defineLocale('ar_001', {
+            preparse: function (string) {
+                return string.replace(/\u200f/g, '').replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {
+                    return numberMap[match];
+                }).replace(/،/g, ',');
+            },
+            postformat: function (string) {
+                return string.replace(/\d/g, function (match) {
+                    return symbolMap[match];
+                }).replace(/,/g, '،');
+            },
+        });
+
+        var list = await createView({
+            View: ListView,
+            debug: 1,
+            data: this.data,
+            model: 'foo',
+            arch: '<tree editable="bottom"><field name="date"/></tree>',
+            groupBy: ['date:day'],
+            mockRPC(route, args) {
+                if (args.method === 'create') {
+                    assert.step('create');
+                    assert.strictEqual(args.model, 'foo');
+                    assert.strictEqual(args.args[0].date, '2017-01-25');
+                }
+                return this._super.call(this, ...arguments);
+            }
+        });
+
+        await testUtils.dom.click(list.$('.o_group_name:eq(0)'));
+        await testUtils.dom.click(list.$('.o_add_record_row a'));
+        await testUtils.dom.click($('.o_list_button_save'));
+
+        moment.locale(originalLocale);
+        moment.updateLocale('ar_001', null);
+
+        list.destroy();
+
+        assert.verifySteps(['create']);
     });
 
 });

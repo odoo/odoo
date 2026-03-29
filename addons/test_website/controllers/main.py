@@ -142,3 +142,10 @@ class WebsiteTest(Home):
     @http.route(['/test_website/test_redirect_view_qs'], type='http', auth="public", website=True, sitemap=False)
     def test_redirect_view_qs(self, **kw):
         return request.render('test_website.test_redirect_view_qs')
+
+    @http.route([
+        '/test_countries_308',
+        '/test_countries_308/<model("test.model"):rec>',
+    ], type='http', auth='public', website=True, sitemap=False)
+    def test_countries_308(self, **kwargs):
+        return request.make_response('ok')

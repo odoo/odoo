@@ -3,7 +3,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
 
     const { parse } = require('web.field_utils');
     const PosComponent = require('point_of_sale.PosComponent');
-    const { useErrorHandlers } = require('point_of_sale.custom_hooks');
+    const { useErrorHandlers, useAsyncLockedMethod } = require('point_of_sale.custom_hooks');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
@@ -21,19 +21,48 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-cancel', this._sendPaymentCancel);
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
-            NumberBuffer.use({
+            this.lockedValidateOrder = useAsyncLockedMethod(this.validateOrder);
+            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
+            NumberBuffer.use(this._getNumberBufferConfig);
+            onChangeOrder(this._onPrevOrder, this._onNewOrder);
+            useErrorHandlers();
+            this.payment_interface = null;
+            this.error = false;
+        }
+
+        mounted() {
+            this.env.pos.on('change:selectedClient', this.render, this);
+        }
+        willUnmount() {
+            this.env.pos.off('change:selectedClient', null, this);
+        }
+
+        showMaxValueError() {
+            this.showPopup('ErrorPopup', {
+                title: this.env._t('Maximum value reached'),
+                body: this.env._t('The amount cannot be higher than the due amount if you don\'t have a cash payment method configured.')
+            });
+        }
+        get _getNumberBufferConfig() {
+            let config = {
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
                 nonKeyboardInputEvent: 'input-from-numpad',
                 // When the buffer is updated, trigger this event.
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
-            });
-            onChangeOrder(this._onPrevOrder, this._onNewOrder);
-            useErrorHandlers();
-            this.payment_interface = null;
-            this.error = false;
-            this.payment_methods_from_config = this.env.pos.payment_methods.filter(method => this.env.pos.config.payment_method_ids.includes(method.id));
+            };
+            // Check if pos has a cash payment method
+            const hasCashPaymentMethod = this.payment_methods_from_config.some(
+                (method) => method.type === 'cash'
+            );
+
+            if (!hasCashPaymentMethod) {
+                config['maxValue'] = this.currentOrder.get_due();
+                config['maxValueReached'] = this.showMaxValueError.bind(this);
+            }
+
+            return config;
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -59,20 +88,17 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         }
         addNewPaymentLine({ detail: paymentMethod }) {
             // original function: click_paymentmethods
-            if (this.currentOrder.electronic_payment_in_progress()) {
+            let result = this.currentOrder.add_paymentline(paymentMethod);
+            if (result){
+                NumberBuffer.reset();
+                return true;
+            }
+            else{
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Error'),
                     body: this.env._t('There is already an electronic payment in progress.'),
                 });
                 return false;
-            } else {
-                this.currentOrder.add_paymentline(paymentMethod);
-                NumberBuffer.reset();
-                this.payment_interface = paymentMethod.payment_terminal;
-                if (this.payment_interface) {
-                    this.currentOrder.selected_paymentline.set_payment_status('pending');
-                }
-                return true;
             }
         }
         _updateSelectedPaymentline() {
@@ -193,6 +219,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             let syncedOrderBackendIds = [];
 
             try {
+                this.env.services.ui.block()
                 if (this.currentOrder.is_to_invoice()) {
                     syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(
                         this.currentOrder
@@ -201,7 +228,9 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     syncedOrderBackendIds = await this.env.pos.push_single_order(this.currentOrder);
                 }
             } catch (error) {
-                if (error.code == 700)
+                // unblock the UI before showing the error popup
+                this.env.services.ui.unblock();
+                if (error.code == 700 || error.code == 701)
                     this.error = true;
 
                 if ('code' in error) {
@@ -210,6 +239,9 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     // then it is an error when invoicing. Besides, _handlePushOrderError was
                     // introduce to handle invoicing error logic.
                     await this._handlePushOrderError(error);
+                    if ('server_ids' in error) {
+                        syncedOrderBackendIds = error.server_ids;
+                    }
                 } else {
                     // We don't block for connection error. But we rethrow for any other errors.
                     if (isConnectionError(error)) {
@@ -221,6 +253,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                         throw error;
                     }
                 }
+            } finally {
+                this.env.services.ui.unblock()
             }
             if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
                 const result = await this._postPushOrderResolve(
@@ -264,6 +298,18 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     title: this.env._t('Empty Order'),
                     body: this.env._t(
                         'There must be at least one product in your order before it can be validated and invoiced.'
+                    ),
+                });
+                return false;
+            }
+
+            if (this.currentOrder.electronic_payment_in_progress()) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Pending Electronic Payments'),
+                    body: this.env._t(
+                        'There is at least one pending electronic payment.\n' +
+                        'Please finish the payment with the terminal or ' +
+                        'cancel it then remove the payment line.'
                     ),
                 });
                 return false;
@@ -319,6 +365,17 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 return false;
             }
 
+            //If this order is a refund, check if there is a cash payment
+            if (this.currentOrder.get_due() < 0) {
+                if (!this.payment_methods_from_config.some(payment_method => payment_method.is_cash_count)) {
+                    this.showPopup('ErrorPopup', {
+                        title: this.env._t('Cannot return change without a cash payment method'),
+                        body: this.env._t('There is no cash payment method available in this point of sale to handle the change.\n\n Please add a cash payment method in the point of sale configuration.')
+                    });
+                    return false;
+                }
+            }
+
             // The exact amount must be paid if there is no cash payment method defined.
             if (
                 Math.abs(
@@ -359,7 +416,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                         ' ' +
                         this.env._t('? Clicking "Confirm" will validate the payment.'),
                 }).then(({ confirmed }) => {
-                    if (confirmed) this.validateOrder(true);
+                    if (confirmed) this.lockedValidateOrder(true);
                 });
                 return false;
             }

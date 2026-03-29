@@ -6,7 +6,7 @@
     'version': '2.0',
     'sequence': 345,
     'summary': 'Payment Acquirer: Alipay Implementation',
-    'description': """Alipay Payment Acquirer""",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_alipay_templates.xml',

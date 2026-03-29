@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
+from odoo.exceptions import UserError
 
 
 class TestProcRule(TransactionCase):
@@ -18,6 +19,55 @@ class TestProcRule(TransactionCase):
             'type': 'consu',
         })
         self.partner = self.env['res.partner'].create({'name': 'Partner'})
+
+    def test_qty_to_order_remainder_decimal(self):
+        """Test case for when remainder is decimal"""
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product
+        orderpoint_form.location_id = self.env.ref('stock.stock_location_stock')
+        orderpoint_form.product_min_qty = 4.0
+        orderpoint_form.product_max_qty = 5.1
+        orderpoint_form.qty_multiple = 0.1
+        orderpoint = orderpoint_form.save()
+        self.assertEqual(orderpoint.qty_to_order, orderpoint_form.product_max_qty)
+
+    def test_endless_loop_rules_from_location(self):
+        """ Creates and configure a rule the way, when trying to get rules from
+        location, it goes in a state where the found rule tries to trigger another
+        rule but finds nothing else than itself and so get stuck in a recursion error."""
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        reception_route = warehouse.reception_route_id
+        self.product.type = 'product'
+
+        # Creates a delivery for this product, that way, this product will be to resupply.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = warehouse.out_type_id
+        with picking_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 10
+        delivery = picking_form.save()
+        delivery.action_confirm()
+        self.product._compute_quantities()  # Computes `outgoing_qty` to have the orderpoint.
+
+        # Then, creates a rule and adds it into the route's rules.
+        reception_route.rule_ids.action_archive()
+
+        # Tries to create loop in rules -> It should raise an UserError.
+        # As assertRaises() creates a savepoint, resulting in a flush, the UserError would already be triggered on the 
+        # 'with self.assertRaises(UserError):' line when computing qty_to_order, failing the test.
+        # To avoid this, we move both the create() and the action_open_orderpoints() inside of the assertRaises.
+        with self.assertRaises(UserError):
+            self.env['stock.rule'].create({
+                'name': 'Looping Rule',
+                'route_id': reception_route.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_src_id': warehouse.lot_stock_id.id,
+                'action': 'pull_push',
+                'procure_method': 'make_to_order',
+                'picking_type_id': warehouse.int_type_id.id,
+            })
+            
+            self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
     def test_proc_rule(self):
         # Create a product route containing a stock rule that will
@@ -322,6 +372,60 @@ class TestProcRule(TransactionCase):
         picking_ship = self.env['stock.picking'].search([('group_id', '=', pg.id)])
         self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 5.0)
         self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 3.0)
+
+    def test_orderpoint_replenishment_view(self):
+        """ Create two warehouses + two moves
+        verify that the replenishment view is consistent"""
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse_2, warehouse_3 = self.env['stock.warehouse'].create([{
+            'name': 'Warehouse Two',
+            'code': 'WH2',
+            'resupply_wh_ids': [warehouse_1.id],
+        }, {
+            'name': 'Warehouse Three',
+            'code': 'WH3',
+            'resupply_wh_ids': [warehouse_1.id],
+        }])
+        route_2 = self.env['stock.location.route'].search([
+            ('supplied_wh_id', '=', warehouse_2.id),
+            ('supplier_wh_id', '=', warehouse_1.id),
+        ])
+        route_3 = self.env['stock.location.route'].search([
+            ('supplied_wh_id', '=', warehouse_3.id),
+            ('supplier_wh_id', '=', warehouse_1.id),
+        ])
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'route_ids': [route_2.id, route_3.id]
+        })
+        moves = self.env['stock.move'].create([{
+            'name': 'Move WH2',
+            'location_id': warehouse_2.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+        }, {
+            'name': 'Move WH3',
+            'location_id': warehouse_3.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+        }])
+        moves._action_confirm()
+        # activate action of opening the replenishment view
+        self.env['report.stock.quantity'].flush()
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        replenishments = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', product.id),
+        ])
+        # Verify that the location and the route make sense
+        self.assertRecordValues(replenishments, [
+            {'location_id': warehouse_2.lot_stock_id.id, 'route_id': route_2.id},
+            {'location_id': warehouse_3.lot_stock_id.id, 'route_id': route_3.id},
+        ])
 
 
 class TestProcRuleLoad(TransactionCase):

@@ -91,17 +91,25 @@ const parseField = (field, value, opts = {}) => {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
+    const options = { field, ...opts };
+    if (["date", "datetime"].includes(type)) {
+        options.timezone = type === "datetime";
+    }
     const parse = parsers.contains(type) ? parsers.get(type) : (v) => v;
-    return parse(value, { field, ...opts });
+    return parse(value, options);
 };
 
 const formatField = (field, value, opts = {}) => {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
+    const options = { field, ...opts };
     const type = field.type === "id" ? "integer" : field.type;
+    if (["date", "datetime"].includes(type)) {
+        options.timezone = type === "datetime";
+    }
     const format = formatters.contains(type) ? formatters.get(type) : (v) => v;
-    return format(value, { field, ...opts });
+    return format(value, options);
 };
 
 export class CustomFilterItem extends Component {
@@ -167,17 +175,17 @@ export class CustomFilterItem extends Component {
                 condition.value = 0;
                 break;
             }
-            case "date": {
+            case "date":
+            case "datetime": {
                 condition.value = [DateTime.local()];
                 if (operator.symbol === "between") {
                     condition.value.push(DateTime.local());
                 }
-                break;
-            }
-            case "datetime": {
-                condition.value = [DateTime.fromFormat("00:00:00", "hh:mm:ss")];
-                if (operator.symbol === "between") {
-                    condition.value.push(DateTime.fromFormat("23:59:59", "hh:mm:ss"));
+                if (genericType === "datetime") {
+                    condition.value[0] = condition.value[0].set({ hour: 0, minute: 0, second: 0 });
+                    if (operator.symbol === "between") {
+                        condition.value[1] = condition.value[1].set({ hour: 23, minute: 59, second: 59 });
+                    }
                 }
                 break;
             }
@@ -220,7 +228,7 @@ export class CustomFilterItem extends Component {
                 domainValue = condition.value.map(serialize);
                 descriptionArray.push(
                     `"${condition.value
-                        .map((val) => formatField(field, val, { timezone: true }))
+                        .map((val) => formatField(field, val))
                         .join(" " + this.env._t("and") + " ")}"`
                 );
             } else {

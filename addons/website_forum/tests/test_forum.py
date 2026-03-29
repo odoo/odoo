@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import KARMA, TestForumCommon
+from odoo import http
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
+from odoo.tests import HttpCase
 from odoo.tools import mute_logger
 from psycopg2 import IntegrityError
 
@@ -197,10 +200,47 @@ class TestForum(TestForumCommon):
             self.post.with_user(self.user_portal).vote(upvote=True)
 
     def test_vote(self):
+        def check_vote_records_count_and_integrity(expected_total_votes_count):
+            groups = self.env['forum.post.vote'].read_group([], fields=['__count'], groupby=['post_id', 'user_id'], lazy=False)
+            self.assertEqual(len(groups), expected_total_votes_count)
+            for post_user_group in groups:
+                self.assertEqual(post_user_group['__count'], 1)
+
+        ORIGIN_COUNT = len(self.env['forum.post.vote'].search([]).post_id)
+        check_vote_records_count_and_integrity(ORIGIN_COUNT)
         self.post.create_uid.karma = KARMA['ask']
-        self.user_portal.karma = KARMA['upv']
-        self.post.with_user(self.user_portal).vote(upvote=True)
+        self.user_portal.karma = KARMA['dwv']
+        initial_vote_count = self.post.vote_count
+        post_as_portal = self.post.with_user(self.user_portal)
+        res = post_as_portal.vote(upvote=True)
+
+        self.assertEqual(res['user_vote'], '1')
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(post_as_portal.user_vote, 1)
         self.assertEqual(self.post.create_uid.karma, KARMA['ask'] + KARMA['gen_que_upv'], 'website_forum: wrong karma generation of upvoted question author')
+
+        # On voting again with the same value, nothing changes
+        res = post_as_portal.vote(upvote=True)
+        self.assertEqual(res['vote_count'], initial_vote_count + 1)
+        self.assertEqual(res['user_vote'], '1')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, 1)
+
+        # On reverting vote, vote cancels
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count)
+        self.assertEqual(res['user_vote'], '0')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, 0)
+
+        # Everything works from "0" too
+        res = post_as_portal.vote(upvote=False)
+        self.assertEqual(res['vote_count'], initial_vote_count - 1)
+        self.assertEqual(res['user_vote'], '-1')
+        self.post.invalidate_cache()
+        self.assertEqual(post_as_portal.user_vote, -1)
+
+        check_vote_records_count_and_integrity(ORIGIN_COUNT + 1)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_downvote_crash(self):
@@ -436,3 +476,48 @@ class TestForum(TestForumCommon):
             not discussions_post.uid_has_answered or discussions_post.forum_id.mode == 'discussions', True)
         self.assertEqual(
             discussions_post.uid_has_answered and discussions_post.forum_id.mode == 'questions', False)
+
+    def test_tag_creation_multi_forum(self):
+        Post = self.env['forum.post']
+        forum_1 = self.forum
+        forum_2 = forum_1.copy({
+            'name': 'Questions Forum'
+        })
+        self.user_portal.karma = KARMA['tag_create']
+        Post.with_user(self.user_portal).create({
+            'name': "Post Forum 1",
+            'forum_id': forum_1.id,
+            'tag_ids': forum_1._tag_to_write_vals('_Food'),
+        })
+        Post.with_user(self.user_portal).create({
+            'name': "Post Forum 2",
+            'forum_id': forum_2.id,
+            'tag_ids': forum_2._tag_to_write_vals('_Food'),
+        })
+        food_tags = self.env['forum.tag'].search([('name', '=', 'Food')])
+        self.assertEqual(len(food_tags), 2, "One Food tag should have been created in each forum.")
+        self.assertIn(forum_1, food_tags.forum_id, "One Food tag should have been created for forum 1.")
+        self.assertIn(forum_2, food_tags.forum_id, "One Food tag should have been created for forum 2.")
+
+class TestWebsiteForum(TestForumCommon, HttpCase):
+
+    def test_forum_post_compose_message_without_branding(self):
+        self.authenticate("admin", "admin")
+        self.url_open(f"/forum/{slug(self.forum)}/new", {
+            "post_name": "test_branding",
+            "content": "<p>test</p>",
+            "csrf_token": http.WebRequest.csrf_token(self),
+        })
+        post = self.env["forum.post"].search([('forum_id', '=', self.forum.id), ('name', '=', 'test_branding')])
+        self.assertNotIn("data-oe-", post.message_ids.body)
+
+    def test_forum_post_link(self):
+        content = 'This is a test link: <a href="https://www.example.com/route?param1=a&param2=b" rel="ugc">test</a> Let make sure it works.'
+        self.user_portal.karma = 50
+        with self.with_user(self.user_portal.login):
+            post = self.env['forum.post'].create({
+                'name': "Post Forum test",
+                'content': content,
+                'forum_id': self.forum.id,
+            })
+        self.assertEqual(post.content, '<p>This is a test link: <a rel="nofollow" href="https://www.example.com/route?param1=a&amp;param2=b">test</a> Let make sure it works.</p>')

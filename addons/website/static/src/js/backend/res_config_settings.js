@@ -37,6 +37,11 @@ BaseSettingController.include({
      * @override
      */
     _onButtonClicked: function (ev) {
+        if (ev.data.attrs.name === "action_ping_sitemap") {
+            // Stable fix for users who have a visible button.
+            Dialog.alert(this, _t("Google doesn't need to be pinged anymore. It will automatically fetch your /sitemap.xml."));
+            return;
+        }
         if (ev.data.attrs.name === 'website_go_to'
                 || ev.data.attrs.name === 'action_open_robots'
                 || ev.data.attrs.name === 'action_ping_sitemap'

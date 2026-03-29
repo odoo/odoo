@@ -18,6 +18,7 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import traceback
@@ -38,7 +39,7 @@ import markupsafe
 import passlib.utils
 import pytz
 import werkzeug.utils
-from lxml import etree
+from lxml import etree, objectify
 
 import odoo
 import odoo.addons
@@ -59,6 +60,11 @@ SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.Com
 
 # Configure default global parser
 etree.set_default_parser(etree.XMLParser(resolve_entities=False))
+default_parser = etree.XMLParser(resolve_entities=False, remove_blank_text=True)
+default_parser.set_element_class_lookup(objectify.ObjectifyElementClassLookup())
+objectify.set_default_parser(default_parser)
+
+NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
 #----------------------------------------------------------
 # Subprocesses
@@ -123,11 +129,10 @@ def exec_pg_environ():
 def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
     env = exec_pg_environ()
-    with open(os.devnull) as dn:
-        args2 = (prog,) + args
-        rc = subprocess.call(args2, env=env, stdout=dn, stderr=subprocess.STDOUT)
-        if rc:
-            raise Exception('Postgres subprocess %s error %s' % (args2, rc))
+    args2 = (prog,) + args
+    rc = subprocess.call(args2, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    if rc:
+        raise Exception('Postgres subprocess %s error %s' % (args2, rc))
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
@@ -138,7 +143,7 @@ def exec_pg_command_pipe(name, *args):
 # File paths
 #----------------------------------------------------------
 
-def file_path(file_path, filter_ext=('',)):
+def file_path(file_path, filter_ext=('',), env=None):
     """Verify that a file exists under a known `addons_path` directory and return its full path.
 
     Examples::
@@ -149,12 +154,16 @@ def file_path(file_path, filter_ext=('',)):
 
     :param str file_path: absolute file path, or relative path within any `addons_path` directory
     :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :param env: optional environment, required for a file path within a temporary directory
+        created using `file_open_temporary_directory()`
     :return: the absolute path to the file
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
     root_path = os.path.abspath(config['root_path'])
     addons_paths = odoo.addons.__path__ + [root_path]
+    if env and hasattr(env.transaction, '__file_open_tmp_paths'):
+        addons_paths += env.transaction.__file_open_tmp_paths
     is_abs = os.path.isabs(file_path)
     normalized_path = os.path.normpath(os.path.normcase(file_path))
 
@@ -176,7 +185,7 @@ def file_path(file_path, filter_ext=('',)):
 
     raise FileNotFoundError("File not found: " + file_path)
 
-def file_open(name, mode="r", filter_ext=None):
+def file_open(name, mode="r", filter_ext=None, env=None):
     """Open a file from within the addons_path directories, as an absolute or relative path.
 
     Examples::
@@ -189,11 +198,13 @@ def file_open(name, mode="r", filter_ext=None):
     :param name: absolute or relative path to a file located inside an addon
     :param mode: file open mode, as for `open()`
     :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :param env: optional environment, required to open a file within a temporary directory
+        created using `file_open_temporary_directory()`
     :return: file object, as returned by `open()`
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
-    path = file_path(name, filter_ext=filter_ext)
+    path = file_path(name, filter_ext=filter_ext, env=env)
     if os.path.isfile(path):
         if 'b' not in mode:
             # Force encoding for text mode, as system locale could affect default encoding,
@@ -205,6 +216,36 @@ def file_open(name, mode="r", filter_ext=None):
             return open(path, mode, encoding="utf-8")
         return open(path, mode)
     raise FileNotFoundError("Not a file: " + name)
+
+
+@contextmanager
+def file_open_temporary_directory(env):
+    """Create and return a temporary directory added to the directories `file_open` is allowed to read from.
+
+    `file_open` will be allowed to open files within the temporary directory
+    only for environments of the same transaction than `env`.
+    Meaning, other transactions/requests from other users or even other databases
+    won't be allowed to open files from this directory.
+
+    Examples::
+
+        >>> with odoo.tools.file_open_temporary_directory(self.env) as module_dir:
+        ...    with zipfile.ZipFile('foo.zip', 'r') as z:
+        ...        z.extract('foo/__manifest__.py', module_dir)
+        ...    with odoo.tools.file_open('foo/__manifest__.py', env=self.env) as f:
+        ...        manifest = f.read()
+
+    :param env: environment for which the temporary directory is created.
+    :return: the absolute path to the created temporary directory
+    """
+    assert not hasattr(env.transaction, '__file_open_tmp_paths'), 'Reentrancy is not implemented for this method'
+    with tempfile.TemporaryDirectory() as module_dir:
+        try:
+            env.transaction.__file_open_tmp_paths = (module_dir,)
+            yield module_dir
+        finally:
+            del env.transaction.__file_open_tmp_paths
+
 
 #----------------------------------------------------------
 # iterables
@@ -230,7 +271,7 @@ def flatten(list):
     """
     r = []
     for e in list:
-        if isinstance(e, (bytes, str)) or not isinstance(e, collections.Iterable):
+        if isinstance(e, (bytes, str)) or not isinstance(e, collections.abc.Iterable):
             r.append(e)
         else:
             r.extend(flatten(e))
@@ -991,6 +1032,12 @@ class Collector(dict):
         if val not in vals:
             self[key] = vals + (val,)
 
+    def discard_keys_and_values(self, excludes):
+        for key in excludes:
+            self.pop(key, None)
+        for key, vals in list(self.items()):
+            self[key] = tuple(val for val in vals if val not in excludes)
+
 
 class StackMap(MutableMapping):
     """ A stack of mappings behaving as a single mapping, and used to implement
@@ -1265,9 +1312,9 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
 
     if currency_obj and currency_obj.symbol:
         if currency_obj.position == 'after':
-            res = '%s %s' % (res, currency_obj.symbol)
+            res = '%s%s%s' % (res, NON_BREAKING_SPACE, currency_obj.symbol)
         elif currency_obj and currency_obj.position == 'before':
-            res = '%s %s' % (currency_obj.symbol, res)
+            res = '%s%s%s' % (currency_obj.symbol, NON_BREAKING_SPACE, res)
     return res
 
 
@@ -1505,6 +1552,40 @@ pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
 
 
+class ReadonlyDict(Mapping):
+    """Helper for an unmodifiable dictionary, not even updatable using `dict.update`.
+
+    This is similar to a `frozendict`, with one drawback and one advantage:
+
+    - `dict.update` works for a `frozendict` but not for a `ReadonlyDict`.
+    - `json.dumps` works for a `frozendict` by default but not for a `ReadonlyDict`.
+
+    This comes from the fact `frozendict` inherits from `dict`
+    while `ReadonlyDict` inherits from `collections.abc.Mapping`.
+
+    So, depending on your needs,
+    whether you absolutely must prevent the dictionary from being updated (e.g., for security reasons)
+    or you require it to be supported by `json.dumps`, you can choose either option.
+
+        E.g.
+          data = ReadonlyDict({'foo': 'bar'})
+          data['baz'] = 'xyz' # raises exception
+          data.update({'baz', 'xyz'}) # raises exception
+          dict.update(data, {'baz': 'xyz'}) # raises exception
+    """
+    def __init__(self, data):
+        self.__data = dict(data)
+
+    def __getitem__(self, key):
+        return self.__data[key]
+
+    def __len__(self):
+        return len(self.__data)
+
+    def __iter__(self):
+        return iter(self.__data)
+
+
 class DotDict(dict):
     """Helper for dot.notation access to dictionary attributes
 
@@ -1514,7 +1595,7 @@ class DotDict(dict):
     """
     def __getattr__(self, attrib):
         val = self.get(attrib)
-        return DotDict(val) if type(val) is dict else val
+        return DotDict(val) if isinstance(val, dict) else val
 
 
 def get_diff(data_from, data_to, custom_style=False):
@@ -1534,19 +1615,29 @@ def get_diff(data_from, data_to, custom_style=False):
         to_append = {
             'diff_header': 'bg-600 text-center align-top px-2',
             'diff_next': 'd-none',
-            'diff_add': 'bg-success',
-            'diff_chg': 'bg-warning',
-            'diff_sub': 'bg-danger',
         }
         for old, new in to_append.items():
             html_diff = html_diff.replace(old, "%s %s" % (old, new))
         html_diff = html_diff.replace('nowrap', '')
         html_diff += custom_style or '''
             <style>
+                .modal-dialog.modal-lg:has(table.diff) {
+                    max-width: 1600px;
+                    padding-left: 1.75rem;
+                    padding-right: 1.75rem;
+                }
                 table.diff { width: 100%; }
                 table.diff th.diff_header { width: 50%; }
                 table.diff td.diff_header { white-space: nowrap; }
-                table.diff td { word-break: break-all; }
+                table.diff td { word-break: break-all; vertical-align: top; }
+                table.diff .diff_chg, table.diff .diff_sub, table.diff .diff_add {
+                    display: inline-block;
+                    color: inherit;
+                }
+                table.diff .diff_sub, table.diff td:nth-child(3) > .diff_chg { background-color: #ffc1c0; }
+                table.diff .diff_add, table.diff td:nth-child(6) > .diff_chg { background-color: #abf2bc; }
+                table.diff td:nth-child(3):has(>.diff_chg, .diff_sub) { background-color: #ffebe9; }
+                table.diff td:nth-child(6):has(>.diff_chg, .diff_add) { background-color: #e6ffec; }
             </style>
         '''
         return html_diff

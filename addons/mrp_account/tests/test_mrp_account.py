@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMove
 from odoo.tests import Form, tagged
@@ -199,7 +200,7 @@ class TestMrpAccountMove(TestAccountMove):
                 "name": "Product B",
                 "type": "product",
                 "default_code": "prda",
-                "categ_id": cls.env.ref("product.product_category_all").id,
+                "categ_id": cls.auto_categ.id,
                 "taxes_id": [(5, 0, 0)],
                 "supplier_taxes_id": [(5, 0, 0)],
                 "lst_price": 100.0,
@@ -320,3 +321,37 @@ class TestMrpAccountMove(TestAccountMove):
         productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('debit', '=', 0)])
         self.assertEqual(productB_debit_line.account_id, self.stock_valuation_account)
         self.assertEqual(productB_credit_line.account_id, wip_incoming_account)
+
+
+@tagged("post_install", "-at_install")
+class TestMrpAnalyticAccount(TestMrpCommon):
+    def test_mo_analytic_account(self):
+        """
+            Check that an mrp user without accounting rights is able to mark as done
+            an MO linked to an analytic account.
+        """
+        if not (self.env.ref('mrp_account_enterprise.account_assembly_hours', raise_if_not_found=False) and self.env.ref('hr_timesheet.group_hr_timesheet_user', raise_if_not_found=False)):
+            self.skipTest("This test requires the installation of hr_timesheet")
+        mrp_user = self.user_mrp_user
+        mrp_user.groups_id = [Command.set([self.ref('mrp.group_mrp_user'), self.ref('hr_timesheet.group_hr_timesheet_user')])]
+        analytic_account = self.env.ref('mrp_account_enterprise.account_assembly_hours')
+        bom = self.bom_4
+        product = bom.product_id
+        bom.bom_line_ids.product_id.standard_price = 1.0
+        bom.analytic_account_id = analytic_account
+        mo = self.env['mrp.production'].with_user(mrp_user.id).create({
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty':1,
+            'bom_id': bom.id,
+        })
+        mo_form = Form(mo)
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.with_user(mrp_user.id).action_confirm()
+        action = mo.with_user(mrp_user.id).button_mark_done()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']).with_user(mrp_user.id)).save()
+        wizard.with_user(mrp_user.id).process()
+        self.assertTrue(mo.move_raw_ids.move_line_ids)
+        self.assertEqual(mo.move_raw_ids.quantity_done, bom.bom_line_ids.product_qty)
+        self.assertEqual(mo.move_raw_ids.state, 'done')

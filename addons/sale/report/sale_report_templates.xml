@@ -142,7 +142,7 @@
 
             <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row" name="total">
-                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
                         <table class="table table-sm">
                             <!-- Tax totals -->
                             <t t-set="tax_totals" t-value="json.loads(doc.tax_totals_json)"/>
@@ -190,6 +190,7 @@
 <template id="report_saleorder_pro_forma">
     <t t-call="web.html_container">
         <t t-set="is_pro_forma" t-value="True"/>
+        <t t-set="docs" t-value="docs.with_context(proforma=True)"/>
         <t t-foreach="docs" t-as="doc">
             <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
         </t>

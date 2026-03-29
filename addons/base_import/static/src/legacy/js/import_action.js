@@ -171,9 +171,8 @@ var DataImport = AbstractAction.extend({
         this.setup_date_format_picker();
         this.setup_sheets_picker();
 
-        return Promise.all([
-            this._super(),
-            self.create_model().then(function (id) {
+        return this._super().then(function () {
+            return self.create_model().then(function (id) {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
 
@@ -182,8 +181,8 @@ var DataImport = AbstractAction.extend({
                     cp_content: {$buttons: self.$buttons},
                 };
                 self.updateControlPanel(status);
-            }),
-        ]);
+            });
+        });
     },
     create_model: function() {
         return this._rpc({
@@ -209,7 +208,7 @@ var DataImport = AbstractAction.extend({
     setup_encoding_picker: function () {
         this.$('input.oe_import_encoding').select2({
             width: '50%',
-            data: _.map(('utf-8 utf-16 windows-1252 latin1 latin2 big5 gb18030 shift_jis windows-1251 koir8_r').split(/\s+/), _make_option),
+            data: _.map(('utf-8 utf-16 windows-1252 latin1 latin2 big5 gb18030 shift_jis windows-1251 koi8_r').split(/\s+/), _make_option),
             query: dataFilteredQuery,
             minimumResultsForSearch: -1,
             initSelection: function ($e, c) {
@@ -268,6 +267,8 @@ var DataImport = AbstractAction.extend({
             'DD-MM-YYYY',
             'DD-MMM-YY',
             'DD-MMM-YYYY',
+            'DD.MM.YY',
+            'DD.MM.YYYY',
             'MM/DD/YY',
             'MM/DD/YYYY',
             'MM-DD-YY',
@@ -914,21 +915,9 @@ var DataImport = AbstractAction.extend({
                 // prevent default handling (warning dialog)
                 if (event) { event.preventDefault(); }
 
-                var msg;
                 var errordata = error.data || {};
-                if (errordata.type === 'xhrerror') {
-                    var xhr = errordata.objects[0];
-                    switch (xhr.status) {
-                    case 504: // gateway timeout
-                        msg = _t("Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file).");
-                        break;
-                    default:
-                        msg = _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
-                    }
-                } else {
-                    msg = errordata.arguments && (errordata.arguments[1] || errordata.arguments[0])
-                        || error.message;
-                }
+                const msg = errordata.arguments && (errordata.arguments[1] || errordata.arguments[0])
+                    || error.message || _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
 
                 return Promise.resolve({'messages': [{
                     type: 'error',
@@ -1263,7 +1252,7 @@ StateMachine.create({
     target: DataImport.prototype,
     events: [
         { name: 'loaded_file',
-          from: ['none', 'file_loaded', 'preview_error', 'preview_success', 'results'],
+          from: ['none', 'file_loaded', 'preview_error', 'preview_success', 'results', 'imported'],
           to: 'file_loaded' },
         { name: 'settings_changed',
           from: ['file_loaded', 'preview_error', 'preview_success', 'results'],

@@ -132,3 +132,20 @@ class TestMultistepManufacturing(TestMrpCommon):
         exception = self.env['mail.activity'].search([('res_model', '=', 'mrp.production'),
                                                       ('res_id', '=', manufaturing_from_so.id)])
         self.assertEqual(len(exception.ids), 1, 'When user cancelled child manufacturing, exception must be generated on parent manufacturing.')
+
+    def test_manufacturing_step_three(self):
+        """ Testing for Step-3 """
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+        self.sale_order.action_confirm()
+
+        mo = self.env['mrp.production'].search([
+            ('origin', '=', self.sale_order.name),
+            ('product_id', '=', self.product_manu.id),
+        ])
+
+        self.assertEqual(self.sale_order.mrp_production_count, 1)
+        self.assertEqual(mo.sale_order_count, 1)
+
+        self.assertEqual(self.sale_order.action_view_mrp_production()['res_id'], mo.id)
+        self.assertEqual(mo.action_view_sale_orders()['res_id'], self.sale_order.id)

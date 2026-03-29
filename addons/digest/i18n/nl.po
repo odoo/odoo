@@ -3,18 +3,19 @@
 # 	* digest
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -51,7 +52,7 @@ msgstr "Geactiveerd"
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
 "Voeg nieuwe gebruikers toe als ontvanger van een periodieke e-mail met "
-"belangrijke statistieken"
+"belangrijke metrics"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -67,7 +68,7 @@ msgstr "Beschikbare velden"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Choose the metrics you care about"
-msgstr "Kies je favoriete statistieken."
+msgstr "Kies je favoriete metrics."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -82,7 +83,7 @@ msgstr "Configuratie instellingen"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr "Samenvatting e-mails instellen"
+msgstr "Samenvattingsmails instellen"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -145,7 +146,7 @@ msgstr "Samenvatting"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
-msgstr "Samenvatting e-mail"
+msgstr "Samenvattingsmail"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
@@ -155,7 +156,7 @@ msgstr "Samenvatting e-mail"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr "Samenvatting e-mails"
+msgstr "Samenvattingsmails"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -165,7 +166,7 @@ msgstr "SAmenvattingsnaam"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr "Verslag abonnementen"
+msgstr "Inschrijving e-mail"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_tip_action
@@ -188,7 +189,7 @@ msgstr "Algemeen"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Group by"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
@@ -385,7 +386,7 @@ msgstr "Nu verzenden"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "Sent by"
-msgstr "Verstuurd door"
+msgstr "Verzonden door"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
@@ -481,13 +482,13 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
-msgstr "Uitschrijven"
+msgstr "Afmelden"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
 msgstr ""
-"Wordt gebruikt om de samenvatting-tip in e-mailsjabloon basis op order weer "
+"Wordt gebruikt om de samenvattingstip in e-mailsjabloon basis op order weer "
 "te geven"
 
 #. module: digest
@@ -510,11 +511,11 @@ msgstr "Wil je deze e-mail aanpassen?"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid ""
-"We have noticed you did not connect these last few days so we've "
-"automatically switched your preference to weekly Digests."
+"We have noticed you did not connect these last few days. We have "
+"automatically switched your preference to %(new_perioridicy_str)s Digests."
 msgstr ""
-"We hebben gemerkt dat je de afgelopen dagen geen verbinding hebt gemaakt, "
-"dus hebben we je voorkeur automatisch overgeschakeld naar wekelijkse "
+"We hebben gemerkt dat je de afgelopen dagen geen verbinding heeft gemaakt. "
+"We hebben je voorkeur automatisch overgezet naar %(new_perioridicy_str)s "
 "samenvattingen."
 
 #. module: digest
@@ -545,7 +546,7 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from"
-msgstr "Je bent succesvol uitgeschreven van"
+msgstr "Je bent succesvol afgemeld van"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -574,6 +575,18 @@ msgstr ""
 "                                                en geef deze weer in de KPI tab;"
 
 #. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "monthly"
+msgstr "per maand"
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "quarterly"
+msgstr "per kwartaal"
+
+#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid ""
 "then create a computed field called\n"
@@ -583,6 +596,12 @@ msgstr ""
 "maak dan een berekend veld aan genaamd\n"
 "                                                <code> kpi_myfield_value</code>\n"
 "                                                 deze zal je aangepaste KPI berekenen."
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
+msgid "weekly"
+msgstr "wekelijks"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form

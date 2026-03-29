@@ -11,7 +11,7 @@ class EventBoothRegistration(models.Model):
     _name = 'event.booth.registration'
     _description = 'Event Booth Registration'
 
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale Order Line', required=True)
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale Order Line', required=True, ondelete='cascade')
     event_booth_id = fields.Many2one('event.booth', string='Booth', required=True)
     partner_id = fields.Many2one(
         'res.partner', related='sale_order_line_id.order_partner_id', store=True)

@@ -4,9 +4,10 @@
 import base64
 import re
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.tools import float_round, float_repr
 
-FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI']
+FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI', 'KODE_DOKUMEN_PENDUKUNG']
 
 LT_HEAD_LIST = ['LT', 'NPWP', 'NAMA', 'JALAN', 'BLOK', 'NOMOR', 'RT', 'RW', 'KECAMATAN', 'KELURAHAN', 'KABUPATEN', 'PROPINSI', 'KODE_POS', 'NOMOR_TELEPON']
 
@@ -29,18 +30,15 @@ class AccountMove(models.Model):
             ('02', '02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)'),
             ('03', '03 Kepada Pemungut Selain Bendaharawan (BUMN)'),
             ('04', '04 DPP Nilai Lain (PPN 1%)'),
+            ('05', '05 Besaran Tertentu'),
             ('06', '06 Penyerahan Lainnya (Turis Asing)'),
             ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
             ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
         ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
-        readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+        readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,
+        compute="_compute_kode_transaksi", store=True)
     l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_need_kode_transaksi')
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        self.l10n_id_kode_transaksi = self.partner_id.l10n_id_kode_transaksi
-        return super(AccountMove, self)._onchange_partner_id()
 
     @api.onchange('l10n_id_tax_number')
     def _onchange_l10n_id_tax_number(self):
@@ -54,9 +52,14 @@ class AccountMove(models.Model):
             record.l10n_id_csv_created = bool(record.l10n_id_attachment_id)
 
     @api.depends('partner_id')
+    def _compute_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_kode_transaksi = move.partner_id.commercial_partner_id.l10n_id_kode_transaksi
+
+    @api.depends('partner_id')
     def _compute_need_kode_transaksi(self):
         for move in self:
-            move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
+            move.l10n_id_need_kode_transaksi = move.partner_id.commercial_partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
 
     @api.constrains('l10n_id_kode_transaksi', 'line_ids')
     def _constraint_kode_ppn(self):
@@ -125,7 +128,7 @@ class AccountMove(models.Model):
             if record.state == 'draft':
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
-            if record.partner_id.l10n_id_pkp and not record.l10n_id_tax_number:
+            if not record.l10n_id_tax_number:
                 raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
 
         self._generate_efaktur(',')
@@ -134,7 +137,6 @@ class AccountMove(models.Model):
     def _generate_efaktur_invoice(self, delimiter):
         """Generate E-Faktur for customer invoice."""
         # Invoice of Customer
-        company_id = self.company_id
         dp_product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
 
         output_head = '%s%s%s' % (
@@ -146,21 +148,38 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.state == 'posted'):
             eTax = move._prepare_etax()
 
-            nik = str(move.partner_id.l10n_id_nik) if not move.partner_id.vat else ''
+            commercial_partner = move.partner_id.commercial_partner_id
+            nik = str(commercial_partner.l10n_id_nik) if not commercial_partner.vat else ''
 
             if move.l10n_id_replace_invoice_id:
                 number_ref = str(move.l10n_id_replace_invoice_id.name) + " replaced by " + str(move.name) + " " + nik
-            else:
+            elif nik:
                 number_ref = str(move.name) + " " + nik
+            else:
+                number_ref = str(move.name)
 
             street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
 
-            invoice_npwp = '000000000000000'
-            if move.partner_id.vat and len(move.partner_id.vat) >= 12:
-                invoice_npwp = move.partner_id.vat
-            elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
-                invoice_npwp = move.partner_id.l10n_id_nik
+            invoice_npwp = ''
+            if commercial_partner.vat and len(commercial_partner.vat) >= 15:
+                invoice_npwp = commercial_partner.vat
+            elif commercial_partner.l10n_id_nik:
+                invoice_npwp = commercial_partner.l10n_id_nik
+            if not invoice_npwp:
+                action_error = {
+                    'view_mode': 'form',
+                    'res_model': 'res.partner',
+                    'type': 'ir.actions.act_window',
+                    'res_id': commercial_partner.id,
+                    'views': [[self.env.ref('base.view_partner_form').id, 'form']],
+                }
+                msg = _("Please make sure that you've input the appropriate NPWP or NIK for the following customer")
+                raise RedirectWarning(msg, action_error, _("Edit Customer Information"))
             invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
+
+            etax_name = commercial_partner.l10n_id_tax_name or move.partner_id.name
+            if invoice_npwp[:15] == '000000000000000' and commercial_partner.l10n_id_nik:
+                etax_name = "%s#NIK#NAMA#%s" % (commercial_partner.l10n_id_nik, etax_name)
 
             # Here all fields or columns based on eTax Invoice Third Party
             eTax['KD_JENIS_TRANSAKSI'] = move.l10n_id_tax_number[0:2] or 0
@@ -170,25 +189,20 @@ class AccountMove(models.Model):
             eTax['TAHUN_PAJAK'] = move.invoice_date.year
             eTax['TANGGAL_FAKTUR'] = '{0}/{1}/{2}'.format(move.invoice_date.day, move.invoice_date.month, move.invoice_date.year)
             eTax['NPWP'] = invoice_npwp
-            eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
-            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
-            eTax['JUMLAH_DPP'] = int(round(move.amount_untaxed, 0)) # currency rounded to the unit
-            eTax['JUMLAH_PPN'] = int(round(move.amount_tax, 0))
+            eTax['NAMA'] = etax_name
+            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '').strip() if eTax['NPWP'] == '000000000000000' else commercial_partner.l10n_id_tax_address or street
+            eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0)) # currency rounded to the unit
+            eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0, rounding_method="DOWN"))  # tax amount ALWAYS rounded down
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref
+            eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
             lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and not x.display_type)
             eTax['FG_UANG_MUKA'] = 0
-            eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped('price_subtotal'))))
-            eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: l.price_total - l.price_subtotal))))
-
-            company_npwp = company_id.partner_id.vat or '000000000000000'
+            eTax['UANG_MUKA_DPP'] = float_repr(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))), 0)
+            eTax['UANG_MUKA_PPN'] = float_repr(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))), 0)
 
             fk_values_list = ['FK'] + [eTax[f] for f in FK_HEAD_LIST[1:]]
-            eTax['JALAN'] = company_id.partner_id.l10n_id_tax_address or company_id.partner_id.street
-            eTax['NOMOR_TELEPON'] = company_id.phone or ''
-
-            lt_values_list = ['FAPR', company_npwp, company_id.name] + [eTax[f] for f in LT_HEAD_LIST[3:]]
 
             # HOW TO ADD 2 line to 1 line for free product
             free, sales = [], []
@@ -206,17 +220,18 @@ class AccountMove(models.Model):
                     if tax.amount > 0:
                         tax_line += line.price_subtotal * (tax.amount / 100.0)
 
-                invoice_line_unit_price = line.price_unit
-
-                invoice_line_total_price = invoice_line_unit_price * line.quantity
+                discount = 1 - (line.discount / 100)
+                # guarantees price to be tax-excluded
+                invoice_line_total_price = line.price_subtotal / discount if discount else 0
+                invoice_line_unit_price = invoice_line_total_price / line.quantity if line.quantity else 0
 
                 line_dict = {
                     'KODE_OBJEK': line.product_id.default_code or '',
                     'NAMA': line.product_id.name or '',
-                    'HARGA_SATUAN': int(invoice_line_unit_price),
+                    'HARGA_SATUAN': float_repr(float_round(invoice_line_unit_price, 0), 0),
                     'JUMLAH_BARANG': line.quantity,
-                    'HARGA_TOTAL': int(invoice_line_total_price),
-                    'DPP': int(line.price_subtotal),
+                    'HARGA_TOTAL': float_repr(float_round(invoice_line_total_price, 0), 0),
+                    'DPP': float_round(line.price_subtotal, 0),
                     'product_id': line.product_id.id,
                 }
 
@@ -225,16 +240,16 @@ class AccountMove(models.Model):
                         free_tax_line += (line.price_subtotal * (tax.amount / 100.0)) * -1.0
 
                     line_dict.update({
-                        'DISKON': int(invoice_line_total_price - line.price_subtotal),
-                        'PPN': int(free_tax_line),
+                        'DISKON': float_round(invoice_line_total_price - line.price_subtotal, 0),
+                        'PPN': float_round(free_tax_line, 0),
                     })
                     free.append(line_dict)
                 elif line.price_subtotal != 0.0:
                     invoice_line_discount_m2m = invoice_line_total_price - line.price_subtotal
 
                     line_dict.update({
-                        'DISKON': int(invoice_line_discount_m2m),
-                        'PPN': int(tax_line),
+                        'DISKON': float_round(invoice_line_discount_m2m, 0),
+                        'PPN': float_round(tax_line, 0),
                     })
                     sales.append(line_dict)
 
@@ -257,17 +272,23 @@ class AccountMove(models.Model):
                             if tax.amount > 0:
                                 tax_line += sale['DPP'] * (tax.amount / 100.0)
 
-                        sale['PPN'] = int(tax_line)
+                        sale['PPN'] = int(float_round(tax_line, 0))
 
                         free.remove(f)
 
                 sub_total_before_adjustment += sale['DPP']
                 sub_total_ppn_before_adjustment += sale['PPN']
                 bruto_total += sale['DISKON']
-                total_discount += round(sale['DISKON'], 2)
+                total_discount += float_round(sale['DISKON'], 2)
+
+                # Change the values to string format after being used
+                sale.update({
+                    'DPP': float_repr(sale['DPP'], 0),
+                    'PPN': float_repr(sale['PPN'], 0),
+                    'DISKON': float_repr(sale['DISKON'], 0),
+                })
 
             output_head += _csv_row(fk_values_list, delimiter)
-            output_head += _csv_row(lt_values_list, delimiter)
             for sale in sales:
                 of_values_list = ['OF'] + [str(sale[f]) for f in OF_HEAD_LIST[1:-2]] + ['0', '0']
                 output_head += _csv_row(of_values_list, delimiter)
@@ -276,7 +297,7 @@ class AccountMove(models.Model):
 
     def _prepare_etax(self):
         # These values are never set
-        return {'JUMLAH_PPNBM': 0, 'UANG_MUKA_PPNBM': 0, 'BLOK': '', 'NOMOR': '', 'RT': '', 'RW': '', 'KECAMATAN': '', 'KELURAHAN': '', 'KABUPATEN': '', 'PROPINSI': '', 'KODE_POS': '', 'JUMLAH_BARANG': 0, 'TARIF_PPNBM': 0, 'PPNBM': 0}
+        return {'JUMLAH_PPNBM': 0, 'UANG_MUKA_PPNBM': 0, 'JUMLAH_BARANG': 0, 'TARIF_PPNBM': 0, 'PPNBM': 0}
 
     def _generate_efaktur(self, delimiter):
         if self.filtered(lambda x: not x.l10n_id_kode_transaksi):

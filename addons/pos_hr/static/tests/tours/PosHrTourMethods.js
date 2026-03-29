@@ -50,6 +50,12 @@ odoo.define('pos_hr.tour.PosHrTourMethods', function (require) {
                 },
             ];
         }
+        cashInOutVisible(visible=true) {
+            const trigger = visible
+                ? ".pos-branding .cash-move-button"
+                : ".pos-branding:not(:has(.cash-move-button))";
+            return [{ trigger, run: () => {} }];
+        }
     }
     class Execute {
         login(name, pin) {

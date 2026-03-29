@@ -126,6 +126,28 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 2)
         self.assertEqual(byproduct.quantity_svl, 2)
 
+    def test_fifo_unbuild(self):
+        """ This test creates an MO and then creates an unbuild
+        orders and checks the stock valuation.
+        """
+        self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        # ---------------------------------------------------
+        #       MO
+        # ---------------------------------------------------
+        self._make_in_move(self.component, 1, 10)
+        self._make_in_move(self.component, 1, 20)
+        mo = self._make_mo(self.bom, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+        self.assertEqual(self.component.value_svl, 20)
+        # ---------------------------------------------------
+        #       Unbuild
+        # ---------------------------------------------------
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.save().action_unbuild()
+        self.assertEqual(self.component.value_svl, 30)
+
     def test_fifo_avco_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
@@ -238,8 +260,21 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self.assertEqual(self.product1.value_svl, 8.8 * 2)
         self.assertEqual(self.component.quantity_svl, 0)
         self.assertEqual(self.product1.quantity_svl, 2)
+        self.assertEqual(self.product1.standard_price, 8.8)
+
         self._make_out_move(self.product1, 1)
         self.assertEqual(self.product1.value_svl, 8.8)
+
+        # Update component price
+        self.component.standard_price = 0
+
+        self._make_in_move(self.component, 3)
+        mo = self._make_mo(self.bom, 3)
+        self._produce(mo)
+        mo.button_mark_done()
+        self.assertEqual(self.product1.value_svl, 8.8)
+        self.assertEqual(self.product1.quantity_svl, 4)
+        self.assertEqual(self.product1.standard_price, 2.2)
 
     def test_std_std_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'standard'
@@ -316,3 +351,35 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 2)
         self._make_out_move(self.product1, 1)
         self.assertEqual(self.product1.value_svl, 15)
+
+    def test_validate_draft_kit(self):
+        """
+        Create a draft receipt, add a kit to its move lines and directly
+        validate it. From client side, such a behaviour is possible with
+        the Barcode app.
+        """
+        self.component.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.type = 'consu'
+        self.bom.type = 'phantom'
+        self.component.standard_price = 1424
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'product_uom_id': self.product1.uom_id.id,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+            })]
+        })
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertRecordValues(receipt.move_lines, [
+            {'product_id': self.component.id, 'quantity_done': 1, 'state': 'done'},
+        ])
+        self.assertEqual(self.component.qty_available, 1)
+        self.assertEqual(self.component.value_svl, 1424)

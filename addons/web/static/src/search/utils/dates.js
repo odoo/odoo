@@ -2,6 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
 export const DEFAULT_PERIOD = "this_month";
@@ -211,16 +212,16 @@ export function constructDateRange(params) {
     }
     const date = referenceMoment.set(setParam).plus(plusParam || {});
     // compute domain
-    let leftDate = date.startOf(granularity);
-    let rightDate = date.endOf(granularity);
+    const leftDate = date.startOf(granularity);
+    const rightDate = date.endOf(granularity);
     let leftBound;
     let rightBound;
     if (fieldType === "date") {
-        leftBound = leftDate.toFormat("yyyy-MM-dd");
-        rightBound = rightDate.toFormat("yyyy-MM-dd");
+        leftBound = serializeDate(leftDate);
+        rightBound = serializeDate(rightDate);
     } else {
-        leftBound = leftDate.toUTC().toFormat("yyyy-MM-dd HH:mm:ss");
-        rightBound = rightDate.toUTC().toFormat("yyyy-MM-dd HH:mm:ss");
+        leftBound = serializeDateTime(leftDate);
+        rightBound = serializeDateTime(rightDate);
     }
     const domain = new Domain(["&", [fieldName, ">=", leftBound], [fieldName, "<=", rightBound]]);
     // compute description
@@ -254,7 +255,7 @@ export function getComparisonParams(referenceMoment, selectedOptionIds, comparis
     if (comparisonOption.plusParam) {
         return [comparisonOption.plusParam, selectedOptions];
     }
-    let plusParam = {};
+    const plusParam = {};
     let globalGranularity = "year";
     if (selectedOptions.month) {
         globalGranularity = "month";

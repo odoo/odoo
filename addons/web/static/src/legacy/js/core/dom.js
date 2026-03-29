@@ -193,7 +193,7 @@ var dom = {
         // spaces should be a good-enough condition to use a simple find
         var multiParts = selector.indexOf(' ') >= 0;
         if (multiParts) {
-            $results = $from.find('*').filter(selector);
+            $results = $from.closest('body').find(selector).filter((i, $el) => $from.has($el).length);
         } else {
             $results = $from.find(selector);
         }
@@ -261,6 +261,12 @@ var dom = {
      */
     getScrollingElement() {
         return $().getScrollingElement()[0];
+    },
+    /**
+     * @returns {HTMLElement|Window}
+     */
+    getScrollingTarget() {
+        return $().getScrollingTarget(...arguments)[0];
     },
     /**
      * @param {HTMLElement} el
@@ -537,7 +543,15 @@ var dom = {
         return size;
     },
     /**
-     * @param {HTMLElement} el - the element to stroll to
+     * @param {HTMLElement|string} el - the element to scroll to. If "el" is a
+     *      string, it must be a valid selector of an element in the DOM or
+     *      '#top' or '#bottom'. If it is an HTML element, it must be present
+     *      in the DOM.
+     *      Limitation: if the element is using a fixed position, this
+     *      function cannot work except if is the header (el is then either a
+     *      string set to '#top' or an HTML element with the "top" id) or the
+     *      footer (el is then a string set to '#bottom' or an HTML element
+     *      with the "bottom" id) for which exceptions have been made.
      * @param {number} [options] - same as animate of jQuery
      * @param {number} [options.extraOffset=0]
      *      extra offset to add on top of the automatic one (the automatic one
@@ -553,23 +567,36 @@ var dom = {
             throw new Error("The scrollTo function was called without any given element");
         }
         const $el = $(el);
-        const $scrollable = options.$scrollable || $el.parent().closestScrollable();
+        if (typeof(el) === 'string' && $el[0]) {
+            el = $el[0];
+        }
+        const isTopOrBottomHidden = (el === '#top' || el === '#bottom');
+        const $topLevelScrollable = $().getScrollingElement();
+        const $scrollable = isTopOrBottomHidden ? $topLevelScrollable : (options.$scrollable || $el.parent().closestScrollable());
+        const isTopScroll = $scrollable.is($topLevelScrollable);
         // If $scrollable and $el are not in the same document, we can safely
         // assume $el is in an $iframe. We retrieve it by filtering the list of
         // iframes in $scrollable to keep only the one that contains $el.
-        const isInOneDocument = $scrollable[0].ownerDocument === $el[0].ownerDocument;
+        const isInOneDocument = isTopOrBottomHidden || $scrollable[0].ownerDocument === $el[0].ownerDocument;
         const $iframe = !isInOneDocument && $scrollable.find('iframe').filter((i, node) => $(node).contents().has($el));
-        const $topLevelScrollable = $().getScrollingElement();
-        const isTopScroll = $scrollable.is($topLevelScrollable);
 
         function _computeScrollTop() {
+            if (el === '#top' || el.id === 'top') {
+                return 0;
+            }
+            if (el === '#bottom' || el.id === 'bottom') {
+                return $scrollable[0].scrollHeight - $scrollable[0].clientHeight;
+            }
+
             let offsetTop = $el.offset().top;
             if (el.classList.contains('d-none')) {
                 el.classList.remove('d-none');
                 offsetTop = $el.offset().top;
                 el.classList.add('d-none');
             }
-            let elPosition = $scrollable[0].scrollTop + (offsetTop - $scrollable.offset().top);
+            const isDocScrollingEl = $scrollable.is(el.ownerDocument.scrollingElement);
+            let elPosition = offsetTop
+                - ($scrollable.offset().top - (isDocScrollingEl ? 0 : $scrollable[0].scrollTop));
             if (!isInOneDocument && $iframe.length) {
                 elPosition += $iframe.offset().top;
             }
@@ -595,12 +622,14 @@ var dom = {
                     options.progress.apply(this, ...arguments);
                 }
                 const newScrollTop = _computeScrollTop();
-                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0) {
+                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0
+                        && (isTopOrBottomHidden || !(el.classList.contains('o_transitioning')))) {
                     return;
                 }
                 $scrollable.stop();
                 dom.scrollTo(el, Object.assign({}, options, {
                     duration: remainingMs,
+                    easing: 'linear',
                 })).then(() => resolve());
             };
 

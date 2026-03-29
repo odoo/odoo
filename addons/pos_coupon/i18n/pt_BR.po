@@ -3,28 +3,30 @@
 # 	* pos_coupon
 # 
 # Translators:
-# grazziano <gra.negocia@gmail.com>, 2021
+# grazziano <grazziano.do+transifex@gmail.com>, 2021
 # Éder Brito <britoederr@gmail.com>, 2021
 # Martin Trigaux, 2021
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-08 06:19+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_coupon
 #: model:coupon.program,name:pos_coupon.15_pc_on_next_order
 msgid "15% on next order"
-msgstr ""
+msgstr "15% no próximo pedido"
 
 #. module: pos_coupon
 #: model:mail.template,body_html:pos_coupon.mail_coupon_template
@@ -184,7 +186,7 @@ msgstr "Cupom"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Coupon Codes"
-msgstr ""
+msgstr "Códigos de cupom"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_program
@@ -230,7 +232,7 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr ""
+msgstr "Insira o código"
 
 #. module: pos_coupon
 #. openerp-web
@@ -263,6 +265,13 @@ msgid "No"
 msgstr "Não"
 
 #. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "No tax"
+msgstr "Sem imposto"
+
+#. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "Order lines where this program is applied."
 msgstr ""
@@ -270,7 +279,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_count
 msgid "PoS Order Count"
-msgstr ""
+msgstr "Contagem de pedidos do PDV"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_line_ids
@@ -280,7 +289,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr ""
+msgstr "Referência do pedido do PDV"
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon_program.py:0
@@ -312,7 +321,7 @@ msgstr "Configuração do Ponto de Vendas"
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Linhas de pedido de Ponto de Venda"
+msgstr "Linhas de pedido do ponto de venda"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_pos_order
@@ -362,7 +371,14 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/ResetProgramsButton.xml:0
 #, python-format
 msgid "Reset Programs"
-msgstr ""
+msgstr "Redefinir programas"
+
+#. module: pos_coupon
+#. openerp-web
+#: code:addons/pos_coupon/static/src/js/coupon.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr "Imposto: %s"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order__applied_program_ids
@@ -418,7 +434,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_product_ids
 msgid "Valid Product"
-msgstr ""
+msgstr "Produto válido"
 
 #. module: pos_coupon
 #. openerp-web
@@ -442,7 +458,7 @@ msgstr "Seu Código de Cupom"
 #. module: pos_coupon
 #: model:mail.template,subject:pos_coupon.mail_coupon_template
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr "Your reward coupon from {{ object.program_id.company_id.name }} "
 
 #. module: pos_coupon
 #: model:mail.template,name:pos_coupon.mail_coupon_template
@@ -454,4 +470,4 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr ""
+msgstr "sem data de validade"

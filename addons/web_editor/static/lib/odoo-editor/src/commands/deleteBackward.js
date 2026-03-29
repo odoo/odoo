@@ -15,14 +15,18 @@ import {
     isVisible,
     isVisibleStr,
     leftPos,
+    rightPos,
     moveNodes,
     nodeSize,
     prepareUpdate,
     setSelection,
     splitTextNode,
-    isUnbreakable,
     isMediaElement,
     isVisibleEmpty,
+    isNotEditableNode,
+    createDOMPathGenerator,
+    closestElement,
+    ZERO_WIDTH_CHARS,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -45,15 +49,20 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     // Do remove the character, then restore the state of the surrounding parts.
     const restore = prepareUpdate(parentNode, firstSplitOffset, parentNode, secondSplitOffset);
     const isSpace = !isVisibleStr(middleNode) && !isInPre(middleNode);
+    const isZWS = ZERO_WIDTH_CHARS.includes(middleNode.nodeValue);
     middleNode.remove();
     restore();
 
     // If the removed element was not visible content, propagate the backspace.
     if (
+        isZWS ||
         isSpace &&
         getState(parentNode, firstSplitOffset, DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
     ) {
         parentNode.oDeleteBackward(firstSplitOffset, alreadyMoved);
+        if (isZWS && parentNode.isConnected) {
+            fillEmpty(parentNode);
+        }
         return;
     }
 
@@ -61,7 +70,12 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     setSelection(parentNode, firstSplitOffset);
 };
 
-HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+const isDeletable = (node) => {
+    return isMediaElement(node) || isNotEditableNode(node);
+}
+
+HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, offsetLimit) {
+    const contentIsZWS = ZERO_WIDTH_CHARS.includes(this.textContent);
     let moveDest;
     if (offset) {
         const leftNode = this.childNodes[offset - 1];
@@ -69,15 +83,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
             throw UNREMOVABLE_ROLLBACK_CODE;
         }
         if (
-            isMediaElement(leftNode) ||
-            (leftNode.getAttribute &&
-                typeof leftNode.getAttribute('contenteditable') === 'string' &&
-                leftNode.getAttribute('contenteditable').toLowerCase() === 'false')
+            isDeletable(leftNode)
         ) {
-            leftNode.remove();
-            return;
-        }
-        if (leftNode.getAttribute && leftNode.getAttribute('contenteditable') === 'false') {
             leftNode.remove();
             return;
         }
@@ -108,8 +115,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
             throw UNREMOVABLE_ROLLBACK_CODE;
         }
         const parentEl = this.parentNode;
-
-        if (!isBlock(this) || isVisibleEmpty(this)) {
+        const closestLi = closestElement(this, 'li');
+        if ((closestLi && !closestLi.previousElementSibling) || !isBlock(this) || isVisibleEmpty(this)) {
             /**
              * Backspace at the beginning of an inline node, nothing has to be
              * done: propagate the backspace. If the node was empty, we remove
@@ -120,9 +127,9 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
              * <=>  <p>abc[]<i>def</i></p> + BACKSPACE
              */
             const parentOffset = childNodeIndex(this);
-            if (!nodeSize(this)) {
-                const visible = isVisible(this);
 
+            if (!nodeSize(this) || contentIsZWS) {
+                const visible = isVisible(this) && !contentIsZWS;
                 const restore = prepareUpdate(...boundariesOut(this));
                 this.remove();
                 restore();
@@ -142,9 +149,11 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
         }
 
         /**
-         * Backspace at the beginning of a block node, we have to move the
-         * inline content at its beginning outside of the element and propagate
-         * to the left block if any.
+         * Backspace at the beginning of a block node. If it doesn't have a left
+         * block and it is one of the special block formatting tags below then
+         * convert the block into a P and return immediately. Otherwise, we have
+         * to move the inline content at its beginning outside of the element
+         * and propagate to the left block.
          *
          * E.g. (prev == block)
          *      <p>abc</p><div>[]def<p>ghi</p></div> + BACKSPACE
@@ -154,16 +163,49 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
          *      abc<div>[]def<p>ghi</p></div> + BACKSPACE
          * <=>  abc[]def<div><p>ghi</p></div>
          */
-        moveDest = leftPos(this);
+        if (
+            !this.previousElementSibling &&
+            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName) &&
+            !closestLi
+        ) {
+            const p = document.createElement('p');
+            p.replaceChildren(...this.childNodes);
+            this.replaceWith(p);
+            setSelection(p, offset);
+            return;
+        } else {
+            moveDest = leftPos(this);
+        }
     }
 
-    let node = this.childNodes[offset];
-    let firstBlockIndex = offset;
-    while (node && !isBlock(node)) {
-        node = node.nextSibling;
-        firstBlockIndex++;
+    const domPathGenerator = createDOMPathGenerator(DIRECTIONS.LEFT, {
+        leafOnly: true,
+        stopTraverseFunction: isDeletable,
+    });
+    const domPath = domPathGenerator(this, offset)
+    const leftNode = domPath.next().value;
+    if (leftNode && isDeletable(leftNode)) {
+        const [parent, offset] = rightPos(leftNode);
+        return parent.oDeleteBackward(offset, alreadyMoved);
     }
-    let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, firstBlockIndex);
+    let node = this.childNodes[offset];
+    const nextSibling = this.nextSibling;
+    let currentNodeIndex = offset;
+
+    // `offsetLimit` will ensure we never move nodes that were not initialy in the element
+    //  => when Deleting and merging an element the containing node will temporary be hosted
+    //  in the common parent beside possible other nodes. We don't want to touch those others node when merging
+    //  two html elements
+    //  ex : <div>12<p>ab[]</p><p>cd</p>34</div> should never touch the 12 and 34 text node.
+    if (offsetLimit === undefined) {
+        while (node && !isBlock(node)) {
+            node = node.nextSibling;
+            currentNodeIndex++;
+        }
+    } else {
+        currentNodeIndex = offsetLimit;
+    }
+    let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, currentNodeIndex);
     setSelection(cursorNode, cursorOffset);
 
     // Propagate if this is still a block on the left of where the nodes were
@@ -178,7 +220,21 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) 
     if (cursorNode.nodeType !== Node.TEXT_NODE) {
         const { cType } = getState(cursorNode, cursorOffset, DIRECTIONS.LEFT);
         if (cType & CTGROUPS.BLOCK && (!alreadyMoved || cType === CTYPES.BLOCK_OUTSIDE)) {
-            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved);
+            cursorNode.oDeleteBackward(cursorOffset, alreadyMoved, cursorOffset + currentNodeIndex - offset);
+        } else if (!alreadyMoved) {
+            // When removing a block node adjacent to a inline node,
+            // we need to ensure the block node induced line break are kept with a <br>.
+            // ex : <div>a<span>b</span><p>[]c</p>d</div> => deleteBakward
+            // =>   <div>a<span>b</span>[]c<br>d</div>
+            // In this case we cannot simply merge the <p> content into the div parent
+            // or we would loose the line break located after the <p>.
+            const cursorNodeNode = cursorNode.childNodes[cursorOffset];
+            const cursorNodeRightNode = cursorNodeNode ? cursorNodeNode.nextSibling : undefined;
+            if (cursorNodeRightNode &&
+                cursorNodeRightNode.nodeType === Node.TEXT_NODE &&
+                nextSibling === cursorNodeRightNode) {
+                moveDest[0].insertBefore(document.createElement('br'), cursorNodeRightNode);
+            }
         }
     }
 };
@@ -199,6 +255,12 @@ HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false
     if (rightState & CTYPES.BLOCK_INSIDE) {
         this.parentElement.oDeleteBackward(parentOffset, alreadyMoved);
     } else {
+        HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
+    }
+};
+
+HTMLTableCellElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+    if (offset) {
         HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
     }
 };

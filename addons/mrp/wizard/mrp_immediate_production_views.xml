@@ -10,7 +10,7 @@
                 </group>
 
                 <field name="show_productions" invisible="1"/>
-                <field name="immediate_production_line_ids" nolabel="1" attrs="{'invisible': [('show_productions', '=', False)]}">>
+                <field name="immediate_production_line_ids" nolabel="1" attrs="{'invisible': [('show_productions', '=', False)]}">
                     <tree create="0" delete="0" editable="top">
                         <field name="production_id"/>
                         <field name="to_immediate" widget="boolean_toggle"/>

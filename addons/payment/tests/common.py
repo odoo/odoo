@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from contextlib import contextmanager
 from unittest.mock import patch
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.fields import Command
@@ -15,13 +16,6 @@ class PaymentCommon(PaymentTestUtils):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-
-        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
-
-        def _get_payment_method_information(self):
-            res = Method_get_payment_method_information(self)
-            res['none'] = {'mode': 'multi', 'domain': [('type', '=', 'bank')]}
-            return res
 
         cls.currency_euro = cls._prepare_currency('EUR')
         cls.currency_usd = cls._prepare_currency('USD')
@@ -77,20 +71,25 @@ class PaymentCommon(PaymentTestUtils):
             'arch': arch,
         })
 
-        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            cls.env['account.payment.method'].create({
+        with cls.mocked_get_payment_method_information(cls):
+            cls.dummy_acquirer_method = cls.env['account.payment.method'].sudo().create({
                 'name': 'Dummy method',
                 'code': 'none',
                 'payment_type': 'inbound'
             })
-        cls.dummy_acquirer = cls.env['payment.acquirer'].create({
-            'name': "Dummy Acquirer",
-            'provider': 'none',
-            'state': 'test',
-            'allow_tokenization': True,
-            'redirect_form_view_id': redirect_form.id,
-            'journal_id': cls.company_data['default_journal_bank'].id,
-        })
+            with cls.mocked_get_default_payment_method_id(cls):
+                cls.dummy_acquirer = cls.env['payment.acquirer'].create({
+                    'name': "Dummy Acquirer",
+                    'provider': 'none',
+                    'state': 'test',
+                    'allow_tokenization': True,
+                    'redirect_form_view_id': redirect_form.id,
+                    'journal_id': cls.company_data['default_journal_bank'].id,
+                })
+
+            # The bank journal has been updated.
+            # Trigger the constraints with the 'flush' to have them evaluated with the mocked payment method.
+            cls.env['account.journal'].flush()
 
         cls.acquirer = cls.dummy_acquirer
         cls.amount = 1111.11
@@ -98,8 +97,50 @@ class PaymentCommon(PaymentTestUtils):
         cls.currency = cls.currency_euro
         cls.partner = cls.default_partner
         cls.reference = "Test Transaction"
+        cls.account = cls.company.account_journal_payment_credit_account_id
+        cls.invoice = cls.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2019-01-01',
+            'line_ids': [
+                (0, 0, {
+                    'account_id': cls.account.id,
+                    'currency_id': cls.currency_euro.id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'amount_currency': 200.0,
+                }),
+                (0, 0, {
+                    'account_id': cls.account.id,
+                    'currency_id': cls.currency_euro.id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'amount_currency': -200.0,
+                }),
+            ],
+        })
 
     #=== Utils ===#
+
+    @contextmanager
+    def mocked_get_payment_method_information(self):
+        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
+
+        def _get_payment_method_information(record):
+            res = Method_get_payment_method_information(record)
+            res['none'] = {'mode': 'electronic', 'domain': [('type', '=', 'bank')]}
+            return res
+
+        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
+            yield
+
+    @contextmanager
+    def mocked_get_default_payment_method_id(self):
+
+        def _get_default_payment_method_id(record):
+            return self.dummy_acquirer_method.id
+
+        with patch.object(self.env.registry['payment.acquirer'], '_get_default_payment_method_id', _get_default_payment_method_id):
+            yield
 
     @classmethod
     def _prepare_currency(cls, currency_code):
@@ -108,6 +149,14 @@ class PaymentCommon(PaymentTestUtils):
         )
         currency.action_unarchive()
         return currency
+
+    @classmethod
+    def _prepare_user(cls, user, group_xmlid):
+        user.groups_id = [Command.link(cls.env.ref(group_xmlid).id)]
+        # Flush and invalidate the cache to allow checking access rights.
+        user.flush()
+        user.invalidate_cache()
+        return user
 
     @classmethod
     def _prepare_acquirer(cls, provider='none', company=None, update_values=None):
@@ -146,6 +195,12 @@ class PaymentCommon(PaymentTestUtils):
                 ('type', '=', 'bank')
             ], limit=1)
         acquirer.state = 'test'
+
+        with cls.mocked_get_payment_method_information(cls):
+            # The bank journal has been updated and the payment lines accordingly.
+            # Trigger the constraints with the 'flush' to have them evaluated with the mocked payment method.
+            cls.env['account.journal'].flush()
+
         return acquirer
 
     def create_transaction(self, flow, sudo=True, **values):
@@ -172,3 +227,49 @@ class PaymentCommon(PaymentTestUtils):
         return self.env['payment.transaction'].sudo().search([
             ('reference', '=', reference),
         ])
+
+    def _prepare_transaction_values(self, payment_option_id, flow):
+        """ Prepare the basic payment/transaction route values.
+
+        :param int payment_option_id: The payment option handling the transaction, as a
+                                      `payment.acquirer` id or a `payment.token` id
+        :param str flow: The payment flow
+        :return: The route values
+        :rtype: dict
+        """
+        return {
+            'amount': self.amount,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'access_token': self._generate_test_access_token(
+                self.partner.id, self.amount, self.currency.id
+            ),
+            'payment_option_id': payment_option_id,
+            'reference_prefix': 'test',
+            'tokenization_requested': True,
+            'landing_route': 'Test',
+            'is_validation': False,
+            'invoice_id': self.invoice.id,
+            'flow': flow,
+        }
+
+    def _assert_does_not_raise(self, exception_class, func, *args, **kwargs):
+        """ Fail if an exception of the provided class is raised when calling the function.
+
+        If an exception of any other class is raised, it is caught and silently ignored.
+
+        This method cannot be used with functions that make requests. Any exception raised in the
+        scope of the new request will not be caught and will make the test fail.
+
+        :param class exception_class: The class of the exception to monitor.
+        :param function fun: The function to call when monitoring for exceptions.
+        :param list args: The positional arguments passed as-is to the called function.
+        :param dict kwargs: The keyword arguments passed as-is to the called function.
+        :return: None
+        """
+        try:
+            func(*args, **kwargs)
+        except exception_class:
+            self.fail(f"{func.__name__} should not raise error of class {exception_class.__name__}")
+        except Exception:
+            pass  # Any exception whose class is not monitored is caught and ignored.

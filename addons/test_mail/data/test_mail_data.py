@@ -105,6 +105,36 @@ Please call me as soon as possible this afternoon!
 Sylvie
 """
 
+MAIL_TEMPLATE_HTML = """Return-Path: {return_path}
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>=20
+  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+ </head>=20
+ <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
+
+  <p>Please call me as soon as possible this afternoon!</p>
+
+  <p>--<br/>
+     Sylvie
+  <p>
+ </body>
+</html>
+"""
+
 MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
 X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
@@ -166,7 +196,7 @@ X-Attachment-Id: f_hkpb27k00
 dGVzdAo=
 --089e01536c4ed4d17204e49b8e96--"""
 
-MAIL_MULTIPART_MIXED_TWO = """X-Original-To: raoul@grosbedon.fr
+MAIL_MULTIPART_MIXED_TWO = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
@@ -214,7 +244,255 @@ Content-Type: text/html;
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
 
-MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
+MAIL_FILE_ENCODING = """MIME-Version: 1.0
+Date: Sun, 26 Mar 2023 05:23:22 +0200
+Message-ID: {msg_id}
+Subject: {subject}
+From: "Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>
+To: groups@test.com
+Content-Type: multipart/mixed; boundary="000000000000b951de05f7c47a9e"
+
+--000000000000b951de05f7c47a9e
+Content-Type: multipart/alternative; boundary="000000000000b951da05f7c47a9c"
+
+--000000000000b951da05f7c47a9c
+Content-Type: text/plain; charset="UTF-8"
+
+Test Body
+
+--000000000000b951da05f7c47a9c
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Test Body</div>
+
+--000000000000b951da05f7c47a9c--
+--000000000000b951de05f7c47a9e
+Content-Type: text/plain; name="test.txt"{charset}
+Content-Disposition: attachment; filename="test.txt"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_lfosfm0l0
+Content-ID: <f_lfosfm0l0>
+
+{content}
+
+--000000000000b951de05f7c47a9e--
+"""
+
+MAIL_MULTIPART_BINARY_OCTET_STREAM = """X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 10 Nov 2021 06:04:01 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Content-Type: multipart/alternative;
+ boundary="Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227"
+Message-Id: <6BB1FAB2-2104-438E-9447-07AE2C8C4A92@sexample.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \\(1878.6\\))
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+    charset=us-ascii
+
+The attached file contains b"Hello world\\n"
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Disposition: attachment;
+ filename="hello_world.dat"
+Content-Type: binary/octet-stream;
+ name="hello_world.dat"
+Content-Transfer-Encoding: base64
+
+SGVsbG8gd29ybGQK
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
+"""
+
+MAIL_MULTIPART_INVALID_ENCODING = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="00000000000005d9da05fa394cc0"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+--00000000000005d9da05fa394cc0
+Content-Type: multipart/alternative; boundary="00000000000005d9d905fa394cbe"
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/plain; charset="UTF-8"
+
+Dear customer,
+
+Please find attached the Peppol Bis 3 attachment of your invoice (with an
+encoding error in the address)
+
+Cheers,
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Dear customer,<div><br></div><div>Please find attached the Peppol Bis 3 attachment of your invoice (with an encoding error in the address)</div><div><br></div><div>Cheers,</div></div>
+
+--00000000000005d9d905fa394cbe--
+
+--00000000000005d9da05fa394cc0
+Content-Type: text/xml; charset="US-ASCII";
+ name="bis3_with_error_encoding_address.xml"
+Content-Disposition: attachment; 
+	filename="bis3_with_error_encoding_address.xml"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lgxgdqx40>
+X-Attachment-Id: f_lgxgdqx40
+
+PEludm9pY2UgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2No
+ZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiIgeG1sbnM9InVybjpvYXNpczpuYW1lczpz
+cGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkludm9pY2UtMiI+DQo8Y2JjOlN0cmVldE5hbWU+
+Q2hhdXNz77+977+9ZSBkZSBCcnV4ZWxsZXM8L2NiYzpTdHJlZXROYW1lPg0KPC9JbnZvaWNlPg0K
+--00000000000005d9da05fa394cc0--
+"""
+
+MAIL_MULTIPART_OMITTED_CHARSET_XML = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="00000000000005d9da05fa394cc0"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+--00000000000005d9da05fa394cc0
+Content-Type: multipart/alternative; boundary="00000000000005d9d905fa394cbe"
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/plain; charset="UTF-8"
+
+Dear customer,
+
+Please find attached the UBL attachment of your invoice
+
+Cheers,
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Dear customer,<div><br></div><div>Please find attached the UBL attachment of your invoice</div><div><br></div><div>Cheers,</div></div>
+
+--00000000000005d9d905fa394cbe--
+
+--00000000000005d9da05fa394cc0
+Content-Disposition: attachment; filename="bis3.xml"
+Content-Transfer-Encoding: base64
+Content-Type: text/xml; name="bis3.xml"
+Content-ID: <f_lgxgdqx40>
+X-Attachment-Id: f_lgxgdqx40
+
+PEludm9pY2U+Q2hhdXNzw6llIGRlIEJydXhlbGxlczwvSW52b2ljZT4=
+--00000000000005d9da05fa394cc0--
+"""
+
+MAIL_MULTIPART_OMITTED_CHARSET_CSV = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="00000000000005d9da05fa394cc0"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+--00000000000005d9da05fa394cc0
+Content-Type: multipart/alternative; boundary="00000000000005d9d905fa394cbe"
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/plain; charset="UTF-8"
+
+Dear customer,
+
+Please find attached the UBL attachment of your invoice
+
+Cheers,
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Dear customer,<div><br></div><div>Please find attached the UBL attachment of your invoice</div><div><br></div><div>Cheers,</div></div>
+
+--00000000000005d9d905fa394cbe--
+
+--00000000000005d9da05fa394cc0
+Content-Disposition: attachment; filename="bis3.csv"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/csv; name="bis3.csv"
+
+=EF=BB=BFAuftraggeber;LieferadresseStra=C3=9Fe;=
+--00000000000005d9da05fa394cc0--
+"""
+
+MAIL_MULTIPART_OMITTED_CHARSET_TXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="00000000000005d9da05fa394cc0"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+--00000000000005d9da05fa394cc0
+Content-Type: multipart/alternative; boundary="00000000000005d9d905fa394cbe"
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/plain; charset="UTF-8"
+
+Dear customer,
+
+Please find attached the UBL attachment of your invoice
+
+Cheers,
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Dear customer,<div><br></div><div>Please find attached the UBL attachment of your invoice</div><div><br></div><div>Cheers,</div></div>
+
+--00000000000005d9d905fa394cbe--
+
+--00000000000005d9da05fa394cc0
+Content-Disposition: attachment; filename="bis3.txt"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; name="bis3.txt"
+
+=C3=84pfel und Birnen sind Fr=C3=BCchte, die im Herbst geerntet werden. =
+In der N=C3=A4he des Flusses steht ein gro=C3=9Fes, altes Schloss. =C3=9Cb=
+er den D=C3=A4chern sieht man oft V=C3=B6gel fliegen. M=C3=BCller und =
+Schr=C3=B6der sind typische deutsche Nachnamen. Die Stra=C3=9Fe, in der =
+ich wohne, hei=C3=9Ft =E2=80=9EBachstra=C3=9Fe=E2=80=9C und ist sehr =
+ruhig. =C3=9Cberall im Wald wachsen B=C3=A4ume mit kr=C3=A4ftigen =
+=C3=84sten. K=C3=B6nnen wir uns =C3=BCber die Pl=C3=A4ne f=C3=BCr das =
+n=C3=A4chste Wochenende unterhalten?=
+--00000000000005d9da05fa394cc0--
+"""
+
+
+MAIL_SINGLE_BINARY = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
@@ -928,6 +1206,90 @@ OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
 --92726A5F09.1555335666/mail2.test.ironsky--
 """
 
+
+MAIL_BOUNCE_QP_RFC822_HEADERS = """\
+Received: by mailserver.odoo.com (Postfix)
+        id EA0B917B8E4; Tue, 29 Feb 2023 11:11:11 +0100 (CET)
+From: {email_from} 
+Subject: Undelivered Mail Returned to Sender
+To: {email_to}
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+        boundary="DFFDC17AA03.1673346179/mailserver.odoo.com"
+Message-Id: <40230110102259.EA0B917B8E4@mailserver.odoo.com>
+Content-Transfer-Encoding: 7bit
+Delivered-To: {delivered_to}
+Return-Path: <>
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Notification
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients.
+
+<rdesfrdgtfdrfesd@outlook.com>: host
+    outlook-com.olc.protection.outlook.com[104.47.56.33] said: 550 5.5.0
+    Requested action not taken: mailbox unavailable (S2017062302). (in re=
+ply to
+    RCPT TO command)
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mailserver.odoo.com
+X-Postfix-Queue-ID: DFFDC17AA03
+X-Postfix-Sender: rfc822; bounce@xxx.odoo.com
+Arrival-Date: Tue, 29 Feb 2023 10:10:10 +0100 (CET)
+
+Final-Recipient: rfc822; rdesfrdgtfdrfesd@outlook.com
+Original-Recipient: rfc822;rdesfrdgtfdrfesd@outlook.com
+Action: failed
+Status: 5.5.0
+Remote-MTA: dns; outlook-com.olc.protection.outlook.com
+Diagnostic-Code: smtp; 550 5.5.0 Requested action not taken: mailbox
+    unavailable (S2017062302).
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Undelivered Message Headers
+Content-Type: text/rfc822-headers
+Content-Transfer-Encoding: quoted-printable
+
+Return-Path: <bounce@xxx.odoo.com>
+Received: from eupp00.odoo.com (00.72.79.34.bc.googleusercontent.com [34.=
+79.72.00])
+        by mailserver.odoo.com (Postfix) with ESMTPS id DFFDC17AA03;
+        Tue, 10 Jan 2023 11:22:57 +0100 (CET)
+DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Dsimple/simple; d=3Dxxx.be;
+        s=3Dodoo; t=3D1673346178;
+        bh=3DYPJOqkUi8B28X1MrRUsgmsL8KRz/ZIkpbYyc6wNITXA=3D;
+        h=3Dreferences:Subject:From:Reply-To:To:Date:From;
+        b=3DCMqh7mUvpgUw+JpCeGluv1+MZ3y6EsXd0acmsfzpYBjcoy1InvD6FLT1/lQCcgetf
+         cGyL/8R4vvDKATyE0AtOIpoYDsbpnMoiYWqaSXnDVuLTrEZzyrK/2j10ZTnHZ2uDTC
+         b7wPjFfQ9pted/t6CAUhVT1XydDNalSwEZovy/QI=3D
+Message-Id: <368396033905967.1673346177.695352554321289-openerp-11-sale.o=
+rder@eupp00>
+references: <792105153140463.1673746527.352018594741821-openerp-11-sale.o=
+rder@xxx.odoo.com> <368396033905967.1673346177.695352554321289-openerp-11=
+-sale.order@eupp00>
+Subject: Thi is a SO (Ref SO/11)
+From: info@xxx.odoo.com
+Reply-To: "SO/11" <catchall@xxx.odoo.com=
+>
+To: "rdesfrdgtfdrfesd@outlook.com" <rdesfrdgtfdrfesd@outlook.com>
+Date: Tue, 29 Feb 2023 06:09:06 -0000
+X-Odoo-Objects: sale.order-11
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=3D"=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D5706316606908750110=3D=3D"
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com--
+
+"""
+
 MAIL_NO_BODY = '''\
 Return-Path: <{email_from}>
 Delivered-To: catchall@xxxx.xxxx
@@ -1013,3 +1375,51 @@ Remote-MTA: 10.245.192.40
 
 
 --_av-UfLe6y6qxNo54-urtAxbJQ--"""
+
+MAIL_FORWARDED = """X-Original-To: lucie@petitebedaine.fr
+Delivered-To: raoul@grosbedon.fr
+Delivered-To: lucie@petitebedaine.fr
+To: lucie@petitebedaine.fr
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+
+SSBhbSB0aGUgQmF0TWFuCg=="""
+
+MAIL_PDF_MIME_TEMPLATE = """\
+To: {to}
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+
+------=_Part_4200734_24778174.1344608186754
+Content-Type: {pdf_mime}; name="scan_soraya.lernout_1691652648.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==
+
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+PDF_PARSED = b'''%PDF-1.1\n%\xc2\xa5\xc2\xb1\xc3\xab\n\n1 0 obj\n  << /Type /Catalog\n     /Pages 2 0 R\n  >>\nendobj\n\n2 0 obj\n  << /Type /Pages\n     /Kids [3 0 R]\n     /Count 1\n     /MediaBox [0 0 300 144]\n  >>\nendobj\n\n3 0 obj\n  <<  /Type /Page\n      /Parent 2 0 R\n      /Resources\n       << /Font\n           << /F1\n               << /Type /Font\n                  /Subtype /Type1\n                  /BaseFont /Times-Roman\n               >>\n           >>\n       >>\n      /Contents 4 0 R\n  >>\nendobj\n\n4 0 obj\n  << /Length 55 >>\nstream\n  BT\n    /F1 18 Tf\n    0 0 Td\n    (Hello World) Tj\n  ET\nendstream\nendobj\n\nxref\n0 5\n0000000000 65535 f \n0000000018 00000 n \n0000000077 00000 n \n0000000178 00000 n \n0000000457 00000 n \ntrailer\n  <<  /Root 1 0 R\n      /Size 5\n  >>\nstartxref\n565\n%%EOF\n'''
+
+THAI_EMAIL_WINDOWS_874='''From: Thai Customer <outlook_windows@outlook.com>
+To: "Thai Odoo User" <thai-user@odoo.com>
+Subject: =?windows-874?B?4MPX6M2n?=
+Thread-Topic: =?windows-874?B?4MPX6M2n?=
+Thread-Index: AQHahRQ4qiMBoXtK0U2XwaGg8w9Y9g==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Tue, 2 Apr 2024 15:42:24 +0000
+Message-ID: <PH7P220MB158617DEAEC85ECA2A0D2CAFBC3E2@PH7P220MB1586.NAMP220.PROD.OUTLOOK.COM>
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+msip_labels:
+Content-Type: text/plain; charset="windows-874"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+=C3=E8=D2=A7=A1=D2=C2='''

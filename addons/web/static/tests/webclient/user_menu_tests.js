@@ -94,7 +94,7 @@ QUnit.test("can be rendered", async (assert) => {
     let userMenuEl = userMenu.el;
     assert.containsOnce(userMenuEl, "img.o_user_avatar");
     assert.strictEqual(
-        userMenuEl.querySelector("img.o_user_avatar").src,
+        userMenuEl.querySelector("img.o_user_avatar").dataset['src'],
         "http://lordofthering/web/image?model=res.users&field=avatar_128&id=7"
     );
     assert.containsOnce(userMenuEl, "span.oe_topbar_name");

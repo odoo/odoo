@@ -47,7 +47,7 @@ class MailBlackListMixin(models.AbstractModel):
     def _compute_email_normalized(self):
         self._assert_primary_email()
         for record in self:
-            record.email_normalized = tools.email_normalize(record[self._primary_email])
+            record.email_normalized = tools.email_normalize(record[self._primary_email], force_single=False)
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
@@ -116,11 +116,11 @@ class MailBlackListMixin(models.AbstractModel):
         can_access = self.env['mail.blacklist'].check_access_rights('write', raise_exception=False)
         if can_access:
             return {
-                'name': 'Are you sure you want to unblacklist this Email Address?',
+                'name': _('Are you sure you want to unblacklist this Email Address?'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'mail.blacklist.remove',
                 'target': 'new',
             }
         else:
-            raise AccessError("You do not have the access right to unblacklist emails. Please contact your administrator.")
+            raise AccessError(_("You do not have the access right to unblacklist emails. Please contact your administrator."))

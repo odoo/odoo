@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-22 09:50+0000\n"
-"PO-Revision-Date: 2021-07-22 09:50+0000\n"
+"POT-Creation-Date: 2024-03-12 13:17+0000\n"
+"PO-Revision-Date: 2024-03-12 13:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #. module: l10n_de
 #: model:ir.model.fields,help:l10n_de.field_account_tax__l10n_de_datev_code
-msgid "2 digits code use by Datev"
+msgid "4 digits code use by Datev"
 msgstr ""
 
 #. module: l10n_de
@@ -67,17 +67,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_de
-#: code:addons/l10n_de/models/datev.py:0
-#, python-format
-msgid ""
-"Account %s does not authorize to have tax %s specified on the line."
-"                                 Change the tax used in this invoice or "
-"remove all taxes from the account"
+#: model_terms:ir.ui.view,arch_db:l10n_de.external_layout_din5008
+msgid "<span>|</span>"
 msgstr ""
 
 #. module: l10n_de
 #: model:ir.model,name:l10n_de.model_account_chart_template
 msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: l10n_de
@@ -102,6 +103,11 @@ msgid "City"
 msgstr ""
 
 #. module: l10n_de
+#: model:ir.model,name:l10n_de.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_de
 #: model:ir.model,name:l10n_de.model_base_document_layout
 msgid "Company Document Layout"
 msgstr ""
@@ -118,17 +124,6 @@ msgid "Credit Note"
 msgstr ""
 
 #. module: l10n_de
-#: model:ir.model.fields,field_description:l10n_de.field_account_chart_template__display_name
-#: model:ir.model.fields,field_description:l10n_de.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_de.field_account_tax__display_name
-#: model:ir.model.fields,field_description:l10n_de.field_account_tax_template__display_name
-#: model:ir.model.fields,field_description:l10n_de.field_base_document_layout__display_name
-#: model:ir.model.fields,field_description:l10n_de.field_ir_actions_report__display_name
-#: model:ir.model.fields,field_description:l10n_de.field_product_template__display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: l10n_de
 #: code:addons/l10n_de/models/account_move.py:0
 #, python-format
 msgid "Draft Invoice"
@@ -139,6 +134,11 @@ msgstr ""
 #: code:addons/l10n_de/models/base_document_layout.py:0
 #, python-format
 msgid "Due Date"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_base_document_layout__account_fiscal_country_id
+msgid "Fiscal Country"
 msgstr ""
 
 #. module: l10n_de
@@ -157,18 +157,8 @@ msgid "IBAN:"
 msgstr ""
 
 #. module: l10n_de
-#: model:ir.model.fields,field_description:l10n_de.field_account_chart_template__id
-#: model:ir.model.fields,field_description:l10n_de.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_de.field_account_tax__id
-#: model:ir.model.fields,field_description:l10n_de.field_account_tax_template__id
-#: model:ir.model.fields,field_description:l10n_de.field_base_document_layout__id
-#: model:ir.model.fields,field_description:l10n_de.field_ir_actions_report__id
-#: model:ir.model.fields,field_description:l10n_de.field_product_template__id
-msgid "ID"
-msgstr ""
-
-#. module: l10n_de
 #: code:addons/l10n_de/models/account_move.py:0
+#: code:addons/l10n_de/models/base_document_layout.py:0
 #, python-format
 msgid "Invoice"
 msgstr ""
@@ -188,8 +178,34 @@ msgid "Invoice No."
 msgstr ""
 
 #. module: l10n_de
+#: code:addons/l10n_de/models/account_move.py:0
+#: code:addons/l10n_de/models/account_move.py:0
+#, python-format
+msgid "Invoicing Address:"
+msgstr ""
+
+#. module: l10n_de
+#: code:addons/l10n_de/models/account_move.py:0
+#: code:addons/l10n_de/models/account_move.py:0
+#, python-format
+msgid "Invoicing and Shipping Address:"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_de
 #: model:ir.model,name:l10n_de.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_account_bank_statement_line__l10n_de_addresses
+#: model:ir.model.fields,field_description:l10n_de.field_account_move__l10n_de_addresses
+#: model:ir.model.fields,field_description:l10n_de.field_account_payment__l10n_de_addresses
+msgid "L10N De Addresses"
 msgstr ""
 
 #. module: l10n_de
@@ -199,6 +215,7 @@ msgid "L10N De Datev Code"
 msgstr ""
 
 #. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_account_analytic_line__l10n_de_document_title
 #: model:ir.model.fields,field_description:l10n_de.field_account_bank_statement_line__l10n_de_document_title
 #: model:ir.model.fields,field_description:l10n_de.field_account_move__l10n_de_document_title
 #: model:ir.model.fields,field_description:l10n_de.field_account_payment__l10n_de_document_title
@@ -207,22 +224,12 @@ msgid "L10N De Document Title"
 msgstr ""
 
 #. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_account_analytic_line__l10n_de_template_data
 #: model:ir.model.fields,field_description:l10n_de.field_account_bank_statement_line__l10n_de_template_data
 #: model:ir.model.fields,field_description:l10n_de.field_account_move__l10n_de_template_data
 #: model:ir.model.fields,field_description:l10n_de.field_account_payment__l10n_de_template_data
 #: model:ir.model.fields,field_description:l10n_de.field_base_document_layout__l10n_de_template_data
 msgid "L10N De Template Data"
-msgstr ""
-
-#. module: l10n_de
-#: model:ir.model.fields,field_description:l10n_de.field_account_chart_template____last_update
-#: model:ir.model.fields,field_description:l10n_de.field_account_move____last_update
-#: model:ir.model.fields,field_description:l10n_de.field_account_tax____last_update
-#: model:ir.model.fields,field_description:l10n_de.field_account_tax_template____last_update
-#: model:ir.model.fields,field_description:l10n_de.field_base_document_layout____last_update
-#: model:ir.model.fields,field_description:l10n_de.field_ir_actions_report____last_update
-#: model:ir.model.fields,field_description:l10n_de.field_product_template____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: l10n_de
@@ -250,7 +257,25 @@ msgstr ""
 #. module: l10n_de
 #: code:addons/l10n_de/models/account_move.py:0
 #, python-format
+msgid "Shipping Address:"
+msgstr ""
+
+#. module: l10n_de
+#: code:addons/l10n_de/models/account_move.py:0
+#, python-format
 msgid "Source"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_res_company__l10n_de_stnr
+msgid "St.-Nr."
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,help:l10n_de.field_res_company__l10n_de_stnr
+msgid ""
+"Steuernummer. Scheme: ??FF0BBBUUUUP, e.g.: 2893081508152 "
+"https://de.wikipedia.org/wiki/Steuernummer"
 msgstr ""
 
 #. module: l10n_de
@@ -274,6 +299,11 @@ msgid "Templates for Taxes"
 msgstr ""
 
 #. module: l10n_de
+#: model:ir.model.fields,help:l10n_de.field_base_document_layout__account_fiscal_country_id
+msgid "The country to use the tax reports from for this company"
+msgstr ""
+
+#. module: l10n_de
 #: code:addons/l10n_de/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill"
@@ -283,6 +313,28 @@ msgstr ""
 #: code:addons/l10n_de/models/account_move.py:0
 #, python-format
 msgid "Vendor Credit Note"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_res_company__l10n_de_widnr
+msgid "W-IdNr."
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,help:l10n_de.field_res_company__l10n_de_widnr
+msgid "Wirtschafts-Identifikationsnummer."
+msgstr ""
+
+#. module: l10n_de_reports
+#: code:addons/l10n_de_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Your company's SteuerNummer is not compatible with your state"
+msgstr ""
+
+#. module: l10n_de_reports
+#: code:addons/l10n_de_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Your company's SteuerNummer is not valid"
 msgstr ""
 
 #. module: l10n_de

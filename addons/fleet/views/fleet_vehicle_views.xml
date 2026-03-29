@@ -117,7 +117,7 @@
                                     </div>
                                     <field name="electric_assistance" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
                                 </group>
-                                <group string="Engine">
+                                <group string="Engine" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                                     <field name="horsepower"/>
                                     <label for="power"/>
                                     <div class="o_row">
@@ -157,7 +157,7 @@
                 sample="1">
                 <field name="active" invisible="1"/>
                 <field name="license_plate" readonly="1"/>
-                <field name="model_id" widget="many2one_avatar" readonly="1"/>
+                <field name="model_id" readonly="1"/>
                 <field name="manager_id" optional="hide"/>
                 <field name="driver_id" widget="many2one_avatar" readonly="1"/>
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1"/>
@@ -363,7 +363,7 @@
         <field name="arch" type="xml">
             <tree string="Odometer Logs" editable="top">
                 <field name="date" />
-                <field name="vehicle_id" widget="many2one_avatar"/>
+                <field name="vehicle_id"/>
                 <field name="driver_id" widget="many2one_avatar"/>
                 <field name="value" />
                 <field name="unit" />

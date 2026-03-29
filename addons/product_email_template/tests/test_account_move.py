@@ -10,7 +10,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.template = Template.create({
             'name': 'Product Template',
             'subject': 'YOUR PRODUCT',
-            'model_id': self.env['ir.model']._get_id('product.template')
+            'model_id': self.env['ir.model']._get_id('account.move')
         })
         self.customer = self.env['res.partner'].create({
             'name': 'James Bond',

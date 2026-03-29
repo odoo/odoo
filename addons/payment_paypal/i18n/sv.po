@@ -10,15 +10,16 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Simon S, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,12 +32,6 @@ msgid ""
 "<br/><br/>\n"
 "                Thanks,<br/>\n"
 "                <b>The Odoo Team</b>"
-msgstr ""
-
-#. module: payment_paypal
-#: code:addons/payment_paypal/models/payment_acquirer.py:0
-#, python-format
-msgid "Add your PayPal account to Odoo"
 msgstr ""
 
 #. module: payment_paypal
@@ -57,7 +52,7 @@ msgstr ""
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
 msgid "How to configure your paypal account?"
-msgstr ""
+msgstr "Hur konfigurerar du ditt paypal-konto?"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
@@ -68,7 +63,7 @@ msgstr "Handlarkonto-ID"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr "Saknat värde för txn_id (%(txn_id)s) eller txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/payment_transaction.py:0
@@ -90,7 +85,7 @@ msgstr "PDT identitetskod"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Typ av PayPal-transaktion"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -111,7 +106,7 @@ msgstr "Betalningstransaktion"
 #: model:account.payment.method,name:payment_paypal.payment_method_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
@@ -127,7 +122,7 @@ msgstr "Leverantör"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Mottagen data med ogiltig betalningsstatus: %s"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
@@ -151,6 +146,29 @@ msgstr "Betaltjänstleverantör som ska användas med denna inlösare"
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
+msgstr ""
+"Den offentliga företagsadressen används endast för att identifiera kontot "
+"hos PayPal"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
+msgstr ""
+"Status för transaktion med referens %(ref)s synkroniserades inte eftersom "
+"alternativet \"Överföring av betalningsdata\" inte är aktiverat på PayPals "
+"instrumentpanel."
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the PDT Identify Token is not configured on the acquirer "
+"%(acq_link)s."
 msgstr ""
 
 #. module: payment_paypal

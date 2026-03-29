@@ -6,6 +6,7 @@ from odoo import fields
 
 
 from datetime import timedelta
+import pytz
 
 
 @tagged('-at_install', 'post_install')
@@ -70,9 +71,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertTrue(purchase_order.name.startswith('PO/2020/'))
 
     def test_reminder_1(self):
-        """Set to send reminder today, check if a reminder can be send to the
+        """Set to send reminder tomorrow, check if a reminder can be send to the
         partner.
         """
+        self.env.user.tz = 'Europe/Brussels'
+        # set partner to send reminder in Company 2
+        self.partner_a.with_company(self.env.companies[1]).receipt_reminder_email = True
+        self.partner_a.with_company(self.env.companies[1]).reminder_date_before_receipt = 1
+        # Create the PO in Company 1
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
         with po.order_line.new() as po_line:
@@ -83,26 +89,53 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
-        # set to send reminder today
-        po.date_planned = fields.Datetime.now() + timedelta(days=1)
-        po.receipt_reminder_email = True
-        po.reminder_date_before_receipt = 1
+
+        # set to send reminder tomorrow
+        date_planned = fields.Datetime.now().replace(hour=23, minute=0) + timedelta(days=2)
+        po.date_planned = date_planned
         po = po.save()
         po.button_confirm()
+        # Check that reminder is not set in Company 1 and the mail will not be sent
+        self.assertEqual(po.company_id, self.env.companies[0])
+        self.assertFalse(po.receipt_reminder_email)
+        self.assertEqual(po.reminder_date_before_receipt, 1, "The default value should be taken from the company")
+        old_messages = po.message_ids
+        po._send_reminder_mail()
+        messages_send = po.message_ids - old_messages
+        self.assertFalse(messages_send)
+        # Set to send reminder in Company 1
+        self.partner_a.receipt_reminder_email = True
+        self.partner_a.reminder_date_before_receipt = 2
+        # Invalidate the cache to ensure that the computed fields are recomputed
+        po.invalidate_cache()
+        self.assertTrue(po.receipt_reminder_email)
+        self.assertEqual(po.reminder_date_before_receipt, 2)
+
+        # check date_planned is correctly set
+        self.assertEqual(po.date_planned, date_planned)
+        po_tz = pytz.timezone(po.user_id.tz)
+        localized_date_planned = po.date_planned.astimezone(po_tz)
+        self.assertEqual(localized_date_planned, po.get_localized_date_planned())
+        # Ensure that the function get_localized_date_planned can accept a date in string format
+        self.assertEqual(localized_date_planned, po.get_localized_date_planned(po.date_planned.strftime('%Y-%m-%d %H:%M:%S')))
 
         # check vendor is a message recipient
         self.assertTrue(po.partner_id in po.message_partner_ids)
 
+        # check reminder send
         old_messages = po.message_ids
         po._send_reminder_mail()
         messages_send = po.message_ids - old_messages
-        # check reminder send
         self.assertTrue(messages_send)
         self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
 
-        # check confirm button
+        # check confirm button + date planned localized in message
+        old_messages = po.message_ids
         po.confirm_reminder_mail()
+        messages_send = po.message_ids - old_messages
         self.assertTrue(po.mail_reminder_confirmed)
+        self.assertEqual(len(messages_send), 1)
+        self.assertIn(str(localized_date_planned.date()), messages_send.body)
 
     def test_reminder_2(self):
         """Set to send reminder tomorrow, check if no reminder can be send.
@@ -119,9 +152,9 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.price_unit = 200
         # set to send reminder tomorrow
         po.date_planned = fields.Datetime.now() + timedelta(days=2)
-        po.receipt_reminder_email = True
-        po.reminder_date_before_receipt = 1
         po = po.save()
+        self.partner_a.receipt_reminder_email = True
+        self.partner_a.reminder_date_before_receipt = 1
         po.button_confirm()
 
         # check vendor is a message recipient
@@ -248,3 +281,113 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         self.assertEqual(po.order_line[0].price_unit, 200)
         self.assertEqual(po.order_line[1].price_unit, 1200)
+
+    def test_on_change_quantity_description(self):
+        """
+        When a user changes the quantity of a product in a purchase order it
+        should not change the description if the descritpion was changed by
+        the user before
+        """
+        self.env.user.write({'company_id': self.company_data['company'].id})
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.partner_a
+        with po.order_line.new() as pol:
+            pol.product_id = self.product_a
+            pol.product_qty = 1
+
+        pol.name = "New custom description"
+        pol.product_qty += 1
+        self.assertEqual(pol.name, "New custom description")
+
+    def test_on_change_quantity_subtotal(self):
+        """
+        When a user changes the quantity of a product in a purchase order it
+        should correctly change the subtotal price even in a multi-enterprise environment
+        """
+        seller_ids = self.env['product.supplierinfo'].create({
+            'name': self.partner_a.id,
+            'price': 20,
+            'company_id': self.company_data_2['company'].id
+        })
+
+        self.product_a.write({'seller_ids': seller_ids})
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.partner_a
+        po.company_id = self.company_data_2['company']
+        with po.order_line.new() as pol:
+            pol.product_id = self.product_a
+            pol.product_qty = 4
+
+        pol.product_qty += 1
+        self.assertEqual(pol.price_subtotal, 100)
+
+    def test_tax_totals(self):
+        """ This test ensures the tax amount is correctly computed"""
+
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax_21_excl = self.env['account.tax'].create({
+            'name': "21 exclude",
+            'amount': '21.00',
+            'amount_type': 'percent',
+            'price_include': False,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 1.0
+            po_line.price_unit = 10.74
+            po_line.taxes_id.clear()
+            po_line.taxes_id.add(tax_21_excl)
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 2.0
+            po_line.price_unit = 0.83
+            po_line.taxes_id.clear()
+            po_line.taxes_id.add(tax_21_excl)
+        po = po_form.save()
+
+        self.assertEqual(po.amount_tax, 2.60)
+        self.assertEqual(po.amount_total, 15.00)
+        self.assertEqual(po.amount_untaxed, 12.40)
+
+    def test_purchase_not_creating_useless_product_vendor(self):
+        """ This test ensures that the product vendor is not created when the
+        product is not set on the purchase order line.
+        """
+
+        #create a contact of type contact
+        contact = self.env['res.partner'].create({
+            'name': 'Contact',
+            'type': 'contact',
+        })
+
+        #create a contact of type Delivery Address lnked to the contact
+        delivery_address = self.env['res.partner'].create({
+            'name': 'Delivery Address',
+            'type': 'delivery',
+            'parent_id': contact.id,
+        })
+
+        #create a product that use the delivery address as vendor
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'seller_ids': [(0, 0, {
+                'name': delivery_address.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+            })]
+        })
+
+        #create a purchase order with the delivery address as partner
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = delivery_address
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = 1.0
+        po = po_form.save()
+        po.button_confirm()
+
+        self.assertEqual(po.order_line.product_id.seller_ids.mapped('name'), delivery_address)

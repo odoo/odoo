@@ -1403,7 +1403,7 @@
 
     <div t-attf-class="o_wforum_author_box d-inline-flex #{display_info and 'o_show_info'} #{compact and 'o_compact align-items-center'} #{bio_popover_data and 'o_wforum_bio_popover'}"
          t-att-data-content="bio_popover_data">
-        <t t-set="user_profile_url" value="#"/>
+        <t t-set="user_profile_url" t-valuef="#"/>
         <t t-if="object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published">
             <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), object.create_uid.id) + '?forum_origin=' + request.httprequest.path"/>
         </t>
@@ -1462,7 +1462,9 @@
             <t t-foreach="reversed(object.website_message_ids)" t-as="message">
                 <div t-attf-class="o_wforum_post_comment #{not message_first and 'mt-3'}">
                     <div>
-                        <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
+                        <t t-set="unlink_comment_required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
+                        <t t-set="can_unlink_comment" t-value="user._is_admin() or user.karma >= unlink_comment_required_karma"/>
+
                         <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
                         <t t-if="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False) or (not object.parent_id and object.state != 'close' and object.active != False)">
                             <t t-set="allow_post_comment" t-value="True" />
@@ -1486,7 +1488,7 @@
                                         <t t-set="inDropdown" t-value="True"/>
                                         <t t-set="icon" t-value="'fa-trash-o text-muted'"/>
                                         <t t-set="classes" t-value="'comment_delete'"/>
-                                        <t t-set="karma" t-value="not object.can_unlink and object.karma_unlink or 0"/>
+                                        <t t-set="karma" t-value="unlink_comment_required_karma if not can_unlink_comment and unlink_comment_required_karma else 0"/>
                                     </t>
                                     <t t-call="website_forum.link_button">
                                         <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
@@ -1595,6 +1597,8 @@
                         <div class="tab-content" id="o_tab_content_spam">
                             <div class="tab-pane fade show active" data-key="create_uid" id="spam_user" role="tabpanel" aria-labelledby="user-tab">
                                 <form class="row" >
+                                    <!-- Prevent the foreach loop to overide the `user` variable from the controller -->
+                                    <t t-set="env_user" t-value="user"/>
                                     <div t-foreach="posts_ids.mapped('create_uid')" t-as="user" class="col-6">
                                         <div class="card mb-2">
                                             <div class="card-body py-2">
@@ -1608,6 +1612,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <t t-set="user" t-value="env_user"/>
                                 </form>
                             </div>
                             <div class="tab-pane fade" data-key="country_id" id="spam_country" role="tabpanel" aria-labelledby="country-tab">

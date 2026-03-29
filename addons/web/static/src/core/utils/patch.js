@@ -14,6 +14,9 @@ const patchMap = new WeakMap();
  * @param {{pure?: boolean}} [options]
  */
 export function patch(obj, patchName, patchValue, options = {}) {
+    if (typeof patchName !== "string") {
+        throw new Error("Incorrect use of patch: second argument should be the patchName");
+    }
     const pure = Boolean(options.pure);
     if (!patchMap.has(obj)) {
         patchMap.set(obj, {
@@ -39,8 +42,8 @@ export function patch(obj, patchName, patchValue, options = {}) {
             proto = Object.getPrototypeOf(proto);
         } while (!prevDesc && proto);
 
-        const newDesc = Object.getOwnPropertyDescriptor(patchValue, k);
-        if (!objDesc.original.hasOwnProperty(k)) {
+        let newDesc = Object.getOwnPropertyDescriptor(patchValue, k);
+        if (!Object.hasOwnProperty.call(objDesc.original, k)) {
             objDesc.original[k] = Object.getOwnPropertyDescriptor(obj, k);
         }
 
@@ -48,6 +51,7 @@ export function patch(obj, patchName, patchValue, options = {}) {
             const patchedFnName = `${k} (patch ${patchName})`;
 
             if (prevDesc.value && typeof newDesc.value === "function") {
+                newDesc = { ...prevDesc, value: newDesc.value };
                 makeIntermediateFunction("value", prevDesc, newDesc, patchedFnName);
             }
             if ((newDesc.get || newDesc.set) && (prevDesc.get || prevDesc.set)) {
@@ -55,8 +59,11 @@ export function patch(obj, patchName, patchValue, options = {}) {
                 // in the previous descriptor but only one in the new descriptor
                 // then the other will be undefined so we need to apply the
                 // previous descriptor in the new one.
-                newDesc.get = newDesc.get || prevDesc.get;
-                newDesc.set = newDesc.set || prevDesc.set;
+                newDesc = {
+                    ...prevDesc,
+                    get: newDesc.get || prevDesc.get,
+                    set: newDesc.set || prevDesc.set,
+                };
                 if (prevDesc.get && typeof newDesc.get === "function") {
                     makeIntermediateFunction("get", prevDesc, newDesc, patchedFnName);
                 }

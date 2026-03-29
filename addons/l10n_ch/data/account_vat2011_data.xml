@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <!--
-        #  TVA - Taxe sur la Valeur Ajoutée
+        #  TVA - Taxe sur la Valeur Ajoutée (pre-2024 rates change)
         -->
         <record model="account.tax.template" id="vat_25">
             <field name="name">2.5% Sales</field>
@@ -11,6 +11,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_tva_25"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -48,6 +49,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_tva_25"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -84,6 +86,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_25"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -119,6 +122,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_25"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -153,6 +157,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_25"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -188,6 +193,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_25"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -222,6 +228,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_tva_37"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -259,6 +266,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_tva_37"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -295,6 +303,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_37"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -330,6 +339,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_37"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -364,6 +374,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_37"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -399,6 +410,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_37"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -434,6 +446,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -472,6 +485,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -510,6 +524,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -544,6 +559,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -579,6 +595,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -677,6 +694,26 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_tva_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
         </record>
 
         <record model="account.tax.template" id="vat_100_import">
@@ -750,14 +787,15 @@
         </record>
 
         <record model="account.tax.template" id="vat_77_purchase_return">
-            <field name="name">7.7% Sales (reverse)</field>
-            <field name="description">7.7% purch. (return)</field>
+            <field name="name">7.7% Purchase (reverse)</field>
+            <field name="description">7.7% purch. (reverse)</field>
             <field name="amount" eval="-7.7"/>
             <field name="amount_type">percent</field>
             <field name="sequence" eval="0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -795,6 +833,7 @@
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
             <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
@@ -829,6 +868,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="tax_group_id" ref="tax_group_tva_77"/>
+            <field name="active" eval="False"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('vat_77_purchase_return'), ref('vat_77_purchase')])]"/>
         </record>
 
@@ -848,12 +888,20 @@
                     'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
                 }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 }),
             ]"/>
         </record>
@@ -872,12 +920,20 @@
                     'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
                 }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 }),
             ]"/>
         </record>

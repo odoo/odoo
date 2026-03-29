@@ -3,6 +3,7 @@ import json
 import logging
 
 from odoo import http
+from odoo.exceptions import AccessDenied
 from odoo.http import request
 from odoo.osv.expression import AND
 from odoo.tools import convert
@@ -86,4 +87,6 @@ class PosController(http.Controller):
 
     @http.route('/pos/load_onboarding_data', type='json', auth='user')
     def load_onboarding_data(self):
+        if not request.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessDenied()
         convert.convert_file(request.env.cr, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')

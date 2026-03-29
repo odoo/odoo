@@ -200,12 +200,12 @@
             <field name="can_approve" invisible="1"/>
             <field name="holiday_allocation_id" invisible="1" force_save="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
                 <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
+                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
                 <button string="Mark as Draft" name="action_draft" type="object"
-                        attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+                        attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
@@ -231,7 +231,7 @@
                 </div>
                 <group>
                     <group name="col_left">
-                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
+                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from, 'default_date_to':date_to}" options="{'no_create': True, 'no_open': True}" class="w-100"/>
                         <label for="request_date_from" string="Dates" id="label_dates"/>
                         <div>
                             <field name="date_from" invisible="1" widget="daterange"/>
@@ -408,7 +408,7 @@
             <field name="holiday_status_id" position="replace"/>
             <div name="title" position="inside">
                 <h1 class="d-flex flex-row justify-content-between">
-                    <field name="holiday_status_id" options="{'no_open': True}" context="{'from_manager_leave_form': True ,'employee_id': employee_id}"/>
+                    <field name="holiday_status_id" options="{'no_open': True}" context="{'from_manager_leave_form': True ,'employee_id': employee_id, 'default_date_from':date_from, 'default_date_to':date_to}"/>
                 </h1>
             </div>
             <field name="employee_id" position="replace"/>
@@ -516,13 +516,16 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_approve']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="states"/>
+                <attribute name="attrs">{'invisible': 1}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_validate']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="states"/>
+                <attribute name="attrs">{'invisible': 1}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_refuse']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="states"/>
+                <attribute name="attrs">{'invisible': 1}</attribute>
             </xpath>
         </field>
     </record>
@@ -573,7 +576,7 @@
         <field name="name">Dashboard</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,tree,form,activity</field>
-        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="context">{'short_name': 1, 'search_default_active_time_off': 1}</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
         <field name="help" type="html">
@@ -660,9 +663,11 @@
             'search_default_my_team': 2,
             'search_default_active_employee': 3,
             'search_default_active_time_off': 4,
-            'hide_employee_name': 1}
-        </field>
-        <field name="domain">[]</field>
+            'hide_employee_name': 1}</field>
+        <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
+                                    '&amp;', ('multi_employee', '=', True),
+                                    '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
+                                    ('employee_ids.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

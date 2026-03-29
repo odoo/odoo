@@ -19,6 +19,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
                 float_field: { string: "Float", type: "float", group_operator: 'sum' },
                 foo: { string: "Foo", type: "char", store: true, sortable: true },
                 m2m: { string: "Many2Many", type: "many2many", store: true},
+                m2m_not_stored: { string: "Many2Many not stored", type: "many2many" },
             };
             patchWithCleanup(browser, {
                 setTimeout: (fn) => fn(),
@@ -43,7 +44,11 @@ odoo.define('web.groupby_menu_tests', function (require) {
         });
 
         QUnit.test('simple rendering with no groupby', async function (assert) {
-            assert.expect(6);
+            assert.expect(3);
+
+            // Manually make m2m_not_stored to be sortable.
+            // Even if it's sortable, it should not be included in the add custom groupby options.
+            this.fields.m2m_not_stored.sortable = true;
 
             const params = {
                 cpModelConfig: { searchMenuTypes },
@@ -58,17 +63,15 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleAddCustomGroup(controlPanel);
 
             const optionEls = controlPanel.el.querySelectorAll('.o_add_custom_group_menu select option');
-            assert.strictEqual(optionEls[0].innerText.trim(), 'Birthday');
-            assert.strictEqual(optionEls[1].innerText.trim(), 'Date');
-            assert.strictEqual(optionEls[2].innerText.trim(), 'Foo');
-            assert.strictEqual(optionEls[3].innerText.trim(), 'Many2Many');
+            assert.deepEqual(
+                [...optionEls].map((el) => el.innerText.trim()),
+                ['Birthday', 'Date', 'Foo', 'Many2Many']
+            );
 
             controlPanel.destroy();
         });
 
         QUnit.test('simple rendering with a single groupby', async function (assert) {
-            assert.expect(4);
-
             const arch = `
                 <search>
                     <filter string="Groupby Foo" name="gb_foo" context="{'group_by': 'foo'}"/>
@@ -81,7 +84,10 @@ odoo.define('web.groupby_menu_tests', function (require) {
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
             assert.containsOnce(controlPanel, '.o_menu_item');
-            assert.strictEqual(controlPanel.el.querySelector('.o_menu_item').innerText.trim(), "Groupby Foo");
+            const menuItem = controlPanel.el.querySelector(".o_menu_item");
+            assert.strictEqual(menuItem.innerText.trim(), "Groupby Foo");
+            assert.strictEqual(menuItem.getAttribute("role"), "menuitemcheckbox");
+            assert.strictEqual(menuItem.ariaChecked, "false");
             assert.containsOnce(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, '.o_add_custom_group_menu');
 
@@ -89,7 +95,7 @@ odoo.define('web.groupby_menu_tests', function (require) {
         });
 
         QUnit.test('toggle a "simple" groupby in groupby menu works', async function (assert) {
-            assert.expect(9);
+            assert.expect(13);
 
             const groupBys = [['foo'], []];
             const arch = `
@@ -110,8 +116,13 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
 
             assert.notOk(cpHelpers.isItemSelected(controlPanel, 0));
+            const menuItem = controlPanel.el.querySelector(".o_menu_item");
+            assert.strictEqual(menuItem.innerText.trim(), "Groupby Foo");
+            assert.strictEqual(menuItem.getAttribute("role"), "menuitemcheckbox");
+            assert.strictEqual(menuItem.ariaChecked, "false");
 
             await cpHelpers.toggleMenuItem(controlPanel, 0);
+            assert.strictEqual(menuItem.ariaChecked, "true");
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['Groupby Foo']);
             assert.containsOnce(controlPanel.el.querySelector('.o_searchview .o_searchview_facet'),
                 'span.fa.fa-bars.o_searchview_facet_label');

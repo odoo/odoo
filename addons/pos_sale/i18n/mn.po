@@ -3,13 +3,15 @@
 # 	* pos_sale
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
 # Otgonbayar.A <gobi.mn@gmail.com>, 2021
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2021
+# hish, 2021
 # Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2021
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2021
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021
 # Martin Trigaux, 2021
+# Torbat Jargalsaikhan, 2023
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# Minj P <pminj322@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
-"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
+"Last-Translator: Minj P <pminj322@gmail.com>, 2024\n"
+"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,25 +29,39 @@ msgstr ""
 
 #. module: pos_sale
 #. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "(left:"
+msgstr "(үлдэгдэл:"
+
+#. module: pos_sale
+#. openerp-web
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(татвартай.)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "<span class=\"o_form_label\">Down Payment Product</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Урьдчилгаа төлбөрийн бүртгэл</span>"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "<span class=\"o_form_label\">Sales Team</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Борлуулалтын баг</span>"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
 msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Apply a down payment"
+msgstr "Урьдчилгаа төлбөр бүртгэх"
 
 #. module: pos_sale
 #. openerp-web
@@ -90,6 +106,13 @@ msgstr "Үйлчлүүлэгч"
 
 #. module: pos_sale
 #. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Customer loading error"
+msgstr "Үйлчлүүлэгчийн жагсаалт ачааллахад алдаа"
+
+#. module: pos_sale
+#. openerp-web
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
@@ -99,7 +122,7 @@ msgstr "Огноо"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.message_body
 msgid "Delivered from"
-msgstr ""
+msgstr "Хаанаас ирсэн"
 
 #. module: pos_sale
 #. openerp-web
@@ -107,17 +130,18 @@ msgstr ""
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
 msgstr ""
+"Борлуулалтын захиалганд ашиглах серийн дугаарын өгөгдлийг ачааллах уу?"
 
 #. module: pos_sale
 #: model:product.product,name:pos_sale.default_downpayment_product
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr ""
+msgstr "Урьдчилгаа төлбөр (ПОС)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr ""
+msgstr "Урьдчилгаа төлбөрийн дэлгэрэнгүй"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -133,6 +157,13 @@ msgstr "Ж.ш. захиалагч: Санжаажамц, огноо: 2020-05-09"
 
 #. module: pos_sale
 #. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Error amount too high"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
 #: code:addons/pos_sale/static/src/xml/ReceiptScreen/OrderReceipt.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 #, python-format
@@ -145,21 +176,32 @@ msgid "Invoiced"
 msgstr "Нэхэмжилсэн"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"It seems that you didn't configure a down payment product in your point of sale.\n"
+"                        You can go to your point of sale configuration to choose one."
+msgstr ""
+"Таны борлуулалтын цэгийн тохиргоонд урьдчилгаа төлбөр бүхий барааны нэр төрөл тодорхойлогдоогүй байна.\n"
+"                        Борлуулалтын цэгийн тохиргоо руу очиж зохих нэр төрлийг сонгож өгнө үү."
+
+#. module: pos_sale
 #: code:addons/pos_sale/models/sale_order.py:0
 #, python-format
 msgid "Linked POS Orders"
-msgstr ""
+msgstr "Холбоотой ПОС захиалгууд"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
 msgid "Linked Sale Order"
-msgstr ""
+msgstr "Холбоотой борлуулалтын захиалга"
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/pos_order.py:0
 #, python-format
 msgid "Linked Sale Orders"
-msgstr ""
+msgstr "Холбоотой борлуулалтын захиалга"
 
 #. module: pos_sale
 #. openerp-web
@@ -198,6 +240,13 @@ msgid "No"
 msgstr "Үгүй"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "No down payment product"
+msgstr "Урьдчилгаа төлбөрийн бүртгэл алга"
+
+#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
 msgstr "ПОС сэшнүүд нээх"
@@ -219,7 +268,7 @@ msgstr "Захиалга"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr ""
+msgstr "Захиалгын мөрүүд Борлуулалтын цэг рүү хөрвүүлэгдсэн"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -231,7 +280,7 @@ msgstr "Төлөгдсөн"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Percentage of %s"
-msgstr ""
+msgstr "%s-ын хувь"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
@@ -281,7 +330,7 @@ msgstr "Өмнөх захиалгын жагсаалт"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Products not available in POS"
-msgstr ""
+msgstr "ПОС дээр ашиглагдахгүй бараанууд"
 
 #. module: pos_sale
 #. openerp-web
@@ -302,14 +351,14 @@ msgstr "Үнийн санал илгээгдсэн"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Quotation/Order"
-msgstr ""
+msgstr "Үнийн санал"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "Серийн дугаар уншиж байна"
 
 #. module: pos_sale
 #. openerp-web
@@ -358,7 +407,7 @@ msgstr "Борлуулалтын баг"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "Sales are reported to the following sales team"
-msgstr ""
+msgstr "Борлуулалтууд нь дараах борлуулалтын багын тайланд тусгагдана"
 
 #. module: pos_sale
 #. openerp-web
@@ -395,7 +444,14 @@ msgstr "Ажиллаж байгаа сэшнүүд"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Set Sale Order"
-msgstr ""
+msgstr "Борлуулалтын захиалга болгох"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Settle the order"
+msgstr "Борлуулалтын захиалга руу хөрвүүлэх"
 
 #. module: pos_sale
 #. openerp-web
@@ -405,11 +461,14 @@ msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
 msgstr ""
+"Таны борлуулалтын захиалга дахь зарим бараанууд ПОС дэлгэц дээр ашиглахаар "
+"тохируулагдаагүй байна, Та тэднийг ПОС дэлгэц руу оруулж ирэхийг хүсч байна "
+"уу?"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Захиалгын мөрийн эх үүсвэр"
 
 #. module: pos_sale
 #. openerp-web
@@ -432,6 +491,13 @@ msgid ""
 msgstr "Захиалга хийгдсэн өдөр тухайн валютын ханштай харьцах ханш"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "There was a problem in loading the %s customer."
+msgstr "Дараах %s үйлчлүүлэгчийн мэдээллийг ачааллахад асуудал тулгарлаа."
+
+#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
@@ -440,12 +506,14 @@ msgstr "Борлуулалтын цэг нь борлуулалтын багта
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "This product will be applied when down payment is made"
-msgstr ""
+msgstr "Урьдчилгаа төлөлт бүртгэх үед уг барааны нэр төрөл ашиглагдана"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
 msgstr ""
+"Борлуулалтын захиалга дээр урьдчилгаа төлбөр бүртгэх үед ашиглагдах барааны "
+"нэр төрөл."
 
 #. module: pos_sale
 #. openerp-web
@@ -456,11 +524,18 @@ msgid "Total"
 msgstr "Нийт дүн"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Шилжүүлэг"
+
+#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
 msgid ""
 "Transfered<br/>\n"
 "                                from Sale"
 msgstr ""
+"Борлуулалтын захиалгаас<br/>\n"
+"                                Шилжүүлсэн"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -468,6 +543,8 @@ msgid ""
 "Transfered<br/>\n"
 "                                to POS"
 msgstr ""
+"ПОС захиалга руу<br/>\n"
+"                                шилжсэн"
 
 #. module: pos_sale
 #. openerp-web
@@ -496,3 +573,15 @@ msgstr "Та юу хиймээр байна?"
 #, python-format
 msgid "Yes"
 msgstr "Тийм"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""
+"Та %s дүнгээр урьдчилгаа төлөлт бүртгэх гэж байна гэвч төлвөл зохих үлдэгдэл"
+" нь ердөө %s юм, тиймээс %s дүнгээр худалдан авалтын захиалгын мөр үүсэх "
+"болно."

@@ -94,12 +94,15 @@ class CouponProgram(models.Model):
 
     def write(self, vals):
         res = super(CouponProgram, self).write(vals)
+        if not self:
+            return res
         reward_fields = [
             'reward_type', 'reward_product_id', 'discount_type', 'discount_percentage',
             'discount_apply_on', 'discount_specific_product_ids', 'discount_fixed_amount'
         ]
         if any(field in reward_fields for field in vals):
-            self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
+            for program in self:
+                program.discount_line_product_id.write({'name': program.reward_id.display_name})
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -137,7 +140,12 @@ class CouponProgram(models.Model):
             return True
 
     def _get_valid_products(self, products):
-        if self.rule_products_domain:
+        """Get valid products for the program.
+
+        :param products: records of product.product
+        :return: valid products recordset
+        """
+        if self.rule_products_domain and self.rule_products_domain != "[]":
             domain = ast.literal_eval(self.rule_products_domain)
             return products.filtered_domain(domain)
         return products

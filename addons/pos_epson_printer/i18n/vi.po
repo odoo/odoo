@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2021
 # Vo Thanh Thuy, 2021
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2021\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,6 +25,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
 msgid "Cashdrawer"
 msgstr "Két tiền"
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Check on the printer configuration for the 'Device ID' setting. It should be"
+" set to: "
+msgstr ""
+"Kiểm tra cấu hình máy in để biết cài đặt 'ID thiết bị'. Nên đặt thành:"
 
 #. module: pos_epson_printer
 #. openerp-web
@@ -62,6 +73,13 @@ msgstr "Địa chỉ IP nội bộ của máy in hóa đơn Epson. "
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
+msgid "No paper was detected by the printer"
+msgstr "Máy in không phát hiện giấy"
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
 msgid "Please check if the printer has enough paper and is ready to print."
 msgstr "Vui lòng kiểm tra xem máy in có đủ giấy và sẵn sàng in không. "
 
@@ -69,8 +87,12 @@ msgstr "Vui lòng kiểm tra xem máy in có đủ giấy và sẵn sàng in kh�
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
-msgid "Please check if the printer is still connected."
-msgstr "Vui lòng kiểm tra xem máy in còn kết nối không. "
+msgid ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
+msgstr ""
+"Vui lòng kiểm tra xem máy in còn được kết nối hay không.\n"
+"Một số trình duyệt không cho phép gọi HTTP từ trang web đến thiết bị trong mạng (vì lý do bảo mật). Nếu đúng như vậy, bạn cần làm theo tài liệu của Odoo về 'Chứng chỉ tự ký cho máy in ePOS' và 'Kết nối an toàn (HTTPS)' để giải quyết vấn đề"
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_config
@@ -92,3 +114,24 @@ msgid ""
 msgstr ""
 "Máy in hóa đơn Epson sẽ được sử dụng thay vì máy in hóa đơn kết nối với IoT "
 "Box. "
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "The following error code was given by the printer:"
+msgstr "Máy in hiển thị mã lỗi sau:"
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "The printer was successfully reached, but it wasn't able to print."
+msgstr "Máy in đã được kết nối thành công, nhưng không thể in."
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "To find more details on the error reason, please search online for:"
+msgstr "Để biết thêm chi tiết về lý do lỗi, vui lòng tra cứu online:"

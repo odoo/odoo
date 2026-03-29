@@ -6,16 +6,17 @@
 # Martin Trigaux, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Halil, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2024-08-14 15:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2021\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Halil, 2024\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,6 +27,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
 msgid "Cashdrawer"
 msgstr "Nakit Çekmece"
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Check on the printer configuration for the 'Device ID' setting. It should be"
+" set to: "
+msgstr ""
+"'Aygıt Kimliği' ayarı için yazıcı yapılandırmasını kontrol edin. Şu şekilde "
+"ayarlanmalıdır:"
 
 #. module: pos_epson_printer
 #. openerp-web
@@ -52,6 +64,8 @@ msgid ""
 "If you are on a secure server (HTTPS) please make sure you manually accepted"
 " the certificate by accessing %s"
 msgstr ""
+"Güvenli bir sunucudaysanız (HTTPS) lütfen %s adrese erişerek sertifikayı "
+"manuel olarak kabul ettiğinizden emin olun"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
@@ -62,15 +76,28 @@ msgstr "Epson makbuz yazıcısının yerel IP adresi."
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
-msgid "Please check if the printer has enough paper and is ready to print."
-msgstr ""
+msgid "No paper was detected by the printer"
+msgstr "Yazıcı tarafından kağıt algılanmadı"
 
 #. module: pos_epson_printer
 #. openerp-web
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
-msgid "Please check if the printer is still connected."
-msgstr "Lütfen yazıcının hala bağlı olup olmadığını kontrol edin."
+msgid "Please check if the printer has enough paper and is ready to print."
+msgstr ""
+"Lütfen yazıcıda yeterli kağıt olup olmadığını ve yazdırmaya hazır olup "
+"olmadığını kontrol edin."
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
+msgstr ""
+"Lütfen yazıcının hala bağlı olup olmadığını kontrol edin. \n"
+"Bazı tarayıcılar, web sitelerinden ağdaki cihazlara HTTP çağrılarına izin vermez (güvenlik nedenleriyle). Bu durumda, sorunu çözmek için Odoo'nun 'ePOS yazıcılar için otomatik olarak imzalanan sertifika' ve 'Güvenli bağlantı (HTTPS)' belgelerini izlemeniz gerekecektir"
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_config
@@ -82,7 +109,7 @@ msgstr "Satış Noktası Yapılandırması"
 #: code:addons/pos_epson_printer/static/src/js/printers.js:0
 #, python-format
 msgid "Printing failed"
-msgstr ""
+msgstr "Yazdırma başarısız oldu"
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
@@ -92,3 +119,26 @@ msgid ""
 msgstr ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "The following error code was given by the printer:"
+msgstr "Yazıcı tarafından aşağıdaki hata kodu verildi:"
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "The printer was successfully reached, but it wasn't able to print."
+msgstr "Yazıcıya başarıyla ulaşıldı, ancak yazdırılamadı."
+
+#. module: pos_epson_printer
+#. openerp-web
+#: code:addons/pos_epson_printer/static/src/js/printers.js:0
+#, python-format
+msgid "To find more details on the error reason, please search online for:"
+msgstr ""
+"Hata nedeni hakkında daha fazla ayrıntı bulmak için lütfen çevrimiçi olarak "
+"şunu arayın:"

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models
+from odoo.tools import float_is_zero
 
 
 class AccountMove(models.Model):
@@ -105,6 +106,7 @@ class AccountMove(models.Model):
         :return: A list of Python dictionary to be passed to env['account.move.line'].create.
         '''
         lines_vals_list = []
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for move in self:
             # Make the loop multi-company safe when accessing models like product.product
             move = move.with_company(move.company_id)
@@ -121,7 +123,7 @@ class AccountMove(models.Model):
                 # Retrieve accounts needed to generate the COGS.
                 accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
                 debit_interim_account = accounts['stock_output']
-                credit_expense_account = accounts['expense'] or self.journal_id.default_account_id
+                credit_expense_account = accounts['expense'] or move.journal_id.default_account_id
                 if not debit_interim_account or not credit_expense_account:
                     continue
 
@@ -130,10 +132,14 @@ class AccountMove(models.Model):
                 price_unit = line._stock_account_get_anglo_saxon_price_unit()
                 balance = sign * line.quantity * price_unit
 
+                if move.currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
+                    continue
+
                 # Add interim account line.
                 lines_vals_list.append({
                     'name': line.name[:64],
                     'move_id': move.id,
+                    'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
@@ -149,6 +155,7 @@ class AccountMove(models.Model):
                 lines_vals_list.append({
                     'name': line.name[:64],
                     'move_id': move.id,
+                    'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
                     'product_uom_id': line.product_uom_id.id,
                     'quantity': line.quantity,
@@ -202,7 +209,7 @@ class AccountMove(models.Model):
                         lambda line: line.product_id == prod and line.account_id == product_interim_account and not line.reconciled)
 
                     # Search for anglo-saxon lines linked to the product in the stock moves.
-                    product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id == prod)
+                    product_stock_moves = stock_moves._filter_by_product(prod)
                     product_account_moves += product_stock_moves.mapped('account_move_ids.line_ids')\
                         .filtered(lambda line: line.account_id == product_interim_account and not line.reconciled)
 
@@ -223,7 +230,7 @@ class AccountMoveLine(models.Model):
         # with anglo-saxon accounting.
         self.ensure_one()
         self = self.with_company(self.move_id.journal_id.company_id)
-        if self.product_id.type == 'product' \
+        if self._can_use_stock_accounts() \
             and self.move_id.company_id.anglo_saxon_accounting \
             and self.move_id.is_purchase_document():
             fiscal_position = self.move_id.fiscal_position_id
@@ -236,8 +243,15 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
 
+    def _can_use_stock_accounts(self):
+        return self.product_id.type == 'product' and self.product_id.categ_id.property_valuation == 'real_time'
+
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
         if not self.product_id:
             return self.price_unit
-        return self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+        original_line = self.move_id.reversed_entry_id.line_ids.filtered(lambda l: l.is_anglo_saxon_line
+            and l.product_id == self.product_id and l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
+        original_line = original_line and original_line[0]
+        return original_line.price_unit if original_line \
+            else self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)

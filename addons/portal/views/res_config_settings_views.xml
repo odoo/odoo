@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.portal</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name=%(base.action_apikeys_admin)d]//ancestor::div[hasclass('o_setting_box')]" position="inside">
+                    <div groups="base.group_no_one">
+                        <div class="o_setting_left_pane">
+                            <field name="portal_allow_api_keys"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="portal_allow_api_keys"/>
+                            <div class="text-muted">
+                                Let your customers create developer API keys
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

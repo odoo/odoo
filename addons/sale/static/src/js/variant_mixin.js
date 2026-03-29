@@ -5,6 +5,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var utils = require('web.utils');
 var ajax = require('web.ajax');
+var session = require('web.session');
 var _t = core._t;
 
 var VariantMixin = {
@@ -72,7 +73,11 @@ var VariantMixin = {
                     'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
                     'pricelist_id': this.pricelistId || false,
                     'parent_combination': combination,
+                    'context': session.user_context,
                 }).then((combinationData) => {
+                    if (this._shouldIgnoreRpcResult()) {
+                        return;
+                    }
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
                     this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
                 });
@@ -90,7 +95,11 @@ var VariantMixin = {
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
+            'context': session.user_context,
         }).then((combinationData) => {
+            if (this._shouldIgnoreRpcResult()) {
+                return;
+            }
             this._onChangeCombination(ev, $parent, combinationData);
             this._checkExclusions($parent, combination, combinationData.parent_exclusions);
         });
@@ -140,7 +149,6 @@ var VariantMixin = {
                     if (previousCustomValue) {
                         $input.val(previousCustomValue);
                     }
-                    $input[0].focus();
                 }
             } else {
                 $variantContainer.find('.variant_custom_value').remove();
@@ -271,10 +279,16 @@ var VariantMixin = {
 
     /**
      * Will return the list of selected product.template.attribute.value ids
+     * For the modal, the "main product"'s attribute values are stored in the
+     * "unchanged_value_ids" data
+     *
      * @param {$.Element} $container the container to look into
      */
     getSelectedVariantValues: function ($container) {
         var values = [];
+        var unchangedValues = $container
+            .find('div.oe_unchanged_value_ids')
+            .data('unchanged_value_ids') || [];
 
         var variantsValuesSelectors = [
             'input.js_variant_change:checked',
@@ -284,7 +298,7 @@ var VariantMixin = {
             values.push(+$(el).val());
         });
 
-        return values;
+        return values.concat(unchangedValues);
     },
 
     /**
@@ -642,6 +656,18 @@ var VariantMixin = {
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");
+    },
+
+    /**
+     * Return true if the current object has been destroyed.
+     * This function has been added as a fix to know if the result of a rpc
+     * should be handled. Indeed, "this._rpc()" can not be used as it is not
+     * supported by some elements that use this mixin.
+     *
+     * @private
+     */
+    _shouldIgnoreRpcResult() {
+        return (typeof this.isDestroyed === "function" && this.isDestroyed());
     },
 
     /**

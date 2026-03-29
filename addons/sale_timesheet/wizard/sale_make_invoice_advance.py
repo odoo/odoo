@@ -11,7 +11,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _default_invoicing_timesheet_enabled(self):
         if 'active_id' not in self._context and 'active_ids' not in self._context:
             return False
-        sale_orders = self.env['sale.order'].browse(self._context.get('active_id') or self._context.get('active_ids'))
+        sale_orders = self.env['sale.order'].browse(self._context.get('active_ids') or self._context.get('active_id'))
         order_lines = sale_orders.mapped('order_line').filtered(lambda sol: sol.invoice_status == 'to invoice')
         product_ids = order_lines.mapped('product_id').filtered(lambda p: p._is_delivered_timesheet())
         return bool(product_ids)
@@ -40,7 +40,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if self.date_start_invoice_timesheet or self.date_end_invoice_timesheet:
                 sale_orders.mapped('order_line')._recompute_qty_to_invoice(self.date_start_invoice_timesheet, self.date_end_invoice_timesheet)
 
-            sale_orders._create_invoices(final=self.deduct_down_payments, start_date=self.date_start_invoice_timesheet, end_date=self.date_end_invoice_timesheet)
+            sale_orders.with_context(
+                timesheet_start_date=self.date_start_invoice_timesheet,
+                timesheet_end_date=self.date_end_invoice_timesheet
+            )._create_invoices(final=self.deduct_down_payments)
 
             if self._context.get('open_invoices', False):
                 return sale_orders.action_view_invoice()

@@ -10,49 +10,51 @@ from odoo import Command
 
 class TransactionCaseWithUserDemo(TransactionCase):
 
-    def setUp(self):
-        super(TransactionCaseWithUserDemo, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.env.ref('base.partner_admin').write({'name': 'Mitchell Admin'})
-        self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
-        self.partner_demo = self.user_demo.partner_id
+        cls.env.ref('base.partner_admin').write({'name': 'Mitchell Admin'})
+        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
+        cls.partner_demo = cls.user_demo.partner_id
 
-        if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+        if not cls.user_demo:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
             # YTI TODO: This could be factorized between the different classes
-            self.partner_demo = self.env['res.partner'].create({
+            cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            self.user_demo = self.env['res.users'].create({
+            cls.user_demo = cls.env['res.users'].create({
                 'login': 'demo',
                 'password': 'demo',
-                'partner_id': self.partner_demo.id,
-                'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+                'partner_id': cls.partner_demo.id,
+                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
 class HttpCaseWithUserDemo(HttpCase):
 
-    def setUp(self):
-        super(HttpCaseWithUserDemo, self).setUp()
-        self.user_admin = self.env.ref('base.user_admin')
-        self.user_admin.write({'name': 'Mitchell Admin'})
-        self.partner_admin = self.user_admin.partner_id
-        self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
-        self.partner_demo = self.user_demo.partner_id
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_admin.write({'name': 'Mitchell Admin'})
+        cls.partner_admin = cls.user_admin.partner_id
+        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
+        cls.partner_demo = cls.user_demo.partner_id
 
-        if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            self.partner_demo = self.env['res.partner'].create({
+        if not cls.user_demo:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            self.user_demo = self.env['res.users'].create({
+            cls.user_demo = cls.env['res.users'].create({
                 'login': 'demo',
                 'password': 'demo',
-                'partner_id': self.partner_demo.id,
-                'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+                'partner_id': cls.partner_demo.id,
+                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -185,7 +187,7 @@ class HttpCaseWithUserPortal(HttpCase):
 
     def setUp(self):
         super(HttpCaseWithUserPortal, self).setUp()
-        self.user_portal = self.env['res.users'].search([('login', '=', 'portal')])
+        self.user_portal = self.env['res.users'].sudo().search([('login', '=', 'portal')])
         self.partner_portal = self.user_portal.partner_id
 
         if not self.user_portal:
@@ -247,6 +249,9 @@ class MockSmtplibCase:
                 pass
 
             def login(self, user, password):
+                pass
+
+            def starttls(self, keyfile=None, certfile=None, context=None):
                 pass
 
         self.testing_smtp_session = TestingSMTPSession()

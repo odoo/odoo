@@ -12,6 +12,7 @@ class Partner(models.Model):
     property_product_pricelist = fields.Many2one(
         'product.pricelist', 'Pricelist', compute='_compute_product_pricelist',
         inverse="_inverse_product_pricelist", company_dependent=False,
+        domain=lambda self: [('company_id', 'in', (self.env.company.id, False))],
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
     @api.depends('country_id')
@@ -20,7 +21,7 @@ class Partner(models.Model):
         company = self.env.company.id
         res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids, company_id=company)
         for p in self:
-            p.property_product_pricelist = res.get(p.id)
+            p.property_product_pricelist = res.get(p._origin.id)
 
     def _inverse_product_pricelist(self):
         for partner in self:

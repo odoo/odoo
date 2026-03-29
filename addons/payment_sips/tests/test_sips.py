@@ -41,6 +41,9 @@ class SipsTest(SipsCommon):
             "Payulatam: transaction reference wasn't correctly singularized.")
 
     def test_redirect_form_values(self):
+        self.patch(self, 'base_url', 'http://localhost:8069')
+        self.patch(type(self.env['base']), 'get_base_url', lambda _: 'http://localhost:8069')
+
         tx = self.create_transaction(flow="redirect")
 
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
@@ -72,8 +75,9 @@ class SipsTest(SipsCommon):
                     'paymentMeanBrand=IDEAL|paymentMeanType=CREDIT_TRANSFER|'
                     'customerIpAddress=127.0.0.1|returnContext={"return_url": '
                     '"/payment/process", "reference": '
-                    '"SO100x1"}|holderAuthentRelegation=N|holderAuthentStatus=|'
-                    'transactionOrigin=INTERNET|paymentPattern=ONE_SHOT|customerMobilePhone=null|'
+                    '"SO100x1"}|scoreValue=-3.0|scoreColor=GREEN|scoreInfo=A3;N;N#SC;N;TRANS=3:2;CUMUL=4500:250000|'
+                    'scoreProfile=25_BUSINESS_SCORE_PRE_AUTHORISATION|scoreThreshold=-7;-5|holderAuthentRelegation=N|'
+                    'holderAuthentStatus=|transactionOrigin=INTERNET|paymentPattern=ONE_SHOT|customerMobilePhone=null|'
                     'mandateAuthentMethod=null|mandateUsage=null|transactionActors=null|'
                     'mandateId=null|captureLimitDate=20200408|dccStatus=null|dccResponseCode=null|'
                     'dccAmount=null|dccCurrencyCode=null|dccExchangeRate=null|'
@@ -106,7 +110,9 @@ class SipsTest(SipsCommon):
                     'transactionDateTime=2020-04-08T06:24:08+02:00|transactionReference=SO100x2|'
                     'keyVersion=1|amount=31400|customerIpAddress=127.0.0.1|returnContext={"return_url": '
                     '"/payment/process", "reference": '
-                    '"SO100x2"}|paymentPattern=ONE_SHOT|customerMobilePhone=null|mandateAuthentMethod=null|'
+                    '"SO100x2"}|scoreValue=-3.0|scoreColor=GREEN|scoreInfo=A3;N;N#SC;N;TRANS=3:2;CUMUL=4500:250000|'
+                    'scoreProfile=25_BUSINESS_SCORE_PRE_AUTHORISATION|scoreThreshold=-7;-5'
+                    '|paymentPattern=ONE_SHOT|customerMobilePhone=null|mandateAuthentMethod=null|'
                     'mandateUsage=null|transactionActors=null|mandateId=null|captureLimitDate=null|'
                     'dccStatus=null|dccResponseCode=null|dccAmount=null|dccCurrencyCode=null|'
                     'dccExchangeRate=null|dccExchangeRateValidity=null|dccProvider=null|'

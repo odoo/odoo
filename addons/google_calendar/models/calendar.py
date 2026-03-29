@@ -76,7 +76,13 @@ class Meeting(models.Model):
         if google_event.is_cancelled():
             return {'active': False}
 
-        alarm_commands = self._odoo_reminders_commands(google_event.reminders.get('overrides') or default_reminders)
+        # default_reminders is never () it is set to google's default reminder (30 min before)
+        # we need to check 'useDefault' for the event to determine if we have to use google's
+        # default reminder or not
+        reminder_command = google_event.reminders.get('overrides')
+        if not reminder_command:
+            reminder_command = google_event.reminders.get('useDefault') and default_reminders or ()
+        alarm_commands = self._odoo_reminders_commands(reminder_command)
         attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
         related_event = self.search([('google_id', '=', google_event.id)], limit=1)
         name = google_event.summary or related_event and related_event.name or _("(No title)")
@@ -88,7 +94,9 @@ class Meeting(models.Model):
             'privacy': google_event.visibility or self.default_get(['privacy'])['privacy'],
             'attendee_ids': attendee_commands,
             'alarm_ids': alarm_commands,
-            'recurrency': google_event.is_recurrent()
+            'recurrency': google_event.is_recurrent(),
+            'videocall_location': google_event.get_meeting_url(),
+            'show_as': 'free' if google_event.is_available() else 'busy'
         }
         if partner_commands:
             # Add partner_commands only if set from Google. The write method on calendar_events will
@@ -112,8 +120,10 @@ class Meeting(models.Model):
             if stop < start:
                 stop = parse(google_event.end.get('date'))
             values['allday'] = True
-        values['start'] = start
-        values['stop'] = stop
+        if related_event['start'] != start:
+            values['start'] = start
+        if related_event['stop'] != stop:
+            values['stop'] = stop
         return values
 
     @api.model
@@ -130,9 +140,10 @@ class Meeting(models.Model):
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
-            existing_attendees = self.browse(google_event.odoo_id(self.env)).attendee_ids
+            event = google_event.get_odoo_event(self.env)
+            existing_attendees = event.attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
-        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
+        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
         for attendee in zip(emails, partners, google_attendees):
             email = attendee[0]
             if email in attendees_by_emails:
@@ -213,10 +224,10 @@ class Meeting(models.Model):
         } for alarm in self.alarm_ids]
 
         attendees = self.attendee_ids
-        if self.user_id and self.user_id != self.env.user and bool(self.user_id.sudo().google_calendar_token):
-            # We avoid updating the other attendee status if we are not the organizer
-            attendees = self.attendee_ids.filtered(lambda att: att.partner_id == self.env.user.partner_id)
-        attendee_values = [{'email': attendee.partner_id.email_normalized, 'responseStatus': attendee.state} for attendee in attendees if attendee.partner_id.email_normalized]
+        attendee_values = [{
+            'email': attendee.partner_id.email_normalized,
+            'responseStatus': attendee.state or 'needsAction',
+        } for attendee in attendees if attendee.partner_id.email_normalized]
         # We sort the attendees to avoid undeterministic test fails. It's not mandatory for Google.
         attendee_values.sort(key=lambda k: k['email'])
         values = {
@@ -224,7 +235,7 @@ class Meeting(models.Model):
             'start': start,
             'end': end,
             'summary': self.name,
-            'description': tools.html2plaintext(self.description) if not tools.is_html_empty(self.description) else '',
+            'description': tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else '',
             'location': self.location or '',
             'guestsCanModify': True,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
@@ -269,3 +280,9 @@ class Meeting(models.Model):
         super(Meeting, my_cancelled_records)._cancel()
         attendees = (self - my_cancelled_records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.state = 'declined'
+
+    def _get_event_user(self):
+        self.ensure_one()
+        if self.user_id and self.user_id.sudo().google_calendar_token:
+            return self.user_id
+        return self.env.user

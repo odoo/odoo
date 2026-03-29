@@ -7,9 +7,14 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { click, getFixture, triggerEvent } from "../helpers/utils";
+import CustomFilterItem from 'web.CustomFilterItem';
+import ActionModel from 'web.ActionModel';
+import { applyFilter, toggleMenu } from '@web/../tests/search/helpers';
+import { editSelect } from 'web.test_utils_fields';
+import { createComponent } from 'web.test_utils';
 
 const { DateTime } = luxon;
-const { Component, mount, tags } = owl;
+const { Component, mount, tags, useState } = owl;
 const { xml } = tags;
 const serviceRegistry = registry.category("services");
 
@@ -29,14 +34,23 @@ const mountPicker = async (Picker, { props, onDateChange } = {}) => {
         )
         .add("ui", uiService);
 
-    class Parent extends Component {}
+    class Parent extends Component {
+        setup() {
+            this.state = useState(props);
+        }
+
+        onDateChange(ev) {
+            onDateChange(ev);
+            this.state.date = ev.detail.date;
+        }
+    }
     Parent.template = xml/* xml */ `
-        <t t-component="props.Picker" t-props="props.props" t-on-datetime-changed="props.onDateChange" />
+        <t t-component="props.Picker" t-props="state" t-on-datetime-changed="onDateChange" />
     `;
 
     const env = await makeTestEnv();
     const target = getFixture();
-    const parent = await mount(Parent, { env, props: { Picker, props, onDateChange }, target });
+    const parent = await mount(Parent, { env, props: { Picker }, target });
     registerCleanup(() => parent.destroy());
     return parent;
 };
@@ -61,6 +75,27 @@ const useFRLocale = () => {
         registerCleanup(() => window.moment.updateLocale("fr", null));
     }
     return "fr";
+};
+
+const useNOLocale = () => {
+    if (!window.moment.locales().includes("nb")) {
+        const originalLocale = window.moment.locale();
+        window.moment.defineLocale("nb", {
+            months: "januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember".split(
+                "_"
+            ),
+            monthsShort: "jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.".split("_"),
+            monthsParseExact: true,
+            week: {
+                dow: 1, // Monday is the first day of the week.
+                doy: 4, // The week that contains Jan 4th is the first week of the year.
+            },
+        });
+        // Moment automatically assigns newly defined locales.
+        window.moment.locale(originalLocale);
+        registerCleanup(() => window.moment.updateLocale("nb", null));
+    }
+    return "nb";
 };
 
 QUnit.module("Components", () => {
@@ -437,5 +472,91 @@ QUnit.module("Components", () => {
         await click(input);
 
         assert.strictEqual(input.value, "12:30:01 1997/01/09");
+    });
+
+    QUnit.test("Datepicker works with norwegian locale", async (assert) => {
+        assert.expect(6);
+
+        await mountPicker(DatePicker, {
+            props: {
+                date: DateTime.fromFormat("09/04/1997 12:30:01", "dd/MM/yyyy HH:mm:ss"),
+                format: "dd MMM, yyyy",
+                locale: useNOLocale(),
+            },
+            onDateChange: (ev) => {
+                assert.step("datetime-changed");
+                assert.strictEqual(
+                    ev.detail.date.toFormat("dd/MM/yyyy"),
+                    "01/04/1997",
+                    "Event should transmit the correct date"
+                );
+            },
+        });
+
+        const target = getFixture();
+        const input = target.querySelector(".o_datepicker_input");
+
+        assert.strictEqual(input.value, "09 apr., 1997");
+
+        await click(input);
+
+        assert.strictEqual(input.value, "1997/04/09");
+
+        const days = [...document.querySelectorAll(".datepicker .day")];
+        await click(days.find((d) => d.innerText.trim() === "1")); // first day of april
+
+        assert.strictEqual(input.value, "01 apr., 1997");
+        assert.verifySteps(["datetime-changed"]);
+    });
+
+    QUnit.test("Datepicker works with dots and commas in format", async (assert) => {
+        assert.expect(2);
+
+        const picker = await mountPicker(DateTimePicker, {
+            props: {
+                date: DateTime.fromFormat("10/03/2023 13:14:27", "dd/MM/yyyy HH:mm:ss"),
+                format: "dd.MM,yyyy",
+            }
+        });
+
+        let input = picker.el.querySelector(".o_datepicker_input");
+
+        assert.strictEqual(input.value, "10.03,2023");
+
+        await click(input);
+
+        assert.strictEqual(input.value, "10.03,2023");
+    });
+
+    QUnit.test('custom filter date', async function (assert) {
+        assert.expect(3);
+        class MockedSearchModel extends ActionModel {
+            dispatch(method, ...args) {
+                assert.strictEqual(method, 'createNewFilters');
+                const preFilters = args[0];
+                const preFilter = preFilters[0];
+                assert.strictEqual(preFilter.description,
+                    'A date is equal to "05/05/2005"',
+                    "description should be in localized format");
+                assert.deepEqual(preFilter.domain,
+                    '[["date_field","=","2005-05-05"]]',
+                    "domain should be in UTC format");
+            }
+        }
+        const searchModel = new MockedSearchModel();
+        const date_field = { name: 'date_field', string: "A date", type: 'date', searchable: true };
+        const cfi = await createComponent(CustomFilterItem, {
+            props: {
+                fields: { date_field },
+            },
+            env: { searchModel },
+        });
+        await toggleMenu(cfi, "Add Custom Filter");
+        await editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_field');
+        const valueInput = cfi.el.querySelector('.o_generator_menu_value .o_input');
+        await click(valueInput);
+        await editSelect(valueInput, '05/05/2005');
+        await applyFilter(cfi);
+        cfi.destroy();
     });
 });

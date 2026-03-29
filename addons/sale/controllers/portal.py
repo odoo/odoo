@@ -23,21 +23,36 @@ class CustomerPortal(portal.CustomerPortal):
 
         SaleOrder = request.env['sale.order']
         if 'quotation_count' in counters:
-            values['quotation_count'] = SaleOrder.search_count([
-                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-                ('state', 'in', ['sent', 'cancel'])
-            ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+            values['quotation_count'] = SaleOrder.search_count(self._prepare_quotations_domain(partner)) \
+                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
         if 'order_count' in counters:
-            values['order_count'] = SaleOrder.search_count([
-                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-                ('state', 'in', ['sale', 'done'])
-            ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+            values['order_count'] = SaleOrder.search_count(self._prepare_orders_domain(partner)) \
+                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
         return values
+
+    def _prepare_quotations_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sent', 'cancel'])
+        ]
+
+    def _prepare_orders_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sale', 'done'])
+        ]
 
     #
     # Quotations and Sales Orders
     #
+
+    def _get_sale_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
+            'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
+        }
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -45,16 +60,9 @@ class CustomerPortal(portal.CustomerPortal):
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ]
+        domain = self._prepare_quotations_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
 
         # default sortby order
         if not sortby:
@@ -80,7 +88,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         values.update({
             'date': date_begin,
-            'quotations': quotations.sudo(),
+            'quotations': quotations,
             'page_name': 'quote',
             'pager': pager,
             'default_url': '/my/quotes',
@@ -95,16 +103,10 @@ class CustomerPortal(portal.CustomerPortal):
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ]
+        domain = self._prepare_orders_domain(partner)
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
+
         # default sortby order
         if not sortby:
             sortby = 'date'
@@ -129,7 +131,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         values.update({
             'date': date_begin,
-            'orders': orders.sudo(),
+            'orders': orders,
             'page_name': 'order',
             'pager': pager,
             'default_url': '/my/orders',
@@ -157,7 +159,7 @@ class CustomerPortal(portal.CustomerPortal):
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
             if session_obj_date != now and request.env.user.share and access_token:
                 request.session['view_quote_%s' % order_sudo.id] = now
-                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,
@@ -184,6 +186,7 @@ class CustomerPortal(portal.CustomerPortal):
         # Payment values
         if order_sudo.has_to_be_paid():
             logged_in = not request.env.user._is_public()
+
             acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
                 order_sudo.company_id.id,
                 order_sudo.partner_id.id,
@@ -194,6 +197,14 @@ class CustomerPortal(portal.CustomerPortal):
                 ('acquirer_id', 'in', acquirers_sudo.ids),
                 ('partner_id', '=', order_sudo.partner_id.id)
             ]) if logged_in else request.env['payment.token']
+
+            # Make sure that the partner's company matches the order's company.
+            if not payment_portal.PaymentPortal._can_partner_pay_in_company(
+                order_sudo.partner_id, order_sudo.company_id
+            ):
+                acquirers_sudo = request.env['payment.acquirer'].sudo()
+                tokens = request.env['payment.token']
+
             fees_by_acquirer = {
                 acquirer: acquirer._compute_fees(
                     order_sudo.amount_total,
@@ -305,7 +316,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Check the order id and the access token
         try:
-            self._document_check_access('sale.order', order_id, access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token)
         except MissingError as error:
             raise error
         except AccessError:
@@ -313,6 +324,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
@@ -339,8 +351,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :raise: ValidationError if the order id is invalid
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
-        amount = self.cast_as_float(amount)
-        sale_order_id = self.cast_as_int(sale_order_id)
+        amount = self._cast_as_float(amount)
+        sale_order_id = self._cast_as_int(sale_order_id)
         if sale_order_id:
             order_sudo = request.env['sale.order'].sudo().browse(sale_order_id).exists()
             if not order_sudo:
@@ -349,13 +361,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
             # Check the access token against the order values. Done after fetching the order as we
             # need the order fields to check the access token.
             if not payment_utils.check_access_token(
-                access_token, order_sudo.partner_id.id, amount, order_sudo.currency_id.id
+                access_token, order_sudo.partner_invoice_id.id, amount, order_sudo.currency_id.id
             ):
                 raise ValidationError(_("The provided parameters are invalid."))
 
             kwargs.update({
                 'currency_id': order_sudo.currency_id.id,
-                'partner_id': order_sudo.partner_id.id,
+                'partner_id': order_sudo.partner_invoice_id.id,
                 'company_id': order_sudo.company_id.id,
                 'sale_order_id': sale_order_id,
             })
