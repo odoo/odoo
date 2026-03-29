@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_account_specific_form">
+        <field name="name">account.account.form.inherit</field>
+        <field name="inherit_id" ref="account.view_account_form" />
+        <field name="model">account.account</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <field name="deprecated" position="after">
+                <field name="centralized" />
+            </field>
+        </field>
+    </record>
+</odoo>

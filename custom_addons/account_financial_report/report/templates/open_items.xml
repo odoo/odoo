@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="open_items">
+        <t t-call="account_financial_report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="account_financial_report.internal_layout">
+                    <t t-call="account_financial_report.report_open_items_base" />
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="account_financial_report.report_open_items_base">
+        <!-- Saved flag fields into variables, used to define columns display -->
+        <t t-set="foreign_currency" t-value="foreign_currency" />
+        <!-- Defines global variables used by internal layout -->
+        <t t-set="title">
+            Open Items -
+            <t t-out="company_name" />
+            -
+            <t t-out="currency_name" />
+        </t>
+        <t t-set="company_name" t-value="Company_Name" />
+        <div class="page">
+            <div class="row">
+                <h4
+                    class="mt0"
+                    t-esc="title or 'Odoo Report'"
+                    style="text-align: center;"
+                />
+            </div>
+            <t t-if="grouped_by == 'salesperson' and show_partner_details">
+                <t t-foreach="partners_data.keys()" t-as="partner_id">
+                    <t t-call="account_financial_report.report_open_items_filters" />
+                    <div class="act_as_caption account_title">
+                        <span t-esc="partners_data[partner_id]['name']" />
+                    </div>
+                    <t t-foreach="Open_Items.keys()" t-as="account_id">
+                        <t t-if="partner_id in Open_Items[account_id]">
+                            <div
+                                class="act_as_table list_table"
+                                style="margin-top: 10px;"
+                            />
+                            <div class="account_title" style="width: 100%;">
+                                <span t-esc="accounts_data[account_id]['code']" />
+                                -
+                                <span t-esc="accounts_data[account_id]['name']" />
+                            </div>
+
+                            <t t-if="Open_Items[account_id]">
+                                <t
+                                    t-set="partner_totals"
+                                    t-value="o._calculate_amounts_by_partner(account_id,Open_Items[account_id][partner_id])"
+                                />
+                                <t
+                                    t-foreach="partner_totals.get(account_id, {})"
+                                    t-as="partner_id_key"
+                                >
+                                    <t t-set="has_lines" t-value="False" />
+                                    <div
+                                        class="act_as_table data_table"
+                                        style="width: 100%;"
+                                    >
+                                        <t
+                                            t-foreach="Open_Items[account_id][partner_id]"
+                                            t-as="line"
+                                        >
+                                            <t
+                                                t-if="line['partner_id'] == partner_id_key"
+                                            >
+                                                <t t-set="has_lines" t-value="True" />
+                                            </t>
+                                        </t>
+                                        <t t-if="has_lines">
+                                            <!-- Display partner header -->
+                                            <t
+                                                t-call="account_financial_report.report_open_items_lines_header"
+                                            />
+                                        </t>
+                                        <t
+                                            t-foreach="Open_Items[account_id][partner_id]"
+                                            t-as="line"
+                                        >
+                                            <t
+                                                t-if="line['partner_id'] == partner_id_key"
+                                            >
+                                                <!-- Display partner move lines -->
+                                                <t
+                                                    t-call="account_financial_report.report_open_items_lines"
+                                                />
+                                            </t>
+                                        </t>
+                                    </div>
+                                    <!-- Check if there were any lines displayed for the partner -->
+                                    <t t-if="has_lines">
+                                        <!-- Calculate and display subtotal for current partner_id -->
+                                        <t
+                                            t-call="account_financial_report.report_open_items_ending_cumul"
+                                        >
+                                            <t
+                                                t-set="currency_id"
+                                                t-value="accounts_data[account_id]['currency_name']"
+                                            />
+                                            <t
+                                                t-set="type"
+                                                t-value="'partner_subtotal_type'"
+                                            />
+                                        </t>
+                                    </t>
+                                </t>
+                            </t>
+                            <!-- Display account footer -->
+                            <t
+                                t-call="account_financial_report.report_open_items_ending_cumul"
+                            >
+                                <t
+                                    t-set="account_or_partner_id"
+                                    t-value="partners_data[partner_id]"
+                                />
+                                <t
+                                    t-set="currency_id"
+                                    t-value="accounts_data[account_id]['currency_name']"
+                                />
+                                <t t-set="type" t-value='"partner_type"' />
+                            </t>
+                        </t>
+                    </t>
+                    <div style="page-break-after: always;" />
+                </t>
+            </t>
+            <t t-else="">
+                <!-- Display filters -->
+                <t t-call="account_financial_report.report_open_items_filters" />
+                <t t-foreach="Open_Items.keys()" t-as="account_id">
+                    <!-- Display account header -->
+                    <div class="act_as_table list_table" style="margin-top: 10px;" />
+                    <div class="account_title" style="width: 100%;">
+                        <span t-esc="accounts_data[account_id]['code']" />
+                        -
+                        <span t-esc="accounts_data[account_id]['name']" />
+                    </div>
+                    <t t-if="not show_partner_details">
+                        <div class="act_as_table data_table" style="width: 100%;">
+                            <t
+                                t-call="account_financial_report.report_open_items_lines_header"
+                            />
+                            <!-- Display account move lines -->
+                            <t t-foreach="Open_Items[account_id]" t-as="line">
+                                <t
+                                    t-call="account_financial_report.report_open_items_lines"
+                                />
+                            </t>
+                        </div>
+                    </t>
+                    <t t-if="show_partner_details">
+                        <div class="page_break">
+                            <!-- Display account partners -->
+                            <t t-foreach="Open_Items[account_id]" t-as="partner_id">
+                                <div class="act_as_caption account_title">
+                                    <span t-esc="partners_data[partner_id]['name']" />
+                                </div>
+                                <div
+                                    class="act_as_table data_table"
+                                    style="width: 100%;"
+                                >
+                                    <!-- Display partner header -->
+                                    <t
+                                        t-call="account_financial_report.report_open_items_lines_header"
+                                    />
+                                    <!-- Display partner move lines -->
+                                    <t
+                                        t-foreach="Open_Items[account_id][partner_id]"
+                                        t-as="line"
+                                    >
+                                        <t
+                                            t-call="account_financial_report.report_open_items_lines"
+                                        />
+                                    </t>
+                                </div>
+                                <t
+                                    t-call="account_financial_report.report_open_items_ending_cumul"
+                                >
+                                    <t
+                                        t-set="account_or_partner_id"
+                                        t-value="partners_data[partner_id]"
+                                    />
+                                    <t
+                                        t-set="currency_id"
+                                        t-value="accounts_data[account_id]['currency_name']"
+                                    />
+                                    <t t-set="type" t-value='"partner_type"' />
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                    <!-- Display account footer -->
+                    <t t-call="account_financial_report.report_open_items_ending_cumul">
+                        <t
+                            t-set="account_or_partner_id"
+                            t-value="accounts_data[account_id]"
+                        />
+                        <t
+                            t-set="currency_id"
+                            t-value="accounts_data[account_id]['currency_name']"
+                        />
+                        <t t-set="type" t-value='"account_type"' />
+                    </t>
+                </t>
+            </t>
+        </div>
+    </template>
+
+    <template id="account_financial_report.report_open_items_filters">
+        <div class="act_as_table data_table" style="width: 100%;">
+            <div class="act_as_row labels">
+                <div class="act_as_cell">Date at filter</div>
+                <div class="act_as_cell">Target moves filter</div>
+                <div class="act_as_cell">Account balance at 0 filter</div>
+            </div>
+            <div class="act_as_row">
+                <div class="act_as_cell">
+                    <span t-esc="date_at" />
+                </div>
+                <div class="act_as_cell">
+                    <t t-if="target_move == 'posted'">All posted entries</t>
+                    <t t-if="target_move == 'all'">All entries</t>
+                </div>
+                <div class="act_as_cell">
+                    <t t-if="hide_account_at_0">Hide</t>
+                    <t t-if="not hide_account_at_0">Show</t>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="account_financial_report.report_open_items_lines_header">
+        <!-- Display table headers for lines -->
+        <div class="act_as_thead">
+            <div class="act_as_row labels">
+                <!--## date-->
+                <div class="act_as_cell first_column" style="width: 5.51%;">Date</div>
+                <!--## move-->
+                <div class="act_as_cell" style="width: 9.76%;">Entry</div>
+                <!--## journal-->
+                <div class="act_as_cell" style="width: 4.78%;">Journal</div>
+                <!--## account code-->
+                <div class="act_as_cell" style="width: 5.38%;">Account</div>
+                <!--## partner-->
+                <div class="act_as_cell" style="width: 15.07%;">Partner</div>
+                <!--## ref - label-->
+                <div class="act_as_cell" style="width: 24.5%;">
+                    Ref -
+                    Label
+                </div>
+                <!--## date_due-->
+                <div class="act_as_cell" style="width: 6.47%;">
+                    Due
+                    date
+                </div>
+                <!--## amount_total_due-->
+                <div class="act_as_cell" style="width: 6.57%;">Original</div>
+                <!--## amount_residual-->
+                <div class="act_as_cell" style="width: 6.57%;">Residual</div>
+                <t t-if="foreign_currency">
+                    <!--## currency_name-->
+                    <div class="act_as_cell" style="width: 2.25%;">Cur.</div>
+                    <!--## amount_total_due_currency-->
+                    <div class="act_as_cell amount" style="width: 6.57%;">
+                        Cur. Original
+                    </div>
+                    <!--## amount_residual_currency-->
+                    <div class="act_as_cell amount" style="width: 6.57%;">
+                        Cur. Residual
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+    <template id="account_financial_report.report_open_items_lines">
+        <!-- # lines or centralized lines -->
+        <div class="act_as_row lines">
+            <!--## date-->
+            <div class="act_as_cell left">
+                <span t-out="line['date'].strftime('%d/%m/%Y')" />
+            </div>
+            <!--## move-->
+            <div class="act_as_cell left">
+                <span
+                    t-att-res-id="line['entry_id']"
+                    res-model="account.move"
+                    view-type="form"
+                >
+                    <t t-esc="line['move_name']" />
+                </span>
+            </div>
+            <!--## journal-->
+            <div class="act_as_cell left">
+                <span
+                    t-att-res-id="journals_data[line['journal_id']]['id']"
+                    res-model="account.journal"
+                    view-type="form"
+                >
+                    <t t-esc="journals_data[line['journal_id']]['code']" />
+                </span>
+            </div>
+            <!--## account code-->
+            <div class="act_as_cell left">
+                <span
+                    t-att-res-id="accounts_data[account_id]['id']"
+                    res-model="account.account"
+                    view-type="form"
+                >
+                    <t t-esc="accounts_data[account_id]['code']" />
+                </span>
+            </div>
+            <!--## partner-->
+            <div class="act_as_cell left">
+                <span
+                    t-if="line.get('partner_id', False)"
+                    t-att-res-id="line['partner_id']"
+                    res-model="res.partner"
+                    view-type="form"
+                >
+                    <t t-esc="line['partner_name']" />
+                </span>
+            </div>
+            <!--## ref - label-->
+            <div class="act_as_cell left">
+                <span t-esc="line['ref_label']" />
+            </div>
+            <!--## date_due-->
+            <div class="act_as_cell left">
+                <span t-esc="line['date_maturity']" />
+            </div>
+            <!--## amount_total_due-->
+            <div class="act_as_cell amount">
+                <span
+                    t-if="line.get('original', False)"
+                    t-esc="line['original']"
+                    t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                />
+            </div>
+            <!--## amount_residual-->
+            <div class="act_as_cell amount">
+                <span
+                    t-esc="line['amount_residual']"
+                    t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                />
+            </div>
+            <t t-if="foreign_currency">
+                <t t-if="line['currency_id']">
+                    <!--## currency_name-->
+                    <div class="act_as_cell amount">
+                        <span t-esc="line['currency_name']" />
+                    </div>
+                    <!--## amount_total_due_currency-->
+                    <div class="act_as_cell amount">
+                        <span
+                            t-esc="line['amount_currency']"
+                            t-options="{'widget': 'monetary', 'display_currency': env['res.currency'].browse(line['currency_id'])}"
+                        />
+                    </div>
+                    <!--## amount_residual_currency-->
+                    <div class="act_as_cell amount">
+                        <span
+                            t-esc="line['amount_residual_currency']"
+                            t-options="{'widget': 'monetary', 'display_currency': env['res.currency'].browse(line['currency_id'])}"
+                        />
+                    </div>
+                </t>
+                <t t-if="not line['currency_id']">
+                    <!--## currency_name-->
+                    <div class="act_as_cell" />
+                    <!--## amount_total_due_currency-->
+                    <div class="act_as_cell" />
+                    <!--## amount_residual_currency-->
+                    <div class="act_as_cell" />
+                </t>
+            </t>
+        </div>
+    </template>
+    <template id="account_financial_report.report_open_items_ending_cumul">
+        <!-- Display ending balance line for account or partner -->
+        <div class="act_as_table list_table" style="width: 100%;">
+            <div class="act_as_row labels" style="font-weight: bold;">
+                <!--## date-->
+                <t t-if='type == "account_type"'>
+                    <div class="act_as_cell first_column" style="width: 36.34%;">
+                        <span t-esc="accounts_data[account_id]['code']" />
+                        -
+                        <span t-esc="accounts_data[account_id]['name']" />
+                    </div>
+                    <div class="act_as_cell right" style="width: 28.66%;">
+                        Ending
+                        balance
+                    </div>
+                </t>
+                <t t-if='type == "partner_type"'>
+                    <div class="act_as_cell first_column" style="width: 36.34%;" />
+                    <div class="act_as_cell right" style="width: 28.66%;">
+                        Partner ending balance
+                    </div>
+                </t>
+                <t t-if='type == "partner_subtotal_type"'>
+                    <div class="act_as_cell first_column" style="width: 36.34%;" />
+                    <t
+                        t-set="partner"
+                        t-value="env['res.partner'].browse(partner_id_key)"
+                    />
+                    <t t-if="partner">
+                        <span t-esc="partner.name" />
+                    </t>
+                    <div class="act_as_cell right" style="width: 28.66%;">
+                        Ending
+                        balance
+                    </div>
+                </t>
+                <!--## date_due-->
+                <div class="act_as_cell" style="width: 6.47%;" />
+                <!--## amount_total_due-->
+                <div class="act_as_cell amount" style="width: 6.57%;" />
+                <!--## amount_currency-->
+                <div class="act_as_cell amount" style="width: 6.57%;">
+                    <t t-if='type == "account_type"'>
+                        <span
+                            t-esc="total_amount[account_id]['residual']"
+                            t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                        />
+                    </t>
+                    <t t-if='type == "partner_type"'>
+                        <span
+                            t-esc="total_amount[account_id][partner_id]['residual']"
+                            t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                        />
+                    </t>
+                    <t t-if='type == "partner_subtotal_type"'>
+                        <span
+                            t-esc="partner_totals[account_id][partner_id_key]['residual']"
+                            t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                        />
+                    </t>
+                </div>
+                <!--## amount_total_due_currency + amount_residual_currency -->
+                <t t-if="foreign_currency">
+                    <!--## currency_name-->
+                    <div class="act_as_cell" />
+                    <!--## amount_total_due_currency-->
+                    <div class="act_as_cell" />
+                    <!--## amount_residual_currency-->
+                    <div class="act_as_cell" />
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

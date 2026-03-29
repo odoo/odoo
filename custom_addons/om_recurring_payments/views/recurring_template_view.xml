@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_recurring_template_form" model="ir.ui.view">
+        <field name="name">account.recurring.template.form</field>
+        <field name="model">account.recurring.template</field>
+        <field name="arch" type="xml">
+            <form string="Recurring Template">
+                <header>
+                    <button name="action_done" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="action_draft" invisible="state != 'done'" string="Set To Draft" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]"/>
+                            <field name="recurring_period"/>
+                        </group>
+                        <group>
+                            <field name="recurring_interval"/>
+                            <field name="journal_state"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Description..." nolabel="1" colspan="4"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_recurring_template_tree" model="ir.ui.view">
+        <field name="name">account.recurring.template.list</field>
+        <field name="model">account.recurring.template</field>
+        <field name="arch" type="xml">
+            <list string="Recurring Template">
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="action_account_recurring_template" model="ir.actions.act_window">
+        <field name="name">Recurring Template</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.recurring.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_account_recurring_template_tree"/>
+    </record>
+
+    <menuitem id="menu_recurring_payments"
+              name="Recurring Payment"
+              sequence="10"
+              groups="account.group_account_user,account.group_account_manager"
+              parent="account.menu_finance_configuration"/>
+
+    <menuitem id="menu_recurring_template"
+              name="Recurring Template"
+              sequence="20"
+              action="action_account_recurring_template"
+              groups="account.group_account_user,account.group_account_manager"
+              parent="menu_recurring_payments"/>
+
+</odoo>

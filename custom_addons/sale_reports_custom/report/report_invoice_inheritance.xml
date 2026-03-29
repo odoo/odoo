@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_goca_compact" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//t[@t-set='layout_document_title']/span[@t-if=&quot;o.move_type == 'out_invoice' and o.state == 'posted'&quot;]" position="replace">
+            <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Recibo </span>
+        </xpath>
+
+        <xpath expr="//t[@t-set='layout_document_title']/span[@t-elif=&quot;o.move_type == 'out_invoice' and o.state == 'draft'&quot;]" position="replace">
+            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Borrador de Recibo </span>
+        </xpath>
+
+        <xpath expr="//div[@class='page mb-4']" position="attributes">
+            <attribute name="style">font-size: 10px !important; line-height: 1.1 !important;</attribute>
+        </xpath>
+
+        <xpath expr="//table[@name='invoice_line_table']" position="attributes">
+            <attribute name="class">table table-sm o_main_table table-borderless</attribute>
+        </xpath>
+
+    </template>
+</odoo>

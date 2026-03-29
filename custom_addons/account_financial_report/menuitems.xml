@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        parent="account.menu_finance_reports"
+        id="menu_oca_reports"
+        name="OCA accounting reports"
+        groups="account.group_account_user"
+    />
+    <menuitem
+        parent="menu_oca_reports"
+        action="action_general_ledger_wizard"
+        id="menu_general_ledger_wizard"
+        sequence="10"
+    />
+    <menuitem
+        parent="menu_oca_reports"
+        action="action_journal_ledger_wizard"
+        id="menu_journal_ledger_wizard"
+        sequence="15"
+    />
+    <menuitem
+        parent="menu_oca_reports"
+        action="action_trial_balance_wizard"
+        id="menu_trial_balance_wizard"
+        sequence="20"
+    />
+    <menuitem
+        parent="menu_oca_reports"
+        action="action_open_items_wizard"
+        id="menu_open_items_wizard"
+        sequence="30"
+    />
+    <menuitem
+        parent="menu_oca_reports"
+        action="action_aged_partner_balance_wizard"
+        id="menu_aged_partner_balance_wizard"
+        sequence="40"
+    />
+    <menuitem
+        parent="menu_oca_reports"
+        action="action_vat_report_wizard"
+        id="menu_vat_report_wizard"
+        sequence="50"
+    />
+</odoo>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- PDF REPORTS : paperformat -->
+    <record id="report_qweb_paperformat" model="report.paperformat">
+        <field name="name">Account financial report qweb paperformat</field>
+        <field name="default" eval="True" />
+        <field name="format">custom</field>
+        <field name="page_height">297</field>
+        <field name="page_width">210</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">10</field>
+        <field name="dpi">110</field>
+    </record>
+
+    <!-- PDF/HMTL REPORTS -->
+    <!-- General Ledger -->
+    <record id="action_print_report_general_ledger_qweb" model="ir.actions.report">
+        <field name="name">General Ledger</field>
+        <field name="model">general.ledger.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_financial_report.general_ledger</field>
+        <field name="report_file">account_financial_report.general_ledger</field>
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+    <record id="action_print_report_general_ledger_html" model="ir.actions.report">
+        <field name="name">General Ledger</field>
+        <field name="model">general.ledger.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_financial_report.general_ledger</field>
+        <field name="report_file">account_financial_report.general_ledger</field>
+    </record>
+    <!-- Journal Ledger -->
+    <record id="action_print_journal_ledger_wizard_qweb" model="ir.actions.report">
+        <field name="name">ournal Ledger</field>
+        <field name="model">journal.ledger.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_financial_report.journal_ledger</field>
+        <field name="report_file">account_financial_report.journal_ledger</field>
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+    <record id="action_print_journal_ledger_wizard_html" model="ir.actions.report">
+        <field name="name">Journal Ledger</field>
+        <field name="model">journal.ledger.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_financial_report.journal_ledger</field>
+        <field name="report_file">account_financial_report.journal_ledger</field>
+    </record>
+    <!-- Trial Balance -->
+    <record id="action_report_trial_balance_qweb" model="ir.actions.report">
+        <field name="name">Trial Balance</field>
+        <field name="model">trial.balance.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_financial_report.trial_balance</field>
+        <field name="report_file">account_financial_report.trial_balance</field>
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+    <record id="action_report_trial_balance_html" model="ir.actions.report">
+        <field name="name">Trial Balance</field>
+        <field name="model">trial.balance.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_financial_report.trial_balance</field>
+        <field name="report_file">account_financial_report.trial_balance</field>
+    </record>
+    <!-- Open Items -->
+    <record id="action_print_report_open_items_qweb" model="ir.actions.report">
+        <field name="name">Open Items</field>
+        <field name="model">open.items.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_financial_report.open_items</field>
+        <field name="report_file">account_financial_report.open_items</field>
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+    <record id="action_print_report_open_items_html" model="ir.actions.report">
+        <field name="name">Open Items</field>
+        <field name="model">open.items.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_financial_report.open_items</field>
+        <field name="report_file">account_financial_report.open_items</field>
+    </record>
+    <!-- Aged Partner Balance -->
+    <record
+        id="action_print_report_aged_partner_balance_qweb"
+        model="ir.actions.report"
+    >
+        <field name="name">Aged Partner Balance</field>
+        <field name="model">aged.partner.balance.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_financial_report.aged_partner_balance</field>
+        <field name="report_file">account_financial_report.aged_partner_balance</field>
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+    <record
+        id="action_print_report_aged_partner_balance_html"
+        model="ir.actions.report"
+    >
+        <field name="name">Aged Partner Balance</field>
+        <field name="model">aged.partner.balance.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_financial_report.aged_partner_balance</field>
+        <field name="report_file">account_financial_report.aged_partner_balance</field>
+    </record>
+    <!-- VAT Report -->
+    <record id="action_print_report_vat_report_qweb" model="ir.actions.report">
+        <field name="name">VAT Report</field>
+        <field name="model">vat.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_financial_report.vat_report</field>
+        <field name="report_file">account_financial_report.vat_report</field>
+        <field name="paperformat_id" ref="report_qweb_paperformat" />
+    </record>
+    <record id="action_print_report_vat_report_html" model="ir.actions.report">
+        <field name="name">VAT Report</field>
+        <field name="model">vat.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_financial_report.vat_report</field>
+        <field name="report_file">account_financial_report.vat_report</field>
+    </record>
+
+    <!-- XLSX REPORTS -->
+    <record id="action_report_general_ledger_xlsx" model="ir.actions.report">
+        <field name="name">General Ledger XLSX</field>
+        <field name="model">general.ledger.report.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">a_f_r.report_general_ledger_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_general_ledger</field>
+    </record>
+    <record id="action_report_journal_ledger_xlsx" model="ir.actions.report">
+        <field name="name">Journal Ledger XLSX</field>
+        <field name="model">journal.ledger.report.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">a_f_r.report_journal_ledger_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_journal_ledger</field>
+    </record>
+    <record id="action_report_trial_balance_xlsx" model="ir.actions.report">
+        <field name="name">Trial Balance XLSX</field>
+        <field name="model">trial.balance.report.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">a_f_r.report_trial_balance_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_trial_balance</field>
+    </record>
+    <record id="action_report_open_items_xlsx" model="ir.actions.report">
+        <field name="name">Open Items XLSX</field>
+        <field name="model">open.items.report.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">a_f_r.report_open_items_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_open_items</field>
+    </record>
+    <record id="action_report_aged_partner_balance_xlsx" model="ir.actions.report">
+        <field name="name">Aged Partner Balance XLSX</field>
+        <field name="model">aged.partner.balance.report.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">a_f_r.report_aged_partner_balance_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_aged_partner_balance</field>
+    </record>
+    <record id="action_report_vat_report_xlsx" model="ir.actions.report">
+        <field name="name">VAT Report XLSX</field>
+        <field name="model">vat.report.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_name">a_f_r.report_vat_report_xlsx</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_file">report_vat_report</field>
+    </record>
+</odoo>

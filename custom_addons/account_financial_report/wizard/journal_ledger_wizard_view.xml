@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="journal_ledger_wizard" model="ir.ui.view">
+        <field name="name">Journal Ledger</field>
+        <field name="model">journal.ledger.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="company_id" groups="base.group_multi_company" />
+                </group>
+                <separator string="Periods" />
+                <group>
+                    <group>
+                        <field name="date_range_id" />
+                        <field name="date_from" />
+                        <field name="date_to" />
+                    </group>
+                    <group />
+                </group>
+                <separator string="Options" />
+                <group name="options">
+                    <group>
+                        <field
+                            name="move_target"
+                            widget="radio"
+                            options="{'horizontal': true}"
+                        />
+                        <field name="sort_option" />
+                        <field name="group_option" />
+                        <field name="foreign_currency" />
+                        <field name="with_account_name" />
+                        <field name="with_auto_sequence" />
+                    </group>
+                    <group />
+                </group>
+                <separator string="Journals" />
+                <group>
+                    <field name="journal_ids" widget="many2many_tags" />
+                </group>
+                <footer>
+                    <button
+                    name="button_export_html"
+                    string="View"
+                    type="object"
+                    default_focus="1"
+                    class="oe_highlight"
+                />
+                    or
+                    <button
+                    name="button_export_pdf"
+                    string="Export PDF"
+                    type="object"
+                />
+                    or
+                    <button
+                    name="button_export_xlsx"
+                    string="Export XLSX"
+                    type="object"
+                />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_journal_ledger_wizard" model="ir.actions.act_window">
+        <field name="name">Journal Ledger</field>
+        <field name="res_model">journal.ledger.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="journal_ledger_wizard" />
+        <field name="target">new</field>
+    </record>
+</odoo>

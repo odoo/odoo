@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- AGED PARTNER BALANCE -->
+    <record id="aged_partner_balance_wizard" model="ir.ui.view">
+        <field name="name">Aged Partner Balance</field>
+        <field name="model">aged.partner.balance.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group name="main_info">
+                    <field
+                        name="company_id"
+                        options="{'no_create': True}"
+                        groups="base.group_multi_company"
+                    />
+                </group>
+                <group name="filters">
+                    <group name="date_range">
+                        <field name="date_at" />
+                        <field name="date_from" />
+                    </group>
+                    <group name="other_filters">
+                        <field name="target_move" widget="radio" />
+                        <field name="show_move_line_details" />
+                    </group>
+                </group>
+                <group name="partner_filter" col="1">
+                    <label for="partner_ids" />
+                    <field
+                        name="partner_ids"
+                        nolabel="1"
+                        widget="many2many_tags"
+                        options="{'no_create': True}"
+                    />
+                </group>
+                <group name="account_filter" col="4">
+                    <label for="age_partner_config_id" />
+                    <field name="age_partner_config_id" nolabel="1" />
+                    <label for="account_ids" colspan="4" />
+                    <field name="receivable_accounts_only" />
+                    <field name="payable_accounts_only" />
+                    <label for="account_code_from" string="From Code" />
+                    <div>
+                        <div class="o_row">
+                            <field
+                                name="account_code_from"
+                                class="oe_inline"
+                                options="{'no_create': True}"
+                            />
+                            <span class="oe_inline">To</span>
+                            <field
+                                name="account_code_to"
+                                class="oe_inline"
+                                options="{'no_create': True}"
+                            />
+                        </div>
+                    </div>
+                    <field
+                        name="account_ids"
+                        nolabel="1"
+                        widget="many2many_tags"
+                        options="{'no_create': True}"
+                        colspan="4"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="button_export_html"
+                        string="View"
+                        type="object"
+                        default_focus="1"
+                        class="oe_highlight"
+                    />
+                    <button
+                        name="button_export_pdf"
+                        string="Export PDF"
+                        type="object"
+                    />
+                    <button
+                        name="button_export_xlsx"
+                        string="Export XLSX"
+                        type="object"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_aged_partner_balance_wizard" model="ir.actions.act_window">
+        <field name="name">Aged Partner Balance</field>
+        <field name="res_model">aged.partner.balance.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="aged_partner_balance_wizard" />
+        <field name="target">new</field>
+    </record>
+</odoo>

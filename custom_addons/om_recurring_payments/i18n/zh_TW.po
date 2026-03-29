@@ -1,0 +1,309 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* om_recurring_payments
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20231105\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-23 21:32+0000\n"
+"PO-Revision-Date: 2023-11-24 06:30+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4.1\n"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__amount
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__amount
+msgid "Amount"
+msgstr "金額"
+
+#. module: om_recurring_payments
+#. odoo-python
+#: code:addons/om_recurring_payments/models/recurring_payment.py:0
+#, python-format
+msgid "Amount Must Be Non-Zero Positive Number"
+msgstr "金額必須是非零正數"
+
+#. module: om_recurring_payments
+#. odoo-python
+#: code:addons/om_recurring_payments/models/recurring_payment.py:0
+#, python-format
+msgid "Cannot delete done records !"
+msgstr "無法刪除已完成的記錄！"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__company_id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__company_id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: om_recurring_payments
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_template_form
+msgid "Confirm"
+msgstr "確認"
+
+#. module: om_recurring_payments
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_payment_form
+msgid "Create Payment"
+msgstr "建立付款"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__create_uid
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__create_uid
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__create_uid
+msgid "Created by"
+msgstr "建立者"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__create_date
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__create_date
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__currency_id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__currency_id
+msgid "Currency"
+msgstr "幣別"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__date
+msgid "Date"
+msgstr "日期"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__recurring_period__days
+msgid "Days"
+msgstr "天"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__description
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__description
+msgid "Description"
+msgstr "描述"
+
+#. module: om_recurring_payments
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_payment_form
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_template_form
+msgid "Description..."
+msgstr "備註"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__display_name
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__display_name
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__state__done
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__recurring_payment__state__done
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__recurring_payment_line__state__done
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_payment_form
+msgid "Done"
+msgstr "完成"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__state__draft
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__recurring_payment__state__draft
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__recurring_payment_line__state__draft
+msgid "Draft"
+msgstr "草稿"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__date_end
+msgid "End Date"
+msgstr "結束日期"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__journal_state
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__journal_state
+msgid "Generate Journal As"
+msgstr "生成分錄為"
+
+#. module: om_recurring_payments
+#: model:ir.actions.server,name:om_recurring_payments.action_generate_recurring_payment_ir_actions_server
+msgid "Generate Recurring Payments"
+msgstr "產生定期帳款"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__journal_id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__journal_id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__journal_id
+msgid "Journal"
+msgstr "日記帳"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__write_uid
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__write_uid
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__write_uid
+msgid "Last Updated by"
+msgstr "最後更新人"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__write_date
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__write_date
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__write_date
+msgid "Last Updated on"
+msgstr "最後更新時間"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__recurring_period__months
+msgid "Months"
+msgstr "月"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__name
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__name
+msgid "Name"
+msgstr "名稱"
+
+#. module: om_recurring_payments
+#. odoo-python
+#: code:addons/om_recurring_payments/models/recurring_payment.py:0
+#, python-format
+msgid "New"
+msgstr "新建"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__partner_id
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__partner_id
+msgid "Partner"
+msgstr "合作夥伴"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__payment_id
+msgid "Payment"
+msgstr "付款"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__payment_type
+msgid "Payment Type"
+msgstr "付款類型"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__journal_state__posted
+msgid "Posted"
+msgstr "已過帳"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__recurring_payment__payment_type__inbound
+msgid "Receive Money"
+msgstr "收到金額"
+
+#. module: om_recurring_payments
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_payment_form
+msgid "Recurring Entries"
+msgstr "定期性分錄"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__recurring_interval
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__recurring_interval
+msgid "Recurring Interval"
+msgstr "定期間隔"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__line_ids
+msgid "Recurring Lines"
+msgstr "定期明細"
+
+#. module: om_recurring_payments
+#: model:ir.actions.act_window,name:om_recurring_payments.action_account_recurring_payment
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__recurring_payment_id
+#: model:ir.ui.menu,name:om_recurring_payments.menu_recurring_payment
+#: model:ir.ui.menu,name:om_recurring_payments.menu_recurring_payments
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_payment_form
+msgid "Recurring Payment"
+msgstr "定期性付款"
+
+#. module: om_recurring_payments
+#: model:ir.model,name:om_recurring_payments.model_recurring_payment_line
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_payment_form
+msgid "Recurring Payment Line"
+msgstr "定期付款明細"
+
+#. module: om_recurring_payments
+#: model:ir.model,name:om_recurring_payments.model_recurring_payment
+msgid "Recurring Payment("
+msgstr "定期付款（"
+
+#. module: om_recurring_payments
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_account_recurring_payment_tree
+msgid "Recurring Payments"
+msgstr "定期支付網址"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__recurring_period
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__recurring_period
+msgid "Recurring Period"
+msgstr "定期週期"
+
+#. module: om_recurring_payments
+#: model:ir.actions.act_window,name:om_recurring_payments.action_account_recurring_template
+#: model:ir.model,name:om_recurring_payments.model_account_recurring_template
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__template_id
+#: model:ir.ui.menu,name:om_recurring_payments.menu_recurring_template
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_account_recurring_template_tree
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_template_form
+msgid "Recurring Template"
+msgstr "定期範本"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__recurring_payment__payment_type__outbound
+msgid "Send Money"
+msgstr "匯款"
+
+#. module: om_recurring_payments
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_payment_form
+#: model_terms:ir.ui.view,arch_db:om_recurring_payments.view_recurring_template_form
+msgid "Set To Draft"
+msgstr "設為草稿"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__date_begin
+msgid "Start Date"
+msgstr "開始日期"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields,field_description:om_recurring_payments.field_account_recurring_template__state
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment__state
+#: model:ir.model.fields,field_description:om_recurring_payments.field_recurring_payment_line__state
+msgid "Status"
+msgstr "狀態"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__journal_state__draft
+msgid "Un Posted"
+msgstr "未發布"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__recurring_period__weeks
+msgid "Weeks"
+msgstr "周"
+
+#. module: om_recurring_payments
+#: model:ir.model.fields.selection,name:om_recurring_payments.selection__account_recurring_template__recurring_period__years
+msgid "Years"
+msgstr "年"
+
+#. module: om_recurring_payments
+#. odoo-python
+#: code:addons/om_recurring_payments/models/recurring_payment.py:0
+#, python-format
+msgid "You cannot Set to Draft as one of the line is already in done state"
+msgstr "您無法設定為草稿，因為其中一行已處於完成狀態"

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2023 Tecnativa - Carolina Fernandez
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='analytic']" position="after">
+                <block
+                    title="OCA Aged Report Configuration"
+                    id="oca_aged_report_config"
+                >
+                    <div
+                        id="main_oca_aged_report_config"
+                        class="col-12 col-lg-12 o_setting_box"
+                    >
+                        <div class="o_setting_left_pane" />
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Intervals configuration</span>
+                            <div class="text-muted">
+                                Here you can set the intervals that will appear on the Aged Partner Balance.
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label
+                                        for="age_partner_config_id"
+                                        class="col-lg-3 o_light_label"
+                                    />
+                                    <field
+                                        name="age_partner_config_id"
+                                        options="{'no_create_edit': True, 'no_open': True}"
+                                    />
+                                </div>
+                                <div class="mt8">
+                                    <button
+                                        type="action"
+                                        name="%(account_financial_report.action_aged_partner_report_configuration)d"
+                                        string="Configurations"
+                                        class="btn-link"
+                                        icon="fa-arrow-right"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

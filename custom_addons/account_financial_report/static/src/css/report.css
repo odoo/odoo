@@ -1,0 +1,148 @@
+a {
+    color: #00337b;
+}
+
+.act_as_table {
+    display: table !important;
+    background-color: white;
+}
+
+.act_as_row {
+    display: table-row !important;
+    page-break-inside: avoid;
+}
+
+.act_as_cell {
+    display: table-cell !important;
+    page-break-inside: avoid;
+}
+
+.act_as_thead {
+    display: table-header-group !important;
+}
+
+.act_as_tbody {
+    display: table-row-group !important;
+}
+
+.list_table,
+.data_table,
+.totals_table {
+    width: 100% !important;
+}
+
+.act_as_row.labels {
+    background-color: #f0f0f0 !important;
+}
+
+.list_table,
+.data_table,
+.totals_table,
+.list_table .act_as_row {
+    border-left: 0;
+    border-right: 0;
+    text-align: center;
+    font-size: 10px;
+    padding: 2px 3px;
+    border-collapse: collapse;
+}
+
+.totals_table {
+    font-weight: bold;
+    text-align: center;
+}
+
+.list_table {
+    .act_as_row {
+        &.labels,
+        &.initial_balance,
+        &.lines {
+            border-color: grey !important;
+            border-bottom: 1px solid lightGrey !important;
+        }
+    }
+}
+
+.data_table {
+    .act_as_cell {
+        border: 1px solid lightGrey;
+        text-align: center;
+        word-wrap: break-word;
+    }
+
+    .act_as_row.labels {
+        font-weight: bold;
+    }
+}
+
+.totals_table {
+    .act_as_cell {
+        word-wrap: break-word;
+    }
+
+    .act_as_row.labels {
+        font-weight: bold;
+    }
+}
+
+.list_table .act_as_cell {
+    &.first_column {
+        padding-left: 0;
+        /*    border-left:1px solid lightGrey; uncomment to active column lines */
+    }
+
+    /*    border-right:1px solid lightGrey;  uncomment to active column lines */
+}
+
+.initial_balance .act_as_cell {
+    font-style: italic;
+}
+
+.account_title {
+    font-size: 11px;
+    font-weight: bold;
+
+    &.labels {
+        background-color: #f0f0f0 !important;
+    }
+}
+
+.act_as_cell {
+    &.amount {
+        word-wrap: normal;
+        text-align: right;
+    }
+
+    &.left {
+        text-align: left;
+    }
+
+    &.right {
+        text-align: right;
+    }
+}
+
+.overflow_ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.custom_footer {
+    font-size: 7px !important;
+}
+
+.page_break {
+    page-break-inside: avoid;
+}
+
+.button_row {
+    padding-bottom: 10px;
+}
+
+.o_account_financial_reports_page {
+    padding-top: 10px;
+    width: 90%;
+    margin: 0 auto;
+    font-family: Helvetica, Arial;
+}

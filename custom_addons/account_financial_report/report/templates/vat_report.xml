@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="vat_report">
+        <t t-call="account_financial_report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="account_financial_report.internal_layout">
+                    <t t-call="account_financial_report.report_vat_report_base" />
+                </t>
+            </t>
+        </t>
+    </template>
+    <template id="account_financial_report.report_vat_report_base">
+        <t t-set="title">
+            VAT Report -
+            <t t-out="company_name" />
+            -
+            <t t-out="currency_name" />
+        </t>
+        <t t-set="company_name" t-value="company_name" />
+        <div class="page">
+            <div class="row">
+                <h4
+                    class="mt0"
+                    t-esc="title or 'Odoo Report'"
+                    style="text-align: center;"
+                />
+            </div>
+            <!-- Display filters -->
+            <t t-call="account_financial_report.report_vat_report_filters" />
+            <div class="page_break" />
+            <div class="act_as_table data_table" style="width: 100%;">
+                <!-- Display table headers for lines -->
+                <div class="act_as_thead">
+                    <div class="act_as_row labels">
+                        <!--## code-->
+                        <div class="act_as_cell first_column" style="width: 5%;">
+                            Code
+                        </div>
+                        <!--## name-->
+                        <div class="act_as_cell" style="width: 65%;">Name</div>
+                        <!--## net-->
+                        <div class="act_as_cell" style="width: 15%;">Net</div>
+                        <!--## tax-->
+                        <div class="act_as_cell" style="width: 15%;">Tax</div>
+                    </div>
+                </div>
+                <t t-foreach="vat_report" t-as="tag_or_group">
+                    <div class="act_as_row lines" style="font-weight: bold;">
+                        <div
+                            class="act_as_cell left oe_tooltip_string"
+                            style="width: 5%;"
+                        >
+                            <span
+                                t-att-res-id="res_id"
+                                t-att-res-model="res_model"
+                                view-type="form"
+                            >
+                                <t t-att-style="style" t-out="tag_or_group['code']" />
+                            </span>
+                        </div>
+                        <div
+                            class="act_as_cell left oe_tooltip_string"
+                            style="width: 65%;"
+                        >
+                            <span
+                                t-att-res-id="res_id"
+                                t-att-res-model="res_model"
+                                view-type="form"
+                            >
+                                <t t-att-style="style" t-out="tag_or_group['name']" />
+                            </span>
+                        </div>
+                        <div class="act_as_cell amount" style="width: 15%;">
+                            <t
+                                t-att-style="style"
+                                t-out="tag_or_group['net']"
+                                t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                            />
+                        </div>
+                        <div class="act_as_cell amount" style="width: 15%;">
+                            <t
+                                t-att-style="style"
+                                t-out="tag_or_group['tax']"
+                                t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                            />
+                        </div>
+                    </div>
+                    <t t-if="tax_detail">
+                        <t t-foreach="tag_or_group['taxes']" t-as="tax">
+                            <div class="act_as_row lines">
+                                <div class="act_as_cell" style="width: 5%;" />
+                                <div
+                                    class="act_as_cell left oe_tooltip_string"
+                                    style="padding-left: 20px; width: 65%;"
+                                >
+                                    <span
+                                        t-att-res-id="tax['id']"
+                                        t-att-res-model="res_model"
+                                        view-type="form"
+                                    >
+                                        <t t-att-style="style" t-out="tax['name']" />
+                                    </span>
+                                </div>
+                                <div class="act_as_cell amount" style="width: 15%;">
+                                    <t
+                                        t-set="domain"
+                                        t-value="[('tax_ids', 'in', tax['id']),
+                                                ('date', '&gt;=', date_from),
+                                                ('date', '&lt;=', date_to)]+request.env['account.move.line']._get_tax_exigible_domain()"
+                                    />
+                                    <span
+                                        t-att-domain="domain"
+                                        res-model="account.move.line"
+                                    >
+                                        <t
+                                            t-att-style="style"
+                                            t-out="tax['net']"
+                                            t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                                        />
+                                    </span>
+                                </div>
+                                <div class="act_as_cell amount" style="width: 15%;">
+                                    <t
+                                        t-set="domain"
+                                        t-value="[('tax_line_id', '=', tax['id']),
+                                                ('date', '&gt;=', date_from),
+                                                ('date', '&lt;=', date_to)]+request.env['account.move.line']._get_tax_exigible_domain()"
+                                    />
+                                    <span
+                                        t-att-domain="domain"
+                                        res-model="account.move.line"
+                                    >
+                                        <t
+                                            t-att-style="style"
+                                            t-out="tax['tax']"
+                                            t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </template>
+    <template id="account_financial_report.report_vat_report_filters">
+        <div class="act_as_table data_table" style="width: 100%;">
+            <div class="act_as_row labels">
+                <div class="act_as_cell">Date From</div>
+                <div class="act_as_cell">Date To</div>
+                <div class="act_as_cell">Based On</div>
+            </div>
+            <div class="act_as_row">
+                <div class="act_as_cell">
+                    <span t-esc="date_from" />
+                </div>
+                <div class="act_as_cell">
+                    <span t-esc="date_to" />
+                </div>
+                <div class="act_as_cell">
+                    <span t-esc="based_on" />
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

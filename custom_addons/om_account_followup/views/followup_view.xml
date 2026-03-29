@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_om_account_followup_followup_line_tree" model="ir.ui.view">
+            <field name="name">followup.line.list</field>
+            <field name="model">followup.line</field>
+            <field name="arch" type="xml">
+                <list string="Follow-up Steps">
+                    <field name="name"/>
+                    <field name="delay"/>
+                    <field name="send_email"/>
+                    <field name="send_letter"/>
+                    <field name="manual_action"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_followup_line_form" model="ir.ui.view">
+            <field name="name">followup.line.form</field>
+            <field name="model">followup.line</field>
+            <field name="arch" type="xml">
+                <form string="Follow-up Steps">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <div class="oe_inline">
+                        After
+                        <field name="delay" class="oe_inline"/>
+                        days overdue, do the following actions:
+                    </div>
+                    <div>
+                        <field name="manual_action" class="oe_inline"/>
+                        <label for="manual_action"/>
+                    </div>
+                    <div>
+                        <field name="send_email" class="oe_inline"/>
+                        <label for="send_email"/>
+                    </div>
+                    <div>
+                        <field name="send_letter" class="oe_inline"/>
+                        <label for="send_letter"/>
+                    </div>
+
+                    <group string="Manual Action" invisible="not manual_action">
+<!--                           attrs="{'invisible': [('manual_action', '=', False)]}">-->
+                        <field name="manual_action_responsible_id"/>
+
+                        <field name="manual_action_note"/>
+<!--                               attrs="{'required': [('manual_action', '&lt;&gt;', False)]}" todo-->
+<!--                               placeholder="e.g. Call the customer, check if it's paid, ..."/>-->
+                    </group>
+                    <group string="Send an Email" invisible="not send_email">
+<!--                           attrs="{'invisible': [('send_email', '=', False)]}">-->
+                        <field name="email_template_id"/>
+<!--                               attrs="{'required': [('send_email', '&lt;&gt;', False)]}"/> todo-->
+                    </group>
+                    <group string="Send a Letter or Email"
+                           invisible="not send_email and not send_letter">
+<!--                           attrs="{'invisible': [('send_email', '=', False), ('send_letter', '=', False)]}">-->
+                        <p colspan="2" class="oe_grey">
+                            Write here the introduction in the letter,
+                            according to the level of the follow-up. You can
+                            use the following keywords in the text. Don't
+                            forget to translate in all languages you installed
+                            using to top right icon.
+                            <table>
+                                <tr>
+                                    <td t-translation="off">%%(partner_name)s
+                                    </td>
+                                    <td>: Partner Name</td>
+                                </tr>
+                                <tr>
+                                    <td t-translation="off">%%(date)s</td>
+                                    <td>: Current Date</td>
+                                </tr>
+                                <tr>
+                                    <td t-translation="off">
+                                        %%(user_signature)s
+                                    </td>
+                                    <td>: User Name</td>
+                                </tr>
+                                <tr>
+                                    <td t-translation="off">%%(company_name)s
+                                    </td>
+                                    <td>: User's Company Name</td>
+                                </tr>
+                            </table>
+                        </p>
+                        <field name="description" nolabel="1" colspan="2"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_followup_form" model="ir.ui.view">
+            <field name="name">followup.followup.form</field>
+            <field name="model">followup.followup</field>
+            <field name="arch" type="xml">
+                <form string="Follow-up">
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <label for="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" widget="selection"
+                           class="oe_inline"
+                           groups="base.group_multi_company"/>
+                    <p class="oe_grey">
+                        To remind customers of paying their invoices, you can
+                        define different actions depending on how severely
+                        overdue the customer is. These actions are bundled
+                        into follow-up levels that are triggered when the due
+                        date of an invoice has passed a certain
+                        number of days. If there are other overdue invoices for
+                        the
+                        same customer, the actions of the most
+                        overdue invoice will be executed.
+                    </p>
+                    <field name="followup_line"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_followup_tree" model="ir.ui.view">
+            <field name="name">followup.followup.list</field>
+            <field name="model">followup.followup</field>
+            <field name="arch" type="xml">
+                <list string="Follow-up">
+                    <field name="company_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_filter" model="ir.ui.view">
+            <field name="name">account.followup.select</field>
+            <field name="model">followup.followup</field>
+            <field name="arch" type="xml">
+                <search string="Search Follow-up">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_om_account_followup_definition_form" model="ir.actions.act_window">
+            <field name="name">Follow-up Levels</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">followup.followup</field>
+            <field name="search_view_id" ref="view_om_account_followup_filter"/>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define follow-up levels and their related actions.
+                </p>
+                <p>
+                    For each step, specify the actions to be taken and delay in
+                    days. It is
+                    possible to use print and e-mail templates to send specific
+                    messages to
+                    the customer.
+                </p>
+            </field>
+        </record>
+
+        <record id="view_move_line_reconcile_tree" model="ir.ui.view">
+            <field name="name">account.move.line.list</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <list string="Journal Items to Reconcile" create="false">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="full_reconcile_id"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="account_manual_reconcile_action" model="ir.actions.act_window">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_reconcile_tree"/>
+            <field name="view_mode">list</field>
+            <field name="help" type="html">
+                <p>
+                    No journal items found.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="om_account_followup_main_menu"
+                  parent="account.menu_finance_configuration"
+                  name="Follow-up"/>
+
+        <menuitem id="om_account_followup_menu"
+                  name="Follow-up Levels"
+                  action="action_om_account_followup_definition_form"
+                  parent="om_account_followup_main_menu" />
+
+
+    </data>
+</odoo>

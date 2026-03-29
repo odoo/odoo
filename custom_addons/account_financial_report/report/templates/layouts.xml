@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="account_financial_report.html_container">
+        <t t-call-assets="web.assets_backend" />
+        <link
+            href="/account_financial_report/static/src/css/report_html.css"
+            rel="stylesheet"
+        />
+        <t t-set="body_classname" t-value="'container'" />
+        <t t-call="web.report_layout">
+            <t t-out="0" />
+        </t>
+    </template>
+    <template id="account_financial_report.internal_layout">
+        <div class="article o_account_financial_reports_page">
+            <link
+                href="/account_financial_report/static/src/css/report.css"
+                rel="stylesheet"
+            />
+            <t t-out="0" />
+        </div>
+        <div class="footer">
+            <div class="row">
+                <div class="col-6 custom_footer">
+                    <span
+                        t-out="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"
+                    />
+                </div>
+                <div class="col-6 text-right custom_footer">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <span class="page" />
+                        </li>
+                        <li class="list-inline-item">/</li>
+                        <li class="list-inline-item">
+                            <span class="topage" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>
