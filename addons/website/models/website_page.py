@@ -208,6 +208,7 @@ class WebsitePage(models.Model):
                     if website.homepage_url == page_url_normalized['homepage_url']:
                         website.homepage_url = url
                 vals['url'] = url
+                self.env.registry.clear_cache('templates')
 
             # If name has changed, check for key uniqueness
             if 'name' in vals and page.name != vals['name']:
