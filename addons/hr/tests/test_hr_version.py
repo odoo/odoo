@@ -878,3 +878,22 @@ class TestHrVersion(TestHrCommon):
         version_1.unlink()
 
         self.assertEqual(employee.first_contract_date, date(2026, 2, 1))
+
+    def test_version_date_start_end_search(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2026-01-01',
+        })
+        employee.write({'contract_date_start': '2026-01-01', 'contract_date_end': '2026-12-31'})
+        v1 = employee.version_id
+        v2 = employee.create_version({
+            'date_version': '2026-06-01',
+        })
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_start', '>', '2026-02-01')])
+        self.assertEqual(versions, v2)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_start', '<', '2026-02-01')])
+        self.assertEqual(versions, v1)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '<', '2026-06-01')])
+        self.assertEqual(versions, v1)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '>', '2026-06-01')])
+        self.assertEqual(versions, v2)
