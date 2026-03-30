@@ -4,7 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db.models import get_registry
-from .builder import load_module_graph, build_representation
+from .builder import build_representation, load_module_graph, snapshot_payload_from_graph
+from .common import module_state_hash
 from .codegen import generate_module_files
 
 
@@ -12,7 +13,11 @@ async def diff_module(session: AsyncSession, module_id: int) -> dict[str, object
     registry = await get_registry()
     graph = await load_module_graph(session, module_id)
     representation = build_representation(graph)
-    current_files = {generated.path: generated for generated in generate_module_files(representation)}
+    state_hash = module_state_hash(snapshot_payload_from_graph(graph))
+    current_files = {
+        generated.path: generated
+        for generated in generate_module_files(representation, state_hash=state_hash)
+    }
 
     last_build = await session.scalar(
         select(registry.forge_build)

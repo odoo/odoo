@@ -11,10 +11,9 @@ from ..config import get_settings
 from .builder import (
     BuildExecution,
     create_build,
-    runtime_field_name,
-    runtime_model_name,
     xml_token,
 )
+from .common import runtime_field_name, runtime_model_name, runtime_relation_model_name
 from .codegen import write_generated_files
 
 
@@ -77,13 +76,6 @@ class AsyncXmlRpcClient:
             args or [],
             kwargs or {},
         )
-
-
-def _runtime_relation_model_name(relation_model: str) -> str:
-    if relation_model.startswith(("kodoo.", "app_")):
-        return runtime_model_name(relation_model)
-    return relation_model
-
 
 def _runtime_arch(view_row: dict[str, Any], model_row: dict[str, Any]) -> str:
     field_name_map = {
@@ -242,7 +234,7 @@ async def _publish_runtime(execution: BuildExecution) -> tuple[list[str], list[s
                         "index": bool(field_row.get("index")),
                     }
                     if field_row["field_type"] in {"many2one", "one2many", "many2many"}:
-                        values["relation"] = _runtime_relation_model_name(field_row["relation_model"])
+                        values["relation"] = runtime_relation_model_name(field_row["relation_model"])
                     if field_row["field_type"] == "one2many":
                         values["relation_field"] = runtime_field_name(field_row["relation_field"])
                     await _upsert_with_xmlid(

@@ -12,13 +12,13 @@ from sqlalchemy.inspection import inspect as sa_inspect
 
 from ..config import get_settings
 from ..db.models import ForgeRegistry, get_registry
+from .common import hash_text, module_state_hash, runtime_field_name, runtime_model_name, stable_json, xml_token
 from .codegen import GeneratedFile, detect_export_conflicts, generate_module_files
 from .validator import ValidationIssue, validate_module_graph
 
 
 MODULE_NAME_RE = re.compile(r"^[a-z0-9_]+$")
-MODEL_NAME_RE = re.compile(r"^(kodoo\.[a-z0-9_.]+|app_[a-z0-9_.]+)$")
-XML_TOKEN_RE = re.compile(r"[^a-z0-9_]+")
+MODEL_NAME_RE = re.compile(r"^[a-z0-9_]+\.[a-z0-9_.]+$")
 
 
 @dataclass
@@ -101,52 +101,15 @@ def row_to_dict(record: Any) -> dict[str, Any]:
     }
 
 
-def json_default(value: Any) -> Any:
-    if isinstance(value, datetime):
-        return value.isoformat()
-    return value
-
-
-def stable_json(data: Any) -> str:
-    return json.dumps(
-        data,
-        default=json_default,
-        ensure_ascii=True,
-        separators=(",", ":"),
-        sort_keys=True,
-    )
-
-
-def hash_text(value: str) -> str:
-    import hashlib
-
-    return hashlib.sha256(value.encode("utf-8")).hexdigest()
-
-
 def parse_depends(depends: str | None) -> list[str]:
     if not depends:
         return []
     return [item.strip() for item in depends.split(",") if item.strip()]
 
 
-def xml_token(value: str | None) -> str:
-    normalized = XML_TOKEN_RE.sub("_", (value or "").strip().lower()).strip("_")
-    return normalized or "item"
-
-
 def python_class_name(technical_name: str) -> str:
     base_name = technical_name.split(".")[-1]
     return "".join(part.capitalize() for part in xml_token(base_name).split("_")) or "ForgeModel"
-
-
-def runtime_model_name(technical_name: str) -> str:
-    candidate = f"x_{xml_token(technical_name.replace('.', '_'))}"
-    return candidate[:63]
-
-
-def runtime_field_name(field_name: str) -> str:
-    candidate = field_name if field_name.startswith("x_") else f"x_{xml_token(field_name)}"
-    return candidate[:63]
 
 
 async def _fetch_rows(
@@ -287,9 +250,13 @@ def snapshot_payload_from_graph(graph: ModuleGraph) -> dict[str, Any]:
         "app": graph.app,
         "module": graph.module,
         "models": models_payload,
+        "fields": graph.fields,
+        "views": graph.views,
         "actions": graph.actions,
         "menus": graph.menus,
         "groups": groups_payload,
+        "accesses": graph.accesses,
+        "automations": graph.automations,
     }
 
 
@@ -431,8 +398,9 @@ async def create_build(
         )
 
     representation = build_representation(graph)
+    state_hash = module_state_hash(snapshot_payload_from_graph(graph))
     previous_artifacts = await _get_last_build_artifacts(session, registry, module_id)
-    generated_files = generate_module_files(representation)
+    generated_files = generate_module_files(representation, state_hash=state_hash)
     conflicts = []
     if check_export_conflicts:
         conflicts = detect_export_conflicts(representation, generated_files, previous_artifacts)
@@ -472,6 +440,7 @@ async def create_build(
 async def create_snapshot_record(
     session: AsyncSession,
     module_id: int,
+    name: str | None = None,
     created_by: str = "api",
 ) -> Any:
     registry = await get_registry()
@@ -480,7 +449,7 @@ async def create_snapshot_record(
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     snapshot_record = registry.forge_snapshot(
         module_id=module_id,
-        name=f"{graph.module['technical_name']}@{timestamp}",
+        name=name or f"{graph.module['technical_name']}@{timestamp}",
         created_by=created_by,
         state_json=stable_json(payload),
     )

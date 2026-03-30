@@ -47,8 +47,16 @@ class ForgeRegistry:
     forge_group_implied_rel: Table
 
 
+def _skip_relationship(*args, **kwargs):
+    return None
+
+
 def _reflect(sync_conn) -> None:
-    Base.prepare(autoload_with=sync_conn, reflection_options={"only": TABLE_NAMES})
+    Base.prepare(
+        autoload_with=sync_conn,
+        generate_relationship=_skip_relationship,
+        reflection_options={"only": TABLE_NAMES},
+    )
 
 
 async def prepare_registry() -> None:

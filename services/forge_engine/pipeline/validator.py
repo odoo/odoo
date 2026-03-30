@@ -7,9 +7,11 @@ from xml.etree.ElementTree import ParseError, fromstring
 
 from pydantic import BaseModel
 
+from .common import xml_token
+
 
 MODULE_NAME_RE = re.compile(r"^[a-z0-9_]+$")
-MODEL_NAME_RE = re.compile(r"^(kodoo\.[a-z0-9_.]+|app_[a-z0-9_.]+)$")
+MODEL_NAME_RE = re.compile(r"^[a-z0-9_]+\.[a-z0-9_.]+$")
 VALID_FIELD_TYPES = {
     "char",
     "text",
@@ -106,7 +108,7 @@ def validate_module_graph(graph: Any) -> list[ValidationIssue]:
                 _issue(
                     "model.technical_name_format",
                     f"forge.model:{model_row['id']}",
-                    "technical_name must match kodoo.* or app_.*",
+                    "technical_name must match <namespace>.<name>",
                 )
             )
 
@@ -284,24 +286,35 @@ def validate_module_graph(graph: Any) -> list[ValidationIssue]:
             )
 
     xmlid_index: dict[str, str] = {}
-    entities = []
+    entities: list[tuple[str, str]] = []
     entities.extend(
-        (model_row["technical_name"], f"forge.model:{model_row['id']}") for model_row in graph.models
+        (
+            f"model_{xml_token(model_row['technical_name'].replace('.', '_'))}",
+            f"forge.model:{model_row['id']}",
+        )
+        for model_row in graph.models
     )
     entities.extend(
-        (view_row["name"], f"forge.view:{view_row['id']}") for view_row in graph.views
+        (
+            f"view_{xml_token(graph.model_by_id[view_row['model_id']]['technical_name'])}_{xml_token(view_row['name'])}",
+            f"forge.view:{view_row['id']}",
+        )
+        for view_row in graph.views
+        if view_row["model_id"] in graph.model_by_id
     )
     entities.extend(
-        (menu_row["name"], f"forge.menu:{menu_row['id']}") for menu_row in graph.menus
+        (f"menu_{xml_token(menu_row['name'])}", f"forge.menu:{menu_row['id']}")
+        for menu_row in graph.menus
     )
     entities.extend(
-        (action_row["name"], f"forge.action:{action_row['id']}") for action_row in graph.actions
+        (f"action_{xml_token(action_row['name'])}", f"forge.action:{action_row['id']}")
+        for action_row in graph.actions
     )
     entities.extend(
-        (group_row["name"], f"forge.group:{group_row['id']}") for group_row in graph.groups
+        (f"group_{xml_token(group_row['name'])}", f"forge.group:{group_row['id']}")
+        for group_row in graph.groups
     )
-    for raw_name, entity in entities:
-        xmlid_name = re.sub(r"[^a-z0-9_]+", "_", (raw_name or "").lower()).strip("_")
+    for xmlid_name, entity in entities:
         if not xmlid_name:
             issues.append(_issue("xmlid.empty", entity, "technical name resolves to an empty XML ID"))
             continue

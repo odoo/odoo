@@ -23,6 +23,10 @@ class PublishRequest(BaseModel):
     mode: Literal["runtime", "export", "both"]
 
 
+class SnapshotRequest(BaseModel):
+    name: str | None = None
+
+
 @router.post("/pipeline/{module_id}/validate")
 async def validate_pipeline(
     module_id: int,
@@ -102,10 +106,16 @@ async def publish_pipeline(
 @router.post("/pipeline/{module_id}/snapshot")
 async def snapshot_pipeline(
     module_id: int,
+    payload: SnapshotRequest,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, object]:
     try:
-        snapshot = await create_snapshot_record(session, module_id, created_by="api")
+        snapshot = await create_snapshot_record(
+            session,
+            module_id,
+            name=payload.name,
+            created_by="api",
+        )
     except LookupError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     return {

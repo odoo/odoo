@@ -31,7 +31,7 @@ class Settings(BaseModel):
         )
 
     def module_output_dir(self, app_technical_name: str, module_technical_name: str) -> Path:
-        return self.output_path / f"app_{app_technical_name}" / module_technical_name
+        return self.output_path / app_technical_name / module_technical_name
 
 
 @lru_cache

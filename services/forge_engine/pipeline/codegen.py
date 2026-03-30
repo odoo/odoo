@@ -4,13 +4,12 @@ from dataclasses import dataclass
 import csv
 from io import StringIO
 from pathlib import Path
-import hashlib
-import json
 import re
 from typing import Any
 from xml.etree.ElementTree import Comment, Element, SubElement, fromstring, indent, tostring
 
 from ..config import get_settings
+from .common import hash_text, module_state_hash, stable_json, xml_token
 
 
 PY_CUSTOM_BLOCK_RE = re.compile(
@@ -39,15 +38,6 @@ class GeneratedFile:
     artifact_type: str
     content_hash: str
     model_hash: str
-
-
-def _hash_text(value: str) -> str:
-    return hashlib.sha256(value.encode("utf-8")).hexdigest()
-
-
-def _stable_json(data: Any) -> str:
-    return json.dumps(data, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
-
 
 def _python_block(block_id: str, body: str) -> str:
     return (
@@ -404,8 +394,8 @@ def _render_access_csv(representation: dict[str, Any]) -> str:
 
 
 def _make_generated_file(path: str, content: str, artifact_type: str, source: Any) -> GeneratedFile:
-    model_hash = _hash_text(_stable_json(source))
-    content_hash = _hash_text(content)
+    model_hash = module_state_hash(source)
+    content_hash = hash_text(content)
     return GeneratedFile(
         path=path,
         content=content,
@@ -415,36 +405,52 @@ def _make_generated_file(path: str, content: str, artifact_type: str, source: An
     )
 
 
-def generate_module_files(representation: dict[str, Any]) -> list[GeneratedFile]:
+def _make_module_generated_file(
+    path: str,
+    content: str,
+    artifact_type: str,
+    state_hash: str,
+) -> GeneratedFile:
+    content_hash = hash_text(content)
+    return GeneratedFile(
+        path=path,
+        content=content,
+        artifact_type=artifact_type,
+        content_hash=content_hash,
+        model_hash=state_hash,
+    )
+
+
+def generate_module_files(representation: dict[str, Any], state_hash: str | None = None) -> list[GeneratedFile]:
+    effective_state_hash = state_hash or module_state_hash(
+        {"representation": representation, "version": "forge-engine:v1"}
+    )
     files: list[GeneratedFile] = []
     files.append(
-        _make_generated_file(
+        _make_module_generated_file(
             "__init__.py",
             _render_root_init(),
             "manifest",
-            {"type": "__init__", "module": representation["module"]["technical_name"]},
+            effective_state_hash,
         )
     )
     model_files: list[GeneratedFile] = []
     for model_row in representation["models"]:
         model_files.append(
-            _make_generated_file(
+            _make_module_generated_file(
                 f"models/{model_row['file_name']}",
                 _render_model_file(model_row),
                 "model",
-                {
-                    "model": model_row["technical_name"],
-                    "fields": model_row["fields"],
-                },
+                effective_state_hash,
             )
         )
     files.extend(model_files)
     files.append(
-        _make_generated_file(
+        _make_module_generated_file(
             "models/__init__.py",
             _render_models_init(representation["models"]),
             "model",
-            {"models": [model_row["technical_name"] for model_row in representation["models"]]},
+            effective_state_hash,
         )
     )
 
@@ -452,20 +458,18 @@ def generate_module_files(representation: dict[str, Any]) -> list[GeneratedFile]
     if representation["groups"]:
         path = "security/groups.xml"
         files.append(
-            _make_generated_file(path, _render_groups_xml(representation), "security", representation["groups"])
+            _make_module_generated_file(
+                path, _render_groups_xml(representation), "security", effective_state_hash
+            )
         )
         data_files.append(path)
     path = "security/ir.model.access.csv"
     files.append(
-        _make_generated_file(
+        _make_module_generated_file(
             path,
             _render_access_csv(representation),
             "security",
-            {
-                "models": [model_row["technical_name"] for model_row in representation["models"]],
-                "accesses": [model_row["accesses"] for model_row in representation["models"]],
-                "groups": representation["groups"],
-            },
+            effective_state_hash,
         )
     )
     data_files.append(path)
@@ -476,16 +480,16 @@ def generate_module_files(representation: dict[str, Any]) -> list[GeneratedFile]
                 **view_row,
                 "xmlid": f"view_{xml_token(model_row['technical_name'])}_{xml_token(view_row['name'])}",
             }
-            path = f"views/{xml_token(model_row['technical_name'])}_{xml_token(view_row['name'])}.xml"
+            path = f"views/{xml_token(view_row['name'])}.xml"
             files.append(
-                _make_generated_file(
+                _make_module_generated_file(
                     path,
                     _xml_document(
                         view_payload["xmlid"],
                         [_render_view_record(view_payload, model_row)],
                     ),
                     "view",
-                    {"model": model_row["technical_name"], "view": view_payload},
+                    effective_state_hash,
                 )
             )
             data_files.append(path)
@@ -493,13 +497,17 @@ def generate_module_files(representation: dict[str, Any]) -> list[GeneratedFile]
     if representation["actions"]:
         path = "views/actions.xml"
         files.append(
-            _make_generated_file(path, _render_actions_xml(representation), "view", representation["actions"])
+            _make_module_generated_file(
+                path, _render_actions_xml(representation), "view", effective_state_hash
+            )
         )
         data_files.append(path)
     if representation["menus"]:
         path = "views/menus.xml"
         files.append(
-            _make_generated_file(path, _render_menus_xml(representation), "view", representation["menus"])
+            _make_module_generated_file(
+                path, _render_menus_xml(representation), "view", effective_state_hash
+            )
         )
         data_files.append(path)
     automations_present = any(model_row["automations"] for model_row in representation["models"])
@@ -507,21 +515,21 @@ def generate_module_files(representation: dict[str, Any]) -> list[GeneratedFile]
     if automations_present:
         path = "data/automations.xml"
         files.append(
-            _make_generated_file(
+            _make_module_generated_file(
                 path,
                 _render_automations_xml(representation),
                 "automation",
-                [model_row["automations"] for model_row in representation["models"]],
+                effective_state_hash,
             )
         )
         data_files.append(path)
 
     files.append(
-        _make_generated_file(
+        _make_module_generated_file(
             "__manifest__.py",
             _render_manifest(representation, data_files),
             "manifest",
-            {"module": representation["module"], "data_files": data_files},
+            effective_state_hash,
         )
     )
     return files
@@ -544,7 +552,7 @@ def detect_export_conflicts(
         previous = previous_artifacts.get(generated.path)
         if target_path.exists():
             existing_content = target_path.read_text(encoding="utf-8")
-            existing_hash = _hash_text(existing_content)
+            existing_hash = hash_text(existing_content)
             if previous is None:
                 conflicts.append(f"{generated.path}: unmanaged existing file")
                 continue
@@ -555,7 +563,7 @@ def detect_export_conflicts(
             continue
         target_path = module_root / path
         if target_path.exists():
-            existing_hash = _hash_text(target_path.read_text(encoding="utf-8"))
+            existing_hash = hash_text(target_path.read_text(encoding="utf-8"))
             if existing_hash != previous["content_hash"]:
                 conflicts.append(f"{path}: removed file was edited manually")
     return conflicts
@@ -581,7 +589,7 @@ def write_generated_files(
         previous = previous_artifacts.get(generated.path)
         existing_content = target_path.read_text(encoding="utf-8") if target_path.exists() else None
         if existing_content is not None:
-            existing_hash = _hash_text(existing_content)
+            existing_hash = hash_text(existing_content)
             if previous is None:
                 conflicts.append(f"{generated.path}: unmanaged existing file")
                 continue
@@ -589,7 +597,7 @@ def write_generated_files(
                 conflicts.append(f"{generated.path}: developer edits conflict with unchanged model")
                 continue
             merged_content = _merge_custom_blocks(generated.content, existing_content, generated.path)
-            if _hash_text(merged_content) == existing_hash:
+            if hash_text(merged_content) == existing_hash:
                 continue
             target_path.write_text(merged_content, encoding="utf-8")
             applied.append(generated.path)
@@ -602,7 +610,7 @@ def write_generated_files(
         target_path = module_root / path
         if not target_path.exists():
             continue
-        existing_hash = _hash_text(target_path.read_text(encoding="utf-8"))
+        existing_hash = hash_text(target_path.read_text(encoding="utf-8"))
         if existing_hash != previous["content_hash"]:
             conflicts.append(f"{path}: removed file was edited manually")
             continue

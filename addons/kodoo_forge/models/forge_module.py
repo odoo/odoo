@@ -4,6 +4,10 @@ from odoo import fields, models
 class ForgeModule(models.Model):
     _name = "forge.module"
     _description = "Forge Module"
+    _technical_name_per_app = models.Constraint(
+        "UNIQUE (technical_name, app_id)",
+        "Technical name must be unique per app",
+    )
 
     name = fields.Char(required=True)
     technical_name = fields.Char(required=True)
@@ -19,11 +23,3 @@ class ForgeModule(models.Model):
         ],
         default="draft",
     )
-
-    _sql_constraints = [
-        (
-            "technical_name_per_app",
-            "unique(technical_name, app_id)",
-            "Technical name must be unique per app",
-        )
-    ]
