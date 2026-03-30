@@ -58,13 +58,13 @@
                                     <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Cheese Burger"/>
                                 </h1>
                             </div>
-                            <div name="options" class="d-flex flex-column flex-md-row flex-wrap">
+                            <div name="options" class="d-flex flex-column flex-md-row flex-wrap gap-2">
                                <span name="sale_option" class="d-inline-flex">
-                                    <field name="sale_ok" class="w-auto"/>
+                                    <field name="sale_ok" widget="boolean_checkbox" class="w-auto"/>
                                     <label for="sale_ok"/>
                                 </span>
                                 <span name="purchase_option" class="d-inline-flex" invisible="type == 'combo'">
-                                    <field name="purchase_ok" class="w-auto"/>
+                                    <field name="purchase_ok" widget="boolean_checkbox" class="w-auto"/>
                                     <label for="purchase_ok"/>
                                 </span>
                             </div>
