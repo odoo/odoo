@@ -1,5 +1,4 @@
-import { validate } from "@web/owl2/utils";
-import { EventBus } from "@odoo/owl";
+import { assertType, EventBus } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -13,11 +12,11 @@ export class DuplicatedKeyError extends Error {}
 // -----------------------------------------------------------------------------
 
 const validateSchema = (name, key, value, schema) => {
-    if (!odoo.debug) {
+    if (!odoo.debug || typeof schema !== "function") {
         return;
     }
     try {
-        validate(value, schema);
+        assertType(value, schema);
     } catch (error) {
         throw new Error(`Validation error for key "${key}" in registry "${name}": ${error}`);
     }
