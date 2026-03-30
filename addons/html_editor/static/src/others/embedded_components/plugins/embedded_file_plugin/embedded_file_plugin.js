@@ -23,7 +23,7 @@ export class EmbeddedFilePlugin extends FilePlugin {
 
     /** @override */
     renderDownloadBox(attachment) {
-        return renderEmbeddedFileBox(attachment);
+        return renderEmbeddedFileBox(attachment, this.document);
     }
 
     /** @override */

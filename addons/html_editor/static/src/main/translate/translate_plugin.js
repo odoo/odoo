@@ -75,7 +75,7 @@ export class TranslatePlugin extends Plugin {
                         endTop += endParent.offsetTop - endParent.scrollTop;
                         endParent = endParent.offsetParent;
                     }
-                    const div = document.createElement("div");
+                    const div = this.document.createElement("div");
                     div.classList.add("o-translator-content");
                     const FRAME_PADDING = 3;
                     div.style.left = `${left - FRAME_PADDING}px`;
@@ -98,6 +98,7 @@ export class TranslatePlugin extends Plugin {
             ...dialogParams,
             originalText,
             sanitize,
+            document: this.document,
         });
         if (this.services.ui.isSmall) {
             // TODO: Find a better way and avoid modifying range

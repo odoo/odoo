@@ -113,7 +113,7 @@ export class CollaborationSelectionPlugin extends Plugin {
         // Draw rects (in case the selection is not collapsed).
         const containerRect = this.selectionOverlay.getBoundingClientRect();
         const indicators = clientRects.map(({ x, y, width, height }) => {
-            const rectElement = this.document.createElement("div");
+            const rectElement = this.dependencies.localOverlay.createElement("div");
             rectElement.style = `
                 position: absolute;
                 top: ${y - containerRect.y}px;
@@ -129,13 +129,13 @@ export class CollaborationSelectionPlugin extends Plugin {
         });
 
         // Draw carret.
-        const caretElement = this.document.createElement("div");
+        const caretElement = this.dependencies.localOverlay.createElement("div");
         caretElement.style = `border-left: 2px solid ${selectionColor}; position: absolute;`;
         caretElement.setAttribute("data-selection-peer-id", peerId);
         caretElement.className = "oe-collaboration-caret";
 
         // Draw carret top square.
-        const caretTopSquare = this.document.createElement("div");
+        const caretTopSquare = this.dependencies.localOverlay.createElement("div");
         caretTopSquare.className = "oe-collaboration-caret-top-square";
         caretTopSquare.style["background-color"] = selectionColor;
         caretTopSquare.setAttribute("data-peer-name", peerName);

@@ -481,7 +481,7 @@ export class DomPlugin extends Plugin {
                     isBlock(nodeToInsert) &&
                     this.dependencies.split.isUnsplittable(nodeToInsert)
                 ) {
-                    const br = document.createElement("br");
+                    const br = this.document.createElement("br");
                     currentNode[
                         isEmptyBlock(currentNode) || !isTangible(currentNode) ? "before" : "after"
                     ](br);

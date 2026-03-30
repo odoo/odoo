@@ -264,6 +264,7 @@ export class MediaPlugin extends Plugin {
             resModel,
             resId,
             field,
+            document: this.document,
             useMediaLibrary: !!(
                 field &&
                 ((resModel === "ir.ui.view" && field === "arch") || type === "html")

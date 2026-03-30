@@ -343,7 +343,7 @@ export class VideoSelector extends Component {
      * @param   {Object} selectedVideos.options
      * @returns {Element[]}
      */
-    static createElements(selectedVideos) {
+    static createElements(selectedVideos, { document = window.document } = {}) {
         return selectedVideos.map((videoData) => {
             const div = document.createElement("div");
             div.dataset.baseUrl = videoData.baseUrl;

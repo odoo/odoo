@@ -100,10 +100,10 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         // Draw user avatar.
         let avatarElement = selectionInfo.avatarElement;
         if (!avatarElement) {
-            avatarElement = this.document.createElement("div");
+            avatarElement = this.dependencies.localOverlay.createElement("div");
             avatarElement.className = "oe-collaboration-caret-avatar";
             avatarElement.style.display = "none";
-            const image = this.document.createElement("img");
+            const image = this.dependencies.localOverlay.createElement("img");
             avatarElement.append(image);
             image.onload = () => avatarElement.style.removeProperty("display");
             image.setAttribute("src", avatarUrl);
@@ -142,7 +142,7 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
             const size = infos.size;
             if (size > 1) {
                 const [left, top] = overlapKey.split("|").map((n) => parseInt(n, 10));
-                const div = document.createElement("div");
+                const div = this.dependencies.localOverlay.createElement("div");
                 div.className = "oe-overlapping-counter";
                 div.style.left = left + 10 + "px";
                 div.style.top = top + 10 + "px";

@@ -32,6 +32,7 @@ export async function renderMedia({
     orm,
     activeTab,
     availableTabs,
+    document,
     oldMediaNode,
     selectedMedia,
     extraClassesToAdd,
@@ -39,6 +40,7 @@ export async function renderMedia({
 }) {
     const elements = await availableTabs[activeTab].Component.createElements(selectedMedia, {
         orm: orm,
+        document,
     });
     elements.forEach((element) => {
         if (oldMediaNode) {

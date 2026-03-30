@@ -70,6 +70,8 @@ export class YoutubePlugin extends Plugin {
     }
 
     createVideoElement(videoData) {
-        return VideoSelector.createElements([{ src: videoData.embed_url }])[0];
+        return VideoSelector.createElements([{ src: videoData.embed_url }], {
+            document: this.document,
+        })[0];
     }
 }
