@@ -264,8 +264,8 @@ export class SnippetModel extends Reactive {
                 : snippet.name;
             if (this.isCustomInnerContent(customSnippetName)) {
                 customInnerContent.unshift(snippet);
-                customSnippets.splice(i, 1);
-            } else if (!this.isCustomStructure(customSnippetName)) {
+            }
+            if (!this.isCustomStructure(customSnippetName)) {
                 // If no structure snippet could be found, it means that the
                 // module is not installed (i.e. the original snippet has no
                 // `data-snippet` attribute).
@@ -286,14 +286,15 @@ export class SnippetModel extends Reactive {
                 {
                     body: message,
                     confirm: async () => {
-                        const isInnerContent =
-                            this.snippetsByCategory.snippet_custom_content.includes(snippet);
-                        const snippetCustom = isInnerContent
-                            ? this.snippetsByCategory.snippet_custom_content
-                            : this.snippetsByCategory.snippet_custom;
-                        const index = snippetCustom.findIndex((s) => s.id === snippet.id);
-                        if (index > -1) {
-                            snippetCustom.splice(index, 1);
+                        for (const categoryKey of ["snippet_custom", "snippet_custom_content"]) {
+                            const snippetList = this.snippetsByCategory[categoryKey] || [];
+                            const snippetIndex = snippetList.findIndex(
+                                (item) => item.id === snippet.id
+                            );
+
+                            if (snippetIndex > -1) {
+                                snippetList.splice(snippetIndex, 1);
+                            }
                         }
                         await this.orm.call("ir.ui.view", "delete_snippet", [], {
                             view_id: snippet.viewId,
