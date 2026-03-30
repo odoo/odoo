@@ -480,6 +480,15 @@ class TestSafeEvalRuntime(TransactionCase):
         for iterator in iterators:
             safe_checker.check(iterator)
 
+        # Catch hide unsafe object in trusted iterator
+        # Note:
+        # Some trusted classes are themselves iterators (no-operation iterators).
+        # If we have an instance of these classes, we must treat them as iterators
+        # rather than as ordinary instances (checking the class itself does not change).
+        unsafe_iterator = enumerate((__import__,))
+        with self.assertRaises(UnsafeFunctionError):
+            safe_checker.check(unsafe_iterator)
+
     def test_trust_auto_objects(self):
         import builtins  # noqa: PLC0415
         import collections  # noqa: PLC0415

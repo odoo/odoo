@@ -710,6 +710,7 @@ class _SafeChecker:
     MAPPINGS = frozenset((dict, defaultdict, OrderedDict, types.MappingProxyType))
     SEQUENCES = frozenset((list, tuple, set, frozenset, OrderedSet))
     ITERATORS = frozenset((
+        enumerate, filter, map, range, reversed, zip,
         type(iter('')), type(iter(b'')), type(iter(bytearray())),
         type(iter([])), type(iter(())), type(iter(set())),
         type(iter(reversed([]))),
@@ -734,6 +735,7 @@ class _SafeChecker:
         self.add_hook(WrapperDescriptorType, self._hook_wrapper_descriptor)
         # Serialization hooks
         for t in _SafeWhitelist.TRUSTED_CLASSES: self.add_hook(t, None)  # Optimization to save time when serializing these types  # noqa: E701
+        # /!\ optimizations can be overwritten
         for t in self.SEQUENCES: self.add_hook(t, list)  # noqa: E701
         for t in self.MAPPINGS: self.add_hook(t, dict)  # noqa: E701
         for t in self.ITERATORS: self.add_hook(t, self._hook_iterator)  # noqa: E701
