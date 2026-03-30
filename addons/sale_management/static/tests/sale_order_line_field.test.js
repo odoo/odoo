@@ -379,3 +379,33 @@ test("Moving Optional Sections to exclude some lines should set quantity to 1", 
     await clickSave();
     await expect.verifySteps(['web_save']);
 })
+
+test("Drag and drop optional subsection under hidden section resets its optional state", async () => {
+    SaleOrderLine._records[7].is_optional = true;
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+
+        expect(args[1].order_line.find((commands) => commands[1] === 8)[2].is_optional).toBe(
+            false,
+            {
+                message: "is_optional should reset to false for subsection Sec3-sub1",
+            }
+        );
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    await contains(".o_data_row:contains(Sec3-sub1):first .o_row_handle").dragAndDrop(
+        ".o_data_row:contains(Sec3):first"
+    );
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
