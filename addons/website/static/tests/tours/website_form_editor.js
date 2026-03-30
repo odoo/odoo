@@ -1133,7 +1133,6 @@ registerWebsitePreviewTour(
     () => [
         {
             trigger: ".o-website-builder_sidebar .o_snippets_container .o_snippet",
-            noPrepend: true,
         },
         {
             trigger:

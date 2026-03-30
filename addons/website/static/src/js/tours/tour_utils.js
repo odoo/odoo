@@ -297,7 +297,6 @@ export function clickOnSnippet(snippet, position = "bottom") {
     return [
         {
             trigger: ".o-website-builder_sidebar",
-            noPrepend: true,
         },
         {
             trigger: `:iframe ${trigger}`,
@@ -315,7 +314,6 @@ export function clickOnSave(position = "bottom", timeout = 50000, withContains =
         },
         {
             trigger: "body:not(:has(.o_dialog))",
-            noPrepend: true,
         },
         {
             trigger: withContains
@@ -328,7 +326,6 @@ export function clickOnSave(position = "bottom", timeout = 50000, withContains =
         },
         {
             trigger: "body:not(.o_builder_open)",
-            noPrepend: true,
             timeout,
         },
         stepUtils.waitIframeIsReady(),
@@ -371,7 +368,6 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
     const insertSnippetSteps = [
         {
             trigger: ".o_builder_sidebar_open",
-            noPrepend: true,
         },
     ];
     const snippetIDSelector = snippet.id
@@ -390,7 +386,6 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
                 // FIXME `:not(.d-none)` should obviously not be needed but it seems
                 // currently needed when using a tour in user/interactive mode.
                 trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
-                noPrepend: true,
                 tooltipPosition: "top",
                 run: "click",
             }
@@ -470,15 +465,6 @@ export function unfoldOptionsGroup(name) {
     ];
 }
 
-export function prepend_trigger(steps, prepend_text = "") {
-    for (const step of steps) {
-        if (!step.noPrepend && prepend_text) {
-            step.trigger = prepend_text + step.trigger;
-        }
-    }
-    return steps;
-}
-
 export function getClientActionUrl(path, edition) {
     let url = `/odoo/action-website.website_preview`;
     if (path) {
@@ -541,10 +527,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
             } else {
                 tourSteps[0].timeout = 20000;
             }
-            return tourSteps.map((step) => {
-                delete step.noPrepend;
-                return step;
-            });
+            return tourSteps;
         },
     });
 }
