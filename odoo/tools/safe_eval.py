@@ -16,7 +16,6 @@ condition/math builtins.
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 import ast
 import contextvars
-import dis
 import functools
 import inspect
 import logging
@@ -190,6 +189,7 @@ _CONST_OPCODES = set(to_opcodes([
     # stack manipulations
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
     'LOAD_CONST',
+    'CACHE',  # internal cpython instruction
     'RETURN_VALUE',  # return the result of the literal/expr evaluation
     # literal collections
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
@@ -338,9 +338,11 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """
     assert_no_dunder_name(code_obj, expr)
 
+    # each instruction is 2-byte wide, use byte slicing over `dis.get_instructions` for performance
+    # https://github.com/python/cpython/blob/7f2d89a444bb389a4f4ded13204e71c0af06ee76/Include/cpython/code.h#L29-L44
+    code_codes = set(code_obj.co_code[::2])
     # set operations are almost twice as fast as a manual iteration + condition
     # when loading /web according to line_profiler
-    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
     if not allowed_codes >= code_codes:
         raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 

@@ -1,3 +1,4 @@
+import dis
 import ast
 import inspect
 
@@ -203,6 +204,24 @@ class TestSafeEval(BaseCase):
                 c: int = a + b
                 return c
         """), mode="exec")
+
+    def test_07_assert_valid_codeobj(self):
+        """Test for regression in `safe_eval.assert_valid_codeobj` opcode parsing"""
+        # Sanity/future-proof check: if Python has more than 256 opcodes, the opcode parsing optimization
+        # simply cannot work. We might have to switch back to `dis.get_instructions` if it happens.
+        self.assertLess(len(dis.opmap), 256, "Python has more than 256 opcodes")
+        # Should yield the same opcodes as `dis`
+        for expr in [
+            '[x for x in (1,2)]',
+            'list(x for x in (1,2))',
+            'v if v is None else w',
+            'v if v is not None else w',
+            '{a for a in (1, 2)}',
+        ]:
+            code_obj = compile(expr, mode="eval", filename="")
+            expected_opcodes = [i.opcode for i in dis.get_instructions(code_obj, show_caches=True)]
+            opcodes = list(code_obj.co_code[::2])  # includes CACHE opcodes
+            self.assertEqual(opcodes, expected_opcodes)
 
 
 @tagged('at_install', '-post_install')
