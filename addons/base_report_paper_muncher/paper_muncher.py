@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextvars
 import datetime as dt
 import logging
 import os
@@ -22,7 +21,7 @@ import h11
 
 from odoo.http.router import root
 from odoo.http.server import SERVER_AGENT, SERVER_SOFTWARE
-from odoo.http.server_log import http_log, push_thread_info, reset_thread_info
+from odoo.http.server_log import http_log, run_in_isolated_context, reset_thread_info
 from odoo.tools.misc import find_in_path
 
 __all__ = ['PaperMuncherInfo', 'PaperMuncherServer', 'paper_muncher']
@@ -169,13 +168,11 @@ class PaperMuncherServer:
             response, bytes_sent = self._handle_put(self._request_body)
             _logger.info("Got a PDF of %s bytes", len(self._request_body))
         else:
-            with push_thread_info():
-                ctx = contextvars.Context()
-                response, bytes_sent = ctx.run(
-                    self._handle_fallback,
-                    self._request,
-                    self._request_body,
-                )
+            response, bytes_sent = run_in_isolated_context(
+                self._handle_fallback,
+                self._request,
+                self._request_body,
+            )
         http_log(logging.INFO, "", req=self._request, res=response, extra={
             'http_response_body': bytes_sent,
             'http_headers': (),  # already printed at [RES]

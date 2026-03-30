@@ -234,7 +234,8 @@ class IrCron(models.Model):
             _logger.debug("job %s acquired", job_id)
             # take into account overridings of _process_job() on that database, check_signaling
             registry = api.Environment(cron_cr, api.SUPERUSER_ID, {}).registry
-            registry[IrCron._name]._process_job(cron_cr, job)
+            # run each job in an insolated context from other jobs
+            contextvars.copy_context().run(registry[IrCron._name]._process_job, cron_cr, job)
             cron_cr.commit()
             _logger.debug("job %s updated and released", job_id)
 

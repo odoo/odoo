@@ -3,6 +3,7 @@
 # -----------------------------------------------------------
 import collections
 import contextlib
+import contextvars
 import errno
 import logging
 import os
@@ -465,7 +466,8 @@ class ThreadedServer(CommonServer):
                     except TimeoutError:
                         continue
                     else:
-                        thread_pool.submit(self.http_client_thread, client, address)
+                        thread_pool.submit(contextvars.Context().run,
+                            self.http_client_thread, client, address)
 
         except SystemExit:
             raise
@@ -1325,7 +1327,7 @@ class WorkerHTTP(Worker):
             pass
         else:
             with client:
-                self.process_request(client, addr)
+                contextvars.Context().run(self.process_request, client, addr)
 
 
 class WorkerCron(Worker):
@@ -1389,7 +1391,7 @@ class WorkerCron(Worker):
         self.setproctitle(db_name)
 
         from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
-        IrCron._process_jobs(db_name)
+        contextvars.Context().run(IrCron._process_jobs, db_name)
 
         # dont keep cursors in multi database mode
         if self.db_count > 1:
