@@ -51,9 +51,9 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
     }
 
     parseLabel(value) {
-        return (this.productName && value && this.productName.concat("\n", value))
-            || (this.productName && !value && this.productName)
-            || (value || "");
+       return this.currentProductName && value && this.currentProductName.concat("\n", value) ||
+            this.currentProductName && !value && this.currentProductName ||
+            value || "";
     }
 
     shouldShowWarning() {
