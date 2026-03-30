@@ -24,6 +24,7 @@ class SaleOrderTemplateLine extends models.ServerModel {
             sequence: 3,
             display_type: 'line_section',
             product_uom_qty: 0,
+            collapse_prices: true,
         },
         {
             id: 4,
@@ -31,6 +32,7 @@ class SaleOrderTemplateLine extends models.ServerModel {
             sequence: 4,
             display_type: 'line_section',
             product_uom_qty: 0,
+            collapse_composition: true,
         },
         {
             id: 5,
@@ -71,6 +73,8 @@ class SaleOrderTemplateLine extends models.ServerModel {
             sequence: 14,
             display_type: 'line_subsection',
             product_uom_qty: 0,
+            collapse_composition: true,
+            collapse_prices: true,
         },
         { id: 15, name: "Sec4-sub1-r1", sequence: 15 },
     ];
@@ -91,7 +95,7 @@ class SaleOrderTemplate extends models.ServerModel {
                 <field
                     name="sale_order_template_line_ids"
                     widget="so_template_line_o2m"
-                    options="{'subsections': True}"
+                    options="{'subsections': True, 'hide_prices': True, 'hide_composition': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -104,6 +108,8 @@ class SaleOrderTemplate extends models.ServerModel {
                         <field name="product_uom_qty"/>
                         <field name="display_type" column_invisible="1"/>
                         <field name="is_optional" column_invisible="1"/>
+                        <field name="collapse_prices" column_invisible="1"/>
+                        <field name="collapse_composition" column_invisible="1"/>
                     </list>
                 </field>
             </form>
@@ -271,12 +277,34 @@ test("Moving Optional Sections to exclude some template lines should set quantit
     await expect.verifySteps(['web_save']);
 })
 
-test("Setting section optional should reset quantity", async () => {
+test("Can't mark section hidden if optional and vice versa", async () => {
+    await mountView({
+        type: "form",
+        resModel: "sale.order.template",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    await contains(".o_data_row:contains(Sec1) .o_list_section_options button").click();
+    expect(".o-dropdown-item:contains(Set Optional)").toHaveClass("disabled", {
+        message: "Section with hidden prices can't be optional",
+    });
+
+    await contains(".o_data_row:contains(Sec2) .o_list_section_options button").click();
+    expect(".o-dropdown-item:contains(Set Optional)").toHaveClass("disabled", {
+        message: "Hidden section can't be optional",
+    });
+});
+
+test("Setting section optional should reset some fields", async () => {
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
         expect(args[1]).toEqual(
             {
                 sale_order_template_line_ids: [
+                    [1, 10, { collapse_composition: false, collapse_prices: false }],
+                    [1, 8, { collapse_composition: false, collapse_prices: false }],
                     [1, 5, { is_optional: true }],
                     [1, 6, { product_uom_qty: 0 }],
                     [1, 7, { product_uom_qty: 0 }],
@@ -298,6 +326,12 @@ test("Setting section optional should reset quantity", async () => {
     });
 
     expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    await contains(".o_data_row:contains(Sec3-sub2) .o_list_section_options button").click();
+    await contains(".o-dropdown-item:contains(Hide Composition)").click();
+
+    await contains(".o_data_row:contains(Sec3-sub1) .o_list_section_options button").click();
+    await contains(".o-dropdown-item:contains(Hide Prices)").click();
 
     await contains(".o_data_row:contains(Sec3) .o_list_section_options button").click();
     await contains(".o-dropdown-item:contains(Set Optional)").click();
@@ -357,6 +391,36 @@ test("Unsetting optional section should reset quantity", async () => {
 
     await contains(".o_data_row:contains(Sec3) .o_list_section_options button").click();
     await contains(".o-dropdown-item:contains(Unset Optional)").click();
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
+test("Drag and drop optional subsection under hidden section resets its optional state", async () => {
+    SaleOrderTemplateLine._records[7].is_optional = true;
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+
+        expect(
+            args[1].sale_order_template_line_ids.find((commands) => commands[1] === 8)[2]
+                .is_optional
+        ).toBe(false, {
+            message: "is_optional should reset to false for subsection Sec3-sub1",
+        });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order.template",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    await contains(".o_data_row:contains(Sec3-sub1):first .o_row_handle").dragAndDrop(
+        ".o_data_row:contains(Sec3):first"
+    );
 
     await clickSave();
     expect.verifySteps(["web_save"]);

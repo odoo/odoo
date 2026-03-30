@@ -16,8 +16,35 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         this.copyFields.push('is_optional');
     }
 
+    /**
+     * Disable "Hide Composition" and "Hide Prices" buttons for optional sections and their
+     * subsections.
+     */
+    disableCompositionButton(record) {
+        return (
+            super.disableCompositionButton(record)
+            || this.shouldCollapse(record, "is_optional", true)
+        );
+    }
+
+    disablePricesButton(record) {
+        return (
+            super.disablePricesButton(record) || this.shouldCollapse(record, "is_optional", true)
+        );
+    }
+
+    /**
+     * Disable "Set Optional" button if
+     *  - Parent section is optional
+     *  - Parent section hides prices or composition
+     *  - Section itself hides prices or composition
+     */
     disableOptionalButton(record) {
-        return this.shouldCollapse(record, 'is_optional');
+        return (
+            this.shouldCollapse(record, "is_optional")
+            || this.shouldCollapse(record, "collapse_prices", true)
+            || this.shouldCollapse(record, "collapse_composition", true)
+        );
     }
 
     get isCurrentSectionOptional() {
@@ -70,6 +97,37 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         return rowClasses;
     }
 
+    /**
+     * @override
+     * This override resets optional state of subsections when their parent sections is collapsed
+     */
+    async toggleCollapse(record, fieldName) {
+        await super.toggleCollapse(record, fieldName);
+
+        if (this.isTopSection(record) && record.data[fieldName]) {
+            const commands = [];
+
+            for (const sectionRecord of getSectionRecords(this.props.list, record)) {
+                if (this.isSubSection(sectionRecord)) {
+                    commands.push(
+                        x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
+                            is_optional: false,
+                        })
+                    );
+                }
+            }
+
+            if (commands.length) {
+                await this.props.list.applyCommands(commands, { sort: true });
+            }
+        }
+    }
+
+    /**
+     * Toggles optional state on a section:
+     * - Product lines → qty = 0 when set optional, reset to 1 when unset.
+     * - Subsections → force hide composition/prices to false.
+     */
     async toggleIsOptional(record) {
         const setOptional = !record.data.is_optional;
 
@@ -84,6 +142,11 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
                 changes = setOptional
                     ? { product_uom_qty: 0 }
                     : { product_uom_qty: sectionRecord.data.product_uom_qty || 1 };
+            } else if (this.isSubSection(sectionRecord)) {
+                changes = setOptional && {
+                    collapse_composition: false,
+                    collapse_prices: false,
+                };
             }
 
             if (Object.keys(changes).length) {
@@ -212,6 +275,31 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         await this.props.list.applyCommands(commands, { sort: true });
     }
 
+    /**
+     * @override
+     * Reset fields when a subsection is moved under an optional section,
+     * since optional sections cannot contain hidden subsections or hidden prices.
+     */
+    resetOnResequence(record, parentSection) {
+        return (
+            super.resetOnResequence(record, parentSection)
+            || (
+                this.isSubSection(record)
+                && (
+                    parentSection?.data.is_optional
+                    || parentSection?.data.collapse_composition
+                ) && (
+                    record.data.collapse_composition
+                    || record.data.collapse_prices
+                    || record.data.is_optional
+                )
+            )
+        );
+    }
+
+    fieldsToReset() {
+        return { ...super.fieldsToReset(), is_optional: false };
+    }
 }
 export class SaleOrderTemplateLineOne2Many extends SectionAndNoteFieldOne2Many {
     static components = {

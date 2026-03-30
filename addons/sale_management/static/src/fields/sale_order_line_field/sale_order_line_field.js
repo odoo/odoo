@@ -283,8 +283,10 @@ patch(SaleOrderLineListRenderer.prototype, {
             super.resetOnResequence(record, parentSection)
             || (
                 this.isSubSection(record)
-                && parentSection?.data.is_optional
                 && (
+                    parentSection?.data.is_optional
+                    || parentSection?.data.collapse_composition
+                ) && (
                     record.data.collapse_composition
                     || record.data.collapse_prices
                     || record.data.is_optional
