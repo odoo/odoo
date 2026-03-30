@@ -80,21 +80,58 @@ test("Step Tour validity", async () => {
         steps: () => steps,
     });
     await makeMockEnv({});
-    const waited_error1 = `Error in schema for TourStep ${JSON.stringify(
-        steps[0],
+    const waited_error1 = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: steps[0],
+                path: [],
+                message: "object value has unknown keys",
+                unknownKeys: ["Belgium", "wins", "EURO2024"],
+            },
+        ],
         null,
-        4
-    )}\nInvalid object: unknown key 'Belgium', unknown key 'wins', unknown key 'EURO2024'`;
-    const waited_error2 = `Error in schema for TourStep ${JSON.stringify(
-        steps[1],
+        2
+    )}`;
+    const waited_error2 = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: steps[1],
+                path: [],
+                message: "object value has unknown keys",
+                unknownKeys: ["my_title", "doku"],
+            },
+        ],
         null,
-        4
-    )}\nInvalid object: unknown key 'my_title', unknown key 'doku'`;
-    const waited_error3 = `Error in schema for TourStep ${JSON.stringify(
-        steps[2],
+        2
+    )}`;
+    const waited_error3 = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: steps[2].run,
+                path: ["run"],
+                message: "value does not match union type",
+                subIssues: [
+                    {
+                        received: steps[2].run,
+                        path: ["run"],
+                        message: "value is not a string",
+                    },
+                    {
+                        received: steps[2].run,
+                        path: ["run"],
+                        message: "value is not a function",
+                    },
+                    {
+                        received: steps[2].run,
+                        path: ["run"],
+                        message: "value is not a boolean",
+                    },
+                ],
+            },
+        ],
         null,
-        4
-    )}\nInvalid object: 'run' is not a string or function or boolean`;
+        2
+    )}`;
     await getService("tour_service").startTour("tour1");
     await animationFrame();
     expect.verifySteps([waited_error1, waited_error2, waited_error3]);
@@ -545,7 +582,7 @@ test("check not possible to click below modal", async () => {
         static template = xml/*html*/ `
             <t>
                 <div class="container">
-                    <div class="p-3"><button class="button0" t-on-click="openDialog">Button 0</button></div>
+                    <div class="p-3"><button class="button0" t-on-click="this.openDialog">Button 0</button></div>
                     <div class="p-3"><button class="button1">Button 1</button></div>
                     <div class="p-3"><button class="button2">Button 2</button></div>
                     <div class="p-3"><button class="button3">Button 3</button></div>
