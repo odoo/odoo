@@ -979,6 +979,13 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         })
         return partner_vals
 
+    def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
+        # EXTENDS account.edi.xml.ubl_20
+        # UBL-TR does not use document-level allowance/charge nodes as global discounts.
+        # In practice, the AllowanceCharge found at the document root reflects the sum of
+        # line-level discounts, so importing it as a separate global discount would duplicate it.
+        return [], []
+
     def _import_fill_invoice(self, invoice, tree, qty_factor):
         # EXTENDS account.edi.xml.ubl_20
         logs = super()._import_fill_invoice(invoice, tree, qty_factor)

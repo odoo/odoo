@@ -164,3 +164,17 @@ class TestUBLTR(TestUBLTRCommon):
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
+
+    def test_import_invoice_basic_sale_einvoice_discounts(self):
+        invoice = self.env["account.move"].create({"move_type": "out_invoice"})
+
+        with file_open("l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_basic_sale_einvoice.xml", "rb") as xml_file:
+            tree = self.get_xml_tree_from_string(xml_file.read())
+
+        self.env["account.edi.xml.ubl.tr"]._import_fill_invoice(invoice, tree, 1)
+
+        product_line = invoice.invoice_line_ids.filtered(lambda l: l.name == 'product_a')[:1]
+        global_discount_line = invoice.invoice_line_ids.filtered(lambda l: l.name == "Discount")[:1]
+
+        self.assertEqual(product_line.discount, 12.0)
+        self.assertFalse(global_discount_line, "Nilvera moves should not have any global discount line")
