@@ -327,13 +327,28 @@ body {
                 max-width: 100% !important;
             }
 
-            // Vertical alignment when top-menu has visually "no background"
+            // Remove the left/right padding of the header navbar when the
+            // header has no visible separation from the body:
+            // - The header has no background color (transparent)
+            // - The header background color matches the body
+            // - The header has no shadow defined
             $-menu-color: o-color('menu-custom') or o-color('menu');
-            @if (not $-menu-color or $-menu-color == o-color('body')) {
-                > header {
-                    .navbar, .container {
-                        padding-left: 0;
-                        padding-right: 0;
+            $-header-template: o-website-value('header-template');
+            @if (
+                (not $-menu-color or ($-menu-color == o-color('body') and o-website-value('body-image') == null))
+                and (o-website-value('menu-box-shadow') == none)
+                and (index(("default", "hamburger", "stretch", "vertical", "search"), $-header-template) != null)
+            ) {
+                > header #o_main_nav {
+                    padding-left: 0;
+                    padding-right: 0;
+                    
+                    @if ($-header-template == "search") {
+                        & > div, 
+                        & > .o_header_hide_on_scroll > .container {
+                            padding-left: 0;
+                            padding-right: 0;
+                        }
                     }
                 }
             }
