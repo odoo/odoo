@@ -11,6 +11,7 @@ from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.tools import SQL, OrderedSet, float_is_zero, format_amount, is_html_empty
 from odoo.tools.mail import html_keep_url
+from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -1743,7 +1744,8 @@ class SaleOrder(models.Model):
     @api.readonly
     def action_preview_sale_order(self):
         self.ensure_one()
-        return {"type": "ir.actions.act_url", "target": "new", "url": self.get_portal_url()}
+        url = urljoin(self.get_base_url(), self.get_portal_url())
+        return {"type": "ir.actions.act_url", "target": "new", "url": url}
 
     def _recompute_taxes(self):
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)

@@ -8,6 +8,7 @@ from . import (
     donation,
     main,
     payment,
+    portal,
     product_configurator,
     product_feed,
     reorder,
