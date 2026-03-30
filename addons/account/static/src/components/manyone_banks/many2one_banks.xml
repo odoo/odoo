@@ -3,8 +3,8 @@
     <t t-name="account.Many2OneBank" t-inherit="web.Many2One">
         <xpath expr="//t[@t-if='this.props.readonly']" position="before">
             <t t-if="this.props.value.id">
-                <i t-if="this.props.value.allow_out_payment" class="fa fa-shield text-success align-self-center o_input_box_overlay_start" title="Trusted"/>
-                <i t-else="" class="fa fa-exclamation-circle text-danger o_input_box_overlay_start" title="Untrusted"/>
+                <i t-if="this.props.value.allow_out_payment" class="me-1 fa fa-shield text-success align-self-center" title="Trusted"/>
+                <i t-else="" class="me-1 fa fa-exclamation-circle text-danger align-self-center" title="Untrusted"/>
             </t>
         </xpath>
     </t>

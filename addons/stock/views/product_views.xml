@@ -187,15 +187,17 @@
                     <!-- Replace the single line tacking + qty without stock with 2 individual lines with stock (tracking + tracking method // qty) -->
                     <field name="tracking" placeholder="None" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
-                    <label for="qty_available" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
-                    <div name="qty_available_with_stock" class="o_input_box" invisible="not is_storable or not tracking" groups="stock.group_stock_user">
+                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
+                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not tracking" groups="stock.group_stock_user">
                         <a type="object" name="action_open_quants"
                            invisible="not show_qty_update_button" groups="stock.group_stock_manager">
                             <field name="qty_available" readonly="True"/>
                         </a>
-                        <field name="qty_available" invisible="show_qty_update_button" groups="stock.group_stock_manager"/>
-                        <field name="qty_available" readonly="True" groups="!stock.group_stock_manager"/>
-                        <field groups="uom.group_uom" name="uom_name" class="o_input_box_overlay_end"/>
+                        <field name="qty_available" invisible="show_qty_update_button" groups="stock.group_stock_manager" style="max-width: fit-content;"/>
+                        <field name="qty_available" readonly="True" groups="!stock.group_stock_manager" style="max-width: fit-content;"/>
+                        <span name="uom_span" groups="uom.group_uom">
+                            <field name="uom_name" class="oe_inline"/>
+                        </span>
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='is_storable']" position="attributes">
@@ -205,9 +207,8 @@
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
                     <label for="sale_delay" invisible="not sale_ok"/>
-                    <div class="o_input_box" invisible="not sale_ok">
-                        <field name="sale_delay"/>
-                        <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                    <div invisible="not sale_ok">
+                        <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
                     </div>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
@@ -225,9 +226,9 @@
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
                     <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="tracking not in ['lot', 'serial']">
                         <label for="serial_prefix_format" string="Custom Lot/Serial"/>
-                        <div class="o_input_box">
-                            <field name="serial_prefix_format"/>
-                            <field class="o_input_box_overlay_end o_input_box_overlay_inline" name="next_serial"/>
+                        <div class="d-flex">
+                            <field name="serial_prefix_format" style="max-width: 150px;"/>
+                            <field name="next_serial" style="max-width: 150px;"/>
                         </div>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">

@@ -7,7 +7,7 @@
             <div class="progress" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-on-click="this.onProgressClick" t-att-style="this.isEditable ? 'cursor: pointer' : ''">
                 <div t-attf-class="{{ this.progressBarColorClass }}" t-att-style="'width: min(' + 100 * this.currentValue / this.maxValue + '%, 100%)'"></div>
             </div>
-            <div class="o_progressbar_value o_input_box w-25">
+            <div class="o_progressbar_value d-flex gap-1 flex-shrink-0 text-nowrap">
                 <t t-if="this.isPercentage">
                     <input
                         t-if="this.isEditable"
@@ -20,7 +20,7 @@
                         t-on-focus="this.onInputFocus"
                         t-on-blur="this.onInputBlur"
                     />
-                    <div t-attf-class="d-flex {{ this.isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
+                    <div t-attf-class="d-flex {{ this.isEditable ? 'w-auto' : '' }} ">
                         <t t-if="!this.isEditable" t-out="this.formatCurrentValue(true)"/>
                         %
                     </div>
@@ -36,7 +36,7 @@
                         t-on-focus="this.onInputFocus"
                         t-on-blur="this.onInputBlur"
                     />
-                    <div t-attf-class="d-flex {{ this.isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
+                    <div t-attf-class="d-flex {{ this.isEditable ? 'w-auto' : '' }} ">
                         <span t-if="!this.isEditable" t-out="this.formatCurrentValue(true)"/>
                         /
                         <span t-out="this.formatMaxValue(true)"/>

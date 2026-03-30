@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CopyClipboardField">
-        <div class="o_input_box">
+        <div class="d-flex w-100 text-truncate">
             <Field t-props="this.fieldProps"/>
             <CopyButton t-if="this.props.record.data[this.props.name]" className="this.copyButtonClassName" content="this.props.record.data[this.props.name]" icon="this.copyButtonIcon" successText="this.successText"/>
         </div>

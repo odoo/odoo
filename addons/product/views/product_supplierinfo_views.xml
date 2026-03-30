@@ -14,9 +14,8 @@
                             <field name="product_name"/>
                             <field name="product_code"/>
                             <label for="delay"/>
-                            <div class="o_input_box">
-                                <field name="delay" />
-                                <span class="o_input_box_overlay_end o_input_box_overlay_inline">days</span>
+                            <div>
+                                <field name="delay" class="oe_inline"/> days
                             </div>
                         </group>
                         <group string="Pricelist">
@@ -32,15 +31,11 @@
                             <div class="o_row">
                                 <field name="price" class="oe_inline" /><field name="currency_id" groups="base.group_multi_currency" options="{'no_open': True}"/>
                             </div>
+                            <label for="date_start" string="Validity"/>
                             <div class="o_row">
-                                <div class="o_cell">
-                                    <label for="date_start" string="Validity Start"/>
-                                    <field name="date_start"/>
-                                </div>
-                                <div class="o_cell">
-                                    <label for="date_end" string="to"/>
-                                    <field name="date_end"/>
-                                </div>
+                                <field name="date_start" class="oe_inline"/>
+                                to
+                                <field name="date_end" class="oe_inline"/>
                             </div>
                             <field name="discount"/>
                             <field name="company_id" options="{'no_create': True}"/>

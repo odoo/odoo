@@ -76,7 +76,7 @@
         }
 
         .o_inner_group {
-            :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box) {
+            :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
                 @extend %-o-field-box;
 
                 &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
@@ -139,6 +139,21 @@
                     }
                 }
             }
+        }
+
+        .o_outlined {
+            @extend %-o-field-box;
+
+            .o_field_widget {
+                --fieldWidget-margin-bottom: 0px;
+            }
+        }
+
+        .o_form_label:has(+ .o_outlined) {
+            @extend %-o-field-label;
+            display: block;
+            width: max-content !important;
+            margin-bottom: calc(-1 * var(--body-font-size)) !important;
         }
     }
 }

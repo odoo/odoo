@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="sale_timesheet.SoLineCreateButton">
-        <div class="o_input_box">
+        <div class="d-flex align-items-center gap-1">
             <Many2One t-props="this.m2oProps"/>
             <button
                 t-if="!this.props.readonly and !this.props.record.data.sale_line_id"
-                t-attf-class="btn btn-link o_input_box_overlay_end"
+                t-attf-class="btn btn-link"
                 tabindex="-1"
                 aria-label="Create Sales Order"
                 data-tooltip="Create Sales Order"
