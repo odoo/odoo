@@ -28,11 +28,21 @@ class SaleOrder(models.Model):
     ]
 
     website_id = fields.Many2one(
+        string="eCommerce Website",
         help="Website through which this order was placed for eCommerce orders.",
         comodel_name="website",
         readonly=True,
         check_company=True,
-    )
+    )  # Website through which the eCommerce order is placed.
+
+    assigned_website_id = fields.Many2one(
+        string="Website",
+        comodel_name="website",
+        check_company=True,
+        compute="_compute_assigned_website_id",
+        store=True,
+        help="Website linked to this order.",
+    )  # Mirror the website_id field or the website set manually by the user.
 
     cart_recovery_email_sent = fields.Boolean(string="Cart recovery email already sent")
 
@@ -59,6 +69,12 @@ class SaleOrder(models.Model):
     is_rating_email_sent = fields.Boolean(string="Rating email already sent")
 
     # === COMPUTE METHODS ===#
+
+    @api.depends("website_id")
+    def _compute_assigned_website_id(self):
+        for order in self:
+            if not order.assigned_website_id:
+                order.assigned_website_id = order.website_id
 
     @api.depends("order_line")
     def _compute_website_order_line(self):
@@ -1049,6 +1065,12 @@ class SaleOrder(models.Model):
             self.env["ir.cron"]._commit_progress(processed=1)
 
     # === TOOLING ===#
+
+    def _compute_access_url(self):
+        super()._compute_access_url()
+        website_specific_orders = self.filtered("assigned_website_id")
+        for order in website_specific_orders:
+            order.access_url = f"{order.assigned_website_id.get_base_url()}/my/orders/{order.id}"
 
     def _is_anonymous_cart(self):
         """Return whether the cart was created by the public user and no address was added yet.
