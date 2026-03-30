@@ -79,7 +79,6 @@
             'barcodes/static/src/barcode_service.js',
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/app/utils/convert_python_template.js',
-            'point_of_sale/static/src/proxy_trap.js',
             'point_of_sale/static/src/lazy_getter.js',
             'point_of_sale/static/src/app/utils/init_lna.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
