@@ -223,7 +223,96 @@ class AccountEdiProxyClientUser(models.Model):
                 params={'message_uuids': message_uuids},
             )
 
+<<<<<<< bd2821145b325eed55f2ac04a79050325cb58c6f
             processed_uuids, moves = edi_user._peppol_process_new_messages(all_messages)
+||||||| 94c27b0e477cbfaf5cf89de24fea9fc0b6003275
+            for uuid, content in all_messages.items():
+                enc_key = content["enc_key"]
+                document_content = content["document"]
+                filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+                decoded_document = edi_user._decrypt_data(document_content, enc_key)
+                attachment_vals = {
+                    'name': f'{filename}.xml',
+                    'raw': decoded_document,
+                    'type': 'binary',
+                    'mimetype': 'application/xml',
+                }
+
+                try:
+                    attachment = self.env['ir.attachment'].create(attachment_vals)
+                    move = journal\
+                        .with_context(
+                            default_move_type='in_invoice',
+                            default_peppol_move_state=content['state'],
+                            default_peppol_message_uuid=uuid,
+                            default_journal_id=journal.id,
+                        )\
+                        ._create_document_from_attachment(attachment.id)
+                    move._message_log(body=_('Peppol document has been received successfully'))
+                # pylint: disable=broad-except
+                except Exception:  # noqa: BLE001
+                    # if the invoice creation fails for any reason,
+                    # we want to create an empty invoice with the attachment
+                    move = self.env['account.move'].create({
+                        'move_type': 'in_invoice',
+                        'peppol_move_state': 'done',
+                        'company_id': company.id,
+                        'peppol_message_uuid': uuid,
+                    })
+                    attachment_vals.update({
+                        'res_model': 'account.move',
+                        'res_id': move.id,
+                    })
+                    self.env['ir.attachment'].create(attachment_vals)
+                if 'is_in_extractable_state' in move._fields:
+                    move.is_in_extractable_state = False
+
+                proxy_acks.append(uuid)
+=======
+            for uuid, content in all_messages.items():
+                enc_key = content["enc_key"]
+                document_content = content["document"]
+                filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+                decoded_document = edi_user._decrypt_data(document_content, enc_key)
+                attachment_vals = {
+                    'name': f'{filename}.xml',
+                    'raw': decoded_document,
+                    'type': 'binary',
+                    'mimetype': 'application/xml',
+                }
+
+                try:
+                    attachment = self.env['ir.attachment'].create(attachment_vals)
+                    move = journal\
+                        .with_context(
+                            default_move_type='in_invoice',
+                            default_peppol_move_state=content['state'],
+                            default_peppol_message_uuid=uuid,
+                            default_journal_id=journal.id,
+                        )\
+                        ._create_document_from_attachment(attachment.id)
+                    move._message_log(body=_('Peppol document has been received successfully'))
+                # pylint: disable=broad-except
+                except Exception:  # noqa: BLE001
+                    # if the invoice creation fails for any reason,
+                    # we want to create an empty invoice with the attachment
+                    move = self.env['account.move'].create({
+                        'move_type': 'in_invoice',
+                        'peppol_move_state': 'done',
+                        'company_id': company.id,
+                        'peppol_message_uuid': uuid,
+                    })
+                    attachment_vals.update({
+                        'res_model': 'account.move',
+                        'res_id': move.id,
+                    })
+                    self.env['ir.attachment'].create(attachment_vals)
+                    _logger.exception('Error while processing the Peppol document with uuid %s', uuid)
+                if 'is_in_extractable_state' in move._fields:
+                    move.is_in_extractable_state = False
+
+                proxy_acks.append(uuid)
+>>>>>>> b7bbab6d04b513f7ee89d5626878e5aaa722fcd5
 
             if not tools.config['test_enable']:
                 self.env.cr.commit()
