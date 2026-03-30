@@ -273,11 +273,25 @@ class ResPartner(models.Model):
                                 break
                     partner.peppol_eas = new_eas
 
+<<<<<<< b9986cf2574d1126aa3dbd19c60ef8bd0d686d10
     @api.depends_context('company')
     @api.depends('company_id')
     def _compute_available_peppol_eas(self):
         # TO OVERRIDE
         self.available_peppol_eas = list(dict(self._fields['peppol_eas'].selection))
+||||||| 2f625d0cb2171628fa4984ee2870a1bb975b631e
+    @api.depends('ubl_cii_format')
+    def _compute_hide_peppol_fields(self):
+        """ Hides the people fields depending on the UBL format. Can be extended to add different hiding conditions. """
+        for partner in self:
+            partner.hide_peppol_fields = not partner.ubl_cii_format or partner.ubl_cii_format == 'facturx'
+=======
+    @api.depends('ubl_cii_format')
+    def _compute_hide_peppol_fields(self):
+        """ Hides the people fields depending on the UBL format. Can be extended to add different hiding conditions. """
+        for partner in self:
+            partner.hide_peppol_fields = not partner.ubl_cii_format or partner.ubl_cii_format in ('zugferd', 'facturx')
+>>>>>>> 04359ab2dcb7b10336f6258ea76b6ec9f959f45c
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""
