@@ -542,7 +542,7 @@ class ResourceCalendar(models.Model):
                     tz_dates[tz, end_dt] = end
                 dt0 = leave_date_from.astimezone(tz)
                 dt1 = leave_date_to.astimezone(tz)
-                if leave_resource and leave_resource._is_fully_flexible():
+                if leave_resource and leave_resource._is_flexible():
                     dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
@@ -587,7 +587,7 @@ class ResourceCalendar(models.Model):
             if resource and resource._is_flexible():
                 leaves = self._leave_intervals_batch(start_dt, end_dt, resource, domain, tz=tz)
                 if res_leaves := leaves.get(resource.id, []):
-                    result[resource.id] = [(i[0], i[1]) for i in res_leaves]
+                    result[resource.id] = [(i[0].astimezone(UTC), i[1].astimezone(UTC)) for i in res_leaves]
                 continue
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
             # start + flatten(intervals) + end
