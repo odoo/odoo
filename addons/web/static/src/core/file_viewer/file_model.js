@@ -95,6 +95,7 @@ export const FileModelMixin = (T) =>
                 "video/mp4",
                 "video/webm",
                 "video/ogg",
+                "video/quicktime",
             ];
             return videoMimeTypes.includes(this.mimetype);
         }
