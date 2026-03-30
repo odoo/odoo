@@ -44,6 +44,7 @@ export class SMLX2ManyField extends X2ManyField {
             ...context,
             single_product: true,
             list_view_ref: "stock.view_stock_quant_tree_simple",
+            show_lot_removal_date: this.props.context.show_lot_removal_date,
         };
         const productName = this.props.record.data.product_id.display_name;
         const title = _t("Add line: %s", productName);

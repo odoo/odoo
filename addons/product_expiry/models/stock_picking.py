@@ -41,3 +41,12 @@ class StockPicking(models.Model):
             'target': 'new',
             'context': context,
         }
+
+    def action_detailed_operations(self):
+        action = super().action_detailed_operations()
+        if any(self.move_ids.mapped('use_expiration_date')):
+            action['context'].update({
+                'show_lot_removal_date': True,
+                'show_lot_expiration_date': self.has_tracking and self.use_create_lots,
+            })
+        return action
