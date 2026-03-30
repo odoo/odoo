@@ -21,6 +21,12 @@ To publish a member, set a *Level* in their contact form and click the *Publish*
         'demo/res_partner_demo.xml',
     ],
     'assets': {
+        'web._assets_primary_variables': [
+            'website_partnership/static/src/scss/primary_variable.scss',
+        ],
+        'web.assets_frontend': [
+            'website_partnership/static/src/scss/website_partnership.scss',
+        ],
         'website.website_builder_assets': [
             'website_partnership/static/src/website_builder/**/*',
         ],
