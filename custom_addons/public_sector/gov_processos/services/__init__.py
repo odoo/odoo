@@ -1,3 +1,5 @@
+from .gov_html_pdf_service import GovHtmlPdfService
+from .gov_latex_jinja_service import GovLatexJinjaService
 from .gov_odoo_bridge import GovOdooBridge
 from .gov_template_registry import GovTemplateRegistry
 from .gov_typst_document_builder import GovTypstDocumentBuilder

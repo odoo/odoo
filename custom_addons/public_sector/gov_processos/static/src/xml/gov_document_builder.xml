@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+<t t-name="gov_processos.GovDocumentBuilder">
+  <div class="gov-builder-root">
+
+    <!-- TOPBAR -->
+    <div class="gov-builder-topbar">
+      <div class="gov-builder-topbar-left">
+        <button class="gov-btn gov-btn-ghost" t-on-click="onBack" title="Voltar ao documento">
+          <i class="fa fa-arrow-left"/> Voltar
+        </button>
+        <span class="gov-builder-docname" t-if="state.doc">
+          <i class="fa fa-file-text-o"/> <t t-esc="state.doc.name"/>
+        </span>
+      </div>
+      <div class="gov-builder-topbar-center">
+        <span class="gov-builder-title">✦ Construtor Visual de Documento</span>
+      </div>
+      <div class="gov-builder-topbar-right">
+        <span class="gov-builder-badge" t-esc="blockCount + ' blocos'"/>
+        <button class="gov-btn gov-btn-secondary" t-on-click="onGeneratePdf"
+                t-att-disabled="state.saving">
+          <i class="fa fa-file-pdf-o"/> Gerar PDF
+        </button>
+        <button class="gov-btn gov-btn-primary" t-on-click="onSave"
+                t-att-disabled="state.saving">
+          <i t-att-class="state.saving ? 'fa fa-spinner fa-spin' : 'fa fa-save'"/>
+          <t t-if="state.saving">Salvando...</t>
+          <t t-else="">Salvar Layout</t>
+        </button>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div t-if="state.loading" class="gov-builder-loading">
+      <i class="fa fa-spinner fa-spin fa-2x"/>
+      <p>Carregando documento...</p>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div t-else="" class="gov-builder-layout">
+
+      <!-- SIDEBAR: catálogo de blocos -->
+      <div class="gov-builder-sidebar">
+        <div class="gov-sidebar-header">
+          <span class="gov-sidebar-title">
+            <i class="fa fa-th-large"/> Biblioteca de Blocos
+          </span>
+          <input
+            class="gov-sidebar-search"
+            type="text"
+            placeholder="Buscar bloco..."
+            t-model="state.searchQuery"
+          />
+        </div>
+        <div class="gov-sidebar-blocks">
+          <t t-foreach="filteredCatalog" t-as="blockDef" t-key="blockDef.type">
+            <div
+              class="gov-catalog-block"
+              draggable="true"
+              t-on-dragstart="(ev) => this.onCatalogDragStart(ev, blockDef)"
+              t-on-click="() => this.addBlock(blockDef.type)"
+              t-att-title="blockDef.description"
+            >
+              <span class="gov-catalog-block-label">
+                <t t-esc="blockDef.label"/>
+              </span>
+              <span class="gov-catalog-block-desc">
+                <t t-esc="blockDef.description"/>
+              </span>
+              <span class="gov-catalog-block-hint">
+                <i class="fa fa-arrows-alt"/> arraste ou clique
+              </span>
+            </div>
+          </t>
+        </div>
+      </div>
+
+      <!-- PRANCHETA / CANVAS -->
+      <div class="gov-builder-canvas-wrap">
+
+        <!-- Drop zone: início da lista -->
+        <div
+          class="gov-drop-zone"
+          t-att-class="state.dragOverIndex === 0 ? 'gov-drop-zone--active' : ''"
+          t-on-dragover="(ev) => this.onCanvasDragOver(ev, 0)"
+          t-on-dragleave="onCanvasDragLeave"
+          t-on-drop="(ev) => this.onCanvasDrop(ev, 0)"
+        />
+
+        <!-- Blocos na prancheta -->
+        <t t-foreach="state.blocks" t-as="block" t-key="block.id">
+
+          <!-- Bloco -->
+          <div
+            class="gov-canvas-block"
+            t-att-class="state.activeBlockId === block.id ? 'gov-canvas-block--active' : ''"
+            draggable="true"
+            t-on-dragstart="(ev) => this.onBlockDragStart(ev, block_index)"
+          >
+            <!-- Cabeçalho do bloco -->
+            <div class="gov-block-header">
+              <span class="gov-block-handle" title="Arrastar para reordenar">
+                <i class="fa fa-grip-vertical"/>
+              </span>
+              <span class="gov-block-type-label">
+                <t t-esc="block.label"/>
+              </span>
+              <div class="gov-block-actions">
+                <button class="gov-block-btn" title="Mover para cima"
+                        t-on-click="() => this.moveUp(block_index)"
+                        t-att-disabled="block_index === 0">
+                  <i class="fa fa-chevron-up"/>
+                </button>
+                <button class="gov-block-btn" title="Mover para baixo"
+                        t-on-click="() => this.moveDown(block_index)"
+                        t-att-disabled="block_index === state.blocks.length - 1">
+                  <i class="fa fa-chevron-down"/>
+                </button>
+                <button class="gov-block-btn gov-block-btn--edit" title="Editar conteúdo"
+                        t-if="block.editable"
+                        t-on-click="() => this.toggleEdit(block.id)">
+                  <i t-att-class="state.activeBlockId === block.id ? 'fa fa-check' : 'fa fa-pencil'"/>
+                </button>
+                <button class="gov-block-btn gov-block-btn--danger" title="Remover bloco"
+                        t-on-click="() => this.removeBlock(block.id)">
+                  <i class="fa fa-trash"/>
+                </button>
+              </div>
+            </div>
+
+            <!-- Preview do bloco -->
+            <div class="gov-block-preview" t-if="state.activeBlockId !== block.id">
+              <GovBlockPreview block="block"/>
+            </div>
+
+            <!-- Editor inline quando ativo -->
+            <div class="gov-block-editor" t-if="state.activeBlockId === block.id">
+              <GovBlockEditor block="block"
+                              onUpdate="(field, val) => this.updateBlockContent(block.id, field, val)"/>
+            </div>
+          </div>
+
+          <!-- Drop zone entre blocos -->
+          <div
+            class="gov-drop-zone"
+            t-att-class="state.dragOverIndex === block_index + 1 ? 'gov-drop-zone--active' : ''"
+            t-on-dragover="(ev) => this.onCanvasDragOver(ev, block_index + 1)"
+            t-on-dragleave="onCanvasDragLeave"
+            t-on-drop="(ev) => this.onCanvasDrop(ev, block_index + 1)"
+          />
+
+        </t>
+
+        <!-- Estado vazio -->
+        <div class="gov-canvas-empty" t-if="state.blocks.length === 0">
+          <i class="fa fa-hand-pointer-o fa-3x gov-canvas-empty-icon"/>
+          <p>Arraste blocos da biblioteca ou clique neles para adicionar</p>
+          <p class="gov-canvas-empty-hint">Cada bloco representa uma seção do documento</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</t>
+
+<!-- Sub-componente: Preview do bloco -->
+<t t-name="gov_processos.GovBlockPreview">
+  <div class="gov-preview-inner">
+    <t t-if="props.block.type === 'titulo'">
+      <strong t-esc="props.block.content.titulo or '(sem título)'"/>
+      <span t-if="props.block.content.subtitulo" class="gov-preview-sub">
+        — <t t-esc="props.block.content.subtitulo"/>
+      </span>
+    </t>
+    <t t-elif="props.block.type === 'texto_livre' or props.block.type === 'objeto'
+               or props.block.type === 'justificativa' or props.block.type === 'base_legal'
+               or props.block.type === 'encaminhamento'">
+      <div t-out="props.block.content.html or '(vazio)'"/>
+    </t>
+    <t t-elif="props.block.type === 'quadro_resumo'">
+      <pre class="gov-preview-pre" t-esc="props.block.content.linhas or '(vazio)'"/>
+    </t>
+    <t t-elif="props.block.type === 'pontos_chave'">
+      <pre class="gov-preview-pre" t-esc="props.block.content.texto or '(vazio)'"/>
+    </t>
+    <t t-elif="props.block.type === 'assinatura'">
+      <span>✍️ <t t-esc="props.block.content.nome or '(nome)'"/> —
+        <t t-esc="props.block.content.cargo or '(cargo)'"/>
+      </span>
+    </t>
+    <t t-else="">
+      <span class="gov-preview-auto">
+        ✓ Bloco preenchido automaticamente com dados do processo
+      </span>
+    </t>
+  </div>
+</t>
+
+<!-- Sub-componente: Editor inline do bloco -->
+<t t-name="gov_processos.GovBlockEditor">
+  <div class="gov-editor-inner">
+
+    <!-- Titulo -->
+    <t t-if="props.block.type === 'titulo'">
+      <div class="gov-field">
+        <label>Título</label>
+        <input type="text" class="gov-input"
+               t-att-value="props.block.content.titulo"
+               t-on-input="(ev) => props.onUpdate('titulo', ev.target.value)"/>
+      </div>
+      <div class="gov-field">
+        <label>Subtítulo</label>
+        <input type="text" class="gov-input"
+               t-att-value="props.block.content.subtitulo"
+               t-on-input="(ev) => props.onUpdate('subtitulo', ev.target.value)"/>
+      </div>
+    </t>
+
+    <!-- Campos HTML: usa o widget de texto nativo do Odoo -->
+    <t t-elif="props.block.type === 'texto_livre' or props.block.type === 'objeto'
+               or props.block.type === 'justificativa' or props.block.type === 'base_legal'
+               or props.block.type === 'encaminhamento'">
+      <div class="gov-field gov-field--full">
+        <label>Conteúdo (suporta /comandos, títulos, listas...)</label>
+        <div
+          class="gov-html-editor"
+          contenteditable="true"
+          t-ref="htmlEditor"
+          t-on-input="(ev) => props.onUpdate('html', ev.target.innerHTML)"
+          t-out="props.block.content.html"
+        />
+        <span class="gov-field-hint">
+          Use / para comandos: /h1, /h2, /lista, /tabela...
+        </span>
+      </div>
+    </t>
+
+    <!-- Quadro resumo: linhas no formato "Rótulo: valor" -->
+    <t t-elif="props.block.type === 'quadro_resumo'">
+      <div class="gov-field gov-field--full">
+        <label>Linhas (formato: Rótulo: valor)</label>
+        <textarea class="gov-textarea" rows="6"
+                  t-att-value="props.block.content.linhas"
+                  t-on-input="(ev) => props.onUpdate('linhas', ev.target.value)"/>
+        <span class="gov-field-hint">Exemplo: Valor estimado: R$ 50.000,00</span>
+      </div>
+    </t>
+
+    <!-- Pontos-chave: um por linha -->
+    <t t-elif="props.block.type === 'pontos_chave'">
+      <div class="gov-field gov-field--full">
+        <label>Pontos (um por linha)</label>
+        <textarea class="gov-textarea" rows="6"
+                  t-att-value="props.block.content.texto"
+                  t-on-input="(ev) => props.onUpdate('texto', ev.target.value)"/>
+      </div>
+    </t>
+
+    <!-- Assinatura -->
+    <t t-elif="props.block.type === 'assinatura'">
+      <div class="gov-field">
+        <label>Nome do Assinante</label>
+        <input type="text" class="gov-input"
+               t-att-value="props.block.content.nome"
+               t-on-input="(ev) => props.onUpdate('nome', ev.target.value)"/>
+      </div>
+      <div class="gov-field">
+        <label>Cargo / Função</label>
+        <input type="text" class="gov-input"
+               t-att-value="props.block.content.cargo"
+               t-on-input="(ev) => props.onUpdate('cargo', ev.target.value)"/>
+      </div>
+    </t>
+
+  </div>
+</t>
+
+</templates>

@@ -108,6 +108,13 @@
                         type="object"
                         invisible="state not in ('revisao','aprovado')"
                     />
+                    <button
+                        name="action_abrir_construtor_visual"
+                        string="🧩 Construtor Visual"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state == 'assinado'"
+                    />
                 </header>
 
                 <sheet>

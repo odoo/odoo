@@ -51,8 +51,11 @@
     "assets": {
         "web.assets_backend": [
             "gov_processos/static/src/css/gov_dashboard.css",
+            "gov_processos/static/src/css/gov_document_builder.css",
             "gov_processos/static/src/js/gov_dashboard.js",
+            "gov_processos/static/src/js/gov_document_builder.js",
             "gov_processos/static/src/xml/gov_dashboard.xml",
+            "gov_processos/static/src/xml/gov_document_builder.xml",
         ],
     },
     "installable": True,
