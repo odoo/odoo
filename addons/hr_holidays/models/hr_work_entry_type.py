@@ -271,7 +271,7 @@ class HrWorkEntryType(models.Model):
         target_date = self.env.context.get('leave_date_from') or self.env.context.get('default_date_from')
         data_days = self.get_allocation_data(employee, target_date)[employee]
         for work_entry_type in self:
-            result = [item for item in data_days if item[0] == work_entry_type.name]
+            result = [item for item in data_days if item[3] == work_entry_type.id]
             work_entry_type_tuple = result[0] if result else ('', {})
             work_entry_type.max_leaves = work_entry_type_tuple[1].get('max_leaves', 0)
             work_entry_type.leaves_taken = work_entry_type_tuple[1].get('leaves_taken', 0)
