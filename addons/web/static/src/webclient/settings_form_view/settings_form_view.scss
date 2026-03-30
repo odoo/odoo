@@ -182,3 +182,9 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
        }
    }
 }
+
+@include media-breakpoint-down(md) {
+    .o_form_renderer .o_setting_left_pane .o_boolean_toggle.form-switch {
+        padding-left: $form-switch-width;
+    }
+}
