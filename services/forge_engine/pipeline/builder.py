@@ -21,6 +21,10 @@ MODULE_NAME_RE = re.compile(r"^[a-z0-9_]+$")
 MODEL_NAME_RE = re.compile(r"^[a-z0-9_]+\.[a-z0-9_.]+$")
 
 
+def utcnow_naive() -> datetime:
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
 @dataclass
 class ModuleGraph:
     app: dict[str, Any]
@@ -377,6 +381,7 @@ async def create_build(
     if validation_errors:
         build_record = registry.forge_build(
             module_id=module_id,
+            build_date=utcnow_naive(),
             state="failed",
             triggered_by=triggered_by,
             log="\n".join(
@@ -406,6 +411,7 @@ async def create_build(
         conflicts = detect_export_conflicts(representation, generated_files, previous_artifacts)
     build_record = registry.forge_build(
         module_id=module_id,
+        build_date=utcnow_naive(),
         state="failed" if conflicts else "success",
         triggered_by=triggered_by,
         log="\n".join(conflicts),
@@ -450,6 +456,7 @@ async def create_snapshot_record(
     snapshot_record = registry.forge_snapshot(
         module_id=module_id,
         name=name or f"{graph.module['technical_name']}@{timestamp}",
+        created_at=utcnow_naive(),
         created_by=created_by,
         state_json=stable_json(payload),
     )
@@ -457,6 +464,59 @@ async def create_snapshot_record(
     await session.commit()
     await session.refresh(snapshot_record)
     return snapshot_record
+
+
+async def list_snapshots(session: AsyncSession, module_id: int) -> list[dict[str, Any]]:
+    registry = await get_registry()
+    module_record = await session.get(registry.forge_module, module_id)
+    if module_record is None:
+        raise LookupError(f"Forge module {module_id} was not found")
+    snapshot_rows = await _fetch_rows(
+        session,
+        registry.forge_snapshot,
+        registry.forge_snapshot.module_id == module_id,
+    )
+    return sorted(
+        (
+            {
+                "id": row["id"],
+                "name": row["name"],
+                "created_at": row.get("created_at"),
+                "created_by": row.get("created_by"),
+            }
+            for row in snapshot_rows
+        ),
+        key=lambda row: (
+            row["created_at"].isoformat() if row.get("created_at") else "",
+            row["id"],
+        ),
+        reverse=True,
+    )
+
+
+async def get_last_successful_artifacts(
+    session: AsyncSession,
+    module_id: int,
+) -> tuple[ModuleGraph, list[dict[str, Any]]]:
+    registry = await get_registry()
+    graph = await load_module_graph(session, module_id)
+    build_row = await session.scalar(
+        select(registry.forge_build)
+        .where(
+            registry.forge_build.module_id == module_id,
+            registry.forge_build.state == "success",
+        )
+        .order_by(registry.forge_build.build_date.desc(), registry.forge_build.id.desc())
+        .limit(1)
+    )
+    if build_row is None:
+        return graph, []
+    artifacts = await _fetch_rows(
+        session,
+        registry.forge_artifact,
+        registry.forge_artifact.build_id == build_row.id,
+    )
+    return graph, artifacts
 
 
 async def _delete_module_state(

@@ -1,19 +1,24 @@
+from pathlib import Path
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..config import get_settings
 from ..db.session import get_session
 from ..pipeline import (
     create_build,
     create_snapshot_record,
     diff_module,
+    get_last_successful_artifacts,
+    list_snapshots,
     load_module_graph,
     publish_module,
     restore_snapshot,
     validate_module_graph,
 )
+from ..pipeline.codegen import collect_block_conflicts
 
 
 router = APIRouter()
@@ -74,6 +79,7 @@ async def build_pipeline(
                 "path": generated.path,
                 "content_hash": generated.content_hash,
                 "model_hash": generated.model_hash,
+                "size_bytes": len(generated.content.encode("utf-8")),
             }
             for generated in execution.files
         ],
@@ -122,6 +128,53 @@ async def snapshot_pipeline(
         "snapshot_id": snapshot.id,
         "module_id": snapshot.module_id,
         "name": snapshot.name,
+    }
+
+
+@router.get("/pipeline/{module_id}/snapshots")
+async def snapshots_pipeline(
+    module_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> list[dict[str, object]]:
+    try:
+        return await list_snapshots(session, module_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+
+@router.get("/pipeline/{module_id}/conflicts")
+async def conflicts_pipeline(
+    module_id: int,
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, object]:
+    try:
+        graph, artifacts = await get_last_successful_artifacts(session, module_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    module_root = get_settings().module_output_dir(
+        graph.app["technical_name"],
+        graph.module["technical_name"],
+    )
+    conflicts: list[dict[str, object]] = []
+    warnings: list[str] = []
+    for artifact in artifacts:
+        target_path = module_root / artifact["file_path"]
+        if not target_path.exists():
+            warnings.append(f"{artifact['file_path']}: file not found in output path")
+            continue
+        current_content = target_path.read_text(encoding="utf-8")
+        conflicts.extend(
+            collect_block_conflicts(
+                artifact_id=artifact["id"],
+                file_path=artifact["file_path"],
+                generated_content=artifact.get("content") or "",
+                current_content=current_content,
+            )
+        )
+    return {
+        "conflicts": conflicts,
+        "warnings": warnings,
+        "output_path": str(Path(module_root)),
     }
 
 

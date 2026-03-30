@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import BaseModel
-from sqlalchemy import delete, select
+from sqlalchemy import delete, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.inspection import inspect as sa_inspect
 
@@ -39,10 +39,34 @@ def row_to_dict(record: Any) -> dict[str, Any]:
 
 
 @router.get("")
-async def list_modules(session: AsyncSession = Depends(get_session)) -> list[dict[str, Any]]:
+async def list_modules(
+    technical_name: str | None = None,
+    app: str | None = None,
+    session: AsyncSession = Depends(get_session),
+) -> list[dict[str, Any]]:
     registry = await get_registry()
-    records = await session.scalars(select(registry.forge_module).order_by(registry.forge_module.id))
-    return [row_to_dict(record) for record in records.all()]
+    statement = (
+        select(registry.forge_module, registry.forge_app)
+        .join(registry.forge_app, registry.forge_module.app_id == registry.forge_app.id)
+        .order_by(registry.forge_module.id)
+    )
+    if technical_name:
+        statement = statement.where(registry.forge_module.technical_name == technical_name)
+    if app:
+        statement = statement.where(
+            or_(
+                registry.forge_app.technical_name == app,
+                registry.forge_app.name == app,
+            )
+        )
+    rows = await session.execute(statement)
+    result: list[dict[str, Any]] = []
+    for module_record, app_record in rows.all():
+        module_row = row_to_dict(module_record)
+        module_row["app_name"] = app_record.name
+        module_row["app_technical_name"] = app_record.technical_name
+        result.append(module_row)
+    return result
 
 
 @router.get("/{module_id}")

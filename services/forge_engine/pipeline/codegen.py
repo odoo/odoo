@@ -18,6 +18,12 @@ PY_CUSTOM_BLOCK_RE = re.compile(
 XML_CUSTOM_BLOCK_RE = re.compile(
     r"(?ms)<!-- forge:custom begin (?P<name>[a-zA-Z0-9_.:-]+) -->\n?(?P<body>.*?)<!-- forge:custom end (?P=name) -->"
 )
+PY_GENERATED_BLOCK_RE = re.compile(
+    r"(?ms)^# forge:generated begin (?P<name>[a-zA-Z0-9_.:-]+)\n(?P<body>.*?)^# forge:generated end (?P=name)\n?"
+)
+XML_GENERATED_BLOCK_RE = re.compile(
+    r"(?ms)<!-- forge:generated begin (?P<name>[a-zA-Z0-9_.:-]+) -->\n?(?P<body>.*?)<!-- forge:generated end (?P=name) -->"
+)
 SCALAR_FIELD_TYPES = {
     "char": "Char",
     "text": "Text",
@@ -67,6 +73,53 @@ def _parse_custom_blocks(content: str, path: str) -> dict[str, str]:
     if path.endswith(".xml"):
         return {match.group("name"): match.group("body") for match in XML_CUSTOM_BLOCK_RE.finditer(content)}
     return {}
+
+
+def parse_generated_blocks(content: str, path: str) -> dict[str, str]:
+    if path.endswith(".py"):
+        return {
+            match.group("name"): match.group("body")
+            for match in PY_GENERATED_BLOCK_RE.finditer(content)
+        }
+    if path.endswith(".xml"):
+        return {
+            match.group("name"): match.group("body")
+            for match in XML_GENERATED_BLOCK_RE.finditer(content)
+        }
+    return {}
+
+
+def comparable_generated_blocks(content: str, path: str) -> dict[str, str]:
+    blocks = parse_generated_blocks(content, path)
+    if blocks:
+        return blocks
+    return {"__file__": content}
+
+
+def collect_block_conflicts(
+    artifact_id: int,
+    file_path: str,
+    generated_content: str,
+    current_content: str,
+) -> list[dict[str, str | int | None]]:
+    generated_blocks = comparable_generated_blocks(generated_content, file_path)
+    current_blocks = comparable_generated_blocks(current_content, file_path)
+    conflicts: list[dict[str, str | int | None]] = []
+    for block_id in sorted(generated_blocks):
+        generated_block = generated_blocks.get(block_id)
+        current_block = current_blocks.get(block_id)
+        if generated_block == current_block:
+            continue
+        conflicts.append(
+            {
+                "artifact_id": artifact_id,
+                "file_path": file_path,
+                "block_id": block_id,
+                "generated_content": generated_block,
+                "current_content": current_block,
+            }
+        )
+    return conflicts
 
 
 def _merge_custom_blocks(content: str, existing_content: str | None, path: str) -> str:

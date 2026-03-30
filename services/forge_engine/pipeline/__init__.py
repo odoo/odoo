@@ -4,6 +4,8 @@ from .builder import (
     build_representation,
     create_build,
     create_snapshot_record,
+    get_last_successful_artifacts,
+    list_snapshots,
     load_module_graph,
     restore_snapshot,
     snapshot_payload_from_graph,
