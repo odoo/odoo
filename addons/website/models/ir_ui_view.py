@@ -447,6 +447,14 @@ class IrUiView(models.Model):
                 return False
         return True
 
+    @api.readonly
+    @api.model
+    def render_shared_snippet(self, template, values=None, main_model=None, main_id=None):
+        assert '.shared_snippet_template_' in template, _("You can only use template prefixed by shared_snippet_template_ ")
+        if main_model and main_id:
+            values |= dict(main_contextual_record=self.env[main_model].browse(main_id))
+        return self.render_public_asset(template, values=values)
+
     def _render_template(self, template, values=None):
         if website_id := self.env.context.get('website_id'):
             return self.env['website'].browse(website_id)._render_template(template, values)

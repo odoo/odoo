@@ -48,6 +48,9 @@ class IrUiView extends models.Model {
     render_public_asset() {
         return getWebsiteSnippets();
     }
+    render_shared_snippet(template, values, main_model, main_id) {
+        return `shared snippet ${template}(${JSON.stringify(values)}, ${main_model}(${main_id}))`;
+    }
 }
 
 export const setupWebsiteBuilderOeId = 539;
