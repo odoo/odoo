@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- WORKED DAYS: colour-coded rows + deduction amount column     -->
+    <!-- ============================================================ -->
+    <record id="view_hr_payslip_form_inherit_worked_days"
+            model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.worked.days</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+
+            <!-- ── Replace the entire worked-days list with a styled one ── -->
+            <xpath expr="//field[@name='worked_days_line_ids']/list"
+                   position="replace">
+                <list string="Worked Days" editable="bottom"
+                      decoration-success="code == 'WORK100'"
+                      decoration-danger="code in ('ATT_ABS', 'ATT_DED')"
+                      decoration-warning="code in ('ATT_LATE', 'ATT_EARLY')"
+                      decoration-bf="code in ('WORK100', 'ATT_DED')">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="number_of_days"  string="Days"
+                           sum="Total Days"/>
+                    <field name="number_of_hours" string="Hours"
+                           sum="Total Hours"/>
+                    <field name="amount"          string="Deduction"
+                           sum="Total Deduction"
+                           decoration-danger="amount &gt; 0"/>
+                    <field name="version_id" column_invisible="True"/>
+                    <field name="sequence" invisible="True"/>
+                </list>
+            </xpath>
+
+            <!-- ── Replace the worked-days form popup ── -->
+            <xpath expr="//field[@name='worked_days_line_ids']/form"
+                   position="replace">
+                <form string="Worked Day">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="number_of_days"  string="Days"/>
+                        <field name="number_of_hours" string="Hours"/>
+                        <field name="amount"          string="Deduction"/>
+                        <field name="version_id" invisible="1"/>
+                    </group>
+                </form>
+            </xpath>
+
+            <!-- ── Hide version_id in Other Inputs list & form ── -->
+            <xpath expr="//field[@name='input_line_ids']/list/field[@name='version_id']"
+                   position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='input_line_ids']/form//field[@name='version_id']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- ── Replace the salary computation list with a styled one ── -->
+            <xpath expr="//field[@name='line_ids']/list"
+                   position="replace">
+                <list string="Salary Structure" editable="bottom"
+                      decoration-muted="total == 0"
+                      decoration-danger="total &lt; 0"
+                      decoration-success="code == 'NET' and total &gt; 0"
+                      decoration-bf="code in ('BASIC', 'GROSS', 'NET', 'ATTDED')">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category_id"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="quantity"  string="Qty"/>
+                    <field name="rate"      string="Rate (%)"/>
+                    <field name="amount"    sum="Total Amount"/>
+                    <field name="total"     sum="Total"
+                           decoration-danger="total &lt; 0"/>
+                    <field name="salary_rule_id" optional="hide"/>
+                </list>
+            </xpath>
+
+            <!-- ── Replace the Details By Salary Rule Category list ── -->
+            <xpath expr="//field[@name='details_by_salary_rule_category']/list"
+                   position="replace">
+                <list string="Payslip Lines"
+                      decoration-muted="total == 0"
+                      decoration-danger="total &lt; 0"
+                      decoration-bf="code in ('BASIC', 'GROSS', 'NET')">
+                    <field name="category_id"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="total" sum="Total"/>
+                </list>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Generate Payslips wizard: move button to footer so the       -->
+    <!-- default Save/Discard buttons are suppressed.                 -->
+    <!-- ============================================================ -->
+    <record id="view_hr_payslip_by_employees_inherit"
+            model="ir.ui.view">
+        <field name="name">hr.payslip.employees.form.inherit.ksw</field>
+        <field name="model">hr.payslip.employees</field>
+        <field name="inherit_id"
+               ref="om_hr_payroll.view_hr_payslip_by_employees"/>
+        <field name="arch" type="xml">
+            <!-- Remove the Generate button from header -->
+            <xpath expr="//header/button[@name='compute_sheet']"
+                   position="replace"/>
+
+            <!-- Add explicit footer (suppresses default Save/Discard) -->
+            <xpath expr="//form" position="inside">
+                <footer>
+                    <button icon="fa-cogs" string="Generate"
+                            name="compute_sheet" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

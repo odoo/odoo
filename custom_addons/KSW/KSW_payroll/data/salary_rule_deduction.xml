@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="0">
+
+        <!-- ========================================================= -->
+        <!-- Add Python conditions to existing om_hr_payroll allowance  -->
+        <!-- rules so they only appear when the value is non-zero.      -->
+        <!-- ========================================================= -->
+
+        <record id="om_hr_payroll.hr_rule_hra" model="hr.salary.rule">
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.hra)</field>
+        </record>
+
+        <record id="om_hr_payroll.hr_rule_da" model="hr.salary.rule">
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.da)</field>
+        </record>
+
+        <record id="om_hr_payroll.hr_rule_travel" model="hr.salary.rule">
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.travel_allowance)</field>
+        </record>
+
+        <record id="om_hr_payroll.hr_rule_meal" model="hr.salary.rule">
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.meal_allowance)</field>
+        </record>
+
+        <record id="om_hr_payroll.hr_rule_medical" model="hr.salary.rule">
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.medical_allowance)</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Mobile Allowance salary rule (before Other)                -->
+        <!-- ========================================================= -->
+
+        <record id="hr_rule_mobile" model="hr.salary.rule">
+            <field name="name">Mobile Allowance</field>
+            <field name="sequence" eval="13"/>
+            <field name="code">Mobile</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.mobile_allowance)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.mobile_allowance</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Other Allowance salary rule (field exists on contract,     -->
+        <!-- but no rule was created in om_hr_payroll)                  -->
+        <!-- ========================================================= -->
+
+        <record id="hr_rule_other" model="hr.salary.rule">
+            <field name="name">Other Allowance</field>
+            <field name="sequence" eval="15"/>
+            <field name="code">Other</field>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.other_allowance)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.other_allowance</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Link ALL allowance rules to the BASE salary structure      -->
+        <!-- ========================================================= -->
+
+        <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
+            <field name="rule_ids" eval="[
+                (4, ref('om_hr_payroll.hr_rule_hra')),
+                (4, ref('om_hr_payroll.hr_rule_da')),
+                (4, ref('om_hr_payroll.hr_rule_travel')),
+                (4, ref('om_hr_payroll.hr_rule_meal')),
+                (4, ref('om_hr_payroll.hr_rule_medical')),
+                (4, ref('hr_rule_other')),
+                (4, ref('hr_rule_mobile')),
+            ]"/>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Attendance Deduction salary rule                           -->
+        <!-- Reads the monetary total from worked_days.ATT_DED.amount   -->
+        <!-- ========================================================= -->
+
+        <record id="hr_rule_attendance_deduction" model="hr.salary.rule">
+            <field name="name">Attendance Deduction</field>
+            <field name="sequence" eval="150"/>
+            <field name="code">ATTDED</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(worked_days.ATT_DED)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -worked_days.ATT_DED.amount if worked_days.ATT_DED else 0.0
+            </field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Automatically deducts the attendance-based penalty
+total (absent days, late arrivals, early departures) computed from
+hr.attendance records during the payslip period.</field>
+        </record>
+
+        <!-- Add the rule to the base salary structure so it is picked
+             up by every structure that inherits from BASE. -->
+        <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
+            <field name="rule_ids"
+                   eval="[(4, ref('hr_rule_attendance_deduction'))]"/>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Default GOSI rate (9.75 %)                                -->
+        <!-- ========================================================= -->
+        <record id="default_gosi_rate" model="ir.config_parameter">
+            <field name="key">ksw_payroll.gosi_rate</field>
+            <field name="value">9.75</field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- Social Insurance (GOSI) salary rule                       -->
+        <!-- Only fires for Saudi employees (country_id.code == 'SA')  -->
+        <!-- Formula: -round((BASIC + HRA) * rate / 100)               -->
+        <!-- ========================================================= -->
+        <record id="hr_rule_gosi" model="hr.salary.rule">
+            <field name="name">Social Insurance (GOSI)</field>
+            <field name="sequence" eval="160"/>
+            <field name="code">GOSI</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.country_id.code == 'SA'</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+rate_pct = float(payslip.env['ir.config_parameter'].sudo().get_param('ksw_payroll.gosi_rate', '9.75'))
+basic = contract.wage or 0.0
+hra = contract.hra or 0.0
+result = -round((basic + hra) * rate_pct / 100.0)
+            </field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Social insurance (GOSI) deduction for Saudi employees.
+Amount = round((Basic Wage + HRA) × configurable rate%).
+The rate is maintained in Settings → Payroll → Social Insurance (GOSI).</field>
+        </record>
+
+        <!-- Attach GOSI rule to the base salary structure -->
+        <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
+            <field name="rule_ids"
+                   eval="[(4, ref('hr_rule_gosi'))]"/>
+        </record>
+
+    </data>
+
+</odoo>
+
+
+
+

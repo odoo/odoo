@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_contract_form_inherit_ksw_payroll" model="ir.ui.view">
+        <field name="name">hr.version.view.form.inherit.ksw.payroll</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="om_hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='allowances']//label[@for='other_allowance']" position="before">
+                <label for="mobile_allowance"/>
+                <div class="o_row">
+                    <field name="mobile_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+
+
+

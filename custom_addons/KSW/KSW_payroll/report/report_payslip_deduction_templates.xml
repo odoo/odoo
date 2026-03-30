@@ -2,60 +2,205 @@
 <odoo>
 
     <!-- ============================================================ -->
-    <!-- Inherit the payslip report to add attendance deduction detail -->
+    <!--  PAYSLIP REPORT — Combined single report:                    -->
+    <!--  Worked Days + Other Inputs + Salary Computation +           -->
+    <!--  Attendance Deduction Breakdown                              -->
+    <!--  Completely replaces the stock om_hr_payroll report_payslip  -->
     <!-- ============================================================ -->
-    <template id="report_payslip_inherit_deduction"
+    <template id="report_payslip_override"
               inherit_id="om_hr_payroll.report_payslip">
-        <xpath expr="//table[hasclass('table-sm')][last()]" position="after">
-            <t t-set="deduction_records"
-               t-value="request.env['hr.attendance'].sudo().search([
-                   ('employee_id', '=', o.employee_id.id),
-                   ('check_in', '&gt;=', str(o.date_from) + ' 00:00:00'),
-                   ('check_in', '&lt;=', str(o.date_to) + ' 23:59:59'),
-                   ('x_deduction_amount', '&gt;', 0),
-               ], order='check_in asc')"/>
-            <t t-if="deduction_records">
-                <h4 class="mt-3">Attendance Deductions</h4>
+
+        <!-- Gut the original page and replace it entirely -->
+        <xpath expr="//div[hasclass('page')]" position="replace">
+            <div class="page">
+
+                <!-- ── Header ── -->
+                <h2>Payslip</h2>
+                <p t-out="o.name"/>
+
+                <!-- ── Employee info ── -->
+                <table class="table table-sm table-bordered mb-3">
+                    <tr>
+                        <td style="width:20%"><strong>Employee</strong></td>
+                        <td style="width:30%" t-out="o.employee_id.name"/>
+                        <td style="width:20%"><strong>Designation</strong></td>
+                        <td style="width:30%" t-out="o.employee_id.job_id.name or ''"/>
+                    </tr>
+                    <tr>
+                        <td><strong>Department</strong></td>
+                        <td t-out="o.employee_id.department_id.name or ''"/>
+                        <td><strong>ID No.</strong></td>
+                        <td t-out="o.employee_id.identification_id or ''"/>
+                    </tr>
+                    <tr>
+                        <td><strong>Reference</strong></td>
+                        <td t-out="o.number or ''"/>
+                        <td><strong>Bank Account</strong></td>
+                        <td>
+                            <t t-if="o.employee_id.bank_account_ids">
+                                <span t-out="o.employee_id.bank_account_ids[0].acc_number"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Period</strong></td>
+                        <td>
+                            <span t-field="o.date_from"/> –
+                            <span t-field="o.date_to"/>
+                        </td>
+                        <td><strong>Company</strong></td>
+                        <td t-out="o.company_id.name"/>
+                    </tr>
+                </table>
+
+                <!-- ══════════════════════════════════════════════════ -->
+                <!--  Section 1: Worked Days                          -->
+                <!-- ══════════════════════════════════════════════════ -->
+                <t t-if="o.worked_days_line_ids">
+                    <h4>Worked Days</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Description</th>
+                                <th>Code</th>
+                                <th class="text-end">Days</th>
+                                <th class="text-end">Hours</th>
+                                <th class="text-end">Deduction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="wd_total_days" t-value="0"/>
+                            <t t-set="wd_total_hours" t-value="0"/>
+                            <t t-set="wd_total_ded" t-value="0"/>
+                            <tr t-foreach="o.worked_days_line_ids" t-as="wd"
+                                t-attf-class="#{'table-danger fw-bold' if wd.code == 'ATT_DED' else 'table-warning' if wd.code in ('ATT_ABS','ATT_LATE','ATT_EARLY') else ''}">
+                                <td t-out="wd.name"/>
+                                <td t-out="wd.code"/>
+                                <td class="text-end" t-out="'%.0f' % wd.number_of_days"/>
+                                <td class="text-end" t-out="'%.0f' % wd.number_of_hours"/>
+                                <td class="text-end" t-out="'%.0f' % wd.amount if wd.amount else ''"/>
+                                <t t-set="wd_total_days" t-value="wd_total_days + wd.number_of_days"/>
+                                <t t-set="wd_total_hours" t-value="wd_total_hours + wd.number_of_hours"/>
+                                <t t-set="wd_total_ded" t-value="wd_total_ded + (wd.amount or 0)"/>
+                            </tr>
+                        </tbody>
+                        <tfoot class="fw-bold table-light">
+                            <tr>
+                                <td colspan="2">Total</td>
+                                <td class="text-end" t-out="'%.0f' % wd_total_days"/>
+                                <td class="text-end" t-out="'%.0f' % wd_total_hours"/>
+                                <td class="text-end" t-out="'%.0f' % wd_total_ded if wd_total_ded else ''"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </t>
+
+                <!-- ══════════════════════════════════════════════════ -->
+                <!--  Section 2: Other Inputs                         -->
+                <!-- ══════════════════════════════════════════════════ -->
+                <t t-if="o.input_line_ids">
+                    <h4>Other Inputs</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Description</th>
+                                <th>Code</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.input_line_ids" t-as="inp">
+                                <td t-out="inp.name"/>
+                                <td t-out="inp.code"/>
+                                <td class="text-end" t-out="'%.0f' % inp.amount"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+
+                <!-- ══════════════════════════════════════════════════ -->
+                <!--  Section 3: Salary Computation (all visible)     -->
+                <!-- ══════════════════════════════════════════════════ -->
+                <h4>Salary Computation</h4>
                 <table class="table table-sm table-bordered">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
-                            <th>Date</th>
-                            <th>Day</th>
-                            <th>Late (min)</th>
-                            <th>Early (min)</th>
-                            <th>Absent</th>
-                            <th class="text-end">Deduction</th>
+                            <th>Description</th>
+                            <th>Code</th>
+                            <th class="text-end">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-set="total_deduction" t-value="0"/>
-                        <tr t-foreach="deduction_records" t-as="att">
-                            <td t-out="att.check_in.strftime('%Y-%m-%d')"/>
-                            <td t-out="att.x_day_of_week"/>
-                            <td t-out="'%.0f' % (att.x_net_late_minutes or 0)"/>
-                            <td t-out="'%.0f' % (att.x_net_early_leave_minutes or 0)"/>
-                            <td t-out="'Yes' if att.x_net_is_absent else ''"/>
-                            <td class="text-end">
-                                <span t-out="att.x_deduction_amount"
-                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-                            </td>
-                            <t t-set="total_deduction"
-                               t-value="total_deduction + att.x_deduction_amount"/>
+                        <tr t-foreach="o.line_ids.filtered(lambda l: l.appears_on_payslip).sorted('sequence')"
+                            t-as="line"
+                            t-attf-class="#{'table-success fw-bold' if line.code == 'NET' else 'table-danger' if line.total &lt; 0 else 'fw-bold' if line.code in ('BASIC','GROSS') else 'text-muted' if line.total == 0 else ''}">
+                            <td t-out="line.name"/>
+                            <td t-out="line.code"/>
+                            <td class="text-end" t-out="'%.0f' % line.total"/>
                         </tr>
                     </tbody>
-                    <tfoot>
-                        <tr class="fw-bold">
-                            <td colspan="5">Total Deductions</td>
-                            <td class="text-end">
-                                <span t-out="total_deduction"
-                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
-            </t>
+
+                <!-- ══════════════════════════════════════════════════ -->
+                <!--  Section 4: Attendance Deduction Breakdown       -->
+                <!-- ══════════════════════════════════════════════════ -->
+                <t t-set="deduction_records"
+                   t-value="request.env['hr.attendance'].sudo().search([
+                       ('employee_id', '=', o.employee_id.id),
+                       ('check_in', '&gt;=', str(o.date_from) + ' 00:00:00'),
+                       ('check_in', '&lt;=', str(o.date_to) + ' 23:59:59'),
+                       ('x_deduction_amount', '&gt;', 0),
+                   ], order='check_in asc')"/>
+                <t t-if="deduction_records">
+                    <h4>Attendance Deduction Breakdown</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Day</th>
+                                <th class="text-end">Late (min)</th>
+                                <th class="text-end">Early (min)</th>
+                                <th class="text-center">Absent</th>
+                                <th class="text-end">Deduction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_ded" t-value="0"/>
+                            <tr t-foreach="deduction_records" t-as="att"
+                                t-attf-class="#{'table-danger' if att.x_net_is_absent else 'table-warning'}">
+                                <td t-out="att.check_in.strftime('%Y-%m-%d')"/>
+                                <td t-out="att.x_day_of_week"/>
+                                <td class="text-end" t-out="'%.0f' % (att.x_net_late_minutes or 0)"/>
+                                <td class="text-end" t-out="'%.0f' % (att.x_net_early_leave_minutes or 0)"/>
+                                <td class="text-center" t-out="'Yes' if att.x_net_is_absent else ''"/>
+                                <td class="text-end" t-out="'%.0f' % att.x_deduction_amount"/>
+                                <t t-set="total_ded"
+                                   t-value="total_ded + att.x_deduction_amount"/>
+                            </tr>
+                        </tbody>
+                        <tfoot class="fw-bold table-light">
+                            <tr>
+                                <td colspan="5">Total Deductions</td>
+                                <td class="text-end" t-out="'%.0f' % total_ded"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </t>
+
+                <p class="text-end mt-4">
+                    <strong>Authorized Signature</strong>
+                </p>
+            </div>
         </xpath>
     </template>
+
+    <!-- ============================================================ -->
+    <!--  Hide the second report from the Print menu — everything is  -->
+    <!--  now in the main payslip report above.                       -->
+    <!-- ============================================================ -->
+    <record id="om_hr_payroll.payslip_details_report" model="ir.actions.report">
+        <field name="binding_model_id" eval="False"/>
+    </record>
 
 </odoo>
 

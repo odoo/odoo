@@ -98,10 +98,10 @@ class HrAttendance(models.Model):
                 + (version.medical_allowance or 0.0)
                 + (version.other_allowance or 0.0)
             )
-            att.x_deductible_base = base
+            att.x_deductible_base = round(base)
             daily_rate = base / DAYS_PER_MONTH
-            att.x_daily_rate = daily_rate
-            att.x_hourly_rate = daily_rate / (DAILY_MINUTES / 60.0)
+            att.x_daily_rate = round(daily_rate)
+            att.x_hourly_rate = round(daily_rate / (DAILY_MINUTES / 60.0))
 
             # All employees: 8 hours/day = 480 minutes
             att.x_scheduled_minutes = DAILY_MINUTES
@@ -109,7 +109,7 @@ class HrAttendance(models.Model):
             # Calculate deduction
             if att.x_net_is_absent:
                 # Full day absence -> deduct one daily rate
-                att.x_deduction_amount = daily_rate
+                att.x_deduction_amount = round(daily_rate)
             else:
                 # Partial day: late + early leave minutes
                 deductible_minutes = (
@@ -118,7 +118,7 @@ class HrAttendance(models.Model):
                 )
                 if deductible_minutes > 0:
                     # Cap at daily_rate: penalty cannot exceed a full absence
-                    att.x_deduction_amount = min(
+                    att.x_deduction_amount = round(min(
                         (deductible_minutes / DAILY_MINUTES) * daily_rate,
                         daily_rate,
-                    )
+                    ))

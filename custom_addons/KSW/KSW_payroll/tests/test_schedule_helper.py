@@ -86,7 +86,7 @@ class TestScheduleHelper(TransactionCase):
         self.assertEqual(sched['start'].minute, 0)
         self.assertEqual(sched['end'].hour, 16)
         self.assertEqual(sched['end'].minute, 30)
-        self.assertAlmostEqual(sched['break_hours'], 0.5, places=2)
+        self.assertEqual(sched['break_hours'], 0.5)
 
     def test_schedule_none_on_weekend(self):
         """Friday has no work lines -> returns None."""
@@ -115,7 +115,7 @@ class TestScheduleHelper(TransactionCase):
             dt(2026, 3, 1, 5, 0),    # 08:00 Riyadh
             dt(2026, 3, 1, 13, 30),   # 16:30 Riyadh
         )
-        self.assertAlmostEqual(result['worked_hours'], 8.0, places=2)
+        self.assertEqual(result['worked_hours'], 8.0)
         self.assertEqual(result['late_minutes'], 0.0)
         self.assertEqual(result['early_leave_minutes'], 0.0)
         self.assertEqual(result['overtime_hours'], 0.0)
@@ -128,7 +128,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['late_minutes'], 0.0)
         # Worked hours: 08:15 to 16:30 = 8.25h - 0.5h break = 7.75h
-        self.assertAlmostEqual(result['worked_hours'], 7.75, places=2)
+        self.assertEqual(result['worked_hours'], 7.75)
 
     def test_within_grace_no_early(self):
         """Check-out at 16:15 (within 16-min grace) -> NOT early."""
@@ -138,7 +138,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['early_leave_minutes'], 0.0)
         # Worked hours: 08:00 to 16:15 = 8.25h - 0.5h break = 7.75h
-        self.assertAlmostEqual(result['worked_hours'], 7.75, places=2)
+        self.assertEqual(result['worked_hours'], 7.75)
 
     # ==================================================================
     # Tests: Late arrival
@@ -152,7 +152,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['late_minutes'], 30.0)
         # Worked: 08:30-16:30 = 8h - 0.5h break = 7.5h
-        self.assertAlmostEqual(result['worked_hours'], 7.5, places=2)
+        self.assertEqual(result['worked_hours'], 7.5)
 
     def test_late_60_min(self):
         """Check-in at 09:00 -> 60 min late."""
@@ -162,7 +162,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['late_minutes'], 60.0)
         # Worked: 09:00-16:30 = 7.5h - 0.5h break = 7.0h
-        self.assertAlmostEqual(result['worked_hours'], 7.0, places=2)
+        self.assertEqual(result['worked_hours'], 7.0)
 
     def test_late_past_break_excludes_break(self):
         """Check-in at 13:00 Riyadh (after 12:00-12:30 break).
@@ -176,7 +176,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['late_minutes'], 270.0)
         # Worked: 13:00-16:30 = 3.5h, no break overlap -> 3.5h
-        self.assertAlmostEqual(result['worked_hours'], 3.5, places=2)
+        self.assertEqual(result['worked_hours'], 3.5)
 
     def test_late_at_exactly_grace_boundary(self):
         """Check-in at 08:17 (1 min past 16-min grace) -> late = 17 min."""
@@ -198,7 +198,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['early_leave_minutes'], 30.0)
         # Worked: 08:00-16:00 = 8h - 0.5h break = 7.5h
-        self.assertAlmostEqual(result['worked_hours'], 7.5, places=2)
+        self.assertEqual(result['worked_hours'], 7.5)
 
     def test_early_leave_before_break_excludes_break(self):
         """Check-out at 11:00 Riyadh (= 08:00 UTC), before 12:00-12:30 break.
@@ -212,7 +212,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['early_leave_minutes'], 300.0)
         # Worked: 08:00-11:00 = 3h, no break overlap -> 3.0h
-        self.assertAlmostEqual(result['worked_hours'], 3.0, places=2)
+        self.assertEqual(result['worked_hours'], 3.0)
 
     def test_early_leave_at_grace_boundary(self):
         """Check-out at 16:13 Riyadh (= 13:13 UTC), 1 min past grace -> early = 17 min."""
@@ -239,7 +239,7 @@ class TestScheduleHelper(TransactionCase):
         self.assertEqual(result['late_minutes'], 60.0)
         self.assertEqual(result['early_leave_minutes'], 90.0)
         # Worked: 09:00-15:00 = 6h - 0.5h break = 5.5h
-        self.assertAlmostEqual(result['worked_hours'], 5.5, places=2)
+        self.assertEqual(result['worked_hours'], 5.5)
 
     # ==================================================================
     # Tests: Overtime
@@ -252,9 +252,9 @@ class TestScheduleHelper(TransactionCase):
             dt(2026, 3, 1, 14, 30),   # 17:30 Riyadh
         )
         self.assertEqual(result['early_leave_minutes'], 0.0)
-        self.assertAlmostEqual(result['overtime_hours'], 1.0, places=2)
+        self.assertEqual(result['overtime_hours'], 1.0)
         # Worked: capped at schedule window 08:00-16:30 = 8.5h - 0.5h break = 8.0h
-        self.assertAlmostEqual(result['worked_hours'], 8.0, places=2)
+        self.assertEqual(result['worked_hours'], 8.0)
 
     def test_overtime_2_hours(self):
         """Check-out at 18:30 Riyadh (= 15:30 UTC) -> 2h overtime."""
@@ -262,8 +262,8 @@ class TestScheduleHelper(TransactionCase):
             dt(2026, 3, 1, 5, 0),     # 08:00 Riyadh
             dt(2026, 3, 1, 15, 30),   # 18:30 Riyadh
         )
-        self.assertAlmostEqual(result['overtime_hours'], 2.0, places=2)
-        self.assertAlmostEqual(result['worked_hours'], 8.0, places=2)
+        self.assertEqual(result['overtime_hours'], 2.0)
+        self.assertEqual(result['worked_hours'], 8.0)
 
     # ==================================================================
     # Tests: No-checkout scenario (check_in == check_out)
@@ -282,7 +282,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['late_minutes'], 0.0)
         self.assertEqual(result['early_leave_minutes'], 470.0)
-        self.assertAlmostEqual(result['worked_hours'], 0.0, places=2)
+        self.assertEqual(result['worked_hours'], 0.0)
 
     def test_no_checkout_after_grace(self):
         """CI=CO at 08:30 (past grace): late=30, early=entire day minus break.
@@ -298,7 +298,7 @@ class TestScheduleHelper(TransactionCase):
         )
         self.assertEqual(result['late_minutes'], 30.0)
         self.assertEqual(result['early_leave_minutes'], 450.0)
-        self.assertAlmostEqual(result['worked_hours'], 0.0, places=2)
+        self.assertEqual(result['worked_hours'], 0.0)
 
     # ==================================================================
     # Tests: No schedule (unscheduled day / no calendar)
@@ -317,7 +317,7 @@ class TestScheduleHelper(TransactionCase):
             emp_no_cal,
         )
         # No schedule -> raw diff = 8h
-        self.assertAlmostEqual(result['worked_hours'], 8.0, places=2)
+        self.assertEqual(result['worked_hours'], 8.0)
         self.assertEqual(result['late_minutes'], 0.0)
         self.assertEqual(result['early_leave_minutes'], 0.0)
         self.assertEqual(result['overtime_hours'], 0.0)
@@ -335,7 +335,7 @@ class TestScheduleHelper(TransactionCase):
         window_end = emp_tz.localize(dt(2026, 3, 1, 16, 30))
         overlap = self.helper._break_overlap_minutes(
             self.employee, ref_date, window_start, window_end, emp_tz)
-        self.assertAlmostEqual(overlap, 30.0, places=2)
+        self.assertEqual(overlap, 30.0)
 
     def test_break_overlap_partial_start(self):
         """Window starts inside break -> partial overlap."""
@@ -346,7 +346,7 @@ class TestScheduleHelper(TransactionCase):
         window_end = emp_tz.localize(dt(2026, 3, 1, 16, 30))
         overlap = self.helper._break_overlap_minutes(
             self.employee, ref_date, window_start, window_end, emp_tz)
-        self.assertAlmostEqual(overlap, 15.0, places=2)
+        self.assertEqual(overlap, 15.0)
 
     def test_break_overlap_partial_end(self):
         """Window ends inside break -> partial overlap."""
@@ -357,7 +357,7 @@ class TestScheduleHelper(TransactionCase):
         window_end = emp_tz.localize(dt(2026, 3, 1, 12, 15))
         overlap = self.helper._break_overlap_minutes(
             self.employee, ref_date, window_start, window_end, emp_tz)
-        self.assertAlmostEqual(overlap, 15.0, places=2)
+        self.assertEqual(overlap, 15.0)
 
     def test_break_overlap_none(self):
         """Window before break -> no overlap."""
@@ -368,7 +368,7 @@ class TestScheduleHelper(TransactionCase):
         window_end = emp_tz.localize(dt(2026, 3, 1, 11, 0))
         overlap = self.helper._break_overlap_minutes(
             self.employee, ref_date, window_start, window_end, emp_tz)
-        self.assertAlmostEqual(overlap, 0.0, places=2)
+        self.assertEqual(overlap, 0.0)
 
     def test_break_overlap_after_break(self):
         """Window entirely after break -> no overlap."""
@@ -379,7 +379,7 @@ class TestScheduleHelper(TransactionCase):
         window_end = emp_tz.localize(dt(2026, 3, 1, 16, 30))
         overlap = self.helper._break_overlap_minutes(
             self.employee, ref_date, window_start, window_end, emp_tz)
-        self.assertAlmostEqual(overlap, 0.0, places=2)
+        self.assertEqual(overlap, 0.0)
 
     def test_break_overlap_on_friday(self):
         """Friday has no work/break lines -> overlap = 0."""
@@ -390,7 +390,7 @@ class TestScheduleHelper(TransactionCase):
         window_end = emp_tz.localize(dt(2026, 3, 6, 16, 30))
         overlap = self.helper._break_overlap_minutes(
             self.employee, ref_date, window_start, window_end, emp_tz)
-        self.assertAlmostEqual(overlap, 0.0, places=2)
+        self.assertEqual(overlap, 0.0)
 
     # ==================================================================
     # Tests: calculate_break_deduction
@@ -404,7 +404,7 @@ class TestScheduleHelper(TransactionCase):
         local_co = emp_tz.localize(dt(2026, 3, 1, 16, 30))
         deduction = self.helper.calculate_break_deduction(
             self.employee, date(2026, 3, 1), local_ci, local_co, emp_tz)
-        self.assertAlmostEqual(deduction, 0.5, places=2)
+        self.assertEqual(deduction, 0.5)
 
     def test_break_deduction_ci_after_break(self):
         """CI after break end -> no break deduction."""
@@ -414,7 +414,7 @@ class TestScheduleHelper(TransactionCase):
         local_co = emp_tz.localize(dt(2026, 3, 1, 16, 30))
         deduction = self.helper.calculate_break_deduction(
             self.employee, date(2026, 3, 1), local_ci, local_co, emp_tz)
-        self.assertAlmostEqual(deduction, 0.0, places=2)
+        self.assertEqual(deduction, 0.0)
 
     def test_break_deduction_co_before_break(self):
         """CO before break start -> no break deduction."""
@@ -424,7 +424,7 @@ class TestScheduleHelper(TransactionCase):
         local_co = emp_tz.localize(dt(2026, 3, 1, 11, 30))
         deduction = self.helper.calculate_break_deduction(
             self.employee, date(2026, 3, 1), local_ci, local_co, emp_tz)
-        self.assertAlmostEqual(deduction, 0.0, places=2)
+        self.assertEqual(deduction, 0.0)
 
     # ==================================================================
     # Tests: Consistency – late + early + worked = scheduled hours
@@ -443,8 +443,8 @@ class TestScheduleHelper(TransactionCase):
         total = (result['late_minutes'] / 60.0
                  + result['early_leave_minutes'] / 60.0
                  + result['worked_hours'])
-        self.assertAlmostEqual(total, 8.0, places=1,
-                               msg="late + early + worked should sum to scheduled hours")
+        self.assertEqual(total, 8.0,
+                         "late + early + worked should sum to scheduled hours")
 
     def test_consistency_no_issue(self):
         """On-time full day: worked = 8.0h, everything else = 0."""
@@ -455,7 +455,7 @@ class TestScheduleHelper(TransactionCase):
         total = (result['late_minutes'] / 60.0
                  + result['early_leave_minutes'] / 60.0
                  + result['worked_hours'])
-        self.assertAlmostEqual(total, 8.0, places=1)
+        self.assertEqual(total, 8.0)
 
     # ==================================================================
     # Tests: Different days of the week
@@ -467,7 +467,7 @@ class TestScheduleHelper(TransactionCase):
             dt(2026, 3, 2, 5, 0),     # Monday 08:00 Riyadh
             dt(2026, 3, 2, 13, 30),   # 16:30 Riyadh
         )
-        self.assertAlmostEqual(result['worked_hours'], 8.0, places=2)
+        self.assertEqual(result['worked_hours'], 8.0)
 
     def test_friday_no_schedule(self):
         """Friday -> no schedule -> raw hours, no penalties."""
@@ -476,9 +476,7 @@ class TestScheduleHelper(TransactionCase):
             dt(2026, 3, 6, 13, 30),   # 16:30 Riyadh
         )
         # No schedule -> raw diff = 8.5h
-        self.assertAlmostEqual(result['worked_hours'], 8.5, places=2)
-        self.assertEqual(result['late_minutes'], 0.0)
-        self.assertEqual(result['early_leave_minutes'], 0.0)
+        self.assertEqual(result['worked_hours'], 8.5)
 
     # ==================================================================
     # Tests: Edge – check-in before / check-out after schedule
@@ -493,7 +491,7 @@ class TestScheduleHelper(TransactionCase):
         self.assertEqual(result['late_minutes'], 0.0)
         # Worked capped: effective_start = max(07:30, 08:00) = 08:00
         # 08:00-16:30 = 8.5h - 0.5h break = 8.0h
-        self.assertAlmostEqual(result['worked_hours'], 8.0, places=2)
+        self.assertEqual(result['worked_hours'], 8.0)
 
     def test_checkout_after_schedule(self):
         """CO at 18:00 Riyadh (= 15:00 UTC) -> overtime 1.5h, worked capped."""
@@ -502,6 +500,5 @@ class TestScheduleHelper(TransactionCase):
             dt(2026, 3, 1, 15, 0),    # 18:00 Riyadh
         )
         self.assertEqual(result['early_leave_minutes'], 0.0)
-        self.assertAlmostEqual(result['overtime_hours'], 1.5, places=2)
-        self.assertAlmostEqual(result['worked_hours'], 8.0, places=2)
-
+        self.assertEqual(result['overtime_hours'], 1.5)
+        self.assertEqual(result['worked_hours'], 8.0)

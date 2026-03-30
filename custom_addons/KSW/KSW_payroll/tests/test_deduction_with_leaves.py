@@ -5,11 +5,11 @@ reduces the deduction amount, and that refusing/resetting leaves restores
 the original deduction.
 Deduction rules (hardcoded):
     All employees: 30 days/month, 8 hours/day = 480 min/day.
-    Deduction = (deductible_minutes / 480) * daily_rate, capped at daily_rate.
+    Deduction = round((deductible_minutes / 480) * daily_rate), capped at round(daily_rate).
 Contract:
     wage=6000  da=0  travel=500  meal=300  medical=200  other=0  hra=1500
     Deductible base = 6000+500+300+200 = 7000  (HRA excluded)
-    Daily rate = 7000 / 30 = 233.333...
+    Daily rate = round(7000 / 30) = 233
 """
 from datetime import datetime as dt, date, timedelta
 from odoo.tests.common import TransactionCase
@@ -80,7 +80,8 @@ class TestDeductionWithLeaves(TransactionCase):
             'request_unit': 'day',
         })
         cls.expected_base = 7000.0
-        cls.expected_daily_rate = 7000.0 / 30.0
+        cls.raw_daily_rate = 7000.0 / 30.0
+        cls.expected_daily_rate = round(cls.raw_daily_rate)  # 233
         cls.expected_scheduled_minutes = 480.0  # hardcoded 8h
     # ------------------------------------------------------------------
     # Helpers
@@ -205,10 +206,10 @@ class TestDeductionWithLeaves(TransactionCase):
         )
         original_deduction = att.x_deduction_amount
         self._create_approved_leave_for_attendance(att, accepted_minutes_override=10.0)
-        self.assertAlmostEqual(att.x_net_late_minutes, 20.0, places=1,
-                               msg="Net late should be 30 - 10 = 20.")
-        expected = (20.0 / self.expected_scheduled_minutes) * self.expected_daily_rate
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        self.assertEqual(att.x_net_late_minutes, 20.0,
+                         "Net late should be 30 - 10 = 20.")
+        expected = round((20.0 / self.expected_scheduled_minutes) * self.raw_daily_rate)
+        self.assertEqual(att.x_deduction_amount, expected)
         self.assertLess(att.x_deduction_amount, original_deduction)
     def test_partial_early_coverage_reduces_deduction(self):
         """Leave accepts 30 of 60 early leave minutes -> deduction halved."""
@@ -218,9 +219,9 @@ class TestDeductionWithLeaves(TransactionCase):
             x_early_leave_minutes=60.0,
         )
         self._create_approved_leave_for_attendance(att, accepted_minutes_override=30.0)
-        self.assertAlmostEqual(att.x_net_early_leave_minutes, 30.0, places=1)
-        expected = (30.0 / self.expected_scheduled_minutes) * self.expected_daily_rate
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        self.assertEqual(att.x_net_early_leave_minutes, 30.0)
+        expected = round((30.0 / self.expected_scheduled_minutes) * self.raw_daily_rate)
+        self.assertEqual(att.x_deduction_amount, expected)
     # ==================================================================
     # ABSENT COVERED BY LEAVE -> DEDUCTION = 0
     # ==================================================================
@@ -231,8 +232,7 @@ class TestDeductionWithLeaves(TransactionCase):
             check_out=dt(2026, 3, 1, 5, 0),
             x_is_absent=True,
         )
-        self.assertAlmostEqual(att.x_deduction_amount,
-                               self.expected_daily_rate, places=2)
+        self.assertEqual(att.x_deduction_amount, self.expected_daily_rate)
         self._create_approved_leave_for_attendance(
             att, leave_type=self.leave_type_day)
         self.assertFalse(att.x_net_is_absent,
@@ -255,8 +255,8 @@ class TestDeductionWithLeaves(TransactionCase):
         self.assertEqual(att.x_deduction_amount, 0.0)
         # Refuse the leave
         self._refuse_leave(leave)
-        self.assertAlmostEqual(att.x_deduction_amount, original_deduction, places=2,
-                               msg="Refusing the leave should restore the deduction.")
+        self.assertEqual(att.x_deduction_amount, original_deduction,
+                         "Refusing the leave should restore the deduction.")
     # ==================================================================
     # UNAPPROVED LEAVE HAS NO EFFECT ON DEDUCTION
     # ==================================================================
@@ -287,8 +287,8 @@ class TestDeductionWithLeaves(TransactionCase):
             'x_attendance_ids': [(4, att.id)],
         })
         att.invalidate_recordset()
-        self.assertAlmostEqual(att.x_deduction_amount, original_deduction, places=2,
-                               msg="Draft leave should not affect deduction.")
+        self.assertEqual(att.x_deduction_amount, original_deduction,
+                         "Draft leave should not affect deduction.")
     # ==================================================================
     # DEDUCTION CAP STILL APPLIES WITH LEAVE COVERAGE
     # ==================================================================
@@ -300,17 +300,16 @@ class TestDeductionWithLeaves(TransactionCase):
             x_early_leave_minutes=500.0,  # Exceeds 480
         )
         # Without leave: capped at daily rate
-        self.assertAlmostEqual(att.x_deduction_amount,
-                               self.expected_daily_rate, places=2)
+        self.assertEqual(att.x_deduction_amount, self.expected_daily_rate)
         # Approve leave covering 100 of 500 minutes
         self._create_approved_leave_for_attendance(att, accepted_minutes_override=100.0)
         # Remaining: 400 min out of 480 scheduled
         remaining = 400.0
-        expected = min(
-            (remaining / self.expected_scheduled_minutes) * self.expected_daily_rate,
-            self.expected_daily_rate,
-        )
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        expected = round(min(
+            (remaining / self.expected_scheduled_minutes) * self.raw_daily_rate,
+            self.raw_daily_rate,
+        ))
+        self.assertEqual(att.x_deduction_amount, expected)
     # ==================================================================
     # LARGE EARLY LEAVE (NEAR FULL DAY) WITH CORRECT DEDUCTION
     # ==================================================================
@@ -322,8 +321,8 @@ class TestDeductionWithLeaves(TransactionCase):
             x_early_leave_minutes=469.0,
         )
         # 469/480 < 1 -> proportional, NOT capped
-        expected = (469.0 / 480.0) * self.expected_daily_rate
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        expected = round((469.0 / 480.0) * self.raw_daily_rate)
+        self.assertEqual(att.x_deduction_amount, expected)
         self.assertLess(att.x_deduction_amount, self.expected_daily_rate)
     def test_large_early_leave_under_scheduled(self):
         """440 min early leave out of 480 -> proportional deduction."""
@@ -332,8 +331,8 @@ class TestDeductionWithLeaves(TransactionCase):
             check_out=dt(2026, 3, 1, 5, 10),
             x_early_leave_minutes=440.0,
         )
-        expected = (440.0 / self.expected_scheduled_minutes) * self.expected_daily_rate
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        expected = round((440.0 / self.expected_scheduled_minutes) * self.raw_daily_rate)
+        self.assertEqual(att.x_deduction_amount, expected)
         self.assertLess(att.x_deduction_amount, self.expected_daily_rate)
     # ==================================================================
     # DIFFERENT SCHEDULE EMPLOYEE -> STILL 480 MIN
@@ -376,9 +375,9 @@ class TestDeductionWithLeaves(TransactionCase):
             'x_late_minutes': 30.0,
         })
         # Hardcoded 480 min regardless of schedule
-        self.assertAlmostEqual(att.x_scheduled_minutes, 480.0, places=1)
-        expected = (30.0 / 480.0) * (3000.0 / 30.0)
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        self.assertEqual(att.x_scheduled_minutes, 480.0)
+        expected = round((30.0 / 480.0) * (3000.0 / 30.0))
+        self.assertEqual(att.x_deduction_amount, expected)
     # ==================================================================
     # NO CALENDAR -> STILL 480 MINUTES
     # ==================================================================
@@ -397,14 +396,14 @@ class TestDeductionWithLeaves(TransactionCase):
             'check_out': dt(2026, 3, 1, 13, 30),
             'x_late_minutes': 30.0,
         })
-        self.assertAlmostEqual(att.x_scheduled_minutes, 480.0, places=1)
-        expected = (30.0 / 480.0) * (3000.0 / 30.0)
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        self.assertEqual(att.x_scheduled_minutes, 480.0)
+        expected = round((30.0 / 480.0) * (3000.0 / 30.0))
+        self.assertEqual(att.x_deduction_amount, expected)
     # ==================================================================
     # DEDUCTION PROPORTIONAL FORMULA VERIFICATION
     # ==================================================================
     def test_deduction_formula_exact(self):
-        """Verify: deduction = (net_late + net_early) / 480 * daily_rate."""
+        """Verify: deduction = round((net_late + net_early) / 480 * raw_daily_rate)."""
         att = self._create_attendance(
             check_in=dt(2026, 3, 1, 5, 45),
             check_out=dt(2026, 3, 1, 12, 45),
@@ -412,34 +411,29 @@ class TestDeductionWithLeaves(TransactionCase):
             x_early_leave_minutes=45.0,
         )
         deductible = 45.0 + 45.0
-        expected = (deductible / self.expected_scheduled_minutes) * self.expected_daily_rate
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
-        # 90/480 = 0.1875 -> 18.75% of daily rate
-        self.assertAlmostEqual(
-            att.x_deduction_amount, self.expected_daily_rate * (90.0 / 480.0), places=2)
+        expected = round((deductible / self.expected_scheduled_minutes) * self.raw_daily_rate)
+        self.assertEqual(att.x_deduction_amount, expected)
     def test_deduction_formula_one_quarter(self):
-        """120 min late out of 480 = 1/4 -> deduction = daily_rate / 4."""
+        """120 min late out of 480 = 1/4 -> deduction = round(raw_daily_rate / 4)."""
         att = self._create_attendance(
             check_in=dt(2026, 3, 1, 5, 0),
             check_out=dt(2026, 3, 1, 13, 30),
             x_late_minutes=120.0,
         )
-        self.assertAlmostEqual(
+        self.assertEqual(
             att.x_deduction_amount,
-            self.expected_daily_rate / 4.0,
-            places=2,
+            round(self.raw_daily_rate / 4.0),
         )
     def test_deduction_formula_one_third(self):
-        """160 min late out of 480 = 1/3 -> deduction = daily_rate / 3."""
+        """160 min late out of 480 = 1/3 -> deduction = round(raw_daily_rate / 3)."""
         att = self._create_attendance(
             check_in=dt(2026, 3, 1, 5, 0),
             check_out=dt(2026, 3, 1, 13, 30),
             x_late_minutes=160.0,
         )
-        self.assertAlmostEqual(
+        self.assertEqual(
             att.x_deduction_amount,
-            self.expected_daily_rate / 3.0,
-            places=2,
+            round(self.raw_daily_rate / 3.0),
         )
     # ==================================================================
     # MULTIPLE ATTENDANCE RECORDS WITH SINGLE LEAVE
@@ -504,8 +498,8 @@ class TestDeductionWithLeaves(TransactionCase):
             check_out=dt(2026, 3, 1, 13, 30),
         )
         self.assertEqual(att.x_deduction_amount, 0.0)
-        self.assertAlmostEqual(att.x_scheduled_minutes, 480.0, places=1)
-        self.assertAlmostEqual(att.x_deductible_base, 7000.0, places=2)
+        self.assertEqual(att.x_scheduled_minutes, 480.0)
+        self.assertEqual(att.x_deductible_base, 7000.0)
     # ==================================================================
     # DEDUCTION RECOMPUTES WHEN NET MINUTES CHANGE
     # ==================================================================
@@ -517,13 +511,13 @@ class TestDeductionWithLeaves(TransactionCase):
             x_late_minutes=60.0,
         )
         deduction_60 = att.x_deduction_amount
-        expected_60 = (60.0 / self.expected_scheduled_minutes) * self.expected_daily_rate
-        self.assertAlmostEqual(deduction_60, expected_60, places=2)
+        expected_60 = round((60.0 / self.expected_scheduled_minutes) * self.raw_daily_rate)
+        self.assertEqual(deduction_60, expected_60)
         # Reduce late minutes
         att.write({'x_late_minutes': 30.0})
         att.invalidate_recordset()
-        expected_30 = (30.0 / self.expected_scheduled_minutes) * self.expected_daily_rate
-        self.assertAlmostEqual(att.x_deduction_amount, expected_30, places=2)
+        expected_30 = round((30.0 / self.expected_scheduled_minutes) * self.raw_daily_rate)
+        self.assertEqual(att.x_deduction_amount, expected_30)
         self.assertLess(att.x_deduction_amount, deduction_60)
     # ==================================================================
     # DEDUCTION NEVER NEGATIVE (even with weird data)
@@ -539,19 +533,19 @@ class TestDeductionWithLeaves(TransactionCase):
         self.assertGreaterEqual(att.x_deduction_amount, 0.0)
         self.assertGreaterEqual(att.x_net_late_minutes, 0.0)
     # ==================================================================
-    # DEDUCTION CONSISTENCY: daily_rate IS ALWAYS base / 30
+    # DEDUCTION CONSISTENCY: daily_rate IS ALWAYS round(base / 30)
     # ==================================================================
     def test_daily_rate_consistency(self):
-        """Verify daily_rate = deductible_base / 30 for all records."""
+        """Verify daily_rate = round(deductible_base / 30) for all records."""
         for day_offset in range(5):  # Sun-Thu
             att = self._create_attendance(
                 check_in=dt(2026, 3, 1 + day_offset, 5, 30),
                 check_out=dt(2026, 3, 1 + day_offset, 13, 30),
                 x_late_minutes=30.0,
             )
-            self.assertAlmostEqual(
-                att.x_daily_rate, att.x_deductible_base / 30.0, places=2,
-                msg=f"Daily rate should always be base/30 (day offset {day_offset}).")
+            self.assertEqual(
+                att.x_daily_rate, round(att.x_deductible_base / 30.0),
+                f"Daily rate should always be round(base/30) (day offset {day_offset}).")
     # ==================================================================
     # DEDUCTION WITH ONLY da ALLOWANCE
     # ==================================================================
@@ -578,9 +572,9 @@ class TestDeductionWithLeaves(TransactionCase):
         })
         base = 6000.0
         daily = base / 30.0
-        expected = (45.0 / self.expected_scheduled_minutes) * daily
-        self.assertAlmostEqual(att.x_deductible_base, base, places=2)
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2)
+        expected = round((45.0 / self.expected_scheduled_minutes) * daily)
+        self.assertEqual(att.x_deductible_base, round(base))
+        self.assertEqual(att.x_deduction_amount, expected)
     # ==================================================================
     # SCENARIO FROM ISSUE: attendance #8102
     # Early leave 469 min with 480 scheduled, base 3250
@@ -588,7 +582,7 @@ class TestDeductionWithLeaves(TransactionCase):
     def test_scenario_8102_like(self):
         """Reproduce the original bug scenario: early leave 469 min
         with base 3250 and hardcoded 480 min.
-        Deduction should be (469/480) * (3250/30) = 105.85."""
+        Deduction should be round((469/480) * (3250/30))."""
         scenario_emp = self.env['hr.employee'].create({
             'name': 'Scenario 8102 Employee',
             'resource_calendar_id': self.calendar.id,
@@ -605,16 +599,15 @@ class TestDeductionWithLeaves(TransactionCase):
             'check_out': dt(2026, 3, 26, 5, 10, 52),  # same (barely showed up)
             'x_early_leave_minutes': 469.0,
         })
-        # Verify base and daily rate
-        self.assertAlmostEqual(att.x_deductible_base, 3250.0, places=2)
-        self.assertAlmostEqual(att.x_daily_rate, 3250.0 / 30.0, places=2)
-        self.assertAlmostEqual(att.x_scheduled_minutes, 480.0, places=1)
-        # The key assertion: deduction should be (469/480) * daily_rate
-        expected = (469.0 / 480.0) * (3250.0 / 30.0)
-        self.assertAlmostEqual(att.x_deduction_amount, expected, places=2,
-                               msg="Deduction should be proportional.")
+        # Verify base and daily rate (rounded)
+        self.assertEqual(att.x_deductible_base, round(3250.0))
+        self.assertEqual(att.x_daily_rate, round(3250.0 / 30.0))
+        self.assertEqual(att.x_scheduled_minutes, 480.0)
+        # The key assertion: deduction should be round((469/480) * raw_daily_rate)
+        raw_daily = 3250.0 / 30.0
+        expected = round((469.0 / 480.0) * raw_daily)
+        self.assertEqual(att.x_deduction_amount, expected,
+                         "Deduction should be proportional (rounded).")
         # It must be less than the daily rate
         self.assertLess(att.x_deduction_amount, att.x_daily_rate,
-                        msg="Deduction for 469/480 must be less than daily rate.")
-        # Approximate check: ~105.85
-        self.assertAlmostEqual(att.x_deduction_amount, 105.85, places=1)
+                        "Deduction for 469/480 must be less than daily rate.")

@@ -32,8 +32,9 @@ class BiometricAttendanceSyncPayroll(models.AbstractModel):
             + (version.medical_allowance or 0.0)
             + (version.other_allowance or 0.0)
         )
-        daily_rate = base / DAYS_PER_MONTH
-        hourly_rate = daily_rate / (DAILY_MINUTES / 60.0)
+        daily_rate = round(base / DAYS_PER_MONTH)
+        hourly_rate = round(daily_rate / (DAILY_MINUTES / 60.0))
+        base = round(base)
         # Update deduction columns via SQL.
         # At this point x_net_late_minutes / x_net_early_leave_minutes /
         # x_net_is_absent have already been set by KSW_attendance_leave's
@@ -47,12 +48,12 @@ class BiometricAttendanceSyncPayroll(models.AbstractModel):
             "    x_scheduled_minutes = %s, "
             "    x_deduction_amount = CASE "
             "        WHEN x_net_is_absent THEN %s "
-            "        ELSE LEAST("
+            "        ELSE ROUND(LEAST("
             "            (COALESCE(x_net_late_minutes, 0) "
             "             + COALESCE(x_net_early_leave_minutes, 0)) "
             "            / %s * %s, "
             "            %s"
-            "        ) "
+            "        )) "
             "    END "
             "WHERE employee_id = %s "
             "  AND check_in >= %s AND check_in < %s",
