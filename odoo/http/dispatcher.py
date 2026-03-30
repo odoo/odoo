@@ -22,6 +22,16 @@ from werkzeug.exceptions import default_exceptions as werkzeug_default_exception
 from odoo.exceptions import UserError
 from odoo.tools import exception_to_unicode
 
+from .response import Response
+from .session import (
+    CheckIdentityException,
+    SessionExpiredException,
+    get_session_max_inactivity,
+    logout,
+    save_session,
+    session_store,
+)
+
 if typing.TYPE_CHECKING:
     from collections.abc import Collection
 
@@ -153,6 +163,7 @@ class Dispatcher(ABC):
         """
         save_session(self.request)
         response.headers.extend(self.request.future_response.headers)
+        from .router import root  # noqa: PLC0415
         root.set_csp(response)
 
     @abstractmethod
@@ -410,16 +421,3 @@ class Json2Dispatcher(Dispatcher):
             body = serialize_exception(exc)
 
         return self.request.make_json_response(body, headers=headers, status=status)
-
-
-# ruff: noqa: E402
-from .response import Response
-from .router import root
-from .session import (
-    CheckIdentityException,
-    SessionExpiredException,
-    get_session_max_inactivity,
-    logout,
-    save_session,
-    session_store,
-)

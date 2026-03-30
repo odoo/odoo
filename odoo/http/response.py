@@ -9,6 +9,8 @@ import werkzeug.datastructures
 import werkzeug.exceptions
 import werkzeug.wrappers
 
+from . import request
+
 _logger = logging.getLogger('odoo.http')
 
 
@@ -142,7 +144,3 @@ class FutureResponse:
         if request.db and not request.env['ir.http']._is_allowed_cookie(cookie_type):
             max_age = 0
         werkzeug.Response.set_cookie(self, key, value=value, max_age=max_age, expires=expires, path=path, domain=domain, secure=secure, httponly=httponly, samesite=samesite)
-
-
-# ruff: noqa: E402
-from .requestlib import request
