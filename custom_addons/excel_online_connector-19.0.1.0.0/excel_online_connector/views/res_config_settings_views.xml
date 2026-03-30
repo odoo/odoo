@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+    <record id="view_res_config_settings_inherit_excel" model="ir.ui.view">
+      <field name="name">res.config.settings.view.form.inherit.excel_online_connector</field>
+      <field name="model">res.config.settings</field>
+      <field name="priority" eval="90"/>
+      <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//form" position="inside">
+         <app data-string="Excel Online Connector" string="Excel Online Connector" name="excel_online_connector" logo="/excel_online_connector/static/description/icon.png">
+          <div class="o_config_section mb16">
+            <div class="card" style="border:none; border-left: 4px solid #185abd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); overflow: hidden; margin-bottom: 1.5rem;">
+              <div class="card-header d-flex align-items-center" style="background: linear-gradient(90deg, rgba(24, 90, 189, 0.05) 0%, rgba(255, 255, 255, 0) 100%); padding:1rem 1.5rem; border-bottom: 1px solid #f0f2f5;">
+                <img src="/excel_online_connector/static/description/icon.png"
+                     alt="Excel"
+                     style="height:28px; width:28px; margin-right:12px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));"/>
+                <h3 class="mb-0" style="font-weight:600; font-size:1.1rem; color:#212529; letter-spacing: -0.2px;">Excel Online Connector</h3>
+              </div>
+              <div class="card-body" style="padding: 1.5rem 1.5rem 2rem 1.5rem; background-color: #fcfdff;">
+                <group col="2" style="column-gap: 2rem; row-gap: 1.25rem;">
+                  <field name="excel_export_tenant_id"
+                         placeholder="e.g. 12345678-90ab-cdef-1234-567890abcdef"
+                         class="form-control"
+                         style="background-color: transparent; border: none; border-radius: 0; margin-top: -10px; box-shadow: none;"/>
+                  <field name="excel_export_client_id"
+                         placeholder="Your Azure App Client ID"
+                         class="form-control"
+                         style="background-color: transparent; border: none; border-radius: 0; margin-top: -10px; box-shadow: none;"/>
+                  <field name="excel_export_client_secret"
+                         placeholder="••••••••••••••••"
+                         password="True"
+                         class="form-control"
+                         style="background-color: transparent; border: none; border-radius: 0; margin-top: -10px; box-shadow: none;"/>
+                  <field name="excel_export_user_upn"
+                         placeholder="user@yourcompany.com"
+                         class="form-control"
+                         style="background-color: transparent; border: none; border-radius: 0; margin-top: -10px; box-shadow: none;"/>
+                </group>
+              </div>
+               <div class="card-footer" style="background-color:#f8f9fa;">
+              <ul class="mb-0 pl-3">
+                <li>Enter your <strong>IDs here</strong>.</li>
+                <li>Ensure each id are different from one another. The solution might not work without IDs.</li>
+                <li>For customizations and feedback, reach us at <a href="mailto:info@niyulabs.com">info@niyulabs.com</a> or visit <a href="https://niyulabs.com" target="_blank">niyulabs.com</a>.</li>
+                <li>Click <strong style="color:#007bff;">SAVE</strong> to apply the changes.</li>
+              </ul>
+            </div>
+            </div>
+          </div>
+         </app>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
