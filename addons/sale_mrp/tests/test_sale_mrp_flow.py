@@ -144,14 +144,13 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
 
     @classmethod
     def _cls_create_product(cls, name, uom_id, routes=()):
-        p = Form(cls.env['product.product'])
-        p.name = name
-        p.tracking = 'none'
-        p.uom_id = uom_id
-        p.route_ids.clear()
-        for r in routes:
-            p.route_ids.add(r)
-        return p.save()
+        product = cls.env['product.product'].create({
+            'name': name,
+            'uom_id': uom_id.id,
+            'is_storable': True,
+            'route_ids': [Command.set([route.id for route in routes])],
+        })
+        return product
 
         # Helper to process quantities based on a dict following this structure :
         #
@@ -2417,8 +2416,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         kit = self.kit_3
         # create a similar kit
         bom_copy = kit.bom_ids[0].copy()
-        kit_copy = kit.copy()
-        bom_copy.product_tmpl_id = kit_copy.product_tmpl_id
+        kit_copy = self._cls_create_product('kit 3 copy', self.uom_unit)
+        bom_copy.product_tmpl_id = kit_copy.product_tmpl_id.id
         # put component in stock: 10 kit = 10 x comp_f + 20 x comp_g
         self.env['stock.quant']._update_available_quantity(self.component_f, warehouse.lot_stock_id, 10)
         self.env['stock.quant']._update_available_quantity(self.component_g, warehouse.lot_stock_id, 20)
