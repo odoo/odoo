@@ -37,6 +37,11 @@ registerWebsitePreviewTour(
         ...insertSnippet(productsSnippet),
         ...clickOnSnippet(productsSnippet),
         ...changeOptionInPopover("Products", "Filter", "Recently Viewed"),
+        {
+            content: 'check product are shown in edit',
+            trigger:
+                ':iframe .s_dynamic_snippet_products .s_dynamic_snippet_content .o_carousel_product_card[aria-label="Storage Box"]',
+        },
         ...clickOnSave(),
         {
             content: 'make delete icon appear',

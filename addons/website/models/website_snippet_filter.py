@@ -7,6 +7,7 @@ from odoo.fields import Domain
 from lxml import etree, html
 import logging
 from random import randint
+from markupsafe import Markup, escape
 
 _logger = logging.getLogger(__name__)
 
@@ -58,35 +59,54 @@ class WebsiteSnippetFilter(models.Model):
                 if not field_name.strip():
                     raise ValidationError(_("Empty field name in “%s”", record.field_names))
 
-    def _render(self, template_key, limit, search_domain=None, with_sample=False, res_model=None, res_id=None, **custom_template_data):
-        """Renders the website dynamic snippet items"""
-        self and self.ensure_one()
+    def _validate_template_keys(self, content_template, wrapper_template):
+        if content_template and '.dynamic_filter_template_' not in content_template:
+            _logger.warning("You can only use template prefixed by dynamic_filter_template_ inside website.shared_snippet_template_dynamic_snippet_content, not %s", content_template)
+            return False
 
-        assert '.dynamic_filter_template_' in template_key, _("You can only use template prefixed by dynamic_filter_template_ ")
-        if search_domain is None:
-            search_domain = []
+        if not wrapper_template or '.s_dynamic_snippet_wrapper_' not in wrapper_template:
+            _logger.warning("You can only use template prefixed by s_dynamic_snippet_wrapper_ to wrap content in website.shared_snippet_template_dynamic_snippet_content, not %s", wrapper_template)
+            return False
 
-        website = self.env.website
-        if self.website_id and website != self.website_id:
-            return ''
+        if self.website_id and self.env.website != self.website_id:
+            _logger.warning("You can only use filter specific to the current website")
+            return False
 
-        if self.model_name and self.model_name.replace('.', '_') not in template_key:
-            return ''
+        if content_template and self.model_name and self.model_name.replace('.', '_') not in content_template:
+            _logger.warning("You can only use template specific to the model of the filter inside website.shared_snippet_template_dynamic_snippet_content, not %s for %s", content_template, self.model_name)
+            return False
 
-        records = self._prepare_values(limit=limit, search_domain=search_domain, res_model=res_model, res_id=res_id)
-        is_sample = with_sample and not records
-        if is_sample:
-            records = self._prepare_sample(limit, res_model=res_model)
-        content = self.env['ir.qweb'].with_context(inherit_branding=False)._render(template_key, dict(
-            records=records,
-            website=website,
-            is_sample=is_sample,
-            is_view_active=website.is_view_active,
-            **custom_template_data,
-        ))
-        return [etree.tostring(el, encoding='unicode', method='html') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
+        return True
 
-    def _prepare_values(self, limit=None, search_domain=None, **options):
+    def _prepare_values_or_sample(self, res_model=None, res_id=None, limit=None, search_domain=None, search_extra=None, main_object=None):
+        class SnippetFilterResult:
+            def __init__(self, incomplete=False, error=None, values=None, is_sample=False):
+                self.incomplete = incomplete
+                self.error = error
+                self.values = values or []
+                self.is_sample = is_sample
+
+        if not (self.exists() or (res_id and res_model and limit == 1)):
+            return SnippetFilterResult(incomplete=True)
+
+        try:
+            values = self._prepare_values(res_model=res_model, res_id=res_id, limit=limit, search_domain=search_domain, search_extra=search_extra, main_object=main_object)
+            is_sample = False
+            if not values and self.env.context.get('dynamic_filter_snippet_with_sample', False):
+                values = self._prepare_sample(limit, res_model=res_model)
+                is_sample = True
+            return SnippetFilterResult(values=values, is_sample=is_sample)
+
+        # prevent an error in the code fetching the values from aborting the
+        # rendering of the whole page
+        except Exception as error:  # noqa: BLE001
+            return SnippetFilterResult(error=error)
+
+    @api.model
+    def _split_children(self, content):
+        return [Markup(etree.tostring(el, encoding='unicode', method='html')) for el in html.fromstring('<root>%s</root>' % escape(content)).getchildren()]
+
+    def _prepare_values(self, limit=None, search_domain=None, search_extra=None, main_object=None, **options):
         """Gets the data and returns it the right format for render."""
         self and self.ensure_one()
 
@@ -137,6 +157,8 @@ class WebsiteSnippetFilter(models.Model):
                     dynamic_filter=self,
                     limit=limit,
                     search_domain=search_domain,
+                    search_extra=search_extra,
+                    main_object=main_object,
                 ).sudo().run() or []
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)

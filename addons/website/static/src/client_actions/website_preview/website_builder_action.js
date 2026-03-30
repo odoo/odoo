@@ -155,6 +155,7 @@ export class WebsiteBuilderClientAction extends Component {
                         .reload({
                             lang: this.websiteService.currentWebsite?.default_lang_id.code,
                             website_id: this.websiteService.currentWebsite?.id,
+                            dynamic_filter_snippet_with_sample: true,
                         });
                 });
             }

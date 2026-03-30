@@ -22,9 +22,10 @@ export class CarouselProductCard extends Interaction {
             rpcParams.product_template_id = ev.currentTarget.dataset.productTemplateId;
         }
         await this.waitFor(rpc('/shop/products/recently_viewed_delete', rpcParams));
-        const dynamicSnippetProducts = this.el.closest('.s_dynamic_snippet_products');
-        this.services['public.interactions'].stopInteractions(dynamicSnippetProducts);
-        this.services['public.interactions'].startInteractions(dynamicSnippetProducts);
+        const carouselEl = this.el.closest('.carousel');
+        this.el.closest('[data-dynamic-carousel-item]').remove();
+        this.services['public.interactions'].stopInteractions(carouselEl);
+        this.services['public.interactions'].startInteractions(carouselEl);
     }
 }
 

@@ -314,6 +314,7 @@
             'website/static/src/js/content/adapt_content.js',
             'website/static/src/js/content/generate_video_iframe.js',
             'website/static/src/js/content/age_verification_content_blur.js',
+            'website/static/src/js/content/wrap_dynamic_snippet.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
@@ -323,6 +324,7 @@
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
             ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
+            ('remove', 'website/static/src/js/content/wrap_dynamic_snippet.js'),
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
@@ -405,6 +407,7 @@
             'web/static/src/public/public_root.js',
             'website/static/lib/multirange/*.js',
             'website/static/src/js/content/auto_hide_menu.js',
+            'website/static/src/js/content/wrap_dynamic_snippet.js',
             'website/static/src/core/**/*',
             'website/static/src/utils/**/*',
             'website/static/src/interactions/**/*',

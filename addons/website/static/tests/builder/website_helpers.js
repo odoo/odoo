@@ -444,7 +444,7 @@ export async function waitForSnippetDialog() {
         targetDoc: queryOne("iframe.o_add_snippet_iframe").contentDocument,
         js: false,
     });
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 1000 });
 }
 
 /**

@@ -11,7 +11,8 @@
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
         <BuilderRow label.translate="Blogs" preview="false">
             <BuilderMany2Many model="'blog.blog'"
-                dataAttributeAction="'filterByBlogIds'"
+                action="'dynamicSearchDomainJson'"
+                actionParam="'blogByIds'"
                 domain="[
                     '|',
                     ['website_id', '=', false],
@@ -21,12 +22,14 @@
         </BuilderRow>
         <BuilderRow label.translate="Tags" preview="false">
             <BuilderMany2Many model="'blog.tag'"
-                dataAttributeAction="'filterByTagIds'"
+                action="'dynamicSearchDomainJson'"
+                actionParam="'blogByTagIds'"
             />
         </BuilderRow>
         <BuilderRow label.translate="Authors" preview="false">
             <BuilderMany2Many model="'res.partner'"
-                dataAttributeAction="'filterByAuthorIds'"
+                action="'dynamicSearchDomainJson'"
+                actionParam="'blogByAuthorIds'"
                 domain="[
                     ['blog_post_ids', '!=', false],
                     '|',

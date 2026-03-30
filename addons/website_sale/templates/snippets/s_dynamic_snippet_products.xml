@@ -33,7 +33,13 @@
         <t t-call="website.s_dynamic_snippet_template"
             snippet_name.f="s_dynamic_snippet_products"
             snippet_classes="'oe_website_sale ' + default_design_classes"
-            main_page_url.f="/shop">
+            main_page_url.f="/shop"
+            filter_param="dict(
+                wrapper_template='website.s_dynamic_snippet_wrapper_carousel',
+                wrapper_data=dict(scroll_mode='multi', carousel_interval=5000),
+                search_extra=dict(show_variants=True),
+            )"
+        >
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>
     </template>

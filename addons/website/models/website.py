@@ -559,17 +559,20 @@ class Website(models.CachedModel):
             # Nothing to preconfigure on the given snippet
             return
 
+        dynamic_content_el = el.xpath("//*[hasclass('s_dynamic_snippet_content')]")[0]
+        dynamic_content_el.set('t-shared-snippet', dynamic_content_el.attrib.pop('data-oe-shared-snippet'))
+
         snippet_classes = el.get('class', '').split()
 
         filter_name = customizations.get('filter_xmlid') or default_settings.get('filter_xmlid')
         if filter_name:
             selected_filter = self.env.ref(filter_name)
-            el.set('data-filter-id', str(selected_filter.id))
-            el.set('data-number-of-records', str(selected_filter.limit))
+            dynamic_content_el.set('data-arg-filter_id', json.dumps(selected_filter.id))
+            dynamic_content_el.set('data-arg-limit', json.dumps(selected_filter.limit))
 
         selected_template_key = customizations.get('template_key') or default_settings.get('template_key')
         if selected_template_key:
-            el.set('data-template-key', selected_template_key)
+            dynamic_content_el.set('data-arg-content_template', json.dumps(selected_template_key))
             template_class = re.sub(r'.*\.dynamic_filter_template_', 's_', selected_template_key)
             if template_class not in snippet_classes:
                 snippet_classes.append(template_class)
@@ -604,6 +607,17 @@ class Website(models.CachedModel):
         }
         for key, value in data_attributes.items():
             el.set(f'data-{key}', value)
+
+        dynamic_snippet_args = {
+            **default_settings.get('dynamic_snippet_args', {}),
+            **customizations.get('dynamic_snippet_args', {}),
+        }
+        for key, value in dynamic_snippet_args.items():
+            attr_name = f'data-arg-{key}'
+            if isinstance(value, dict):
+                existing_arg = dynamic_content_el.get(attr_name)
+                value = (existing_arg and json.loads(existing_arg) or {}) | value
+            dynamic_content_el.set(attr_name, json.dumps(value))
 
         el.set('class', ' '.join(snippet_classes))
 

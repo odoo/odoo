@@ -2,14 +2,20 @@
 <odoo>
 
     <template id="website_sale.dynamic_filter_template_product_public_category_default">
+        <t t-set="alignment_class" t-value="dict(
+            left='justify-content-between',
+            center='align_category_center',
+            right='justify-content-between align_category_right',
+        ).get(alignment)"/>
+        <t t-set="span" t-value="dict(small=2 ,medium=2 ,large=4).get(size)"/>
         <t t-foreach="records" t-as="category">
-            <t t-set="is_parent" t-value="category['id'] == parentCategoryId"/>
+            <t t-set="is_parent" t-value="category['id'] == parent_category_id"/>
             <div
-                t-if="not is_parent or includeParent"
+                t-if="not is_parent or include_parent"
                 name="category_item"
                 class="s_dynamic_category_item position-relative bg-black overflow-hidden oe_unremovable oe_unmovable"
                 t-att-data-category-id="category['id']"
-                t-attf-style="grid-row: span {{ 4 if is_parent else size }}; grid-column: span calc(min({{ 2 if is_parent and colSpanTwo else 1 }}, var(--DynamicCategory-max-column-span, infinity)))"
+                t-attf-style="grid-row: span {{ 4 if is_parent else span }}; grid-column: span calc(min({{ 2 if is_parent and col_span_two else 1 }}, var(--DynamicCategory-max-column-span, infinity)))"
                 role="article"
             >
                 <div class="overflow-hidden">
@@ -24,7 +30,7 @@
                 </div>
                 <div
                     name="category_overlay"
-                    t-attf-class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}"
+                    t-attf-class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignment_class}}"
                 >
                     <h3 class="h4" t-out="category['name']"/>
                     <a
@@ -32,7 +38,7 @@
                         role="button"
                         t-attf-href="/shop/category/{{category['id']}}"
                         class="s_dynamic_category_button btn btn-primary align-self-start oe_unremovable"
-                        t-out="buttonText"
+                        t-out="button_text"
                     />
                 </div>
             </div>

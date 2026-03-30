@@ -29,6 +29,7 @@ class SharedSnippetContent extends Interaction {
                 [sharedSnippetName, sharedSnippetArgs, mainObject.model, mainObject.id],
                 {
                     context: {
+                        dynamic_filter_snippet_with_sample: true,
                         lang: this.services.website_page.context.lang,
                         website_id: this.services.website_page.context.website_id,
                     },
