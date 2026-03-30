@@ -590,3 +590,12 @@ class TestSafeEvalRuntime(TransactionCase):
         with self.assertRaises(UnsafeFunctionError):
             safe_checker.check(__import__)
         safe_checker.check(safe_eval._import)
+
+    def test_prevent_bypass_module(self):
+        from collections import deque  # noqa: PLC0415
+
+        unsafe_func = deque().append
+        self.assertFalse(unsafe_func.__module__)
+
+        with self.assertRaises(UnsafeFunctionError):
+            safe_checker.check(deque().append)

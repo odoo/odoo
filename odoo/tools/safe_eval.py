@@ -504,7 +504,11 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
 
     check_values(context)
 
-    globals_dict = dict(context or {}, __builtins__=dict(_BUILTINS))
+    globals_dict = dict(
+        context or {},
+        __name__=f'{__name__}.<evaluated_code>',
+        __builtins__=dict(_BUILTINS),
+    )
 
     c = compile_codeobj(expr, filename=filename, mode=mode)
     assert_valid_codeobj(_SAFE_OPCODES, c, expr)
@@ -521,6 +525,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     finally:
         if context is not None:
             del globals_dict['__builtins__']
+            del globals_dict['__name__']
             context.update(globals_dict)
 
 
@@ -836,7 +841,7 @@ class _SafeChecker:
     def _hook_function(self, obj) -> None:
         # At runtime if `__name__` is present in globals, `__module__` will
         # be present on the user defined function
-        if obj is safe_call or not getattr(obj, '__module__', False):
+        if obj is safe_call:
             return
         if obj not in _SafeWhitelist.TRUSTED_FUNCTIONS:
             safe_whitelist.check_function(obj)
@@ -937,7 +942,10 @@ class _SafeWhitelist:
             qualname = ''
 
         if module := getattr(cls_obj, '__module__', None):
-            if module in sys.modules:
+            if (
+                module in sys.modules or
+                module == 'odoo.tools.safe_eval.<evaluated_code>'
+            ):
                 return f'{module}.{qualname}'.strip('.')
 
             # The object can be defined in a module which is not register,
@@ -1096,6 +1104,8 @@ def add_monitoring(code):
 
 @functools.cache
 def _initialize_safe_whitelist():
+    # Custom functions
+    safe_whitelist.add_function('odoo.tools.safe_eval.<evaluated_code>.*')
     # Wrapped modules
     safe_whitelist.add_class('datetime.date')
     safe_whitelist.add_class('datetime.datetime')
