@@ -361,7 +361,7 @@ test("one2many in a list x2many editable use the right context", async () => {
     });
 
     await contains(".o_field_x2many_list .o_field_x2many_list_row_add button").click();
-    await contains("[name='trululu'] input").edit("new partner");
+    await contains("[name='trululu'] input").edit("new partner", { confirm: false });
     await selectFieldDropdownItem("trululu", 'Create "new partner"');
 
     expect.verifySteps(["name_create list"]);
