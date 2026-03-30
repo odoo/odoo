@@ -1329,6 +1329,10 @@ export class PosStore extends WithLazyGetterTrap {
         this.setNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
 
+        if (!order.partner_id) {
+            order.partner_id = this.getDefaultPartnerId();
+        }
+
         if (this.config.use_presets && !data["preset_id"]) {
             this.selectPreset(this.config.default_preset_id, order);
         }
@@ -1370,13 +1374,17 @@ export class PosStore extends WithLazyGetterTrap {
     get openOrder() {
         return this.models["pos.order"].find((o) => o.state === "draft") || this.addNewOrder();
     }
+    getDefaultPartnerId() {
+        return null;
+    }
     getEmptyOrder() {
+        const defaultPartnerId = this.getDefaultPartnerId();
         const emptyOrders = this.models["pos.order"].filter(
             (order) =>
                 order.isEmpty() &&
                 !order.finalized &&
                 order.payment_ids.length === 0 &&
-                !order.partner_id &&
+                (!order.partner_id || order.partner_id.id === defaultPartnerId) &&
                 order.pricelist_id?.id === this.config.pricelist_id?.id &&
                 order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
         );
