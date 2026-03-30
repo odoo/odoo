@@ -14,6 +14,7 @@ import {
     isProtecting,
     isVisible,
     isZwnbsp,
+    isContentEditable,
 } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
@@ -651,7 +652,9 @@ export class LinkPlugin extends Plugin {
             getAttachmentMetadata: this.getAttachmentMetadata,
             recordInfo: this.config.getRecordInfo?.() || {},
             canEdit:
-                !this.linkInDocument || !this.linkInDocument.classList.contains("o_link_readonly"),
+                (!this.linkInDocument ||
+                    !this.linkInDocument.classList.contains("o_link_readonly")) &&
+                isContentEditable(linkElement),
             canRemove:
                 this.linkInDocument &&
                 this.linkInDocument.parentElement.isContentEditable &&
