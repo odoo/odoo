@@ -694,7 +694,7 @@ class Website(models.CachedModel):
         return themes_suggested
 
     @api.model
-    def configurator_theme_preview_body(self, theme_name, install_theme=False):
+    def configurator_theme_preview_body(self, theme_name, industry, install_theme=False, generate_content=False, user_prompt=None, tone=None):
         """Build homepage preview content using a theme configurator snippets."""
         website = self.get_current_website()
         if not theme_name:
@@ -721,10 +721,38 @@ class Website(models.CachedModel):
             text_must_be_translated_for_openai=False,
         )
         generated_content = {}
+        translated_content = {}
         for snippet in snippet_list:
             snippet_key = website._get_snippet_view_key(snippet, 'homepage')
-            html_text_processor, snippet_generated_content, _translated_content = html_text_processor._get_snippet_content(snippet_key)
+            html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
             generated_content.update(snippet_generated_content)
+            translated_content.update(snippet_translated_content)
+        
+        footer_ids = [
+            'website.template_footer_contact', 'website.template_footer_headline',
+            'website.footer_custom', 'website.template_footer_links',
+            'website.template_footer_minimalist', 'website.template_footer_mega', 'website.template_footer_mega_columns', 'website.template_footer_mega_links',
+            'website.template_footer_mega_cards', 'website.template_footer_descriptive', 'website.template_footer_centered', 'website.template_footer_call_to_action',
+        ]
+
+        # Extract placeholders from footers
+        for footer_id in footer_ids:
+            view_id = self.env['website'].viewref(footer_id, raise_if_not_found=False)
+            if view_id and view_id.arch_db:
+                html_text_processor, placeholders = html_text_processor._process_snippet(view_id.arch_db, view_id.arch_db)
+                for placeholder in placeholders:
+                    generated_content[placeholder] = ''
+
+        if generate_content:
+            generated_content = self.configurator_generate_AI_content(
+                website,
+                generated_content,
+                translated_content,
+                html_text_processor,
+                industry,
+                user_prompt=user_prompt,
+                tone=tone,
+            )
 
         theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
         rendered_snippets = []
@@ -768,6 +796,42 @@ class Website(models.CachedModel):
                 logger.warning(e)
 
         return ''.join(rendered_snippets)
+
+    def configurator_generate_AI_content(
+        self,
+        website,
+        generated_content,
+        translated_content,
+        html_text_processor,
+        industry,
+        user_prompt=None,
+        tone=None,
+    ):
+        translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
+        if translated_ratio <= 0.5:
+            logger.info("Skip AI text generation because translation coverage is too low (%s%%)", translated_ratio * 100)
+            return generated_content
+
+        try:
+            database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+            response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
+                'placeholders': list(generated_content.keys()),
+                'lang': website.default_lang_id.name,
+                'industry': industry,
+                'database_id': database_id,
+                'user_prompt': user_prompt,
+                'tone': tone,
+            })
+            name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
+            website_name = re.escape(website.name)
+            for key in generated_content:
+                if response.get(key):
+                    generated_content[key] = name_replace_parser.sub(website_name, response[key], 0)
+        except AccessError:
+            # If IAP is broken continue normally (without generating text)
+            pass
+
+        return generated_content
 
     @api.model
     def configurator_skip(self):
@@ -951,7 +1015,6 @@ class Website(models.CachedModel):
             '/api/website/2/configurator/custom_resources/%s' % (industry_id if industry_id > 0 else ''),
             {'theme': theme_name}
         )
-
         # Generate text for the pages
         requested_pages = set(pages_views.keys()).union({'homepage'})
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
@@ -988,27 +1051,13 @@ class Website(models.CachedModel):
                 for placeholder in placeholders:
                     generated_content[placeholder] = ''
 
-        translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
-        if translated_ratio > 0.8:
-            try:
-                database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
-                response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
-                    'placeholders': list(generated_content.keys()),
-                    'lang': website.default_lang_id.name,
-                    'industry': industry,
-                    'database_id': database_id,
-                })
-                name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
-                website_name = re.escape(website.name)
-                for key in generated_content:
-                    if response.get(key):
-                        generated_content[key] = (name_replace_parser.sub(website_name, response[key], 0))
-            except AccessError:
-                # If IAP is broken continue normally (without generating text)
-                pass
-        else:
-            logger.info("Skip AI text generation because translation coverage is too low (%s%%)", translated_ratio * 100)
-
+        generated_content = self.configurator_generate_AI_content(
+            website,
+            generated_content,
+            translated_content,
+            html_text_processor,
+            industry,
+        )
         # Configure the pages
         for index, page_code in enumerate(requested_pages):
             snippet_list = configurator_snippets.get(page_code, [])
