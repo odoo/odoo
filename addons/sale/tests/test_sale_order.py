@@ -607,6 +607,32 @@ class TestSaleOrder(SaleCommon):
         scheduled_message.post_message()
         self.assertEqual(order.state, 'sent')
 
+    def test_send_from_action_marks_as_sent(self):
+        """Sending email via Actions menu should mark SOs as sent (single and multi)."""
+        quotation_template = self.env.ref('sale.email_template_edi_sale')
+
+        email_act = self.sale_order.with_context(hide_default_template=True).action_quotation_send()
+        email_ctx = email_act.get('context', {})
+        composer = self.env['mail.compose.message'].with_context(**email_ctx).create({
+            'template_id': quotation_template.id,
+        })
+        composer.action_send_mail()
+
+        self.assertEqual(self.sale_order.state, 'sent')
+
+        orders = self.empty_order | self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+        email_act = orders.with_context(hide_default_template=True).action_quotation_send()
+        email_ctx = email_act.get('context', {})
+        composer = self.env['mail.compose.message'].with_context(**email_ctx).create({
+            'template_id': quotation_template.id,
+        })
+        composer.action_send_mail()
+
+        self.assertEqual(orders[0].state, 'sent')
+        self.assertEqual(orders[1].state, 'sent')
+
     def test_so_discount_is_not_reset(self):
         """ Discounts should not be recomputed on order confirmation """
         with patch(
