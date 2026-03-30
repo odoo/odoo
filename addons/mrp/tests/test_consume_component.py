@@ -488,3 +488,59 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 0.0, 'picked': False},
             {'quantity': 0.0, 'picked': False},
         ])
+
+    def test_reservation_method_for_outgoing(self):
+        """ Test the functional flow when the reservation method for outgoing picking types is set to 'manual' """
+        outgoing_picking_type = self.env['stock.picking.type'].search([('code', '=', 'outgoing')], limit=1)
+
+        outgoing_picking_type.reservation_method = 'manual'
+
+        quant_none = self.create_quant(self.raw_none, 3)
+        quant_lot = self.create_quant(self.raw_lot, 2)
+        (quant_none + quant_lot).action_apply_inventory()
+
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = outgoing_picking_type
+
+            with picking_form.move_ids_without_package.new() as move_form:
+                move_form.product_id = self.raw_none
+                move_form.product_uom_qty = 3
+
+            with picking_form.move_ids_without_package.new() as move_form:
+                move_form.product_id = self.raw_lot
+                move_form.product_uom_qty = 2
+
+        picking = picking_form.save()
+
+        self.assertEqual(len(picking.move_ids), 2)
+        picking.action_confirm()
+
+        move_track_none, move_track_lot = picking.move_ids
+
+        self.assertEqual(move_track_none.quantity, 0)
+        self.assertEqual(move_track_lot.quantity, 0)
+
+        move_track_none.quantity = 3
+
+        # Simulate the form view of the burger button (detail of a move) for serial/lot tracking
+        with (
+            Form(move_track_lot, self.env.ref('stock.view_stock_move_operations')) as move_form,
+            move_form.move_line_ids.new() as move_line_form,
+        ):
+            move_line_form.quantity = 2
+            move_line_form.lot_id = quant_lot.lot_id
+
+        # Check stock move lines creation for each move
+        self.assertEqual(len(move_track_none.move_line_ids), 1)
+        self.assertEqual(move_track_none.move_line_ids.quantity, 3)
+
+        self.assertEqual(len(move_track_lot.move_line_ids), 1)
+        self.assertEqual(move_track_lot.move_line_ids.quantity, 2)
+        self.assertTrue(move_track_lot.move_line_ids.lot_id)
+
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+
+        # Check quantity available in stock for each product
+        self.assertEqual(self.raw_none.qty_available, 0)
+        self.assertEqual(self.raw_lot.qty_available, 0)
