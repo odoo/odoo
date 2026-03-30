@@ -626,12 +626,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'tax_category_percent': tax_category_vals['percent'],
                 '_tax_category_vals_': tax_category_vals,
                 'tax_amount_type': tax.amount_type,
-                'include_base_amount': tax.include_base_amount,
             }
             # If the tax is fixed, we want to have one group per tax
             # s.t. when the invoice is imported, we can try to guess the fixed taxes
             if tax.amount_type == 'fixed':
                 grouping_key['tax_name'] = tax.name
+                grouping_key['include_base_amount'] = tax.include_base_amount
             return grouping_key
 
         # Validate the structure of the taxes
