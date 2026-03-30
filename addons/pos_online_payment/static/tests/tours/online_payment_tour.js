@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "2"),
             PaymentScreen.selectedPaymentlineHas("Cash", "2.0"),
-            PaymentScreen.changeIs("1.0"),
+            PaymentScreen.changeIs("-1.0"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             // successfully confirming the dialog would imply that the error popup is actually shown

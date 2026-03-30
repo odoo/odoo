@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_ch
             PaymentScreen.clickPaymentMethod("Bank", true, { amount: "5.2" }),
             PaymentScreen.enterPaymentLineAmount("Bank", "6", true, {
                 amount: "6.0",
-                change: "0.80",
+                change: "-0.80",
             }),
             ProductScreen.finishOrder(),
         ].flat(),

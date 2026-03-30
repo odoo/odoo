@@ -642,7 +642,7 @@ registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickNumpad("2 0"),
             PaymentScreen.fillPaymentLineAmountMobile("Bank", "20.00"),
-            PaymentScreen.changeIs("4.30"),
+            PaymentScreen.changeIs("-4.30"),
 
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
@@ -668,7 +668,7 @@ registry.category("web_tour.tours").add("test_cash_rounding_up_with_change", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("2 0 0"),
 
-            PaymentScreen.changeIs("21"),
+            PaymentScreen.changeIs("-21"),
         ].flat(),
 });
 
@@ -687,7 +687,7 @@ registry.category("web_tour.tours").add("test_cash_rounding_only_cash_method_wit
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("+20"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "20.00"),
-            PaymentScreen.changeIs("4.30"),
+            PaymentScreen.changeIs("-4.30"),
 
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
