@@ -44,6 +44,10 @@ class TestWebsiteProfile(HttpCaseGamification):
         self.start_tour("/profile/users", 'website_profile_description', login="admin")
 
     def test_portal_access(self):
+        # Delete demo data, to have a known set of given karma and badges
+        self.env["gamification.karma.tracking"].search([]).unlink()
+        self.env["gamification.badge.user"].search([]).unlink()
+
         bob = odoo.tests.new_test_user(self.env, 'Bob', karma=100, website_published=True)
         alice = odoo.tests.new_test_user(self.env, 'Alice', karma=100, website_published=True)
         john = odoo.tests.new_test_user(self.env, 'John', karma=100)
