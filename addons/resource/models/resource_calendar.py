@@ -570,6 +570,8 @@ class ResourceCalendar(models.Model):
         with them so this method merely calculates the proportion that is
         covered by the intervals.
         """
+        if self:
+            self.ensure_one()
         day_hours = defaultdict(float)
         day_days = defaultdict(float)
         for start, stop, _ in attendance_intervals:
@@ -750,6 +752,7 @@ class ResourceCalendar(models.Model):
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
         """
+        self.ensure_one()
         # naive datetimes are made explicit in UTC
         from_datetime = localized(from_datetime)
         to_datetime = localized(to_datetime)
