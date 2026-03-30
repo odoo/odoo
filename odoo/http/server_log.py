@@ -1,4 +1,4 @@
-import contextlib
+import contextvars
 import functools
 import logging
 import pprint
@@ -75,8 +75,7 @@ def reset_thread_info():
     current_thread.sess_id = None
 
 
-@contextlib.contextmanager
-def push_thread_info():
+def run_in_isolated_context(callback, /, *a, **kw):
     current_thread = threading.current_thread()
     query_count = current_thread.query_count
     query_time = current_thread.query_time
@@ -88,7 +87,7 @@ def push_thread_info():
     reset_thread_info()
 
     try:
-        yield
+        return contextvars.Context().run(callback, *a, **kw)
     finally:
         current_thread.query_count += query_count  # +=
         current_thread.query_time += query_time  # +=
