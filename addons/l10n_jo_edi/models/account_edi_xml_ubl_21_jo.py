@@ -3,8 +3,28 @@ import re
 from types import SimpleNamespace
 
 from odoo import models
+<<<<<<< 905421f74325c342dfd05f37fb8270d87752ad02
 from odoo.tools import float_round, float_is_zero
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+||||||| 109f829c2b461b14167e9227e42d096d4410a3b3
+from odoo.tools import float_repr
+from odoo.tools.float_utils import float_round
+
+
+# There is a need for this dummy currency because:
+# 1. In `ubl_20_templates.xml`, the currency name is read from currency like `vals['currency'].name`
+# 2. In Jordanian EDI XML documentation, certain locations expect the currency name to be `JO` not `JOD`.
+JO_CURRENCY = SimpleNamespace(name='JO')
+=======
+from odoo.tools import float_compare, float_repr
+from odoo.tools.float_utils import float_round
+
+
+# There is a need for this dummy currency because:
+# 1. In `ubl_20_templates.xml`, the currency name is read from currency like `vals['currency'].name`
+# 2. In Jordanian EDI XML documentation, certain locations expect the currency name to be `JO` not `JOD`.
+JO_CURRENCY = SimpleNamespace(name='JO')
+>>>>>>> 9b24151ba724ba2ad29635980c2ace8076005d25
 
 JO_MAX_DP = 9
 
@@ -366,26 +386,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         }
 
     def _get_line_edi_id(self, line, default_id):
-        if not line.is_refund:  # in case it's invoice not credit note
-            return default_id
-
-        refund_move = line.move_id
-        invoice_move = refund_move.reversed_entry_id
-        invoice_lines = invoice_move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
-        n = len(invoice_lines)
-
-        line_id = -1
-        for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
-            if line.product_id == invoice_line.product_id \
-                    and line.name == invoice_line.name \
-                    and line.price_unit == invoice_line.price_unit \
-                    and line.discount == invoice_line.discount:
-                line_id = invoice_line_id
-                break
-        if line_id == -1:
-            line_id = n + default_id
-
-        return line_id
+        # only kept for stable policy, would be removed in FWs
+        return default_id
 
     def _add_document_line_gross_subtotal_and_discount_vals(self, vals):
         """ In JO, because of the precision requirements, we first compute an exact
@@ -458,9 +460,61 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                     },
                     'cac:TaxCategory': self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
                 }
+<<<<<<< 905421f74325c342dfd05f37fb8270d87752ad02
                 for grouping_key, values in aggregated_tax_details.items()
                 if grouping_key
             ],
+||||||| 109f829c2b461b14167e9227e42d096d4410a3b3
+                vals['rounding_amount'] += self._round_max_dp(tax_details_vals['raw_tax_amount_currency'])
+                vals['tax_subtotal_vals'].insert(0, special_tax_subtotal)
+                # Because we want the following:
+                # 1. The special tax amount should be accounted for in the taxable amount used to calculate general tax amount.
+                # 2. The special tax amount should not be included in the reported taxable amount of either subtotals (general or special).
+                # We do the following in the general tax subtotal:
+                # 1. Taxable amount is first calculated as (line taxable amount + line special tax amount)
+                # 2. This taxable amount is used to calculate general tax amount, and is reported in the general tax subtotal itself
+                # 3. If special tax was found on the line, the reported taxable amount in the general tax subtotal is overridden here
+                #       to remove special tax amount from it
+                vals['tax_subtotal_vals'][1]['taxable_amount'] = taxable_amount
+        return [vals]
+
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        return {
+            'currency': JO_CURRENCY,
+            'currency_dp': self._get_currency_decimal_places(),
+            'id': self._get_line_edi_id(line, default_id=line_id + 1),
+            'line_quantity': line.quantity,
+            'line_quantity_attrs': {'unitCode': self._get_uom_unece_code()},
+            'line_extension_amount': self._get_line_taxable_amount(self._extract_base_lines(taxes_vals)[0]),
+            'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
+            'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
+            'price_vals': self._get_invoice_line_price_vals(line, taxes_vals),
+=======
+                vals['rounding_amount'] += self._round_max_dp(tax_details_vals['raw_tax_amount_currency'])
+                vals['tax_subtotal_vals'].insert(0, special_tax_subtotal)
+                # Because we want the following:
+                # 1. The special tax amount should be accounted for in the taxable amount used to calculate general tax amount.
+                # 2. The special tax amount should not be included in the reported taxable amount of either subtotals (general or special).
+                # We do the following in the general tax subtotal:
+                # 1. Taxable amount is first calculated as (line taxable amount + line special tax amount)
+                # 2. This taxable amount is used to calculate general tax amount, and is reported in the general tax subtotal itself
+                # 3. If special tax was found on the line, the reported taxable amount in the general tax subtotal is overridden here
+                #       to remove special tax amount from it
+                vals['tax_subtotal_vals'][1]['taxable_amount'] = taxable_amount
+        return [vals]
+
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        return {
+            'currency': JO_CURRENCY,
+            'currency_dp': self._get_currency_decimal_places(),
+            'id': line_id,
+            'line_quantity': line.quantity,
+            'line_quantity_attrs': {'unitCode': self._get_uom_unece_code()},
+            'line_extension_amount': self._get_line_taxable_amount(self._extract_base_lines(taxes_vals)[0]),
+            'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
+            'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
+            'price_vals': self._get_invoice_line_price_vals(line, taxes_vals),
+>>>>>>> 9b24151ba724ba2ad29635980c2ace8076005d25
         }
 
     def _add_invoice_line_item_nodes(self, line_node, vals):
@@ -495,3 +549,152 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                 'currencyID': vals['currency_name'],
             }
         }
+<<<<<<< 905421f74325c342dfd05f37fb8270d87752ad02
+||||||| 109f829c2b461b14167e9227e42d096d4410a3b3
+
+    ####################################################
+    # export methods
+    ####################################################
+
+    def _export_invoice_vals(self, invoice):
+        vals = super()._export_invoice_vals(invoice)
+
+        vals.update({
+            'main_template': 'l10n_jo_edi.ubl_jo_Invoice',
+            'InvoiceType_template': 'l10n_jo_edi.ubl_jo_InvoiceType',
+            'PaymentMeansType_template': 'l10n_jo_edi.ubl_jo_PaymentMeansType',
+            'InvoiceLineType_template': 'l10n_jo_edi.ubl_jo_InvoiceLineType',
+            'TaxTotalType_template': 'l10n_jo_edi.ubl_jo_TaxTotalType',
+        })
+
+        customer = invoice.partner_id
+        is_refund = invoice.move_type == 'out_refund'
+
+        vals['vals'].update({
+            'ubl_version_id': '',
+            'order_reference': '',
+            'sales_order_id': '',
+            'profile_id': 'reporting:1.0',
+            'id': invoice.name.replace('/', '_'),
+            'uuid': invoice.l10n_jo_edi_uuid,
+            'document_currency_code': invoice.currency_id.name,
+            'tax_currency_code': invoice.currency_id.name,
+            'document_type_code_attrs': {'name': self._get_payment_method_code(invoice)},
+            'document_type_code': "381" if is_refund else "388",
+            'accounting_customer_party_vals': {
+                'party_vals': self._get_empty_party_vals() if is_refund else self._get_partner_party_vals(customer, role='customer'),
+                'accounting_contact': {
+                    'telephone': '' if is_refund else self._sanitize_phone(invoice.partner_id.phone or invoice.partner_id.mobile),
+                },
+            },
+            'seller_supplier_party_vals': {
+                'party_vals': self._get_seller_supplier_party_vals(invoice),
+            },
+            'billing_reference_vals': self._get_billing_reference_vals(invoice),
+            'additional_document_reference_list': self._get_additional_document_reference_list(invoice),
+        })
+
+        return vals
+
+    def _export_invoice(self, invoice):
+        # EXTENDS account.edi.xml.ubl_21
+        # _export_invoice normally cleans up the xml to remove empty nodes.
+        # However, in the JO UBL version, we always want the PartyIdentification with ID nodes, even if empty.
+        # We'll replace the empty value by a dummy one so that the node doesn't get cleaned up and remove its content after the file generation.
+        xml, errors = super()._export_invoice(invoice)
+        xml_root = etree.fromstring(xml)
+        party_identification_id_elements = xml_root.findall('.//cac:PartyIdentification/cbc:ID', namespaces=xml_root.nsmap)
+        for element in party_identification_id_elements:
+            if element.text == 'NO_VAT':
+                element.text = ''
+        # method='html' is used to keep the element un-shortened ("<a></a>" instead of <a/>)
+        return etree.tostring(xml_root, method='html'), errors
+=======
+
+    ####################################################
+    # export methods
+    ####################################################
+
+    def _enumerate_invoice_lines(self, invoice, start=0):
+        if invoice.move_type == 'out_refund':
+            DecimalPrecision = self.env['decimal.precision']
+            invoice_edi_id_x_line = dict(self._enumerate_invoice_lines(invoice.reversed_entry_id, start=start))
+            overflow_edi_id = len(invoice_edi_id_x_line) + 1
+
+            refund_edi_id_x_line = {}
+            refund_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+            for refund_line in refund_lines:
+                matching_edi_ids = [
+                    line_id for line_id, line in invoice_edi_id_x_line.items()
+                    if line.product_id == refund_line.product_id
+                    and float_compare(line.price_unit, refund_line.price_unit, precision_digits=DecimalPrecision.precision_get('Product Price')) == 0
+                    and float_compare(line.discount, refund_line.discount, precision_digits=DecimalPrecision.precision_get('Discount')) == 0
+                    and float_compare(line.quantity, refund_line.quantity, precision_digits=DecimalPrecision.precision_get('Product Unit of Measure')) >= 0
+                ]
+
+                if matching_edi_ids:
+                    edi_id = min(matching_edi_ids, key=lambda line_id: invoice_edi_id_x_line[line_id].quantity)
+                    refund_edi_id_x_line[edi_id] = refund_line
+                    invoice_edi_id_x_line.pop(edi_id)
+                else:
+                    refund_edi_id_x_line[overflow_edi_id] = refund_line
+                    overflow_edi_id += 1
+
+            return refund_edi_id_x_line.items()
+        else:
+            return super()._enumerate_invoice_lines(invoice, 1)
+
+    def _export_invoice_vals(self, invoice):
+        vals = super()._export_invoice_vals(invoice)
+
+        vals.update({
+            'main_template': 'l10n_jo_edi.ubl_jo_Invoice',
+            'InvoiceType_template': 'l10n_jo_edi.ubl_jo_InvoiceType',
+            'PaymentMeansType_template': 'l10n_jo_edi.ubl_jo_PaymentMeansType',
+            'InvoiceLineType_template': 'l10n_jo_edi.ubl_jo_InvoiceLineType',
+            'TaxTotalType_template': 'l10n_jo_edi.ubl_jo_TaxTotalType',
+        })
+
+        customer = invoice.partner_id
+        is_refund = invoice.move_type == 'out_refund'
+
+        vals['vals'].update({
+            'ubl_version_id': '',
+            'order_reference': '',
+            'sales_order_id': '',
+            'profile_id': 'reporting:1.0',
+            'id': invoice.name.replace('/', '_'),
+            'uuid': invoice.l10n_jo_edi_uuid,
+            'document_currency_code': invoice.currency_id.name,
+            'tax_currency_code': invoice.currency_id.name,
+            'document_type_code_attrs': {'name': self._get_payment_method_code(invoice)},
+            'document_type_code': "381" if is_refund else "388",
+            'accounting_customer_party_vals': {
+                'party_vals': self._get_empty_party_vals() if is_refund else self._get_partner_party_vals(customer, role='customer'),
+                'accounting_contact': {
+                    'telephone': '' if is_refund else self._sanitize_phone(invoice.partner_id.phone or invoice.partner_id.mobile),
+                },
+            },
+            'seller_supplier_party_vals': {
+                'party_vals': self._get_seller_supplier_party_vals(invoice),
+            },
+            'billing_reference_vals': self._get_billing_reference_vals(invoice),
+            'additional_document_reference_list': self._get_additional_document_reference_list(invoice),
+        })
+
+        return vals
+
+    def _export_invoice(self, invoice):
+        # EXTENDS account.edi.xml.ubl_21
+        # _export_invoice normally cleans up the xml to remove empty nodes.
+        # However, in the JO UBL version, we always want the PartyIdentification with ID nodes, even if empty.
+        # We'll replace the empty value by a dummy one so that the node doesn't get cleaned up and remove its content after the file generation.
+        xml, errors = super()._export_invoice(invoice)
+        xml_root = etree.fromstring(xml)
+        party_identification_id_elements = xml_root.findall('.//cac:PartyIdentification/cbc:ID', namespaces=xml_root.nsmap)
+        for element in party_identification_id_elements:
+            if element.text == 'NO_VAT':
+                element.text = ''
+        # method='html' is used to keep the element un-shortened ("<a></a>" instead of <a/>)
+        return etree.tostring(xml_root, method='html'), errors
+>>>>>>> 9b24151ba724ba2ad29635980c2ace8076005d25
