@@ -855,6 +855,11 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.state = useStore();
         this.previewDevice = useState({ value: "desktop" });
         this.previewIframeRef = useRef("previewIframe");
+        this.logoInputRef = useRef("logoSelectionInput");
+        this.state.selectedTone = "Inspirational";
+        this.is_content_generated = false;
+        this.state.generatorIsLoading = false;
+
         onWillStart(async () => {
             this.state.previewIsLoading = true;
             if (!this.state.selectedTheme) {
@@ -1033,7 +1038,12 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
                 this.getPalettes();
             }
         }
+        this.state.generatorIsLoading = false;
         this.state.previewIsLoading = false;
+        if (!this.is_content_generated) {
+            this.generateContent();
+            return;
+        }
     }
 
     deactivatePreviewInteractions(iframeDoc) {
@@ -1060,10 +1070,36 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         }
     }
 
+    changeTone(tone) {
+        this.state.selectedTone = tone;
+    }
+
+    generateContent() {
+        const userPrompt = document.getElementById("describeYourWebsiteTextarea")?.value || "";
+        if (userPrompt !== "" || !this.is_content_generated) {
+            const params = new URLSearchParams({
+                industry: this.state.selectedIndustry.label,
+                install_theme: "0",
+                theme_name: this.state.selectedTheme || "theme_default",
+                generate_content: "1",
+                user_prompt: userPrompt !== "" ? userPrompt : null,
+                tone: this.state.selectedTone || null,
+            });
+            const iframe = this.previewIframeRef.el;
+            if (iframe) {
+                this.state.generatorIsLoading = true;
+                this.is_content_generated = true;
+                iframe.src = `/website/configurator/preview?${params.toString()}&preview_ts=${Date.now()}`;
+            }
+        }
+    }
+
     get previewUrl() {
         const params = new URLSearchParams({
+            industry: this.state.selectedIndustry.label,
             install_theme: "1",
             theme_name: this.state.selectedTheme || "theme_default",
+            generate_content: "0",
         });
         return `/website/configurator/preview?${params.toString()}`;
     }

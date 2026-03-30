@@ -301,19 +301,19 @@
                                 <p class="text-muted small">Describe your website, our AI handles the rest</p>
                                 <div class="position-relative">
                                     <textarea class="form-control" id="describeYourWebsiteTextarea" rows="5"></textarea>
-                                    <button class="btn btn-info d-flex align-items-center justify-content-center ms-auto mt-1 fa fa-send o_setup_style_screen_ai_btn">
+                                    <button class="btn btn-info d-flex align-items-center justify-content-center ms-auto mt-1 fa fa-send o_setup_style_screen_ai_btn" t-on-click="this.generateContent">
                                     </button>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <h4 class="mb-2">Tone of voice</h4>
                                 <div class="d-flex flex-wrap gap-2">
-                                    <button type="button" class="btn btn-outline-secondary">Professional</button>
-                                    <button type="button" class="btn btn-outline-secondary">Friendly</button>
-                                    <button type="button" class="btn btn-outline-secondary active">Inspirational</button>
-                                    <button type="button" class="btn btn-outline-secondary">Educational</button>
-                                    <button type="button" class="btn btn-outline-secondary">Playful</button>
-                                    <button type="button" class="btn btn-outline-secondary">Luxury</button>
+                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Professional'}" t-on-click="() => this.changeTone('Professional')">Professional</button>
+                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Friendly'}" t-on-click="() => this.changeTone('Friendly')">Friendly</button>
+                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Inspirational'}" t-on-click="() => this.changeTone('Inspirational')">Inspirational</button>
+                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Educational'}" t-on-click="() => this.changeTone('Educational')">Educational</button>
+                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Playful'}" t-on-click="() => this.changeTone('Playful')">Playful</button>
+                                    <button type="button" class="btn btn-outline-secondary" t-att-class="{'active': this.state.selectedTone === 'Luxury'}" t-on-click="() => this.changeTone('Luxury')">Luxury</button>
                                 </div>
                             </div>
                         </div>
@@ -373,6 +373,9 @@
                                 />
                                 <div t-if="this.state.previewIsLoading" class="position-absolute top-0 start-0 w-100 h-100 bg-white d-flex align-items-center justify-content-center">
                                     <div class="spinner-border text-primary" role="status"/>
+                                </div>
+                                <div t-if="this.state.generatorIsLoading" class="o_ai_loading position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <div class="spinner-border text-secondary" role="status"/>
                                 </div>
                             </div>
                         </div>
