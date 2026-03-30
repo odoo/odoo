@@ -877,7 +877,7 @@ class ResCompany(models.Model):
                 'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
                 'values': {
                               'code': str(code),
-                              'name': _('Undistributed Profits/Losses'),
+                              'name': _('Profit or Loss Appropriation'),
                               'account_type': unaffected_earnings_type,
                               'company_ids': [Command.link(self.id)],
                           },
