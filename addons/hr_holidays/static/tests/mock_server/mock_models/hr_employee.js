@@ -5,6 +5,7 @@ export class HrEmployee extends hrModels.HrEmployee {
     _name = "hr.employee";
 
     leave_date_to = fields.Date();
+    avatar_leave_summary = fields.Json();
 
     _records = [
         {
@@ -23,6 +24,7 @@ export class HrEmployee extends hrModels.HrEmployee {
     _store_avatar_card_fields(res) {
         super._store_avatar_card_fields(res);
         res.attr("leave_date_to");
+        res.attr("avatar_leave_summary");
     }
 
     _store_im_status_fields(res) {
