@@ -446,3 +446,31 @@ test("should work with force and allowImportant params", async () => {
         { inline: true }
     );
 });
+
+test("should apply theme and update preview using CSS variables", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue() {
+                return "";
+            }
+            apply({ editingElement, value }) {
+                editingElement.classList.add("o_cc", value);
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker action="'customAction'" defaultColor="''"/>`,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o-overlay-item [data-color='o_cc1']").click();
+    expect(":iframe .test-options-target").toHaveClass("o_cc o_cc1");
+    expect(".we-bg-options-container .o_we_color_preview").toHaveAttribute(
+        "style",
+        "background-color: var(--hb-cp-o-cc1-bg); background-image: var(--hb-cp-o-cc1-bg-gradient);"
+    );
+});

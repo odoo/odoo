@@ -193,13 +193,7 @@ export class BuilderColorPicker extends Component {
         }
         if (this.state.selectedColorCombination) {
             const colorCombination = this.state.selectedColorCombination.replace("_", "-");
-            const el = this.env.getEditingElement();
-            const style = el.ownerDocument.defaultView.getComputedStyle(el);
-            if (style.backgroundImage !== "none") {
-                return `background-image: ${style.backgroundImage}`;
-            } else {
-                return `background-color: var(--${colorCombination}-bg)`;
-            }
+            return `background-color: var(--hb-cp-${colorCombination}-bg); background-image: var(--hb-cp-${colorCombination}-bg-gradient);`;
         }
         return "";
     }
