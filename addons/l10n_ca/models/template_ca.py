@@ -8,7 +8,9 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ca_2023')
     def _get_ca_template_data(self):
-        return {}
+        return {
+            'code_digits': '0',
+        }
 
     @template('ca_2023', 'res.company')
     def _get_ca_res_company(self):
@@ -29,29 +31,42 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.ca',
-                'bank_account_code_prefix': '11131',
-                'cash_account_code_prefix': '11121',
-                'transfer_account_code_prefix': '1111',
-                'account_default_pos_receivable_account_id': 'l10n_ca_112113',
-                'income_currency_exchange_account_id': 'l10n_ca_423100',
-                'expense_currency_exchange_account_id': 'l10n_ca_522100',
-                'account_journal_early_pay_discount_loss_account_id': 'l10n_ca_522200',
-                'account_journal_early_pay_discount_gain_account_id': 'l10n_ca_423200',
+                'account_default_pos_receivable_account_id': 'l10n_ca_accounts_receivable_pos',
+                'income_currency_exchange_account_id': 'l10n_ca_foreign_exchange_gain',
+                'expense_currency_exchange_account_id': 'l10n_ca_foreign_exchange_loss',
+                'account_journal_early_pay_discount_loss_account_id': 'l10n_ca_cash_discount_loss',
+                'account_journal_early_pay_discount_gain_account_id': 'l10n_ca_cash_discount_gain',
                 'account_sale_tax_id': default_sales_tax,
                 'account_purchase_tax_id': default_purchase_tax,
-                'income_account_id': 'l10n_ca_411100',
-                'expense_account_id': 'l10n_ca_511210',
-                'receivable_account_id': 'l10n_ca_112110',
-                'payable_account_id': 'l10n_ca_221110',
-                'account_stock_valuation_id': 'l10n_ca_121120',
+                'income_account_id': 'l10n_ca_sales_revenue',
+                'expense_account_id': 'l10n_ca_cost_of_goods_sold',
+                'receivable_account_id': 'l10n_ca_accounts_receivable',
+                'payable_account_id': 'l10n_ca_accounts_payable',
+                'account_stock_valuation_id': 'l10n_ca_inventory_valuation',
+                'default_cash_difference_income_account_id': 'l10n_ca_cash_difference_gain',
+                'default_cash_difference_expense_account_id': 'l10n_ca_cash_difference_loss',
+                'account_journal_suspense_account_id': 'l10n_ca_bank_suspense_account',
+                'transfer_account_id': 'l10n_ca_funds_in_transfers',
+                'deferred_expense_account_id': 'l10n_ca_prepaid_expenses',
+                'deferred_revenue_account_id': 'l10n_ca_deferred_revenue',
+                'account_production_wip_account_id': 'l10n_ca_work_in_progress',
+                'downpayment_account_id': 'l10n_ca_customer_deposits',
+            },
+        }
+
+    @template('ca_2023', 'account.journal')
+    def _get_ca_account_journal(self):
+        return {
+            'bank': {
+                'default_account_id': 'l10n_ca_bank',
             },
         }
 
     @template('ca_2023', 'account.account')
     def _get_ca_account_account(self):
         return {
-            'l10n_ca_121120': {
-                'account_stock_variation_id': 'l10n_ca_512207',
+            'l10n_ca_inventory_valuation': {
+                'account_stock_variation_id': 'l10n_ca_cost_of_goods_sold',
             },
         }
 
