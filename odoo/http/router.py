@@ -40,12 +40,24 @@ from odoo.modules.registry import Registry
 from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
+from . import request, _request_stack
+from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
+from .response import Response
+from .retrying import retrying
+from .routing_map import ROUTING_KEYS, _generate_routing_rules
+from .stream import STATIC_CACHE, Stream
+from .requestlib import (
+    HTTPRequest,
+    Request,
+    borrow_request,
+    is_cors_preflight,
+)
+from .session import SessionExpiredException, get_default_session, logout, session_store
+
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
     from wsgiref.types import StartResponse, WSGIEnvironment
 
-    from .requestlib import Request
-    from .response import Response
     from .routing_map import Endpoint
 
 _logger = logging.getLogger('odoo.http')
@@ -579,20 +591,3 @@ def serve_ir_http(request: Request, rule: werkzeug.routing.Rule, args) -> Respon
     response = request.dispatcher.dispatch(rule.endpoint, args)
     request.registry['ir.http']._post_dispatch(response)
     return response
-
-
-# ruff: noqa: E402
-from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
-from .requestlib import (
-    HTTPRequest,
-    Request,
-    _request_stack,
-    borrow_request,
-    is_cors_preflight,
-    request,
-)
-from .response import Response
-from .retrying import retrying
-from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .session import SessionExpiredException, get_default_session, logout, session_store
-from .stream import STATIC_CACHE, Stream

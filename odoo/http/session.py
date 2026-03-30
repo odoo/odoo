@@ -20,11 +20,13 @@ from zlib import adler32
 from odoo.api import Environment
 from odoo.tools import config, consteq, get_lang
 
+from . import request
+from .geoip import GeoIP
+
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
 
     from .requestlib import Request
-
 
 _logger = logging.getLogger('odoo.http')
 
@@ -653,8 +655,3 @@ def save_session(request: Request, env: Environment | None = None) -> None:
             max_age=get_session_max_inactivity(env),
             httponly=True,
         )
-
-
-# ruff: noqa: E402
-from .geoip import GeoIP
-from .requestlib import request

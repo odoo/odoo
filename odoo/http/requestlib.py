@@ -19,30 +19,33 @@ from werkzeug.datastructures import (
     MultiDict,
 )
 from werkzeug.exceptions import NotFound
-from werkzeug.local import LocalStack
 from werkzeug.urls import URL, url_encode, url_parse
 from werkzeug.utils import redirect
 
 from odoo.tools import consteq, json_default
 
+from . import _request_stack, request
+from .dispatcher import HttpDispatcher
+from .geoip import GeoIP
+from .response import FutureResponse, Response
+from .session import DEFAULT_LANG, STORED_SESSION_BYTES, get_default_session
+
+from ._facade import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE, HTTPRequest  # noqa: F401
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
-
-    import werkzeug.routing
 
     from odoo.api import Environment
     from odoo.models import BaseModel
     from odoo.modules.registry import Registry
 
-    from .response import Response
     from .routing_map import Endpoint
 
     HeaderType = Mapping[str, str | Iterable[str]] | Iterable[tuple[str, str]]
 
-_logger = logging.getLogger('odoo.http')
+    import werkzeug.wrappers
+    HTTPRequest = werkzeug.wrappers.Request
 
-_request_stack = LocalStack()
-request: Request = _request_stack()  # type: ignore[assignment]
+_logger = logging.getLogger('odoo.http')
 
 CSRF_TOKEN_SALT = 60 * 60 * 24 * 365  # 1 year
 """ The default csrf token lifetime, a salt against BREACH. """
@@ -362,19 +365,3 @@ class Request:
         httprequest = HTTPRequest(environ)
         threading.current_thread().url = httprequest.url
         self.httprequest = httprequest
-
-
-# ruff: noqa: E402
-if typing.TYPE_CHECKING:
-    HTTPRequest = werkzeug.wrappers.Request
-    from ._facade import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE  # noqa: F401
-else:
-    from ._facade import (  # noqa: F401
-        DEFAULT_MAX_CONTENT_LENGTH,
-        MAX_FORM_SIZE,
-        HTTPRequest,
-    )
-from .dispatcher import HttpDispatcher
-from .geoip import GeoIP
-from .response import FutureResponse, Response
-from .session import DEFAULT_LANG, STORED_SESSION_BYTES, get_default_session

@@ -10,6 +10,7 @@ from collections import defaultdict
 from odoo.tools import unique
 from odoo.tools.func import filter_kwargs
 
+from . import request
 from .dispatcher import _dispatchers
 
 _logger = logging.getLogger('odoo.http')
@@ -352,7 +353,3 @@ def _check_and_complete_route_definition(controller_cls: type[Controller], subme
             'readonly' if parent_readonly else 'read/write',
         )
         submethod.original_routing['readonly'] = False
-
-
-# ruff: noqa: E402
-from .requestlib import request
