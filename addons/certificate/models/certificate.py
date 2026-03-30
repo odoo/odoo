@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 
 from odoo import _, api, fields, models
 from .key import STR_TO_HASH, _get_formatted_value
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import parse_version
 
@@ -180,7 +180,12 @@ class Certificate(models.Model):
                     certificate.date_start = None
                     certificate.date_end = None
                     certificate.serial_number = None
-                    certificate.loading_error = _("This certificate could not be loaded. Either the content or the password is erroneous.")
+
+                    if not certificate.pkcs12_password:
+                        certificate.loading_error = ""
+                    else:
+                        certificate.loading_error = _(
+                            "This certificate could not be loaded. Either the content or the password is erroneous.")
                     continue
 
                 try:
@@ -248,21 +253,21 @@ class Certificate(models.Model):
 
                 if certificate.private_key_id:
                     if certificate.private_key_id.loading_error:
-                        raise UserError(certificate.private_key_id.loading_error)
+                        raise ValidationError(certificate.private_key_id.loading_error)
                     pkey_public_key_bytes = base64.b64decode(
                         certificate.private_key_id._get_public_key_bytes(encoding='pem')
                     )
                     if not constant_time.bytes_eq(pkey_public_key_bytes, cert_public_key_bytes):
-                        raise UserError(_("The certificate and private key are not compatible."))
+                        raise ValidationError(_("The certificate and private key are not compatible."))
 
                 if certificate.public_key_id:
                     if certificate.public_key_id.loading_error:
-                        raise UserError(certificate.public_key_id.loading_error)
+                        raise ValidationError(certificate.public_key_id.loading_error)
                     pkey_public_key_bytes = base64.b64decode(
                         certificate.public_key_id._get_public_key_bytes(encoding='pem')
                     )
                     if not constant_time.bytes_eq(pkey_public_key_bytes, cert_public_key_bytes):
-                        raise UserError(_("The certificate and public key are not compatible."))
+                        raise ValidationError(_("The certificate and public key are not compatible."))
 
     # -------------------------------------------------------
     #                   Business Methods                    #
@@ -387,3 +392,13 @@ class Certificate(models.Model):
             raise UserError(_("No private key linked to the certificate, it is required to sign documents."))
 
         return self.private_key_id._sign(message, hashing_algorithm=hashing_algorithm, formatting=formatting)
+
+    @api.constrains('content', 'pem_certificate')
+    def _constrains_certificate_loaded(self):
+        for certificate in self:
+            if certificate.content and not certificate.pem_certificate:
+                raise ValidationError(
+                    certificate.loading_error
+                    or _(
+                        "This certificate could not be loaded. Please provide the certificate password.")
+                )
