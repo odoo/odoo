@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="th_partner_address_form" model="ir.ui.view">
+        <field name="name">th.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    <div class="o_address_format">
+                        <field name="street" invisible="not country_code or country_code == 'TH'" placeholder="Street..." class="o_address_street"/>
+                        <field name="street" invisible="country_code and country_code != 'TH'" placeholder="Building/Village Room no. Floor" class="o_address_street"/>
+                        <field name="street2" invisible="not country_code or country_code == 'TH'" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="street2" invisible="country_code and country_code != 'TH'" placeholder="House no. Moo Soi Yaek Road" class="o_address_street"/>
+                        <field name="city" invisible="not country_code or country_code == 'TH'" placeholder="City" class="o_address_city"/>
+                        <field name="city" invisible="country_code and country_code != 'TH'" placeholder="Sub-district District" class="o_address_city d-block"/>
+                        <field name="state_id" invisible="not country_code or country_code == 'TH'" placeholder="State" class="o_address_state"
+                               options="{'no_open': True, 'no_quick_create': True}"
+                               context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                        <field name="state_id" invisible="country_code and country_code != 'TH'" placeholder="Province" class="o_address_state"
+                               options="{'no_open': True, 'no_quick_create': True}"
+                               context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="country_id" placeholder="Country" class="o_address_country"
+                               options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="base.th" model="res.country">
+        <field name="address_view_id" ref="th_partner_address_form" />
+    </record>
+</odoo>

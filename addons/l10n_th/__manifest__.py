@@ -21,6 +21,7 @@ Thai accounting chart and localization.
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
+        'data/res_country_data.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
         'views/report_invoice.xml',

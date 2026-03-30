@@ -17,6 +17,11 @@
                            invisible="parent_id or not (is_company and country_code == 'TH')"
                            help="The 5-digit branch code as registered with the Revenue Department."/>
                 </field>
+
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="l10n_th_title" invisible="country_code != 'TH' or 'TH' not in fiscal_country_codes or is_company"/>
+                    <field name="l10n_th_company_type" invisible="country_code != 'TH' or 'TH' not in fiscal_country_codes or not is_company"/>
+                </xpath>
             </field>
         </record>
     </data>

@@ -9,6 +9,23 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_th_branch_name = fields.Char(compute="_compute_l10n_th_branch_name")
+    l10n_th_title = fields.Selection([
+        ("khun", "Khun"),
+        ("mr", "Mr."),
+        ("ms", "Ms."),
+        ("mrs", "Mrs.")],
+        string="Title",
+    )
+    l10n_th_company_type = fields.Selection([
+        ("company_ltd", "Company Limited"),
+        ("pub_company_ltd", "Public Company Limited"),
+        ("ltd_partner", "Limited Partnership"),
+        ("foundation", "Foundation"),
+        ("asso", "Association"),
+        ("joint_venture", "Joint Venture"),
+        ("others", "Others")],
+        string="Company Type",
+    )
 
     def _compute_is_company(self):
         super()._compute_is_company()
