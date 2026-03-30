@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- This Account EDI Format has the following function -->
+        <!-- - It is used to generate the document that will / can be sent via the Peppol sending option. -->
+        <!--   It generates document with one of the following formats based on the `ubl_cii_format` value -->
+        <!--   set on the partner: "ubl_bis3", "ubl_de", "edi_nlcius_1" -->
+        <!-- - It is used as `edi_format_id` for the record of model 'account_edi_proxy_client.user' -->
+        <!--   that is used communicate with the peppol server. -->
+        <record id="edi_peppol" model="account.edi.format">
+            <field name="name">Peppol</field>
+            <field name="code">peppol</field>
+        </record>
+    </data>
+</odoo>

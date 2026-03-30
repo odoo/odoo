@@ -121,6 +121,7 @@
         ],
         'web.assets_frontend': [
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            'website/static/src/core/errors/beforeunload_error_handler.js',
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website.ui.scss',
             'website/static/src/js/utils.js',
@@ -220,6 +221,7 @@
             'web_editor/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'website/static/src/scss/website.wysiwyg.fonts.scss',
             'website/static/src/scss/website.wysiwyg.scss',
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/js/editor/editor.js',
@@ -258,6 +260,12 @@
             'website/static/src/js/editor/widget_link.js',
             'website/static/src/js/widgets/link_popover_widget.js',
             'website/static/src/xml/website.cookies_bar.xml',
+        ],
+        # TODO: in master, we should revisit this and probably opt-in what is
+        # to be added in the iframe instead of excluding what should not be.
+        'website.assets_wysiwyg_inside': [
+            ('include', 'website.assets_wysiwyg'),
+            ('remove', 'website/static/src/scss/website.wysiwyg.fonts.scss'),
         ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/image_selector.js',

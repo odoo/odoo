@@ -1,10 +1,132 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.exceptions import UserError
 from odoo.tools import is_html_empty, mute_logger, formataddr
-from odoo.tests import tagged, users
+from odoo.tests import tagged, users, HttpCase
+
+
+@tagged('mail_message', 'mail_controller', 'post_install', '-at_install')
+class TestMessageHelpersRobustness(TestMailCommon, HttpCase):
+    """ Test message helpers robustness, currently mainly linked to records
+    being removed from DB due to cascading deletion, which let side records
+    alive in DB. """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env,
+            email='eglantine@example.com',
+            groups='base.group_user',
+            login='employee2',
+            notification_type='email',
+            name='Eglantine Employee',
+        )
+        cls.partner_employee_2 = cls.user_employee_2.partner_id
+
+        cls.test_records_simple, _partners = cls._create_records_for_batch(
+            'mail.test.simple', 3,
+        )
+
+    def setUp(self):
+        super().setUp()
+        # cleanup db
+        self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)]).unlink()
+
+        # handy shortcut variables
+        self.deleted_record = self.test_records_simple[2]
+
+        # generate crashed notifications
+        with mute_logger('odoo.addons.mail.models.mail_mail'), self.mock_mail_gateway():
+            def _send_email(*args, **kwargs):
+                raise MailDeliveryException("Some exception")
+            self.send_email_mocked.side_effect = _send_email
+
+            for record in self.test_records_simple.with_user(self.user_employee):
+                record.message_post(
+                    body="Setup",
+                    message_type='comment',
+                    partner_ids=self.partner_employee_2.ids,
+                    subtype_id=self.env.ref('mail.mt_comment').id,
+                )
+
+        # In the mean time, some FK deletes the record where the message is
+        # # scheduled, skipping its unlink() override
+        self.env.cr.execute(
+            f"DELETE FROM {self.test_records_simple._table} WHERE id = %s", (self.deleted_record.id,)
+        )
+        self.env.invalidate_all()
+
+    def test_assert_initial_values(self):
+        notifs_by_employee = self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)])
+        self.assertEqual(
+            set(notifs_by_employee.mapped('mail_message_id.res_id')),
+            set(self.test_records_simple.ids)
+        )
+        self.assertEqual(len(notifs_by_employee), 3)
+        self.assertTrue(all(notif.notification_status == 'exception' for notif in notifs_by_employee))
+        self.assertTrue(all(notif.res_partner_id == self.partner_employee_2 for notif in notifs_by_employee))
+
+    def test_load_message_failures(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        response = self.opener.post(
+            self.env.user.get_base_url() + '/mail/load_message_failures',
+            json={},
+        )
+        result = json.loads(response.content)['result']
+        self.assertEqual({r['res_id'] for r in result}, set(self.test_records_simple[:2].ids))
+        self.assertEqual(
+            set(self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)]).mapped('mail_message_id.res_id')),
+            set((self.test_records_simple - self.deleted_record).ids),
+            'Should have cleaned notifications linked to unexisting records'
+        )
+
+    def test_message_fetch(self):
+        # set notifications to unread, so that we can simulate inbox usage
+        p2_notifications = self.env['mail.notification'].search([('res_partner_id', '=', self.partner_employee_2.id)])
+        p2_notifications.is_read = False
+
+        self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
+        response = self.opener.post(
+            self.env.user.get_base_url() + '/mail/inbox/messages',
+            json={},
+        )
+        result = json.loads(response.content)['result']
+        self.assertEqual(
+            {r['res_id'] for r in result}, set(self.test_records_simple.ids),
+            'Currently reading message on missing record, crash avoided'
+        )
+        p2_notifications.with_user(self.user_employee_2).mail_message_id.set_message_done()
+
+        response = self.opener.post(
+            self.env.user.get_base_url() + '/mail/history/messages',
+            json={},
+        )
+        result = json.loads(response.content)['result']
+        self.assertEqual(
+            {r['res_id'] for r in result}, set(self.test_records_simple.ids),
+            'Currently reading message on missing record, crash avoided'
+        )
+
+    def test_notify_cancel_by_type(self):
+        """ Test canceling notifications, notably when having missing records. """
+        self.env.invalidate_all()
+        notifs_by_employee = self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)])
+
+        # do not crash even if removed record
+        self.test_records_simple.with_user(self.user_employee).notify_cancel_by_type('email')
+        self.env.invalidate_all()
+
+        notifs_by_employee = notifs_by_employee.exists()
+        self.assertEqual(len(notifs_by_employee), 3, 'Currently keep notifications for missing records')
+        self.assertTrue(all(notif.notification_status == 'canceled' for notif in notifs_by_employee))
 
 
 @tagged('mail_message')

@@ -68,6 +68,7 @@ class SaleOrder(models.Model):
         # computed field)
         return self.env['delivery.carrier'].sudo().search([
             ('website_published', '=', True),
+            '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)
         ]).filtered(lambda carrier: carrier._is_available_for_order(self))
 
     def _cart_update(self, *args, **kwargs):

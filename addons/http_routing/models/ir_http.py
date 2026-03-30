@@ -560,8 +560,12 @@ class IrHttp(models.AbstractModel):
             if request.httprequest.method in ('GET', 'HEAD'):
                 try:
                     _, path = rule.build(args)
-                except odoo.exceptions.MissingError:
-                    raise werkzeug.exceptions.NotFound()
+                except exceptions.MissingError as exc:
+                    raise werkzeug.exceptions.NotFound() from exc
+                except exceptions.AccessError as exc:
+                    if request.env.user.is_public:
+                        raise werkzeug.exceptions.NotFound() from exc
+                    raise
                 assert path is not None
                 generated_path = werkzeug.urls.url_unquote_plus(path)
                 current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
@@ -667,9 +671,10 @@ class IrHttp(models.AbstractModel):
         router = http.root.get_db_router(request.db).bind('')
         endpoint = False
         try:
-            endpoint = router.match(path, method='POST', query_args=query_args)
-        except werkzeug.exceptions.MethodNotAllowed:
-            endpoint = router.match(path, method='GET', query_args=query_args)
+            try:
+                endpoint = router.match(path, method='POST', query_args=query_args)
+            except werkzeug.exceptions.MethodNotAllowed:
+                endpoint = router.match(path, method='GET', query_args=query_args)
         except werkzeug.routing.RequestRedirect as e:
             new_url = e.new_url.split('?')[0][7:]  # remove scheme
             _, endpoint = self.url_rewrite(new_url, query_args)

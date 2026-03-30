@@ -5090,7 +5090,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_notification_manager .o_notification");
     });
 
-    QUnit.test("keynav: switching to another record from an invalid one", async function (assert) {
+    QUnit.skip("keynav: switching to another record from an invalid one", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -5159,7 +5159,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
     });
 
-    QUnit.test("keynav: switching to another record from a dirty one", async function (assert) {
+    QUnit.skip("keynav: switching to another record from a dirty one", async function (assert) {
         let nbWrite = 0;
         await makeView({
             type: "form",

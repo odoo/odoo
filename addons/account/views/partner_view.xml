@@ -250,10 +250,9 @@
                                 />
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
-                                <field name="is_coa_installed" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
-                                <field name="property_account_receivable_id" attrs="{'required': [('is_coa_installed', '=', True)]}"/>
-                                <field name="property_account_payable_id" attrs="{'required': [('is_coa_installed', '=', True)]}"/>
+                                <field name="property_account_receivable_id"/>
+                                <field name="property_account_payable_id"/>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"

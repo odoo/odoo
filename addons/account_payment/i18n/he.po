@@ -137,6 +137,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>אזהרה! </strong>קיים החזר כספי ממתין עבור תשלום זה.                                                      אנא המתן מספר רגעים עד לסיום העיבוד. \n"
+"אם ההחזר עדיין ממתין\n"
+"                                    לאחר מספר דקות, בדוק את הגדרות ספק התשלומים שלך."
 
 #. module: account_payment
 #. odoo-python
@@ -309,6 +312,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"שימו לב כי אסימוני תשלום מספקים שהוגדרו לאשר עסקאות בלבד (ולא לגבות את "
+"הסכום) אינם זמינים."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -499,7 +504,7 @@ msgstr "התשלום הקשור לעסקה עם הפניה%(ref)s נרשם: %(li
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "הפרמטרים שסופקו אינם תקינים."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
@@ -568,6 +573,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
+"לא ניתן למחוק אמצעי תשלום שמקושר לספק שנמצא במצב פעיל או מצב בדיקה.\n"
+"ספקים מקושרים:%s"
 
 #. module: account_payment
 #. odoo-python
@@ -577,3 +584,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"עליך קודם להשבית ספק תשלום לפני מחיקת יומן שלו.\n"
+"ספקים מקושרים: %s"

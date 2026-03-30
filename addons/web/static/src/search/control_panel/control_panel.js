@@ -176,11 +176,11 @@ export class ControlPanel extends Component {
         if (scrollTop > this.initialScrollTop) {
             // Beneath initial position => sticky display
             this.root.el.classList.add(STICKY_CLASS);
-            if (delta < 0) {
-                // Going up
+            if (delta <= 0) {
+                // Going up | not moving
                 this.lastScrollTop = Math.min(0, this.lastScrollTop - delta);
             } else {
-                // Going down | not moving
+                // Going down
                 this.lastScrollTop = Math.max(
                     -this.root.el.offsetHeight,
                     -this.root.el.offsetTop - delta

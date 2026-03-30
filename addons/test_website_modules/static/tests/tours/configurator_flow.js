@@ -24,6 +24,7 @@ tour.register('configurator_flow', {
     {
         content: "click next",
         trigger: 'button.o_configurator_show',
+        timeout: 20000,  /* previous step create a new website, this could take a long time */
     },
     // Description screen
     {

@@ -3181,8 +3181,7 @@ QUnit.module("Views", (hooks) => {
                     views: [[false, "search"]],
                 },
             });
-            checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
-            // mockReadGroup does not always sort groups -> May 2016 is before April 2016 for that reason.
+            checkLabels(assert, graph, ["January 2016", "March 2016", "April 2016", "May 2016"]);
             checkLegend(assert, graph, ["xphone", "xpad"]);
             checkDatasets(
                 assert,
@@ -3996,11 +3995,11 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, [
             "January 2016",
             "March 2016",
+            "April 2016",
             "May 2016",
             "Undefined",
-            "April 2016",
         ]);
-        checkDatasets(assert, graph, "data", { data: [56, 26, 4, 105, 48] });
+        checkDatasets(assert, graph, "data", { data: [56, 26, 48, 4, 105] });
     });
 
     QUnit.test("fill_temporal is true by default", async function (assert) {
@@ -4123,7 +4122,7 @@ QUnit.module("Views", (hooks) => {
                 views: [[false, "search"]],
             },
         });
-        checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
+        checkLabels(assert, graph, ["January 2016", "March 2016", "April 2016", "May 2016"]);
     });
 
     QUnit.test("graph_groupbys should be also used after first load", async function (assert) {

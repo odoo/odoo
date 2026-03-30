@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
+from odoo.modules.loading import force_demo
 from odoo.tests import standalone
 
 
@@ -13,6 +14,7 @@ def test_all_l10n(env):
     As the module install is not yet fully transactional, the modules will
     remain installed after the test.
     """
+    force_demo(env.cr)
     assert env.ref('base.module_account').demo, "Need the demo to test with data"
     l10n_mods = env['ir.module.module'].search([
         ('name', 'like', 'l10n%'),

@@ -50,6 +50,7 @@ odoo.define('mass_mailing.mass_mailing_code_view_tour', function (require) {
     }, {
         trigger: '[name="body_arch"] iframe #email_designer_default_body [name="Title"] .ui-draggable-handle',
         content: 'Drag the "Title" snippet from the design panel and drop it in the editor',
+        extra_trigger: '[name="body_arch"] iframe body.editor_enable',
         run: function (actions) {
             actions.drag_and_drop('[name="body_arch"] iframe .o_editable', this.$anchor);
         }

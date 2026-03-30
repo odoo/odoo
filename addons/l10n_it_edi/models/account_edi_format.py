@@ -968,7 +968,7 @@ class AccountEdiFormat(models.Model):
             return {
                 'post': self._post_fattura_pa,
                 'post_batching': lambda move: (move.move_type, bool(move.l10n_it_edi_transaction)),
-                'batching_limit': 50,
+                'batching_limit': 20,
             }
 
     def _l10n_it_edi_export_invoice_as_xml(self, invoice):
@@ -1215,7 +1215,7 @@ class AccountEdiFormat(models.Model):
 
     def _get_proxy_identification(self, company):
         if self.code != 'fattura_pa':
-            return super()._get_proxy_identification()
+            return super()._get_proxy_identification(company)
 
         if not company.l10n_it_codice_fiscale:
             raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))

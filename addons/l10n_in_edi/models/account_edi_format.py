@@ -175,7 +175,7 @@ class AccountEdiFormat(models.Model):
                 return {invoice: {
                     "success": False,
                     "error": error_message,
-                    "blocking_level": ("404" in error_codes) and "warning" or "error",
+                    "blocking_level": "warning" if {'404', 'timeout'} & set(error_codes) else "error",
                 }}
         if not response.get("error"):
             json_dump = json.dumps(response.get("data"))
@@ -258,6 +258,11 @@ class AccountEdiFormat(models.Model):
             message.append(_("- City required min 3 and max 100 characters"))
         if partner.country_id.code == "IN" and not re.match("^.{3,50}$", partner.state_id.name or ""):
             message.append(_("- State required min 3 and max 50 characters"))
+        if (
+            partner.country_id.code == "IN"
+            and not re.match(r"^(?!0+$)([0-9]{2})$", partner.state_id.l10n_in_tin or "")
+        ):
+            message.append(_("- State TIN Number must be exactly 2 digits."))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
         if partner.phone and not re.match("^[0-9]{10,12}$",
@@ -656,17 +661,21 @@ class AccountEdiFormat(models.Model):
     @api.model
     def _l10n_in_edi_connect_to_server(self, company, url_path, params):
         user_token = self.env["iap.account"].get("l10n_in_edi")
+        IrConfigParam = self.env["ir.config_parameter"].sudo()
         params.update({
             "account_token": user_token.account_token,
-            "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
+            "dbuuid": IrConfigParam.get_param("database.uuid"),
             "username": company.sudo().l10n_in_edi_username,
             "gstin": company.vat,
         })
+        gsp_provider = IrConfigParam.get_param("l10n_in.gsp_provider")
+        if gsp_provider:
+            params.update({"gsp_provider": gsp_provider})
         if company.sudo().l10n_in_edi_production_env:
             default_endpoint = DEFAULT_IAP_ENDPOINT
         else:
             default_endpoint = DEFAULT_IAP_TEST_ENDPOINT
-        endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi.endpoint", default_endpoint)
+        endpoint = IrConfigParam.get_param("l10n_in_edi.endpoint", default_endpoint)
         url = "%s%s" % (endpoint, url_path)
         try:
             return jsonrpc(url, params=params, timeout=25)

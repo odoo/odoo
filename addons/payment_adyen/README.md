@@ -2,13 +2,13 @@
 
 ## Technical details
 
-SDK: [Web Drop-in](https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Drop-in)
-version `4.7.3`
+SDK: Web Drop-in
+version `6.9.0`
 
 APIs:
 
-- [Checkout API](https://docs.adyen.com/api-explorer/Checkout/) version `67`
-- [Recurring API](https://docs.adyen.com/api-explorer/Recurring/) version `49`
+- [Checkout API](https://docs.adyen.com/api-explorer/Checkout/) version `71`
+~~- [Recurring API](https://docs.adyen.com/api-explorer/Recurring/) version `49`~~
 
 This module relies on the Web Drop-in SDK to render the list of available payment methods and their
 payment detail inputs on the payment form. The JS and CSS assets of the SDK are loaded directly from
@@ -22,7 +22,7 @@ This combined solution allows the implementation of a good-quality direct paymen
 keeping the front-end development efforts low. The 3DS support is also entirely delegated to Adyen.
 
 This is achieved by following Web Drop-in's
-"[Advanced flow](https://docs.adyen.com/online-payments/build-your-integration/additional-use-cases/advanced-flow-integration)".
+"[Advanced flow](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Web&integration=Drop-in)".
 It is preferred over the recommended "Sessions flow" that only requires dealing with the `/sessions`
 endpoint instead of three `/payment/*` endpoints because two of those are still required to
 implement tokenization and handle 3DS redirects.
@@ -53,7 +53,7 @@ implement tokenization and handle 3DS redirects.
   - The Web Drop-in SDK is migrated to version 4.7.3 and the Checkout API to version 67 to switch
     from relying on origin keys and use client keys instead. odoo/odoo#74827
 - `14.3`
-  - The previous Hosted Payment Pages API that allowed for redirect payments is replaced by a 
+  - The previous Hosted Payment Pages API that allowed for redirect payments is replaced by a
     combination of the Web Drop-in SDK (version 3.9.4) and the Checkout (version 53) and Recurring
     (version 49) APIs. odoo/odoo#141661
 

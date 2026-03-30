@@ -318,7 +318,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'product_id': avco_product.id,
-                'product_qty': 1,
+                'product_qty': 5,
                 'price_unit': 10,
             })],
         })
@@ -330,10 +330,39 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         bill.action_post()
         receipt = purchase_order.picking_ids[0]
         receipt.move_ids[0].quantity_done = 1
-        receipt.button_validate()
+        res_dict = receipt.button_validate()
+
+        self.assertEqual(res_dict['res_model'], 'stock.backorder.confirmation')
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard.process()
+
         self.assertEqual(sum(self.env['stock.valuation.layer'].search([
                 ('product_id', '=', avco_product.id),
             ]).mapped('value')),
             9,
         )
-        self.assertEqual(avco_product.standard_price, 9)
+
+        backorder1 = receipt.backorder_ids
+        backorder1.move_ids[0].quantity_done = 2
+        res_dict = backorder1.button_validate()
+
+        self.assertEqual(res_dict['res_model'], 'stock.backorder.confirmation')
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+        wizard.process()
+
+        self.assertEqual(sum(self.env['stock.valuation.layer'].search([
+                ('product_id', '=', avco_product.id),
+                ('stock_move_id', '=', backorder1.move_ids[0].id)
+            ]).mapped('value')),
+            18,
+        )
+
+        backorder2 = backorder1.backorder_ids
+        backorder2.move_ids[0].quantity_done = 2
+        backorder2.button_validate()
+        self.assertEqual(sum(self.env['stock.valuation.layer'].search([
+                ('product_id', '=', avco_product.id),
+                ('stock_move_id', '=', backorder2.move_ids[0].id)
+            ]).mapped('value')),
+            18,
+        )

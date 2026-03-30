@@ -254,12 +254,18 @@ class Meeting(models.Model):
         super(Meeting, self).action_mass_archive(recurrence_update_setting)
 
     def _google_values(self):
+        # In Google API, all-day events must have their 'dateTime' information set
+        # as null and timed events must have their 'date' information set as null.
+        # This is mandatory for allowing changing timed events to all-day and vice versa.
+        start = {'date': None, 'dateTime': None}
+        end = {'date': None, 'dateTime': None}
         if self.allday:
-            start = {'date': self.start_date.isoformat()}
-            end = {'date': (self.stop_date + relativedelta(days=1)).isoformat()}
+            start['date'] = self.start_date.isoformat()
+            end['date'] = (self.stop_date + relativedelta(days=1)).isoformat()
         else:
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat()}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat()}
+            start['dateTime'] = pytz.utc.localize(self.start).isoformat()
+            end['dateTime'] = pytz.utc.localize(self.stop).isoformat()
+
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes

@@ -663,10 +663,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 picking = self.env['stock.picking'].browse(vals['picking_id'])
                 if picking.group_id:
                     vals['group_id'] = picking.group_id.id
-            if vals.get('picking_id') and vals.get('state'):
-                picking = self.env['stock.picking'].browse(vals['picking_id'])
-                if picking.state == 'done' and vals['state'] != 'done':
-                    vals['state'] = 'done'
         res = super().create(vals_list)
         res._update_orderpoints()
         return res

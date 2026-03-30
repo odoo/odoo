@@ -214,6 +214,9 @@ class AccountMove(models.Model):
         def format_alphanumeric(text_to_convert):
             return text_to_convert.encode('latin-1', 'replace').decode('latin-1') if text_to_convert else False
 
+        def get_move_invoice_template_date(move):
+            return move.date if self.env['account.edi.format']._l10n_it_edi_is_self_invoice(move) else move.invoice_date
+
         def get_vat_values(partner):
             """ Generate the VAT and country code needed by l10n_it_edi XML export.
 
@@ -314,7 +317,7 @@ class AccountMove(models.Model):
         conversion_line = self.invoice_line_ids.sorted(lambda l: abs(l.balance), reverse=True)[0] if self.invoice_line_ids else None
         conversion_rate = float_repr(
             abs(conversion_line.balance / conversion_line.amount_currency), precision_digits=5,
-        ) if convert_to_euros and conversion_line else None
+        ) if convert_to_euros and conversion_line and conversion_line.amount_currency else None
 
         invoice_lines = self._l10n_it_edi_prepare_fatturapa_line_details(reverse_charge_refund, is_downpayment, convert_to_euros)
         tax_lines = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details, reverse_charge_refund)
@@ -368,6 +371,7 @@ class AccountMove(models.Model):
             'conversion_rate': conversion_rate,
             'buyer_info': get_vat_values(buyer),
             'seller_info': get_vat_values(seller),
+            'get_move_invoice_template_date': get_move_invoice_template_date,
         }
         return template_values
 

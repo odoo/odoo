@@ -8,6 +8,9 @@
             Therefore, we need to override this rule to change the domain, and then the
             rules for the account.analytic.line defined in timesheet will be apply.
          -->
+        <record id="account.account_analytic_line_rule_readonly_user" model="ir.rule" forcecreate="False">
+            <field name="domain_force">[('project_id', '=', False)]</field>
+        </record>
         <record id="account.account_analytic_line_rule_billing_user" model="ir.rule">
             <field name="domain_force">[('project_id', '=', False)]</field>
         </record>

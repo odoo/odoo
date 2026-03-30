@@ -184,8 +184,8 @@
                     </div>
                     <!-- We keep "18rem" of space to display the points / nickname.
                     Then, the length of the bar is a percentage of the attendee's score compared to the max_score. -->
-                    <t t-set="width_ratio" t-value="round(round(score['scoring_total']) / round(max_score), 3)"/>
-                    <t t-set="width_ratio_question" t-value="str(round(round(score.get('question_score', 0)) / round(score.get('max_question_score', 1)), 3))"/>
+                    <t t-set="width_ratio" t-value="round(round(score['scoring_total'], 3) / round(max_score, 3), 3)"/>
+                    <t t-set="width_ratio_question" t-value="str(round(round(score.get('question_score', 0), 3) / round(score.get('max_question_score', 1), 3), 3))"/>
                     <div class="o_survey_session_leaderboard_bar ms-2 align-top d-inline-block text-end fw-bold"
                         t-att-style="'width: calc(calc(%s - 18rem) * %s)' % ('100%', width_ratio)"
                         t-att-data-width-ratio="width_ratio">

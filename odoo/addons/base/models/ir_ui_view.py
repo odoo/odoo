@@ -477,7 +477,7 @@ actual arch.
 
         return True
 
-    @api.constrains('type', 'groups_id', 'inherit_id')
+    @api.constrains('groups_id', 'inherit_id', 'mode')
     def _check_groups(self):
         for view in self:
             if (view.groups_id and
@@ -2371,6 +2371,8 @@ class Model(models.AbstractModel):
         right_group = E.group()
         for fname, field in self._fields.items():
             if field.automatic:
+                continue
+            elif field.type == "binary" and not isinstance(field, fields.Image) and not field.store:
                 continue
             elif field.type in ('one2many', 'many2many', 'text', 'html'):
                 # append to sheet left and right group if needed

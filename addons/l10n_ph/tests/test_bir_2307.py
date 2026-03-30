@@ -27,6 +27,17 @@ class TestBir2037(AccountTestInvoicingCommon):
             'zip': "+900–1-096",
         })
 
+        cls.partner_a.write({
+            'vat': '123-456-789-001',
+            'branch_code': '001',
+            'name': 'JMC Company',
+            'street': "250 Amorsolo Street",
+            'city': "Manila",
+            'country_id': cls.env.ref('base.ph').id,
+            'zip': "+900–1-096",
+            'is_company': True,
+        })
+
     def test_01_no_atc(self):
         """ Ensure that generating the file on a document where no taxes has an ATC set will work, although gives an empty file. """
         tax = self._create_tax('10% VAT', 10)
@@ -68,13 +79,14 @@ class TestBir2037(AccountTestInvoicingCommon):
         for row in range(1, sheet.nrows):
             result.append(sheet.row_values(row))
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'product that cost 1000', 'WI010', 1000.0, -10.0, -100.0]
+            ['01/01/2025', '123456789', '001', '', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, -10.0, -100.0]
         ])
 
     def test_03_atc_affected_by_vat(self):
         """ Ensure that generating the file on a document where the ATC tax is affected works as expected. """
         vat = self._create_tax('15% VAT', 15, include_base_amount=True)
         atc = self._create_tax('10% ATC', -10, l10n_ph_atc='WI010', is_base_affected=True)
+        atc.description = '10% ATC'
         bill = self._create_invoice(
             move_type='in_invoice',
             invoice_amount=1000,
@@ -93,7 +105,7 @@ class TestBir2037(AccountTestInvoicingCommon):
         for row in range(1, sheet.nrows):
             result.append(sheet.row_values(row))
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'product that cost 1000', 'WI010', 1150.0, -10.0, -115.0]
+            ['01/01/2025', '123456789', '001', '', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '10% ATC', 'WI010', 1150.0, -10.0, -115.0]
         ])
 
     def test_04_multi_currency(self):
@@ -103,7 +115,7 @@ class TestBir2037(AccountTestInvoicingCommon):
             move_type='in_invoice',
             invoice_amount=2000,
             taxes=tax,
-            partner_id=self.partner.id,
+            partner_id=self.partner_a.id,
             date_invoice='2025-01-01',
             currency_id=self.currency_data['currency'].id,
         )
@@ -119,5 +131,5 @@ class TestBir2037(AccountTestInvoicingCommon):
             result.append(sheet.row_values(row))
         # We expect the values in company currency in the file.
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'product that cost 2000', 'WI010', 1000.0, -10.0, -100.0]
+            ['01/01/2025', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, -10.0, -100.0]
         ])

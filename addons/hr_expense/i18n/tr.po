@@ -24,14 +24,15 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Wil Odoo, 2025
 # Tugay Hatıl <tugayh@projetgrup.com>, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2025\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,7 +372,7 @@ msgstr "Ekler"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "Gider ekleri"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -726,7 +727,6 @@ msgstr ""
 "yapılandırın."
 
 #. module: hr_expense
-#: model:account.journal,name:hr_expense.hr_expense_account_journal
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
@@ -1334,7 +1334,7 @@ msgstr "Yeni Masraf Formu"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report, paid by %(paid_by)s"
-msgstr ""
+msgstr "%(paid_by)s tarafından ödenen Yeni Gider Raporu"
 
 #. module: hr_expense
 #. odoo-python
@@ -1447,7 +1447,7 @@ msgstr "Teslimat hatası olan mesaj adedi"
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 #, python-format
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "Kişisel harcamalarınızdan hesaplanan rakamlar."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1563,7 +1563,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Please specify an expense journal in order to generate accounting entries."
-msgstr ""
+msgstr "Muhasebe kayıtları oluşturmak için bir gider günlüğü belirtiniz."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2092,6 +2092,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"Bu kategori ile bağlantılı gönderilmemiş giderler var. Kategori maliyetini "
+"güncellemek, gider tutarlarını değiştirecektir. Bu işlemi gerçekleştirmek "
+"istediğinizden emin olun."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2406,7 +2409,7 @@ msgstr "Kendi masraflarınızı reddedemezsiniz"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different companies in the same report."
-msgstr ""
+msgstr "Aynı raporda farklı şirketlerin giderlerini bildiremezsiniz."
 
 #. module: hr_expense
 #. odoo-python
@@ -2436,7 +2439,7 @@ msgstr "Aynı satırı birden fazla gönderemezsiniz!"
 msgid ""
 "You don't have the rights to bypass the validation process of this expense "
 "report."
-msgstr ""
+msgstr "Bu gider raporunun doğrulama sürecini atlama hakkınız yoktur."
 
 #. module: hr_expense
 #. odoo-python
@@ -2444,7 +2447,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You don't have the rights to bypass the validation process of this expense."
-msgstr ""
+msgstr "Bu giderin doğrulama sürecini atlama hakkınız yoktur."
 
 #. module: hr_expense
 #. odoo-python

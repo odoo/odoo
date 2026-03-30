@@ -12,6 +12,8 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { pagerNext } from "@web/../tests/search/helpers";
 
+const { DateTime } = luxon;
+
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 const PRODUCT_IMAGE =
@@ -923,7 +925,9 @@ QUnit.module("Fields", (hooks) => {
             });
 
             const initialUnique = Number(getUnique(target.querySelector(".o_field_image img")));
-            assert.ok(initialUnique - 1486375200000 < 100);
+            assert.ok(
+                DateTime.fromMillis(initialUnique).hasSame(DateTime.fromISO("2017-02-06"), "days")
+            );
 
             await editInput(target, ".o_field_widget[name='foo'] input", "grrr");
 
@@ -952,9 +956,8 @@ QUnit.module("Fields", (hooks) => {
 
             await clickSave(target);
 
-            assert.ok(
-                Number(getUnique(target.querySelector(".o_field_image img"))) - 1486638000000 < 100
-            );
+            const unique = Number(getUnique(target.querySelector(".o_field_image img")));
+            assert.ok(DateTime.fromMillis(unique).hasSame(DateTime.fromISO("2017-02-09"), "days"));
         }
     );
 });

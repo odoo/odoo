@@ -577,6 +577,17 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         generated_coupon = order._get_reward_coupons()
         self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
         self.assertEqual(generated_coupon.points, 0, "The coupon should not have it's points already.")
+        self.assertFalse(order._get_claimable_rewards(), "No rewards should be claimable")
+
+        order.action_confirm()
+        self.assertEqual(
+            generated_coupon.points, 1,
+            "The coupon should have 1 point after confirmation",
+        )
+        self.assertFalse(
+            order._get_claimable_rewards(),
+            "Next-order coupon rewards shouldn't be claimable on current order",
+        )
 
     def test_coupon_rule_minimum_amount(self):
         """ Ensure coupon with minimum amount rule are correctly

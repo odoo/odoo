@@ -23,6 +23,7 @@ from . import test_account_move_line_tax_details
 from . import test_account_journal_dashboard
 from . import test_chart_template
 from . import test_fiscal_position
+from . import test_kpi_provider
 from . import test_sequence_mixin
 from . import test_settings
 from . import test_tax

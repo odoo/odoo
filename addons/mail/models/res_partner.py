@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
+from collections import defaultdict
 
 
 class Partner(models.Model):
@@ -141,7 +142,23 @@ class Partner(models.Model):
             ('mail_message_id.model', '!=', False),
             ('mail_message_id.res_id', '!=', 0),
         ], limit=100)
-        return notifications.mail_message_id._message_notification_format()
+        found = defaultdict(list)
+        for message in notifications.mail_message_id:
+            found[message.model].append(message.res_id)
+        existing = {
+            model: set(self.env[model].browse(ids).exists().ids)
+            for model, ids in found.items()
+        }
+        valid = notifications.filtered(
+            lambda n: (
+                not n.mail_message_id.model or not n.mail_message_id.res_id or
+                n.mail_message_id.res_id in existing[n.mail_message_id.model]
+            )
+        )
+        lost = notifications - valid
+        if lost:
+            lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway
+        return valid.mail_message_id._message_notification_format()
 
     def _get_channels_as_member(self):
         """Returns the channels of the partner."""

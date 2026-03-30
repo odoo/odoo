@@ -7,15 +7,15 @@
 # arfa simoncelli, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Abe Manyo, 2024
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-05-22 18:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1138,8 +1138,6 @@ msgid "Assigned to"
 msgstr "Ditugaskan untuk"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1149,7 +1147,6 @@ msgstr "Ditugaskan untuk"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, python-format
 msgid "Assignees"
 msgstr "Petugas"
 
@@ -1620,7 +1617,7 @@ msgstr "Tanggal Dibuat"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr "Buat Proyek"
+msgstr "Buat Project"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1977,7 +1974,7 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
-"Menentukan langkah-langkah yang akan digunakan dalam proyek dari penciptaan tugas, hingga penutupan tugas atau masalah.\n"
+"Menentukan langkah-langkah yang akan digunakan dalam project dari penciptaan tugas, hingga penutupan tugas atau masalah.\n"
 "                Anda akan menggunakan tahap ini untuk melacak kemajuan dalam menyelesaikan sebuah tugas atau masalah."
 
 #. module: project
@@ -2378,8 +2375,8 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
-"Ikuti proyek ini untuk secara otomatis melacak aktivitas terkait dengan "
-"kegiatan dan masalah dari proyek ini."
+"Ikuti project ini untuk secara otomatis melacak aktivitas terkait dengan "
+"kegiatan dan masalah dari project ini."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2590,7 +2587,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID dari catatan induk alias (contoh: proyek yang menahan pembuatan alias "
+"ID dari catatan induk alias (contoh: project yang menahan pembuatan alias "
 "tugas)"
 
 #. module: project
@@ -2697,7 +2694,7 @@ msgid ""
 "without removing it."
 msgstr ""
 "Jika bidang aktif diatur ke False, itu akan memungkinkan Anda untuk "
-"menyembunyikan proyek tanpa menghapus itu."
+"menyembunyikan project tanpa menghapus itu."
 
 #. module: project
 #. odoo-javascript
@@ -2771,7 +2768,7 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"Internal email yang terkait dengan proyek ini. Email masuk secara otomatis "
+"Internal email yang terkait dengan project ini. Email masuk secara otomatis "
 "disinkronisasi dengan tugas (atau opsional masalah jika pelacak isu modul "
 "diinstal)."
 
@@ -3402,7 +3399,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "My Projects"
-msgstr "Proyek"
+msgstr "Project"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
@@ -3769,7 +3766,6 @@ msgid "Off Track"
 msgstr "Keluar dari Jalur"
 
 #. module: project
-#: model:account.analytic.account,name:project.analytic_office_design
 #: model:project.project,name:project.project_project_1
 msgid "Office Design"
 msgstr "Desain Kantor"
@@ -3920,7 +3916,7 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Model induk dengan alias. Model yang memiliki referensi alias ini tidak "
-"selalu berarti model yang diberikan oleh alias_model_id (contoh: proyek "
+"selalu berarti model yang diberikan oleh alias_model_id (contoh: project "
 "(parent_model) dan tugas (model))"
 
 #. module: project
@@ -4023,7 +4019,7 @@ msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
 msgstr ""
-"Silakan Hapus tugas-tugas yang ada dalam proyek yang terkait dengan akun "
+"Silakan Hapus tugas-tugas yang ada dalam project yang terkait dengan akun "
 "yang ingin Anda hapus."
 
 #. module: project
@@ -4051,6 +4047,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
 msgstr "Portal Access URL"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Portal Parent Task"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Portal Sub-tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__portal_user_names
@@ -4163,7 +4173,7 @@ msgstr "Persentase Progress"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 #, python-format
 msgid "Project"
-msgstr "Proyek"
+msgstr "Project"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
@@ -4184,7 +4194,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
-msgstr "Jumlah Proyek"
+msgstr "Jumlah Project"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -4194,7 +4204,7 @@ msgstr "Jumlah Proyek"
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Manajer Proyek"
+msgstr "Manajer Project"
 
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
@@ -4204,7 +4214,7 @@ msgstr "Milestone Project"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Project Name"
-msgstr "Nama Proyek"
+msgstr "Nama Project"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
@@ -4257,7 +4267,7 @@ msgstr "Tag Project"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "Project Tasks"
-msgstr "Kegiatan-kegiatan proyek"
+msgstr "Kegiatan-kegiatan project"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
@@ -4289,7 +4299,7 @@ msgstr "Status project - {{ object.name }}"
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Kegiatan-kegiatan proyek"
+msgstr "Kegiatan-kegiatan project"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_recurring_tasks_ir_actions_server
@@ -4341,7 +4351,7 @@ msgstr "Project: Permintaan Rating Task"
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
 #, python-format
 msgid "Projects"
-msgstr "Proyek"
+msgstr "Project"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
@@ -4606,7 +4616,6 @@ msgid "Related Document Model"
 msgstr "Model Dokumen Terkait"
 
 #. module: project
-#: model:account.analytic.account,name:project.analytic_renovations
 #: model:project.project,name:project.project_project_3
 msgid "Renovations"
 msgstr "Renovasi"
@@ -4698,7 +4707,6 @@ msgid "Research"
 msgstr "Penelitian"
 
 #. module: project
-#: model:account.analytic.account,name:project.analytic_research_development
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
 msgstr "Penelitian & Pengembangan"
@@ -4803,7 +4811,7 @@ msgstr "Cari <span class=\"nolabel\"> (di Konten)</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr "Cari proyek"
+msgstr "Cari project"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
@@ -5401,6 +5409,7 @@ msgstr "Task:"
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -5537,7 +5546,7 @@ msgid ""
 msgstr ""
 "Model (Jenis Dokumen Odoo) di mana alias ini dikaitkan. Email masuk yang "
 "tidak menjawab catatan yang sudah ada akan menyebabkan pembuatan rekor baru "
-"model ini (misalnya tugas proyek)"
+"model ini (misalnya tugas project)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name

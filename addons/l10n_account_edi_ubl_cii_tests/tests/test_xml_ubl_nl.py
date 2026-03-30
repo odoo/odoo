@@ -25,7 +25,7 @@ class TestUBLNL(TestUBLCommon):
             'phone': '+31 180 6 225789',
             'email': 'info@outlook.nl',
             'country_id': cls.env.ref('base.nl').id,
-            'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57'})],
+            'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57', 'allow_out_payment': True})],
             'l10n_nl_kvk': '77777677',
             'ref': 'ref_partner_1',
         })
@@ -37,7 +37,7 @@ class TestUBLNL(TestUBLCommon):
             'city': "Rotterdam",
             'vat': 'NL41452B11',
             'country_id': cls.env.ref('base.nl').id,
-            'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167'})],
+            'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167', 'allow_out_payment': True})],
             'l10n_nl_kvk': '1234567',
             'ref': 'ref_partner_2',
         })

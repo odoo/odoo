@@ -8,3 +8,4 @@ from . import survey_user_input
 from . import badge
 from . import challenge
 from . import res_partner
+from . import ir_http

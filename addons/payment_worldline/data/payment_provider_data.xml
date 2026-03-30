@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_worldline" model="payment.provider">
+        <field name="name">Worldline</field>
+        <field
+            name="image_128"
+            type="base64"
+            file="payment_worldline/static/description/icon.png"
+        />
+        <field name="module_id" ref="base.module_payment_worldline"/>
+        <field
+            name="payment_icon_ids"
+            eval="[(6, 0, [
+                ref('payment.payment_icon_cc_american_express'),
+                ref('payment.payment_icon_cc_bancontact'),
+                ref('payment.payment_icon_cc_diners_club_intl'),
+                ref('payment.payment_icon_cc_discover'),
+                ref('payment.payment_icon_cc_eps'),
+                ref('payment.payment_icon_cc_ideal'),
+                ref('payment.payment_icon_cc_jcb'),
+                ref('payment.payment_icon_cc_maestro'),
+                ref('payment.payment_icon_cc_mastercard'),
+                ref('payment.payment_icon_cc_p24'),
+                ref('payment.payment_icon_cc_visa'),
+            ])]"
+        />
+        <field name="code">worldline</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="allow_tokenization">True</field>
+    </record>
+
+</odoo>

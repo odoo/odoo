@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import struct
 from threading import Event
 import unittest
@@ -11,11 +12,12 @@ except ImportError:
     websocket = None
 
 import odoo.tools
-from odoo.tests import HOST, HttpCase
-from ..websocket import CloseCode, WebsocketConnectionHandler
+from odoo.tests import HOST, HttpCase, TEST_CURSOR_COOKIE_NAME
+from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
 
 
 class WebsocketCase(HttpCase):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -70,8 +72,8 @@ class WebsocketCase(HttpCase):
         if 'cookie' not in kwargs:
             self.session = self.authenticate(None, None)
             kwargs['cookie'] = f'session_id={self.session.sid}'
-        if 'timeout' not in kwargs:
-            kwargs['timeout'] = 5
+        kwargs['cookie'] += f';{TEST_CURSOR_COOKIE_NAME}={self.http_request_key}'
+        kwargs['timeout'] = 10  # keep a large timeout to avoid aving a websocket request escaping the test
         ws = websocket.create_connection(
             type(self)._WEBSOCKET_URL, *args, **kwargs
         )
@@ -79,6 +81,31 @@ class WebsocketCase(HttpCase):
         ws.recv_data_frame(control_frame=True) # pong
         self._websockets.add(ws)
         return ws
+
+    def subscribe(self, websocket, channels=None, last=None, wait_for_dispatch=True):
+        """ Subscribe the websocket to the given channels.
+        :param websocket: The websocket of the client.
+        :param channels: The list of channels to subscribe to.
+        :param last: The last notification id the client received.
+        :param wait_for_dispatch: Whether to wait for the notification
+            dispatching trigerred by the subscription.
+        """
+        dispatch_bus_notification_done = Event()
+        original_dispatch_bus_notifications = Websocket._dispatch_bus_notifications
+
+        def _mocked_dispatch_bus_notifications(self, *args):
+            original_dispatch_bus_notifications(self, *args)
+            dispatch_bus_notification_done.set()
+
+        with patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
+            sub = {'event_name': 'subscribe', 'data': {
+                'channels': channels or [],
+            }}
+            if last:
+                sub['data']['last'] = last
+            websocket.send(json.dumps(sub))
+            if wait_for_dispatch:
+                dispatch_bus_notification_done.wait(timeout=5)
 
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """

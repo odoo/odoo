@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-06-27 03:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1275,7 +1275,7 @@ msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
 "Cochez cette case si vous souhaitez regrouper les produits de cette "
-"catégorie dans les bons de commande du point de vente"
+"catégorie dans les commandes clients du point de vente"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_check_product_wizard
@@ -3483,8 +3483,8 @@ msgstr "Plus..."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
-msgid "Multiple Invoiced Orders Selected"
-msgstr "Plusieurs commandes facturées sélectionnées"
+msgid "Multiple Orders Selected"
+msgstr "Commandes multiples sélectionnées"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -6968,6 +6968,17 @@ msgstr ""
 "son type."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Ce journal est associé à la méthode de paiement %s utilisée par la commande "
+"%s dans la session de point de vente active %s."
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
 #, python-format
@@ -7713,6 +7724,17 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+"Vous ne pouvez pas supprimer une méthode d'arrondi qui est utilisée dans une"
+" configuration de Point de Vente."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -7760,12 +7782,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid ""
-"You have selected orderlines from multiple invoiced orders. To proceed "
-"refund, please select orderlines from the same invoiced order."
+"You have selected orderlines from multiple orders. To proceed refund, please"
+" select orderlines from the same order."
 msgstr ""
 "Vous avez sélectionné des lignes de commande provenant de plusieurs "
-"commandes facturées. Pour procéder au remboursement, veuillez sélectionner "
-"les lignes de commande d'une même commande facturée."
+"commandes. Pour effectuer un remboursement, veuillez sélectionner des lignes"
+" de commande provenant de la même commande."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8053,14 +8075,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "a été dupliqué de commandes existantes"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with payment method %s that is being used by "
-"order %s in the active pos session %s"
-msgstr ""
-"Ce journal est associé à la méthode de paiement %s utilisée par la commande "
-"%s dans la session de point de vente active %s."

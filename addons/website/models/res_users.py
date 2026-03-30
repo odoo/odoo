@@ -81,6 +81,10 @@ class ResUsers(models.Model):
         uid = super(ResUsers, cls).authenticate(db, login, password, user_agent_env)
         if uid and visitor_pre_authenticate_sudo:
             env = api.Environment(request.env.cr, uid, {})
+            # user may not always exist in request cursor for auto-provisioning modules like LDAP
+            if not env.user.exists():
+                return uid
+
             user_partner = env.user.partner_id
             visitor_current_user_sudo = env['website.visitor'].sudo().search([
                 ('partner_id', '=', user_partner.id)

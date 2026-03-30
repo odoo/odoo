@@ -55,10 +55,16 @@
 
     .o_cp_top_right {
         display: flex;
-        justify-content: flex-end;
         align-items: flex-start;
         flex: 4;
+        row-gap: 8px;
         min-width: 0;
+        flex-wrap: wrap;
+
+        .o_filter_value_container {
+            width: 235px;
+            padding-right: 18px;
+        }
 
         .o-filter-value {
             min-height: 25px;

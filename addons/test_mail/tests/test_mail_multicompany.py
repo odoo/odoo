@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 import socket
 
 from itertools import product
@@ -10,7 +11,7 @@ from werkzeug.urls import url_parse, url_decode
 
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, users, HttpCase
 from odoo.tools import formataddr, mute_logger
 
@@ -295,7 +296,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
         )
 
 
-@tagged('-at_install', 'post_install', 'multi_company')
+@tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
 
     @classmethod
@@ -336,8 +337,7 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                     path = url_parse(response.url).path
                     self.assertEqual(path, '/web/login')
                     decoded_fragment = url_decode(url_parse(response.url).fragment)
-                    self.assertTrue("cids" in decoded_fragment)
-                    self.assertEqual(decoded_fragment['cids'], str(mc_record.company_id.id))
+                    self.assertNotIn("cids", decoded_fragment)
                 else:
                     user = self.env['res.users'].browse(self.session.uid)
                     self.assertEqual(user.login, login)
@@ -387,21 +387,50 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                     self.assertTrue("cids" in decoded_fragment)
                     self.assertEqual(decoded_fragment['cids'], str(user_company.id))
 
-        # when being not logged, cids should be added based on
-        # '_get_mail_redirect_suggested_company'
-        self.authenticate(None, None)
+        # when being not logged, cids should not be added as redirection after
+        # logging will be 'mail/view' again
         for test_record in nothreads:
-            with self.subTest(record_name=test_record.name, user_company=user_company):
-                self.user_admin.write({'company_id': user_company.id})
+            with self.subTest(record_name=test_record.name):
+                self.authenticate(None, None)
                 response = self.url_open(
                     f'/mail/view?model={test_record._name}&res_id={test_record.id}',
                     timeout=15
                 )
                 self.assertEqual(response.status_code, 200)
-
                 decoded_fragment = url_decode(url_parse(response.url).fragment)
-                if test_record.company_id:
-                    self.assertIn('cids', decoded_fragment)
-                    self.assertEqual(decoded_fragment['cids'], str(test_record.company_id.id))
-                else:
-                    self.assertNotIn('cids', decoded_fragment)
+                self.assertNotIn('cids', decoded_fragment)
+
+
+@tagged("-at_install", "post_install", "multi_company", "mail_controller")
+class TestMultiCompanyThreadData(TestMailCommon, HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._activate_multi_company()
+
+    def test_mail_thread_data_follower(self):
+        partner_portal = self.env["res.partner"].create(
+            {"company_id": self.company_3.id, "name": "portal partner"}
+        )
+        record = self.env["mail.test.multi.company"].create({"name": "Multi Company Record"})
+        record.message_subscribe(partner_ids=partner_portal.ids)
+        with self.assertRaises(UserError):
+            partner_portal.with_user(self.user_employee_c2).check_access_rule("read")
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        response = self.url_open(
+            url="/mail/thread/data",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_id": record.id,
+                        "thread_model": "mail.test.multi.company",
+                        "request_list": ["followers"],
+                    }
+                },
+            ),
+        )
+        self.assertEqual(response.status_code, 200)
+        followers = json.loads(response.content)["result"]["followers"]
+        self.assertEqual(len(followers), 1)
+        self.assertEqual(followers[0]["partner"]["id"], partner_portal.id)

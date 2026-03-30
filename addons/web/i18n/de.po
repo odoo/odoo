@@ -10,7 +10,7 @@
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Michael Hofer, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2025
+# Wil Odoo, 2024
 # Tiffany Chang, 2025
 # Larissa Manderfeld, 2025
 # 
@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
+"POT-Creation-Date: 2025-05-08 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -42,20 +42,6 @@ msgstr " Datensätze"
 #, python-format
 msgid "# Code editor"
 msgstr "# Code-Editor"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is current state"
-msgstr "#{i.display_name} ist der aktuelle Status"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is not current state"
-msgstr "#{i.display_name} ist nicht der aktuelle Status"
 
 #. module: web
 #. odoo-javascript
@@ -1330,13 +1316,6 @@ msgstr "Unterschrift verwerfen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Click to change current state to #{i.display_name}"
-msgstr "Klicken Sie, um den aktuellen Status auf #{i.display_name} zu setzen"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
@@ -2286,6 +2265,13 @@ msgstr "E-Mail-Adresse eingeben"
 #, python-format
 msgid "Enterprise"
 msgstr "Enterprise"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
+#, python-format
+msgid "Entry Count"
+msgstr "Anzahl Einträge"
 
 #. module: web
 #. odoo-javascript
@@ -3648,6 +3634,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
@@ -3684,13 +3671,6 @@ msgstr "Nicht aktiver Zustand"
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "Nicht aktiver Zustand, anklicken, um ihn zu ändern"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
-#, python-format
-msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
-msgstr "Nummer, die {{ DECIMAL_POINT }} als Dezimaltrennzeichen verwendet."
 
 #. module: web
 #. odoo-javascript
@@ -5293,14 +5273,6 @@ msgstr "TIPP"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Tag color: #{colornames[color]}"
-msgstr "Stichwortfarbe: #{colornames[color]}"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
@@ -6349,11 +6321,9 @@ msgstr "vor etwa einer Stunde"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "allen"
@@ -6789,14 +6759,6 @@ msgstr "neuer Tab"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "new_template"
-msgstr "neue_Vorlage"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6948,14 +6910,6 @@ msgstr "ausgewählten Datensätzen, sind"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "self"
-msgstr "selbst"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6983,27 +6937,6 @@ msgstr ", um ein Tastenkürzel auszulösen."
 #, python-format
 msgid "type a default text or press ENTER"
 msgstr "Standardtext eingeben oder ENTER drücken"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#, python-format
-msgid "{{ progressBar.count }} {{ progressBar.string }}"
-msgstr "{{ progressBar.count }} {{ progressBar.string }}"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
-#, python-format
-msgid "{{ relatedFieldName }}..."
-msgstr "{{ relatedFieldName }}..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/kanban.xml:0
-#, python-format
-msgid "{{ widget.groupByFieldString }}..."
-msgstr "{{ widget.groupByFieldString }}..."
 
 #. module: web
 #. odoo-javascript

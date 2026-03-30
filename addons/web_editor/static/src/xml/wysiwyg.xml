@@ -173,14 +173,14 @@
                 <a href="#" class="mx-1 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
                     <i class="fa fa-clone"/>
                 </a>
-                <a href="#" class="mx-1 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
+                <a href="#" t-att-hidden="widget.isDocument ? true : undefined" class="mx-1 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
                     <i class="fa fa-edit"/>
                 </a>
-                <a href="#" class="ms-1 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
+                <a href="#" t-att-hidden="widget.isDocument ? true : undefined" class="ms-1 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
                     <i class="fa fa-chain-broken"/>
                 </a>
             </div>
-            <a href="#" target="_blank" class="o_we_full_url mt-1 text-muted d-none" t-esc="widget.href" title="Open in a new tab"/>
+            <a href="#" t-att-hidden="widget.isDocument ? true : undefined" target="_blank" class="o_we_full_url mt-1 text-muted d-none" t-esc="widget.href" title="Open in a new tab"/>
         </div>
     </div>
     <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">

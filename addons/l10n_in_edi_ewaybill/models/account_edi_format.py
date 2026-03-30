@@ -133,7 +133,7 @@ class AccountEdiFormat(models.Model):
         cancel_json = {
             "ewbNo": ewaybill_response_json.get("ewayBillNo") or ewaybill_response_json.get("EwbNo"),
             "cancelRsnCode": int(invoices.l10n_in_edi_cancel_reason),
-            "CnlRem": invoices.l10n_in_edi_cancel_remarks,
+            "cancelRmrk": invoices.l10n_in_edi_cancel_remarks,
         }
         response = self._l10n_in_edi_ewaybill_cancel(invoices.company_id, cancel_json)
         if response.get("error"):
@@ -407,6 +407,7 @@ class AccountEdiFormat(models.Model):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoices)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
+        rounding_amount = sum(line.balance for line in invoices.line_ids if line.display_type == 'rounding') * sign
         json_payload = {
             # Note:
             # Customer Invoice, Sales Receipt and Vendor Credit Note are Outgoing
@@ -446,8 +447,8 @@ class AccountEdiFormat(models.Model):
             "igstValue": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
             "cessValue": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
             "cessNonAdvolValue": self._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount"))),
+            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
+            "totInvValue": self._l10n_in_round_value(tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
         if invoices.is_outbound():
@@ -505,7 +506,7 @@ class AccountEdiFormat(models.Model):
             "hsnCode": extract_digits(line.product_id.l10n_in_hsn_code),
             "productDesc": line.name,
             "quantity": line.quantity,
-            "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",
+            "qtyUnit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
             "taxableAmount": self._l10n_in_round_value(line.balance * sign),
         }
         gst_types = {'cgst', 'sgst', 'igst'}
@@ -583,17 +584,21 @@ class AccountEdiFormat(models.Model):
     @api.model
     def _l10n_in_edi_ewaybill_connect_to_server(self, company, url_path, params):
         user_token = self.env["iap.account"].get("l10n_in_edi")
+        IrConfigParam = self.env["ir.config_parameter"].sudo()
         params.update({
             "account_token": user_token.account_token,
-            "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
+            "dbuuid": IrConfigParam.get_param("database.uuid"),
             "username": company.sudo().l10n_in_edi_ewaybill_username,
             "gstin": company.vat,
         })
+        gsp_provider = IrConfigParam.get_param("l10n_in.gsp_provider")
+        if gsp_provider:
+            params["gsp_provider"] = gsp_provider
         if company.sudo().l10n_in_edi_production_env:
             default_endpoint = DEFAULT_IAP_ENDPOINT
         else:
             default_endpoint = DEFAULT_IAP_TEST_ENDPOINT
-        endpoint = self.env["ir.config_parameter"].sudo().get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
+        endpoint = IrConfigParam.get_param("l10n_in_edi_ewaybill.endpoint", default_endpoint)
         url = "%s%s" % (endpoint, url_path)
         try:
             response = jsonrpc(url, params=params, timeout=70)

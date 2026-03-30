@@ -1348,6 +1348,9 @@ msgid ""
 "        E-Invoicing, Universal Business Language\n"
 "    "
 msgstr ""
+"\n"
+"        E-fakturowanie, uniwersalny język biznesowy\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -4086,6 +4089,44 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Automatyczne deklaracje DIMONA\n"
+"=============================\n"
+"\n"
+"Warunki wstępne:\n"
+"--------------\n"
+"\n"
+"- Potrzebujesz Elektronicznego Certyfikatu zgodnego z wymogami rządu belgijskiego, dostarczony przez Global\n"
+"  Sign. Zobacz: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Wygeneruj pliki certyfikatów ze swojego certyfikatu SSL (plik .pfx), które są potrzebne do stworzenia\n"
+"  użytkownika technicznego (plik .cer) i do zdalnego zatwierdzenia do pliku ONSS (.pem). W systemie UNIX,\n"
+"  możesz użyć następujących komend:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Zanim będziesz w stanie używać usługi sieciowej ubezpieczenia społecznego REST, musisz stworzyć konto\n"
+"  w imieniu swoim lub twojego klienta i skonfigurować bezpieczeństwo (Cała procedura jest\n"
+"  dostępna pod adresem\n"
+"https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Zarządzanie kontem użytkownika: Postępuj zgodnie z procedurą https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Stwórz użytkownika technicznego: Twój klient musi teraz stworzyć technicznego użytkownika w usłudze zarządzania\n"
+"    dostępem online. Następnie postępuj zgodnie z tą procedurą: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Aktywuj kanał usługi sieciowej: Jak tylko techniczny użytkownik zostanie stworzony, klient musi\n"
+"    aktywować kanał usługi sieciowej z Menadżerze Dostępu. Następująca instrukcja zawiera\n"
+"    kroki aktywacji kanału: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Na końcu tej procedury, powinieneś otrzymać \"Numer Nadawcy ONSS\", możesz\n"
+"    zakodować go w ustawieniach listy płac z plikiem .pem i powiązanym hasłem, jeśli takie posiadasz.\n"
+"\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_exhibitor
@@ -4303,6 +4344,54 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "    "
 msgstr ""
+"\n"
+"Belgijskie zasady płacowe\n"
+"======================\n"
+"\n"
+"    * Szczegóły pracownika\n"
+"    * Umowy pracownika\n"
+"    * Umowa na podstawie paszportu\n"
+"    * Dodatki/odliczenia\n"
+"    * Możliwość skonfigurowania płacy Podstawowej/Brutto/Netto\n"
+"    * Pasek wypłaty pracownika\n"
+"    * Miesięczny rejestr płac\n"
+"    * Integracja z zarządzaniem urlopami\n"
+"    * Główne wynagrodzenie, ONSS, podatek u źródła, zasiłek na dziecko, ...\n"
+"\n"
+"Automatyczny podpis DmfA\n"
+"========================\n"
+"\n"
+"Wymagania wstępne:\n"
+"--------------\n"
+"\n"
+"- Potrzebujesz Elektronicznego Certyfikatu zgodnego z wymogami rządu belgijskiego, dostarczony przez Global\n"
+"  Sign. Zobacz: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Wygeneruj pliki certyfikatów ze swojego certyfikatu SSL (plik .pfx), które są potrzebne do stworzenia\n"
+"  użytkownika technicznego (plik .cer) i do zdalnego zatwierdzenia do pliku ONSS (.pem). W systemie UNIX\n"
+"  możesz użyć następujących komend:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"  - Zanim będziesz w stanie używać usługi sieciowej ubezpieczenia społecznego REST, musisz stworzyć konto\n"
+"w imieniu swoim lub twojego klienta i skonfigurować bezpieczeństwo. (Cała procedura jest\n"
+"dostępna pod adresem\n"
+"https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Stwórz użytkownika technicznego + skonfiguruj kanał SFTP: Twój klient musi teraz stworzyć technicznego użytkownika w usłudze zarządzania\n"
+"dostępem online. Następnie postępuj zgodnie z tą procedurą: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Skonfiguruj swojego klienta SFTP: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - Na końcu tej procedury, powinieneś otrzymać \"Numer Nadawcy ONSS\", możesz\n"
+"zakodować go w ustawieniach listy płac z plikiem .pem i powiązanym hasłem, jeśli takie posiadasz.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -8325,6 +8414,18 @@ msgid ""
 "- Withholding Tax Report\n"
 "- Fiscal Positions\n"
 msgstr ""
+"\n"
+"Moduł księgowy dla Arabii Saudyjskiej\n"
+"===========================================================\n"
+"Podstawowe plany księgowe Arabii Saudyjskiej i lokalizacja\n"
+"\n"
+"Aktywuje:\n"
+"\n"
+"- Plan kont\n"
+"- Podatki\n"
+"- Raport wypełnienia podatków\n"
+"- Raport podatku u źródła\n"
+"- Obszar podatkowy\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
@@ -17581,8 +17682,8 @@ msgstr "D - DOSTAWA ENERGII ELEKTRYCZNEJ, GAZU, PARY I KLIMATYZACJI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Express Shipping"
-msgstr "Dostawa DHL Express"
+msgid "DHL Express Shipping (Legacy)"
+msgstr "Dostawa DHL Express (przestarzałe)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
@@ -18844,7 +18945,7 @@ msgstr "Egipt - Księgowość"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
 msgid "Egypt E-Invoicing"
-msgstr ""
+msgstr "Egipt e-Fakturowanie"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__partner_share
@@ -19771,7 +19872,7 @@ msgstr "Wyodrębnij dane ze skanów faktur, aby wypełnić je automatycznie"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
 msgid "Extraterritorial"
-msgstr "Eksterytorialny"
+msgstr "Fundacja"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
@@ -20419,7 +20520,7 @@ msgstr "Czcionka"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
 msgid "Food/Hospitality"
-msgstr "Żywność/Gospodarka"
+msgstr "Żywienie/Hotelarstwo"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_footer
@@ -20463,7 +20564,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Forgot password?"
-msgstr "Zapomniałeś hasło?"
+msgstr "Zapomniałeś hasła?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -25118,6 +25219,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Minimalny zestaw kont do rozpoczęcia pracy w Peru.\n"
+"=================================================\n"
+"\n"
+"Korzystanie z tego CoA musi odnosić się do oficjalnej dokumentacji MEF\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Wszystkie odniesienia prawne można znaleźć tutaj.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Uwagi.\n"
+"===============\n"
+"\n"
+"Plan kont:\n"
+"-----------------\n"
+"\n"
+"Drzewo CoA jest tworzone przy użyciu grup kont, najczęściej używane konta  \n"
+"są dostępne w ramach swoich grup, jeśli chcesz utworzyć nowe konto, użyj \n"
+"grupy jako odniesienia. \n"
+"Podatki:\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTROS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"W tym module dodaliśmy 3 koncepcje dotyczące podatków (niezbędne dla podpisu\n"
+"EDI)\n"
+"\n"
+"Kod peruwiański EDI: używany do wyboru rodzaju podatku z SUNAT.\n"
+"Kod EDI UNECE: używany do wyboru rodzaju podatku na podstawie \n"
+"Komisji Gospodarczej \n"
+"Narodów Zjednoczonych\n"
+"EDI Affect. Powód: rodzaj wpływu na IGV na podstawie Katalogu 07\n"
+"\n"
+"Produkty:\n"
+"---------\n"
+"\n"
+"Kody produktów do wykorzystania w EDI są dostępne tutaj. Aby zdecydować,\n"
+"które podatki są używane z którym kodem zgodnie skorzystaj z tej referencji i kodu Python:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -25698,22 +25867,22 @@ msgstr "Holandia - raporty księgowości"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr
 msgid "Netherlands - SBR"
-msgstr ""
+msgstr "Holandia - SBR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr_icp
 msgid "Netherlands - SBR ICP"
-msgstr ""
+msgstr "Holandia - SBR ICP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr_ob_nummer
 msgid "Netherlands - SBR OB Nummer"
-msgstr ""
+msgstr "Holandia - SBR OB Nummer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr_status_info
 msgid "Netherlands - SBR Status information service"
-msgstr ""
+msgstr "Holandia - Usługa informacji statusu SBR"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
@@ -31422,7 +31591,7 @@ msgstr "S - POZOSTAŁA DZIAŁALNOŚĆ USŁUGOWA"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sbr
 msgid "SBR"
-msgstr ""
+msgstr "SBR"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -31855,12 +32024,12 @@ msgstr "Arabia Saudyjska - E-fakturowanie (Uproszczone)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
 msgid "Saudi Arabia - Payroll"
-msgstr ""
+msgstr "Arabia Saudyjska - Lista płac"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "Saudi Arabia - Payroll with Accounting"
-msgstr ""
+msgstr "Arabia Saudyjska - Lista płac z Ksiegowością"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -32277,8 +32446,14 @@ msgstr "Wysyłaj swoje paczki przez Shiprocket i śledź je online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
-msgid "Send your shippings through DHL and track them online"
-msgstr "Wyślij swoje przesyłki za pośrednictwem DHL i śledź je online"
+msgid ""
+"This is the legacy integration with DHL Express that is no longer supported."
+" Please install the new \"DHL Express Shipping\" module and uninstall this "
+"one as soon as possible."
+msgstr ""
+"To jest przestarzała integracja z DHL Express, która nie jest już "
+"obsługiwana. Zainstaluj nowy moduł \"DHL Express\", a ten odinstaluj tak "
+"szybko jak to możliwe."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -33184,7 +33359,7 @@ msgstr "Konsola arkusza kalkulacyjnego dla arkuszy czasu pracy"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_spreadsheet
 #: model:ir.module.module,summary:base.module_l10n_in_reports_gstr_spreadsheet
 msgid "Spreadsheet document for GSTR1 Report"
-msgstr ""
+msgstr "Dokument arkuszy kalkulacyjnych dla raportu GSTR1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql
@@ -34630,6 +34805,12 @@ msgid ""
 "For example, __import__, resulting in the external id "
 "__import__.%(record_id)s."
 msgstr ""
+"Zapis %(xml_id)s ma prefiks modułu %(module_name)s. To jest część przed '.' "
+"w zewnętrznym id. Ponieważ prefiks odnosi się do istniejącego modułu, zapis "
+"zostałby usunięty podczas aktualizacji modułu. Nie używaj żadnego prefiksu "
+"ani żadnej kropki, lub użyj prefiksu, który nie jest istniejącym modułem. Na"
+" przykład, __import__, czego rezultatem będzie zewnętrzne id "
+"__import__.%(record_id)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -36093,12 +36274,12 @@ msgstr "Zjednoczone Emiraty Arabskie - Księgowość"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "United Arab Emirates - Payroll"
-msgstr ""
+msgstr "Zjednoczone Emiraty Arabskie - Lista płac"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
 msgid "United Arab Emirates - Payroll with Accounting"
-msgstr ""
+msgstr "Zjednoczone Emiraty Arabskie - Lista płac i Księgowość"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_pos

@@ -5,17 +5,17 @@
 # Translators:
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-06-27 03:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -2253,7 +2253,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #, python-format
 msgid "Electronic Scale"
-msgstr "Electronische weegschaal"
+msgstr "Elektronische weegschaal"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3462,8 +3462,8 @@ msgstr "Meer..."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
-msgid "Multiple Invoiced Orders Selected"
-msgstr "Meerdere gefactureerde orders geselecteerd"
+msgid "Multiple Orders Selected"
+msgstr "Meerdere orders geselecteerd"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -6046,7 +6046,7 @@ msgid ""
 "the issue has been resolved."
 msgstr ""
 "Sommige orders konden niet bij de server worden ingediend vanwege problemen "
-"met de internetverbinding. Je kunt het kassa verlaten, maar de sessie niet "
+"met de internetverbinding. Je kunt de kassa verlaten, maar de sessie niet "
 "afsluiten voordat het probleem is opgelost."
 
 #. module: point_of_sale
@@ -6371,7 +6371,7 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
-"Het Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
+"De Kassa ondersteunt alleen de afrondingsstrategie \"voeg een "
 "afrondingsregel toe\"."
 
 #. module: point_of_sale
@@ -6517,7 +6517,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The invoice journal of the point of sale %s must belong to the same company."
-msgstr "Het factuurdagboek van het kassa %s moet van hetzelfde bedrijf zijn."
+msgstr "Het verkoopdagboek van de kassa %s moet bij zijn bedrijf horen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6583,7 +6583,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
-msgstr "De betaalmethoden voor het Kassa %s moeten van zijn bedrijf zijn."
+msgstr "De betaalmethoden voor de Kassa %s moeten van zijn bedrijf zijn."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_start_categ_id
@@ -6630,8 +6630,8 @@ msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
 msgstr ""
-"Het kassabon scherm wordt overgeslagen als de kassabon automatisch afgedrukt"
-" kan worden."
+"Het kassabonscherm wordt overgeslagen als de kassabon automatisch afgedrukt "
+"kan worden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
@@ -6799,7 +6799,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There is already an electronic payment in progress."
-msgstr "Er is al een electronische betaling in behandeling."
+msgstr "Er is al een elektronische betaling in behandeling."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6924,6 +6924,17 @@ msgid ""
 msgstr ""
 "Dit dagboek is gekoppeld aan een betaalmethode. Je kunt het type niet "
 "wijzigen"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Dit dagboek is gekoppeld aan betaalmethode %s die wordt gebruikt door "
+"bestelling %s in de actieve Kassa-sessie %s."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7662,6 +7673,17 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+"Je kunt een afrondmethode die gebruikt wordt in een kassaconfiguratie niet "
+"verwijderen."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -7709,12 +7731,11 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid ""
-"You have selected orderlines from multiple invoiced orders. To proceed "
-"refund, please select orderlines from the same invoiced order."
+"You have selected orderlines from multiple orders. To proceed refund, please"
+" select orderlines from the same order."
 msgstr ""
-"Je hebt orderregels geselecteerd uit meerdere gefactureerde orders. Om tot "
-"terugbetaling over te gaan, selecteer je orderregels van dezelfde "
-"gefactureerde bestelling."
+"Je hebt orderregels uit meerdere orders geselecteerd. Om een terugbetaling "
+"te verwerken, selecteer orderregels uit dezelfde order."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8003,14 +8024,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "waren duplicaten van bestaande orders"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with payment method %s that is being used by "
-"order %s in the active pos session %s"
-msgstr ""
-"Dit dagboek is gekoppeld aan betaalmethode %s die wordt gebruikt door "
-"bestelling %s in de actieve Kassa-sessie %s."

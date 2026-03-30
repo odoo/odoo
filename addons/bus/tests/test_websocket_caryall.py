@@ -2,10 +2,12 @@
 
 import gc
 import json
+import os
 from collections import defaultdict
 from datetime import timedelta
 from freezegun import freeze_time
 from threading import Event
+from unittest import skipIf
 from unittest.mock import patch
 try:
     from websocket._exceptions import WebSocketBadStatusException
@@ -130,26 +132,23 @@ class TestWebsocketCaryall(WebsocketCase):
         websocket.send(json.dumps({'event_name': 'subscribe'}))
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
+    @skipIf(os.getenv("ODOO_FAKETIME_TEST_MODE"), 'This test times out when faketime is used')
     def test_user_logout_outgoing_message(self):
-        subscribe_done_event = Event()
-        original_subscribe = Websocket.subscribe
         odoo_ws = None
 
         def patched_subscribe(self, *args):
             nonlocal odoo_ws
             odoo_ws = self
-            original_subscribe(self, *args)
-            subscribe_done_event.set()
 
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
         with patch.object(Websocket, 'subscribe', patched_subscribe):
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['channel1'], 'last': 0}
-            }))
-            subscribe_done_event.wait(timeout=5)
+            self.subscribe(
+                websocket,
+                ["channel1"],
+                self.env["bus.bus"].search([], limit=1, order="id DESC").id or 0,
+            )
             self.url_open('/web/session/logout')
             # Simulate postgres notify. The session with whom the websocket
             # connected has been deleted. WebSocket should be closed without
@@ -218,12 +217,9 @@ class TestWebsocketCaryall(WebsocketCase):
 
         with patch.object(Websocket, 'subscribe', patched_subscribe):
             websocket = self.websocket_connect()
+            bus_last_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
             self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
-            websocket.send(json.dumps({
-                'event_name': 'subscribe',
-                'data': {'channels': ['my_channel'], 'last': 0}
-            }))
-
+            self.subscribe(websocket, ["my_channel"], bus_last_id)
             notifications = json.loads(websocket.recv())
             self.assertEqual(1, len(notifications))
             self.assertEqual(notifications[0]['message']['type'], 'notif_type')

@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from pytz import timezone, UTC
 
 from odoo import fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import mute_logger
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -1083,6 +1083,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Sick Leave (days)',
             'request_unit': 'day',
             'leave_validation_type': 'hr',
+            'requires_allocation': 'no',
         })
         sick_leave = self.env['hr.leave'].create({
             'name': 'Sick 3 days',
@@ -1095,6 +1096,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'OT Compensation (hours)',
             'request_unit': 'hour',
             'leave_validation_type': 'manager',
+            'requires_allocation': 'no',
         })
         comp_leave = self.env['hr.leave'].create({
             'name': 'OT Comp (12 hours)',
@@ -1139,6 +1141,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         user_id = self.employee_emp.user_id
         employee_id = self.employee_emp.id
 
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Test Allocation',
+            'employee_id': employee_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 5,
+            'state': 'confirm',
+            'date_from': datetime.today() - relativedelta(days=5),
+            'date_to': datetime.today() + relativedelta(days=5),
+        })
+        allocation.action_validate()
         leave = self.env['hr.leave'].with_user(user_id).create({
             'name': 'Test leave',
             'employee_id': employee_id,
@@ -1155,3 +1167,117 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(modified_leave.request_date_from, two_days_after)
         self.assertEqual(modified_leave.request_date_to, two_days_after)
+
+    def test_leave_creation_without_allocation(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Restricted Leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+        })
+        with self.assertRaises(UserError):
+            self.env['hr.leave'].create({
+                'name': 'Test Leave',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-06-01',
+                'request_date_to': '2024-06-02',
+            })
+
+    def test_calendar_event_create_access_rights(self):
+        """Test that a manager can validate a leave request for an employee linked to a portal user.
+        Customers defined custom ACLs and record rules to support the possibility to assign a portal user to employees
+        and still be able to manage their holidays.
+        """
+        # Add the required ACLs and record rules to allow portal users to create `calendar.event`.
+        # This reflects the customization done by customers for the reason explained above.
+        self.env['ir.model.access'].create([
+            # Read access on `mail.activity.type` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L734
+            {
+                'name': 'Portal can read mail.activity.type',
+                'model_id': self.env.ref('mail.model_mail_activity_type').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': False, 'perm_write': False, 'perm_unlink': False,
+            },
+            # Read access on `mail.activity` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L786
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L882
+            {
+                'name': 'Portal can read mail.activity',
+                'model_id': self.env.ref('mail.model_mail_activity').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': False, 'perm_write': False, 'perm_unlink': False,
+            },
+            # Read and create acess on `calendar.event` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/hr_holidays/models/hr_leave.py#L894-L898
+            # Write and unlink added to match the customer customization + out of common sense,
+            # if you give create to portal for their own events,
+            # you give write and unlink so they can manage their own events
+            {
+                'name': 'Portal all CRUD on calendar.event',
+                'model_id': self.env.ref('calendar.model_calendar_event').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': True, 'perm_write': True, 'perm_unlink': True,
+            },
+            # Read and create acess on `calendar.event` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L760-L768
+            # Write and unlink added to match the customer customization + out of common sense,
+            # if you give create to portal for their own events attendees,
+            # you give write and unlink so they can manage their own attendees
+            {
+                'name': 'Portal all CRUD on calendar.attendee',
+                'model_id': self.env.ref('calendar.model_calendar_attendee').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': True, 'perm_write': True, 'perm_unlink': True,
+            }])
+        self.env['ir.rule'].create([
+            # Restrict portals to their own activities
+            # so they cannot read the activities of other users
+            {
+                'name': 'Portal own mail activity',
+                'model_id': self.env.ref('mail.model_mail_activity').id,
+                'groups': [(4, self.env.ref('base.group_portal').id)],
+                'domain_force': "['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]",
+            },
+            # Restrict portals to their own events
+            # so they cannot read the events of other users
+            {
+                'name': 'Portal own calendar events',
+                'model_id': self.env.ref('calendar.model_calendar_event').id,
+                'groups': [(4, self.env.ref('base.group_portal').id)],
+                'domain_force': "[('partner_ids', 'in', user.partner_id.id)]",
+            },
+            # Restrict portals to their own attendees
+            # so they cannot read the attendees of other users
+            {
+                'name': 'Portal own calendar attendees',
+                'model_id': self.env.ref('calendar.model_calendar_attendee').id,
+                'groups': [(4, self.env.ref('base.group_portal').id)],
+                'domain_force': "[('partner_id', '=', user.partner_id.id)]",
+            }
+        ])
+
+        # Create a portal user and assign it to the employee
+        user_portal = self.env['res.users'].create({
+            'name': 'Portal', 'login': 'portal_user', 'password': 'portal_user',
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+        self.employee_emp.user_id = user_portal
+
+        # As a manager, create a leave request for the employee linked to a portal user
+        with freeze_time('2025, 1, 8'):
+            leave = self.env['hr.leave'].with_user(self.user_hrmanager_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_1.id,
+                'request_date_from': (datetime.today() - relativedelta(days=7)),
+                'request_date_to': datetime.today(),
+                'number_of_days': 1,
+            })
+
+        # Assert the employee cannot approve his own leave request
+        with self.assertRaises(AccessError):
+            leave.with_user(self.user_employee_id).action_approve()
+
+        # Assert the manager can approve the leave request assign to portal employee
+        leave.with_user(self.user_hrmanager_id).action_approve()

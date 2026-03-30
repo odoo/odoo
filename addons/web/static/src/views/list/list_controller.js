@@ -142,6 +142,9 @@ export class ListController extends Component {
         usePager(() => {
             const list = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = list;
+            if (this.model.useSampleModel) {
+                return;
+            }
             return {
                 offset: offset,
                 limit: limit,

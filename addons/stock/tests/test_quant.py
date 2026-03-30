@@ -51,10 +51,7 @@ class StockQuant(TransactionCase):
             'type': 'product',
             'tracking': 'serial',
         })
-        cls.stock_location = cls.env['stock.location'].create({
-            'name': 'stock_location',
-            'usage': 'internal',
-        })
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.stock_subloc3 = cls.env['stock.location'].create({
             'name': 'subloc3',
             'usage': 'internal',
@@ -210,7 +207,9 @@ class StockQuant(TransactionCase):
         """
         quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
         if not quant:
-            self.skipTest('Cannot test concurrent transactions without demo data.')
+            with closing(self.registry.cursor()) as cr:
+                self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, quantity=1.0)
+                quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
         product = quant.product_id
         available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True)
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
@@ -299,7 +298,9 @@ class StockQuant(TransactionCase):
         """
         quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
         if not quant:
-            self.skipTest('Cannot test concurrent transactions without demo data.')
+            with closing(self.registry.cursor()) as cr:
+                self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, quantity=1.0)
+                quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
         product = quant.product_id
         available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True)
 

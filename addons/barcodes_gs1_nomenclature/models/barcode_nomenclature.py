@@ -51,7 +51,13 @@ class BarcodeNomenclature(models.Model):
             date = datetime.datetime.strptime(str(year) + gs1_date[2:4], '%Y%m')
             date = date.replace(day=calendar.monthrange(year, int(gs1_date[2:4]))[1])
         else:
-            date = datetime.datetime.strptime(str(year) + gs1_date[2:], '%Y%m%d')
+            try:
+                date = datetime.datetime.strptime(str(year) + gs1_date[2:], '%Y%m%d')
+            except ValueError as e:
+                raise ValidationError(_(
+                    "A GS1 barcode nomenclature pattern was matched. However, the barcode failed to be converted to a valid date: '%(error_message)'",
+                    error_message=e
+                ))
         return date.date()
 
     def parse_gs1_rule_pattern(self, match, rule):

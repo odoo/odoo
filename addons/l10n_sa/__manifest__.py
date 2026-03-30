@@ -36,6 +36,7 @@ Activates:
         'data/report_paperformat_data.xml',
         'views/view_move_form.xml',
         'views/report_invoice.xml',
+        'views/report_templates_views.xml'
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -5,7 +5,7 @@ import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "@web/views/sample_server";
 import { useSetupView } from "@web/views/view_hook";
 
-import { EventBus, onWillStart, onWillUpdateProps, status, useComponent } from "@odoo/owl";
+import { EventBus, onMounted, onWillStart, onWillUpdateProps, status, useComponent } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
@@ -94,6 +94,26 @@ export function useModel(ModelClass, params, options = {}) {
         services[key] = useService(key);
     }
     services.orm = services.orm || useService("orm");
+    if (services.dialog) {
+        services.dialog = Object.create(services.dialog);
+        const dialogAddOrigin = services.dialog.add;
+        let dialogRequests = [];
+        services.dialog.add = (...args) => {
+            const index = dialogRequests.push(args);
+            return () => {
+                dialogRequests[index] = null;
+            }
+        }
+        onMounted(() => {
+            services.dialog.add = dialogAddOrigin;
+            for (const req of dialogRequests) {
+                if (req) {
+                    dialogAddOrigin(...req);
+                }
+            }
+            dialogRequests = null;
+        });
+    }
 
     if (!("isAlive" in params)) {
         params.isAlive = () => status(component) !== "destroyed";

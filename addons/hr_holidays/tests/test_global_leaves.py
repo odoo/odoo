@@ -91,7 +91,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'leave_validation_type': 'both',
             'responsible_id': self.user_hrmanager_id,
         })
-        self.env['hr.leave.allocation'].create({
+        allocation = self.env['hr.leave.allocation'].create({
             'employee_id': self.employee_emp_id,
             'name': '2 days allocation',
             'holiday_status_id': leave_type.id,
@@ -100,6 +100,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'date_from': date(2024, 2, 1),
             'date_to': date(2024, 2, 29),
         })
+        allocation.action_validate()
         covered_leave_1 = self.env['hr.leave'].create({
             'name': 'Covered Leave',
             'employee_id': self.employee_emp_id,
@@ -198,7 +199,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'leave_validation_type': 'both',
             'responsible_id': self.user_hrmanager_id,
         })
-        self.env['hr.leave.allocation'].create({
+        allocation = self.env['hr.leave.allocation'].create({
             'employee_id': self.employee_emp_id,
             'name': '5 days allocation',
             'holiday_status_id': leave_type.id,
@@ -207,6 +208,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'date_from': date(2024, 12, 1),
             'date_to': date(2024, 12, 30),
         })
+        allocation.action_validate()
         partially_covered_leave = self.env['hr.leave'].create({
             'name': 'Covered Leave',
             'employee_id': self.employee_emp_id,

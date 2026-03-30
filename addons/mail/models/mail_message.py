@@ -8,7 +8,7 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 
 from odoo import _, api, Command, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.osv import expression
 from odoo.tools.misc import clean_context
 
@@ -563,6 +563,10 @@ class Message(models.Model):
     def create(self, values_list):
         tracking_values_list = []
         for values in values_list:
+            if not (self.env.su or self.env.user.has_group('base.group_user')):
+                values.pop('author_id', None)
+                values.pop('email_from', None)
+                self = self.with_context({k: v for k, v in self.env.context.items() if k not in ['default_author_id', 'default_email_from']})  # noqa: PLW0642
             if 'email_from' not in values:  # needed to compute reply_to
                 _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None, raise_on_email=False)
                 values['email_from'] = email_from
@@ -664,6 +668,9 @@ class Message(models.Model):
         return super(Message, self).read(fields=fields, load=load)
 
     def write(self, vals):
+        if not (self.env.su or self.env.user.has_group('base.group_user')):
+            vals.pop('author_id', None)
+            vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
@@ -846,6 +853,9 @@ class Message(models.Model):
         for message in self:
             if message.model and message.res_id:
                 thread_ids_by_model_name[message.model].add(message.res_id)
+        # filter missing records
+        for model_name, record_ids in thread_ids_by_model_name.items():
+            thread_ids_by_model_name[model_name] = self.env[model_name].browse(record_ids).exists().ids
 
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
@@ -857,7 +867,7 @@ class Message(models.Model):
                 'id': message_sudo.author_guest_id.id,
                 'name': message_sudo.author_guest_id.name,
             } if message_sudo.author_guest_id else [('clear',)]
-            if message_sudo.model and message_sudo.res_id:
+            if message_sudo.model and message_sudo.res_id and message_sudo.res_id in thread_ids_by_model_name[message_sudo.model]:
                 record_name = self.env[message_sudo.model].browse(message_sudo.res_id).sudo().with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
             else:
                 record_name = False
@@ -1011,7 +1021,9 @@ class Message(models.Model):
                 try:
                     record.check_access_rights('read')
                     record.check_access_rule('read')
-                except AccessError:
+                except (MissingError, AccessError):
+                    # record has been removed from db without cascading notif -> avoid crash at least
+                    # access error -> just skip
                     continue
                 else:
                     messages += message

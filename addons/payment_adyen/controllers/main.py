@@ -68,10 +68,13 @@ class AdyenController(http.Controller):
             'value': converted_amount,
             'currency': request.env['res.currency'].browse(currency_id).name,  # ISO 4217
         }
+        partner_country_code = (
+            partner_sudo.country_id.code or provider_sudo.company_id.country_id.code or 'NL'
+        )
         data = {
             'merchantAccount': provider_sudo.adyen_merchant_account,
             'amount': amount,
-            'countryCode': partner_sudo.country_id.code or None,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
+            'countryCode': partner_country_code,  # ISO 3166-1 alpha-2 (e.g.: 'BE')
             'shopperLocale': lang_code,  # IETF language tag (e.g.: 'fr-BE')
             'shopperReference': shopper_reference,
             'channel': 'Web',
@@ -83,7 +86,11 @@ class AdyenController(http.Controller):
             method='POST'
         )
         _logger.info("paymentMethods request response:\n%s", pprint.pformat(payment_methods_data))
-        return {'payment_methods_data': payment_methods_data, 'amount_formatted': amount}
+        return {
+            'payment_methods_data': payment_methods_data,
+            'amount_formatted': amount,
+            'country_code': partner_country_code
+        }
 
     @http.route('/payment/adyen/payments', type='json', auth='public')
     def adyen_payments(

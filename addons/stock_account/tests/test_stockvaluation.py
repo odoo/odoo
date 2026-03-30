@@ -4338,3 +4338,82 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move.quantity_done, 24)
         self.assertRecordValues(move.stock_valuation_layer_ids, [{'quantity': 12}, {'quantity': 12}])
+
+    def test_scrap_reception_valuation(self):
+        product = self.product1
+        product.categ_id.property_cost_method = 'fifo'
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': f'in {product.name}',
+                'product_id': product.id,
+                'product_uom_qty': 10,
+                'quantity_done': 10,
+                'price_unit': 15,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        receipt.button_validate()
+        scrap_form = Form(self.env['stock.scrap'].with_context(default_picking_id=receipt.id))
+        scrap_form.product_id = product
+        scrap_form.scrap_qty = 2
+        scrap = scrap_form.save()
+        scrap.action_validate()
+        svls = product.stock_valuation_layer_ids
+        self.assertRecordValues(
+            svls,
+            [
+                {'quantity': 10.0, 'remaining_qty': 8.0, 'value': 150.0, 'remaining_value': 120.0},
+                {'quantity': -2.0, 'remaining_qty': 0.0, 'value': -30.0, 'remaining_value': 0.0},
+            ]
+        )
+
+    def test_valuation_rounding_method(self):
+        uom_g = self.env.ref('uom.product_uom_gram')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        self.product1.uom_id = uom_kg
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': 'IN 11g',
+                'product_id': self.product1.id,
+                'product_uom': uom_g.id,
+                'product_uom_qty': 11,
+                'quantity_done': 11,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        receipt.button_validate()
+
+        self.assertEqual(receipt.move_ids.quantity_done, 11)
+        self.assertEqual(receipt.move_ids.product_qty, 0.01)
+        self.assertEqual(receipt.move_ids.stock_valuation_layer_ids.quantity, 0.01)
+        self.assertEqual(self.product1.qty_available, 0.01)
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': 'OUT 11g',
+                'product_id': self.product1.id,
+                'product_uom': uom_g.id,
+                'product_uom_qty': 11,
+                'quantity_done': 11,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery.button_validate()
+
+        self.assertEqual(delivery.move_ids.quantity_done, 11)
+        self.assertEqual(delivery.move_ids.product_qty, 0.01)
+        self.assertEqual(delivery.move_ids.stock_valuation_layer_ids.quantity, -0.01)
+        self.assertEqual(self.product1.qty_available, 0.00)

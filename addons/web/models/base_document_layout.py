@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import markupsafe
+import os
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.modules import get_resource_path
-from odoo.tools import html2plaintext, is_html_empty
+from odoo.tools import file_path, html2plaintext, is_html_empty
 
 try:
     import sass as libsass
@@ -291,6 +292,14 @@ class BaseDocumentLayout(models.TransientModel):
         Simply copied and adapted slightly
         """
 
+        def scss_importer(path, *args):
+            *parent_path, file = os.path.split(path)
+            try:
+                parent_path = file_path(os.path.join(*parent_path))
+            except FileNotFoundError:
+                parent_path = file_path(os.path.join(bootstrap_path, *parent_path))
+            return [(os.path.join(parent_path, file),)]
+
         # No scss ? still valid, returns empty css
         if not scss_source.strip():
             return ""
@@ -305,6 +314,7 @@ class BaseDocumentLayout(models.TransientModel):
                 include_paths=[
                     bootstrap_path,
                 ],
+                importers=[(0, scss_importer)],
                 output_style=output_style,
                 precision=precision,
             )

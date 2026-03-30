@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="l10n_id_tax_group_luxury_goods" model="account.tax.group">
-        <field name="name">Luxury Good Taxes (ID)</field>
+        <field name="name">Luxury Good Taxes</field>
         <field name="sequence">1</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_tax_group_non_luxury_goods" model="account.tax.group">
+        <field name="name">Non-luxury Good Taxes</field>
+        <field name="sequence">2</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_tax_group_0" model="account.tax.group">
+        <field name="name">Zero-rated Taxes</field>
+        <field name="sequence">3</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+    <record id="l10n_id_tax_group_exempt" model="account.tax.group">
+        <field name="name">Tax Exempted</field>
+        <field name="sequence">4</field>
+        <field name="country_id" ref="base.id"/>
     </record>
 </odoo>

@@ -8,3 +8,9 @@ class EfakturUomCode(models.Model):
 
     code = fields.Char()
     name = fields.Char()
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append((record.id, f"{record.name} ({record.code})"))
+        return result

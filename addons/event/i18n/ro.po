@@ -9,6 +9,7 @@
 # Claudia Baisan, 2023
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -323,6 +324,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-"
 "end\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary o_wevent_badge float-"
+"end\">SPEAKER</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1414,7 +1417,7 @@ msgstr "Afișați sponsorii și expozanții pe paginile evenimentului"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 msgid "Display Timezone"
-msgstr ""
+msgstr "Afișează fusul orar"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1574,6 +1577,18 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Planificator eveniment pentru:\n"
+"  - Eveniment: %(event_name)s (%(event_id)s)\n"
+"  - Programat: %(date)s\n"
+"  - Șablon: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Eroare la execuție:\n"
+"  - %(error)s\n"
+"\n"
+"Primiți acest email deoarece sunteți:\n"
+"  - organizatorul evenimentului,\n"
+"  - sau responsabilul evenimentului,\n"
+"  - sau ultimul care a modificat șablonul.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -1642,6 +1657,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Șabloanele de eveniment combină configurații pe care le folosiți frecvent și"
+" sunt de obicei bazate pe tipurile de evenimente pe care le organizați (ex: "
+"\"Workshop\", \"Roadshow\", \"Webinar online\" etc)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2122,6 +2140,7 @@ msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"Indică fusul orar în care datele/orele evenimentului vor fi afișate pe site."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3599,6 +3618,8 @@ msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
+"Când evenimentul este programat să aibă loc (exprimat în fusul orar local în"
+" vizualizarea formularului)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

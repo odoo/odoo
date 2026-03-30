@@ -31,26 +31,28 @@ RUN mkdir -pm755 ${DRIVE_C_DIR} ${ODOO_BUILD_DIR}/nssm-2.24 ${ODOO_BUILD_DIR}/vc
 # Ignoring debug and fixme's message when running wine
 ENV WINEDEBUG=-all
 
-ARG NSIS_URL=https://downloads.sourceforge.net/project/nsis/NSIS%203/3.10/nsis-3.10.zip
+ARG NSIS_VERSION=3.11
+
+ARG NSIS_URL=https://sourceforge.net/projects/nsis/files/NSIS%203/${NSIS_VERSION}/nsis-${NSIS_VERSION}.zip
 RUN curl -sSL ${NSIS_URL} -o /tmp/nsis.zip \
     && unzip /tmp/nsis.zip -d ${DRIVE_C_DIR} \
     && rm /tmp/nsis.zip
 
-ARG NSIS_PLUG_CURL=https://github.com/negrutiu/nsis-nscurl/releases/download/v24.6.7.61/NScurl.zip
+ARG NSIS_PLUG_CURL=https://github.com/negrutiu/nsis-nscurl/releases/download/v25.3.12.183/NScurl.zip
 RUN curl -sSL ${NSIS_PLUG_CURL} -o /tmp/nsis_curl.zip \
-    && unzip /tmp/nsis_curl.zip Plugins/* -d ${DRIVE_C_DIR}/nsis-3.10/ \
+    && unzip /tmp/nsis_curl.zip Plugins/* -d ${DRIVE_C_DIR}/nsis-${NSIS_VERSION}/ \
     && rm /tmp/nsis_curl.zip
 
 ARG NSIS_PLUG_ACCESS=https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip
 RUN curl -sSL ${NSIS_PLUG_ACCESS} -o /tmp/nsis_access.zip \
-        && unzip /tmp/nsis_access.zip Plugins/* -d ${DRIVE_C_DIR}/nsis-3.10/ \
-        && mv ${DRIVE_C_DIR}/nsis-3.10/Plugins/i386-unicode/* ${DRIVE_C_DIR}/nsis-3.10/Plugins/x86-unicode/ \
-        && mv ${DRIVE_C_DIR}/nsis-3.10/Plugins/i386-ansi/* ${DRIVE_C_DIR}/nsis-3.10/Plugins/x86-ansi/ \
+        && unzip /tmp/nsis_access.zip Plugins/* -d ${DRIVE_C_DIR}/nsis-${NSIS_VERSION}/ \
+        && mv ${DRIVE_C_DIR}/nsis-${NSIS_VERSION}/Plugins/i386-unicode/* ${DRIVE_C_DIR}/nsis-${NSIS_VERSION}/Plugins/x86-unicode/ \
+        && mv ${DRIVE_C_DIR}/nsis-${NSIS_VERSION}/Plugins/i386-ansi/* ${DRIVE_C_DIR}/nsis-${NSIS_VERSION}/Plugins/x86-ansi/ \
         && rm /tmp/nsis_access.zip
 
 ARG NSIS_PLUG_UNZIP=https://nsis.sourceforge.io/mediawiki/images/5/5a/NSISunzU.zip
 RUN curl -sSL ${NSIS_PLUG_UNZIP} -o /tmp/nsis_unzip.zip \
-        && unzip -j /tmp/nsis_unzip.zip NSISunzU/Plugin*/* -d ${DRIVE_C_DIR}/nsis-3.10/Plugins/x86-unicode/ \
+        && unzip -j /tmp/nsis_unzip.zip NSISunzU/Plugin*/* -d ${DRIVE_C_DIR}/nsis-${NSIS_VERSION}/Plugins/x86-unicode/ \
         && rm /tmp/nsis_unzip.zip
 
 ARG WINPY=7.5.20240410final/Winpython64-3.12.3.0dot.exe

@@ -16,7 +16,7 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                <search string="Tasks">
-                    <field name="name" string="Task" filter_domain="['|', ('name', 'ilike', self), ('id', 'ilike', self)]"/>
+                    <field name="name" string="Task" filter_domain="[('name', 'ilike', self)]"/>
                     <field name="tag_ids"/>
                     <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>

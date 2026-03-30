@@ -13645,4 +13645,28 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_group", 3);
         }
     );
+
+    QUnit.test("hide pager in the kanban view with sample data", async (assert) => {
+        serverData.models.partner.records = [];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban sample="1">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="int_field"/>
+                                <field name="category_ids" widget="many2many_tags"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
+        assert.isNotVisible(target.querySelector(".o_cp_pager"));
+    });
 });

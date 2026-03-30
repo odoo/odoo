@@ -151,6 +151,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2022-03-24'),
             'invoice_date_due': fields.Date.from_string('2022-03-24'),
+            'date': fields.Date.from_string('2022-04-01'),
             'partner_id': cls.french_partner.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': product_lines(
@@ -171,6 +172,7 @@ class TestItEdiReverseCharge(TestItEdi):
         cls.reverse_charge_bill_2 = cls.env['account.move'].with_company(cls.company).create(bill_data_2)
         cls.reverse_charge_refund = cls.reverse_charge_bill.with_company(cls.company)._reverse_moves([{
             'invoice_date': fields.Date.from_string('2022-03-24'),
+            'date': fields.Date.from_string('2022-04-01'),
         }])
 
         # Import bill San Marino
@@ -179,6 +181,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2022-03-24'),
             'invoice_date_due': fields.Date.from_string('2022-03-24'),
+            'date': fields.Date.from_string('2022-04-01'),
             'partner_id': cls.san_marino_partner.id,
             'partner_bank_id': cls.test_bank.id,
             'invoice_line_ids': product_lines(
@@ -266,13 +269,13 @@ class TestItEdiReverseCharge(TestItEdi):
                         <DatiGeneraliDocumento>
                             <TipoDocumento>TD18</TipoDocumento>
                             <Divisa>EUR</Divisa>
-                            <Data>2022-03-24</Data>
+                            <Data>2022-04-01</Data>
                             <Numero/>
                             <ImportoTotaleDocumento>-1808.91</ImportoTotaleDocumento>
                         </DatiGeneraliDocumento>
                         <DatiFattureCollegate>
                             <IdDocumento>{self.reverse_charge_bill.name}</IdDocumento>
-                            <Data>{self.reverse_charge_refund.invoice_date}</Data>
+                            <Data>{self.reverse_charge_refund.date}</Data>
                         </DatiFattureCollegate>
                     </DatiGenerali>
                 """,

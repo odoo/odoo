@@ -10,6 +10,7 @@
 # jl2035 <jaka.luthar@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Katja Deržič, 2024
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Katja Deržič, 2024\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr "Odgovor"
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Razčlenitev odgovorov"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
@@ -59,12 +60,12 @@ msgstr "Odgovori"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Vprašajte enkrat na naročilo"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Odgovori udeležencev"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
@@ -112,12 +113,12 @@ msgstr "Dogodek"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Vprašanje o dogodku"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Odgovor na vprašanje o dogodku"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -127,7 +128,7 @@ msgstr "Registracija dogodka"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Odgovor na prijavo na dogodek"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
@@ -142,7 +143,7 @@ msgstr "Vrsta dogodka"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "Splošna vprašanja"
 
 #. module: website_event_questions
 #: model:event.question,title:website_event_questions.event_7_question_1
@@ -168,6 +169,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"Če je vrednost Resnična, bo to vprašanje zastavljeno samo enkrat in njegova "
+"vrednost bo posredovana vsem udeležencem. Če ni, bo zastavljeno vsem "
+"udeležencem rezervacije."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
@@ -237,14 +241,14 @@ msgstr "Vprašanje"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__question_type
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Vrsta vprašanja"
 
 #. module: website_event_questions
 #. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
-msgstr ""
+msgstr "Vprašanja ni mogoče povezati z dogodkom in vrsto dogodka hkrati."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -278,7 +282,7 @@ msgstr ""
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Izbrani odgovor"
 
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__simple_choice
@@ -294,7 +298,7 @@ msgstr "Zaporedje"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Specifična vprašanja"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_answer_id
@@ -304,7 +308,7 @@ msgstr "Predlagani odgovor"
 #. module: website_event_questions
 #: model:ir.model.fields.selection,name:website_event_questions.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Vnos besedila"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_text_box
@@ -314,7 +318,7 @@ msgstr "Besedilni odgovor"
 #. module: website_event_questions
 #: model:ir.model.constraint,message:website_event_questions.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Obstajati mora predlagana vrednost ali besedilna vrednost."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
@@ -349,6 +353,7 @@ msgstr "Da"
 msgid ""
 "You cannot change the question type of a question that already has answers!"
 msgstr ""
+"Vrste vprašanja, na katero že obstajajo odgovori, ne morete spremeniti!"
 
 #. module: website_event_questions
 #. odoo-python
@@ -357,6 +362,7 @@ msgstr ""
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
 msgstr ""
+"Vprašanja, na katerega so udeleženci že odgovorili, ne morete izbrisati."
 
 #. module: website_event_questions
 #. odoo-python
@@ -364,10 +370,10 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Odgovora, ki so ga udeleženci že izbrali, ne morete izbrisati."
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "npr. \"Ali imate kakšne prehranske omejitve?\""

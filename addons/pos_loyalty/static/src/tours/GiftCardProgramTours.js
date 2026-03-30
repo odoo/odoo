@@ -12,7 +12,7 @@ ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 ProductScreen.do.clickDisplayedProduct('Gift Card');
 PosLoyalty.check.orderTotalIs('50.00');
-PosLoyalty.exec.finalizeOrder('Cash', '50');
+PosLoyalty.exec.finalizeOrder('Cash');
 Tour.register('GiftCardProgramCreateSetTour1', { test: true, url: '/pos/web' }, getSteps());
 //#endregion
 
@@ -22,7 +22,7 @@ ProductScreen.do.clickHomeCategory();
 ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
 PosLoyalty.do.enterCode('044123456');
 PosLoyalty.check.orderTotalIs('0.00');
-PosLoyalty.exec.finalizeOrder('Cash', '0');
+PosLoyalty.exec.finalizeOrder('Cash');
 Tour.register('GiftCardProgramCreateSetTour2', { test: true, url: '/pos/web' }, getSteps());
 //#endregion
 
@@ -36,17 +36,17 @@ TextInputPopup.check.isShown();
 TextInputPopup.do.inputText('044123456');
 TextInputPopup.do.clickConfirm();
 PosLoyalty.check.orderTotalIs('5.00');
-PosLoyalty.exec.finalizeOrder('Cash', '5');
+PosLoyalty.exec.finalizeOrder('Cash');
 // Partially use the gift card. (4$)
 ProductScreen.exec.addOrderline('Desk Pad', '2', '2', '4.0');
 PosLoyalty.do.enterCode('044123456');
 PosLoyalty.check.orderTotalIs('0.00');
-PosLoyalty.exec.finalizeOrder('Cash', '0');
+PosLoyalty.exec.finalizeOrder('Cash');
 // Use the remaining of the gift card. (5$ - 4$ = 1$)
 ProductScreen.exec.addOrderline('Whiteboard Pen', '6', '6', '36.0');
 PosLoyalty.do.enterCode('044123456');
 PosLoyalty.check.orderTotalIs('35.00');
-PosLoyalty.exec.finalizeOrder('Cash', '35');
+PosLoyalty.exec.finalizeOrder('Cash');
 Tour.register('GiftCardProgramScanUseTour', { test: true, url: '/pos/web' }, getSteps());
 //#endregion
 
@@ -58,7 +58,7 @@ TextInputPopup.check.isShown();
 TextInputPopup.do.inputText('044123456');
 TextInputPopup.do.clickConfirm();
 PosLoyalty.check.orderTotalIs('50.00');
-PosLoyalty.exec.finalizeOrder('Cash', '50');
+PosLoyalty.exec.finalizeOrder('Cash');
 ProductScreen.do.clickPartnerButton();
 ProductScreen.do.clickCustomer("partner_a");
 ProductScreen.exec.addOrderline("product_a", "1");
@@ -76,7 +76,7 @@ TextInputPopup.check.isShown();
 TextInputPopup.do.inputText('044123456');
 TextInputPopup.do.clickConfirm();
 PosLoyalty.check.orderTotalIs('50.00');
-PosLoyalty.exec.finalizeOrder('Cash', '50');
+PosLoyalty.exec.finalizeOrder('Cash');
 ProductScreen.do.clickDisplayedProduct("Test Product A");
 PosLoyalty.do.enterCode("044123456");
 PosLoyalty.check.orderTotalIs("50.00");
@@ -93,5 +93,5 @@ TextInputPopup.do.clickConfirm();
 PosLoyalty.check.orderTotalIs('0.00');
 ProductScreen.do.pressNumpad("Price 5");
 PosLoyalty.check.orderTotalIs('5.00');
-PosLoyalty.exec.finalizeOrder('Cash', '5');
+PosLoyalty.exec.finalizeOrder('Cash');
 Tour.register("PosLoyaltyGiftCardNoPoints", { test: true }, getSteps());

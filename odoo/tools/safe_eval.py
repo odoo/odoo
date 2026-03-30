@@ -62,7 +62,7 @@ _UNSAFE_ATTRIBUTES = [
     # Tracebacks
     'tb_frame',
     # Generators
-    'gi_code', 'gi_frame', 'g_yieldfrom'
+    'gi_code', 'gi_frame', 'gi_yieldfrom',
     # Coroutines
     'cr_await', 'cr_code', 'cr_frame',
     # Coroutine generators
@@ -389,7 +389,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     if globals_dict is None:
         globals_dict = {}
 
-    globals_dict['__builtins__'] = _BUILTINS
+    globals_dict['__builtins__'] = dict(_BUILTINS)
     if locals_builtins:
         if locals_dict is None:
             locals_dict = {}

@@ -396,6 +396,24 @@ class TestHttpStatic(TestHttpStaticCommon):
                     raise AssertionError(e) from exc
                 self.assertEqual(res.content, self.gizeh_data)
 
+    def test_static24_binary_non_base64(self):
+        self.authenticate('admin', 'admin')
+
+        # need a Binary(attachment=False) field
+        # TODO: master, add such a field on test_http.stargate
+        record = self.env['ir.mail_server'].create({
+            'name': 'dummy test_http test_static server',
+            'smtp_host': 'localhost',
+        })
+        record.smtp_ssl_certificate = b'non base64 value'
+        self.assertDownload(
+            f'/web/content/ir.mail_server/{record.id}/smtp_ssl_certificate',
+            headers={},
+            assert_status_code=200,
+            assert_headers={},
+            assert_content=b'non base64 value',
+        )
+
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
     @staticmethod

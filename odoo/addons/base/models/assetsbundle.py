@@ -30,7 +30,7 @@ from odoo.modules.module import get_resource_path
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler,
     apply_inheritance_specs)
-from odoo.tools.misc import file_open, html_escape as escape
+from odoo.tools.misc import file_open, file_path, html_escape as escape
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
@@ -1280,6 +1280,14 @@ class ScssStylesheetAsset(PreprocessedCSS):
         if libsass is None:
             return super().compile(source)
 
+        def scss_importer(path, *args):
+            *parent_path, file = os.path.split(path)
+            try:
+                parent_path = file_path(os.path.join(*parent_path))
+            except FileNotFoundError:
+                parent_path = file_path(os.path.join(self.bootstrap_path, *parent_path))
+            return [(os.path.join(parent_path, file),)]
+
         try:
             profiler.force_hook()
             return libsass.compile(
@@ -1287,6 +1295,7 @@ class ScssStylesheetAsset(PreprocessedCSS):
                 include_paths=[
                     self.bootstrap_path,
                 ],
+                importers=[(0, scss_importer)],
                 output_style=self.output_style,
                 precision=self.precision,
             )

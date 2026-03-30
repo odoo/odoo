@@ -41,7 +41,9 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     @http.route(['/shop/carrier_rate_shipment'], type='json', auth='public', methods=['POST'], website=True)
     def cart_carrier_rate_shipment(self, carrier_id, **kw):
-        order = request.website.sale_get_order(force_create=True)
+        order = request.website.sale_get_order()
+        if not order:
+            raise ValidationError(_("Your cart is empty."))
 
         if not int(carrier_id) in order._get_delivery_methods().ids:
             raise UserError(_('It seems that a delivery method is not compatible with your address. Please refresh the page and try again.'))

@@ -60,6 +60,17 @@ class TestProfilingWeb(ProfilingHttpCase):
         self.assertNotEqual(last_profile, new_profile, "A new profile should have been created")
         self.assertEqual(new_profile.name, '/web/speedscope?')
 
+    def test_profile_test_tool(self):
+        with self.profile():
+            self.url_open('/web')
+
+        descriptions = self.env['ir.profile'].search([], order='id desc', limit=3).mapped('name')
+        self.assertEqual(descriptions, [
+            f'test_profile_test_tool uid:{self.env.uid} warm ',
+            f'test_profile_test_tool uid:{self.env.uid} warm /web/login?',
+            f'test_profile_test_tool uid:{self.env.uid} warm /web?',
+        ])
+
 
 @tagged('post_install', '-at_install', 'profiling')
 class TestProfilingModes(ProfilingHttpCase):

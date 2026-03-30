@@ -3,6 +3,8 @@
 
 import json
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -26,6 +28,53 @@ class AccountMove(models.Model):
                 lambda i: i.edi_format_id.code == "in_einvoice_1_03"
                 and i.state in ("sent", "to_cancel", "cancelled")
             ))
+
+    def _compute_edi_error_count(self):
+        super()._compute_edi_error_count()
+        for move in self:
+            if (
+                move.country_code == "IN"
+                and move.edi_document_ids
+                and all(d.state in ("to_send", "sent") and not d.blocking_level for d in move.edi_document_ids)
+                and self.env["ir.config_parameter"].sudo().get_param("l10n_in.gsp_provider", "tera") == "tera"
+            ):
+                move.edi_error_count = 1
+
+    def _compute_edi_error_message(self):
+        super()._compute_edi_error_message()
+        for move in self:
+            if (
+                move.country_code == "IN"
+                and move.edi_document_ids
+                and all(d.state in ("to_send", "sent") and not d.blocking_level for d in move.edi_document_ids)
+                and self.env["ir.config_parameter"].sudo().get_param("l10n_in.gsp_provider", "tera") == "tera"
+            ):
+                edi_error_message = _(
+                    "<b><span class='fa fa-warning'/> Important Notice – GSP Deprecation <br></b>"
+                    "The currently selected GSP (Tera Soft) will be deprecated soon.<br>"
+                    "To ensure uninterrupted e-Invoice and E-way operations, <b>please switch to BVM GSP as per the </b>"
+                    "<a href='https://www.odoo.com/documentation/16.0/applications/finance/fiscal_localizations/india.html#gsp-configuration'>documentation</a>."
+                )
+                if not self.env.is_admin():
+                    edi_error_message += _(
+                        "<br><br><i>You must contact your system administrator to update the GSP.</i>"
+                    )
+                move.edi_error_message = edi_error_message
+                move.edi_blocking_level = 'warning'
+
+    def action_retry_edi_documents_error(self):
+        for move in self:
+            if move.country_code == 'IN':
+                move.message_post(body=_(
+                    "Retrying EDI processing for the following documents: %(breakline)s %(edi_codes)s",
+                    breakline=Markup("<br/>"),
+                    edi_codes=Markup("<br/>").join(
+                        move.edi_document_ids
+                        .filtered(lambda doc: doc.blocking_level == "error")
+                        .mapped("edi_format_name")
+                    )
+                ))
+        return super().action_retry_edi_documents_error()
 
     def button_cancel_posted_moves(self):
         """Mark the edi.document related to this move to be canceled."""

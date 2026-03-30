@@ -145,6 +145,16 @@ class DBFormatter(logging.Formatter):
         record.dbname = getattr(threading.current_thread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
 
+    def formatMessage(self, record):
+        if record.munge_traceback:
+            return super().formatMessage(record).replace(
+                'Traceback (most recent call last):',
+                '_Traceback_ (most recent call last):',
+            )
+        else:
+            return super().formatMessage(record)
+
+
 class ColoredFormatter(DBFormatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
@@ -162,6 +172,7 @@ def init_logger():
     def record_factory(*args, **kwargs):
         record = old_factory(*args, **kwargs)
         record.perf_info = ""
+        record.munge_traceback = False
         return record
     logging.setLogRecordFactory(record_factory)
 
@@ -205,6 +216,9 @@ def init_logger():
     # need to be adapted later but too muchwork for this pr.
     warnings.filterwarnings('ignore', r'^datetime.datetime.utcnow\(\) is deprecated and scheduled for removal in a future version.*', category=DeprecationWarning)
 
+    # This warning is triggered library only during the python precompilation which does not occur on readonly filesystem
+    warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*vobject")
+    warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*vobject")
     from .tools.translate import resetlocale
     resetlocale()
 

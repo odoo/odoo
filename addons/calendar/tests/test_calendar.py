@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 
 from odoo import fields, Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.exceptions import AccessError
 from odoo.tests import Form, tagged, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
@@ -472,6 +473,21 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'partner_ids': [Command.link(new_partner) for new_partner in new_partners]
         })
         self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
+
+    def test_unauthorized_user_cannot_add_attendee(self):
+        """ Check that a user that doesn't have access to a private event cannot add attendees to it """
+        attendee_model = self.env['calendar.attendee'].with_user(self.user_demo.id)
+        # event_id in values
+        with self.assertRaises(AccessError):
+            attendee_model.create([{
+                'event_id': self.event_tech_presentation.id,
+                'partner_id': self.partner_demo.id,
+            }])
+        # event_id via context (default_event_id)
+        with self.assertRaises(AccessError):
+            attendee_model.with_context(default_event_id=self.event_tech_presentation.id).create([{
+                'partner_id': self.partner_demo.id,
+            }])
 
 
 @tagged('post_install', '-at_install')

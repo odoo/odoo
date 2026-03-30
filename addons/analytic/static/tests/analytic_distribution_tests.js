@@ -308,24 +308,22 @@ QUnit.module("Analytic", (hooks) => {
             assert.equal(el.value, expectedPercentages[i], `6: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
 
-        // change tag 4 to 0%, tag is removed and balance goes to last tag (tag 5)
-        let accountEls = [...popup.querySelectorAll("table#plan_5 .o_analytic_account_name input")];
+        // change tag 4 to 0%, the balance resets it to its previous value
         await editInput(percentageEls[3], null, "0");
         percentageEls = [...popup.querySelectorAll("table#plan_5 .o_analytic_percentage input")];
-        expectedPercentages = ['10%', '50%', '10%', '10%', '20%'];
+        expectedPercentages = ['10%', '50%', '10%', '20%', '10%', '0%'];
         for (const [i, el] of percentageEls.entries()) {
             assert.equal(el.value, expectedPercentages[i], `7: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
-        assert.strictEqual(document.activeElement, accountEls[4], "Focus should be on the fifth tag (one was removed)");
 
-        // delete tag 3, balance goes to last empty tag (tag 4)
+        // delete tag 3, balance goes to last empty tag (tag 5)
         let trashIcons = [...document.querySelectorAll("table#plan_5 .fa-trash-o")];
-        assert.equal(trashIcons.length, 4, "1 tag should not have a trash icon");
+        assert.equal(trashIcons.length, 5);
         await click(trashIcons[2]);
         percentageEls = [...popup.querySelectorAll("table#plan_5 .o_analytic_percentage input")];
-        expectedPercentages = ['10%', '50%', '10%', '30%'];
+        expectedPercentages = ['10%', '50%', '20%', '10%', '10%'];
         for (const [i, el] of percentageEls.entries()) {
-            assert.equal(el.value, expectedPercentages[i], `7: Percentage Element ${i} should be ${expectedPercentages[i]}`);
+            assert.equal(el.value, expectedPercentages[i], `8: Percentage Element ${i} should be ${expectedPercentages[i]}`);
         }
         assert.equal(popup.querySelector("table#plan_5 tr:last-of-type .o_analytic_account_name input").value, "",
             "Last tag's account is empty");
@@ -334,7 +332,7 @@ QUnit.module("Analytic", (hooks) => {
         triggerHotkey("Escape");
         await nextTick();
         await click(target.querySelector(".modal-dialog .btn-primary"));
-        assert.containsN(target, ".badge", 10, "should contain 2 rows of 5 tags each");
+        assert.containsN(target, ".badge", 12, "should contain 2 rows of 6 tags each");
 
     });
 });

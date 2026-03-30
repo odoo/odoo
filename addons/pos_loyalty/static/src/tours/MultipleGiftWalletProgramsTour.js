@@ -19,14 +19,14 @@ SelectionPopup.do.clickItem('gift_card_1');
 ProductScreen.do.pressNumpad('Price');
 ProductScreen.do.pressNumpad('1 0');
 PosLoyalty.check.orderTotalIs('10.00');
-PosLoyalty.exec.finalizeOrder('Cash', '10');
+PosLoyalty.exec.finalizeOrder('Cash');
 // One card for gift_card_1.
 ProductScreen.do.clickDisplayedProduct('Gift Card');
 SelectionPopup.do.clickItem('gift_card_2');
 ProductScreen.do.pressNumpad('Price');
 ProductScreen.do.pressNumpad('2 0');
 PosLoyalty.check.orderTotalIs('20.00');
-PosLoyalty.exec.finalizeOrder('Cash', '20');
+PosLoyalty.exec.finalizeOrder('Cash');
 // Top up ewallet_1 for AAAAAAA.
 ProductScreen.do.clickDisplayedProduct('Top-up eWallet');
 SelectionPopup.check.hasSelectionItem('ewallet_1');
@@ -37,7 +37,7 @@ ProductScreen.do.clickCustomer('AAAAAAA');
 ProductScreen.do.pressNumpad('Price');
 ProductScreen.do.pressNumpad('3 0');
 PosLoyalty.check.orderTotalIs('30.00');
-PosLoyalty.exec.finalizeOrder('Cash', '30');
+PosLoyalty.exec.finalizeOrder('Cash');
 // Top up ewallet_2 for AAAAAAA.
 ProductScreen.do.clickDisplayedProduct('Top-up eWallet');
 SelectionPopup.do.clickItem('ewallet_2');
@@ -46,14 +46,14 @@ ProductScreen.do.clickCustomer('AAAAAAA');
 ProductScreen.do.pressNumpad('Price');
 ProductScreen.do.pressNumpad('4 0');
 PosLoyalty.check.orderTotalIs('40.00');
-PosLoyalty.exec.finalizeOrder('Cash', '40');
+PosLoyalty.exec.finalizeOrder('Cash');
 // Top up ewallet_1 for BBBBBBB.
 ProductScreen.do.clickDisplayedProduct('Top-up eWallet');
 SelectionPopup.do.clickItem('ewallet_1');
 ProductScreen.do.clickPartnerButton();
 ProductScreen.do.clickCustomer('BBBBBBB');
 PosLoyalty.check.orderTotalIs('50.00');
-PosLoyalty.exec.finalizeOrder('Cash', '50');
+PosLoyalty.exec.finalizeOrder('Cash');
 // Consume 12$ from ewallet_1 of AAAAAAA.
 ProductScreen.exec.addOrderline('Whiteboard Pen', '2', '6', '12.00');
 PosLoyalty.check.eWalletButtonState({ highlighted: false });
@@ -65,6 +65,6 @@ SelectionPopup.check.hasSelectionItem('ewallet_1');
 SelectionPopup.check.hasSelectionItem('ewallet_2');
 SelectionPopup.do.clickItem('ewallet_1');
 PosLoyalty.check.orderTotalIs('0.00');
-PosLoyalty.exec.finalizeOrder('Cash', '0');
+PosLoyalty.exec.finalizeOrder('Cash');
 
 Tour.register('MultipleGiftWalletProgramsTour', { test: true, url: '/pos/web' }, getSteps());

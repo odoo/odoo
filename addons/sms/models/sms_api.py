@@ -18,6 +18,7 @@ class SmsApi(models.AbstractModel):
 
         account = self.env['iap.account'].get('sms')
         params['account_token'] = account.account_token
+        params['dbuuid'] = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', DEFAULT_ENDPOINT)
         # TODO PRO, the default timeout is 15, do we have to increase it ?
         return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params)

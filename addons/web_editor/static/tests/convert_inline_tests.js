@@ -307,22 +307,22 @@ QUnit.module('convert_inline', {}, function () {
                 .replace(/<td[^>]*>\(0, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
-                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: inherit;\"><tr>` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: separate; border-spacing: 0px; text-align: inherit; ` +
+                        `font-size: unset; line-height: inherit; height: 100%;\"><tr>` +
                             `<td class="card-header"><span>HEADER</span></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(1, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
-                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: inherit;\"><tr>` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: separate; border-spacing: 0px; text-align: inherit; ` +
+                        `font-size: unset; line-height: inherit; height: 100%;\"><tr>` +
                             `<td class="card-body"><h2 class="card-title">TITLE</h2><small>BODY <img></small></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(2, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
-                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: inherit;\"><tr>` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: separate; border-spacing: 0px; text-align: inherit; ` +
+                        `font-size: unset; line-height: inherit; height: 100%;\"><tr>` +
                             `<td class="card-footer"><a href="#" class="btn">FOOTER</a></td>` +
                         `</tr></table></td>`),
         });
@@ -1125,6 +1125,20 @@ QUnit.module('convert_inline', {}, function () {
         styleSheet.deleteRule(0);
         styleSheet.deleteRule(0);
         $styleSheet.remove();
+    });
+
+    QUnit.test('Create mso properly', async function (assert) {
+        assert.strictEqual(convertInline.createMso('<div>abcde</div>').nodeValue,
+            '[if mso]><div>abcde</div><![endif]',
+            "Should wrap the content in mso condition");
+
+        assert.strictEqual(convertInline.createMso('<div>ef<!--[if mso]><div>abcd</div><![endif]-->gh</div>').nodeValue,
+            '[if mso]><div>ef<div>abcd</div>gh</div><![endif]',
+            "Should wrap the content inside one mso condition");
+
+        assert.strictEqual(convertInline.createMso('<div>ef<!--[if !mso]><div>abcd</div><![endif]-->gh</div>').nodeValue,
+            '[if mso]><div>efgh</div><![endif]',
+            "Should remove nested mso hide condition");
     });
 });
 

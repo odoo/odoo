@@ -6,25 +6,26 @@
 # Jonatan Gk, 2022
 # Arnau Ros, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Josep Sànchez <papapep@gmx.com>, 2022
+# Josep Sànchez <papapep@pinatell.net>, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Eric Antones <eantones@users.noreply.github.com>, 2022
 # Josep Anton Belchi, 2022
 # Martin Trigaux, 2022
-# Quim - eccit <quim@eccit.com>, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
 # M Palau <mpalau@tda.ad>, 2022
 # marcescu, 2022
 # Ivan Espinola, 2022
 # jabiri7, 2022
 # Óscar Fonseca <tecnico@pyming.com>, 2023
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2023\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +60,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola:<br><br>\n"
+"                Vostè ha sol·licitat que es cancel·li la subscripció a la llista de correu <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Per confirmar aquesta acció, si us plau, visiti l'enllaç que hi ha a continuació: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Si ha estat un error o no ha sol·licitat aquesta acció, si us plau, ignori aquest missatge.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -73,6 +83,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hola:<br><br>\n"
+"                Vostè ha sol·licitat que es cancel·li la subscripció a la llista de correu <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Per confirmar aquesta acció, si us plau, visiti l'enllaç que hi ha a continuació: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Si ha estat un error o no ha sol·licitat aquesta acció, si us plau, ignori aquest missatge.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -84,6 +103,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hola<t t-out=\"object.partner_id.name or ''\"></t>:</p>\n"
+"                <p>Si us plau, trobi a sota les directrius de la <t t-out=\"object.mail_group_id.name\"></t> llista de correu.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -1007,6 +1032,13 @@ msgstr ""
 msgid "Only members can send email to the mailing list."
 msgstr ""
 "Només els membres poden enviar correu electrònic a la llista de correu."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id

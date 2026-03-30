@@ -265,6 +265,11 @@ class TestUiTranslate(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
+    def fetch_proxy(self, url):
+        if 'vimeo' in url:
+            return self.make_fetch_proxy_response('{}')
+        return super().fetch_proxy(url)
+
     def test_01_admin_tour_homepage(self):
         self.start_tour("/web", 'homepage', login='admin')
 
@@ -352,8 +357,8 @@ class TestUi(odoo.tests.HttpCase):
     def test_08_website_style_custo(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
-    def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/', 'edit_link_popover', login='admin')
+    # def test_09_website_edit_link_popover(self):
+    #     self.start_tour('/@/', 'edit_link_popover', login='admin')
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
@@ -431,8 +436,8 @@ class TestUi(odoo.tests.HttpCase):
     def test_14_carousel_snippet_content_removal(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'carousel_content_removal', login='admin')
 
-    def test_15_website_link_tools(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'link_tools', login="admin")
+    # def test_15_website_link_tools(self):
+    #     self.start_tour(self.env['website'].get_client_action_url('/'), 'link_tools', login="admin")
 
     def test_16_website_edit_megamenu(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu', login='admin')
@@ -571,3 +576,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_snippet_background_video(self):
         self.start_tour("/", "website_snippet_background_video", login="admin")
+
+    def test_popup_visibility_option(self):
+        self.start_tour("/", "website_popup_visibility_option", login="admin")

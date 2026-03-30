@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Netta Waizer, 2022
 # Ofir Blum <ofir.blum@gmail.com>, 2022
 # ExcaliberX <excaliberx@gmail.com>, 2022
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # NoaFarkash, 2022
 # Sagi Ahiel, 2022
 # Yihya Hugirat <hugirat@gmail.com>, 2023
@@ -20,14 +20,15 @@
 # Jonathan Spier, 2024
 # tomerlayline, 2024
 # or balmas, 2025
+# Yoram Lavi, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: or balmas, 2025\n"
+"Last-Translator: Yoram Lavi, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,14 +82,9 @@ msgid "Add a new analytic account"
 msgstr "הוסף חשבון אנליטי חדש"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_administratif
-msgid "Administrative"
-msgstr "מנהלי"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr ""
+msgstr "כל החשבונות האנליטיים נחשבים"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -130,7 +126,7 @@ msgstr "חשבונות אנליטיים"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
-msgstr ""
+msgstr "ספירת חשבונות אנליטיים"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution_model
@@ -183,7 +179,7 @@ msgstr "שורות אנליטיות"
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr ""
+msgstr "מיקסין של פונקציות אנליטיות"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
@@ -227,7 +223,7 @@ msgstr "חשבונות אנליטיים"
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Plans"
-msgstr ""
+msgstr "תוכניות אנליטיות "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
@@ -248,11 +244,6 @@ msgid "Associated Partner"
 msgstr "שותף מקושר"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_asustek
-msgid "Asustek"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
 msgstr "כמות קבצים מצורפים"
@@ -269,16 +260,6 @@ msgid "Balance:"
 msgstr "יתרה:"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
-msgid "Camp to Camp"
-msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_integration_c2c
-msgid "CampToCamp"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
 msgid "Category"
 msgstr "קטגוריה"
@@ -291,7 +272,7 @@ msgstr "לוח חשבונות אנליטיים"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "ספירת תוכניות ילדים"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -301,7 +282,7 @@ msgstr "ילדים"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "לחץ כדי להוסיף תוכנית אנליטית חדשה."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -312,11 +293,6 @@ msgstr "צבע"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__color
 msgid "Color Index"
 msgstr "אינדקס צבעים"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_commercial_marketing
-msgid "Commercial & Marketing"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -399,7 +375,7 @@ msgstr "תאריך"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "השבת את החשבון."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -408,30 +384,15 @@ msgid "Debit"
 msgstr "חובה"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_agrolait
-msgid "Deco Addict"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
 msgstr "סוג הזנה"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_deltapc
-msgid "Delta PC"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__description
 msgid "Description"
 msgstr "תיאור"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
-msgid "Desertic - Hispafuentes"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
@@ -500,6 +461,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"ב-Odoo, הזמנות מכירה ופרויקטים מיושמים באמצעות\n"
+"חשבונות אנליטיים. אתה יכול לעקוב אחר עלויות והכנסות לניתוח\n"
+"השוליים שלך בקלות."
 
 #. module: analytic
 #. odoo-javascript
@@ -548,16 +512,6 @@ msgid "Loading..."
 msgstr "טוען..."
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_think_big_systems
-msgid "Lumber Inc"
-msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_luminous_technologies
-msgid "Luminous Technologies"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "קובץ ראשי מצורף "
@@ -582,11 +536,6 @@ msgid "Messages"
 msgstr "הודעות"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_millennium_industries
-msgid "Millennium Industries"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "שונות"
@@ -596,11 +545,6 @@ msgstr "שונות"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
 msgstr "שם"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_nebula
-msgid "Nebula"
-msgstr ""
 
 #. module: analytic
 #. odoo-javascript
@@ -665,12 +609,7 @@ msgstr "אישור"
 #: code:addons/analytic/models/analytic_mixin.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_internal
-msgid "Operating Costs"
-msgstr ""
+msgstr "שורה אחת או יותר דורשות התפלגות אנליטית של 100%."
 
 #. module: analytic
 #. odoo-python
@@ -694,11 +633,6 @@ msgid "Other"
 msgstr "אחר"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_our_super_product
-msgid "Our Super Product"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
 msgid "Parent"
 msgstr "אב"
@@ -717,7 +651,7 @@ msgstr "לקוח/ספק"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "קטגורית שותף"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
@@ -744,11 +678,6 @@ msgid "Reference"
 msgstr "מזהה"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_rd_department
-msgid "Research & Development"
-msgstr "מחקר ופיתוח"
-
-#. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
@@ -757,16 +686,15 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"הכנסות ייווצרו אוטומטית כאשר אתה יוצר לקוח\n"
+"חשבוניות. ניתן ליצור חשבוניות של לקוחות על סמך הזמנות מכירה\n"
+"(חשבוניות מחיר קבוע), על דפי זמן (בהתבסס על העבודה שנעשתה) או\n"
+"על הוצאות (למשל חיוב חוזר של עלויות נסיעה)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_seagate_p2
-msgid "Seagate P2"
-msgstr ""
+msgstr "תוכנית מקור"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -794,6 +722,8 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"בחר חברה שעבורה ישמש ההפצה האנליטית (לדוגמה, צור חשבונית לקוח חדשה או הזמנת "
+"מכירות אם נבחר בחברה זו, היא תיקח זאת באופן אוטומטי כחשבון אנליטי)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -802,6 +732,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"בחר קטגוריית שותפים שעבורה ישמש ההפצה האנליטית (לדוגמה, צור חשבונית לקוח "
+"חדשה או הזמנת מכירות אם נבחר בשותף זה, הוא ייקח זאת באופן אוטומטי כחשבון "
+"אנליטי)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -810,15 +743,12 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"בחר שותף שעבורו ישמש ההפצה האנליטית (לדוגמה, צור חשבונית לקוח חדשה או הזמנת "
+"מכירה אם נבחר בשותף זה, הוא ייקח זאת אוטומטית כחשבון אנליטי)"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Simultaneous conditions to meet"
-msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_spark
-msgid "Spark Systems"
 msgstr ""
 
 #. module: analytic
@@ -834,11 +764,6 @@ msgid ""
 "The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_absences
-msgid "Time Off"
-msgstr "מאשר חופשות"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -879,6 +804,8 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
+"אינך יכול להגדיר חברה אחרת בחשבון האנליטי שלך מכיוון שיש כמה פריטים אנליטיים"
+" המקושרים אליה."
 
 #. module: analytic
 #. odoo-python
@@ -888,6 +815,8 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
+"הגדרת התפלגות עם חשבונות אנליטיים השייכים לחברה ספציפית אך מודל משותף בין "
+"חברות או עם חברה אחרת"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

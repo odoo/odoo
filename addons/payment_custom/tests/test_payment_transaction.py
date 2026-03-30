@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import unittest
 
 from odoo import Command, fields
 from odoo.tests import tagged
@@ -12,6 +13,9 @@ class TestPaymentTransaction(PaymentCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        if 'product.product' not in cls.env:
+            raise unittest.SkipTest("requires product")
 
         cls.provider = cls._prepare_provider(code='custom')
         cls.product = cls.env['product.product'].create({

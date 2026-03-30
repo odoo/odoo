@@ -29,8 +29,10 @@ class ResConfigSettings(models.TransientModel):
 
     def l10n_in_edi_test(self):
         self.l10n_in_check_gst_number()
-        self.env["account.edi.format"]._l10n_in_edi_authenticate(self.company_id)
-        if not self.company_id.sudo()._l10n_in_edi_token_is_valid():
+        response = self.env['account.edi.format']._l10n_in_edi_authenticate(self.company_id)
+        if response.get('error'):
+            raise UserError("\n".join(["[%s] %s" % (e.get('code'), (e.get('message'))) for e in response['error']]))
+        elif not self.company_id.sudo()._l10n_in_edi_token_is_valid():
             raise UserError(_("Incorrect username or password, or the GST number on company does not match."))
         return {
               'type': 'ir.actions.client',
@@ -50,3 +52,14 @@ class ResConfigSettings(models.TransientModel):
             'url': self.env["iap.account"].get_credits_url(service_name="l10n_in_edi", base_url=''),
             'target': '_new'
         }
+
+    def _l10n_in_gsp_provider_changed(self):
+        """
+            This change should effect all Indian companies so we search for them and
+            Invalidate existing tokens if GSP provider changed
+        """
+        super()._l10n_in_gsp_provider_changed()
+        self.env['res.company'].sudo().search([('account_fiscal_country_id.code', '=', 'IN')]).write({
+            'l10n_in_edi_token': False,
+            'l10n_in_edi_token_validity': False,
+        })

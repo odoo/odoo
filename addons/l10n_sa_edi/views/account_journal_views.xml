@@ -15,7 +15,7 @@
                     <page name="zatca_einvoicing" string="ZATCA" attrs="{'invisible': ['|', ('country_code', '!=', 'SA'), ('type', '!=', 'sale')]}">
                         <group>
                             <group>
-                                <field name="l10n_sa_serial_number"/>
+                                <field name="l10n_sa_serial_number" readonly="1" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <p groups="base.group_system">

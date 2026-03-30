@@ -395,9 +395,10 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     continue;
                 }
                 const newId = nextId--;
-                delete this.oldCouponMapping[pe.coupon_id];
+                this.oldCouponMapping[pe.coupon_id] = newId;
                 pe.coupon_id = newId;
                 this.couponPointChanges[newId] = pe;
+                delete this.couponPointChanges[key];
             }
         }
         super.init_from_JSON(...arguments);

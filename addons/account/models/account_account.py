@@ -442,7 +442,7 @@ class AccountAccount(models.Model):
                 account.reconcile = False
             elif account.account_type in ('asset_receivable', 'liability_payable'):
                 account.reconcile = True
-            elif account.account_type == 'asset_cash':
+            elif account.account_type in ('asset_cash', 'liability_credit_card', 'off_balance'):
                 account.reconcile = False
             # For other asset/liability accounts, don't do any change to account.reconcile.
 
@@ -497,7 +497,7 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
-    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
+    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None, journal_id=None):
         """
         Returns the accounts ordered from most frequent to least frequent for a given partner
         and filtered according to the move type
@@ -506,6 +506,7 @@ class AccountAccount(models.Model):
         :param move_type: the type of the move to know which type of accounts to retrieve
         :param filter_never_user_accounts: True if we should filter out accounts never used for the partner
         :param limit: the maximum number of accounts to retrieve
+        :param journal_id: only return accounts allowed on this journal id
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
         join = "INNER JOIN" if filter_never_user_accounts else "LEFT JOIN"
@@ -515,6 +516,12 @@ class AccountAccount(models.Model):
             where_internal_group = "AND account.internal_group = 'income'"
         elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
             where_internal_group = "AND account.internal_group = 'expense'"
+        params = [partner_id, company_id]
+        where_allowed_journal = ""
+        if journal_id:
+            allowed_accounts = self.env['account.account'].search(['|', ('allowed_journal_ids', '=', journal_id), ('allowed_journal_ids', '=', False)])
+            where_allowed_journal = "AND aml.account_id in %s"
+            params.append(tuple(allowed_accounts.ids))
         self._cr.execute(f"""
             SELECT account.id
               FROM account_account account
@@ -526,15 +533,16 @@ class AccountAccount(models.Model):
               WHERE account.company_id = %s
                 AND account.deprecated = FALSE
                    {where_internal_group}
+                   {where_allowed_journal}
             GROUP BY account.id
             ORDER BY COUNT(aml.id) DESC, account.code
                    {limit}
-        """, [partner_id, company_id])
+        """, params)
         return [r[0] for r in self._cr.fetchall()]
 
     @api.model
-    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):
-        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1)
+    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None, journal_id=None):
+        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1, journal_id=journal_id)
         return most_frequent_account[0] if most_frequent_account else False
 
     @api.model

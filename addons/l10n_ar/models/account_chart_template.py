@@ -23,7 +23,7 @@ class AccountChartTemplate(models.Model):
             for vals in res:
                 if vals['type'] == 'sale':
                     vals.update({
-                        "name": "Ventas Preimpreso",
+                        "name": _("Ventas Preimpreso"),
                         "code": "0001",
                         "l10n_ar_afip_pos_number": 1,
                         "l10n_ar_afip_pos_partner_id": company.partner_id.id,

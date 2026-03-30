@@ -1460,7 +1460,7 @@ class Task(models.Model):
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Set task notification based on project notification preference if user follow the project"""
         if not subtype_ids:
-            project_followers = self.project_id.message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
+            project_followers = self.project_id.sudo().message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
             for project_follower in project_followers:
                 project_subtypes = project_follower.subtype_ids
                 task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
@@ -1912,6 +1912,25 @@ class Task(models.Model):
 
         return vals
 
+    def _ensure_fields_write(self, vals, check_group_user=True, defaults=False):
+        # First check if the fields are accessible
+        self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=check_group_user)
+
+        if defaults:
+            vals = {
+                **{
+                    key[8:]: value
+                    for key, value in self.env.context.items()
+                    if key.startswith("default_") and key[8:] in self._fields
+                },
+                **vals
+            }
+
+        for fname, value in vals.items():
+            field = self._fields[fname]
+            if field.type == 'many2one':
+                self.env[field.comodel_name].browse(value).check_access_rule('read')
+
     def _ensure_fields_are_accessible(self, fields, operation='read', check_group_user=True):
         """" ensure all fields are accessible by the current user
 
@@ -2044,7 +2063,7 @@ class Task(models.Model):
         is_superuser = self._uid == SUPERUSER_ID
         for vals in vals_list:
             if is_portal_user:
-                self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
+                self._ensure_fields_write(vals, check_group_user=False, defaults=True)
 
             project_id = vals.get('project_id') or self.env.context.get('default_project_id')
             if not vals.get('parent_id'):
@@ -2117,7 +2136,7 @@ class Task(models.Model):
         portal_can_write = False
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
-            self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
+            self._ensure_fields_write(vals, check_group_user=False, defaults=False)
             self.check_access_rights('write')
             self.check_access_rule('write')
             portal_can_write = True
@@ -2627,7 +2646,7 @@ class Task(models.Model):
                 if project._check_project_sharing_access():
                     url = f"/my/projects/{self.parent_id.project_id.id}?task_id={self.parent_id.id}"
                 return {
-                    "name": "Portal Parent Task",
+                    "name": _("Portal Parent Task"),
                     "type": "ir.actions.act_url",
                     "url": url,
                 }
@@ -2668,7 +2687,7 @@ class Task(models.Model):
                 action['res_id'] = subtasks.id
             return action
         return {
-            'name': 'Portal Sub-tasks',
+            'name': _('Portal Sub-tasks'),
             'type': 'ir.actions.act_url',
             'url': f'/my/projects/{self.project_id.id}/task/{self.id}/subtasks' if len(subtasks) > 1 else subtasks.get_portal_url(query_string='project_sharing=1'),
         }

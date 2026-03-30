@@ -12,16 +12,16 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Tim Siu Lai <tl@roomsfor.hk>, 2023
 # Tatsuki Kanda, 2023
-# Junko Augias, 2025
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
+"POT-Creation-Date: 2025-05-08 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,20 +43,6 @@ msgstr "レコード"
 #, python-format
 msgid "# Code editor"
 msgstr "コードエディタ数"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is current state"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is not current state"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1029,7 +1015,7 @@ msgstr "自動"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Available fields"
-msgstr "利用可能な項目"
+msgstr "利用可能なフィールド"
 
 #. module: web
 #. odoo-javascript
@@ -1307,13 +1293,6 @@ msgstr "クリア"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Clear Signature"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Click to change current state to #{i.display_name}"
 msgstr ""
 
 #. module: web
@@ -2266,6 +2245,13 @@ msgstr "エンタープライズ"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
+#, python-format
+msgid "Entry Count"
+msgstr "エントリ数"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 #: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
@@ -2530,7 +2516,7 @@ msgid ""
 msgstr ""
 "Excel との互換性について、列数が 16384 を超える場合はデータをエクスポートできません。\n"
 "\n"
-"ヒント: 軸を反転させる、さらにフィルタリングする、または単位数を減らしてみて下さい。"
+"ヒント: 軸を反転させる、さらにフィルタリングする、または集計項目数を減らしてみて下さい。"
 
 #. module: web
 #. odoo-javascript
@@ -3229,7 +3215,7 @@ msgstr "F5キーを押してアプリケーションを再ロードすること�
 #: code:addons/web/static/src/views/view.xml:0
 #, python-format
 msgid "Measures"
-msgstr "分析対象"
+msgstr "集計項目"
 
 #. module: web
 #. odoo-javascript
@@ -3614,6 +3600,7 @@ msgstr "現在のアクションにタイプ '%s' のビューが見つかりま
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
@@ -3650,13 +3637,6 @@ msgstr "無効状態"
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "有効ステータスではありません。クリックして変更してください。"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
-#, python-format
-msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5244,14 +5224,6 @@ msgstr "ヒント"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Tag color: #{colornames[color]}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
@@ -5400,7 +5372,7 @@ msgstr "ファイルのアップロード中に問題が発生しました。"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
 msgid "This database is neutralized."
-msgstr ""
+msgstr "このDBは安全化されています。"
 
 #. module: web
 #. odoo-javascript
@@ -6256,11 +6228,9 @@ msgstr "1時間前"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "全て"
@@ -6342,7 +6312,7 @@ msgstr "以下の子："
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "contains"
-msgstr "が次を含む"
+msgstr "次を含む"
 
 #. module: web
 #. odoo-javascript
@@ -6385,7 +6355,7 @@ msgstr "例 国際商業解決会社"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "for:"
-msgstr ""
+msgstr "対象:"
 
 #. module: web
 #. odoo-javascript
@@ -6580,7 +6550,7 @@ msgstr "が次と一致しない"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not set"
-msgstr "が設定されていない"
+msgstr "未設定"
 
 #. module: web
 #. odoo-javascript
@@ -6601,7 +6571,7 @@ msgstr "が設定されていない"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is set"
-msgstr "が設定されている"
+msgstr "設定済"
 
 #. module: web
 #. odoo-javascript
@@ -6693,14 +6663,6 @@ msgstr "ms"
 #, python-format
 msgid "new tab"
 msgstr "新規タブ"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "new_template"
-msgstr "new_template"
 
 #. module: web
 #. odoo-javascript
@@ -6853,14 +6815,6 @@ msgstr "選択されたレコード、"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "self"
-msgstr "セルフ"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6888,27 +6842,6 @@ msgstr "ショートカットをトリガーするため"
 #, python-format
 msgid "type a default text or press ENTER"
 msgstr "デフォルトテキストを入力するかENTERを押して下さい。"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#, python-format
-msgid "{{ progressBar.count }} {{ progressBar.string }}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
-#, python-format
-msgid "{{ relatedFieldName }}..."
-msgstr "{{ relatedFieldName }}..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/kanban.xml:0
-#, python-format
-msgid "{{ widget.groupByFieldString }}..."
-msgstr ""
 
 #. module: web
 #. odoo-javascript

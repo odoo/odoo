@@ -14,6 +14,8 @@
 # Vladimir Vrgoč, 2022
 # Antonijo Kovacevic, 2023
 # Bole <bole@dajmi5.com>, 2025
+# Luka Carević <luka@uvid.hr>, 2025
+# Ivica Dimjašević, 2025
 # 
 msgid ""
 msgstr ""
@@ -21,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2025\n"
+"Last-Translator: Ivica Dimjašević, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +57,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Kupite Odoo Enterprise za više pružatelja usluga.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -334,7 +339,7 @@ msgstr "Kupac"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "Debug zapisivanje"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
@@ -420,7 +425,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
-msgstr ""
+msgstr "Trošak dostave treba ponovno izračunati"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -566,7 +571,7 @@ msgstr "Besplatno ako je iznos narudžbe iznad"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr ""
+msgstr "Generiranje naljepnice za povrat"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
@@ -684,7 +689,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Upravljanje prefiksima poštanskih brojeva za dostavu"
 
 #. module: delivery
 #. odoo-python
@@ -806,6 +811,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Prefiksi poštanskih brojeva na koje se ovaj dostavljač odnosi. Imajte na umu"
+" da se regularni izrazi mogu koristiti za podršku zemljama s različitim "
+"duljinama poštanskih brojeva, tj. '$' se može dodati na kraj prefiksa kako "
+"bi se podudarao s točnim poštanskim brojem (npr. '100$' će se podudarati "
+"samo s '100', a ne s '1000')."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -882,7 +892,7 @@ msgstr "Naljepnica za povrat"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr ""
+msgstr "Naljepnica za povrat dostupna kroz korisnički portal"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1002,6 +1012,8 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Detalji o metodi dostave koji će biti uključeni na dnu prodajnih narudžbi i "
+"u e-porukama s potvrdom. Npr. upute koje kupci trebaju slijediti."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1270,6 +1282,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"Ne možete izbrisati kategoriju proizvoda za dostavu jer se koristi za "
+"proizvode dostavljača."
 
 #. module: delivery
 #. odoo-python
@@ -1299,12 +1313,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 #: model:ir.ui.menu,name:delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Prefiksi poštanskog broja"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Poštanski brojevi"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery

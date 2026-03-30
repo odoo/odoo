@@ -24,7 +24,9 @@ export class BinaryField extends Component {
     }
 
     get fileName() {
-        return (this.state.fileName || this.props.value || "").slice(0, toBase64Length(MAX_FILENAME_SIZE_BYTES));
+        let value = this.props.value;
+        value = value && typeof value === "string" ? value : false;
+        return (this.state.fileName || value || "").slice(0, toBase64Length(MAX_FILENAME_SIZE_BYTES));
     }
 
     update({ data, name }) {

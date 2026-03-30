@@ -1199,7 +1199,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         active_ids = (invoice_1 + invoice_2 + refund_1 + refund_2).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'group_payment': False,
-        })._create_payments()
+        })._create_payments().sorted('ref')
 
         self.assertRecordValues(payments[0], [
             {

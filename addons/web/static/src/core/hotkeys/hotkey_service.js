@@ -285,7 +285,8 @@ export const hotkeyService = {
                     if (document.activeElement) {
                         document.activeElement.blur();
                     }
-                    setTimeout(() => el.click());
+                    el.focus();
+                    browser.setTimeout(() => el.click());
                 },
             }));
         }

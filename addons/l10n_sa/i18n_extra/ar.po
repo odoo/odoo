@@ -1247,3 +1247,41 @@ msgstr "هللة"
 #: model:account.tax.group,name:l10n_sa.sa_tax_group_taxes_15
 msgid "VAT Taxes"
 msgstr "ضريبة القيمة المضافة"
+
+#. module: l10n_sa
+#: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_delivery_date
+#: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_delivery_date
+#: model:ir.model.fields,field_description:l10n_sa.field_account_payment__l10n_sa_delivery_date
+msgid "Supply Date"
+msgstr "تاريخ التوريد"
+
+#. module: l10n_sa
+#: model:ir.model.fields,help:l10n_sa.field_account_bank_statement_line__l10n_sa_delivery_date
+#: model:ir.model.fields,help:l10n_sa.field_account_move__l10n_sa_delivery_date
+#: model:ir.model.fields,help:l10n_sa.field_account_payment__l10n_sa_delivery_date
+msgid ""
+"Date when the supply of the goods and services is performed.\n"
+"                                        You can set this date to when you want ZATCA to recognize the VAT Due Liability as ZATCA will consider the earlier of this date and the Issue Date.\n"
+"                                        In case of multiple deliveries, you should take the date of the latest one."
+msgstr ""
+"تاريخ تنفيذ توريد السلع أو الخدمات.\n"
+"يمكنك تحديد هذا التاريخ ليتم اعتبار التوريد من قبل الزكاة والضريبة والجمارك (زاتكا) على أنه تاريخ استحقاق الضريبة، حيث ستأخذ زاتكا بالتاريخ الأسبق بين هذا التاريخ وتاريخ الإصدار.\n"
+"في حال وجود عمليات تسليم متعددة، يجب استخدام تاريخ آخر تسليم."
+
+#. module: l10n_sa
+#: model:ir.model.fields,field_description:l10n_sa.field_account_bank_statement_line__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,field_description:l10n_sa.field_account_move__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,field_description:l10n_sa.field_account_payment__l10n_sa_confirmation_datetime
+msgid "Confirmation Date"
+msgstr "تاريخ التأكيد"
+
+#. module: l10n_sa
+#: model:ir.model.fields,help:l10n_sa.field_account_bank_statement_line__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,help:l10n_sa.field_account_move__l10n_sa_confirmation_datetime
+#: model:ir.model.fields,help:l10n_sa.field_account_payment__l10n_sa_confirmation_datetime
+msgid ""
+"Date when the invoice is confirmed and posted.\n"
+"                                                    In other words, it is the date on which the invoice is generated as final document (after securing all internal approvals)."
+msgstr ""
+"تاريخ تأكيد وتسجيل الفاتورة.\n"
+"بعبارة أخرى، هو التاريخ الذي يتم فيه إصدار الفاتورة كوثيقة نهائية (بعد الحصول على جميع الموافقات الداخلية)."

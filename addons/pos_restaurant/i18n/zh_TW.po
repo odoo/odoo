@@ -6,6 +6,7 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2022
 # Pak Wai Ho, 2024
+# Wil Odoo, 2025
 # Tony Ng, 2025
 # 
 msgid ""
@@ -95,7 +96,7 @@ msgstr "增加按鈕"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr "在廚房訂單資料行新增內部備註"
+msgstr "在廚房單加入內部備註"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -115,7 +116,7 @@ msgstr "調整金額"
 msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
-msgstr "調整支付終端授權金額，在客戶離開後或一天結束時增加小費."
+msgstr "調整付款終端機授權的金額，以便在顧客離開後或營業時間結束時，加入小費。"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -355,7 +356,7 @@ msgstr "飲品"
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #, python-format
 msgid "Due to a connection error, the orders are not synchronized."
-msgstr ""
+msgstr "由於連線錯誤，訂單未有同步。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -614,7 +615,7 @@ msgstr "午餐壽司卷 18 件"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
 msgid "Lunch Salmon 20pc"
-msgstr "午餐鮭魚 20pc"
+msgstr "午餐鮭魚 20 件"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
@@ -719,7 +720,7 @@ msgstr "打開"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Orange"
-msgstr "橘色"
+msgstr "橙色"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -792,7 +793,7 @@ msgstr "POS營業點設定"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "POS營業點訂單明細"
+msgstr "銷售點訂單資料行"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
@@ -807,7 +808,7 @@ msgstr "POS營業點付款"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_session
 msgid "Point of Sale Session"
-msgstr "POS營業點"
+msgstr "POS 操作時段"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
@@ -832,7 +833,7 @@ msgstr "POS是訂單打印機"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
 msgid "Pos Is Table Management"
-msgstr ""
+msgstr "POS 是餐桌管理"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
@@ -849,7 +850,7 @@ msgstr "列印"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Print orders at the kitchen, at the bar, etc."
-msgstr "列印廚房、酒吧等的訂單."
+msgstr "在廚房、酒吧、水吧等列印訂單"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__product_categories_ids
@@ -893,7 +894,7 @@ msgid ""
 "Printing is not supported on some browsers due to no default printing "
 "protocol is available. It is possible to print your tickets by making use of"
 " an IoT Box."
-msgstr ""
+msgstr "由於沒有預設列印協議可用，部份瀏覽器未能支援列印功能。使用 IoT Box 可列印你的小票。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -945,7 +946,7 @@ msgstr "重印收據"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Restaurant &amp; Bar"
-msgstr ""
+msgstr "餐廳及酒吧"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -1074,7 +1075,7 @@ msgstr "拆分"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Split total or order lines"
-msgstr "拆分總計或訂單明細"
+msgstr "可分拆訂單總額或個別資料行"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__square
@@ -1136,7 +1137,7 @@ msgstr "電話:"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "The %s is already used in another Pos Config."
-msgstr ""
+msgstr "該 %s 已在另一個銷售點配置中使用。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1301,14 +1302,14 @@ msgstr "無法刪除餐桌"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to fetch orders"
-msgstr ""
+msgstr "未能讀取訂單"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to get orders count"
-msgstr ""
+msgstr "未能取得訂單數量"
 
 #. module: pos_restaurant
 #. odoo-javascript

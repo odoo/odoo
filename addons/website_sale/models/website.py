@@ -550,7 +550,11 @@ class Website(models.Model):
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
-                template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
+                # fallback email_vals in case partner_to and email_to were emptied
+                email_vals = {} if template.email_to or template.partner_to else {
+                    'email_to': sale_order.partner_id.email_formatted
+                }
+                template.send_mail(sale_order.id, email_values=email_vals)
                 sale_order.cart_recovery_email_sent = True
 
     def _display_partner_b2b_fields(self):

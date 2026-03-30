@@ -212,7 +212,9 @@ class AccountMove(models.Model):
                 document_types = document_types.filtered(lambda x: x.internal_type not in ['credit_note'])
             if rec.debit_origin_id:
                 document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note')
-            rec.l10n_latam_document_type_id = document_types and document_types[0].id
+
+            if rec.l10n_latam_document_type_id not in document_types:
+                rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
     @api.constrains('name', 'partner_id', 'company_id', 'posted_before')
     def _check_unique_vendor_number(self):

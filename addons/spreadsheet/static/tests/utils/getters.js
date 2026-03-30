@@ -44,7 +44,7 @@ export function getCellFormula(model, xc, sheetId = model.getters.getActiveSheet
  */
 export function getCellContent(model, xc, sheetId = model.getters.getActiveSheetId()) {
     const cell = getCell(model, xc, sheetId);
-    return cell ? model.getters.getCellText(cell, sheetId, true) : "";
+    return cell ? model.getters.getCellText(cell, true) : "";
 }
 
 /**
@@ -52,4 +52,12 @@ export function getCellContent(model, xc, sheetId = model.getters.getActiveSheet
  */
 export function getMerges(model, sheetId = model.getters.getActiveSheetId()) {
     return model.exportData().sheets.find((sheet) => sheet.id === sheetId).merges;
+}
+
+/**
+ * Get the formatted value of the given xc
+ */
+export function getCellFormattedValue(model, xc, sheetId = model.getters.getActiveSheetId()) {
+    const cell = getCell(model, xc, sheetId);
+    return cell ? model.getters.getCellText(cell, false) : "";
 }

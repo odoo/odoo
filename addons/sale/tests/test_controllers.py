@@ -66,6 +66,23 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
 
 
 @tagged('post_install', '-at_install')
+class TestSalesControllers(BaseUsersCommon, HttpCase, SaleCommon):
+    def test_sales_portal_report(self):
+        portal_so = self.sale_order.copy()
+        portal_so.message_subscribe(self.user_portal.partner_id.ids)
+
+        self.authenticate(None, None)
+
+        req = self.url_open(portal_so.get_portal_url(report_type='pdf'), allow_redirects=False)
+        self.assertEqual(req.status_code, 200)
+        self.assertEqual(req.headers['content-disposition'], f"inline; filename*=UTF-8''Quotation-{portal_so.name}.pdf")
+
+        req = self.url_open(portal_so.get_portal_url(report_type='pdf', download=True), allow_redirects=False)
+        self.assertEqual(req.status_code, 200)
+        self.assertEqual(req.headers['content-disposition'], f"attachment; filename*=UTF-8''Quotation-{portal_so.name}.pdf")
+
+
+@tagged('post_install', '-at_install')
 class TestSaleSignature(HttpCaseWithUserPortal):
 
     def test_01_portal_sale_signature_tour(self):

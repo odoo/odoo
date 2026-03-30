@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.pos_loyalty.tests.test_frontend import TestUi
+from odoo.addons.pos_loyalty.tests.test_frontend import TestPoSLoyaltyCommon
 from odoo.tests import tagged
 
 
 @tagged("post_install", "-at_install")
-class TestPoSSaleLoyalty(TestUi):
+class TestPoSSaleLoyalty(TestPoSLoyaltyCommon):
     def test_pos_sale_loyalty_1(self):
         """Test that only one loyalty card is created when settling an unconfirmed order."""
         self.env['loyalty.program'].search([]).write({'active': False})

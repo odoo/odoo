@@ -148,12 +148,18 @@ const defaultDialogs = new Map([
  * @returns {boolean}
  */
 function defaultHandler(env, error) {
-    const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
-    env.services.dialog.add(DialogComponent, {
-        traceback: error.traceback,
-        message: error.message,
-        name: error.name,
-    });
+    // As an error can occur before the dialog service (implicit service) is up and running, we have added a fallback to
+    // log any errors in the console if the dialog service hasn't been started.
+    if (env.services.dialog) {
+        const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
+        env.services.dialog.add(DialogComponent, {
+            traceback: error.traceback,
+            message: error.message,
+            name: error.name,
+        });
+    } else {
+        console.error(error.traceback);
+    }
     return true;
 }
 errorHandlerRegistry.add("defaultHandler", defaultHandler, { sequence: 100 });

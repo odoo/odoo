@@ -19,7 +19,11 @@ export const pivotFormulaRegex = /^=.*PIVOT/;
 export function formatDate(interval, value) {
     const output = FORMATS[interval].display;
     const input = FORMATS[interval].out;
-    const date = moment(value, input);
+    
+    let date = moment(value, input);
+    if (interval === "week") {
+        date = date.endOf("week");
+    }
     return date.isValid() ? date.format(output) : _t("None");
 }
 

@@ -432,11 +432,10 @@ const Wysiwyg = Widget.extend({
 
             if ($target.is(this.customizableLinksSelector)
                     && $target.is('a')
-                    && $target[0].isContentEditable
+                    && ($target[0].isContentEditable || $target.attr("data-mimetype"))
                     && !$target.attr('data-oe-model')
                     && !$target.find('> [data-oe-model]').length
-                    && !$target[0].closest('.o_extra_menu_items')
-                    && $target[0].isContentEditable) {
+                    && !$target[0].closest('.o_extra_menu_items')) {
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open($target[0].href, '_blank');
                 }
@@ -893,10 +892,20 @@ const Wysiwyg = Widget.extend({
                     // id parameters.
                     return;
                 }
+                let newAttachmentSrc = isBackground ? el.dataset.bgSrc : el.getAttribute('src');
+                const isImageAlreadySaved = !newAttachmentSrc || !newAttachmentSrc.startsWith("data:");
+                // Frequent media changes or page reloads may trigger a save request  
+                // without removing the `o_modified_image_to_save` class, causing a traceback  
+                // on the next save since the element loses its base64 `src`.  
+                // If the image isn't already saved, a new copy is created.
+                if (isImageAlreadySaved) {
+                    el.classList.remove('o_modified_image_to_save');
+                    return;
+                }
                 // Modifying an image always creates a copy of the original, even if
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
-                const newAttachmentSrc = await this._rpc({
+                newAttachmentSrc = await this._rpc({
                     route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
                     params: {
                         res_model: resModel,
@@ -1390,13 +1399,36 @@ const Wysiwyg = Widget.extend({
      * @param {Object} params binded @see openMediaDialog
      * @param {Element} element provided by the dialog
      */
-    _onMediaDialogSave: function (params, element) {
+    async _onMediaDialogSave(params, element) {
+        const saveCallback = this.snippetsMenu
+            ? async element => {
+                const $element = $(element);
+                // Make sure the newly inserted media's options are built, note:
+                // also enable the overlay on edited existing media.
+                if (params.node) {
+                    await this.snippetsMenu.activateSnippet($element);
+                } else {
+                    await this.snippetsMenu.callPostSnippetDrop($element);
+                }
+                if (element.tagName !== 'IMG') {
+                    return;
+                }
+                return new Promise(resolve => {
+                    this.snippetsMenu.trigger_up("snippet_edition_request", {exec: () => {
+                        // TODO In master use a trigger parameter
+                        const event = $.Event("image_changed", {_complete: resolve});
+                        $element.trigger(event);
+                    }});
+                });
+            }
+            : () => {};
         params.restoreSelection();
         if (!element) {
             return;
         }
 
         if (params.node) {
+            this.odooEditor.historyPauseSteps();
             const isIcon = (el) => el.matches('i.fa, span.fa');
             const changedIcon = isIcon(params.node) && isIcon(element);
             if (changedIcon) {
@@ -1408,6 +1440,8 @@ const Wysiwyg = Widget.extend({
             } else {
                 params.node.replaceWith(element);
             }
+            await saveCallback(element);
+            this.odooEditor.historyUnpauseSteps();
             this.odooEditor.unbreakableStepUnactive();
 
             if (params.node.matches(".oe_unremovable")) {
@@ -1428,18 +1462,14 @@ const Wysiwyg = Widget.extend({
             // Refocus again to save updates when calling `_onWysiwygBlur`
             this.odooEditor.editable.focus();
         } else {
+            this.odooEditor.historyPauseSteps();
             const result = this.odooEditor.execCommand('insert', element);
+            await saveCallback(element);
+            this.odooEditor.historyUnpauseSteps();
+            this.odooEditor.historyStep();
             // Refocus again to save updates when calling `_onWysiwygBlur`
             this.odooEditor.editable.focus();
             return result;
-        }
-
-        if (this.snippetsMenu) {
-            this.snippetsMenu.activateSnippet($(element)).then(() => {
-                if (element.tagName === 'IMG') {
-                    $(element).trigger('image_changed');
-                }
-            });
         }
     },
     getInSelection(selector) {
@@ -1936,23 +1966,28 @@ const Wysiwyg = Widget.extend({
         // Unselect all media.
         this.$editable.find('.o_we_selected_image').removeClass('o_we_selected_image');
         if (isInMedia) {
-            this.odooEditor.automaticStepSkipStack();
-            // Select the media in the DOM.
-            const selection = this.odooEditor.document.getSelection();
-            const range = this.odooEditor.document.createRange();
-            range.selectNode(this.lastMediaClicked);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            // Toggle the 'active' class on the active image tool buttons.
-            for (const button of this.toolbar.$el.find('#image-shape div, #fa-spin')) {
-                button.classList.toggle('active', $(e.target).hasClass(button.id));
+            // Hide the toolbar if the media has a data-mimetype (e.g. attachment).
+            if ($target.attr("data-mimetype")) {
+                this.odooEditor.toolbarHide();
+            } else {
+                this.odooEditor.automaticStepSkipStack();
+                // Select the media in the DOM.
+                const selection = this.odooEditor.document.getSelection();
+                const range = this.odooEditor.document.createRange();
+                range.selectNode(this.lastMediaClicked);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                // Toggle the 'active' class on the active image tool buttons.
+                for (const button of this.toolbar.$el.find('#image-shape div, #fa-spin')) {
+                    button.classList.toggle('active', $(e.target).hasClass(button.id));
+                }
+                for (const button of this.toolbar.$el.find('#image-width div')) {
+                    button.classList.toggle('active', e.target.style.width === button.id);
+                }
+                this.toolbar.el.querySelector('#image-transform').classList.toggle('active', e.target.matches('[style*="transform"]'));
+                this._updateMediaJustifyButton();
+                this._updateFaResizeButtons();
             }
-            for (const button of this.toolbar.$el.find('#image-width div')) {
-                button.classList.toggle('active', e.target.style.width === button.id);
-            }
-            this.toolbar.el.querySelector('#image-transform').classList.toggle('active', e.target.matches('[style*="transform"]'));
-            this._updateMediaJustifyButton();
-            this._updateFaResizeButtons();
         }
         if (isInMedia) {
             // Handle the media/link's tooltip.
@@ -2487,7 +2522,7 @@ const Wysiwyg = Widget.extend({
             if (
                 isVisible &&
                 (
-                    (this.options.autohideToolbar && !this.odooEditor.document.getSelection().isCollapsed) ||
+                    (this.options.autohideToolbar && !this.odooEditor.document.getSelection().isCollapsed && !this.linkPopover.$target.attr("data-mimetype")) ||
                     !selectionInLink
                 )
             ) {

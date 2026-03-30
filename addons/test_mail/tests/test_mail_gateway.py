@@ -41,6 +41,21 @@ class TestEmailParsing(TestMailCommon):
              "Content-Type 'binary/octet-stream', assuming 'application/octet-stream'"),
         ])
 
+    def test_message_parse_and_replace_wildcard(self):
+        """Incoming email containing a wrong Content-Type (*/*) as described in RFC2046/section-3"""
+        mail_with_wildcard_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="*/*")
+        self.assertIn("Content-Type: */*", mail_with_wildcard_mime, "Wildcard for content-type not found")
+        with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as capture:
+            extracted_mail = self.env['mail.thread'].message_parse(self.from_string(mail_with_wildcard_mime))
+
+        self.assertEqual(len(extracted_mail['attachments']), 1)
+        attachment = extracted_mail['attachments'][0]
+        self.assertEqual(attachment.fname, 'scan_soraya.lernout_1691652648.pdf')
+        self.assertEqual(capture.output, [
+            ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
+             "Content-Type '*/*', assuming 'application/octet-stream'"),
+        ])
+
     def test_message_parse_body(self):
         # test pure plaintext
         plaintext = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
@@ -2208,14 +2223,14 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 partner_ids=self.partner_1.ids,
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
-        reply, _log, email = gateway_record.message_ids
+        reply, log, email = gateway_record.message_ids
         self.assertMailNotifications(
             reply,
             [{
                 'content': 'Odoo Reply',
                 'email_values': {
                     'message_id': reply.message_id,
-                    'references': f'{email.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{email.message_id} {log.message_id} {reply.message_id}',  # should contain reference to OdooExternal message, logs to fill up history
                 },
                 'fields_values': {
                     'notified_partner_ids': self.partner_1,
@@ -2278,7 +2293,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 'content': 'Odoo Reply',
                 'email_values': {
                     'message_id': reply.message_id,
-                    'references': f'{odooext_msg.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
                 },
                 'fields_values': {
                     'notified_partner_ids': self.partner_1 + self.partner_admin,
@@ -2313,7 +2328,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 'email_values': {
                     'email_from': self.email_from,
                     'message_id': reply_2.message_id,
-                    'references': f'{odooext_msg.message_id} {reply.message_id} {reply_2.message_id}',  # should contain reference to OdooExternal message
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id} {reply_2.message_id}',  # should contain reference to OdooExternal message
                 },
                 'fields_values': {
                     'author_id': self.env['res.partner'],

@@ -3,7 +3,7 @@
 
 import time
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class ProductProduct(models.Model):
@@ -60,7 +60,7 @@ class ProductProduct(models.Model):
             field_no_aggr, _sep, agg = field.partition(':')
             if field_no_aggr in fields_list:
                 if agg and agg != 'sum':
-                    raise NotImplementedError('Aggregate functions other than \':sum\' are not allowed.')
+                    raise NotImplementedError(_('Aggregate functions other than \':sum\' are not allowed.'))
                 return field_no_aggr
             return field
         fields = {truncate_aggr(field) for field in fields}
@@ -124,8 +124,8 @@ class ProductProduct(models.Model):
                 SELECT
                     l.product_id as product_id,
                     SUM(
-                        l.price_unit / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) *
-                        l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END) * ((100 - l.discount) * 0.01)
+                        l.price_subtotal / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) *
+                        (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)
                     ) / NULLIF(SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)), 0) AS avg_unit_price,
                     SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
                     SUM(ABS(l.balance) * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS total,

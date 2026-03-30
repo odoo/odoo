@@ -112,3 +112,62 @@ class TestManual(common.TestAr):
             len_line_price_unit_digits = len(line_price_unit_decimal_part)
             if len_l10n_ar_price_unit_digits == len_line_price_unit_digits == decimal_price_digits_setting:
                 self.assertEqual(l10n_ar_price_unit_decimal_part, line_price_unit_decimal_part)
+
+    def _get_simple_detail_ar_tax(self, invoice):
+        """ Get the simple detail_ar_tax list of tuples with the vat group name and the amount
+        [("vat_taxes", float), ("other_taxes", float)] """
+        return [
+            (item.get('group'), item.get('tax_amount'))
+            for item in invoice._l10n_ar_get_invoice_totals_for_report().get('detail_ar_tax')
+        ]
+
+    def test_16_invoice_b_tax_breakdown_1(self):
+        """ Display Both VAT and Other Taxes """
+        invoice1 = self._create_invoice_from_dict({
+            'ref': 'test_invoice_20:  Final Consumer Invoice B with multiple vat/perceptions/internal/other/national taxes',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.service_iva_21, 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
+                 'tax_ids': [(6, 0, [self.tax_21.id, self.tax_perc_iibb.id])]},
+                {'product_id': self.service_iva_27, 'price_unit': 2250.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_27.id, self.tax_national.id])]},
+                {'product_id': self.product_iva_105_perc, 'price_unit': 1740.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_10_5.id, self.tax_internal.id])]},
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_0.id, self.tax_other.id])]},
+            ],
+        })
+        self.assertEqual(self._get_simple_detail_ar_tax(invoice1), [("vat", 868.51), ("other", 142.20)])
+
+    def test_17_invoice_b_tax_breakdown_2(self):
+        """ Display only Other Taxes (VAT taxes are 0) """
+        invoice2 = self._create_invoice_from_dict({
+            'ref': 'test_invoice_21:  inal Consumer Invoice B with 0 tax and internal tax',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_no_gravado.id, self.tax_internal.id])]},
+            ],
+        })
+        self.assertEqual(self._get_simple_detail_ar_tax(invoice2), [("vat", 0.0), ("other", 300.0)])
+
+    def test_18_invoice_b_tax_breakdown_3(self):
+        """ Display only Other Taxes (VAT taxes are 0 and non other taxes) """
+        invoice3 = self._create_invoice_from_dict({
+            'ref': 'test_invoice_22:  Final Consumer Invoice B with 0 only',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_no_gravado.id])]},
+            ],
+        })
+        self.assertEqual(self._get_simple_detail_ar_tax(invoice3), [("vat", 0.0)])

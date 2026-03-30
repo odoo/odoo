@@ -5,7 +5,7 @@
 # Translators:
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2022
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2022
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
 # Kovács Tibor <kovika@gmail.com>, 2022
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2022
@@ -17,15 +17,17 @@
 # krnkris, 2023
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Tamás Dombos, 2023
-# gezza <geza.nagy@oregional.hu>, 2024
+# Valics Lehel, 2025
+# gezza <geza.nagy@oregional.hu>, 2025
+# Pammer József, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"POT-Creation-Date: 2025-05-22 18:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
+"Last-Translator: Pammer József, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +48,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Nincsenek mérföldkövek. Készítsen egyet!\n"
+"                </p><p>\n"
+"                    Kövesse nyomon a sikeres megvalósításhoz vezető lényegesebb előrehaladási pontokat.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #. odoo-javascript
@@ -1030,8 +1039,6 @@ msgid "Assigned to"
 msgstr "Hozzárendelve"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1041,7 +1048,6 @@ msgstr "Hozzárendelve"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, python-format
 msgid "Assignees"
 msgstr "Hozzárendelések"
 
@@ -1054,7 +1060,7 @@ msgstr "Hozzárendelés dátuma"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_assign
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 msgid "Assignment Date"
-msgstr ""
+msgstr "Hozzárendelés dátuma"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__at_risk
@@ -1125,12 +1131,12 @@ msgstr "Avatár"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Átlag Értékelés"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Átlag Értékelés (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1360,7 +1366,7 @@ msgstr "Közreműködők"
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "Együttműködők megosztott projektben"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1894,6 +1900,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
+"Kapcsolja a mérföldkövet vevői rendelés tételhez és teljesítse "
+"szolgáltatásait automatikusan a mérföldkő elérésekor."
 
 #. module: project
 #. odoo-javascript
@@ -2091,7 +2099,7 @@ msgstr "E-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
 msgid "Email From"
-msgstr ""
+msgstr "Feladó e-mail címe"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
@@ -3602,7 +3610,6 @@ msgid "Off Track"
 msgstr ""
 
 #. module: project
-#: model:account.analytic.account,name:project.analytic_office_design
 #: model:project.project,name:project.project_project_1
 msgid "Office Design"
 msgstr ""
@@ -3870,6 +3877,20 @@ msgid "Portal Access URL"
 msgstr "Portálelérés webcíme"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Portal Parent Task"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Portal Sub-tasks"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__portal_user_names
 msgid "Portal User Names"
 msgstr ""
@@ -4080,7 +4101,7 @@ msgstr "Projekt feladatok"
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "Projekt állapot"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -4418,7 +4439,6 @@ msgid "Related Document Model"
 msgstr "Vonatkozó dokumentum modell"
 
 #. module: project
-#: model:account.analytic.account,name:project.analytic_renovations
 #: model:project.project,name:project.project_project_3
 msgid "Renovations"
 msgstr ""
@@ -4510,7 +4530,6 @@ msgid "Research"
 msgstr "Kutatás"
 
 #. module: project
-#: model:account.analytic.account,name:project.analytic_research_development
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
 msgstr "Kutatás, fejlesztés"
@@ -5134,7 +5153,7 @@ msgstr "Feladat kész"
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Feladat ismétlődés"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5208,6 +5227,7 @@ msgstr "Feladat:"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task

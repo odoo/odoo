@@ -60,7 +60,7 @@
             <field name="l10n_it_pa_index">SOOTJS</field>
         </record>
 
-        <record id="demo_l10n_it_edi_partner_pa_fiscal_position" model="ir.property">
+        <record id="demo_l10n_it_edi_partner_pa_fiscal_position" model="ir.property" forcecreate="0">
             <field name="name">property_account_position_id</field>
             <field name="fields_id" search="[('model', '=', 'res.partner'), ('name', '=', 'property_account_position_id')]"/>
             <field name="res_id" model="res.partner" eval="'res.partner,' + str(obj().env.ref('l10n_it_edi.demo_l10n_it_edi_partner_pa').id)"/>

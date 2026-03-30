@@ -4,6 +4,7 @@
 import datetime
 from lxml import etree
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.exceptions import UserError
@@ -304,6 +305,20 @@ class TestItEdiExport(TestItEdi):
         cls.zero_tax_invoice._post()
         cls.negative_price_invoice._post()
         cls.negative_price_credit_note._post()
+
+    def test_export_zero_amount_move(self):
+        """When a move has an amount of 0, a float division by zero error is triggered."""
+        usd_currency = self.env.ref('base.USD')
+        usd_currency.active = True
+        zero_amount_move = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'currency_id': usd_currency.id,
+            'invoice_line_ids': [Command.create({'amount_currency': 0})]
+        })
+        zero_amount_move._prepare_fatturapa_export_values()
+        self.assertEqual(len(zero_amount_move.invoice_line_ids), 1)
+        self.assertEqual(zero_amount_move.invoice_line_ids[0].amount_currency, 0)
 
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
