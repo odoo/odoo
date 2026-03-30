@@ -13,7 +13,11 @@ export class ProjectTaskControlPanel extends ControlPanel {
 
     get showTaskOptions() {
         const context = this.env.searchModel.globalContext;
-        return !context.my_tasks && (!('show_task_options' in context) || context.show_task_options);
+        return (
+            !context.my_tasks &&
+            !context.activity_action &&
+            (!("show_task_options" in context) || context.show_task_options)
+        );
     }
 
     get taskOptionsTitle() {
