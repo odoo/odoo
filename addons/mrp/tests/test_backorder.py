@@ -575,6 +575,37 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.origin, expected_origin)
         self.assertEqual(mo.product_qty, 10)
 
+    def test_split_merge_production_group(self):
+        """ Ensure that splitting and then merging MO's properly unlinks and deletes the production groups.
+        The group should only be deleted when no MO's are associated to it anymore.
+        """
+        mo_1 = self.generate_mo(qty_final=12)[0]
+        mo_2 = mo_1.copy()
+        mo_2.action_confirm()
+        pg_1 = mo_1.production_group_id
+        pg_2 = mo_2.production_group_id
+        # Split into 4
+        action = mo_1.action_split()
+        wizard = Form.from_action(self.env, action)
+        wizard.max_batch_size = 3
+        action = wizard.save().action_split()
+        # Split into 2
+        action = mo_2.action_split()
+        wizard = Form.from_action(self.env, action)
+        wizard.max_batch_size = 6
+        action = wizard.save().action_split()
+
+        (pg_1.production_ids[0] + pg_2.production_ids[0]).action_merge()
+        self.assertEqual(len(pg_1.production_ids), 3)
+        self.assertEqual(len(pg_2.production_ids), 1)
+
+        (pg_1.production_ids[0] + pg_2.production_ids[0]).action_merge()
+        self.assertEqual(len(pg_1.production_ids), 2)
+        self.assertFalse(pg_2.exists())
+
+        (pg_1.production_ids[0] + pg_1.production_ids[1]).action_merge()
+        self.assertFalse(pg_1.exists())
+
     def test_reservation_method_w_mo(self):
         """ Create a MO for 2 units, Produce 1 and create a backorder.
         The MO and the backorder should be assigned according to the reservation method
