@@ -173,6 +173,9 @@ patch(SaleOrderLineListRenderer.prototype, {
      */
     async sortDrop(dataRowId, dataGroupId, { element, previous }) {
         const record = this.props.list.records.find(r => r.id === dataRowId);
+        // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
+        record.dirty = true;
+        await this.props.list.leaveEditMode();
         const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
 
         await super.sortDrop(dataRowId, dataGroupId, { element, previous });
