@@ -310,6 +310,59 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
 
         self.assertGreater(int(xml_tree.findall('./{*}InvoiceLine')[-1].findtext('{*}ID')), 4)
 
+    def test_credit_notes_lines_matching_2(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'income'
+        self.company.l10n_jo_edi_sequence_income_source = '4419618'
+
+        order_vals = {
+            'name': 'EIN00017',
+            'lines': [
+                {  # id = 1
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 1,
+                },
+                {  # id = 2
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 3,
+                },
+                {  # id = 3
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 2,
+                },
+            ],
+        }
+        refund_vals = {
+            'name': 'EIN998833',
+            'lines': [
+                {  # id = 3
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 2,
+                    'name': '3',  # label should not affect matching
+                },
+                {  # id = 1
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 1,
+                    'name': '1',
+                },
+                {  # id = 2
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 2,
+                    'name': '2',
+                },
+            ],
+        }
+        refund = self._l10n_jo_create_order_refund(order_vals, refund_vals)
+        xml_string = self.env['pos.edi.xml.ubl_21.jo']._export_pos_order(refund)[0]
+        xml_tree = self.get_xml_tree_from_string(xml_string)
+        for xml_line, expected_line_id in zip(xml_tree.findall('./{*}InvoiceLine'), [3, 1, 2]):
+            self.assertEqual(int(xml_line.findtext('{*}ID')), expected_line_id)
+
     def test_different_payment_methods(self):
         def get_xml_order_type(order):
             if order._l10n_jo_validate_fields():  # conflicting payment methods
