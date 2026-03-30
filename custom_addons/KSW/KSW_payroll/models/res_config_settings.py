@@ -12,3 +12,4 @@ class ResConfigSettings(models.TransientModel):
         default=9.75,
     )
 
+

@@ -32,10 +32,13 @@ Extends om_hr_payroll with:
     'data': [
         # Security
         # 'security/hr_payroll_security.xml',
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
 
         # Data
         'data/salary_rule_deduction.xml',
+
+        # Wizard
+        'wizard/wps_file_wizard_views.xml',
 
         # Views
         'views/hr_employee_view.xml',
@@ -43,6 +46,7 @@ Extends om_hr_payroll with:
         'views/hr_payslip_views.xml',
         'views/hr_version_views.xml',
         'views/res_config_settings_views.xml',
+        'views/res_partner_bank_views.xml',
 
         # Reports
         'report/report_payslip_deduction_templates.xml',

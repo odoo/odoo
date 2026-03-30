@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wizard form -->
+    <record id="view_wps_file_wizard_form" model="ir.ui.view">
+        <field name="name">ksw.wps.file.wizard.form</field>
+        <field name="model">ksw.wps.file.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create WPS File">
+                <group>
+                    <field name="payslip_run_id"/>
+                    <field name="value_date"/>
+                </group>
+                <footer>
+                    <button string="Create File" name="action_generate"
+                            type="object" class="btn-primary"
+                            icon="fa-file-text-o"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window action (opened from batch button) -->
+    <record id="action_wps_file_wizard" model="ir.actions.act_window">
+        <field name="name">Create WPS File</field>
+        <field name="res_model">ksw.wps.file.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+

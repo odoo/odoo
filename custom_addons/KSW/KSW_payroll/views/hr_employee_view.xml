@@ -6,6 +6,10 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet/notebook/page[@name='payroll_information']" position="inside">
                 <group>
+                    <group string="Salary Payment">
+                        <field name="company_partner_id" invisible="1"/>
+                        <field name="x_salary_bank_account_id"/>
+                    </group>
                     <group string="Allowances">
                         <field name="hra"/>
                         <field name="da"/>

@@ -125,4 +125,30 @@
         </field>
     </record>
 
+    <!-- ============================================================ -->
+    <!-- Payslip Batch: Export Bank File button                        -->
+    <!-- ============================================================ -->
+    <record id="hr_payslip_run_form_inherit_ksw" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form.inherit.ksw</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="om_hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='close_payslip_run']"
+                   position="after">
+                <button name="action_export_bank_file" type="object"
+                        string="Export Bank File"
+                        icon="fa-file-excel-o"
+                        class="btn-secondary"/>
+                <button name="action_open_wps_wizard" type="object"
+                        string="Create WPS File"
+                        icon="fa-file-text-o"
+                        class="btn-secondary"/>
+            </xpath>
+            <!-- Bank account selector for WPS export -->
+            <xpath expr="//field[@name='credit_note']" position="after">
+                <field name="x_salary_bank_account_id"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

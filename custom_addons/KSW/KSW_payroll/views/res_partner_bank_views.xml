@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_bank_form_inherit_ksw_wps" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.ksw.wps</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="WPS Bank File Configuration">
+                    <group>
+                        <field name="x_wps_cic_number"/>
+                        <field name="x_wps_mol_id"/>
+                    </group>
+                    <group>
+                        <field name="x_wps_debit_account"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+
