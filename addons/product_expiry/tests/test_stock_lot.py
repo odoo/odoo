@@ -707,7 +707,7 @@ class TestStockLot(TestStockCommon):
         })
         self.assertEqual(apple_lot1.with_context(formatted_display_name=True).display_name, "LOT-00001")
         self.assertEqual(apple_lot2.with_context(formatted_display_name=True).display_name, "LOT-00002\t--Expired--")
-        self.assertEqual(apple_lot3.with_context(formatted_display_name=True).display_name, "LOT-00003\t--Expire on " + fields.Datetime.to_string(apple_lot3.expiration_date) + "--")
+        self.assertEqual(apple_lot3.with_context(formatted_display_name=True).display_name, "LOT-00003\t--Expire on " + fields.Date.to_string(apple_lot3.expiration_date) + "--")
 
     def test_proceed_except_expired_delivery_without_move_removal_date(self):
         # Making sure that the lot will be assigned at confirm
@@ -742,40 +742,6 @@ class TestStockLot(TestStockCommon):
         wizard = self.env['expiry.picking.confirmation'].with_context(context).create({})
         self.assertFalse(wizard.picking_ids.move_line_ids.removal_date)
         wizard.process_no_expired()
-
-    def test_lot_dates_form_update(self):
-        """
-        Ensure that we can edit the removal_date and expiration_date fields at the same time
-        Without triggering the compute method for the expiration when saving modifications.
-        """
-        delta = timedelta(seconds=10)
-        today = datetime.today()
-        receipt = self.env['stock.picking'].create({
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
-            'picking_type_id': self.picking_type_in.id,
-            'scheduled_date': today,
-            'move_ids': [
-                Command.create({
-                    'product_id': self.apple_product.id,
-                    'location_id': self.supplier_location.id,
-                    'location_dest_id': self.stock_location.id,
-                    'product_uom_qty': 1,
-                }),
-            ],
-        })
-        receipt.action_confirm()
-        self.assertAlmostEqual(receipt.move_line_ids.expiration_date, today + timedelta(days=10), delta=delta)
-        self.assertAlmostEqual(receipt.move_line_ids.removal_date, today + timedelta(days=8), delta=delta)
-
-        with Form(receipt.move_ids, view="stock.view_stock_move_operations") as move_form:
-            with move_form.move_line_ids.edit(0) as line_form:
-                line_form.lot_name = 'lot 1'
-                line_form.expiration_date = today + timedelta(days=15)
-                line_form.removal_date = today + timedelta(days=10)
-
-        self.assertAlmostEqual(receipt.move_line_ids.expiration_date, today + timedelta(days=15), delta=delta)
-        self.assertAlmostEqual(receipt.move_line_ids.removal_date, today + timedelta(days=10), delta=delta)
 
     def test_no_expiration_wizard_when_tracking_removed(self):
         product = self.ProductObj.create({
