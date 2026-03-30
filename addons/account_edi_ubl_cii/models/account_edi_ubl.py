@@ -1041,7 +1041,7 @@ class AccountEdiUBL(models.AbstractModel):
         vals['document_node']['cbc:BuyerReference'] = {'_text': None}
 
     def _ubl_add_invoice_period_nodes(self, vals):
-        vals['document_node']['cac:InvoicePeriod'] = []
+        vals['document_node']['cac:InvoicePeriod'] = {}
 
     def _ubl_add_order_reference_node(self, vals):
         vals['document_node']['cac:OrderReference'] = {
