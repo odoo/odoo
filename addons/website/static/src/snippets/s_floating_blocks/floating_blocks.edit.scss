@@ -14,4 +14,13 @@
     .s_floating_blocks_alert_empty {
         cursor: pointer;
     }
+    &.o_disable_cards_overlap {
+        .s_floating_blocks_block {
+            // Disable transformation and overlap during drag and drop. The
+            // removal of the transformation is animated, to look less abrupt.
+            top: auto !important;
+            transform: none !important;
+            transition: transform .2s linear,
+        }
+    }
 }
