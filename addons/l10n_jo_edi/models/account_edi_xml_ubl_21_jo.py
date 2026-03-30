@@ -3,7 +3,7 @@ import re
 from types import SimpleNamespace
 
 from odoo import models
-from odoo.tools import float_round, float_is_zero
+from odoo.tools import float_compare, float_round, float_is_zero
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
 JO_MAX_DP = 9
@@ -40,6 +40,37 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             rounding=10**-JO_MAX_DP,
             decimal_places=JO_MAX_DP,
         )
+
+    def _add_base_lines_edi_ids(self, vals):
+        vals['base_lines_edi_ids'] = {}
+        invoice = vals['invoice']
+        if invoice.reversed_entry_id:
+            DecimalPrecision = self.env['decimal.precision']
+            invoice_vals = {
+                **vals,
+                'invoice': invoice.reversed_entry_id,
+            }
+            self._add_invoice_base_lines_vals(invoice_vals)
+            invoice_edi_id_x_base_line = dict(enumerate(invoice_vals['base_lines'], 1))
+            overflow_edi_id = len(invoice_edi_id_x_base_line) + 1
+
+            refund_base_lines = filter(lambda l: not self._is_document_allowance_charge(l), vals['base_lines'])
+            for line_idx, refund_base_line in enumerate(refund_base_lines, 1):
+                matching_edi_ids = [
+                    line_id for line_id, base_line in invoice_edi_id_x_base_line.items()
+                    if base_line['product_id'] == refund_base_line['product_id']
+                    and float_compare(base_line['price_unit'], refund_base_line['price_unit'], precision_digits=DecimalPrecision.precision_get('Product Price')) == 0
+                    and float_compare(base_line['discount'], refund_base_line['discount'], precision_digits=DecimalPrecision.precision_get('Discount')) == 0
+                    and float_compare(base_line['quantity'], refund_base_line['quantity'], precision_digits=DecimalPrecision.precision_get('Product Unit')) >= 0
+                ]
+
+                if matching_edi_ids:
+                    edi_id = min(matching_edi_ids, key=lambda line_id: invoice_edi_id_x_base_line[line_id]['quantity'])
+                    vals['base_lines_edi_ids'][line_idx] = edi_id
+                    invoice_edi_id_x_base_line.pop(edi_id)
+                else:
+                    vals['base_lines_edi_ids'][line_idx] = overflow_edi_id
+                    overflow_edi_id += 1
 
     def _add_invoice_base_lines_vals(self, vals):
         # OVERRIDE account_edi_xml_ubl_20.py
@@ -78,6 +109,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                 base_line['tax_details'][key] = new_base_line['tax_details'][key]
 
         vals['base_lines'] = base_lines
+        self._add_base_lines_edi_ids(vals)
 
     # -------------------------------------------------------------------------
     # EXPORT: Helpers
@@ -360,32 +392,13 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _add_invoice_line_id_nodes(self, line_node, vals):
-        line = vals['base_line']['record']
         line_node['cbc:ID'] = {
-            '_text': self._get_line_edi_id(line, vals['line_idx']),
+            '_text': vals['base_lines_edi_ids'].get(vals['line_idx'], vals['line_idx']),
         }
 
     def _get_line_edi_id(self, line, default_id):
-        if not line.is_refund:  # in case it's invoice not credit note
-            return default_id
-
-        refund_move = line.move_id
-        invoice_move = refund_move.reversed_entry_id
-        invoice_lines = invoice_move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note'))
-        n = len(invoice_lines)
-
-        line_id = -1
-        for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
-            if line.product_id == invoice_line.product_id \
-                    and line.name == invoice_line.name \
-                    and line.price_unit == invoice_line.price_unit \
-                    and line.discount == invoice_line.discount:
-                line_id = invoice_line_id
-                break
-        if line_id == -1:
-            line_id = n + default_id
-
-        return line_id
+        # only kept for stable policy, would be removed in FWs
+        return default_id
 
     def _add_document_line_gross_subtotal_and_discount_vals(self, vals):
         """ In JO, because of the precision requirements, we first compute an exact
