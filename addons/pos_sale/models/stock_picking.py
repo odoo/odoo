@@ -20,5 +20,6 @@ class StockPicking(models.Model):
             lambda l: not l.sale_order_line_id
             or (l.sale_order_line_id.has_valued_move_ids() or not l.sale_order_line_id.move_ids)
             or (l.sale_order_line_id == l.refunded_orderline_id.sale_order_line_id)
+            or all(m.state == 'cancel' for m in l.sale_order_line_id.move_ids)
         )
         return super()._create_move_from_pos_order_lines(lines_for_moves)
