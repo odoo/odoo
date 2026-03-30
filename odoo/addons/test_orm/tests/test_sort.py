@@ -27,8 +27,9 @@ class TestSort(TransactionCase):
 
     def test_basic(self):
         db_result = self.env['test_orm.country'].search([])
+        # 1 query to fetch the fields, in practice it is already prefetched
+        self.countries.invalidate_model()
         with self.assertQueryCount(1):
-            # 1 query to fetch the fields, in practice it is already prefetched
             self.assertEqual(db_result.ids, self.countries.sorted().ids)
         with self.assertQueryCount(0):
             self.assertEqual(db_result[::-1].ids, self.countries.sorted(reverse=True).ids)
