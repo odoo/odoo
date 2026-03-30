@@ -3,7 +3,7 @@ import re
 from types import SimpleNamespace
 
 from odoo import models
-from odoo.tools import float_round, float_is_zero
+from odoo.tools import float_compare, float_round, float_is_zero
 from odoo.addons.l10n_jo_edi.models.account_edi_xml_ubl_21_jo import JO_MAX_DP
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -64,6 +64,37 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         super()._add_pos_order_currency_vals(vals)
         vals['currency_name'] = 'JO'
 
+    def _add_base_lines_edi_ids(self, vals):
+        vals['base_lines_edi_ids'] = {}
+        if vals['is_refund']:
+            DecimalPrecision = self.env['decimal.precision']
+            order_vals = {
+                **vals,
+                'is_refund': False,
+                'pos_order': vals['pos_order'].refunded_order_id,
+            }
+            self._add_pos_order_base_lines_vals(order_vals)
+            order_edi_id_x_base_line = dict(enumerate(order_vals['base_lines'], 1))
+            overflow_edi_id = len(order_edi_id_x_base_line) + 1
+
+            refund_base_lines = filter(lambda l: not self._is_document_allowance_charge(l), vals['base_lines'])
+            for line_idx, refund_base_line in enumerate(refund_base_lines, 1):
+                matching_edi_ids = [
+                    line_id for line_id, base_line in order_edi_id_x_base_line.items()
+                    if base_line['product_id'] == refund_base_line['product_id']
+                    and float_compare(base_line['price_unit'], refund_base_line['price_unit'], precision_digits=DecimalPrecision.precision_get('Product Price')) == 0
+                    and float_compare(base_line['discount'], refund_base_line['discount'], precision_digits=DecimalPrecision.precision_get('Discount')) == 0
+                    and float_compare(base_line['quantity'], abs(refund_base_line['quantity']), precision_digits=DecimalPrecision.precision_get('Product Unit of Measure')) >= 0
+                ]
+
+                if matching_edi_ids:
+                    edi_id = min(matching_edi_ids, key=lambda line_id: order_edi_id_x_base_line[line_id]['quantity'])
+                    vals['base_lines_edi_ids'][line_idx] = edi_id
+                    order_edi_id_x_base_line.pop(edi_id)
+                else:
+                    vals['base_lines_edi_ids'][line_idx] = overflow_edi_id
+                    overflow_edi_id += 1
+
     def _add_pos_order_base_lines_vals(self, vals):
         # OVERRIDE account_edi_xml_ubl_20.py
         currency_9_dp = vals['currency_id']
@@ -97,6 +128,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
         vals['base_lines'] = base_lines
         self._add_pos_order_discount_vals(vals)
+        self._add_base_lines_edi_ids(vals)
 
     def _add_document_line_gross_subtotal_and_discount_vals(self, vals):
         """ In JO, because of the precision requirements, we first compute an exact
@@ -273,22 +305,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         return line_node
 
     def _get_pos_order_line_id(self, vals):
-        if not vals['is_refund']:
-            return vals['line_idx']
-
-        line_id = -1
-        refund_line = vals['base_line']['record']
-        order_lines = vals['pos_order'].refunded_order_id.lines
-        for order_line_id, order_line in enumerate(order_lines, 1):
-            if refund_line.product_id == order_line.product_id \
-                    and refund_line.price_unit == order_line.price_unit \
-                    and refund_line.discount == order_line.discount:
-                line_id = order_line_id
-                break
-        if line_id == -1:
-            line_id = len(order_lines) + vals['line_idx']
-
-        return line_id
+        return vals['base_lines_edi_ids'].get(vals['line_idx'], vals['line_idx'])
 
     def _add_pos_order_line_id_nodes(self, line_node, vals):
         line_id = self._get_pos_order_line_id(vals)
