@@ -4,7 +4,7 @@ from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning
 from odoo.tests import tagged
 from odoo.addons.account.models.chart_template import code_translations, AccountChartTemplate, TEMPLATE_MODELS
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -864,7 +864,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
             ]
         }
-        with self.assertRaisesRegex(UserError, 'update your localization'):
+        with self.assertRaisesRegex(RedirectWarning, 'update your localization'):
             self.env['account.chart.template']._deref_account_tags('test', {'tax1': tax_to_load})
 
     def test_install_with_translations(self):
