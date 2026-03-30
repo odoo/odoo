@@ -361,7 +361,7 @@ test("one2many in a list x2many editable use the right context", async () => {
     });
 
     await contains(".o_field_x2many_list .o_field_x2many_list_row_add a").click();
-    await contains("[name='trululu'] input").edit("new partner");
+    await contains("[name='trululu'] input").edit("new partner", { confirm: false });
     await selectFieldDropdownItem("trululu", 'Create "new partner"');
 
     expect.verifySteps(["name_create list"]);
@@ -12338,7 +12338,7 @@ test("existing record: receive more create commands than limit", async () => {
         { id: 2, name: "Initial Record 2" },
         { id: 3, name: "Initial Record 3" },
         { id: 4, name: "Initial Record 4" },
-    ]
+    ];
     Partner._onChanges = {
         int_field: function (obj) {
             if (obj.int_field === 16) {
