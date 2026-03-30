@@ -8,7 +8,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'website.seo.metadata', 'website.structured_data.mixin']
 
-    website_description = fields.Html('Website Partner Full Description', strip_style=True, sanitize_overridable=True, translate=html_translate, prefetch=False)
+    website_description = fields.Qweb('Website Partner Full Description', strip_style=True, sanitize_overridable=True, translate=html_translate, prefetch=False)
     website_short_description = fields.Text('Website Partner Short Description', translate=True)
     is_published = fields.Boolean(tracking=True)
 

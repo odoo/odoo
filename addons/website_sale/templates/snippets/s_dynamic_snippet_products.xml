@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <t t-name="website_sale.s_dynamic_snippet_wrapper_grid">
+        <div
+            class="s_dynamic_snippet_grid_container py-3"
+            t-att-data-grid-columns="grid_columns"
+            t-att-data-mobile-columns="mobile_columns"
+        >
+            <t t-foreach="data" t-as="record" t-key="record_index">
+                <t t-out="record"/>
+            </t>
+        </div>
+    </t>
+
     <template
         id="website_sale.s_dynamic_snippet_product_grid_template"
         inherit_id="website.s_dynamic_snippet_template"
@@ -16,6 +28,8 @@
     <!-- Snippets -->
     <template id="website_sale.s_dynamic_snippet_products" name="Products">
         <t t-set="snippet_name" t-value="snippet_name or 's_dynamic_snippet_products'"/>
+        <t t-set="wrapper_template" t-value="'website.s_dynamic_snippet_wrapper_carousel'"/>
+        <t t-set="wrapper_data" t-value="dict()"/>
         <t
             t-set="default_design_classes"
             t-value="env.website.shop_opt_products_design_classes or ''"
@@ -46,7 +60,13 @@
         <t t-call="website.s_dynamic_snippet_template"
             snippet_name="snippet_name"
             snippet_classes="'oe_website_sale o_dynamic_carousel_snippet s_dynamic_snippet_products o_carousel_multi_items ' + default_design_classes"
-            main_page_url.f="/shop">
+            main_page_url.f="/shop"
+            filter_param="dict(
+                wrapper_template=wrapper_template,
+                wrapper_data=wrapper_data,
+                search_info=dict(showVariants=True),
+            )"
+        >
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>
     </template>
@@ -60,6 +80,9 @@
         <t t-set="snippet_name" position="attributes">
             <attribute name="t-value">'s_dynamic_snippet_products_carousel'</attribute>
         </t>
+        <t t-set="wrapper_data" position="attributes">
+            <attribute name="t-value">dict(scroll_mode='multi', carousel_interval=5000)</attribute>
+        </t>
     </template>
 
     <template
@@ -70,6 +93,12 @@
     >
         <t t-set="snippet_name" position="attributes">
             <attribute name="t-value">'s_dynamic_snippet_products_grid'</attribute>
+        </t>
+        <t t-set="wrapper_template" position="attributes">
+            <attribute name="t-value">'website_sale.s_dynamic_snippet_wrapper_grid'</attribute>
+        </t>
+        <t t-set="wrapper_data" position="attributes">
+            <attribute name="t-value">dict(grid_columns=4, mobile_columns=2)</attribute>
         </t>
         <t t-call="website.s_dynamic_snippet_template" position="attributes">
             <attribute name="t-call">website_sale.s_dynamic_snippet_product_grid_template</attribute>

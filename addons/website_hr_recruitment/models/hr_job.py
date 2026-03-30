@@ -36,7 +36,7 @@ class HrJob(models.Model):
             <h6>4 Days after Interview</h6>
         """)
 
-    description = fields.Html(
+    description = fields.Qweb(
         'Job Description', translate=html_translate,
         prefetch=False,
         sanitize_overridable=True,
@@ -52,17 +52,17 @@ This position is both <b>creative and rigorous</b> by nature you need to think
 outside the box. We expect the candidate to be proactive and have a "get it done"
 spirit. To be successful, you will have solid solving problem skills.''')
     website_published = fields.Boolean(help='Set if the application is published on the website of the company.', tracking=True)
-    website_description = fields.Html(
+    website_description = fields.Qweb(
         'Website description', translate=html_translate,
         default=_get_default_website_description, prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
-    website_rating = fields.Html(
+    website_rating = fields.Qweb(
         'Website rating', translate=html_translate,
         default=_get_default_website_rating, prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
-    job_details = fields.Html(
+    job_details = fields.Qweb(
         'Process Details',
         translate=True,
         help="Complementary information that will appear on the job submission page",

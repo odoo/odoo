@@ -4,7 +4,8 @@
 <t t-name="website_blog.BlogPostsFilterOptions">
     <BuilderRow label.translate="Blogs" preview="false">
         <BuilderMany2Many model="'blog.blog'"
-            dataAttributeAction="'filterByBlogIds'"
+            action="'dynamicSearchInfoByIds'"
+            actionParam="'blogByIds'"
             domain="[
                 '|',
                 ['website_id', '=', false],
@@ -14,12 +15,14 @@
     </BuilderRow>
     <BuilderRow label.translate="Tags" preview="false">
         <BuilderMany2Many model="'blog.tag'"
-            dataAttributeAction="'filterByTagIds'"
+            action="'dynamicSearchInfoByIds'"
+            actionParam="'blogByTagIds'"
         />
     </BuilderRow>
     <BuilderRow label.translate="Authors" preview="false">
         <BuilderMany2Many model="'res.partner'"
-            dataAttributeAction="'filterByAuthorIds'"
+            action="'dynamicSearchInfoByIds'"
+            actionParam="'blogByAuthorIds'"
             domain="[
                 ['blog_post_ids', '!=', false],
                 '|',

@@ -68,7 +68,7 @@ class ProductTemplate(models.Model):
 
     # === FIELDS ===#
 
-    website_description = fields.Html(
+    website_description = fields.Qweb(
         string="Description for the website",
         translate=html_translate,
         sanitize_overridable=True,
@@ -76,7 +76,7 @@ class ProductTemplate(models.Model):
         sanitize_form=False,
         index="trigram",
     )
-    description_ecommerce = fields.Html(
+    description_ecommerce = fields.Qweb(
         string="eCommerce Description",
         translate=html_translate,
         sanitize_overridable=True,

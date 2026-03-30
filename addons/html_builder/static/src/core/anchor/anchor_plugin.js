@@ -37,12 +37,14 @@ export class AnchorPlugin extends Plugin {
         anchor_allowed_selectors: [
             ":not(p).oe_structure > *",
             ":not(p)[data-oe-type=html] > *",
+            ":not(p)[data-oe-type=qweb_content] > *",
             ".row > *",
         ],
         anchor_excluded_selectors: [
             ".modal *",
             ".s_tabs_common .oe_structure *",
             "[data-oe-type=html] .oe_structure *",
+            "[data-oe-type=qweb_content] .oe_structure *",
         ],
     };
 

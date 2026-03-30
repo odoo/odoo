@@ -23,7 +23,7 @@ export class PopupOptionPlugin extends Plugin {
             exclude: "#website_cookies_bar",
             excludeAncestor:
                 ".s_popup, .s_table_of_content, .s_tabs, .s_tabs_images, .position-sticky, .o_mega_menu",
-            dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
+            dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=qweb_content]:not([data-snippet] *)",
         },
         builder_actions: {
             SetBackdropAction,
