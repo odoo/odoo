@@ -7,7 +7,6 @@ import json
 import logging
 import os
 import re
-import threading
 import time
 import typing
 import unicodedata
@@ -45,7 +44,6 @@ from odoo.http.session import (
     get_session_max_inactivity,
     session_store,
 )
-from odoo.modules.registry import Registry
 from odoo.tools.json import json_default
 from odoo.tools.misc import get_lang, submap
 from odoo.tools.translate import code_translations
@@ -111,17 +109,14 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         super().__init__(url_map)
         self.model = model
 
-        IrHttp = Registry(threading.current_thread().dbname)['ir.http']
-        self.slug = IrHttp._slug
-        self.unslug = IrHttp._unslug
-
     def to_python(self, value: str) -> models.BaseModel:
         uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.env.cr, uid, request.env.context)
-        return env[self.model].browse(self.unslug(value)[1])
+        unslug = env['ir.http']._unslug
+        return env[self.model].browse(unslug(value)[1])
 
     def to_url(self, value: models.BaseModel) -> str:
-        return self.slug(value)
+        return value.env['ir.http']._slug(value)
 
 
 class ModelsConverter(werkzeug.routing.BaseConverter):
@@ -451,7 +446,7 @@ class IrHttp(models.AbstractModel):
     @api.ormcache('key', cache='routing')
     def routing_map(self, key=None):
         _logger.info("Generating routing map for key %s", key)
-        registry = Registry(threading.current_thread().dbname)
+        registry = self.env.registry
         installed = registry._init_modules.union(odoo.tools.config['server_wide_modules'])
         mods = sorted(installed)
         # Note : when routing map is generated, we put it on the class `cls`
