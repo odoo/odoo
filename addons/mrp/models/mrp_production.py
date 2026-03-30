@@ -2660,7 +2660,12 @@ class MrpProduction(models.Model):
             production.action_confirm()
 
         self.with_context(skip_activity=True)._action_cancel()
-        self.sudo().production_group_id.unlink()
+        self_sudo = self.sudo()
+        groups = {production.production_group_id for production in self_sudo if production.production_group_id}
+        self_sudo.production_group_id = False
+        for group in groups:
+            if not group.production_ids:
+                group.unlink()
         # set the new deadline of origin moves (stock to pre prod)
         production.move_raw_ids.move_orig_ids.with_context(date_deadline_propagate_ids=set(production.move_raw_ids.ids)).write({'date_deadline': production.date_start})
         for p in self:
