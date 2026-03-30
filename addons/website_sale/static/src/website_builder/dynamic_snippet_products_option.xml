@@ -24,11 +24,11 @@
             t-if="!this.domState.isAlternative and !isSingleMode"
             level="1"
         >
-            <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
-                <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>
-                <BuilderSelectItem dataAttributeActionValue="'current'">Current Category or All</BuilderSelectItem>
+            <BuilderSelect preview="false" id="'product_category_opt'">
+                <BuilderSelectItem classAction="''">All Products</BuilderSelectItem>
+                <BuilderSelectItem action="'dynamicSearchInfo'" actionParam="'productCategoryId'" actionValue="'current'">Current Category or All</BuilderSelectItem>
                 <t t-foreach="this.state.categories" t-as="category" t-key="`${category.id}`">
-                    <BuilderSelectItem dataAttributeActionValue="`${category.id}`" t-out="category.name"/>
+                    <BuilderSelectItem action="'dynamicSearchInfoJson'" actionParam="'productCategoryId'" actionValue="`${category.id}`" t-out="category.name"/>
                 </t>
             </BuilderSelect>
         </BuilderRow>
@@ -41,7 +41,8 @@
 	        <BuilderMany2Many
                 id="'product_ribbon_opt'"
                 model="'product.ribbon'"
-                dataAttributeAction="'productRibbonIds'"
+                action="'dynamicSearchInfoByIds'"
+                actionParam="'productRibbonIds'"
 	        />
 	    </BuilderRow>
         <BuilderRow
@@ -51,7 +52,8 @@
             level="1"
         >
 	        <BuilderMany2Many id="'product_tag_opt'" model="'product.tag'" limit="10"
-	            dataAttributeAction="'productTagIds'"
+                action="'dynamicSearchInfoByIds'"
+                actionParam="'productTagIds'"
 	        />
 	    </BuilderRow>
         <BuilderRow
@@ -61,8 +63,9 @@
             level="1"
         >
             <BuilderTextInput
-                dataAttributeAction="'productNames'"
                 id="'product_names_opt'"
+                action="'dynamicSearchInfo'"
+                actionParam="'productNames'"
                 placeholder.translate="e.g. lamp,bin"
                 title.translate="Comma-separated list of parts of product names, barcodes or internal reference"
             />
@@ -73,8 +76,9 @@
 -->
         <BuilderRow label.translate="Split variants" preview="false" level="1">
             <BuilderCheckbox
-                dataAttributeAction="'splitVariants'"
-                dataAttributeActionValue="'true'"
+                action="'dynamicSearchInfo'"
+                actionParam="'showVariants'"
+                actionValue="true"
             />
         </BuilderRow>
     </BuilderRow>
@@ -90,7 +94,7 @@
             t-if="!isSingleMode"
             level="1"
         >
-            <BuilderSelect action="'gridColumns'" id="'o_wsale_grid_columns'">
+            <BuilderSelect action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'wrapper_data', key: 'grid_columns' }" id="'o_wsale_grid_columns'">
                 <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
                 <BuilderSelectItem actionValue="3">3 Columns</BuilderSelectItem>
                 <BuilderSelectItem actionValue="4">4 Columns</BuilderSelectItem>
@@ -103,7 +107,7 @@
             t-if="!isSingleMode"
             level="1"
         >
-            <BuilderSelect action="'mobileColumns'" id="'o_wsale_mobile_columns'">
+            <BuilderSelect action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'wrapper_data', key: 'mobile_columns' }" id="'o_wsale_mobile_columns'">
                 <BuilderSelectItem actionValue="1">1 Column</BuilderSelectItem>
                 <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
             </BuilderSelect>

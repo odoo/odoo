@@ -1,30 +1,21 @@
 import { isDarkColorPalette } from "@website/components/dialog/dark_palette_utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { DynamicSearchInfoAction } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
 
 export class DynamicSnippetEventsOptionPlugin extends Plugin {
     static id = "dynamicSnippetEventsOption";
-    static dependencies = ["dynamicSnippetCarouselOption", "dynamicSnippetOption"];
-    static shared = ["getModelNameFilter"];
-    modelNameFilter = "event.event";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
-        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_dynamic_snippet_template_updated_handlers: this.onTemplateUpdated.bind(this),
+        builder_actions: { DynamicSearchInfoTagIdsByCategoryAction },
+        model_name_filter_overrides: (snippetEl) => {
+            if (snippetEl.matches(".s_event_upcoming_snippet, .s_events_carousel")) {
+                return "event.event";
+            }
+        },
     };
-    getModelNameFilter() {
-        return this.modelNameFilter;
-    }
-    async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(".s_event_upcoming_snippet, .s_events_carousel")) {
-            const optionKey = snippetEl.matches(".s_events_carousel")
-                ? "dynamicSnippetCarouselOption"
-                : "dynamicSnippetOption";
-            await this.dependencies[optionKey].setOptionsDefaultValues(
-                snippetEl,
-                this.modelNameFilter
-            );
-        }
-    }
+    // TODO: do this on normalize
     // Some single-event templates use `o_cc5` for their content background.
     // The snippet dialog replaces it with `o_cc1` for dark palettes. Since the
     // generic template update still relies on the original `o_cc5` metadata,
@@ -43,6 +34,27 @@ export class DynamicSnippetEventsOptionPlugin extends Plugin {
         } else {
             contentEl.classList.replace("o_cc1", "o_cc5");
         }
+    }
+}
+
+export class DynamicSearchInfoTagIdsByCategoryAction extends DynamicSearchInfoAction {
+    static id = "dynamicSearchInfoTagIdsByCategory";
+    getValue(args) {
+        const searchInfoValue = super.getValue(args);
+        if (searchInfoValue) {
+            const searchInfo = Object.entries(searchInfoValue).flatMap(([category_id, ids]) =>
+                ids.map((id) => ({ id, category_id: [category_id] }))
+            );
+            return JSON.stringify(searchInfo);
+        }
+    }
+    apply(args) {
+        const value = {};
+        for (const { category_id, id } of JSON.parse(args.value)) {
+            value[category_id[0]] ||= [];
+            value[category_id[0]].push(id);
+        }
+        Object.keys(value).length ? super.apply({ ...args, value }) : super.clean(args);
     }
 }
 

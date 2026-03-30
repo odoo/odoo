@@ -6,12 +6,12 @@ import {
 } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    waitForSnippetDialog,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -74,7 +74,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
     await contains(
         ".o-website-builder_sidebar .o_snippets_container .o_snippet[name='Custom'] button"
     ).click();
-    await animationFrame();
+    await waitForSnippetDialog();
 
     // Throw if any render_public_asset RPC happens during rename
     onRpc("ir.ui.view", "render_public_asset", () => {
