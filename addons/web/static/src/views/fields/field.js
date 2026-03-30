@@ -228,15 +228,10 @@ export class Field extends Component {
     static props = ["fieldInfo?", "*"];
     static parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         const name = node.getAttribute("name");
-        let widget = node.getAttribute("widget");
+        const widget = node.getAttribute("widget");
         const fields = models[modelName].fields;
         if (!fields[name]) {
             throw new Error(`"${modelName}"."${name}" field is undefined.`);
-        }
-        const isForceBooleanToggleField =
-            !widget && fields[name].type === "boolean" && viewType === "form" && isSmall();
-        if (isForceBooleanToggleField) {
-            widget = "boolean_toggle";
         }
         const field = getFieldFromRegistry(fields[name].type, widget, viewType, jsClass);
         const fieldInfo = {
@@ -295,10 +290,7 @@ export class Field extends Component {
         if (widget === "handle") {
             fieldInfo.isHandle = true;
         }
-        if (isForceBooleanToggleField && !("autosave" in fieldInfo.options)) {
-            // Disable the default autosave default behavior to keep the same behavior has desktop
-            fieldInfo.options.autosave = false;
-        }
+
         if (X2M_TYPES.includes(fields[name].type)) {
             const views = {};
             let relatedFields = fieldInfo.field.relatedFields;
