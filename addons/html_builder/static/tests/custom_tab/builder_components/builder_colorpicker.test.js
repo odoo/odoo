@@ -388,3 +388,33 @@ test("should open the last used tab", async () => {
     await contains(".we-bg-options-container .o_we_color_preview").click();
     expect(".theme-tab.active").toHaveCount(1);
 });
+
+test("should apply theme and update preview using CSS variables", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue() {
+                return "";
+            }
+            apply({ editingElement, value }) {
+                editingElement.classList.add("o_cc", value);
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderColorPicker action="'customAction'" defaultColor="''"/>`;
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o-overlay-item [data-color='o_cc1']").click();
+    expect(":iframe .test-options-target").toHaveClass("o_cc o_cc1");
+    expect(".we-bg-options-container .o_we_color_preview").toHaveAttribute(
+        "style",
+        "background-color: var(--hb-cp-o-cc1-bg); background-image: var(--hb-cp-o-cc1-bg-gradient);"
+    );
+});
