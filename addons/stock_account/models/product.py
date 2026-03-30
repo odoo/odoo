@@ -418,12 +418,17 @@ class ProductProduct(models.Model):
         if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
+        product_ids_by_manual_value_date = defaultdict(list)
+        if not lot:
+            for manual_value in last_manual_value_by_product.values():
+                product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
+
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
             if lot:
                 quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
             else:
-                quantity = product.with_context(to_date=manual_value.date).qty_available
+                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
