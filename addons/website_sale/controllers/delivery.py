@@ -179,7 +179,11 @@ class Delivery(WebsiteSale):
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
-        order_sudo._recompute_taxes()
+
+        try:
+            order_sudo.with_context(is_express_checkout_flow=True)._recompute_taxes()
+        except UserError:
+            return {"external_tax_error": True}
 
         sorted_delivery_methods = sorted(
             [
