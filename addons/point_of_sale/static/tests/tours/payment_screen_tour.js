@@ -39,11 +39,11 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             PaymentScreen.validateButtonIsHighlighted(false),
             PaymentScreen.clickNumpad("5"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "105"),
-            PaymentScreen.changeIs("52.2"),
+            PaymentScreen.changeIs("-52.2"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickNumpad("+50"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "155"),
-            PaymentScreen.changeIs("102.2"),
+            PaymentScreen.changeIs("-102.2"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickPaymentlineDelButton("Cash", "155.0"),
 
@@ -167,7 +167,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             PaymentScreen.clickNumpad("2"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "2"),
 
-            PaymentScreen.changeIs("1.0"),
+            PaymentScreen.changeIs("-1.0"),
         ].flat(),
 });
 
@@ -181,7 +181,7 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             PaymentScreen.totalIs("1.98"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
-                change: "3.05",
+                change: "-3.05",
             }),
         ].flat(),
 });
