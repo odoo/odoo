@@ -141,7 +141,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 unaffected_earnings_account = self.env['account.account'].search([
                     *self.env['account.account']._check_company_domain(company),
                     ('account_type', '=', 'equity_unaffected'),
-                ], limit=1)
+                ], order='code desc', limit=1)
                 unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
                 if unaffected_earnings_account:
                     # compute the benefit/loss of last year to add in the initial balance of the current year earnings account
@@ -215,7 +215,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     # search an unaffected earnings account
                     unaffected_earnings_account = self.env['account.account'].search([
                         ('account_type', '=', 'equity_unaffected')
-                    ], limit=1)
+                    ], order='code desc', limit=1)
                     if unaffected_earnings_account:
                         unaffected_earnings_results[4] = unaffected_earnings_account.code
                         unaffected_earnings_results[5] = unaffected_earnings_account.name
