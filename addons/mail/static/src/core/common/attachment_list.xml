@@ -57,8 +57,11 @@
                     <!-- display of non image attachments -->
                     <div t-else="" class="o-mail-AttachmentCard d-flex flex-column w-100 h-100">
                         <div class="d-flex justify-content-center align-items-center flex-grow-1 bg-white position-relative rounded-3 rounded-bottom-0" t-on-click="() => this.onClickAttachment(attachment)">
-                            <div t-if="!attachment.has_thumbnail" class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
-                            <img t-else="" t-att-src="attachment.thumbnailUrl" t-att-alt="attachment.name"/>
+                            <t t-if="attachment.has_thumbnail">
+                                <img t-att-src="attachment.thumbnailUrl" t-att-alt="attachment.name" class="object-fit-contain position-absolute top-0 start-0 w-100 h-100"/>
+                                <i t-if="attachment.isVideo" class="fa fa-2x fa-play-circle"/>
+                            </t>
+                            <div t-else="" class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
                         </div>
                          <div class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">
                             <div class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
@@ -66,7 +69,7 @@
                         </div>
                     </div>
                     <!-- hover information (not for mobile view) -->
-                    <div t-if="!this.isMobileOS" class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-2 d-flex flex-column align-items-start o-opacity-hoverable opacity-100-hover opacity-0 rounded-3" t-att-class="{ 'o-image': attachment.isImage }">
+                    <div t-if="!this.isMobileOS" class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-2 d-flex flex-column align-items-start o-opacity-hoverable opacity-100-hover opacity-0 rounded-3" t-att-class="{ 'o-bgTranslucent': attachment.isImage or attachment.isVideo }">
                         <div class="d-flex flex-row align-items-start gap-2">
                             <img t-if="attachment.isImage" src="/mail/static/src/img/image_icon.png" class="mw-100 mh-100 rounded o-mt-0_5" draggable="false"/>
                             <div t-else="" class="o-mail-Attachment-hover-image o_image flex-shrink-0" t-att-data-mimetype="attachment.mimetype"/>
