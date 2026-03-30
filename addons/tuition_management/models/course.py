@@ -1,6 +1,56 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
 
+COUNTRY_CODES = [
+    ('+1', '+1 (USA/Canada)'),
+    ('+44', '+44 (UK)'),
+    ('+91', '+91 (India)'),
+    ('+61', '+61 (Australia)'),
+    ('+86', '+86 (China)'),
+    ('+81', '+81 (Japan)'),
+    ('+33', '+33 (France)'),
+    ('+49', '+49 (Germany)'),
+    ('+39', '+39 (Italy)'),
+    ('+34', '+34 (Spain)'),
+    ('+65', '+65 (Singapore)'),
+    ('+60', '+60 (Malaysia)'),
+    ('+62', '+62 (Indonesia)'),
+    ('+63', '+63 (Philippines)'),
+    ('+66', '+66 (Thailand)'),
+    ('+84', '+84 (Vietnam)'),
+    ('+852', '+852 (Hong Kong)'),
+    ('+886', '+886 (Taiwan)'),
+    ('+64', '+64 (New Zealand)'),
+    ('+27', '+27 (South Africa)'),
+    ('+55', '+55 (Brazil)'),
+    ('+52', '+52 (Mexico)'),
+    ('+54', '+54 (Argentina)'),
+    ('+56', '+56 (Chile)'),
+    ('+57', '+57 (Colombia)'),
+    ('+971', '+971 (UAE)'),
+    ('+966', '+966 (Saudi Arabia)'),
+    ('+972', '+972 (Israel)'),
+    ('+90', '+90 (Turkey)'),
+    ('+47', '+47 (Norway)'),
+    ('+46', '+46 (Sweden)'),
+    ('+45', '+45 (Denmark)'),
+    ('+31', '+31 (Netherlands)'),
+    ('+43', '+43 (Austria)'),
+    ('+41', '+41 (Switzerland)'),
+    ('+32', '+32 (Belgium)'),
+    ('+358', '+358 (Finland)'),
+    ('+48', '+48 (Poland)'),
+    ('+36', '+36 (Hungary)'),
+    ('+420', '+420 (Czech Republic)'),
+    ('+421', '+421 (Slovakia)'),
+    ('+40', '+40 (Romania)'),
+    ('+353', '+353 (Ireland)'),
+    ('+30', '+30 (Greece)'),
+    ('+359', '+359 (Bulgaria)'),
+    ('+385', '+385 (Croatia)'),
+    ('+389', '+389 (Macedonia)'),
+]
+
 
 class TuitionTimeSlot(models.Model):
     _name = 'tuition.time.slot'
@@ -130,13 +180,19 @@ class Enquiry(models.Model):
     first_name = fields.Char(string='First Name', required=True, tracking=True)
     middle_name = fields.Char(string='Middle Name')
     last_name = fields.Char(string='Last Name', required=True, tracking=True)
-    student_name = fields.Char(string='Student Name', tracking=True)
+    
+    # Student Information
+    student_first_name = fields.Char(string='First Name', required=True, tracking=True)
+    student_middle_name = fields.Char(string='Middle Name')
+    student_last_name = fields.Char(string='Last Name', required=True, tracking=True)
+    student_name = fields.Char(string='Student Name', compute='_compute_student_name', store=True)
     
     partner_id = fields.Many2one('res.partner', string='Contact', required=True, ondelete='cascade')
     email = fields.Char()
+    country_code = fields.Selection(COUNTRY_CODES, string='Country Code', default='+1')
     phone = fields.Char()
-    subject_id = fields.Many2one('subject.master', string='Interested Subject')
-    grade_id = fields.Many2one('grade.master', string='Target Grade')
+    subject_id = fields.Many2one('subject.master', string='Interested Subject', required=True)
+    grade_id = fields.Many2one('grade.master', string='Target Grade', required=True)
     enquiry_date = fields.Date(default=fields.Date.context_today, tracking=True)
     status = fields.Selection([
         ('new', 'New'),
@@ -157,6 +213,16 @@ class Enquiry(models.Model):
                 name_parts.append(rec.middle_name)
             name_parts.append(rec.last_name or '')
             rec.name = ' '.join(filter(None, name_parts))
+
+    @api.depends('student_first_name', 'student_middle_name', 'student_last_name')
+    def _compute_student_name(self):
+        """Compute student name from student first_name, middle_name, and last_name"""
+        for rec in self:
+            name_parts = [rec.student_first_name or '']
+            if rec.student_middle_name:
+                name_parts.append(rec.student_middle_name)
+            name_parts.append(rec.student_last_name or '')
+            rec.student_name = ' '.join(filter(None, name_parts))
 
     def action_schedule_demo(self):
         """Schedule a demo session for this enquiry."""
@@ -416,7 +482,7 @@ class ClassSchedule(models.Model):
         
         while current_date <= end_date:
             # Check if current day is in the schedule
-            day_of_week = current_date.weekday()  # 0=Monday, 6=Sunday
+            day_of_week = current_date.weekday() # 0=Monday, 6=Sunday
             
             if day_of_week in days_to_schedule:
                 # Create start and end datetime
@@ -474,7 +540,13 @@ class TutorProfile(models.Model):
     middle_name = fields.Char(string='Middle Name')
     last_name = fields.Char(string='Last Name', required=True)
     email = fields.Char(string='Email')
+    country_code = fields.Selection(COUNTRY_CODES, string='Country Code', default='+1')
     phone = fields.Char(string='Phone')
+    address_line_1 = fields.Char(string='Address Line 1')
+    address_line_2 = fields.Char(string='Address Line 2')
+    address_line_3 = fields.Char(string='Address Line 3')
+    address_line_4 = fields.Char(string='Address Line 4')
+    zip_code = fields.Char(string='Zip Code')
     subjects_ids = fields.Many2many('subject.master', string='Subjects')
     bio = fields.Text(string='Biography')
     experience = fields.Integer(string='Years of Experience')
@@ -535,3 +607,59 @@ class TutorAvailability(models.Model):
         """Helper method to get day name from day number"""
         day_names = dict(self._fields['day_of_week'].selection).get(day_number)
         return day_names if day_names else ''
+
+class StudentProfile(models.Model):
+    _name = 'student.profile'
+    _description = 'Student Profile'
+
+    first_name = fields.Char(string='First Name', required=True)
+    middle_name = fields.Char(string='Middle Name')
+    last_name = fields.Char(string='Last Name', required=True)
+    email = fields.Char(string='Email')
+    country_code = fields.Selection(COUNTRY_CODES, string='Country Code', default='+1')
+    phone = fields.Char(string='Phone')
+    grade_id = fields.Many2one('grade.master', string='Grade')
+    subjects_ids = fields.Many2many('subject.master', string='Subjects')
+    address_line_1 = fields.Char(string='Address Line 1')
+    address_line_2 = fields.Char(string='Address Line 2')
+    address_line_3 = fields.Char(string='Address Line 3')
+    address_line_4 = fields.Char(string='Address Line 4')
+    zip_code = fields.Char(string='Zip Code')
+    parent_id = fields.Many2one('parent.profile', string='Parent')
+    tutor_id = fields.Many2one('tutor.profile', string='Tutor')
+
+    # Add display_name field
+    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
+
+    @api.depends('first_name', 'last_name')
+    def _compute_display_name(self):
+        """Compute display name from first and last name."""
+        for record in self:
+            record.display_name = f"{record.first_name} {record.last_name}".strip()
+
+
+class ParentProfile(models.Model):
+    _name = 'parent.profile'
+    _description = 'Parent Profile'
+
+    first_name = fields.Char(string='First Name', required=True)
+    middle_name = fields.Char(string='Middle Name')
+    last_name = fields.Char(string='Last Name', required=True)
+    email = fields.Char(string='Email')
+    country_code = fields.Selection(COUNTRY_CODES, string='Country Code', default='+1')
+    phone = fields.Char(string='Phone')
+    address_line_1 = fields.Char(string='Address Line 1')
+    address_line_2 = fields.Char(string='Address Line 2')
+    address_line_3 = fields.Char(string='Address Line 3')
+    address_line_4 = fields.Char(string='Address Line 4')
+    zip_code = fields.Char(string='Zip Code')
+    student_ids = fields.One2many('student.profile', 'parent_id', string='Students')
+
+    # Add display_name field
+    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
+
+    @api.depends('first_name', 'last_name')
+    def _compute_display_name(self):
+        """Compute display name from first and last name."""
+        for record in self:
+            record.display_name = f"{record.first_name} {record.last_name}".strip()

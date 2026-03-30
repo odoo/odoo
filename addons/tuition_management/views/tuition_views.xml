@@ -107,8 +107,11 @@
 <field name="middle_name"/>
 <field name="last_name"/>
 <field name="email"/>
+<label for="phone" string="Phone Number"/>
+<div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
 <field name="country_code"/>
-<field name="phone"/>
+<field name="phone" class="o_field_char"/>
+</div>
 </group>
 <group string="Academic Information">
 <field name="grade_id"/>
@@ -135,6 +138,7 @@
 <field name="first_name"/>
 <field name="last_name"/>
 <field name="email"/>
+<field name="country_code"/>
 <field name="phone"/>
 <field name="subjects_ids"/>
 </list>
@@ -152,8 +156,11 @@
 <field name="middle_name"/>
 <field name="last_name"/>
 <field name="email"/>
+<label for="phone" string="Phone Number"/>
+<div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
 <field name="country_code"/>
-<field name="phone"/>
+<field name="phone" class="o_field_char"/>
+</div>
 </group>
 <group string="Professional Information">
 <field name="subjects_ids" widget="many2many_tags"/>
@@ -259,8 +266,11 @@
 <field name="middle_name"/>
 <field name="last_name"/>
 <field name="email"/>
+<label for="phone" string="Phone Number"/>
+<div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
 <field name="country_code"/>
-<field name="phone"/>
+<field name="phone" class="o_field_char"/>
+</div>
 </group>
 <group string="Address">
 <field name="address_line_1" placeholder="Address Line 1"/>
@@ -581,15 +591,22 @@
 <field name="enquiry_name"/>
 <field name="enquiry_date"/>
 </group>
-<group string="Personal Information">
+<group string="Parent Information">
 <field name="first_name"/>
 <field name="middle_name"/>
 <field name="last_name"/>
-<field name="name" readonly="1"/>
-<field name="student_name"/>
 <field name="email"/>
-<field name="phone"/>
 <field name="partner_id"/>
+<label for="phone" string="Phone Number"/>
+<div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
+<field name="country_code"/>
+<field name="phone" class="o_field_char"/>
+</div>
+</group>
+<group string="Student Information">
+<field name="student_first_name"/>
+<field name="student_middle_name"/>
+<field name="student_last_name"/>
 </group>
 <group string="Academic Information">
 <field name="subject_id"/>
