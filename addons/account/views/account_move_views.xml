@@ -681,6 +681,9 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <button name="action_force_register_payment" position="before">
+                    <button name="action_send_and_print" type="object" string="Send" invisible="not context.get('is_self_billing', False)"/>
+                </button>
                 <xpath expr="//field[@name='ref']" position="attributes">
                     <attribute name="optional">show</attribute>
                 </xpath>
