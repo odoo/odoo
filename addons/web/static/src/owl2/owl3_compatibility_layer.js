@@ -172,6 +172,13 @@ owl.useLayoutEffect = function useLayoutEffect(effect, computeDependencies = () 
     let cleanup;
     /** @type {any[]} */
     let dependencies;
+    owl.onWillRender(() => {
+        try {
+            computeDependencies();
+        } catch {
+            // just need to read dependencies to subscribe to signals
+        }
+    });
     owl.onMounted(() => {
         dependencies = computeDependencies();
         cleanup = effect(...dependencies);
