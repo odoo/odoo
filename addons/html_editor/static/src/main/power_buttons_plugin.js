@@ -101,7 +101,7 @@ export class PowerButtonsPlugin extends Plugin {
             };
         };
         const renderButton = ({ description, icon, text, run }) => {
-            const btn = this.document.createElement("button");
+            const btn = this.dependencies.localOverlay.createElement("button");
             let className = "power_button btn px-2 py-1 cursor-pointer";
             if (icon) {
                 const iconLibrary = icon.includes("fa-") ? "fa" : "oi";
@@ -127,7 +127,7 @@ export class PowerButtonsPlugin extends Plugin {
         // Render HTML buttons.
         this.descriptionToElementMap = new Map(powerButtons.map((pb) => [pb, renderButton(pb)]));
 
-        this.powerButtonsContainer = this.document.createElement("div");
+        this.powerButtonsContainer = this.dependencies.localOverlay.createElement("div");
         this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center invisible position-absolute`;
         this.powerButtonsContainer.append(...this.descriptionToElementMap.values());
         this.powerButtonsOverlay.append(this.powerButtonsContainer);

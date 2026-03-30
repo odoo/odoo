@@ -383,7 +383,7 @@ export class ImageSelector extends FileSelector {
     /**
      * Utility method used by the MediaDialog component.
      */
-    static async createElements(selectedMedia, { orm }) {
+    static async createElements(selectedMedia, { orm, document = window.document } = {}) {
         // Create all media-library attachments.
         const toSave = Object.fromEntries(
             selectedMedia

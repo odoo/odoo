@@ -34,7 +34,7 @@ export class SignaturePlugin extends Plugin {
                 displaySignatureRatio: 3,
             },
             uploadSignature: (signature) => {
-                const img = document.createElement("img");
+                const img = this.document.createElement("img");
                 img.classList.add("img", "img-fluid", "o_we_custom_image");
                 img.style = "width: 50%";
                 img.src = signature.signatureImage;

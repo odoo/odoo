@@ -533,7 +533,7 @@ export class TablePlugin extends Plugin {
                 }
             }
             if (colgroup) {
-                const newcol = document.createElement("col");
+                const newcol = this.document.createElement("col");
                 const children = colgroup.children;
                 const currentCol = children[gridCellIndex];
                 newcol.style.width = currentCol.style.width;

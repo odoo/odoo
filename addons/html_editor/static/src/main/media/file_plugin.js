@@ -208,7 +208,7 @@ export class FilePlugin extends Plugin {
             accessToken: true,
         });
         const { name: filename, mimetype, id } = attachment;
-        return renderStaticFileBox(filename, mimetype, url, id);
+        return renderStaticFileBox(filename, mimetype, url, id, this.document);
     }
 
     onClickFileImage(fileImage) {

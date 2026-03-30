@@ -56,7 +56,7 @@ export class IconSelector extends Component {
     /**
      * Utility methods, used by the MediaDialog component.
      */
-    static createElements(selectedMedia) {
+    static createElements(selectedMedia, { document = window.document } = {}) {
         return selectedMedia.map((icon) => {
             const iconEl = document.createElement("span");
             iconEl.classList.add(icon.fontBase, icon.names[0]);

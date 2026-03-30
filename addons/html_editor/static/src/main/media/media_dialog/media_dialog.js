@@ -26,6 +26,7 @@ export const mediaDialogProps = {
     pendingAttachments: t.array().optional([]),
     save: t.function(),
     close: t.function(),
+    document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
 };
 
 export class MediaDialog extends Component {
@@ -219,6 +220,7 @@ export class MediaDialog extends Component {
                 selectedMedia: selectedMedia,
                 extraClassesToAdd: this.extraClassesToAdd(),
                 extraClassesToRemove: this.initialIconClasses,
+                document: this.props.document,
             });
             elements = this.props.multiImages ? elements : elements[0];
             await this.props.save(elements, selectedMedia, this.activeTab(), this.props.media);

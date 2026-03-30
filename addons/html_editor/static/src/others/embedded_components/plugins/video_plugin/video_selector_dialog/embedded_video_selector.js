@@ -6,9 +6,9 @@ export class EmbeddedVideoSelector extends VideoSelector {
     static mediaSpecificClasses = [];
 
     /** @override */
-    static createElements(selectedVideos) {
-        return selectedVideos.map((videoData) =>
-            renderToElement("html_editor.EmbeddedVideoBlueprint", {
+    static createElements(selectedVideos, { document = window.document } = {}) {
+        return selectedVideos.map((videoData) => {
+            const videoElement = renderToElement("html_editor.EmbeddedVideoBlueprint", {
                 embeddedProps: JSON.stringify({
                     baseUrl: videoData.baseUrl || "",
                     videoId: videoData.videoId,
@@ -16,7 +16,8 @@ export class EmbeddedVideoSelector extends VideoSelector {
                     params: videoData.options || {},
                 }),
                 isVertical: videoData.options?.isVertical || false,
-            })
-        );
+            });
+            return document.importNode(videoElement, true);
+        });
     }
 }

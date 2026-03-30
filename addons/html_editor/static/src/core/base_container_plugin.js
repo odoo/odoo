@@ -241,7 +241,7 @@ export class BaseContainerPlugin extends Plugin {
                 div.classList.add(BASE_CONTAINER_CLASS);
                 newBaseContainers.push(div);
                 if (!div.hasChildNodes()) {
-                    const br = document.createElement("br");
+                    const br = this.document.createElement("br");
                     div.appendChild(br);
                 }
             }

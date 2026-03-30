@@ -66,6 +66,8 @@ export class VideoPlugin extends Plugin {
     }
 
     createVideoElement(videoData) {
-        return this.componentForMediaDialog.createElements([videoData])[0];
+        return this.componentForMediaDialog.createElements([videoData], {
+            document: this.document,
+        })[0];
     }
 }

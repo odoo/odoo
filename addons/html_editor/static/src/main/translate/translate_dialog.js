@@ -8,7 +8,7 @@ import { GoogleTranslator, ChatGPTTranslator } from "./translator";
 
 const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur", "yi", "ps", "ku", "sd", "ug", "dv", "ha"]);
 
-const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
+const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer, document) => {
     let lines = content.split("\n");
     if (baseContainer.toUpperCase() === "P") {
         // P has a margin bottom which is used as an interline, no need to
@@ -68,6 +68,7 @@ export class TranslateDialog extends Component {
             languageCode: t.string(),
             languageName: t.string(),
         }),
+        document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
     });
 
     setup() {
@@ -103,7 +104,11 @@ export class TranslateDialog extends Component {
     }
 
     formatContent(content) {
-        const fragment = POSTPROCESS_GENERATED_CONTENT(content, this.props.baseContainer);
+        const fragment = POSTPROCESS_GENERATED_CONTENT(
+            content,
+            this.props.baseContainer,
+            this.props.document
+        );
         let result = "";
         for (const child of fragment.children) {
             this.props.sanitize(child, { IN_PLACE: true });
@@ -171,7 +176,8 @@ export class TranslateDialog extends Component {
             });
             const fragment = POSTPROCESS_GENERATED_CONTENT(
                 translatedText || "",
-                this.props.baseContainer
+                this.props.baseContainer,
+                this.props.document
             );
             this.props.sanitize(fragment, { IN_PLACE: true });
             this.props.insert(fragment);
