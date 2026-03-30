@@ -178,10 +178,10 @@ patch(ExpressCheckout.prototype, {
                     },
                 ));
                 const { delivery_methods, delivery_discount_minor_amount, adjusted_minor_amount } = availableCarriersData;
-                this.paymentContext['minorAmount'] = adjusted_minor_amount;
-                if (delivery_methods.length === 0) {
+                if (availableCarriersData.external_tax_error || delivery_methods.length === 0) {
                     ev.updateWith({status: 'invalid_shipping_address'});
                 } else {
+                    this.paymentContext['minorAmount'] = adjusted_minor_amount;
                     ev.updateWith({
                         status: 'success',
                         shippingOptions: delivery_methods.map(carrier => ({
