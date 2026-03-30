@@ -39,9 +39,9 @@
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                             <AutoresizeInput
                                 className="'o-mail-Discuss-threadDescription flex-shrink-1 text-muted small pt-1'"
-                                enabled="thread.is_editable"
+                                enabled="thread.isActive and thread.is_editable"
                                 onValidate.bind="updateThreadDescription"
-                                placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
+                                placeholder="thread.isActive and thread.is_editable ? autogrowDescriptionPlaceholder : ''"
                                 value="thread.description or ''"
                             />
                         </t>

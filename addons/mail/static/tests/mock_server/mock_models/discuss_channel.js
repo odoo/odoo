@@ -1046,4 +1046,30 @@ export class DiscussChannel extends models.ServerModel {
         });
         MailGuest._set_auth_cookie(guestId);
     }
+
+    _find_channels() {
+        const { domain, ids, limit, order } = getKwArgs(
+            arguments,
+            "ids",
+            "domain",
+            "limit",
+            "order"
+        );
+        let channelDomain = domain || [];
+        if (ids) {
+            channelDomain = [["id", "in", ensureArray(ids)], ...channelDomain];
+        }
+        if (channelDomain.length === 0) {
+            return this.browse();
+        }
+        const resultIds = this.search(
+            channelDomain,
+            makeKwArgs({
+                context: { ...this.env.context, active_test: false },
+                limit,
+                order,
+            })
+        );
+        return this.browse(resultIds);
+    }
 }
