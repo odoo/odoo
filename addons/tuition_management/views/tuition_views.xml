@@ -442,7 +442,7 @@
 <group>
 <field name="name"/>
 <field name="course_id"/>
-<field name="tutor_id"/>
+<field name="tutor_id" string="Tutor (First Name, Last Name)"/>
 <field name="schedule_type"/>
 <field name="schedule_hour" string="Hour (00-23)"/>
 <field name="schedule_minute" string="Minute (00-59)"/>
@@ -563,6 +563,125 @@
 <field name="view_mode">list,form</field>
 </record>
 
+<!-- Enquiry Views -->
+<record id="view_enquiry_form" model="ir.ui.view">
+<field name="name">enquiry.form</field>
+<field name="model">enquiry</field>
+<field name="arch" type="xml">
+<form string="Enquiry">
+<header>
+<button name="action_convert_to_student" type="object" string="Convert to Student" class="btn-secondary"/>
+<button name="action_convert_to_parent" type="object" string="Convert to Parent" class="btn-secondary"/>
+</header>
+<div class="alert alert-info" role="status">
+<field name="status" nolabel="1" widget="statusbar" options="{'clickable': True}"/>
+</div>
+<sheet>
+<group string="Enquiry Information">
+<field name="enquiry_name"/>
+<field name="enquiry_date"/>
+</group>
+<group string="Personal Information">
+<field name="first_name"/>
+<field name="middle_name"/>
+<field name="last_name"/>
+<field name="name" readonly="1"/>
+<field name="student_name"/>
+<field name="email"/>
+<field name="phone"/>
+<field name="partner_id"/>
+</group>
+<group string="Academic Information">
+<field name="subject_id"/>
+<field name="grade_id"/>
+</group>
+<group string="Demo Sessions">
+<field name="demo_session_ids"/>
+</group>
+<group string="Notes">
+<field name="notes" nolabel="1"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<!-- Enquiry List View -->
+<record id="view_enquiry_list" model="ir.ui.view">
+<field name="name">enquiry.list</field>
+<field name="model">enquiry</field>
+<field name="arch" type="xml">
+<list string="Enquiries">
+<field name="enquiry_name"/>
+<field name="first_name"/>
+<field name="last_name"/>
+<field name="email"/>
+<field name="phone"/>
+<field name="subject_id"/>
+<field name="grade_id"/>
+<field name="status"/>
+</list>
+</field>
+</record>
+
+<!-- Demo Session Views -->
+<record id="view_demo_session_list" model="ir.ui.view">
+<field name="name">demo.session.list</field>
+<field name="model">demo.session</field>
+<field name="arch" type="xml">
+<list string="Demo Sessions">
+<field name="enquiry_id"/>
+<field name="subject_id"/>
+<field name="tutor_id"/>
+<field name="scheduled_date"/>
+<field name="completed_date"/>
+<field name="status"/>
+<field name="rating"/>
+</list>
+</field>
+</record>
+
+<record id="view_demo_session_form" model="ir.ui.view">
+<field name="name">demo.session.form</field>
+<field name="model">demo.session</field>
+<field name="arch" type="xml">
+<form string="Demo Session">
+<sheet>
+<group>
+<field name="enquiry_id"/>
+<field name="subject_id"/>
+<field name="tutor_id"/>
+<field name="scheduled_date"/>
+<field name="completed_date"/>
+</group>
+<group>
+<field name="status"/>
+<field name="rating"/>
+</group>
+<group string="Feedback">
+<field name="feedback" nolabel="1"/>
+</group>
+</sheet>
+</form>
+</field>
+</record>
+
+<record id="action_demo_sessions" model="ir.actions.act_window">
+<field name="name">Demo Sessions</field>
+<field name="res_model">demo.session</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Enquiry Action -->
+<record id="action_enquiry" model="ir.actions.act_window">
+<field name="name">Enquiries</field>
+<field name="res_model">enquiry</field>
+<field name="view_mode">list,form</field>
+</record>
+
+<!-- Demo Sessions Menu -->
+<menuitem id="menu_tuition_demo_sessions" name="Demo Sessions" parent="menu_tuition_root" action="action_demo_sessions"/>
+
 <!-- Top Level Admin Menus -->
 <menuitem id="menu_tuition_root" name="Tuition" sequence="50"/>
 <menuitem id="menu_tuition_time_slots" name="Time Slots" parent="menu_tuition_root" action="action_tuition_time_slots"/>
@@ -570,6 +689,7 @@
 <menuitem id="menu_tuition_enrollments" name="Enrollments" parent="menu_tuition_root" action="action_course_enrollments"/>
 <menuitem id="menu_tuition_class_schedules" name="Class Schedules" parent="menu_tuition_root" action="action_class_schedules"/>
 <menuitem id="menu_tuition_attendance" name="Attendance" parent="menu_tuition_root" action="action_attendance_records"/>
+<menuitem id="menu_tuition_enquiries" name="Enquiries" parent="menu_tuition_root" action="action_enquiry"/>
 
 <!-- Settings Menu -->
 <menuitem id="menu_tuition_settings" name="Settings" parent="menu_tuition_root" sequence="100"/>

@@ -120,28 +120,49 @@ class CourseEnrollment(models.Model):
 class Enquiry(models.Model):
     _name = 'enquiry'
     _description = 'Student Enquiry'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(required=True)
+    # Enquiry identification
+    enquiry_name = fields.Char(string='Enquiry Name', required=True, help='e.g., SAT Enquiry for Tom Thomas', tracking=True)
+    
+    # Personal Information
+    name = fields.Char(string='Contact Name', compute='_compute_contact_name', store=True)
+    first_name = fields.Char(string='First Name', required=True, tracking=True)
+    middle_name = fields.Char(string='Middle Name')
+    last_name = fields.Char(string='Last Name', required=True, tracking=True)
+    student_name = fields.Char(string='Student Name', tracking=True)
+    
     partner_id = fields.Many2one('res.partner', string='Contact', required=True, ondelete='cascade')
     email = fields.Char()
     phone = fields.Char()
     subject_id = fields.Many2one('subject.master', string='Interested Subject')
     grade_id = fields.Many2one('grade.master', string='Target Grade')
-    enquiry_date = fields.Date(default=fields.Date.context_today)
+    enquiry_date = fields.Date(default=fields.Date.context_today, tracking=True)
     status = fields.Selection([
         ('new', 'New'),
         ('demo_scheduled', 'Demo Scheduled'),
         ('completed', 'Completed'),
+        ('lost', 'Lost'),
         ('enrolled', 'Enrolled')
     ], default='new', tracking=True)
     notes = fields.Text()
+    demo_session_ids = fields.One2many('demo.session', 'enquiry_id', string='Demo Sessions')
+
+    @api.depends('first_name', 'middle_name', 'last_name')
+    def _compute_contact_name(self):
+        """Compute contact name from first_name, middle_name, and last_name"""
+        for rec in self:
+            name_parts = [rec.first_name or '']
+            if rec.middle_name:
+                name_parts.append(rec.middle_name)
+            name_parts.append(rec.last_name or '')
+            rec.name = ' '.join(filter(None, name_parts))
 
     def action_schedule_demo(self):
         """Schedule a demo session for this enquiry."""
         self.ensure_one()
         demo_vals = {
             'enquiry_id': self.id,
-            'student_name': self.name,
             'subject_id': self.subject_id.id,
             'scheduled_date': fields.Date.context_today(self),
         }
@@ -192,17 +213,55 @@ class Enquiry(models.Model):
         else:
             raise models.UserError('No active course found matching the subject and grade.')
 
+    def action_convert_to_parent(self):
+        """Convert enquiry to parent profile."""
+        self.ensure_one()
+        # Create or get parent profile
+        parent_profile = self.env['parent.profile'].search([('first_name', '=', self.first_name), ('last_name', '=', self.last_name)])
+        if not parent_profile:
+            parent_profile = self.env['parent.profile'].create({
+                'first_name': self.first_name,
+                'middle_name': self.middle_name or '',
+                'last_name': self.last_name,
+                'email': self.email or '',
+                'phone': self.phone or '',
+                'country_code': '+1',
+            })
+        
+        self.status = 'enrolled'
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'parent.profile',
+            'res_id': parent_profile.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_mark_completed(self):
+        """Mark enquiry as completed."""
+        self.ensure_one()
+        self.write({'status': 'completed'})
+
+    def action_mark_lost(self):
+        """Mark enquiry as lost."""
+        self.ensure_one()
+        self.write({'status': 'lost'})
+
+    def action_enroll_student(self):
+        """Mark enquiry as enrolled (alternative to converting to student/parent)."""
+        self.ensure_one()
+        self.write({'status': 'enrolled'})
+
 
 class DemoSession(models.Model):
     _name = 'demo.session'
     _description = 'Demo Session'
 
     enquiry_id = fields.Many2one('enquiry', string='Enquiry', ondelete='cascade')
-    student_name = fields.Char(required=True)
     subject_id = fields.Many2one('subject.master', string='Subject', required=True)
     tutor_id = fields.Many2one('tutor.profile', string='Tutor')
     scheduled_date = fields.Date(required=True)
-    completed_date = fields.Date()
+    completed_date = fields.Date(string='Completed Date')
     status = fields.Selection([
         ('scheduled', 'Scheduled'),
         ('completed', 'Completed'),
@@ -214,10 +273,12 @@ class DemoSession(models.Model):
     def action_mark_completed(self):
         """Mark demo session as completed."""
         self.ensure_one()
-        self.completed_date = fields.Date.context_today(self)
-        self.status = 'completed'
+        self.write({
+            'completed_date': fields.Date.context_today(self),
+            'status': 'completed'
+        })
         if self.enquiry_id:
-            self.enquiry_id.status = 'completed'
+            self.enquiry_id.write({'status': 'completed'})
 
 
 class AttendanceRecord(models.Model):
@@ -367,7 +428,7 @@ class ClassSchedule(models.Model):
                     'start': event_start,
                     'stop': event_end,
                     'location': '',
-                    'description': f"Course: {self.course_id.name}\nTutor: {self.tutor_id.name if self.tutor_id else 'N/A'}",
+                    'description': f"Course: {self.course_id.name}\nTutor: {self.tutor_id.first_name + ' ' + self.tutor_id.last_name if self.tutor_id else 'N/A'}",
                     'user_id': self.tutor_id.partner_id.user_ids[0].id if self.tutor_id and self.tutor_id.partner_id.user_ids else self.env.user.id,
                 })
             
@@ -403,3 +464,74 @@ class ClassSchedule(models.Model):
                 days.append(6)
         
         return days
+
+
+class TutorProfile(models.Model):
+    _name = 'tutor.profile'
+    _description = 'Tutor Profile'
+
+    first_name = fields.Char(string='First Name', required=True)
+    middle_name = fields.Char(string='Middle Name')
+    last_name = fields.Char(string='Last Name', required=True)
+    email = fields.Char(string='Email')
+    phone = fields.Char(string='Phone')
+    subjects_ids = fields.Many2many('subject.master', string='Subjects')
+    bio = fields.Text(string='Biography')
+    experience = fields.Integer(string='Years of Experience')
+    rating = fields.Float(string='Rating', digits=(2, 1), default=5.0)
+    availability_ids = fields.One2many('tutor.availability', 'tutor_id', string='Availability')
+    student_ids = fields.One2many('student.profile', 'tutor_id', string='Students')
+
+    # Add display_name field
+    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
+
+    @api.depends('first_name', 'last_name')
+    def _compute_display_name(self):
+        """Compute display name from first and last name."""
+        for record in self:
+            record.display_name = f"{record.first_name} {record.last_name}".strip()
+
+
+class TutorAvailability(models.Model):
+    _name = 'tutor.availability'
+    _description = 'Tutor Availability'
+
+    tutor_id = fields.Many2one('tutor.profile', string='Tutor', required=True, ondelete='cascade')
+    day_of_week = fields.Selection([
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday')
+    ], string='Day of Week', required=True)
+    start_time = fields.Float(string='Start Time', required=True)
+    end_time = fields.Float(string='End Time', required=True)
+
+    @api.constrains('start_time', 'end_time')
+    def _check_availability_times(self):
+        """Ensure that end_time is after start_time"""
+        for record in self:
+            if record.end_time <= record.start_time:
+                raise models.ValidationError("End time must be after start time.")
+
+    @api.model
+    def create(self, vals):
+        """Override create to set default name"""
+        record = super().create(vals)
+        record.name = f"{record.tutor_id.display_name} - {record.get_day_name(record.day_of_week)}: {record.start_time} - {record.end_time}"
+        return record
+
+    @api.model
+    def write(self, vals):
+        """Override write to update name field"""
+        result = super().write(vals)
+        for record in self:
+            record.name = f"{record.tutor_id.display_name} - {record.get_day_name(record.day_of_week)}: {record.start_time} - {record.end_time}"
+        return result
+
+    def get_day_name(self, day_number):
+        """Helper method to get day name from day number"""
+        day_names = dict(self._fields['day_of_week'].selection).get(day_number)
+        return day_names if day_names else ''
