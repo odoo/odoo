@@ -20,7 +20,7 @@ class ResUsers(models.Model):
     country_id = fields.Many2one(related='partner_id.country_id', inherited=True, readonly=False, user_writeable=True)
     city = fields.Char(related='partner_id.city', inherited=True, readonly=False, user_writeable=True)
     website = fields.Char(related='partner_id.website', inherited=True, readonly=False, user_writeable=True)
-    website_description = fields.Html(related='partner_id.website_description', inherited=True, readonly=False, user_writeable=True)
+    website_description = fields.Qweb(related='partner_id.website_description', inherited=True, readonly=False, user_writeable=True)
     website_published = fields.Boolean(related='partner_id.website_published', inherited=True, readonly=False, user_writeable=True)
 
     @api.model

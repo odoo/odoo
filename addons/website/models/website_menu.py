@@ -40,7 +40,7 @@ class WebsiteMenu(models.Model):
         groups='base.group_user',
         help="User needs to be at least in one of these groups to see the menu")
     is_mega_menu = fields.Boolean(compute='_compute_field_is_mega_menu', inverse='_inverse_field_is_mega_menu')
-    mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
+    mega_menu_content = fields.Qweb(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
 
     @api.depends('mega_menu_content')

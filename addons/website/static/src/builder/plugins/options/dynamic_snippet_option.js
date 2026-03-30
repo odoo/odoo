@@ -6,19 +6,13 @@ import { registry } from "@web/core/registry";
 export class DynamicSnippetOption extends BaseOptionComponent {
     static id = "dynamic_snippet_option";
     static template = "website.DynamicSnippetOption";
-    static dependencies = ["dynamicSnippetOption"];
     props = useProps({
         slots: t.object().optional(),
     });
 
     setup() {
         super.setup();
-        const { getModelNameFilter } = this.dependencies.dynamicSnippetOption;
-        // Specify model name in subclasses to filter the list of available
-        // model record filters. Indicates that some current options are a
-        // default selection.
-        this.modelNameFilter = getModelNameFilter();
-        this.dynamicOptionParams = useDynamicSnippetOption(this.modelNameFilter);
+        this.dynamicOptionParams = useDynamicSnippetOption();
     }
 }
 

@@ -7,7 +7,7 @@
 
 const BREAKPOINT_SIZES = { sm: "575", md: "767", lg: "991", xl: "1199", xxl: "1399" };
 
-let ignoreDOMMutations;
+export let ignoreDOMMutations;
 export function setupIgnoreDOMMutations(fn) {
     ignoreDOMMutations = fn;
 }

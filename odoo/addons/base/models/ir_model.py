@@ -1339,14 +1339,14 @@ class IrModelFields(models.Model):
             'column2': field.column2 if field.type == 'many2many' else None,
             'currency_field': field.currency_field if field.type == 'monetary' else None,
             # html sanitization attributes (useless for other fields)
-            'sanitize': field.sanitize if field.type == 'html' else None,
-            'sanitize_overridable': field.sanitize_overridable if field.type == 'html' else None,
-            'sanitize_tags': field.sanitize_tags if field.type == 'html' else None,
-            'sanitize_attributes': field.sanitize_attributes if field.type == 'html' else None,
-            'sanitize_style': field.sanitize_style if field.type == 'html' else None,
-            'sanitize_form': field.sanitize_form if field.type == 'html' else None,
-            'strip_style': field.strip_style if field.type == 'html' else None,
-            'strip_classes': field.strip_classes if field.type == 'html' else None,
+            'sanitize': field.sanitize if field.type in ['html', 'qweb_content'] else None,
+            'sanitize_overridable': field.sanitize_overridable if field.type in ['html', 'qweb_content'] else None,
+            'sanitize_tags': field.sanitize_tags if field.type in ['html', 'qweb_content'] else None,
+            'sanitize_attributes': field.sanitize_attributes if field.type in ['html', 'qweb_content'] else None,
+            'sanitize_style': field.sanitize_style if field.type in ['html', 'qweb_content'] else None,
+            'sanitize_form': field.sanitize_form if field.type in ['html', 'qweb_content'] else None,
+            'strip_style': field.strip_style if field.type in ['html', 'qweb_content'] else None,
+            'strip_classes': field.strip_classes if field.type in ['html', 'qweb_content'] else None,
         }
 
     def _reflect_fields(self, model_names):
