@@ -25,6 +25,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': '3111',
                 'account_sale_tax_id': '22v',
                 'account_purchase_tax_id': '22am',
+                'deferred_expense_account_id': '1902',
+                'deferred_revenue_account_id': '2702',
                 'expense_account_id': '4101',
                 'income_account_id': '3101',
                 'receivable_account_id': '1501',
