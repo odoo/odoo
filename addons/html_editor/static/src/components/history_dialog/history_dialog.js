@@ -79,7 +79,8 @@ export class HistoryDialog extends Component {
                 revision_id: revisionId,
                 create_date: DateTime.fromFormat(
                     record[0]["create_date"],
-                    "yyyy-MM-dd HH:mm:ss"
+                    "yyyy-MM-dd HH:mm:ss",
+                    { zone: "utc" }
                 ).toISO(),
                 create_uid: record[0]["create_uid"][0],
                 create_user_name: record[0]["create_uid"][1],
