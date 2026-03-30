@@ -11,10 +11,14 @@ if __package__ in {None, ""}:
     from forge_engine.db.models import prepare_registry
     from forge_engine.routers.modules import router as modules_router
     from forge_engine.routers.pipeline import router as pipeline_router
+    from forge_engine.routers.terminal import router as terminal_router
+    from forge_engine.routers.token import router as token_router
 else:
     from .db.models import prepare_registry
     from .routers.modules import router as modules_router
     from .routers.pipeline import router as pipeline_router
+    from .routers.terminal import router as terminal_router
+    from .routers.token import router as token_router
 
 
 @asynccontextmanager
@@ -26,6 +30,8 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="Kodoo Forge Engine", version="19.0.1.0.0", lifespan=lifespan)
 app.include_router(modules_router, prefix="/modules", tags=["modules"])
 app.include_router(pipeline_router, tags=["pipeline"])
+app.include_router(token_router, tags=["terminal"])
+app.include_router(terminal_router, tags=["terminal"])
 
 
 @app.get("/health")

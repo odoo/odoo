@@ -165,6 +165,14 @@ class GovProcessoDoc(models.Model):
         domain=[("output_format", "=", "typst")],
         ondelete="restrict",
     )
+    layout_json = fields.Text(
+        string="Layout Build (JSON)",
+        help="Armazena os blocos ordenados arrastados pelo usuário no Construtor Visual.",
+    )
+    is_visual_builder = fields.Boolean(
+        string="Feito no Construtor Visual",
+        default=False,
+    )
     template_snapshot = fields.Text(
         string="Snapshot do Template",
         readonly=True,
@@ -497,6 +505,19 @@ class GovProcessoDoc(models.Model):
 
     def action_aprovar(self):
         self.write({"state": "aprovado"})
+
+    def action_abrir_construtor_visual(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.client",
+            "tag": "gov_document_builder",
+            "name": "Construtor Visual de Documento",
+            "params": {
+                "doc_id": self.id,
+                "model": "gov.processo.doc",
+            },
+            "target": "fullscreen",
+        }
 
     def action_voltar_rascunho(self):
         for rec in self:

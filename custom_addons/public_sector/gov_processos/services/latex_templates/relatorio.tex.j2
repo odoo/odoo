@@ -1,0 +1,141 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\geometry{top=2.5cm,bottom=3cm,left=3cm,right=2cm}
+\definecolor{govblue}{HTML}{ {{- cor1 -}} }
+\definecolor{govblue2}{HTML}{ {{- cor2 -}} }
+\definecolor{alertred}{HTML}{C0392B}
+\definecolor{alertyellow}{HTML}{F39C12}
+\definecolor{okgreen}{HTML}{27AE60}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\color{govblue}\textbf{ {{- orgao_nome|esc -}} }}
+\rhead{\small Exercicio {{ exercicio }}}
+\cfoot{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\begin{document}
+
+\begin{center}
+  \IfFileExists{logo.png}{\includegraphics[width={{ largura_logo }}mm]{logo.png}}{}
+  {\large\bfseries {{ orgao_nome|esc }}}
+  \par\vspace{0.2cm}
+  {% if secretaria_nome %}{\normalsize {{ secretaria_nome|esc }}}
+  \par\vspace{0.1cm}{% endif %}
+  {% if cnpj %}{\small CNPJ: {{ cnpj|esc }}}
+  \par\vspace{0.1cm}{% endif %}
+  \par\vspace{0.4cm}
+  \textcolor{govblue}{\rule{\textwidth}{ {{- esp1 -}} pt}}
+  \par\vspace{0.3cm}
+  {\LARGE\bfseries\color{govblue} {{ titulo|esc }}}
+  \par\vspace{0.2cm}
+  {\large Exercicio {{ exercicio }} --- Referencia: {{ data_ref }}}
+  \par\vspace{0.2cm}
+  \textcolor{govblue2}{\rule{\textwidth}{ {{- esp2 -}} pt}}
+\end{center}
+\vspace{0.5cm}
+
+{% if incluir_kpis %}
+\section{Processos por Fase}
+\begin{center}
+\begin{tabular}{l r r}
+  \toprule
+  \textbf{Fase} & \textbf{Processos} & \textbf{\%} \\
+  \midrule
+  Demanda & {{ kpis.em_demanda }} & {{ kpis.pct_demanda }}\% \\
+  Instrucao & {{ kpis.em_instrucao }} & {{ kpis.pct_instrucao }}\% \\
+  Planejamento & {{ kpis.em_planejamento }} & {{ kpis.pct_planejamento }}\% \\
+  Licitacao & {{ kpis.em_licitacao }} & {{ kpis.pct_licitacao }}\% \\
+  Contratacao & {{ kpis.em_contratacao }} & {{ kpis.pct_contratacao }}\% \\
+  Execucao & {{ kpis.em_execucao }} & {{ kpis.pct_execucao }}\% \\
+  \midrule
+  \textbf{Total Ativos} & \textbf{ {{ kpis.total_ativos }} } & \textbf{100\%} \\
+  Encerrados no Mes & {{ kpis.encerrados_mes }} & --- \\
+  \bottomrule
+\end{tabular}
+\end{center}
+{% endif %}
+
+{% if incluir_alertas %}
+\section{Alertas e Situacoes Criticas}
+\begin{center}
+\begin{tabular}{l r}
+  \toprule
+  \textbf{Indicador} & \textbf{Qtd.} \\
+  \midrule
+  \textcolor{ {{- alertas.cor_venc -}} }{Prazos Vencidos} & \textcolor{ {{- alertas.cor_venc -}} }{\textbf{ {{- alertas.prazos_vencidos -}} }} \\
+  \textcolor{ {{- alertas.cor_prox -}} }{Vencendo em 7 dias} & \textcolor{ {{- alertas.cor_prox -}} }{\textbf{ {{- alertas.prazos_proximos -}} }} \\
+  \textcolor{ {{- alertas.cor_iner -}} }{Processos Parados (+21d)} & \textcolor{ {{- alertas.cor_iner -}} }{\textbf{ {{- alertas.processos_inertes -}} }} \\
+  \textcolor{ {{- alertas.cor_urg -}} }{Urgentes Ativos} & \textcolor{ {{- alertas.cor_urg -}} }{\textbf{ {{- alertas.urgentes_ativos -}} }} \\
+  Retroativos Ativos & {{ alertas.retroativos_ativos }} \\
+  \bottomrule
+\end{tabular}
+\end{center}
+{% endif %}
+
+{% if incluir_financeiro %}
+\section{Resumo Financeiro e Documental}
+\begin{center}
+\begin{tabular}{l r}
+  \toprule
+  \textbf{Item} & \textbf{Valor / Qtd.} \\
+  \midrule
+  Valor Total Estimado em Andamento & R\$ {{ financeiro.valor_total|format_brl }} \\
+  Documentos em Revisao & {{ financeiro.docs_em_revisao }} \\
+  {% if incluir_docs_ia %}Documentos IA Pendentes de Aprovacao & {{ financeiro.ia_pendentes }} \\{% endif %}
+  \bottomrule
+\end{tabular}
+\end{center}
+{% endif %}
+
+{% if incluir_criticos and criticos %}
+\section{Processos Criticos}
+\begin{center}
+\begin{tabular}{p{2cm} p{4.5cm} p{2cm} p{3cm} p{2cm} p{1.5cm}}
+  \toprule
+  \textbf{Processo} & \textbf{Objeto} & \textbf{Fase} & \textbf{Responsavel} & \textbf{Prazo} & \textbf{Alerta} \\
+  \midrule
+  {% for item in criticos %}
+  {{ item.name|esc }} & {{ item.subject|esc }} & {{ item.state|esc }} & {{ item.responsible|esc }} & {{ item.prazo_resposta|esc }} & {{ item.alerta_latex }} \\
+  {% endfor %}
+  \bottomrule
+\end{tabular}
+\end{center}
+{% endif %}
+
+{% if incluir_inercia and mapa_inercia %}
+\section{Mapa de Inercia por UG (Top 5)}
+\begin{center}
+\begin{tabular}{l r r r}
+  \toprule
+  \textbf{UG} & \textbf{Ativos} & \textbf{Parados} & \textbf{\%} \\
+  \midrule
+  {% for item in mapa_inercia %}
+  {{ item.ug|esc }} & {{ item.total }} & \textcolor{ {{- item.cor -}} }{\textbf{ {{- item.inertes -}} }} & \textcolor{ {{- item.cor -}} }{ {{ item.pct }}\% } \\
+  {% endfor %}
+  \bottomrule
+\end{tabular}
+\end{center}
+{% endif %}
+
+{% if incluir_assinatura %}
+\vspace{2cm}
+\begin{center}
+  \rule{8cm}{0.4pt} \\[0.3cm]
+  \textbf{ {{- assinante_nome|esc -}} } \\
+  {% if assinante_cargo %}{{ assinante_cargo|esc }} \\{% endif %}
+  {{ orgao_nome|esc }} \\[0.3cm]
+  \small Data: \underline{\hspace{4cm}}
+\end{center}
+{% endif %}
+
+\vspace{1cm}
+\begin{center}
+\small\color{gray}
+Relatorio gerado automaticamente pelo Sistema AGI Gov \\
+{{ orgao_nome|esc }} --- Exercicio {{ exercicio }} --- {{ data_ref }}
+\end{center}
+\end{document}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_kodoo_root"
+        name="Kodoo"
+        parent="base.menu_administration"
+        sequence="85"
+        groups="base.group_system"
+    />
+
+    <menuitem
+        id="menu_kodoo_studio"
+        name="Studio"
+        parent="menu_kodoo_root"
+        action="action_kodoo_studio"
+        sequence="10"
+        groups="base.group_system"
+    />
+</odoo>

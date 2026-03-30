@@ -1,0 +1,108 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{colortbl}
+
+\geometry{top=2.5cm,bottom=3cm,left=2cm,right=2cm,headheight=1.5cm}
+\definecolor{govblue}{HTML}{1F4E79}
+\definecolor{govgreen}{HTML}{1E7A1E}
+\definecolor{lightgray}{HTML}{F0F0F0}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\color{govblue}\textbf{ {{- ug_nome|esc -}} }}
+\rhead{\small Exercicio {{ exercicio }}}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+{{ bloco_cabecalho }}
+
+\begin{center}
+  {\Large\bfseries\color{govblue} RELATORIO DE EXECUCAO ORCAMENTARIA} \\[0.2cm]
+  {\normalsize Exercicio {{ exercicio }} - Periodo: {{ data_ini }} a {{ data_fim }}} \\[0.1cm]
+  {\small Agrupado por: {{ agrupamento }}}
+\end{center}
+
+\textcolor{govblue}{\rule{\textwidth}{1.5pt}}
+\vspace{0.4cm}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{govblue!20}
+\textbf{Dotacao} & \textbf{Empenhado} & \textbf{Liquidado} & \textbf{Pago} & \textbf{\% Exec.} \\
+\hline
+R\$ {{ total_dot|format_brl }} & R\$ {{ total_emp|format_brl }} & R\$ {{ total_liq|format_brl }} & R\$ {{ total_pag|format_brl }} & \textbf{ {{- pct_geral -}} \%} \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+{% if top5 %}
+\begin{center}
+\begin{tikzpicture}
+  \tikzstyle{every node}=[font=\small]
+  {% for bar in top5_bars %}
+  \draw[fill=govblue!70] (0,{{ bar.y_low_emp }}) rectangle ({{ bar.w_emp }},{{ bar.y_high_emp }});
+  \draw[fill=govgreen!70] (0,{{ bar.y_low_pag }}) rectangle ({{ bar.w_pag }},{{ bar.y_high_pag }});
+  \node[anchor=east,font=\tiny] at (-0.1,{{ bar.y_mid }}) { {{- bar.label|esc -}} };
+  \node[anchor=west,font=\tiny] at ({{ bar.w_emp }},{{ bar.y_mid }}) {R\$ {{ bar.emp_fmt }}};
+  {% endfor %}
+  \draw[govblue,thick] (0,0) -- (8,0);
+  \node[anchor=north,font=\footnotesize,color=govblue] at (4,-0.3) {Valor Empenhado (Top 5)};
+  \draw[fill=govblue!70] (0,-0.9) rectangle (0.4,-0.6);
+  \node[anchor=west,font=\tiny] at (0.5,-0.75) {Empenhado};
+  \draw[fill=govgreen!70] (2,-0.9) rectangle (2.4,-0.6);
+  \node[anchor=west,font=\tiny] at (2.5,-0.75) {Pago};
+\end{tikzpicture}
+\end{center}
+{% endif %}
+
+\vspace{0.4cm}
+
+\begin{center}
+{\small
+\begin{longtable}{|p{3.5cm}|r|r|r|r|r|r|r|}
+\hline
+\rowcolor{govblue!20}
+\textbf{Grupo} & \textbf{Dotacao} & \textbf{Empenhado} & \textbf{\%E} & \textbf{Liquidado} & \textbf{\%L} & \textbf{Pago} & \textbf{\%P} \\
+\hline
+\endhead
+{% for item in linhas %}
+{{ item.grupo|esc|truncate(40, True, '') }} & R\$ {{ item.dotacao|format_brl }} & R\$ {{ item.empenhado|format_brl }} & {{ item.pct_emp }}\% & R\$ {{ item.liquidado|format_brl }} & {{ item.pct_liq }}\% & R\$ {{ item.pago|format_brl }} & {{ item.pct_pag }}\% \\ \hline
+{% endfor %}
+\hline
+\rowcolor{lightgray}
+\textbf{TOTAL} &
+\textbf{R\$ {{ total_dot|format_brl }}} &
+\textbf{R\$ {{ total_emp|format_brl }}} &
+\textbf{ {{- pct_geral -}} \%} &
+\textbf{R\$ {{ total_liq|format_brl }}} &
+- &
+\textbf{R\$ {{ total_pag|format_brl }}} &
+- \\
+\hline
+\end{longtable}
+}
+\end{center}
+
+\vspace{1cm}
+{{ bloco_rodape }}
+\begin{center}
+  \small\color{gray}
+  Gerado em \today\ pelo Sistema AGI Gov - Dados sujeitos a conferencia.
+\end{center}
+
+\end{document}

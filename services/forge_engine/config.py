@@ -11,6 +11,7 @@ class Settings(BaseModel):
     database_url: str
     addons_path: Path
     output_path: Path
+    terminal_secret: str
     odoo_url: str
     odoo_db: str
     odoo_user: str
@@ -23,6 +24,7 @@ class Settings(BaseModel):
                 "database_url": os.environ["DATABASE_URL"],
                 "addons_path": Path(os.environ["ADDONS_PATH"]),
                 "output_path": Path(os.environ["OUTPUT_PATH"]),
+                "terminal_secret": os.environ["TERMINAL_SECRET"],
                 "odoo_url": os.environ["ODOO_URL"].rstrip("/"),
                 "odoo_db": os.environ["ODOO_DB"],
                 "odoo_user": os.environ["ODOO_USER"],

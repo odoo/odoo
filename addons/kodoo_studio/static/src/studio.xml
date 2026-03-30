@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="KodooStudio">
+        <div class="o_kodoo_studio">
+            <div t-att-class="this.bodyClass()">
+                <aside class="o_kodoo_studio__sidebar">
+                    <AppManager
+                        selectedModuleId="state.selectedModuleId"
+                        reloadStamp="state.reloadStamp"
+                        onSelectModule.bind="onSelectModule"
+                    />
+                </aside>
+                <main class="o_kodoo_studio__main">
+                    <div t-if="state.selectedModuleId" class="o_kodoo_studio__main_stack">
+                        <ModuleForm
+                            moduleId="state.selectedModuleId"
+                            reloadStamp="state.reloadStamp"
+                            onModuleUpdated.bind="onModuleUpdated"
+                        />
+                        <PipelinePanel
+                            moduleId="state.selectedModuleId"
+                            onModuleChanged.bind="onModuleChanged"
+                            onOpenTerminal.bind="openTerminal"
+                        />
+                    </div>
+                    <div t-else="" class="o_kodoo_studio__welcome">
+                        <p class="o_kodoo_studio__eyebrow">Kodoo Forge</p>
+                        <h1 class="o_kodoo_studio__welcome_title">Kodoo Studio</h1>
+                        <p class="o_kodoo_studio__welcome_text">
+                            Selecione um m&#243;dulo na lateral para editar a defini&#231;&#227;o can&#244;nica e executar o pipeline.
+                        </p>
+                    </div>
+                </main>
+            </div>
+
+            <button class="o_kodoo_studio__terminal_toggle" type="button" t-on-click="toggleTerminal">
+                [&gt;_]
+            </button>
+
+            <div t-if="state.terminalOpen" t-att-class="this.drawerClass()">
+                <div class="o_kodoo_studio__drawer_bar">
+                    <span class="o_kodoo_studio__drawer_title">Terminal</span>
+                    <div class="o_kodoo_studio__drawer_actions">
+                        <button class="btn btn-secondary btn-sm" type="button" t-on-click="minimizeTerminal">
+                            <t t-esc="state.terminalMinimized ? 'Expandir' : 'Minimizar'"/>
+                        </button>
+                        <button class="btn btn-secondary btn-sm" type="button" t-on-click="closeTerminal">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+                <div class="o_kodoo_studio__drawer_content">
+                    <StudioTerminal open="this.terminalOpenProp()"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="AppManager">
+        <div class="o_kodoo_studio__panel o_kodoo_studio__panel--sidebar">
+            <div class="o_kodoo_studio__panel_header">
+                <div>
+                    <p class="o_kodoo_studio__eyebrow">Kodoo Forge</p>
+                    <h2>Apps &amp; Modules</h2>
+                </div>
+                <button class="btn btn-primary btn-sm" type="button" t-on-click="openAppDialog">
+                    + App
+                </button>
+            </div>
+
+            <div t-if="state.loading" class="o_kodoo_studio__empty">
+                Carregando apps...
+            </div>
+            <div t-elif="state.error" class="o_kodoo_studio__notice o_kodoo_studio__notice--error">
+                <span t-esc="state.error"/>
+            </div>
+            <div t-elif="!state.apps.length" class="o_kodoo_studio__empty">
+                Nenhum app criado ainda.
+            </div>
+            <div t-else="" class="o_kodoo_studio__app_list">
+                <t t-foreach="state.apps" t-as="app" t-key="app.id">
+                    <section class="o_kodoo_studio__app_card">
+                        <div class="o_kodoo_studio__app_header">
+                            <button class="o_kodoo_studio__app_toggle" type="button" t-on-click="() => this.toggleApp(app.id)">
+                                <span class="o_kodoo_studio__app_toggle_icon" t-esc="state.expanded[app.id] ? '-' : '+'"/>
+                                <span class="o_kodoo_studio__app_title_wrap">
+                                    <span class="o_kodoo_studio__app_title" t-esc="app.name"/>
+                                    <span class="o_kodoo_studio__app_meta" t-esc="app.technical_name"/>
+                                </span>
+                            </button>
+                            <button class="btn btn-secondary btn-sm" type="button" t-on-click="() => this.openModuleDialog(app.id)">
+                                + M&#243;dulo
+                            </button>
+                        </div>
+
+                        <div t-if="state.expanded[app.id]" class="o_kodoo_studio__module_list">
+                            <div t-if="!app.modules.length" class="o_kodoo_studio__empty o_kodoo_studio__empty--compact">
+                                Nenhum m&#243;dulo neste app.
+                            </div>
+                            <t t-foreach="app.modules" t-as="moduleRecord" t-key="moduleRecord.id">
+                                <button
+                                    class="o_kodoo_studio__module_item"
+                                    type="button"
+                                    t-att-class="props.selectedModuleId === moduleRecord.id ? 'is-selected' : ''"
+                                    t-on-click="() => this.onSelectModule(moduleRecord.id, app.id)"
+                                >
+                                    <span class="o_kodoo_studio__module_copy">
+                                        <span class="o_kodoo_studio__module_name" t-esc="moduleRecord.name"/>
+                                        <span class="o_kodoo_studio__module_meta" t-esc="moduleRecord.technical_name"/>
+                                    </span>
+                                    <span t-att-class="this.moduleStateClass(moduleRecord.state)" t-esc="moduleRecord.state || 'draft'"/>
+                                </button>
+                            </t>
+                        </div>
+                    </section>
+                </t>
+            </div>
+
+            <div t-if="state.dialog" class="o_kodoo_studio__inline_dialog_overlay">
+                <div class="o_kodoo_studio__inline_dialog">
+                    <div class="o_kodoo_studio__inline_dialog_header">
+                        <h3 t-esc="state.dialog === 'app' ? 'Novo App' : 'Novo Módulo'"/>
+                        <button class="btn btn-secondary btn-sm" type="button" t-on-click="closeDialog">Cancelar</button>
+                    </div>
+
+                    <div t-if="state.dialog === 'app'" class="o_kodoo_studio__form_stack">
+                        <label class="o_kodoo_studio__field">
+                            <span>Name</span>
+                            <input class="form-control" type="text" t-model="state.appForm.name"/>
+                        </label>
+                        <label class="o_kodoo_studio__field">
+                            <span>Technical Name</span>
+                            <input class="form-control" type="text" t-model="state.appForm.technical_name"/>
+                        </label>
+                        <button class="btn btn-primary" type="button" t-on-click="createApp">
+                            Criar App
+                        </button>
+                    </div>
+
+                    <div t-if="state.dialog === 'module'" class="o_kodoo_studio__form_stack">
+                        <label class="o_kodoo_studio__field">
+                            <span>Name</span>
+                            <input class="form-control" type="text" t-model="state.moduleForm.name"/>
+                        </label>
+                        <label class="o_kodoo_studio__field">
+                            <span>Technical Name</span>
+                            <input class="form-control" type="text" t-model="state.moduleForm.technical_name"/>
+                        </label>
+                        <label class="o_kodoo_studio__field">
+                            <span>Depends</span>
+                            <input class="form-control" type="text" t-model="state.moduleForm.depends"/>
+                        </label>
+                        <button class="btn btn-primary" type="button" t-on-click="createModule">
+                            Criar M&#243;dulo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ModuleForm">
+        <div class="o_kodoo_studio__panel">
+            <div class="o_kodoo_studio__panel_header">
+                <div>
+                    <p class="o_kodoo_studio__eyebrow">Canonical Module</p>
+                    <h2>M&#243;dulo</h2>
+                </div>
+                <span t-if="state.module" t-att-class="this.stateClass()" t-esc="state.module.state || 'draft'"/>
+            </div>
+
+            <div t-if="state.loading" class="o_kodoo_studio__empty">
+                Carregando m&#243;dulo...
+            </div>
+            <div t-elif="state.error" class="o_kodoo_studio__notice o_kodoo_studio__notice--error">
+                <span t-esc="state.error"/>
+            </div>
+            <div t-elif="!state.module" class="o_kodoo_studio__empty">
+                Sem m&#243;dulo selecionado.
+            </div>
+            <div t-else="" class="o_kodoo_studio__form_grid">
+                <label class="o_kodoo_studio__field">
+                    <span>Name</span>
+                    <input class="form-control" type="text" t-model="state.form.name" t-on-input="markDirty"/>
+                </label>
+                <label class="o_kodoo_studio__field">
+                    <span>Technical Name</span>
+                    <input
+                        class="form-control"
+                        type="text"
+                        t-model="state.form.technical_name"
+                        t-on-input="markDirty"
+                        t-att-disabled="state.module.state !== 'draft' ? true : undefined"
+                    />
+                </label>
+                <label class="o_kodoo_studio__field">
+                    <span>Version</span>
+                    <input class="form-control" type="text" t-model="state.form.version" t-on-input="markDirty"/>
+                </label>
+                <label class="o_kodoo_studio__field">
+                    <span>Depends</span>
+                    <input
+                        class="form-control"
+                        type="text"
+                        placeholder="base,mail,..."
+                        t-model="state.form.depends"
+                        t-on-input="markDirty"
+                    />
+                </label>
+
+                <div class="o_kodoo_studio__form_actions">
+                    <button
+                        t-if="state.dirty"
+                        class="btn btn-primary"
+                        type="button"
+                        t-att-disabled="state.saving ? true : undefined"
+                        t-on-click="save"
+                    >
+                        <t t-esc="state.saving ? 'Salvando...' : 'Salvar'"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="PipelinePanel">
+        <div class="o_kodoo_studio__panel">
+            <div class="o_kodoo_studio__panel_header">
+                <div>
+                    <p class="o_kodoo_studio__eyebrow">Forge Engine</p>
+                    <h2>Pipeline</h2>
+                </div>
+                <span t-if="state.module" t-att-class="this.moduleStateClass()" t-esc="state.module.state || 'draft'"/>
+            </div>
+
+            <div t-if="state.error" class="o_kodoo_studio__notice o_kodoo_studio__notice--error">
+                <span t-esc="state.error"/>
+            </div>
+
+            <div t-if="!props.moduleId" class="o_kodoo_studio__empty">
+                Selecione um m&#243;dulo para executar o pipeline.
+            </div>
+
+            <div t-else="" class="o_kodoo_studio__pipeline_grid">
+                <section class="o_kodoo_studio__pipeline_column">
+                    <div class="o_kodoo_studio__action_row">
+                        <button
+                            class="btn btn-primary"
+                            type="button"
+                            t-att-disabled="state.loading.validate ? true : undefined"
+                            t-on-click="runValidate"
+                        >
+                            <t t-esc="state.loading.validate ? 'Validando...' : 'Validar'"/>
+                        </button>
+                        <button
+                            class="btn btn-primary"
+                            type="button"
+                            t-att-disabled="state.loading.build ? true : undefined"
+                            t-on-click="runBuild"
+                        >
+                            <t t-esc="state.loading.build ? 'Buildando...' : 'Build'"/>
+                        </button>
+                        <button
+                            class="btn btn-secondary"
+                            type="button"
+                            t-att-disabled="state.loading.diff ? true : undefined"
+                            t-on-click="runDiff"
+                        >
+                            <t t-esc="state.loading.diff ? 'Comparando...' : 'Diff'"/>
+                        </button>
+                    </div>
+
+                    <div class="o_kodoo_studio__inline_action">
+                        <label class="o_kodoo_studio__field o_kodoo_studio__field--compact">
+                            <span>Publish</span>
+                            <select class="form-select" t-model="state.publishMode">
+                                <option value="export">Export</option>
+                                <option value="runtime">Runtime</option>
+                                <option value="both">Both</option>
+                            </select>
+                        </label>
+                        <button
+                            class="btn btn-secondary"
+                            type="button"
+                            t-att-disabled="state.loading.publish ? true : undefined"
+                            t-on-click="askPublish"
+                        >
+                            <t t-esc="state.loading.publish ? 'Publicando...' : 'Publicar'"/>
+                        </button>
+                    </div>
+
+                    <div t-if="state.publishConfirm" class="o_kodoo_studio__inline_dialog o_kodoo_studio__inline_dialog--embedded">
+                        <p class="o_kodoo_studio__dialog_text">
+                            Publicar este m&#243;dulo com modo <strong t-esc="state.publishMode"/>?
+                        </p>
+                        <p t-if="state.diffResult" class="o_kodoo_studio__dialog_text o_kodoo_studio__terminal_message">
+                            <t t-esc="(state.diffResult.changed || []).length"/> changed,
+                            <t t-esc="(state.diffResult.added || []).length"/> added,
+                            <t t-esc="(state.diffResult.removed || []).length"/> removed
+                        </p>
+                        <div class="o_kodoo_studio__dialog_actions">
+                            <button class="btn btn-primary btn-sm" type="button" t-on-click="confirmPublish">Confirmar</button>
+                            <button class="btn btn-secondary btn-sm" type="button" t-on-click="cancelPublish">Cancelar</button>
+                        </div>
+                    </div>
+
+                    <div class="o_kodoo_studio__inline_action">
+                        <label class="o_kodoo_studio__field o_kodoo_studio__field--grow">
+                            <span>Snapshot</span>
+                            <input class="form-control" type="text" t-model="state.snapshotName"/>
+                        </label>
+                        <button
+                            class="btn btn-secondary"
+                            type="button"
+                            t-att-disabled="state.loading.snapshot ? true : undefined"
+                            t-on-click="runSnapshot"
+                        >
+                            <t t-esc="state.loading.snapshot ? 'Salvando...' : 'Snapshot'"/>
+                        </button>
+                    </div>
+
+                    <div t-if="state.results.validate" class="o_kodoo_studio__section">
+                        <div class="o_kodoo_studio__section_header">
+                            <h3>Valida&#231;&#227;o</h3>
+                            <span t-esc="state.results.validate.valid ? 'Válido' : 'Com erros'"/>
+                        </div>
+                        <div t-if="state.results.validate.valid" class="o_kodoo_studio__notice o_kodoo_studio__notice--success">
+                            Nenhuma inconsist&#234;ncia encontrada.
+                        </div>
+                        <div t-else="" class="o_kodoo_studio__group_list">
+                            <t t-foreach="this.groupedValidationEntries()" t-as="group" t-key="group[0]">
+                                <div class="o_kodoo_studio__group_card">
+                                    <h4 t-esc="group[0]"/>
+                                    <ul class="o_kodoo_studio__issue_list">
+                                        <t t-foreach="group[1]" t-as="issue" t-key="issue.rule + ':' + issue.entity + ':' + issue.message">
+                                            <li>
+                                                <strong t-esc="issue.entity"/>
+                                                <span> - </span>
+                                                <span t-esc="issue.message"/>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div t-if="state.results.build" class="o_kodoo_studio__section">
+                        <div class="o_kodoo_studio__section_header">
+                            <h3>Build</h3>
+                            <span t-esc="state.results.build.build_id || 'n/a'"/>
+                        </div>
+                        <ul t-if="state.results.build.files" class="o_kodoo_studio__artifact_list">
+                            <t t-foreach="state.results.build.files" t-as="artifact" t-key="artifact.path">
+                                <li>
+                                    <strong t-esc="artifact.path"/>
+                                    <span t-if="artifact.size_bytes"> · <t t-esc="artifact.size_bytes"/> bytes</span>
+                                </li>
+                            </t>
+                        </ul>
+                        <ul t-if="state.results.build.conflicts" class="o_kodoo_studio__issue_list">
+                            <t t-foreach="state.results.build.conflicts" t-as="conflict" t-key="conflict.path + ':' + (conflict.blockId || '__file__')">
+                                <li>
+                                    <strong t-esc="conflict.path"/>
+                                    <span> · bloco </span>
+                                    <span t-esc="conflict.blockId || '__file__'"/>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+
+                    <div t-if="state.results.publish" class="o_kodoo_studio__section">
+                        <div class="o_kodoo_studio__section_header">
+                            <h3>Publica&#231;&#227;o</h3>
+                            <span t-esc="state.results.publish.published ? 'Concluída' : 'Falhou'"/>
+                        </div>
+                        <ul t-if="state.results.publish.applied" class="o_kodoo_studio__artifact_list">
+                            <t t-foreach="state.results.publish.applied" t-as="path" t-key="path">
+                                <li t-esc="path"/>
+                            </t>
+                        </ul>
+                        <ul t-if="state.results.publish.errors" class="o_kodoo_studio__issue_list">
+                            <t t-foreach="state.results.publish.errors" t-as="publishError" t-key="publishError">
+                                <li t-esc="publishError"/>
+                            </t>
+                        </ul>
+                    </div>
+
+                    <div t-if="state.results.snapshot" class="o_kodoo_studio__section">
+                        <div class="o_kodoo_studio__section_header">
+                            <h3>Snapshot</h3>
+                        </div>
+                        <div class="o_kodoo_studio__notice o_kodoo_studio__notice--success">
+                            Snapshot <strong t-esc="state.results.snapshot.name"/> criado.
+                        </div>
+                    </div>
+
+                    <div t-if="state.diffResult" class="o_kodoo_studio__section">
+                        <div class="o_kodoo_studio__section_header">
+                            <h3>Diff</h3>
+                            <span t-esc="state.diffResult.clean ? 'Limpo' : 'Alterado'"/>
+                        </div>
+                        <div t-if="state.diffResult.clean" class="o_kodoo_studio__notice o_kodoo_studio__notice--success">
+                            Nada para buildar.
+                        </div>
+                        <ul t-else="" class="o_kodoo_studio__diff_list">
+                            <t t-foreach="this.diffItems()" t-as="item" t-key="item.type + ':' + item.path">
+                                <li t-att-class="'o_kodoo_studio__diff_item o_kodoo_studio__diff_item--' + item.type">
+                                    <span class="o_kodoo_studio__diff_icon" t-esc="item.icon"/>
+                                    <code t-esc="item.path"/>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </section>
+
+                <aside class="o_kodoo_studio__pipeline_column o_kodoo_studio__pipeline_column--aside">
+                    <div class="o_kodoo_studio__fact_list">
+                        <div class="o_kodoo_studio__fact">
+                            <span class="o_kodoo_studio__fact_label">State</span>
+                            <span t-att-class="this.moduleStateClass()" t-esc="state.module ? (state.module.state || 'draft') : 'draft'"/>
+                        </div>
+                        <div class="o_kodoo_studio__fact">
+                            <span class="o_kodoo_studio__fact_label">&#218;ltimo build</span>
+                            <strong t-esc="state.latestBuild ? this.formatDate(state.latestBuild.build_date) : 'Nenhum build'"/>
+                            <small t-if="state.latestBuild" t-esc="state.latestBuild.state || 'pending'"/>
+                        </div>
+                        <div class="o_kodoo_studio__fact">
+                            <span class="o_kodoo_studio__fact_label">&#218;ltimo snapshot</span>
+                            <strong t-esc="this.lastSnapshot() ? this.lastSnapshot().name : 'Nenhum snapshot'"/>
+                            <small t-if="this.lastSnapshot()" t-esc="this.formatDate(this.lastSnapshot().created_at)"/>
+                        </div>
+                        <div class="o_kodoo_studio__fact">
+                            <span class="o_kodoo_studio__fact_label">Conflitos ativos</span>
+                            <button class="btn btn-secondary btn-sm" type="button" t-on-click="toggleConflicts">
+                                <t t-esc="(state.conflicts || []).length"/> conflito(s)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div t-if="state.conflictWarnings.length" class="o_kodoo_studio__section">
+                        <div class="o_kodoo_studio__section_header">
+                            <h3>Warnings</h3>
+                        </div>
+                        <ul class="o_kodoo_studio__issue_list">
+                            <t t-foreach="state.conflictWarnings" t-as="warning" t-key="warning">
+                                <li t-esc="warning"/>
+                            </t>
+                        </ul>
+                    </div>
+
+                    <div t-if="state.showConflicts" class="o_kodoo_studio__section">
+                        <div class="o_kodoo_studio__section_header">
+                            <h3>Conflitos</h3>
+                        </div>
+                        <div t-if="!state.conflicts.length" class="o_kodoo_studio__empty o_kodoo_studio__empty--compact">
+                            Nenhum conflito ativo.
+                        </div>
+                        <div t-else="" class="o_kodoo_studio__conflict_list">
+                            <t t-foreach="state.conflicts" t-as="conflict" t-key="this.conflictKey(conflict)">
+                                <article class="o_kodoo_studio__conflict_card">
+                                    <div class="o_kodoo_studio__conflict_header">
+                                        <div>
+                                            <strong t-esc="conflict.file_path"/>
+                                            <small t-esc="conflict.block_id || '__file__'"/>
+                                        </div>
+                                        <button class="btn btn-secondary btn-sm" type="button" t-on-click="() => this.toggleConflictDiff(conflict)">
+                                            <t t-esc="this.isConflictExpanded(conflict) ? 'Ocultar diff' : 'Ver diff'"/>
+                                        </button>
+                                    </div>
+                                    <pre t-if="this.isConflictExpanded(conflict)" class="o_kodoo_studio__diff_pre" t-esc="this.conflictDiff(conflict)"/>
+                                </article>
+                            </t>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="StudioTerminal">
+        <div class="o_kodoo_studio__terminal_shell">
+            <div class="o_kodoo_studio__terminal_meta">
+                <span t-att-class="'o_kodoo_studio__terminal_status is-' + state.status" t-esc="state.status"/>
+                <span class="o_kodoo_studio__terminal_message" t-esc="state.message"/>
+            </div>
+            <div class="o_kodoo_studio__terminal_canvas" t-ref="terminal"/>
+        </div>
+    </t>
+</templates>
