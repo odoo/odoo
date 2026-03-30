@@ -2,9 +2,8 @@ from odoo import models
 from odoo.tests.common import new_test_user, tagged, TransactionCase, users
 
 
-@tagged('res_partner', 'res_partner_address', 'post_install', '-at_install')
+@tagged('res_partner', 'res_partner_address', 'post_install', 'post_install_l10n', '-at_install')
 class TestResPartner(TransactionCase):
-
 
     @classmethod
     def setUpClass(cls):
@@ -74,7 +73,7 @@ class TestResPartner(TransactionCase):
         test_company, test_contact = (self.test_company_fr + self.test_company_fr_contact).with_env(self.env)
         self.assertTrue(test_company.l10n_fr_is_french)
         self.assertTrue(test_contact.l10n_fr_is_french)
-        test_company.write(({'country_id': self.env.ref('base.be').id}))
+        test_company.write({'country_id': self.env.ref('base.be').id})
         self.assertFalse(test_company.l10n_fr_is_french)
         self.assertFalse(test_contact.l10n_fr_is_french, 'Should be propagated')
 
@@ -110,3 +109,38 @@ class TestResPartner(TransactionCase):
                 self.assertEqual(partner._l10nfr_get_siren(), siren)
                 self.assertEqual(partner._l10nfr_get_institution(), institution)
                 self.assertEqual(partner._l10nfr_siren_to_vat(partner.company_registry), vat)
+
+    @users('employee')
+    def test_contact_sync(self):
+        """ Test l10n_fr specific requirements for sync, notably siret / siren
+        propagation. """
+        test_company, test_contact = (self.test_company_fr + self.test_company_fr_contact).with_env(self.env)
+        brother_contact = self.env['res.partner'].create({
+            'name': 'Brother',
+            'parent_id': test_company.id,
+        })
+        self.assertEqual(brother_contact.company_registry, '73282932000074', 'New siret should be propagated')
+
+        # new siret, new siren -> propagate
+        test_contact.write({
+            'company_registry': '63286832909047',
+        })
+        self.assertEqual(brother_contact.company_registry, '63286832909047', 'New siret should be propagated')
+        self.assertEqual(test_company.company_registry, '63286832909047', 'New siret should be propagated')
+        self.assertEqual(test_contact.company_registry, '63286832909047', 'New siret should be propagated')
+
+        # same siren, just changing institution
+        test_contact.write({
+            'company_registry': '63286832909021',
+        })
+        self.assertEqual(brother_contact.company_registry, '63286832909047', 'Contact changing institution should not change parent siret')
+        self.assertEqual(test_company.company_registry, '63286832909047', 'Contact changing institution should not change parent siret')
+        self.assertEqual(test_contact.company_registry, '63286832909021', 'Contact changing institution should not change parent siret')
+
+        # invalid stuff
+        test_contact.write({
+            'company_registry': 'boudin, pommes, frites',
+        })
+        self.assertEqual(brother_contact.company_registry, '63286832909047', 'Contact changing institution should not change parent siret')
+        self.assertEqual(test_company.company_registry, '63286832909047', 'Contact changing institution should not change parent siret')
+        self.assertEqual(test_contact.company_registry, 'boudin, pommes, frites', 'Contact changing institution should not change parent siret')

@@ -14,7 +14,6 @@ class ResPartner(models.Model):
     is_vat = fields.Boolean(related='l10n_latam_identification_type_id.is_vat')
     vat = fields.Char(string='Identification Number', help="Identification Number for selected type")
 
-    @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_latam_identification_type_id']
 
