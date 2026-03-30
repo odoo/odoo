@@ -225,6 +225,7 @@ class AccountEdiProxyClientUser(models.Model):
                         'res_id': move.id,
                     })
                     self.env['ir.attachment'].create(attachment_vals)
+                    _logger.exception('Error while processing the Peppol document with uuid %s', uuid)
                 if 'is_in_extractable_state' in move._fields:
                     move.is_in_extractable_state = False
 
