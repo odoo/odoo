@@ -234,6 +234,9 @@ class HrExpense(models.Model):
         domain="[('id', 'in', selectable_payment_method_line_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
+    payment_method_code = fields.Char(
+        related='payment_method_line_id.code',
+    )
     account_move_id = fields.Many2one(
         string="Journal Entry",
         comodel_name='account.move',
