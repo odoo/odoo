@@ -1839,7 +1839,10 @@ class MrpProduction(models.Model):
                 for bom, data in order.bom_id.explode(order.bom_id.product_id, order.product_qty)[0]:
                     if bom.type == 'phantom' or bom == order.bom_id:
                         bom_factors[bom.id] = bom_factor * data['qty'] / data['original_qty']
-                        all_lines |= bom.bom_line_ids.filtered(lambda line: line.child_bom_id.type != 'phantom')
+                        all_lines |= bom.bom_line_ids.filtered(lambda line:
+                            line.child_bom_id.type != 'phantom'
+                            and not line._skip_bom_line(order.product_id)
+                        )
                 missing_lines = all_lines - order.move_raw_ids.bom_line_id
             for move in order.move_raw_ids:
                 # If there's no BoM, we simply rely on the quantity specified by the user.
