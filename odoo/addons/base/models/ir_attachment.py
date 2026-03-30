@@ -271,7 +271,7 @@ class IrAttachment(models.Model):
         self.ensure_one()
         if self.type != 'binary':
             return False
-        if self.mimetype != 'application/pdf':
+        if not self.mimetype.startswith('application/pdf'):
             return False
         return self.raw
 
