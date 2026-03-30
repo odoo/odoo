@@ -213,7 +213,7 @@ class AccountEdiCommon(models.AbstractModel):
         if supplier.country_id == customer.country_id:
             if not tax or tax.amount == 0:
                 # in theory, you should indicate the precise law article
-                return create_dict(tax_category_code='E', tax_exemption_reason=_('Articles 226 items 11 to 15 Directive 2006/112/EN'))
+                return create_dict(tax_category_code='E', tax_exemption_reason=_('Exempt from tax'))
             elif self._is_reverse_charge_tax(tax):
                 # Special case: Purchase reverse-charge taxes for self-billed invoices.
                 # From the buyer's perspective, this is a standard tax with a non-zero percentage but
@@ -248,7 +248,7 @@ class AccountEdiCommon(models.AbstractModel):
         if tax.amount != 0:
             return create_dict(tax_category_code='S')
         else:
-            return create_dict(tax_category_code='E', tax_exemption_reason=_('Articles 226 items 11 to 15 Directive 2006/112/EN'))
+            return create_dict(tax_category_code='E', tax_exemption_reason=_('Exempt from tax'))
 
     def _get_tax_category_list(self, invoice, taxes):
         """ Full list: https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5305.htm

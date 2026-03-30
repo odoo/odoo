@@ -298,7 +298,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'tax_scheme_vals': {
                         'id': "VAT",
                     },
-                    'tax_exemption_reason': "Exempt from tax",
+                    'tax_exemption_reason': _("Exempt from tax"),
                 },
             }
             tax_totals_vals['tax_subtotal_vals'].append(subtotal)
@@ -316,7 +316,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'tax_scheme_vals': {
                         'id': "VAT",
                     },
-                    'tax_exemption_reason': "Exempt from tax",
+                    'tax_exemption_reason': _("Exempt from tax"),
                 },
             })
         return [tax_totals_vals]
