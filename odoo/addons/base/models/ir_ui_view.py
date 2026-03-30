@@ -2551,15 +2551,15 @@ actual arch.
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a
-        @data-oe-model or a @t-* *which is not t-field* as t-field does not
-        section out views)
+        @data-oe-model or a @t-* *which is not t-editable-call* as
+        t-editable-call does not section out views)
 
         :param node: an etree-compatible element to test
         :type node: etree._Element
         :rtype: boolean
         """
         return any(
-            (attr in ('data-oe-model', 'groups') or (attr.startswith('t-')))
+            (attr in ('data-oe-model', 'groups') or (attr.startswith('t-') and attr != 't-editable-call'))
             for attr in node.attrib
         ) or (
             node.tag is etree.ProcessingInstruction

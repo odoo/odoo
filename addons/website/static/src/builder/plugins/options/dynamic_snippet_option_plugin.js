@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {object} Template
@@ -463,3 +464,26 @@ export function setDatasetIfUndefined(snippetEl, optionName, value) {
 }
 
 registry.category("website-plugins").add(DynamicSnippetOptionPlugin.id, DynamicSnippetOptionPlugin);
+
+class SharedSnippetPlugin extends Plugin {
+    static id = "sharedSnippet";
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        clean_for_save_processors: (root) => {
+            for (const el of selectElements(root, "[data-oe-editable-call]")) {
+                // This mirrors the handling of `t-editable-call` during qweb
+                // rendering server side. The information stored in the
+                // directive were stored in `data-oe-editable-call` for the
+                // browser side to use. This code re-creates the directive
+                // (and remove the content)
+                el.replaceChildren();
+                const key = el.getAttribute("data-oe-editable-call");
+                el.removeAttribute("data-oe-editable-call");
+                el.setAttribute("t-editable-call", key);
+            }
+            return root;
+        },
+    };
+}
+
+registry.category("website-plugins").add(SharedSnippetPlugin.id, SharedSnippetPlugin);

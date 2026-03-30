@@ -462,7 +462,7 @@ class IrQwebFieldQwebContent(models.AbstractModel):
             node.tail = node.tail and html_escape(node.tail)
 
         # TODO: remove this condition once the evaluation makes it un-needed
-        allowed_directives = []
+        allowed_directives = ["t-editable-call"]
         if any(any((attr == "groups" or attr.startswith("t-")) and not attr in allowed_directives for attr in node.attrib) for node in content.iter()):
             raise SyntaxError("forbidden directive")
 
