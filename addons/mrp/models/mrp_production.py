@@ -2339,6 +2339,7 @@ class MrpProduction(models.Model):
     def pre_button_mark_done(self):
         self._button_mark_done_sanity_checks()
         production_auto_ids = set()
+<<<<<<< 43c03ea81f26ae0a319da1d34dae85a4af4f6bb9
         for production in self:
             if not production.product_uom_id.is_zero(production.qty_producing):
                 production.move_raw_ids.filtered(
@@ -2347,6 +2348,48 @@ class MrpProduction(models.Model):
                 continue
             if production._auto_production_checks():
                 production_auto_ids.add(production.id)
+||||||| b0b8a102153eaa9231321524ec5140cc6d754502
+        production_missing_lot_ids = set()
+        for production in self:
+            if production._auto_production_checks():
+                production_auto_ids.add(production.id)
+            elif not production.lot_producing_ids:
+                production_missing_lot_ids.add(production.id)
+
+        if production_missing_lot_ids:
+            if len(production_missing_lot_ids) > 1:
+                raise UserError(_("You need to generate Lot/Serial Number(s) to mark as done some productions"))
+            return self.env['mrp.production'].browse(production_missing_lot_ids).action_generate_serial()
+
+        productions_auto = self.env['mrp.production'].browse(production_auto_ids)
+        for production in productions_auto:
+            production._set_quantities()
+
+        for production in self:
+            if not production.product_uom_id.is_zero(production.qty_producing):
+                production.move_raw_ids.filtered(
+                    lambda move: move.manual_consumption and not move.picked
+                ).picked = True
+                continue
+=======
+        production_missing_lot_ids = set()
+        for production in self:
+            if production._auto_production_checks():
+                production_auto_ids.add(production.id)
+            elif not production.lot_producing_ids:
+                production_missing_lot_ids.add(production.id)
+
+        if production_missing_lot_ids:
+            if len(production_missing_lot_ids) > 1:
+                raise UserError(_("You need to generate Lot/Serial Number(s) to mark as done some productions"))
+            return self.env['mrp.production'].browse(production_missing_lot_ids).action_generate_serial()
+
+        productions_auto = self.env['mrp.production'].browse(production_auto_ids)
+        for production in productions_auto:
+            production._set_quantities()
+
+        self.move_raw_ids.filtered(lambda m: m.manual_consumption and not m.picked).picked = True
+>>>>>>> 8e949e251f4c6d3d2cc2f6a1ab0445c8fbab1f36
 
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
         for production in productions_auto:
@@ -2921,6 +2964,7 @@ class MrpProduction(models.Model):
         self._set_qty_producing()
         self._mark_byproducts_as_produced()
 
+<<<<<<< 43c03ea81f26ae0a319da1d34dae85a4af4f6bb9
         missing_lot_id_products = ""
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
@@ -2935,6 +2979,22 @@ class MrpProduction(models.Model):
             )
             raise UserError(error_msg)
 
+||||||| b0b8a102153eaa9231321524ec5140cc6d754502
+        for move in self.move_raw_ids:
+            if move.state in ('done', 'cancel') or not move.product_uom_qty:
+                continue
+            if move.manual_consumption:
+                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
+                    missing_lot_id_products += "\n  - %s" % move.product_id.display_name
+        if missing_lot_id_products:
+            error_msg = _(
+                "You need to supply Lot/Serial Number for products and 'consume' them: %(missing_products)s",
+                missing_products=missing_lot_id_products,
+            )
+            raise UserError(error_msg)
+
+=======
+>>>>>>> 8e949e251f4c6d3d2cc2f6a1ab0445c8fbab1f36
     def _get_autoprint_done_report_actions(self):
         """ Reports to auto-print when MO is marked as done
         """
