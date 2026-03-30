@@ -84,7 +84,7 @@
                 <t t-set="last_grade" t-value="partner.grade_id.id"/>
             </t>
             <div class="col-md-4 col-xl-3 col-12 mb-4">
-                <div class="card h-100 text-decoration-none">
+                <div class="o_wpartners_card card h-100 text-decoration-none">
                     <a id="partner_link_card" class="text-decoration-none" aria-label="Go to partner">
                         <div t-field="partner.avatar_1920"
                             class="card-img-top border-bottom"
@@ -227,6 +227,11 @@
 <template id="image_four_five_partner_page" inherit_id="website_partnership.index" name="Partner page">
     <xpath expr="//div[hasclass('card-img-top')]" position="attributes">
         <attribute name="t-options">{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 375px; min-height: 375px; object-fit: cover"}</attribute>
+    </xpath>
+</template>
+<template name="Partner Card Shadow" id="website_partnership.partners_card_shadow" inherit_id="website_partnership.index">
+    <xpath expr="//div[hasclass('o_wpartners_card')]" position="attributes">
+        <attribute name="class" add="shadow-lg" separator=" "/>
     </xpath>
 </template>
 
