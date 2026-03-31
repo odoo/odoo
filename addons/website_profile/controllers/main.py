@@ -126,8 +126,11 @@ class WebsiteProfile(http.Controller):
 
     # Edit Profile
     # ---------------------------------------------------
-    def _profile_edition_preprocess_values(self, user, **kwargs):
-        values = {
+    @http.route('/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
+    def save_edited_profile(self, **kwargs):
+        user_id = int(kwargs.get('user_id', 0))
+        user = request.env['res.users'].browse(user_id or request.env.uid)
+        qcontext = {
             'name': kwargs.get('name'),
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
@@ -137,20 +140,20 @@ class WebsiteProfile(http.Controller):
         }
 
         if 'image_1920' in kwargs:
-            values['image_1920'] = kwargs.get('image_1920')
+            qcontext['image_1920'] = kwargs.get('image_1920')
 
         if request.env.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
-            values['website_published'] = kwargs.get('website_published')
-        return values
+            qcontext['website_published'] = kwargs.get('website_published')
 
-    @http.route('/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
-    def save_edited_profile(self, **kwargs):
-        user_id = int(kwargs.get('user_id', 0))
-        user = request.env['res.users'].browse(user_id or request.env.uid)
-        values = self._profile_edition_preprocess_values(user, **kwargs)
-        if not user.partner_id._can_edit_country() and values.get('country_id') != user.partner_id.country_id.id:
+        if not user.partner_id._can_edit_country() and qcontext.get('country_id') != user.partner_id.country_id.id:
             raise UserError(_("Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."))
-        user.write(values)
+        if not user.has_access('write'):
+            # no write access, grant it if we can edit the partner
+            if user.partner_id._can_be_edited_by_current_customer(**kwargs):
+                user = user.sudo()
+            else:
+                raise UserError(_("You are not allowed to edit this user"))
+        user.write(qcontext)
 
     # Ranks and Badges
     # ---------------------------------------------------
