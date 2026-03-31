@@ -539,7 +539,7 @@ actual arch.
             if (view.group_ids and
                 view.inherit_id and
                 view.mode != 'primary'):
-                raise ValidationError(_("Inherited view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
+                raise ValidationError(_("Inherited view cannot have ")+ "'Groups'"+_(" define on the record. Use ")+"'groups'"+_(" attributes inside the view definition"))
 
     @api.constrains('inherit_id')
     def _check_000_inheritance(self):
