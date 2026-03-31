@@ -63,7 +63,9 @@ import { Test } from "./test";
  *
  * @typedef {import("../hoot_utils").ArgumentType} ArgumentType
  *
- * @typedef {string | string[] | ((pass: boolean, raw: typeof String["raw"]) => string | string[])} AssertionReportMessage
+ * @typedef {string | ((pass: boolean) => string)} AssertionMessage
+ *
+ * @typedef {string | string[] | ((pass: boolean) => string | string[])} AssertionReportMessage
  *
  * @typedef {InteractionType | "assertion" | "error" | "step"} CaseEventType
  *
@@ -2528,14 +2530,14 @@ export class Assertion extends CaseEvent {
 
         // Message
         if (typeof message === "function") {
-            this.additionalMessage = message();
+            this.additionalMessage = message(this.pass);
         } else {
             this.additionalMessage = message;
         }
 
         // Reporting message
         if (typeof reportMessage === "function") {
-            reportMessage = reportMessage(this.pass, r);
+            reportMessage = reportMessage(this.pass);
         }
         const parts =
             $isArray(reportMessage) && !isLabel(reportMessage)
