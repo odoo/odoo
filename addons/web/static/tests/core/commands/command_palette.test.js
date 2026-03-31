@@ -187,6 +187,8 @@ test("concurrency with custom debounce delay", async () => {
     expect(".o_command").toHaveCount(0);
     expect(".o_command_palette .o_namespace").toHaveCount(0);
 
+    // On mobile we need to focus the input
+    await click(".o_command_palette_search input");
     await fill("@");
     await animationFrame();
     expect(".o_command_palette .o_namespace").toHaveText("@");
@@ -530,6 +532,7 @@ test("open the command palette with a searchValue already in the searchbar", asy
     expect(queryAllTexts(".o_command")).toEqual(["Command1"]);
 });
 
+test.tags("desktop");
 test("command palette keeps the same top position when its content changes", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const action = () => {};
