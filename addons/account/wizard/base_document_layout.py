@@ -1,4 +1,5 @@
 from odoo import api, Command, fields, models
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 
 
 class BaseDocumentLayout(models.TransientModel):
@@ -67,7 +68,8 @@ class BaseDocumentLayout(models.TransientModel):
         for record in self:
             if record.partner_id.bank_ids and record.account_number:
                 bank = record.partner_id.bank_ids[0]
-                if bank.account_number != record.account_number:
+                cleaned_account_number = sanitize_account_number(record.account_number)
+                if bank.account_number != cleaned_account_number:
                     bank.allow_out_payment = False
                     bank.account_number = record.account_number
                     bank.allow_out_payment = True

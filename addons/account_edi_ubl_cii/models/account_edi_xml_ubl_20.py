@@ -698,7 +698,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 }
             }
         return {
-            'cbc:ID': {'_text': partner_bank.account_number.replace(' ', '')},
+            'cbc:ID': {'_text': partner_bank.account_number},
             'cac:FinancialInstitutionBranch': financial_institution_branch
         }
 

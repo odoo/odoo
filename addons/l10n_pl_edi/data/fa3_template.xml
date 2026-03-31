@@ -324,7 +324,7 @@
             </t>
             <t t-if="invoice.partner_bank_id">
                 <RachunekBankowy>
-                    <NrRB t-out="invoice.partner_bank_id.account_number.replace(' ', '')"/>
+                    <NrRB t-out="invoice.partner_bank_id.account_number"/>
                     <NazwaBanku t-out="invoice.partner_bank_id.bank_name"/>
                     <OpisRachunku t-out="invoice.currency_id.name"/>
                 </RachunekBankowy>

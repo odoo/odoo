@@ -70,13 +70,15 @@ class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
         with self.mock_mail_gateway(), self.mock_mail_app():
             bank_a.write({
                 'active': False,
-                'allow_out_payment': True,
                 'formatted_account_number': '99999',
                 'clearing_number': '123456789',
                 'bank_bic': '9999',
                 'holder_name': 'Marcel Offane',
                 'partner_id': self.partner_b.id,
             })
+            # Writing to `formatted_account_number` triggers a write on `account_number` (after the initial write finishes) so cannot trust the
+            # bank account (`allow_out_payment` = True) in the same write operation as `formatted_account_number`.
+            bank_a.allow_out_payment = True
             self.flush_tracking()
         self.assertEqual(len(self._new_msgs), 3, 'Should post on old- and new- partners + tracking on bank itself')
         partner_msgs = self._new_msgs.filtered(lambda m: m.model == 'res.partner')

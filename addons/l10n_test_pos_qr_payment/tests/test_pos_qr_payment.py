@@ -39,10 +39,10 @@ class TestUiSEPA(TestPosQrCommon):
 
         # Set non sepa bank account to make the test failed
         self.bank_account.allow_out_payment = False
-        self.bank_account.write({
-            'formatted_account_number': 'SA4420000001234567891234',
-            'allow_out_payment': True,
-        })
+        self.bank_account.formatted_account_number = 'SA4420000001234567891234'
+        # Writing to `formatted_account_number` triggers a write on `account_number` (after the initial write finishes) so cannot trust the
+        # bank account (`allow_out_payment` = True) in the same write operation as `formatted_account_number`.
+        self.bank_account.allow_out_payment = True
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPaymentFailure', login="pos_user")

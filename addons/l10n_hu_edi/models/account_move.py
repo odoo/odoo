@@ -10,7 +10,6 @@ from odoo.http import request
 from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.tools import BinaryBytes, formatLang, float_round, float_repr, cleanup_xml_node, groupby
 from odoo.tools.misc import split_every
-from odoo.addons.account.tools import normalize_account_number
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import format_bool, L10nHuEdiConnection, L10nHuEdiConnectionError
 
 _logger = logging.getLogger(__name__)
@@ -825,13 +824,6 @@ class AccountMove(models.Model):
             else:
                 return {'third_state_tax_id': partner.vat}
 
-        def format_bank_account_number(bank_account):
-            # Normalize IBANs (no spaces!)
-            if bank_account.account_type == 'iban':
-                return normalize_account_number(bank_account.account_number)
-            else:
-                return bank_account.account_number
-
         supplier = self.company_id.partner_id
         customer = self.partner_id.commercial_partner_id
 
@@ -851,12 +843,12 @@ class AccountMove(models.Model):
             'base_invoice': base_invoice if base_invoice != self else None,
             'supplier': supplier,
             'supplier_vat_data': get_vat_data(supplier, self.fiscal_position_id.foreign_vat),
-            'supplierBankAccountNumber': format_bank_account_number(supplier_bank),
+            'supplierBankAccountNumber': supplier_bank.account_number,
             'individualExemption': self.company_id.l10n_hu_tax_regime == 'ie',
             'customer': customer,
             'customerVatStatus': (not customer.is_company and 'PRIVATE_PERSON') or (customer.country_code == 'HU' and 'DOMESTIC') or 'OTHER',
             'customer_vat_data': get_vat_data(customer) if customer.is_company else None,
-            'customerBankAccountNumber': format_bank_account_number(customer_bank),
+            'customerBankAccountNumber': customer_bank.account_number,
             'smallBusinessIndicator': self.company_id.l10n_hu_tax_regime == 'sb',
             'exchangeRate': currency_rate,
             'cashAccountingIndicator': self.company_id.l10n_hu_tax_regime == 'ca',
