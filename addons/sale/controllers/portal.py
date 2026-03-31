@@ -14,6 +14,9 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 class CustomerPortal(payment_portal.PaymentPortal):
 
+    def _get_message_author(self, order):
+        return order.partner_id if request.env.user._is_public() else request.env.user.partner_id
+
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         partner = request.env.user.partner_id
@@ -154,7 +157,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 msg = _('Quotation viewed by customer %s', author.name)
                 del context
                 order_sudo.message_post(
-                    author_id=author.id,
+                    author_id=self._get_message_author(order_sudo).id,
                     body=msg,
                     message_type="notification",
                     subtype_xmlid="sale.mt_order_viewed",
@@ -296,11 +299,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         order_sudo.message_post(
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
-            author_id=(
-                order_sudo.partner_id.id
-                if request.env.user._is_public()
-                else request.env.user.partner_id.id
-            ),
+            author_id=self._get_message_author(order_sudo).id,
             body=_('Order signed by %s', name),
             message_type='comment',
             subtype_xmlid='mail.mt_comment',
@@ -331,11 +330,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             order_sudo.order_line.currency_id
 
             order_sudo.message_post(
-                author_id=(
-                    order_sudo.partner_id.id
-                    if request.env.user._is_public()
-                    else request.env.user.partner_id.id
-                ),
+                author_id=self._get_message_author(order_sudo).id,
                 body=decline_message,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment',
