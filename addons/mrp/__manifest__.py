@@ -51,7 +51,6 @@
         'data/mrp_demo.xml',
     ],
     'application': True,
-    'pre_init_hook': '_pre_init_mrp',
     'post_init_hook': '_create_warehouse_data',
     'uninstall_hook': 'uninstall_hook',
     'assets': {

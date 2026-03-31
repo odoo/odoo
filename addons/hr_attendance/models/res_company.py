@@ -11,9 +11,6 @@ from odoo.tools.urls import urljoin as url_join
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    def _default_company_token(self):
-        return str(uuid.uuid4())
-
     # TODO: Remove in master
     overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
     # TODO: Remove in master

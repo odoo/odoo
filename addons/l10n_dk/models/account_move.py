@@ -17,6 +17,7 @@ class AccountMove(models.Model):
             ('error', 'Error'),
         ],
         compute='_compute_nemhandel_move_state',
+        init_column=lambda model: None,
         store=True,
         string='Nemhandel status',
         copy=False,

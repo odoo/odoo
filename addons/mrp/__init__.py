@@ -1,17 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
 from . import wizard
 from . import report
 
-
-def _pre_init_mrp(env):
-    """ Allow installing MRP in databases with large stock.move table (>1M records)
-        - Creating the computed stored fields `stock_move` and `unit_factor`
-        is terribly slow with the ORM and leads to "Out of Memory" crashes.
-    """
-    env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision NOT NULL DEFAULT 1;""")
 
 def _create_warehouse_data(env):
     """ This hook is used to add a default manufacture_pull_id, manufacture

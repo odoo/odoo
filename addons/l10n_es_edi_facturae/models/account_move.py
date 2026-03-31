@@ -10,7 +10,6 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_round, float_repr, float_compare, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
-from odoo.tools.sql import column_exists, create_column
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
     NS_MAP,
     _canonicalize_node,
@@ -120,6 +119,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_es_edi_facturae_reason_code',
         store=True,
         readonly=False,
+        init_column=lambda model: None,
     )
     l10n_es_invoicing_period_start_date = fields.Date(string="Invoice Period Start Date")
     l10n_es_invoicing_period_end_date = fields.Date(string="Invoice Period End Date")
@@ -149,18 +149,10 @@ class AccountMove(models.Model):
         compute='_compute_l10n_es_payment_means',
         store=True,
         readonly=False,
+        init_column=lambda model: None,
     )
 
     l10n_es_original_invoice_credited = fields.Char(string='Original Invoice Credited', store=True)
-
-    def _auto_init(self):
-        # Create compute stored field l10n_es_edi_facturae_reason_code and
-        # l10n_es_payment_means here to avoid timeout error on large databases.
-        if not column_exists(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code'):
-            create_column(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code', 'varchar')
-        if not column_exists(self.env.cr, 'account_move', 'l10n_es_payment_means'):
-            create_column(self.env.cr, 'account_move', 'l10n_es_payment_means', 'varchar')
-        return super()._auto_init()
 
     @api.depends('country_code')
     def _compute_l10n_es_edi_facturae_reason_code(self):

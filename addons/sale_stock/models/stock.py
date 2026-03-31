@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
 
 from odoo import api, fields, models, Command
-from odoo.tools.sql import column_exists, create_column
 
 
 class StockRoute(models.Model):
@@ -199,7 +197,8 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     allow_spontaneous_returns = fields.Boolean(related="company_id.allow_spontaneous_returns")
-    sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
+    sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null', init_column=lambda model: None)
+    # init_column: Since group_id.sale_id is created in this module, no need for an UPDATE statement.
     return_reason_id = fields.Many2one("return.reason")
 
     @api.depends('reference_ids.sale_ids', 'move_ids.sale_line_id.order_id')
@@ -237,18 +236,6 @@ class StockPicking(models.Model):
                 })
                 self._add_reference(reference)
         self.move_ids._reassign_sale_lines(self.sale_id)
-
-    def _auto_init(self):
-        """
-        Create related field here, too slow
-        when computing it afterwards through _compute_related.
-
-        Since group_id.sale_id is created in this module,
-        no need for an UPDATE statement.
-        """
-        if not column_exists(self.env.cr, 'stock_picking', 'sale_id'):
-            create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
-        return super()._auto_init()
 
     def _action_done(self):
         res = super()._action_done()

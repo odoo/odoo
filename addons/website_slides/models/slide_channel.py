@@ -12,7 +12,7 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import is_html_empty
+from odoo.tools import SQL, is_html_empty
 from odoo.tools.misc import format_duration
 
 _logger = logging.getLogger(__name__)
@@ -475,12 +475,11 @@ class SlideChannel(models.Model):
 
     def _init_access_token(self):
         """ Generate different access tokens for all records. """
-        query = """
+        self.env.execute_query(SQL("""
             UPDATE %(table_name)s
             SET access_token = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
             WHERE access_token IS NULL
-        """ % {'table_name': self._table}
-        self.env.cr.execute(query)
+        """, table_name=SQL.identifier(self._table)))
 
     def _populate_description_short(self, vals):
         """ Populate the empty ``vals['description_short']`` with the non-empty ``vals['description']`` for the ``self``

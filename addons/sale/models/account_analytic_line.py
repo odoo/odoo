@@ -22,6 +22,7 @@ class AccountAnalyticLine(models.Model):
         compute="_compute_so_line",
         store=True,
         readonly=False,
+        init_column=lambda model: None,
         index="btree_not_null",
         domain=lambda self: str(self._domain_so_line()),
     )
@@ -31,6 +32,7 @@ class AccountAnalyticLine(models.Model):
         compute="_compute_order_id",
         store=True,
         readonly=False,
+        init_column=lambda model: None,
         index=True,
     )
 

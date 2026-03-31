@@ -1,5 +1,4 @@
 from odoo import api, models, fields
-from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMoveLine(models.Model):
@@ -11,6 +10,7 @@ class AccountMoveLine(models.Model):
         compute='_compute_l10n_hr_product_id_kpd',
         store=True,
         readonly=False,
+        init_column=lambda model: None,
     )
 
     @api.depends('product_id')
@@ -19,8 +19,3 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.product_id:
                 line.l10n_hr_kpd_category_id = line.product_id.l10n_hr_kpd_category_id
-
-    def _auto_init(self):
-        if not column_exists(self.env.cr, 'account_move_line', 'l10n_hr_kpd_category_id'):
-            create_column(self.env.cr, 'account_move_line', 'l10n_hr_kpd_category_id', 'integer')
-        return super()._auto_init()

@@ -6,6 +6,7 @@ from urllib import parse
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.business_data import split_vat
+from odoo.tools.sql import SQL, table_columns
 
 from odoo.addons.l10n_dk.tools.demo_utils import handle_demo
 
@@ -35,6 +36,7 @@ class ResPartner(models.Model):
         string='Nemhandel Endpoint Type',
         help='Unique identifier used by OIOUBL and Nemhandel',
         compute="_compute_nemhandel_identifier_type", store=True, readonly=False,
+        init_column='_auto_init_nemhandel_identifier',
         tracking=True,
         selection=[
             ('0088', "EAN/GLN"),
@@ -47,12 +49,26 @@ class ResPartner(models.Model):
         string='Nemhandel Endpoint',
         help='Code used to identify the Endpoint on Nemhandel',
         compute="_compute_nemhandel_identifier_value", store=True, readonly=False,
+        init_column='_auto_init_nemhandel_identifier',
         tracking=True,
     )
     nemhandel_supported_documents = fields.Json('Supported Nemhandel Documents')
     nemhandel_response_support = fields.Boolean('Nemhandel Response Service', compute='_compute_nemhandel_response_support')
 
     is_using_nemhandel = fields.Boolean(compute='_compute_is_using_nemhandel')
+
+    def _auto_init_nemhandel_identifier(self):
+        columns = table_columns(self.env.cr, 'res_partner')
+        if 'nemhandel_identifier_type' not in columns or 'nemhandel_identifier_value' not in columns:
+            return
+        country_dk = self.env.ref('base.dk').id
+        self.env.execute_query(SQL("""
+            UPDATE res_partner p
+            SET nemhandel_identifier_type = '0184',
+                nemhandel_identifier_value = (p.additional_identifiers->>'DK_CVR')::text
+            WHERE (p.vat ILIKE 'DK%%' OR p.country_id = %s)
+                AND p.nemhandel_identifier_value IS NULL
+        """, country_dk))
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
