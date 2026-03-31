@@ -185,7 +185,7 @@ class AccountEdiProxyClientUser(models.Model):
                         # 389/527: Self-billing invoice; 261: Self-billing credit note
                         journal = self.env['account.journal'].search(
                             [
-                                *self.env['account.journal']._check_company_domain(self.company_id),
+                                *self.env['account.journal']._check_company_domain(company),
                                 ('type', '=', 'sale'),
                             ],
                             limit=1,
