@@ -432,7 +432,7 @@ class AccountMove(models.Model):
 
         attachment_vals = {
             'name': 'attachment.xml',
-            'raw': response,
+            'raw': response.encode('utf-8'),
             'type': 'binary',
             'mimetype': 'application/xml',
         }

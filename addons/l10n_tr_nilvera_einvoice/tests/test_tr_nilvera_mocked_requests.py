@@ -98,7 +98,7 @@ def mock_requests_request(method, url, *args, **kwargs):
     elif method == 'GET' and '/einvoice/Purchase' in url:
         if '/xml' in url:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.xml', 'rb') as xml:
-                response = xml.read()
+                response = xml.read().decode()
         elif '/pdf' in url:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.pdf', 'rb') as pdf:
                 response = pdf.read()
