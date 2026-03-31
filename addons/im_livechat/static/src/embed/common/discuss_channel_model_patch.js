@@ -96,7 +96,7 @@ const discussChannelPatch = {
         return (
             super.composerHidden ||
             this.livechat_end_dt ||
-            (this.channel?.chatbot?.completed && !this.channel.chatbot.forwarded)
+            (this.channel?.chatbot?.completed && !this.channel.livechat_agent_history_ids.length)
         );
     },
 };

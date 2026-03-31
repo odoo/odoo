@@ -525,6 +525,10 @@ export class Thread extends Component {
         this.props.thread.fetchMoreMessages({ routeParams: this.messageFetchRouteParams });
     }
 
+    onClickRetry() {
+        this.onClickLoadOlder();
+    }
+
     async onClickPreferences() {
         const actionDescription = await this.orm.call("res.users", "action_get");
         actionDescription.res_id = this.store.self_user?.id;
@@ -691,6 +695,13 @@ export class Thread extends Component {
         );
     }
 
+    get isInErrorState() {
+        return this.props.thread.hasLoadingFailed;
+    }
+
+    get errorStateText() {
+        return _t("An error occurred while loading messages.");
+    }
     setScroll(value, { smooth = false } = {}) {
         if (smooth) {
             clearTimeout(this.smoothScrollingTimeout);

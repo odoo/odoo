@@ -1,12 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from functools import wraps
 from markupsafe import Markup
+from unittest.mock import patch
 
 from odoo import Command, tests
+from odoo.addons.im_livechat.controllers.chatbot import (
+    LivechatChatbotScriptController as LivechatChatbotController,
+)
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon as TestWebsiteLivechatCommon
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 from odoo.tools import html2plaintext
+from odoo.tools.misc import mute_logger
 
 
 @tests.tagged("is_tour")
@@ -392,9 +398,68 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
             "script_step_id": restart_step.id,
         })
         self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
-            {"chatbot_script_id": chatbot_script.id}
+            {"chatbot_script_id": chatbot_script.id},
         )
         self.start_tour("/", "website_livechat.chatbot_restart_on_feedback_tour")
+
+    @mute_logger("odoo.http")
+    def test_chatbot_stop_when_agent_joins(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Test User Input Bot"})
+        _, email_step, _ = self.env["chatbot.script.step"].create([
+            {
+                "step_type": "question_phone",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Enter your phone number",
+            },
+            {
+                "step_type": "question_email",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Enter your email address",
+            },
+            {
+                "step_type": "text",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "This step should not be reached",
+            },
+        ])
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
+            {"chatbot_script_id": chatbot_script.id},
+        )
+        step_trigger = LivechatChatbotController.chatbot_trigger_step
+        count = 0
+        new_channel_id = None
+
+        def _patched_step_trigger(_self, channel_id, chatbot_script_id=None, data_id=None):
+            nonlocal count, new_channel_id
+            channel = _self.env["discuss.channel"].sudo().search([("id", "=", channel_id)])
+            new_channel_id = channel_id
+            if channel and channel.sudo().chatbot_current_step_id == email_step:
+                count += 1
+                match count:
+                    case 1:
+                        raise ValueError(
+                            "Test exception during trigger, should update the UI with retry button",
+                        )
+                    case 2:
+                        channel.with_user(self.operator.partner_id.main_user_id)._add_members(
+                            partners=self.operator.partner_id,
+                            create_member_params={"livechat_member_type": "agent"},
+                        )
+            return step_trigger(_self, channel_id, chatbot_script_id, data_id)
+
+        with patch.object(
+            LivechatChatbotController,
+            "chatbot_trigger_step",
+            wraps(step_trigger)(_patched_step_trigger),
+        ):
+            self.start_tour("/", "website_livechat.chatbot_stop_when_agent_joins_tour")
+
+        channel = self.env["discuss.channel"].search([("id", "=", new_channel_id)])
+
+        self.assertFalse(
+            channel.message_ids.filtered(lambda m: "This step should not be reached" in m.body),
+        )
+        self.assertEqual(count, 2, "Email step should be triggered twice (1 failure + 1 retry)")
 
 
 class TestLivechatChatbotUIMoblie(TestLivechatChatbotUICommon):

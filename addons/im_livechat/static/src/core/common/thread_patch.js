@@ -31,4 +31,20 @@ patch(Thread.prototype, {
         }
         return _t("Visitor is disconnected");
     },
+    onClickRetry() {
+        if (!this.channel?.chatbotTriggerFailedError) {
+            return super.onClickRetry(...arguments);
+        }
+        this.channel.chatbotTriggerFailedError = null;
+        this.channel.chatbot._runUntilUserInputStep();
+    },
+    get isInErrorState() {
+        return this.channel?.chatbotTriggerFailedError || super.isInErrorState;
+    },
+    get errorStateText() {
+        if (this.channel?.chatbotTriggerFailedError) {
+            return _t("An error occurred while processing your answer.");
+        }
+        return super.errorStateText;
+    },
 });
