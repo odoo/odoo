@@ -53,7 +53,7 @@ class HrApplicant(models.Model):
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
 
     partner_id = fields.Many2one('res.partner', "Contact", copy=False, index='btree_not_null')
-    partner_name = fields.Char("Applicant's Name", tracking=True)
+    partner_name = fields.Char("Applicant's Name", tracking=True, compute="_compute_partner_name", store=True, readonly=False)
     email_from = fields.Char(
         string="Email",
         size=128,
@@ -176,6 +176,12 @@ class HrApplicant(models.Model):
             return super()._get_model_description(model_name)
         return self.env._("Application")
 
+    @api.depends('partner_id')
+    def _compute_partner_name(self):
+        for applicant in self:
+            if applicant.partner_id and not applicant.partner_name:
+                applicant.partner_name = applicant.partner_id.name
+
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id.talent_pool_ids")
     def _compute_talent_pool_count(self):
         """
@@ -252,7 +258,7 @@ class HrApplicant(models.Model):
                 if not applicant.partner_name:
                     raise UserError(_("You must define a Contact Name for this applicant."))
                 applicant.partner_id = applicant._partner_find_from_emails_single(
-                    [applicant.email_from], no_create=False,
+                    [applicant.email_from], no_create=True,
                     additional_values={
                         email_normalized: {
                             'lang': self.env.lang,

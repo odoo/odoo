@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, tools
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
@@ -20,19 +20,6 @@ class TestRecruitment(MailCase, TransactionCase):
         cls.env.user.company_ids = [Command.set(cls.company.ids)]
 
         cls.Attachment = cls.env['ir.attachment']
-
-    def test_infer_applicant_lang_from_context(self):
-        # Prerequisites
-        self.env['res.lang']._activate_lang('pl_PL')
-        self.env['res.lang']._activate_lang('en_US')
-        self.env['ir.default'].set('res.partner', 'lang', 'en_US')
-
-        # Creating an applicant will create a partner (email_from inverse)
-        applicant = self.env['hr.applicant'].sudo().with_context(lang='pl_PL').create({
-            'partner_name': 'Test Applicant',
-            'email_from': "test_aplicant@example.com"
-        })
-        self.assertEqual(applicant.partner_id.lang, 'pl_PL', 'Context langague not used for partner creation')
 
     def test_duplicate_email(self):
         # Tests that duplicate email matching is case insesitive
@@ -261,8 +248,15 @@ class TestRecruitment(MailCase, TransactionCase):
             'partner_name': 'Test',
             'email_from': 'test@thisisatest.com',
         }
-        # First application, a partner should be created
-        self.env['hr.applicant'].create(applicant_data)
+        # First application, + creation of partner
+        applicant = self.env['hr.applicant'].create(applicant_data)
+        email_normalized = tools.email_normalize(applicant.email_from or '')
+        applicant.partner_id = applicant._partner_find_from_emails_single(
+            [applicant.email_from], no_create=False,
+            additional_values={
+                email_normalized: {'lang': self.env.lang}
+            },
+        )
         partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
         self.assertEqual(partner_count, 1)
         # Second application, no partner should be created
@@ -520,6 +514,13 @@ class TestRecruitment(MailCase, TransactionCase):
             'email_from': 'applicant@example.com',
             'partner_phone': '123456789',
         })
+        email_normalized = tools.email_normalize(applicant.email_from or '')
+        applicant.partner_id = applicant._partner_find_from_emails_single(
+            [applicant.email_from], no_create=False,
+            additional_values={
+                email_normalized: {'lang': self.env.lang}
+            },
+        )
         self.assertEqual(applicant.partner_id.email, 'applicant@example.com', "Email should have been set on the partner.")
         self.assertEqual(applicant.partner_id.phone, '123456789', "Phone should have been set on the partner.")
 
