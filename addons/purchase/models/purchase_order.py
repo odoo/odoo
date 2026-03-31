@@ -700,7 +700,7 @@ class PurchaseOrder(models.Model):
                 if line.selected_seller_id:
                     supplierinfo['product_name'] = line.selected_seller_id.product_name
                     supplierinfo['product_code'] = line.selected_seller_id.product_code
-                    supplierinfo['product_uom_id'] = line.product_uom.id
+                    supplierinfo['product_uom_id'] = line.product_uom_id.id
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
