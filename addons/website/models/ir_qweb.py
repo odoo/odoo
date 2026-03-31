@@ -2,7 +2,6 @@
 import re
 
 from collections import OrderedDict
-from urllib.parse import urlsplit
 
 from odoo import models
 from odoo.http import request
@@ -141,45 +140,8 @@ class IrQweb(models.AbstractModel):
         if not website:
             return atts
 
-        if (
-            website.cookies_bar
-            and website.block_third_party_domains
-            and not self.env.context.get('cookies_allowed')
-            and not request.env.user.has_group('website.group_website_restricted_editor')
-        ):
-            # If the cookie banner is activated, 3rd-party embedded iframes and
-            # scripts should be controlled. As such:
-            # - 'domains' is a watchlist on the iframe/script's src itself,
-            # - 'classes' is a watchlist on container elements in which iframes
-            # are/could be built on the fly client-side for some reason.
-            cookies_watchlist = {
-                'domains': website.blocked_third_party_domains.split('\n'),
-                'classes': website._get_blocked_iframe_containers_classes(),
-            }
-            remove_src = False
-            if tagName in ('iframe', 'script'):
-                src_host = urlsplit((atts.get('src') or '').lower()).hostname
-                if src_host:
-                    remove_src = any(
-                        # "www.example.com" and "example.com" should block both.
-                        src_host == domain.removeprefix('www.')
-                        # "domain.com" should block "subdomain.domain.com", but
-                        # not "(subdomain.)mydomain.com".
-                        or src_host.endswith('.' + domain.removeprefix('www.'))
-                        for domain in cookies_watchlist['domains']
-                    )
-            if (
-                remove_src
-                or cookies_watchlist['classes'].intersection((atts.get('class') or '').split(' '))
-            ):
-                atts['data-need-cookies-approval'] = 'true'
-                # Case class in watchlist: we stop here. The element could
-                # contain an iframe created on the fly client-side. It is marked
-                # now so that the iframe can be marked later when created.
-                # Case iframe/script's src in watchlist: we adapt the src.
-                if 'src' in atts:
-                    atts['data-nocookie-src'] = atts['src']
-                    atts['src'] = 'about:blank'
+        if website._should_remove_third_party_trackers():
+            website._remove_third_party_trackers(tagName, atts, ['domains', 'classes'])
 
         name = self.URL_ATTRS.get(tagName)
         if request:
