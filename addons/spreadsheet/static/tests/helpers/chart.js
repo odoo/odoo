@@ -2,7 +2,6 @@ import { animationFrame } from "@odoo/hoot-mock";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
-const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").Model} Model
@@ -24,7 +23,7 @@ export function insertChartInSpreadsheet(model, type = "bar", definition = {}) {
     model.dispatch("CREATE_CHART", {
         sheetId: model.getters.getActiveSheetId(),
         chartId: definition.id,
-        figureId: uuidGenerator.smallUuid(),
+        figureId: spreadsheet.helpers.UuidGenerator.smallUuid(),
         col: 0,
         row: 0,
         offset: {
@@ -77,8 +76,8 @@ function getChartDefinition(type) {
         background: "#FFFFFF",
         legendPosition: "top",
         verticalAxisPosition: "left",
-        dataSourceId: uuidGenerator.smallUuid(),
-        id: uuidGenerator.smallUuid(),
+        dataSourceId: spreadsheet.helpers.UuidGenerator.smallUuid(),
+        id: spreadsheet.helpers.UuidGenerator.smallUuid(),
         type,
     };
 }
