@@ -1,6 +1,6 @@
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 from odoo.fields import Command, Domain
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import tagged, warmup, TransactionCase
 
 
 @tagged('at_install', '-post_install')
@@ -1311,6 +1311,55 @@ class TestSearchRelated(TransactionCase):
             ORDER BY "test_orm_related_inherits"."id"
         """]):
             model.search([('foo_bar_name', '=', 'a')])
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestSearchAccessOperator(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        discussion_model_id = cls.env['ir.model']._get('test_orm.discussion').id
+        message_model_id = cls.env['ir.model']._get('test_orm.message').id
+        cls.env['ir.rule'].search([('model_id', 'in', [discussion_model_id, message_model_id])]).unlink()
+        cls.rules = cls.env['ir.rule'].create([{
+            'name': 'related',
+            'model_id': discussion_model_id,
+            'domain_force': "[('id', '<', 1000)]",
+        }, {
+            'name': 'related_foo',
+            'model_id': message_model_id,
+            'domain_force': "[('discussion', 'access', 'read')]",
+        }])
+        cls.model = cls.env['test_orm.discussion'].with_user(cls.env.ref('base.user_admin'))
+
+    @warmup
+    def test_query_access_operator(self):
+        with self.assertQueries(["""
+            SELECT "test_orm_discussion"."id"
+            FROM "test_orm_discussion"
+            WHERE EXISTS(SELECT FROM (
+                SELECT "test_orm_message"."discussion" AS __inverse FROM "test_orm_message"
+                LEFT JOIN "test_orm_discussion" AS "test_orm_message__discussion"
+                ON ("test_orm_message"."discussion" = "test_orm_message__discussion"."id")
+                WHERE ("test_orm_message"."active" IS TRUE AND "test_orm_message"."discussion" IS NOT NULL AND "test_orm_message"."name" ILIKE %s)
+                AND ("test_orm_message"."discussion" IS NOT NULL AND "test_orm_message__discussion"."id" < %s)
+            ) AS __sub WHERE __inverse = "test_orm_discussion"."id")
+            AND "test_orm_discussion"."id" < %s
+            ORDER BY ...
+        """]):
+            self.model.search([('messages', 'ilike', 'ok')])
+
+        messages = self.model.messages
+        with self.assertQueries(["""
+            SELECT "test_orm_message"."id"
+            FROM "test_orm_message"
+            LEFT JOIN "test_orm_discussion" AS "test_orm_message__discussion"
+            ON ("test_orm_message"."discussion" = "test_orm_message__discussion"."id")
+            WHERE "test_orm_message"."active" IS TRUE
+            AND ("test_orm_message"."discussion" IS NOT NULL AND "test_orm_message__discussion"."id" < %s)
+            ORDER BY ...
+        """]):
+            messages.search([])
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

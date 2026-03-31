@@ -839,6 +839,10 @@ class TestDomainOptimize(TransactionCase):
             'perm_read': False,
         }])
 
+        with self.assertRaises(ValueError):
+            # operator cannot be used with x2many
+            Domain('messages', 'access', 'read').optimize_dynamic(self.env['test_orm.discussion'])
+
         for user in (internal_user, elevated_user, portal_user):
             for su in (False, True):
                 with self.subTest("", user=user.display_name, su=su):
