@@ -28,7 +28,7 @@ Then it can be made specific at the product level.
             "website_sale_stock/static/src/js/combo_configurator_dialog/*",
             "website_sale_stock/static/src/js/models/*",
             "website_sale_stock/static/src/js/product_card/*",
-            "website_sale_stock/static/src/js/location_selector/**/*",
+            "website_sale_stock/static/src/js/location_selector/location_selector_dialog/*",
         ],
         "web.assets_backend": [
             "website_sale_stock/static/src/js/location_selector/**/*",
