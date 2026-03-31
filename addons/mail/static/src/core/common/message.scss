@@ -3,6 +3,11 @@
 }
 
 .o-mail-Message {
+
+    &:not([data-o-shrink-wrap-ready]) {
+        visibility: hidden;
+    }
+
     transition: background-color .2s ease-out, opacity .25s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
     &.o-card {

@@ -211,6 +211,9 @@ export class Composer extends Component {
                     (!this.store.rtc.isFullscreen || this.env.inMeetingView)
             );
         }
+        if (this.env.messageComposerAutoresize) {
+            this.env.messageComposerAutoresize.invoke = this.autoresize.bind(this);
+        }
         useChildSubEnv({ inComposer: true });
         useLayoutEffect(
             (focus) => {
@@ -235,18 +238,7 @@ export class Composer extends Component {
         );
         useLayoutEffect(
             () => {
-                if (this.fakeTextarea.el?.scrollHeight) {
-                    let wasEmpty = false;
-                    if (!this.fakeTextarea.el.value) {
-                        wasEmpty = true;
-                        this.fakeTextarea.el.value = "0";
-                    }
-                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
-                    if (wasEmpty) {
-                        this.fakeTextarea.el.value = "";
-                    }
-                }
-                this.saveContentDebounced();
+                this.autoresize();
             },
             () => [this.props.composer.composerText, this.ref.el]
         );
@@ -330,6 +322,21 @@ export class Composer extends Component {
 
     get areAllActionsDisabled() {
         return this.props.disabled;
+    }
+
+    autoresize() {
+        if (this.fakeTextarea.el?.scrollHeight) {
+            let wasEmpty = false;
+            if (!this.fakeTextarea.el.value) {
+                wasEmpty = true;
+                this.fakeTextarea.el.value = "0";
+            }
+            this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+            if (wasEmpty) {
+                this.fakeTextarea.el.value = "";
+            }
+        }
+        this.saveContentDebounced();
     }
 
     get isMultiUpload() {

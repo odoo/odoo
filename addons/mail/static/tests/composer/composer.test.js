@@ -796,11 +796,18 @@ test("[text composer] quick edit last self-message from UP arrow", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-content:text('Test-1')");
-    await contains(".o-mail-Message-content:text('Test-2')");
+    await contains(
+        ".o-mail-Message:eq(0)[data-o-shrink-wrap-ready] .o-mail-Message-content:text('Test-1')"
+    );
+    await contains(
+        ".o-mail-Message:eq(1)[data-o-shrink-wrap-ready] .o-mail-Message-content:text('Test-2')"
+    );
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
+    await contains(".o-mail-Composer.o-focused");
     triggerHotkey("ArrowUp");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "Test-2" });
+    await contains(".o-mail-Message .o-mail-Composer.o-focused .o-mail-Composer-input", {
+        value: "Test-2",
+    });
     triggerHotkey("Escape");
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
     await contains(".o-mail-Composer.o-focused");

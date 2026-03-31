@@ -6,7 +6,17 @@ import {
     useState,
     useSubEnv,
 } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, onWillUnmount, toRaw, xml } from "@odoo/owl";
+import {
+    Component,
+    markRaw,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    status,
+    toRaw,
+    useEffect,
+    xml,
+} from "@odoo/owl";
 
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
@@ -795,4 +805,106 @@ export class UseForwardRefsToParent {
  */
 export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
+}
+
+/**
+ * @param {import("@web/core/utils/hooks").Ref} rootRef The root element of component. Useful to observe resize in order to re-trigger shrink-wrap.
+ * @param {import("@web/core/utils/hooks").Ref} elementRef The element to apply shrink-wrap.
+ * @param {Object} [param2={}]
+ * @param {(HTMLElement) => void} [param2.onAfterShrinkWrap] Optional post-process after shrink-wrap has been applied.
+ */
+export function useShrinkWrap(rootRef, elementRef, { onAfterShrinkWrap } = {}) {
+    const component = useComponent();
+    const store = useService("mail.store");
+    const rawStore = toRaw(store);
+    const elementResizeObserver = new ResizeObserver(() => requestShrinkWrap());
+    useEffect(
+        (el) => {
+            elementResizeObserver.observe(el);
+            return () => {
+                elementResizeObserver.unobserve(el);
+            };
+        },
+        () => [rootRef.el]
+    );
+
+    async function requestShrinkWrap() {
+        rootRef.el.dataset.oShrinkWrapReady ??= false;
+        const element = elementRef.el;
+        if (!element || ["destroyed", "cancelled"].includes(status(component))) {
+            return;
+        }
+        if (!rawStore.toShrinkWrapElements) {
+            rawStore.toShrinkWrapElements = markRaw([]);
+            rawStore.shrinkWrapSequential = useSequential();
+        }
+        rawStore.toShrinkWrapElements.push([
+            element,
+            () => {
+                if (
+                    ["destroyed", "cancelled"].includes(status(component)) ||
+                    elementRef.el !== element
+                ) {
+                    return;
+                }
+                onAfterShrinkWrap?.(element);
+            },
+        ]);
+        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve))); // batch shrink wrap so sequential getBoundingRect() trigger a single painting
+        rawStore.shrinkWrapSequential(() => {
+            const toHandle = rawStore.toShrinkWrapElements;
+            rawStore.toShrinkWrapElements = markRaw([]);
+            const toChange = [];
+            for (const [element] of toHandle) {
+                shrinkWrap(element, toChange);
+            }
+            for (const [element, width] of toChange) {
+                element.style.width = width + "px";
+                element.style.boxSizing = "content-box";
+            }
+            for (const [element, toShrinkWrapElements] of toHandle) {
+                toShrinkWrapElements?.(element);
+            }
+            if (rootRef.el) {
+                rootRef.el.dataset.oShrinkWrapReady = true;
+            }
+        });
+    }
+
+    /**
+     * Courtesy of https://stackoverflow.com/a/78307608
+     *
+     * @param {HTMLElement} element
+     * @param {Array<[HTMLElement, Number]>} toChange
+     */
+    function shrinkWrap(element, toChange) {
+        const { firstChild, lastChild } = element;
+        if (!element || !firstChild || !lastChild) {
+            return;
+        }
+        element
+            .querySelectorAll("p, .o-mail-Message-richBody")
+            .forEach((p) => shrinkWrap(p, toChange));
+        element.style.width = "auto";
+        element.style.boxSizing = "auto";
+        const range = document.createRange();
+        const firstChildStyle =
+            firstChild.nodeType !== 3 ? getComputedStyle(firstChild) : undefined;
+        const lastChildStyle = lastChild.nodeType !== 3 ? getComputedStyle(lastChild) : undefined;
+        const marginLeft = Math.max(
+            parseFloat(firstChildStyle?.marginLeft ?? 0),
+            parseFloat(lastChildStyle?.marginLeft ?? 0)
+        );
+        const marginRight = Math.max(
+            parseFloat(firstChildStyle?.marginRight ?? 0),
+            parseFloat(lastChildStyle?.marginRight ?? 0)
+        );
+        range.setStartBefore(firstChild);
+        range.setEndAfter(lastChild);
+        const { width } = range.getBoundingClientRect();
+        const resultingWidth = width + marginLeft + marginRight;
+        if (element.tagName === "P" || element.classList.contains("o-mail-Message-richBody")) {
+            toChange.push([element, resultingWidth]);
+        }
+    }
 }
