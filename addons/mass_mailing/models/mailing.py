@@ -459,7 +459,7 @@ class MailingMailing(models.Model):
         for mailing in self:
             if not mailing.mailing_model_id:
                 mailing.mailing_domain = ''
-            elif self.is_dynamic_recipients and mailing.contact_list_ids:
+            elif mailing.is_dynamic_recipients and mailing.contact_list_ids:
                 mailing.mailing_domain = Domain.OR([mailing_list._parse_mailing_domain() for mailing_list in self.contact_list_ids])
             else:
                 mailing.mailing_domain = repr(mailing._get_default_mailing_domain() or [])
