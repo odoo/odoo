@@ -1,3 +1,5 @@
+import { Store } from "@mail/../tests/mock_server/store";
+
 import { models } from "@web/../tests/web_test_helpers";
 
 export class MailComposeMessage extends models.ServerModel {
@@ -22,5 +24,34 @@ export class MailComposeMessage extends models.ServerModel {
                 record_name: "Mitchell Admin",
             },
         };
+    }
+
+    web_save(ids, values, kwargs = {}) {
+        const context = kwargs.context || {};
+        const messageId = context.default_message_id;
+        if (!messageId) {
+            return super.web_save(ids, values, kwargs);
+        }
+        const MailMessage = this.env["mail.message"];
+        const [message] = MailMessage.browse(messageId);
+        if (!message) {
+            return [];
+        }
+        const msg_values = {};
+        if (values.body !== null) {
+            msg_values.body = values.body || "";
+        }
+        MailMessage.write([messageId], msg_values);
+        this.env["bus.bus"]._sendone(
+            MailMessage._bus_notification_target(messageId),
+            "mail.record/insert",
+            new Store().add(MailMessage.browse(messageId), "_store_message_fields").as_dict()
+        );
+        return [
+            {
+                id: messageId,
+                body: values.body || "",
+            },
+        ];
     }
 }
