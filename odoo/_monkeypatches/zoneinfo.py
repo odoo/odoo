@@ -100,6 +100,7 @@ _tz_mapping = {
     "ROC": "Asia/Taipei",
     "ROK": "Asia/Seoul",
     "Singapore": "Asia/Singapore",
+    "Turkey": "Europe/Istanbul",
     "Türkiye": "Europe/Istanbul",
     "UCT": "Etc/UTC",
     "Universal": "Etc/UTC",
