@@ -35,7 +35,7 @@ test("Rendering of visitor banner", async () => {
         website_id,
     });
     pyEnv["website.visitor"].write([visitorId], {
-        display_name: `Visitor #${visitorId}`,
+        name: `Visitor #${visitorId}`,
     });
     const guestId = pyEnv["mail.guest"].create({ name: `Visitor #${visitorId}` });
     const channelId = pyEnv["discuss.channel"].create({

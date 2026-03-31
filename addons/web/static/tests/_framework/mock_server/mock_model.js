@@ -77,6 +77,11 @@ const {
  * @typedef {ViewType | `${ViewType},${number}`} ViewKey
  *
  * @typedef {import("@web/views/view").ViewType} ViewType
+ *
+ * @typedef {{
+ *  force?: boolean;
+ *  originalRecords?: Record<number | false, ModelRecord>;
+ * }} WriteOptions
  */
 
 /**
@@ -566,6 +571,13 @@ function getViewKey(viewType, viewId) {
 function isDateField(field) {
     const fieldType = typeof field === "string" ? field : field.type;
     return fieldType === "date" || fieldType === "datetime";
+}
+
+/**
+ * @param {FieldDefinition} field
+ */
+function isFieldWritable(field) {
+    return field.store || !isComputed(field);
 }
 
 /**
@@ -1206,9 +1218,10 @@ function traverseElement(node, callback) {
  *
  * @param {Model} model
  * @param {ModelRecord} record record that have been created/updated.
- * @param {ModelRecord} [originalRecord] record before update.
+ * @param {WriteOptions} [writeOptions]
  */
-function updateComodelRelationalFields(model, record, originalRecord) {
+function updateComodelRelationalFields(model, record, writeOptions) {
+    const originalRecord = writeOptions?.originalRecords?.[record.id];
     for (const fname in record) {
         const field = model._fields[fname];
         const coModel = getRelation(field, record);
@@ -1241,13 +1254,13 @@ function updateComodelRelationalFields(model, record, originalRecord) {
                 if (comodelInverseField.type === "many2one_reference") {
                     data[comodelInverseField.model_name_ref_fname] = model._name;
                 }
-                coModel._write(data, relatedRecordId);
+                coModel._write(relatedRecord, data, writeOptions);
             }
         } else if (field.type === "many2one_reference") {
             // we need to clean the many2one_field as well.
             const model_many2one_field =
                 comodelInverseField.inverse_fname_by_model_name[model._name];
-            model._write({ [model_many2one_field]: false }, record.id);
+            model._write(record, { [model_many2one_field]: false }, writeOptions);
         }
         // it's an update, get the records that were originally referenced but are not
         // anymore and update their relational fields.
@@ -1264,17 +1277,17 @@ function updateComodelRelationalFields(model, record, originalRecord) {
                 }
                 let inverseFieldNewValue = false;
                 if (Array.isArray(removedRecord[inverseFieldName])) {
-                    inverseFieldNewValue = removedRecord[inverseFieldName].filter(
+                    const filtered = removedRecord[inverseFieldName].filter(
                         (id) => id !== record.id
                     );
+                    if (filtered.length) {
+                        inverseFieldNewValue = filtered;
+                    }
                 }
                 coModel._write(
-                    {
-                        [inverseFieldName]: inverseFieldNewValue.length
-                            ? inverseFieldNewValue
-                            : false,
-                    },
-                    removedRecordId
+                    removedRecord,
+                    { [inverseFieldName]: inverseFieldNewValue },
+                    writeOptions
                 );
             }
         }
@@ -1351,7 +1364,8 @@ const INHERITED_PRIMITIVE_KEYS = [
     ["_order", null],
     ["_parent_name", null],
     ["_rec_name", null],
-    ["_related", (set) => new Set(set)],
+    ["_relatedDepencencies", (related) => new Map(related)],
+    ["_relatedInverse", (related) => new Map(related)],
 ];
 const READ_GROUP_NUMBER_GRANULARITY = [
     "day_of_month",
@@ -1547,7 +1561,8 @@ export class Model extends Array {
      *  | "_parent_name"
      *  | "_rec_name"
      *  | "_records"
-     *  | "_related"
+     *  | "_relatedDepencencies"
+     *  | "_relatedInverse"
      *  | "_views"> | null
      * } */
     _fields = {};
@@ -1567,8 +1582,10 @@ export class Model extends Array {
     _rec_name = null;
     /** @type {Partial<ModelRecord>[]} */
     _records = [];
-    /** @type {Set<string>} */
-    _related = new Set();
+    /** @type {Map<string, [Model, FieldDefinition][]>} */
+    _relatedDepencencies = new Map();
+    /** @type {Map<string, [Model, FieldDefinition][]>} */
+    _relatedInverse = new Map();
     /** @type {Record<"print" | "action", ActionDefinition[]>} */
     _toolbar = {};
     /** @type {Record<ViewKey, string>} */
@@ -1611,7 +1628,8 @@ export class Model extends Array {
             this._order = modelInstance._order;
             this._parent_name = modelInstance._parent_name;
             this._rec_name = modelInstance._rec_name;
-            this._related = modelInstance._related;
+            this._relatedDepencencies = modelInstance._relatedDepencencies;
+            this._relatedInverse = modelInstance._relatedInverse;
             this._views = modelInstance._views;
         }
     }
@@ -1645,6 +1663,7 @@ export class Model extends Array {
      */
     browse(idOrIds) {
         const ids = ensureArray(idOrIds);
+        /** @type {typeof this} */
         const records = new this.constructor();
         if (ids.length > 1) {
             const recordSet = new Map();
@@ -1677,17 +1696,28 @@ export class Model extends Array {
     copy(idOrIds, defaultValues) {
         ({ ids: idOrIds, default: defaultValues } = getKwArgs(arguments, "ids", "default"));
 
-        return ensureArray(idOrIds).map((id) => {
-            const copyId = this._getNextId();
-            const originalRecord = this.find((record) => record.id === id);
-            this.push({
+        for (const fieldName in defaultValues) {
+            if (!(fieldName in this._fields)) {
+                delete defaultValues[fieldName];
+            }
+        }
+        const recName = this._rec_name;
+        /** @type {number[]} */
+        const copyIds = [];
+        for (const originalRecord of this.browse(idOrIds)) {
+            const recordCopy = {
                 ...originalRecord,
                 ...defaultValues,
-                id: copyId,
-                display_name: `${originalRecord.display_name} (copy)`,
-            });
-            return copyId;
-        });
+                id: this._getNextId(),
+            };
+            if (recName) {
+                recordCopy[recName] = `${originalRecord[recName]} (copy)`;
+            }
+            copyIds.push(recordCopy.id);
+            this.push(recordCopy);
+        }
+        this.browse(copyIds)._applyComputesAndValidate({ force: true });
+        return copyIds;
     }
 
     /**
@@ -1701,17 +1731,18 @@ export class Model extends Array {
         const allValues = shouldReturnList ? valuesList : [valuesList];
         /** @type {number[]} */
         const ids = [];
+        const writeOptions = { force: true };
         for (const values of allValues) {
             if ("id" in values) {
                 throw new MockServerError(`Cannot create a record with a given ID value`);
             }
-            const record = { id: this._getNextId() };
-            ids.push(record.id);
-            this.push(record);
+            const createdRecord = { id: this._getNextId() };
+            ids.push(createdRecord.id);
+            this.push(createdRecord);
             this._applyDefaults(values, kwargs.context);
-            this._write(values, record.id);
+            this._write(createdRecord, values, writeOptions);
         }
-        this.browse(ids)._applyComputesAndValidate();
+        this.browse(ids)._applyComputesAndValidate(writeOptions);
         return shouldReturnList ? ids : ids[0];
     }
 
@@ -1820,11 +1851,13 @@ export class Model extends Array {
      * @param {string} name
      */
     name_create(name) {
+        if (!this._rec_name) {
+            return false;
+        }
         const kwargs = getKwArgs(arguments, "name");
         ({ name } = kwargs);
 
-        const values = { [this._rec_name]: name, display_name: name };
-        const [id] = this.create([values], kwargs);
+        const id = this.create({ [this._rec_name]: name }, kwargs);
         return [id, kwargs.name];
     }
 
@@ -2603,9 +2636,13 @@ export class Model extends Array {
                 if (coModel?._name === this._name) {
                     for (const record of model) {
                         if (Array.isArray(record[fieldName])) {
-                            record[fieldName] = record[fieldName].filter((id) => !ids.includes(id));
+                            model._write(record, {
+                                [fieldName]: record[fieldName].filter((id) => !ids.includes(id)),
+                            });
                         } else if (ids.includes(record[fieldName])) {
-                            record[fieldName] = false;
+                            model._write(record, {
+                                [fieldName]: false,
+                            });
                         }
                     }
                 }
@@ -2739,13 +2776,13 @@ export class Model extends Array {
         const kwargs = getKwArgs(arguments, "ids", "vals");
         ({ ids: idOrIds, vals: values } = kwargs);
 
-        const ids = ensureArray(idOrIds);
         const originalRecords = {};
-        for (const id of ids) {
-            originalRecords[id] = { ...this.browse(id)[0] };
-            this._write(values, id);
+        const records = this.browse(idOrIds);
+        for (const record of records) {
+            originalRecords[record.id] = { ...record };
+            this._write(record, values);
         }
-        this.browse(ids)._applyComputesAndValidate(originalRecords);
+        records._applyComputesAndValidate({ originalRecords });
         return true;
     }
 
@@ -2755,12 +2792,14 @@ export class Model extends Array {
 
     /**
      * @private
-     * @param {Record<string, ModelRecord>} [originalRecords={}]
+     * @param {WriteOptions} [writeOptions]
      */
-    _applyComputesAndValidate(originalRecords = {}) {
+    _applyComputesAndValidate(writeOptions) {
         // Compute related fields
-        for (const fieldName of this._related) {
-            this._compute_related_field(fieldName);
+        if (writeOptions?.force) {
+            for (const fieldChain of this._relatedDepencencies.values()) {
+                this._compute_related_field(fieldChain);
+            }
         }
 
         // Apply compute functions
@@ -2770,7 +2809,7 @@ export class Model extends Array {
 
         // Validate record values
         for (const record of this) {
-            for (const fieldName of Object.keys(record)) {
+            for (const fieldName in record) {
                 const fieldDef = this._fields[fieldName];
                 if (!isValidFieldValue(record, fieldDef)) {
                     throw new MockServerError(
@@ -2783,7 +2822,7 @@ export class Model extends Array {
                 }
             }
 
-            updateComodelRelationalFields(this, record, originalRecords[record.id]);
+            updateComodelRelationalFields(this, record, writeOptions);
         }
     }
 
@@ -2818,7 +2857,7 @@ export class Model extends Array {
                     typeof fieldDef.default === "function"
                         ? fieldDef.default.call(this, record)
                         : fieldDef.default;
-            } else if (fieldDef.type in DEFAULT_FIELD_VALUES) {
+            } else if (fieldDef.type in DEFAULT_FIELD_VALUES && isFieldWritable(fieldDef)) {
                 record[fieldName] = DEFAULT_FIELD_VALUES[fieldDef.type]();
             }
         }
@@ -2842,25 +2881,27 @@ export class Model extends Array {
 
     /**
      * @private
-     * @param {string} fieldName
+     * @param {[Model, FieldDefinition][]} fieldChain
      */
-    _compute_related_field(fieldName) {
-        const field = this._fields[fieldName];
-        const fieldNames = safeSplit(field.related, ".");
+    _compute_related_field(fieldChain) {
+        const fieldName = fieldChain[0][1].name;
+        const [, relatedField] = fieldChain.at(-1);
         for (const record of this) {
-            const [value, fieldType] = this._followRelation(record, fieldNames);
-            if (!fieldType) {
-                // The related field is not found on the record, so we
-                // remove the compute function.
-                this.env[this._name]._related.delete(fieldName);
-                return;
-            }
+            const relatedRecord = this._followRelatedRecord(record, fieldChain);
+            const value = relatedRecord?.[relatedField.name];
             if (value === undefined) {
                 // Value is null: assign default value (if null)
-                record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldType]();
+                record[fieldName] ??= DEFAULT_FIELD_VALUES[relatedField.type]();
             } else {
                 // Value is not null: override
                 record[fieldName] = value;
+            }
+        }
+        // Cascade to related fields that depend on this one, in turn.
+        const dependantFields = this._relatedInverse.get(fieldName);
+        if (dependantFields) {
+            for (const [model, field] of dependantFields) {
+                model._compute_related_field(model._relatedDepencencies.get(field.name));
             }
         }
     }
@@ -2966,33 +3007,17 @@ export class Model extends Array {
     /**
      * @private
      * @param {ModelRecord} record
-     * @param {string[]} fieldNames
-     * @returns {[any, FieldType]}
+     * @param {[Model, FieldDefinition][]} fieldChain
      */
-    _followRelation(record, fieldNames) {
-        let currentModel = this;
-        let currentRecord = record;
-        let currentField;
-        let value;
-        for (const fieldName of fieldNames) {
-            currentField = currentModel._fields[fieldName];
-            if (!currentField) {
-                break;
-            }
-            if (!currentRecord) {
-                value = undefined;
-                break;
-            }
-            value = currentRecord?.[fieldName];
-            const relation = getRelation(currentField, currentRecord);
-            if (relation) {
-                const ids = ensureArray(currentRecord?.[fieldName]);
-                currentModel = relation;
-                currentRecord = currentModel.find((r) => ids.includes(r.id));
-            }
+    _followRelatedRecord(record, fieldChain) {
+        let relatedRecord = record;
+        for (let i = 1; i < fieldChain.length - 1; i++) {
+            const [, field] = fieldChain[i];
+            const nextModel = fieldChain[i + 1][0];
+            const ids = ensureArray(relatedRecord?.[field.name]);
+            relatedRecord = nextModel.find((r) => ids.includes(r.id));
         }
-
-        return [value, currentField?.type];
+        return relatedRecord;
     }
 
     /**
@@ -3240,16 +3265,29 @@ export class Model extends Array {
 
     /**
      * @private
-     * @param {ModelRecord} values
-     * @param {number} id
+     * @param {ModelRecord} record
+     * @param {Partial<ModelRecord>} values
+     * @param {WriteOptions} [options]
      */
-    _write(values, id) {
-        const record = this.find((r) => r.id === id);
+    _write(record, values, options) {
+        /**
+         * @param {string} fieldName
+         * @param {any} value
+         */
+        function applyWrite(fieldName, value) {
+            if (record[fieldName] !== value) {
+                record[fieldName] = value;
+                updatedFields.add(fieldName);
+            }
+        }
+
         const todoValsMap = new Map(Object.entries(values));
+        const updatedFields = new Set();
         const MAX_ITER = todoValsMap.size;
         let i = 0;
         while (todoValsMap.size > 0 && i < MAX_ITER) {
             let [fieldName, value] = todoValsMap.entries().next().value;
+            let alreadyUpdated = false;
             todoValsMap.delete(fieldName);
             const field = this._fields[fieldName];
             if (!field) {
@@ -3259,15 +3297,27 @@ export class Model extends Array {
                     `could not write on ${getRecordQualifier(record)}`
                 );
             }
-            if (isX2MField(field)) {
+            if (field.related) {
+                const fieldChain = this._relatedDepencencies.get(fieldName);
+                const relatedRecord = this._followRelatedRecord(record, fieldChain);
+                if (relatedRecord) {
+                    const [lastModel, lastField] = fieldChain.at(-1);
+                    const fname = lastField.name;
+                    lastModel._write(relatedRecord, { [fname]: value }, options);
+                }
+                // Always update related value
+                alreadyUpdated = true;
+            }
+            if (!alreadyUpdated && isX2MField(field)) {
                 let ids = record[fieldName] ? record[fieldName].slice() : [];
                 // if a field has been modified, its value must always be sent to the server for onchange and write.
                 // take into account that the value can be a empty list of commands.
-                if (Array.isArray(value) && value.length) {
+                if (Array.isArray(value)) {
                     if (
                         value.reduce((hasOnlyInt, val) => hasOnlyInt && Number.isInteger(val), true)
                     ) {
                         // fallback to command 6 when given a simple list of ids
+                        // (including an empty list, which clears the field)
                         value = [[6, 0, value]];
                     }
                 } else if (value === false) {
@@ -3282,7 +3332,8 @@ export class Model extends Array {
                         const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
                         const inverseFieldName = field.inverse_fname_by_model_name?.[coModel._name];
                         if (inverseFieldName) {
-                            inverseData[inverseFieldName] = field.type === "many2many" ? [id] : id;
+                            inverseData[inverseFieldName] =
+                                field.type === "many2many" ? [record.id] : record.id;
                         }
                         const [newId] = coModel.create([inverseData]);
                         ids.push(newId);
@@ -3314,8 +3365,8 @@ export class Model extends Array {
                         );
                     }
                 }
-                record[fieldName] = ids;
-            } else if (isM2OField(field)) {
+                applyWrite(fieldName, ids);
+            } else if (!alreadyUpdated && isM2OField(field)) {
                 if (value) {
                     if (!isValidId(value, field, record)) {
                         if (todoValsMap.has(field.model_name_ref_fname)) {
@@ -3329,11 +3380,11 @@ export class Model extends Array {
                             )}" for a many2one on field "${fieldName}" in model "${this._name}"`
                         );
                     }
-                    record[fieldName] = value;
+                    applyWrite(fieldName, value);
                 } else {
-                    record[fieldName] = false;
+                    applyWrite(fieldName, false);
                 }
-            } else if (field.type === "properties") {
+            } else if (!alreadyUpdated && field.type === "properties") {
                 const properties = value || [];
                 if (properties.some((p) => p.definition_changed || p.definition_deleted)) {
                     // Property definition changed or deleted
@@ -3354,10 +3405,10 @@ export class Model extends Array {
                 }
 
                 // Property values
-                record[fieldName] ||= {};
+                const propertyValues = { ...record[fieldName] };
                 for (const property of properties) {
                     if (property.definition_deleted) {
-                        delete record[fieldName][property.name];
+                        delete propertyValues[property.name];
                     } else {
                         let value = property.value ?? property.default ?? false;
                         if (value && property.comodel) {
@@ -3375,13 +3426,30 @@ export class Model extends Array {
                                 }
                             }
                         }
-                        record[fieldName][property.name] = value;
+                        propertyValues[property.name] = value;
                     }
                 }
-            } else if (!isComputed(field)) {
-                record[fieldName] = value;
+                applyWrite(fieldName, propertyValues);
+            } else if (alreadyUpdated || options?.force || isFieldWritable(field)) {
+                applyWrite(fieldName, value);
+            } else {
+                // FIXME: should also take 'readonly' into account
+                console.warn(`could not write on ${field.name} field as it cannot be stored`);
+            }
+            if (alreadyUpdated) {
+                updatedFields.delete(fieldName);
             }
             i++;
+        }
+        for (const fieldName of updatedFields) {
+            if (!fieldName || !this._relatedInverse.has(fieldName)) {
+                continue;
+            }
+            const dependantFields = this._relatedInverse.get(fieldName);
+            for (const [model, field] of dependantFields) {
+                const fieldChain = model._relatedDepencencies.get(field.name);
+                model._compute_related_field(fieldChain);
+            }
         }
     }
 }
