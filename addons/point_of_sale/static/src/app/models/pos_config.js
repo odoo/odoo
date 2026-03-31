@@ -117,6 +117,10 @@ export class PosConfig extends Base {
     get paymentMethods() {
         return this.payment_method_ids.slice().sort((a, b) => a.sequence - b.sequence);
     }
+
+    get autoPrint() {
+        return this.iface_print_auto;
+    }
 }
 
 registry.category("pos_available_models").add(PosConfig.pythonModel, PosConfig);

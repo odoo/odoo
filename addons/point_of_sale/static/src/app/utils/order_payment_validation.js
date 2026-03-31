@@ -209,7 +209,7 @@ export default class OrderPaymentValidation {
             orderDone: true,
         });
 
-        if (this.order.nb_print === 0 && this.pos.config.iface_print_auto) {
+        if (this.order.nb_print === 0 && this.pos.config.autoPrint) {
             const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
             if (invoiced_finalized) {
                 await this.pos.ticketPrinter.printOrderReceipt({ order: this.order });
