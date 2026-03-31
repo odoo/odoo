@@ -319,29 +319,20 @@
                                 <group>
                                     <group string="Production Information" name="capacity">
                                         <label for="time_efficiency"/>
-                                        <div class="o_input_box">
-                                            <field name="time_efficiency"/>
-                                            <span class="o_input_box_overlay_end o_input_box_overlay_inline">%</span>
+                                        <div>
+                                            <field name="time_efficiency" class="oe_inline"/>%
                                         </div>
                                         <label for="oee_target"/>
-                                        <div class="o_input_box">
-                                            <field name="oee_target"/>
-                                            <span class="o_input_box_overlay_end o_input_box_overlay_inline">%</span>
+                                        <div>
+                                            <field name="oee_target" class="oe_inline"/>%
                                         </div>
-                                        <label for="time_start"/>
-                                        <div class="o_input_box">
-                                            <field name="time_start" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}"/>
-                                        </div>
-                                        <label for="time_stop"/>
-                                        <div class="o_input_box">
-                                            <field name="time_stop" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}"/>
-                                        </div>
+                                        <field name="time_start" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}"/>
+                                        <field name="time_stop" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}"/>
                                     </group>
                                     <group string="Costing Information" name="costing">
                                         <label for="costs_hour"/>
-                                        <div class="o_input_box" id="costs_hour">
-                                            <field name="costs_hour" widget="monetary"/>
-                                            <span class="o_input_box_overlay_end o_input_box_overlay_inline">per workcenter</span>
+                                        <div id="costs_hour">
+                                            <field name="costs_hour" class="oe_inline" widget="monetary"/>per workcenter
                                         </div>
                                     </group>
                                 </group>
