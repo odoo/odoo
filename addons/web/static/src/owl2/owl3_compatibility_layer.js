@@ -412,8 +412,8 @@ class App extends owl.App {
         if (config.env) {
             component = class extends component {
                 constructor(node) {
+                    provideEnv(config.env);
                     super(node);
-                    this.env = provideEnv(config.env);
                 }
             };
         }
