@@ -36,7 +36,7 @@
                                     required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
                         </div>
                         <div class="o_setting_right_pane" id="peppol_participation_role_config" company_dependent="1"
-                            invisible="not peppol_participation_role">
+                            invisible="not peppol_participation_role or peppol_use_parent_company">
                             <div class="mb-2">
                                 <span class="o_form_label">
                                     <label string="Peppol Participation Role" for="peppol_participation_role"/>
