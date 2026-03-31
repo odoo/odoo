@@ -113,6 +113,10 @@ export class PosConfig extends Base {
         }
         return Array.from(available_pricelists);
     }
+
+    get autoPrint() {
+        return this.iface_print_auto;
+    }
 }
 
 registry.category("pos_available_models").add(PosConfig.pythonModel, PosConfig);
