@@ -1012,6 +1012,8 @@ class StockQuant(models.Model):
             inventory_location = quant.product_id.with_company(quant.company_id).property_stock_inventory or\
                 default_loss_locations.get(quant.company_id.id)
             # Create and validate a move so that the quant matches its `inventory_quantity`.
+            if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) == 0:
+                continue
             if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
