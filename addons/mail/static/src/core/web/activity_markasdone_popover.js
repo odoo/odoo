@@ -7,7 +7,6 @@ export class ActivityMarkAsDone extends Component {
         "activity",
         "close?",
         "hasHeader?",
-        "onClickDone?",
         "onClickDoneAndScheduleNext?",
         "onActivityChanged",
     ];
@@ -42,9 +41,6 @@ export class ActivityMarkAsDone extends Component {
         });
         this.state.disableDoneButton = true;
         try {
-            if (this.props.onClickDone) {
-                this.props.onClickDone();
-            }
             await this.props.activity.markAsDone();
             this.props.onActivityChanged(thread);
             await thread.fetchNewMessages();
