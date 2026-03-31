@@ -27,9 +27,6 @@ export function enterCode(code) {
         Dialog.confirm(),
     ];
 }
-export function clickEWalletButton(text = "eWallet") {
-    return [{ trigger: ProductScreen.controlButtonTrigger(text), run: "click" }];
-}
 export function claimReward(rewardName) {
     return [
         ...ProductScreen.clickControlButton("Reward"),

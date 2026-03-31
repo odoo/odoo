@@ -477,14 +477,6 @@ export function qrPopupIsNotShown() {
     };
 }
 
-export function confirmQrPopup() {
-    return {
-        content: "confirm QR code popup",
-        trigger: ".o_qr_popup .qr-code-popup-footer .confirm-button",
-        run: "click",
-    };
-}
-
 export function closeQrPopup() {
     return {
         content: "close QR code popup",

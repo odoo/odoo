@@ -137,10 +137,3 @@ export function hasCustomerNote(note) {
         },
     ];
 }
-
-export function hasNoTax() {
-    return {
-        content: "order has not tax",
-        trigger: negate(".tax-info"),
-    };
-}

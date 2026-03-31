@@ -65,13 +65,6 @@ export function refresh() {
         true
     );
 }
-export function elementDoesNotExist(selector) {
-    return {
-        content: `Check that element "${selector}" don't exist.`,
-        trigger: negate(selector),
-    };
-}
-
 export function assertCurrentOrderDirty(dirty = true) {
     return {
         trigger: "body",

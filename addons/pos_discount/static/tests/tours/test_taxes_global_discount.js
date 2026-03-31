@@ -6,7 +6,6 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
-import { escapeRegExp } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
 
 export function addDocument(documentParams) {
@@ -16,14 +15,6 @@ export function addDocument(documentParams) {
     }
     steps.push(...[ProductScreen.clickPartnerButton(), ProductScreen.clickCustomer("AAAAAA")]);
     return steps;
-}
-
-export function clickDiscountNumpad(num) {
-    return {
-        content: `click discount numpad button: ${num}`,
-        trigger: `.o_dialog div.numpad button:contains(/^${escapeRegExp(num)}$/)`,
-        run: "click",
-    };
 }
 
 export function addDiscount(discount, type = "percent") {

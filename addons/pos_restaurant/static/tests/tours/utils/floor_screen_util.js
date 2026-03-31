@@ -84,14 +84,6 @@ export function clickFloor(name) {
         },
     ];
 }
-export function hasFloor(name) {
-    return [
-        {
-            content: `has '${name}' floor`,
-            trigger: `.floor-selector .button-floor:contains("${name}")`,
-        },
-    ];
-}
 export function hasNotFloor(name) {
     return [
         {

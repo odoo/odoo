@@ -2,7 +2,6 @@
 
 import { session } from "@web/session";
 import { cookie } from "@web/core/browser/cookie";
-import { getDataURLFromFile } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Time } from "@web/core/l10n/time";
 /*
@@ -206,12 +205,6 @@ export function isPrivateIp(ip) {
 
 export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
 export const TOUCH_DELAY = session.test_mode ? 50 : 300;
-
-export async function getImageDataUrl(imageUrl) {
-    const res = await fetch(imageUrl);
-    const blob = await res.blob();
-    return await getDataURLFromFile(blob);
-}
 
 export function orderUsageUTCtoLocalUtil(data) {
     const result = {};

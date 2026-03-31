@@ -9,16 +9,6 @@ export function increaseQuantityOfTicket(ticket) {
     ];
 }
 
-export function decreaseQuantityOfTicket(ticket) {
-    return [
-        {
-            content: `decrease quantity`,
-            trigger: `.modal .o_event_configurator_popup div:contains('${ticket}') .fa.fa-minus`,
-            run: "click",
-        },
-    ];
-}
-
 export function answerTicketSelectQuestion(ticketNumber, question, answer) {
     return [
         {
@@ -55,26 +45,6 @@ export function answerGlobalTextQuestion(question, answer) {
             content: `Answer question ${question} with ${answer} for global`,
             trigger: `.global_question:contains('${question}') input`,
             run: `edit ${answer}`,
-        },
-    ];
-}
-
-export function pickTicket(name) {
-    return [
-        {
-            content: `pick ticket with name: ${name}`,
-            trigger: `.modal .o-event-ticket:contains('${name}')`,
-            run: "click",
-        },
-    ];
-}
-
-export function eventRemainingSeat(name, seats) {
-    return [
-        {
-            content: `check remaining seats for ${name}`,
-            trigger: `article:contains('${name}'):contains('${seats} seats')`,
-            run: "click",
         },
     ];
 }

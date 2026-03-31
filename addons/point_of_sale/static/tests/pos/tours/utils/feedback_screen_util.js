@@ -46,15 +46,6 @@ export function isShown() {
         },
     ];
 }
-export function totalAmountContains(value) {
-    return [
-        {
-            content: `total amount contains ${value}`,
-            trigger: `.feedback-screen .amount-container.amount:contains("${value}")`,
-        },
-    ];
-}
-
 export function checkTicketData(data, basic = false) {
     // data is an object like:
     // {
@@ -346,7 +337,6 @@ export function checkTicketData(data, basic = false) {
         },
     ];
 }
-
 export function clickSendButton() {
     return [
         {
