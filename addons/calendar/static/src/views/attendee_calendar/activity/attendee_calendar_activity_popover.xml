@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="calendar.AttendeeCalendarActivityPopover.body">
+        <!-- tabindex="0" needed to prevent having a weird auto-focus style
+            on the first button/link of the popover while still auto-focusing the popover. -->
+        <ul t-if="!this.state.hasMarkDoneView" tabindex="0" class="list-group list-group-flush">
+            <li t-if="this.formattedDate" class="list-group-item">
+                <i class="fa fa-fw fa-calendar text-400"/>
+                <span class="fw-bold ms-2" t-out="this.formattedDate"/>
+                <Dropdown t-if="this.hasRescheduleButton">
+                    <button class="btn btn-info btn-link py-0 border-0" type="button" title="Reschedule" aria-label="Reschedule">
+                        <i class="fa fa-fw fa-pencil"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.today)">
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <i class="oi oi-schedule-today me-1"/> Today
+                                </span>
+                                <span t-out="this.targetDays.today.day.weekdayShort" class="ms-2 text-muted"/>
+                            </div>
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.tomorrow)">
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
+                                </span>
+                                <span t-out="this.targetDays.tomorrow.day.weekdayShort" class="ms-2 text-muted"/>
+                            </div>
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => this.onRescheduleActivity(this.targetDays.nextWeek)">
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <i class="oi oi-schedule-later me-1"/> Next Week
+                                </span>
+                                <span t-out="this.targetDays.nextWeek.day.weekdayShort" class="ms-2 text-muted"/>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </li>
+            <li t-if="this.props.activity.res_id and this.props.activity.res_model and this.props.activity.res_name" class="list-group-item">
+                <i class="fa fa-fw fa-link text-400"/>
+                <button class="btn btn-link fw-normal ms-2 p-0 border-0" t-out="this.props.activity.res_name" title="Related Record" aria-label="Related Record"
+                    t-custom-click.stop="(ev, isMiddleClick) => this.onClickOpenRelatedRecord(ev, isMiddleClick)"/>
+            </li>
+        </ul>
+        <ul t-if="this.state.hasMarkDoneView" class="list-group list-group-flush">
+            <li class="list-group-item">
+                <textarea t-custom-ref="textarea" name="feedback" class="form-control" style="min-height: 70px"
+                    rows="3" placeholder="Write Feedback" t-custom-model="this.props.activity.feedback"/>
+            </li>
+        </ul>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarActivityPopover.footer">
+        <t t-if="!this.state.hasMarkDoneView">
+            <t t-if="this.hasMarkDoneButton">
+                <a href="#" class="btn btn-primary" title="Mark Done" aria-label="Mark Done"
+                    t-on-click="() => this.state.hasMarkDoneView = true">
+                    Mark Done
+                </a>
+            </t>
+            <t t-if="this.hasFileUploadButton">
+                <FileUploader onUploaded.bind="this.onFileUploaded">
+                    <t t-set-slot="toggler">
+                        <button class="btn btn-primary" title="Upload File" aria-label="Upload File">
+                            Upload File
+                        </button>
+                    </t>
+                </FileUploader>
+            </t>
+            <t t-if="this.hasEditButton">
+                <a href="#" class="btn btn-secondary" title="Edit" aria-label="Edit"
+                    t-on-click="this.onEditActivity">
+                    Edit
+                </a>
+            </t>
+            <t t-if="this.hasViewMeetingButton">
+                <a href="#" class="btn btn-secondary" title="View Meeting" aria-label="View Meeting"
+                    t-on-click="() => this.props.onViewMeeting(this.props.activity.calendar_event_id)">
+                    View Meeting
+                </a>
+            </t>
+        </t>
+        <t t-else="">
+            <a href="#" class="btn btn-primary" title="Done" aria-label="Done"
+                t-on-click="this.onClickDone">
+                Done
+            </a>
+            <a href="#" class="btn btn-primary" title="Done &amp; Schedule Next" aria-label="Done &amp; Schedule Next"
+                t-on-click="this.onClickDoneAndScheduleNext">
+                Done &amp; Schedule Next
+            </a>
+            <a href="#" class="btn btn-secondary" title="Discard" aria-label="Discard"
+                t-on-click="() => this.state.hasMarkDoneView = false">
+                Discard
+            </a>
+        </t>
+    </t>
+
+</templates>

@@ -1,7 +1,6 @@
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { deserializeDate, serializeDate } from "@web/core/l10n/dates";
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 
 /**
@@ -13,10 +12,10 @@ import { user } from "@web/core/user";
  */
 patch(AttendeeCalendarModel.prototype, {
     /**
-     * User pending activities data.
+     * User pending activities structured as full calendar library events for rendering.
      */
-    get activities() {
-        return this.data.activities;
+    get activityEvents() {
+        return this.data.activityEvents;
     },
 
     /**
@@ -37,37 +36,33 @@ patch(AttendeeCalendarModel.prototype, {
     },
 
     /**
-     * Initialize a Full Calendar library event with the activities for the day.
+     * Initialize a Full Calendar library event from an activity record.
      */
-    normalizeActivityEventRecord(day, activities) {
-        const event = {
-            id: `activity-event-${day.toISODate()}`,
+    normalizeActivityEventRecord(activity) {
+        return {
+            id: `activity-event-${activity.id}`,
+            activityId: activity.id,
+            titleIcon: "fa fa-clock-o",
+            title: activity.display_name,
             colorIndex: user.partnerId || 0,
             duration: 1,
-            start: day,
+            start: deserializeDate(activity.date_deadline),
             // "end" needed even for all day events to represent it on the calendar.
-            end: day.plus({ hours: 1 }),
+            end: deserializeDate(activity.date_deadline).plus({ hours: 1 }),
             isActivity: true,
             isAllDay: true,
             resModel: "mail.activity",
-            rawRecord: activities,
         };
-        if (this.env.isSmall) {
-            event.title = activities.length;
-        } else if (activities.length > 1) {
-            event.title = _t("%s pending activities", activities.length);
-        } else {
-            event.title = activities[0].display_name;
-        }
-        return event;
     },
 
     /**
-     * Update the model activity data with the user pending activities.
+     * Retrieves the user’s pending activities.
+     * Structures them as full calendar library events to be rendered on the calendar view,
+     * and saves them in the store to render their associated activity popover.
      */
     async updateActivityData(data) {
         if (!this.userActivitiesEnabled || !this.showActivities || this.meta.scale === "year") {
-            data.activities = {};
+            data.activityEvents = {};
             return;
         }
         // Retrieves user pending activities for the current calendar date range
@@ -87,24 +82,21 @@ patch(AttendeeCalendarModel.prototype, {
             }
         );
         if (!activities.length) {
-            data.activities = {};
+            data.activityEvents = {};
             return;
         }
-        // Create activity events
-        const activitiesPerDueDate = activities.records.reduce((acc, activity) => {
-            const key = activity.date_deadline;
-            (acc[key] ||= []).push(activity);
-            return acc;
-        }, {});
         const activityEvents = {};
-        for (const [date, activities] of Object.entries(activitiesPerDueDate)) {
-            const activityEvent = this.normalizeActivityEventRecord(
-                deserializeDate(date),
-                activities
-            );
+        for (const activity of activities.records) {
+            const activityEvent = this.normalizeActivityEventRecord(activity);
             activityEvents[activityEvent.id] = activityEvent;
         }
-        data.activities = activityEvents;
+        // Add the activity events in the model data for calendar view rendering.
+        data.activityEvents = activityEvents;
+        // Insert the activity records in the store for activity popover rendering.
+        const storeData = await this.orm.silent.call("mail.activity", "activity_format", [
+            activities.records.map((a) => a.id),
+        ]);
+        this.env.services["mail.store"].insert(storeData);
     },
 
     /**

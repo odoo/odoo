@@ -1,4 +1,4 @@
-import { AttendeeCalendarActivityListPopover } from "@calendar/views/attendee_calendar/activity/attendee_calendar_activity_list_popover";
+import { AttendeeCalendarActivityPopover } from "@calendar/views/attendee_calendar/activity/attendee_calendar_activity_popover";
 import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_renderer";
 import { patch } from "@web/core/utils/patch";
 import { renderToFragment } from "@web/core/utils/render";
@@ -22,18 +22,18 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         super.setup(...arguments);
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.activityListPopover = useCalendarPopover(AttendeeCalendarActivityListPopover);
+        this.activityPopover = useCalendarPopover(AttendeeCalendarActivityPopover);
     },
 
     /**
      * @override
-     * Make sure the activities are set before any other event.
+     * Make sure the activity events are set after any other event.
      */
     get options() {
         const defaultEventOrder = "start,-duration,allDay,title"; // (cf full calendar library BASE_OPTION_DEFAULTS)
         return {
             ...super.options,
-            eventOrder: "isActivity," + defaultEventOrder,
+            eventOrder: "-isActivity," + defaultEventOrder,
         };
     },
 
@@ -44,7 +44,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         if (!event.extendedProps?.isActivity) {
             return super.eventClassNames({ el, event });
         }
-        const record = this.props.model.activities[event.id];
+        const record = this.props.model.activityEvents[event.id];
         return [
             "o_event",
             "o_activity_event",
@@ -62,7 +62,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         if (!this.props.model.showActivities) {
             return events;
         }
-        const activityEvents = Object.values(this.props.model.activities).map((r) => {
+        const activityEvents = Object.values(this.props.model.activityEvents).map((r) => {
             const event = this.convertRecordToEvent(r);
             return {
                 ...event,
@@ -79,24 +79,25 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
      */
     onClick(info) {
         const activityEvent = info.event.extendedProps?.isActivity
-            ? this.props.model.activities[info.event.id]
+            ? this.props.model.activityEvents[info.event.id]
             : false;
         if (!activityEvent) {
             return super.onClick(info);
         }
-        this.activityListPopover.open(
+        this.activityPopover.open(
             info.el,
             {
-                activityIds: activityEvent.rawRecord.map((a) => a.id),
                 model: this.props.model,
-                onActivityChanged: () => {
-                    this.props.model.load();
-                },
+                record: activityEvent,
+                activity: this.env.services["mail.store"]["mail.activity"].get(
+                    activityEvent.activityId
+                ),
                 onViewMeeting: (eventId) => {
+                    this.activityPopover.close();
                     const el = document.querySelector(`.fc-event[data-event-id="${eventId}"]`);
                     const record = this.props.model.records[eventId];
                     if (el && record) {
-                        this.activityListPopover.close();
+                        this.fc.api.scrollToTime(record.start);
                         this.openPopover(el, record);
                     }
                 },
@@ -107,7 +108,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
 
     /**
      * @override
-     * Do not handle double clicks for activities.
+     * Do not handle double clicks for activity events.
      */
     onDblClick(info) {
         if (!info.event.extendedProps?.isActivity) {
@@ -124,7 +125,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         if (!event.extendedProps?.isActivity) {
             return super.onEventContent(arg);
         }
-        const activityEvent = this.props.model.activities[event.id];
+        const activityEvent = this.props.model.activityEvents[event.id];
         if (activityEvent) {
             const fragment = renderToFragment(this.constructor.activityTemplate, activityEvent);
             return { domNodes: fragment.children };
