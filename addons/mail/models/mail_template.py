@@ -225,10 +225,15 @@ class MailTemplate(models.Model):
                 try:
                     template._render_field(fname, record.ids, options=render_options)
                 except Exception as e:
-                    _logger.exception("Error while checking if template can be rendered for field %s", fname)
+                    _logger.info("Error while checking if template can be rendered for field %s", fname)
+
+                    error_details = str(e)
+
                     raise ValidationError(
-                        _("Oops! We couldn't save your template due to an issue with this value: %(template_txt)s. Correct it and try again.",
-                        template_txt=template[fname])
+                        _("Oops! We couldn't save your template due to an issue.\n\n"
+                          "Error: %(error_details)s\n\n"
+                          "Correct it and try again.",
+                        error_details=error_details)
                     ) from e
 
     def _get_dynamic_field_names(self):
