@@ -314,6 +314,7 @@
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
             'website/static/src/components/user_switch.*',
+            'website/static/src/components/location_selector/**/*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -408,6 +409,7 @@
             'website/static/src/xml/website.xml',
             'website/static/src/scss/website_controller_page_kanban.scss',
             'website/static/src/mail/core/common/**/*',
+            'website/static/src/components/location_selector/**/*',
 
             'website/static/src/xml/website_form_editor.xml',
             # TODO when moving options to website: load this from website

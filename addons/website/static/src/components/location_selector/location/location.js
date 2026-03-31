@@ -1,12 +1,10 @@
-import {
-    LocationSchedule
-} from '@website_sale_stock/js/location_selector/location_schedule/location_schedule';
-import { Component } from '@odoo/owl';
-import { _t } from '@web/core/l10n/translation';
+import { LocationSchedule } from "@website/components/location_selector/location_schedule/location_schedule";
+import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class Location extends Component {
     static components = { LocationSchedule };
-    static template = 'website_sale_stock.locationSelector.location';
+    static template = "website.locationSelector.location";
     static props = {
         id: String,
         number: Number,
