@@ -82,4 +82,10 @@ patch(PosOrderline.prototype, {
             "fst-italic": this.is_reward_line,
         };
     },
+    canBeMergedWith(orderline) {
+        return (
+            super.canBeMergedWith(...arguments) &&
+            this._e_wallet_program_id === orderline._e_wallet_program_id
+        );
+    },
 });
