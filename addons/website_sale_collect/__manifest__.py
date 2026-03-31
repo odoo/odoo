@@ -25,6 +25,7 @@ Allows customers to check in-store stock, pay on site, and pick up their orders 
         "web.assets_frontend": [
             "website_sale_collect/static/src/**/*",
             ("remove", "website_sale_collect/static/src/js/pickup_location_many2one/**/*"),
+            'website/static/src/components/location_selector/**/*',
         ],
         "web.assets_backend": [
             "website_sale_collect/static/src/js/location_selector/**/*",

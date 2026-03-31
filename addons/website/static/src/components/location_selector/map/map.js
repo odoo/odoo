@@ -1,11 +1,11 @@
 /*global L*/
 
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from '@odoo/owl';
-import { renderToString } from '@web/core/utils/render';
+import { Component } from "@odoo/owl";
+import { renderToString } from "@web/core/utils/render";
 
 export class Map extends Component {
-    static template = 'website_sale_stock.locationSelector.map';
+    static template = "website.locationSelector.map";
     static props = {
         locations: {
             type: Array,
@@ -43,7 +43,7 @@ export class Map extends Component {
     setup() {
         this.leafletMap = null;
         this.markers = [];
-        this.mapRef = useRef('map');
+        this.mapRef = useRef("map");
 
         // Create the map.
         useLayoutEffect(
@@ -54,13 +54,14 @@ export class Map extends Component {
                 this.leafletMap.attributionControl.setPrefix(
                     '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
                 );
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
                     maxZoom: 19,
-                    attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+                    attribution:
+                        "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
                 }).addTo(this.leafletMap);
                 return () => {
                     this.leafletMap.remove();
-                }
+                };
             },
             () => []
         );
@@ -77,15 +78,12 @@ export class Map extends Component {
         useLayoutEffect(
             (locations, selectedLocationId) => {
                 this.addMarkers(locations);
-                const selectedLocation = locations.find(
-                    l => String(l.id) === selectedLocationId
-                );
+                const selectedLocation = locations.find((l) => String(l.id) === selectedLocationId);
                 if (selectedLocation) {
                     // Center the Map.
-                    this.leafletMap.panTo(
-                        [selectedLocation.latitude, selectedLocation.longitude],
-                        { animate: true }
-                    );
+                    this.leafletMap.panTo([selectedLocation.latitude, selectedLocation.longitude], {
+                        animate: true,
+                    });
                 }
                 return () => {
                     this.removeMarkers();
@@ -104,33 +102,32 @@ export class Map extends Component {
      */
     addMarkers(locations) {
         for (const loc of locations) {
-            const isSelected = String(loc.id) === this.props.selectedLocationId
+            const isSelected = String(loc.id) === this.props.selectedLocationId;
             // Icon creation
             const iconInfo = {
-                className: isSelected ? 'o_location_selector_marker_icon_selected'
-                    : 'o_location_selector_marker_icon',
-                html: renderToString(
-                    'website_sale_stock.locationSelector.map.marker',
-                    { number: locations.indexOf(loc) + 1 },
-                ),
+                className: isSelected
+                    ? "o_location_selector_marker_icon_selected"
+                    : "o_location_selector_marker_icon",
+                html: renderToString("website.locationSelector.map.marker", {
+                    number: locations.indexOf(loc) + 1,
+                }),
                 iconSize: [30, 40],
                 iconAnchor: [15, 40],
             };
 
-            const marker = L.marker(
-                [loc.latitude, loc.longitude],
-                {
-                    icon: L.divIcon(iconInfo),
-                    title: locations.indexOf(loc) + 1,
-                },
-            );
+            const marker = L.marker([loc.latitude, loc.longitude], {
+                icon: L.divIcon(iconInfo),
+                title: locations.indexOf(loc) + 1,
+            });
 
             // By default, the marker's zIndex is based on its latitude. This ensures the selected
             // marker is always displayed on top of all others.
-            if (isSelected) marker.setZIndexOffset(100);
+            if (isSelected) {
+                marker.setZIndexOffset(100);
+            }
 
             marker.addTo(this.leafletMap);
-            marker.addEventListener('click', () => {
+            marker.addEventListener("click", () => {
                 this.props.setSelectedLocation(loc.id);
             });
 
@@ -157,6 +154,6 @@ export class Map extends Component {
      * @return {Object} The selected location.
      */
     get selectedLocation() {
-        return this.props.locations.find(l => String(l.id) === this.props.selectedLocationId)
+        return this.props.locations.find((l) => String(l.id) === this.props.selectedLocationId);
     }
 }
