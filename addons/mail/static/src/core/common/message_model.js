@@ -19,7 +19,11 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { createElementWithContent, htmlTrim } from "@web/core/utils/html";
+import {
+    createDocumentFragmentFromContent,
+    createElementWithContent,
+    htmlTrim,
+} from "@web/core/utils/html";
 import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
@@ -688,6 +692,14 @@ export class Message extends Record {
         return data;
     }
 
+    get fromFullComposer() {
+        return Boolean(
+            createDocumentFragmentFromContent(this.body).querySelector(
+                "[data-o-mail-full-composer]"
+            )
+        );
+    }
+
     enterEditMode() {
         const validRoles = Array.from(
             this.bodyEl?.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']") ?? []
@@ -702,6 +714,7 @@ export class Message extends Record {
             isEditComposerVisible: true,
             mentionedPartners: this.partner_ids,
             mentionedRoles: validRoles,
+            restoredFromFullComposer: this.fromFullComposer,
             selection: {
                 start: text.length,
                 end: text.length,

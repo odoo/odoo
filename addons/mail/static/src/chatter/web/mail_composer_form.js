@@ -2,8 +2,10 @@ import { useSubEnv } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
 import { EventBus, t, useOnChange, useProps } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
@@ -18,6 +20,35 @@ export class MailComposerFormController extends formView.Controller {
         this.env.dialogData.model = this.props.resModel;
         useSubEnv({
             fullComposerBus: this.props.fullComposerBus,
+        });
+        if (this.props.context.default_message_id) {
+            this.dialogService = useService("dialog");
+            this.stopEditingConfirmation();
+        }
+    }
+
+    stopEditingConfirmation() {
+        const dialogData = this.env.dialogData;
+        const close = dialogData.close;
+        dialogData.close = async (params) => {
+            if (params?.dismiss && !(await this.askStopEditingConfirmation())) {
+                return;
+            }
+            return close(params);
+        };
+    }
+
+    /** @returns {Promise<boolean>} whether the message edition should be stopped */
+    askStopEditingConfirmation() {
+        return new Promise((resolve) => {
+            this.dialogService.add(ConfirmationDialog, {
+                body: _t("Leaving will stop editing this message."),
+                cancel: () => resolve(false),
+                cancelLabel: _t("Keep editing"),
+                confirm: () => resolve(true),
+                confirmLabel: _t("Stop editing"),
+                title: _t("Stop editing"),
+            });
         });
     }
 }
