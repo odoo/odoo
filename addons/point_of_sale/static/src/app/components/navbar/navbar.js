@@ -18,6 +18,8 @@ import { uuidv4 } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { cookie } from "@web/core/browser/cookie";
+import { browser } from "@web/core/browser/browser";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -175,6 +177,19 @@ export class Navbar extends Component {
         this.dialog.add(QrCodeCustomerDisplay, {
             customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
         });
+    }
+
+    get isHighContrast() {
+        return cookie.get("pos_high_contrast") !== undefined;
+    }
+
+    toggleHighContrast() {
+        if (this.isHighContrast) {
+            cookie.delete("pos_high_contrast");
+        } else {
+            cookie.set("pos_high_contrast", "1");
+        }
+        browser.location.reload();
     }
 
     get showCreateProductButton() {

@@ -62,6 +62,11 @@
                                 <DropdownItem onSelected="() => this.openCustomerDisplay()">
                                     <i class="fa fa-fw fa-desktop" aria-hidden="true" /> Customer Display
                                 </DropdownItem>
+                                <DropdownItem onSelected="() => this.toggleHighContrast()">
+                                    <i t-if="this.isHighContrast" class="fa fa-fw fa-toggle-on" aria-hidden="true" />
+                                    <i t-else="" class="fa fa-fw fa-toggle-off" aria-hidden="true" />
+                                    Toggle High Contrast Mode
+                                </DropdownItem>
                                 <DropdownItem t-if="!isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
                                     <i class="fa fa-fw fa-download" aria-hidden="true" /> Install App
                                 </DropdownItem>

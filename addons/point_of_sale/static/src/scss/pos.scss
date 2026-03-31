@@ -183,6 +183,9 @@ select > option {
         margin-top: $border-width * 5;
         border-bottom: ($border-width * 1)  solid var(--btn-border-color);
     }
+    .pos_high_contrast &{
+        border: 0;
+    }
 }
 
 // Set all the colors but the "no-color" one
@@ -196,6 +199,13 @@ select > option {
         --btn-hover-border-color: #{$-border-color};
         --btn-active-bg: #{darken($-background-color, 10%)};
         --btn-active-border-color: #{$-border-color};
+        .pos_high_contrast &{
+            $-background-color: mix($-border-color, $white, 70%);
+            --btn-color: #{color-contrast($-background-color)};
+            --btn-bg: #{$-background-color};
+            --btn-hover-bg: #{darken($-background-color, 3%)};
+            --btn-active-bg: #{darken($-background-color, 10%)};
+        }
     }
 
     .o_colorlist_item_numpad_color_#{$size - 1} {
