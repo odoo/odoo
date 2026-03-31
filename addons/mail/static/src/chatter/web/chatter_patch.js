@@ -210,12 +210,15 @@ const chatterPatch = {
             partner_id: result.partner_id,
             name: result.name || result.email,
         }));
+        const excludePartnerIds = this.state.thread.suggestedRecipients.map(
+            (r) => r.partner_id
+        );
         this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
-            (additionalRecipient) =>
-                this.state.thread.suggestedRecipients.every(
-                    (suggestedRecipient) =>
-                        suggestedRecipient.partner_id !== additionalRecipient.partner_id
-                )
+            (r) => !excludePartnerIds.includes(r.partner_id)
+        );
+        excludePartnerIds.push(...this.state.thread.additionalRecipients.map((r) => r.partner_id));
+        this.state.thread.additionalCcRecipients = this.state.thread.additionalCcRecipients.filter(
+            (r) => !excludePartnerIds.includes(r.partner_id)
         );
     },
 

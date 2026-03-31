@@ -212,6 +212,7 @@ export class Thread extends Record {
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" field of the Chatter. */
     additionalRecipients = fields.Attr([]);
+    additionalCcRecipients = fields.Attr([]);
     /** @type {number|undefined} */
     recipients = fields.Many("mail.followers");
     recipientsCount = undefined;

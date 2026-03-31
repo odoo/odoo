@@ -462,7 +462,7 @@ export class Store extends BaseStore {
 
     fillPartnersMentionToken(postData) {
         postData.partner_ids_mention_token ||= {};
-        for (const pid of postData.partner_ids) {
+        for (const pid of [...postData.partner_ids, ...(postData.partner_cc_ids || [])]) {
             const partner = this["res.partner"].get(pid);
             if (partner?.mention_token) {
                 postData.partner_ids_mention_token[pid] = partner.mention_token;
@@ -521,6 +521,7 @@ export class Store extends BaseStore {
             attachments,
             cannedResponseIds,
             emailAddSignature,
+            isCcEnabled,
             isNote,
             mentionedChannels,
             mentionedPartners,
@@ -534,21 +535,6 @@ export class Store extends BaseStore {
             mentionedRoles,
             thread,
         });
-        const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
-        const role_ids = validMentions?.roles.map((role) => role.id) ?? [];
-        const recipientEmails = [];
-        if (!isNote) {
-            const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
-            const recipientIds = allRecipients
-                .filter((recipient) => recipient.persona)
-                .map((recipient) => recipient.persona.id);
-            allRecipients
-                .filter((recipient) => !recipient.persona)
-                .forEach((recipient) => {
-                    recipientEmails.push(recipient.email);
-                });
-            partner_ids.push(...recipientIds);
-        }
         postData = {
             body: await generateEmojisOnHtml(body),
             email_add_signature: emailAddSignature,
@@ -556,15 +542,35 @@ export class Store extends BaseStore {
             subtype_xmlid: subtype,
             subject,
         };
+        postData.partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
+        postData.partner_emails = [];
+        postData.partner_cc_ids = [];
+        postData.partner_cc_emails = [];
+        postData.role_ids = validMentions?.roles.map((role) => role.id) ?? [];
+        if (!isNote) {
+            for (const recipient of [
+                ...thread.suggestedRecipients,
+                ...thread.additionalRecipients,
+            ]) {
+                if (recipient.persona) {
+                    postData.partner_ids.push(recipient.persona.id);
+                } else {
+                    postData.partner_emails.push(recipient.email);
+                }
+            }
+            if (isCcEnabled) {
+                for (const recipient of thread.additionalCcRecipients) {
+                    if (recipient.persona) {
+                        postData.partner_cc_ids.push(recipient.persona.id);
+                    } else {
+                        postData.partner_cc_emails.push(recipient.email);
+                    }
+                }
+            }
+        }
+        this.fillPartnersMentionToken(postData);
         if (attachments.length) {
             postData.attachment_ids = attachments.map(({ id }) => id);
-        }
-        if (partner_ids.length) {
-            Object.assign(postData, { partner_ids });
-            this.fillPartnersMentionToken(postData);
-        }
-        if (role_ids.length) {
-            Object.assign(postData, { role_ids });
         }
         if (thread.channel && validMentions?.specialMentions.length) {
             postData.special_mentions = validMentions.specialMentions;
@@ -574,8 +580,18 @@ export class Store extends BaseStore {
                 (attachment) => attachment.ownership_token
             );
         }
-        if (recipientEmails.length) {
-            postData.partner_emails = recipientEmails;
+        // Clean empty fields
+        for (const field of [
+            "partner_ids",
+            "partner_ids_mention_token",
+            "partner_cc_ids",
+            "partner_emails",
+            "partner_cc_emails",
+            "role_ids",
+        ]) {
+            if (Object.prototype.hasOwnProperty.call(postData, field) && !postData[field].length) {
+                delete postData[field];
+            }
         }
         const params = {
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually

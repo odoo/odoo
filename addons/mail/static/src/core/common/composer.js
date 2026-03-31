@@ -670,9 +670,12 @@ export class Composer extends Component {
 
     async onClickFullComposerGetAction() {
         this.props.composer.restoredFromFullComposer = false;
-        const allRecipients = [...this.thread.suggestedRecipients];
+        const recipientsTo = [...this.thread.suggestedRecipients];
+        const recipientsCc = [];
         if (this.props.type !== "note") {
-            allRecipients.push(...this.thread.additionalRecipients);
+            recipientsTo.push(...this.thread.additionalRecipients);
+            recipientsCc.push(...this.thread.additionalCcRecipients);
+            const allRecipients = recipientsTo.concat(recipientsCc);
             // auto-create partners:
             const newPartners = allRecipients.filter((recipient) => !recipient.partner_id);
             if (newPartners.length !== 0) {
@@ -714,7 +717,11 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : allRecipients.map((recipient) => recipient.partner_id),
+                    : recipientsTo.map((recipient) => recipient.partner_id),
+            default_partner_cc_ids:
+                this.props.type === "note"
+                    ? []
+                    : recipientsCc.map((recipient) => recipient.partner_id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
@@ -841,6 +848,7 @@ export class Composer extends Component {
             const allRecipients = [
                 ...composer.thread.suggestedRecipients,
                 ...composer.thread.additionalRecipients,
+                ...composer.thread.additionalCcRecipients,
             ];
             if (allRecipients.some((recipient) => !recipient.email || !isEmail(recipient.email))) {
                 return;
@@ -932,6 +940,7 @@ export class Composer extends Component {
         this.props.composer.replyToMessage = undefined;
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
+        this.props.composer.thread.additionalCcRecipients = [];
         return message;
     }
 
