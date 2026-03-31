@@ -29,14 +29,6 @@ export function setTextCaretToEnd(el) {
     sel.addRange(range);
 }
 
-export function selectAllText(el) {
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.selectNodeContents(el);
-    sel.removeAllRanges();
-    sel.addRange(range);
-}
-
 export function computeTextElementSize(textEl, element) {
     textEl.getBoundingClientRect();
     const textWidth = Math.max(TEXT_MIN_WIDTH, textEl.scrollWidth);

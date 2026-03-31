@@ -38,20 +38,6 @@ export function loginScreenIsNotShown() {
         },
     ];
 }
-export function cashierNameIs(name) {
-    return [
-        {
-            isActive: ["desktop"],
-            content: `logged cashier is '${name}'`,
-            trigger: `.pos .oe_status .username:contains("${name}")`,
-        },
-        {
-            isActive: ["mobile"],
-            content: `logged cashier is '${name}'`,
-            trigger: `.pos .oe_status img[alt="${name}"]`,
-        },
-    ];
-}
 export function login(name, pin) {
     const res = [...clickLoginButton(), ...CashierSelectionPopup.has(name, { run: "click" })];
     if (!pin) {

@@ -67,9 +67,6 @@ class PosSelfOrderController(http.Controller):
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
         }
 
-    def _verify_line_price(self, lines, pos_config, preset_id):
-        lines.order_id.recompute_prices()
-
     def _ensure_delivery_fee(self, order, preset):
         """Add or remove the delivery fee line based on the order total and preset configuration."""
         delivery_product = preset.delivery_product_id

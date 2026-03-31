@@ -17,13 +17,6 @@ export function clickSnoozeButton() {
         run: "click",
     };
 }
-export function clickAvailabilitySwitch() {
-    return {
-        trigger: ".section-inventory .form-switch input[type='checkbox']:not(:checked)",
-        content: "Click the snooze button",
-        run: "click",
-    };
-}
 export function clickSnoozeDuration(button) {
     return {
         trigger: `.btn-group .row label:contains(${button})`,

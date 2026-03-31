@@ -197,17 +197,11 @@ function _hasFloatingOrder(name, yes, click) {
 export function hasFloatingOrder(name) {
     return _hasFloatingOrder(name, true);
 }
-export function noFloatingOrder(name) {
-    return _hasFloatingOrder(name, false);
-}
 export function clickFloatingOrder(name) {
     return _hasFloatingOrder(name, true, true);
 }
 export function clickOrders() {
     return { trigger: ".pos-leftheader .orders-button", run: "click" };
-}
-export function clickPresetTimingSlot() {
-    return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
 }
 export function selectPresetTimingSlotHour({ title, hour } = {}) {
     return [
@@ -331,14 +325,6 @@ export function CustomerDisplayHasQRButton() {
         isActive: ["desktop"],
         content: "Check that the customer display popup has a 'Display QR' button",
         trigger: ".o_dialog .modal-body .container .btn-secondary:contains('Display QR')",
-    };
-}
-export function ClickCustomerDisplayThisDeviceButton() {
-    return {
-        isActive: ["desktop"],
-        content: "Check that the customer display popup has a 'This device' button",
-        trigger: ".btn-primary:contains('This device')",
-        run: "click",
     };
 }
 export function ClickCustomerDisplayQRButton() {
