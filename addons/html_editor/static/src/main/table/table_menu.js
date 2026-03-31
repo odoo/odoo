@@ -1,6 +1,6 @@
 import { useExternalListener, useRef } from "@web/owl2/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useEffect } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -41,24 +41,12 @@ export class TableMenu extends Component {
     static components = { Dropdown, DropdownItem };
 
     setup() {
-        if (this.props.type === "column") {
-            this.isFirst = this.props.target.cellIndex === 0;
-            this.isLast = !this.props.target.nextElementSibling;
-        } else {
-            const tr = this.props.target.parentElement;
-            this.isFirst = !tr.previousElementSibling;
-            this.isLast = !tr.nextElementSibling;
-            this.isTableHeader = [...tr.children][0].nodeName === "TH";
-        }
         this.editableDocument = this.props.editable.ownerDocument;
-        this.tableGrid = this.props.buildTableGrid(closestElement(this.props.target, "table"));
-        this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
         this.menuRef = useRef("menuRef");
         const onPointerDown = (ev) => this.onPointerDown(ev);
         onMounted(() => {
             this.overlayEl = this.menuRef.el;
             this.overlayEl.addEventListener("pointerdown", onPointerDown);
-            this.updatePosition(this.props);
         });
         onWillUnmount(() => {
             this.menuRef?.el.removeEventListener("pointerdown", onPointerDown);
@@ -68,12 +56,27 @@ export class TableMenu extends Component {
             // Listen outside the iframe.
             useExternalListener(document, "pointerup", this.onPointerUp);
         }
-        onWillUpdateProps((newProps) => {
-            this.updatePosition(newProps);
-        });
+        useEffect(
+            () => {
+                const { type, target } = this.props;
+                this.tableGrid = this.props.buildTableGrid(closestElement(target, "table"));
+                if (type === "column") {
+                    this.isFirst = target.cellIndex === 0;
+                    this.isLast = !target.nextElementSibling;
+                } else {
+                    const tr = target.parentElement;
+                    this.isFirst = !tr.previousElementSibling;
+                    this.isLast = !tr.nextElementSibling;
+                    this.isTableHeader = [...tr.children][0].nodeName === "TH";
+                }
+                this.items = type === "column" ? this.colItems() : this.rowItems();
+                this.updatePosition();
+            },
+            () => [this.props.target]
+        );
         if (this.props.document.defaultView.frameElement) {
             useExternalListener(this.props.document, "scroll", () => {
-                this.updatePosition(this.props);
+                this.updatePosition();
             });
             useExternalListener(this.props.document, "pointerdown", (ev) => {
                 if (!this.overlayEl.contains(ev.target)) {
@@ -126,7 +129,8 @@ export class TableMenu extends Component {
         });
     }
 
-    updatePosition({ target, type, direction }) {
+    updatePosition() {
+        const { target, type, direction } = this.props;
         if (!this.overlayEl || !target) {
             return;
         }
