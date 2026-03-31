@@ -7,6 +7,25 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
         ...CalendarCommonRenderer.components,
         Popover: AttendeeCalendarCommonPopover,
     };
+
+    get interactiveOptions() {
+        return {
+            ...super.interactiveOptions,
+            moreLinkClick: () => {
+                this.toggleDayGridFoldButton();
+                // do not let fullcalendar open its default "more" popover.
+                return true;
+            },
+        };
+    }
+
+    get options() {
+        return {
+            ...super.options,
+            eventsSet: this.onEventsSet,
+        };
+    }
+
     /**
      * @override
      *
@@ -44,6 +63,27 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
     }
 
     /**
+     * Toggle the visibility of the day grid fold/unfold button.
+     * Only visible if the event limit is exceeded.
+     */
+    onEventsSet(events) {
+        if (!this.dayGridFoldButton) {
+            return;
+        }
+        // Check if the event limit is exceeded.
+        // i.e. if at least one day cell contains an event count exceeding the event limit.
+        const counts = {};
+        const limitExceeded = events.some(
+            (e) =>
+                e.allDay &&
+                (counts[e.startStr] = (counts[e.startStr] || 0) + 1) > this.props.model.eventLimit
+        );
+        // Show button if the event limit is exceeded, hide it otherwise.
+        this.dayGridFoldButton.classList.toggle("d-none", !limitExceeded);
+        this.dayGridFoldButton.classList.toggle("d-flex", limitExceeded);
+    }
+
+    /**
      * @override
      */
     onEventDidMount({ el, event }) {
@@ -63,5 +103,51 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
      */
     isSelectionAllowed(event) {
         return true;
+    }
+
+    /**
+     * Fold/unfold the all day events in the day grid.
+     */
+    toggleDayGridFoldButton() {
+        if (!this.dayGridFoldButton) {
+            return;
+        }
+        if (this.fc.api.getOption("dayMaxEventRows") !== this.props.model.eventLimit) {
+            // Fold: only display events up to event limit.
+            this.fc.api.setOption("dayMaxEventRows", this.props.model.eventLimit);
+            this.props.model.currentEventLimit = this.props.model.eventLimit;
+            this.dayGridFoldButton.classList.replace("oi-chevron-up", "oi-chevron-down");
+        } else {
+            // Unfold: display every events.
+            this.fc.api.setOption("dayMaxEventRows", false);
+            this.props.model.currentEventLimit = false;
+            this.dayGridFoldButton.classList.replace("oi-chevron-down", "oi-chevron-up");
+        }
+    }
+
+    /**
+     * @override
+     * Render a button to fold/unfold the all day events in the day grid.
+     */
+    viewDidMount({ el, view }) {
+        super.viewDidMount({ el, view });
+        if (["day", "week"].includes(this.props.model.scale)) {
+            const box = el.querySelector(".fc-scroller-harness:has(.fc-daygrid-body)");
+            if (!box) {
+                return;
+            }
+            // Restore previous day grid fold/unfold state
+            const eventLimit = this.props.model.currentEventLimit ?? this.props.model.eventLimit;
+            this.fc.api.setOption("dayMaxEventRows", eventLimit);
+            // Render fold/unfold button (hidden by default, visibility handled in onEventsSet)
+            const button = document.createElement("button");
+            button.className =
+                "o_calendar_daygrid_fold_btn position-absolute top-0 bottom-0 z-2 " +
+                "btn oi opacity-75 opacity-100-hover border-0 d-none align-items-start justify-content-center " +
+                `${eventLimit ? "oi-chevron-down" : "oi-chevron-up"}`;
+            button.addEventListener("click", this.toggleDayGridFoldButton.bind(this));
+            box.insertAdjacentElement("beforeend", button);
+            this.dayGridFoldButton = button;
+        }
     }
 }

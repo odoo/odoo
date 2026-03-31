@@ -102,6 +102,26 @@
     }
 }
 
+.o_calendar_renderer {
+    // ====== Both Day and Week view
+    .fc-timeGridDay-view,
+    .fc-timeGridWeek-view {
+        .fc-scrollgrid-section-body:not(.fc-scrollgrid-section-liquid) {
+            // Max height for the day grid when it's unfolded.
+            .fc-scroller:has(+ .o_calendar_daygrid_fold_btn.oi-chevron-up) {
+                max-height: 25vh;
+            }
+            .o_calendar_daygrid_fold_btn {
+                // Match cell width
+                width: 40px;
+                @include media-breakpoint-up(md) {
+                    width: 60px;
+                }
+            }
+        }
+    }
+}
+
 .btn:hover .o_calendar_check {
     display: none;
 }
