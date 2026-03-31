@@ -180,6 +180,10 @@ const CSS_UNITS_CONVERSION = {
     "ms-s": () => 0.001,
     "rem-px": (htmlStyle) => parseFloat(htmlStyle["font-size"]),
     "px-rem": (htmlStyle) => 1 / parseFloat(htmlStyle["font-size"]),
+    "em-px": (htmlStyle) => parseFloat(htmlStyle["font-size"]),
+    "px-em": (htmlStyle) => 1 / parseFloat(htmlStyle["font-size"]),
+    "em-%": () => 100, // 1em = 100%
+    "%-em": () => 1 / 100, // 1% = 0.01em
     "%-px": () => -1, // Not implemented but should simply be ignored for now
     "px-%": () => -1, // Not implemented but should simply be ignored for now
 };

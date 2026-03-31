@@ -781,6 +781,51 @@ describe("unit & saveUnit", () => {
         expect.verifySteps(["customAction 57000ms"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("57000ms");
     });
+    test("should correctly convert values between em <-> %, em <-> px units", async () => {
+        addBuilderAction({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
+                    expect.step(`customAction ${value}`);
+                    editingElement.innerHTML = value;
+                }
+            },
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-px-em-conversion";
+                static template = xml`<BuilderNumberInput action="'customAction'" unit="'px'" saveUnit="'em'"/>`;
+            }
+        );
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-em-percent-conversion";
+                static template = xml`<BuilderNumberInput action="'customAction'" unit="'em'" saveUnit="'%'"/>`;
+            }
+        );
+        await setupHTMLBuilder(`
+                    <div style="font-size: 10px">
+                        <div class="test-px-em-conversion">1em</div>
+                        <div class="test-em-percent-conversion">10%</div>
+                    </div>
+                `);
+        await contains(":iframe .test-px-em-conversion").click();
+        expect(".options-container input").toHaveValue("10");
+        await click(".options-container input");
+        await fill("0");
+        await click(document.body);
+        expect.verifySteps(["customAction 10em", "customAction 10em"]);
+        expect(":iframe .test-px-em-conversion").toHaveInnerHTML("10em");
+        await contains(":iframe .test-em-percent-conversion").click();
+        expect(".options-container input").toHaveValue("0.1");
+        await click(".options-container input");
+        await fill("0");
+        expect.verifySteps(["customAction 10%"]);
+        expect(":iframe .test-em-percent-conversion").toHaveInnerHTML("10%");
+    });
 });
 describe("sanitized values", () => {
     test("don't allow multi values by default", async () => {
