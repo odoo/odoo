@@ -20,11 +20,16 @@ patch(PartnerDetailsEdit.prototype, {
         return res;
     },
     saveChanges() {
-        if (this.pos.isPeruvianCompany() && (!this.props.partner.vat && !this.changes.vat)) {
-            return this.popup.add(ErrorPopup, {
-                title: _t("Missing Field"),
-                body: _t("A Identification Number Is Required"),
-            });
+        if (this.pos.isPeruvianCompany()) {
+            if (!this.props.partner.vat && !this.changes.vat) {
+                return this.popup.add(ErrorPopup, {
+                    title: _t("Missing Field"),
+                    body: _t("A Identification Number Is Required"),
+                });
+            }
+            const city_id = parseInt(this.changes.city_id);
+            const city = this.pos.cities.find((c) => c.id == city_id);
+            this.changes.city = city ? city.name : this.changes.city;
         }
         return super.saveChanges(...arguments);
     },
