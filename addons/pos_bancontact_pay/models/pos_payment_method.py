@@ -4,7 +4,6 @@ import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.sql import column_exists, create_column
 
 from odoo.addons.pos_bancontact_pay import const
 from odoo.addons.pos_bancontact_pay.errors.http import HTTP_ERRORS
@@ -16,11 +15,6 @@ class PosPaymentMethod(models.Model):
     # ----- Fields ----- #
     def _get_external_qr_provider_selection(self):
         return super()._get_external_qr_provider_selection() + [("bancontact_pay", "Bancontact Pay")]
-
-    def _auto_init(self):
-        if not column_exists(self.env.cr, "pos_payment_method", "bancontact_usage"):
-            create_column(self.env.cr, "pos_payment_method", "bancontact_usage", "varchar")
-        return super()._auto_init()
 
     bancontact_api_key = fields.Char("Bancontact API Key")
     bancontact_ppid = fields.Char("Bancontact PPID")

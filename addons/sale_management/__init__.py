@@ -1,14 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools.sql import column_exists, create_column
-
 from . import controllers, models
-
-
-def pre_init_hook(env):
-    """Do not compute the sale_order_template_id field on existing SOs."""
-    if not column_exists(env.cr, "sale_order", "sale_order_template_id"):
-        create_column(env.cr, "sale_order", "sale_order_template_id", "int4")
 
 
 def uninstall_hook(env):

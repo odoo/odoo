@@ -6,21 +6,6 @@ from odoo.tools.sql import SQL
 from . import const, controllers, models, report, wizard
 
 
-def _pre_init_sale(env):
-    """Allow installing sale in databases with large account.analytic.line tables.
-
-    The different fields are all NULL (falsy) for existing AAL,
-    the computation is way more efficient in SQL than in Python.
-    """
-    env.cr.execute(
-        SQL("""
-       ALTER TABLE account_analytic_line
-       ADD COLUMN IF NOT EXISTS order_id INT4,
-       ADD COLUMN IF NOT EXISTS so_line  INT4
-    """)
-    )
-
-
 def _post_init_hook(env):
     _synchronize_crons(env)
     _setup_downpayment_account(env)
