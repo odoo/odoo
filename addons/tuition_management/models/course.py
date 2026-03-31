@@ -329,15 +329,26 @@ class Enquiry(models.Model):
             self.stage_id = enrolled_stage
 
     def action_enroll_to_course(self):
-        """Convert enrolled enquiry to a course enrollment."""
+        """Convert enquiry to a course enrollment, creating student, parent, and course."""
         self.ensure_one()
-        enrolled_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Enrolled')], limit=1)
-        if enrolled_stage and self.stage_id != enrolled_stage:
-            raise UserError('Enquiry must be in "Enrolled" stage to enroll in a course.')
         
-        # Create or get student profile if not already created
-        student_profile = self.env['student.profile'].search([
+        # Create or find parent profile
+        parent_profile = self.env['parent.profile'].search([
             ('email', '=', self.email)
+        ], limit=1)
+        
+        if not parent_profile:
+            parent_profile = self.env['parent.profile'].create({
+                'name': self.name,
+                'email': self.email or '',
+                'phone': self.phone or '',
+                'country_code': self.country_code or '+1',
+            })
+        
+        # Create or find student profile
+        student_profile = self.env['student.profile'].search([
+            ('name', '=', self.student_name),
+            ('parent_id', '=', parent_profile.id),
         ], limit=1)
         
         if not student_profile:
@@ -346,19 +357,30 @@ class Enquiry(models.Model):
                 'email': self.email or '',
                 'phone': self.phone or '',
                 'country_code': self.country_code,
-                'grade_id': self.grade_id.id if self.grade_id else None,
+                'grade_id': self.grade_id.id if self.grade_id else False,
                 'subjects_ids': [(6, 0, [self.subject_id.id])] if self.subject_id else [],
+                'parent_id': parent_profile.id,
             })
+        else:
+            # Link existing student to parent if not already linked
+            if not student_profile.parent_id:
+                student_profile.parent_id = parent_profile.id
         
-        # Find active course matching subject and grade
+        # Build course name: Student Name - Subject - Grade
+        course_name = f"{self.student_name} - {self.subject_id.name} - {self.grade_id.name}"
+        
+        # Find existing course with the same name, or create a new one
         course = self.env['course.master'].search([
-            ('subject_id', '=', self.subject_id.id),
-            ('grade_id', '=', self.grade_id.id),
-            ('status', '=', 'active')
+            ('name', '=', course_name),
         ], limit=1)
         
         if not course:
-            raise UserError('No active course found matching the subject and grade. Please create a course first.')
+            course = self.env['course.master'].create({
+                'name': course_name,
+                'subject_id': self.subject_id.id,
+                'grade_id': self.grade_id.id,
+                'status': 'active',
+            })
         
         # Create enrollment
         enrollment = self.env['course.enrollment'].create({
@@ -367,6 +389,11 @@ class Enquiry(models.Model):
             'student_id': student_profile.id,
             'status': 'enrolled',
         })
+        
+        # Move to Enrolled stage
+        enrolled_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Enrolled')], limit=1)
+        if enrolled_stage:
+            self.stage_id = enrolled_stage
         
         return {
             'type': 'ir.actions.act_window',
