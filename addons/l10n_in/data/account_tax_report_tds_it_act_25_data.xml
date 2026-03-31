@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tds_report_it_act_25" model="account.report">
+        <field name="name">TDS I.T. Act 25 Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.in"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tds_report_25_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tds_report_line_section_392_1" model="account.report.line">
+                <field name="name">Section 392(1): Salary income based on slab rate</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_392_1_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 392(1) SALARY</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_1_i" model="account.report.line">
+                <field name="name">Section 393(1)1(i): Insurance Commission - Person other than Company/Domestic Company</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_1_i_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)1(i) INSU COMM</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_1_ii" model="account.report.line">
+                <field name="name">Section 393(1)1(ii): Commission/brokerage (other than insurance)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_1_ii_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)1(ii) COMM / BROK</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_2_i" model="account.report.line">
+                <field name="name">Section 393(1)2(i): Rent paid by non-specified person</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_2_i_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)2(i) RENT</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_2_ii_a" model="account.report.line">
+                <field name="name">Section 393(1)2(ii)(a): Rent of machinery/plant/equipment (specified person)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_2_ii_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)2(ii)(a) RENT MACH</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_2_ii_b" model="account.report.line">
+                <field name="name">Section 393(1)2(ii)(b): Rent of land/building/furniture/fittings (specified person)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_2_ii_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)2(ii)(b) RENT LAND</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_3_i" model="account.report.line">
+                <field name="name">Section 393(1)3(i): Consideration for immovable property transfer (higher of consideration or stamp duty value)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_3_i_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)3(i) IMM PROP</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_3_ii" model="account.report.line">
+                <field name="name">Section 393(1)3(ii): Consideration for property transfer under section 67(14) agreement</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_3_ii_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)3(ii) PROP 67 (14)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_3_iii" model="account.report.line">
+                <field name="name">Section 393(1)3(iii): Compensation/consideration for compulsory acquisition of immovable property</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_3_iii_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)3(iii) COMP ACQ</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_4_i" model="account.report.line">
+                <field name="name">Section 393(1)4(i): Income from Mutual Fund units / specified undertaking / specified company</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_4_i_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)4(i) MF UNITS</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_4_ii" model="account.report.line">
+                <field name="name">Section 393(1)4(ii): Distributed income payable by Business Trust to unitholders (Sch V Sl. 3 &amp; 4)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_4_ii_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)4(ii) BT DIST</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_4_iii" model="account.report.line">
+                <field name="name">Section 393(1)4(iii): Income from Investment Fund units (other than exempt portion)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_4_iii_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)4(iii) INV FUND</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_4_iv" model="account.report.line">
+                <field name="name">Section 393(1)4(iv): Income from investment in Securitisation Trust</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_4_iv_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)4(iv) SEC TRUST</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_6_i_a" model="account.report.line">
+                <field name="name">Section 393(1)6(i)(a): Contract payments to Individual/HUF contractor (designated person)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_6_i_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)6(i)(a) CONT IND</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_6_i_b" model="account.report.line">
+                <field name="name">Section 393(1)6(i)(b): Contract payments to non-individual/HUF contractor (designated person)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_6_i_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)6(i)(b) CONT OTH</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_6_ii" model="account.report.line">
+                <field name="name">Section 393(1)6(ii): Contract payments to non-individual/HUF contractor (designated person)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_6_ii_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)6(ii) IND CONT</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_6_iii_a" model="account.report.line">
+                <field name="name">Section 393(1)6(iii)(a): Technical services (non-professional) / royalty for films / call centre operation</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_6_iii_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)6(iii)(a) TECH</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_6_iii_b" model="account.report.line">
+                <field name="name">Section 393(1)6(iii)(b): Professional services / royalty / Sec 26(2)(h) sum</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_6_iii_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)6(iii)(b) PROF</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_7" model="account.report.line">
+                <field name="name">Section 393(1)7: Dividend (including preference shares) declared by domestic company</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_7_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)7 DIV</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_8_i" model="account.report.line">
+                <field name="name">Section 393(1)8(i): Income component of life insurance policy sum (including bonus)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_8_i_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)8(i) LIC</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_8_ii" model="account.report.line">
+                <field name="name">Section 393(1)8(ii): Purchase of goods exceeding ₹50 lakh (on amount above ₹50L)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_8_ii_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)8(ii) GOODS</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_8_iv" model="account.report.line">
+                <field name="name">Section 393(1)8(iv): Benefit or perquisite (cash/kind) arising from business/profession to resident</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_8_iv_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)8(iv) PERQ</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_8_v" model="account.report.line">
+                <field name="name">Section 393(1)8(v): Gross sale/services amount by e-commerce operator to e-commerce participant</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_8_v_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)8(v) ECOMM</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_1_8_vi" model="account.report.line">
+                <field name="name">Section 393(1)8(vi): Consideration for transfer of Virtual Digital Asset</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_1_8_vi_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(1)8(vi) VDA</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_1" model="account.report.line">
+                <field name="name">Section 393(2)1: Income of non-resident sportsman (incl. athlete) or entertainer who is not a citizen of India, or a non-resident sports association/institution</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_1_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)1 SPORT NR</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_2" model="account.report.line">
+                <field name="name">Section 393(2)2: Interest payable on money borrowed in foreign currency under loan agreement or LT infrastructure bond (1 Jul 2012 – 1 Jul 2023), approved by Central Govt</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)2 INT FOREX</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_3" model="account.report.line">
+                <field name="name">Section 393(2)3: Interest on money borrowed outside India via rupee denominated bond before 1 Jul 2023, payable to non-resident (not a company) or foreign company</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_3_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)3 INT RUPEE</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_4_a" model="account.report.line">
+                <field name="name">Section 393(2)4(a): Interest on LT bond or rupee denominated bond listed only on recognised stock exchange in IFSC, issued on or after 1 Apr 2020 but before 1 Jul 2023</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_4_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)4(a) INT IFSC</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_4_b" model="account.report.line">
+                <field name="name">Section 393(2)4(b): Interest on LT bond or rupee denominated bond listed only on recognised stock exchange in IFSC, issued on or after 1 Jul 2023</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_4_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)4(b) INT IFSC</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_5" model="account.report.line">
+                <field name="name">Section 393(2)5: Interest income paid by infrastructure debt fund [Sch VII Table Sl. No. 46] to non-resident (not a company) or foreign company</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_5_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)5 INT INFRA</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_6_a" model="account.report.line">
+                <field name="name">Section 393(2)6(a): Distributed income referred to in section 223 of the nature in Sch V Table Sl.3.B(a) payable to non-resident/foreign company unitholder by Business Trust</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_6_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)6(a) DIST BT</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_6_b" model="account.report.line">
+                <field name="name">Section 393(2)6(b): Distributed income referred to in section 223 of the nature in Sch V Table Sl.3.B(b) payable to non-resident/foreign company unitholder by Business Trust</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_6_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)6(b) DIST BT</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_7" model="account.report.line">
+                <field name="name">Section 393(2)7: Distributed income (section 223, Sch V Sl.4) payable to non-resident/foreign company unitholder by Business Trust – actual rate as per DTAA/slab</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_7_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)7 DIST BT4</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_8" model="account.report.line">
+                <field name="name">Section 393(2)8: Income (other than exempt portion under Sch V Sl.2) from units of investment fund u/s 224, payable to non-resident/foreign company unitholder</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_8_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)8 INV FUND</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_9" model="account.report.line">
+                <field name="name">Section 393(2)9: Income from investment in securitisation trust u/s 221, payable to non-resident/foreign company investor</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_9_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)9 SEC TRUST</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_10" model="account.report.line">
+                <field name="name">Section 393(2)10: Income from Mutual Fund units [Sch VII Sl.20 or 21] or units from specified company, to non-resident/foreign company</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_10_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)10 MF UNITS</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_11" model="account.report.line">
+                <field name="name">Section 393(2)11: Income in respect of units referred to in section 208 payable by any person to an offshore fund</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_11_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)11 OFFSHORE</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_12" model="account.report.line">
+                <field name="name">Section 393(2)12: Long-term capital gains arising from transfer of units referred to in section 208, payable to offshore fund</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_12_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)12 LTCG OFF</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_13" model="account.report.line">
+                <field name="name">Section 393(2)13: Income by way of interest or dividends on bonds or Global Depository Receipts referred to in section 209, payable to non-resident</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_13_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)13 GDR</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_14" model="account.report.line">
+                <field name="name">Section 393(2)14: Long-term capital gains arising from transfer of bonds or Global Depository Receipts referred to in section 209, payable to non-resident</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_14_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)14 GDR LTCG</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_15" model="account.report.line">
+                <field name="name">Section 393(2)15: Income in respect of securities u/s 210(1) Table Sl.1 payable to Foreign Institutional Investor (FII)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_15_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)15 FII</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_16" model="account.report.line">
+                <field name="name">Section 393(2)16: Income in respect of securities u/s 210(1) Table Sl.1 payable to specified fund referred to in Sch VI Note 1(g)</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_16_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)16 SPEC FUND</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_2_17" model="account.report.line">
+                <field name="name">Section 393(2)17: Any interest (not covered under Sl.2,3,4,5) or any other sum chargeable to tax (not being salary) payable to non-resident (not a company) or foreign company by any person</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_2_17_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(2)17 NR INT</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_1" model="account.report.line">
+                <field name="name">Section 393(3)1: Winnings from lottery, crossword puzzle, card game, other games, gambling or betting. Threshold: ₹10,000 per single transaction</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_1_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)1 LOTTERY</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_2" model="account.report.line">
+                <field name="name">Section 393(3)2: Net winnings from online games at end of tax year and/or at time of withdrawal; computed as per prescribed manner</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_2_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)2 ONLINE GAME</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_3" model="account.report.line">
+                <field name="name">Section 393(3)3: Winnings from horse race by a bookmaker or licensed person under law. Threshold: ₹10,000 per single transaction</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_3_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)3 HORSE</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_4" model="account.report.line">
+                <field name="name">Section 393(3)4: Commission, remuneration or prize paid to person stocking, distributing, purchasing or selling lottery tickets. Threshold: ₹20,000</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_4_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)4 LOTTERY COMM</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_5_a" model="account.report.line">
+                <field name="name">Section 393(3)5(a): Sum paid in cash from one or more accounts by banking company / co-operative bank / post office where recipient is a co-operative society. Threshold: ₹3,00,00,000</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_5_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)5(a) CASH COOP</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_5_b" model="account.report.line">
+                <field name="name">Section 393(3)5(b): Sum paid in cash from one or more accounts by banking company / co-operative bank / post office where recipient is other than co-operative society. Threshold: ₹1,00,00,000</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_5_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)5(b) CASH OTH</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_6" model="account.report.line">
+                <field name="name">Section 393(3)6: Any amount referred to in section 80CCA(2)(a) of the Income-tax Act, 1961 (National Savings Scheme deposit withdrawals). Threshold: ₹2,500</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_6_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)6 NSS</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tds_report_line_section_393_3_7" model="account.report.line">
+                <field name="name">Section 393(3)7: Salary, remuneration, commission, bonus or interest paid to a partner of the firm or credited to partner's account (including capital account). Threshold: ₹20,000</field>
+                <field name="expression_ids">
+                    <record id="tds_report_line_section_393_3_7_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">TDS 393(3)7 PARTNER</field>
+                    </record>
+                </field>
+            </record>
+
+        </field>
+    </record>
+</odoo>

@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-03-16 09:20+0000\n"
+"PO-Revision-Date: 2026-03-25 08:45+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/base/sk/>"
 "\n"
@@ -3500,7 +3500,7 @@ msgid ""
 "* Cost structure report\n"
 msgstr ""
 "\n"
-"Manažérske účtovníctvo vo Výrobe\n"
+"Manažérske účtovníctvo vo výrobe\n"
 "==========================\n"
 "\n"
 "* Výkaz nákladovej štruktúry\n"
@@ -3524,7 +3524,6 @@ msgid ""
 msgstr ""
 "\n"
 "Analytické účtovníctvo vo výrobe\n"
-"\n"
 "==========================\n"
 "\n"
 "* Výkaz štruktúry nákladov\n"
@@ -7387,6 +7386,21 @@ msgid ""
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed "
 "picking (partial delivery friendly).\n"
 msgstr ""
+"\n"
+"Importujte svoje objednávky z Amazonu do Odoo a synchronizujte dodávky.\n"
+"============================================================\n"
+"\n"
+"Kľúčové funkcie\n"
+"------------\n"
+"* Importujte objednávky z viacerých účtov a trhovísk.\n"
+"* Objednávky sa spájajú s produktmi Odoo na základe ich interného "
+"referenčného čísla (SKU v Amazon).\n"
+"* Dodávky potvrdené v Odoo sa synchronizujú v Amazon.\n"
+"* Podpora pre Fulfilment by Amazon (FBA) aj Fulfilment by Merchant (FBM):\n"
+"* FBA: Umiestnenie zásob a presuny zásob umožňujú monitorovať vaše zásoby v "
+"Amazon Fulfilment Centres.\n"
+"* FBM: Oznámenia o dodávkach sa posielajú do Amazonu za každé potvrdené "
+"vyzdvihnutie (vhodné pre čiastočné dodávky).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_lazada
@@ -8580,6 +8594,19 @@ msgid ""
 "aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"Modul na importovanie bankových výpisov vo formáte CSV.\n"
+"======================================\n"
+"\n"
+"Tento modul vám umožňuje importovať súbory CSV do Odoo: sú analyzované a "
+"uložené v čitateľnom formáte v\n"
+"Účtovníctvo \\ Banka a hotovosť \\ Bankové výpisy.\n"
+"\n"
+"Dôležitá poznámka\n"
+"---------------------------------------------\n"
+"Vzhľadom na obmedzenia formátu CSV nemôžeme zaručiť, že sa rovnaké "
+"transakcie neimportujú viackrát, ani spracovať viacero mien.\n"
+"Ak je to možné, mali by ste použiť vhodnejší formát súboru, napríklad OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -9686,6 +9713,11 @@ msgid ""
 "employees when scheduling appointments\n"
 "--------------------------------------------------------------------------------------------------------------\n"
 msgstr ""
+"\n"
+"Pri plánovaní schôdzok zohľadňujte pracovný rozvrh (pracovná neschopnosť, "
+"čiastočný úväzok atď.) zamestnancov.\n"
+"-------------------------------------------------------------------------- ------------------------------------"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tz_account
@@ -13509,6 +13541,9 @@ msgid ""
 "                            to your user account, it is very important to "
 "store it securely."
 msgstr ""
+"<strong>Dôležité:</strong>\n"
+"Kľúč nie je možné neskôr obnoviť a poskytuje <b>plný prístup</b>\n"
+"k vášmu používateľskému účtu, preto je veľmi dôležité ho bezpečne uchovávať."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -14199,17 +14234,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
 msgid "Account Bank Statement Import"
-msgstr "Import účtu bankového výpisu"
+msgstr "Import bankového výpisu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant_batch_payment
 msgid "Account Batch Payment Reconciliation"
-msgstr ""
+msgstr "Párovanie hromadných platieb"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
 msgid "Account Charts"
-msgstr "Účtovné Osnovy"
+msgstr "Účtovné osnovy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extract
@@ -14236,12 +14271,12 @@ msgstr "Názov držiteľa účtu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
 msgid "Account Invoice Extract"
-msgstr "Výpis faktúry z účtu"
+msgstr "Vyťažovanie faktúr"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr "Nákup výpisu faktúry z účtu"
+msgstr "Zakúpenie vyťažovania faktúr"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
@@ -14256,7 +14291,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "Account SEPA QR Code"
-msgstr ""
+msgstr "SEPA QR kód"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_transfer
@@ -14300,7 +14335,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 #: model:ir.module.module,shortdesc:base.module_mrp_account_enterprise
 msgid "Accounting - MRP"
-msgstr "Účtovníctvo - MRP"
+msgstr "Účtovníctvo - výroba"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account_enterprise
@@ -14315,7 +14350,7 @@ msgstr "Účtovné Konzistenčné Testy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_base_import
 msgid "Accounting Import"
-msgstr ""
+msgstr "Účtovníctvo - importy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
@@ -14363,7 +14398,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account_accountant_fleet
 #: model:ir.module.module,shortdesc:base.module_account_fleet
 msgid "Accounting/Fleet bridge"
-msgstr "Účtovníctvo / flotila "
+msgstr "Prepojenie účtovníctvo - vozidlá"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -18546,6 +18581,7 @@ msgid ""
 "Banks are the financial institutions at which you and your contacts have "
 "their accounts."
 msgstr ""
+"Banky sú finančné inštitúcie, v ktorých máte vy a vaši kontakty svoje účty."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bar_industry
@@ -19266,7 +19302,7 @@ msgstr "Most medzi IAP a poštou"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_accountant
 msgid "Bridge between Mrp and Accounting"
-msgstr ""
+msgstr "Prepojenie medzi výrobou a účtovníctvom"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_accountant
@@ -22223,7 +22259,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz
 msgid "Czech - Accounting"
-msgstr ""
+msgstr "Účtovníctvo - Česko"
 
 #. module: base
 #: model:res.country,name:base.cz
@@ -22511,6 +22547,8 @@ msgid ""
 "Decimal places taken into account for operations on amounts in this "
 "currency. It is determined by the rounding factor."
 msgstr ""
+"Desatinné miesta zohľadnené pri operáciách s čiastkami v tejto mene. Určuje "
+"ich zaokrúhľovací faktor."
 
 #. module: base
 #. odoo-python
@@ -26279,6 +26317,8 @@ msgstr "Od"
 msgid ""
 "From here you can manage all bank accounts linked to you and your contacts."
 msgstr ""
+"Odtiaľto môžete spravovať všetky bankové účty prepojené s vami a vašimi "
+"kontaktmi."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
@@ -28298,7 +28338,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_base_import
 msgid "Improved Import in Accounting"
-msgstr ""
+msgstr "Vylepšený import v účtovníctve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
@@ -32462,7 +32502,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_accountant
 msgid "Mrp Accounting"
-msgstr ""
+msgstr "Účtovníctvo výroby"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -39657,6 +39697,11 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
+"Posielanie falošných faktúr s podvodným číslom účtu je bežnou phishingovou "
+"praktikou. Aby ste sa ochránili, vždy overujte nové čísla bankových účtov, "
+"najlepšie telefonicky u dodávateľa, pretože phishing sa zvyčajne vyskytuje v "
+"prípade, že sú ohrozené ich e-maily. Po overení môžete aktivovať možnosť "
+"posielať peniaze."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.WST
@@ -42117,7 +42162,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
-msgstr ""
+msgstr "Kombinácia čísla účtu a partnera musí byť jedinečná."
 
 #. module: base
 #. odoo-python
