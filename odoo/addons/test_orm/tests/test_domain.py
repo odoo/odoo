@@ -849,6 +849,11 @@ class TestDomainOptimize(TransactionCase):
                     env = self.env(user=user, su=su)
                     self._test_condition_optimize_access(records.with_env(env))
 
+        self.assertEqual(
+            Domain('currency_id', 'access', 'read').optimize_dynamic(model),
+            Domain('currency_id', '!=', False).optimize_dynamic(model),
+        )
+
     def _test_condition_optimize_access(self, records):
         model = records.browse()
         domain = Domain('id', 'access', 'read')

@@ -1378,8 +1378,10 @@ def _optimize_in_required(condition, model):
     field = condition._field(model)
     if (
         field.falsy_value is None
-        and (field.required or field.name == 'id')
-        and field in model.env.registry.not_null_fields
+        and (
+            (field.required and field in model.env.registry.not_null_fields)
+            or field.name == 'id'
+        )
         # only optimize if there are no NewId's
         and all(model._ids)
     ):
@@ -1909,7 +1911,7 @@ def _operator_access_rule_domain(condition, model):
         return Domain.FALSE
     if access_domain.is_true() or comodel.env.su:
         # access to all or edge-case for super user
-        return Domain.TRUE
+        return DomainCondition(field.name, '!=', False)
 
     def filtered_access(record):
         if field.name == 'id':
