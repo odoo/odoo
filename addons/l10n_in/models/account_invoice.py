@@ -375,7 +375,10 @@ class AccountMove(models.Model):
                 for tax in line.tax_ids:
                     if (
                         tax.l10n_in_tax_type == 'tcs'
-                        and tax.amount != max(tax.l10n_in_section_id.l10n_in_section_tax_ids, key=lambda t: abs(t.amount)).amount
+                        and tax.amount != max(
+                            tax.l10n_in_section_id.with_context(active_test=False).l10n_in_section_tax_ids,
+                            key=lambda t: abs(t.amount),
+                        ).amount
                     ):
                         lines |= line._origin
             return lines
