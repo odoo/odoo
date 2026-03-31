@@ -511,7 +511,7 @@
                                     <field name="name" widget="name_with_subtask_count"/>
                                     <field name="subtask_count" column_invisible="True"/>
                                     <field name="closed_subtask_count" column_invisible="True"/>
-                                    <field name="project_id" string="Project" optional="hide" required="1" options="{'no_open': 1}" widget="project"/>
+                                    <field name="project_id" string="Project" optional="hide" required="parent_id or child_ids or is_template" options="{'no_open': 1}" widget="project"/>
                                     <field name="milestone_id"
                                         optional="hide"
                                         context="{'default_project_id': project_id}"
