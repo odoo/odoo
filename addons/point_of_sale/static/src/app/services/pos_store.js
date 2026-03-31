@@ -2099,7 +2099,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     canEditPayment(order) {
-        return !this.config.iface_print_auto && order.nb_print === 0 && order.state === "paid";
+        return !this.config.autoPrint && order.nb_print === 0 && order.state === "paid";
     }
     openFinalizedOrders() {
         const order = this.getOrder();
