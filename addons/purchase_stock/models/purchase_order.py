@@ -248,7 +248,11 @@ class PurchaseOrder(models.Model):
             if self.dest_address_id:
                 return self.dest_address_id.property_stock_customer
             return self.picking_type_id.default_location_dest_id
-        return self.picking_type_id.warehouse_id.lot_stock_id
+        wh_stock_loc = self.picking_type_id.warehouse_id.lot_stock_id
+        default_dest_loc = self.picking_type_id.default_location_dest_id
+        if default_dest_loc and default_dest_loc._child_of(wh_stock_loc):
+            return default_dest_loc
+        return wh_stock_loc
 
     @api.model
     def _get_picking_type(self, company_id):
