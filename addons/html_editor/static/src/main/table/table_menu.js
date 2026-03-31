@@ -2,8 +2,8 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     Component,
     onMounted,
-    onWillUpdateProps,
     onWillUnmount,
+    useEffect,
     useExternalListener,
     useRef,
 } from "@odoo/owl";
@@ -42,22 +42,11 @@ export class TableMenu extends Component {
     static components = { Dropdown, DropdownItem };
 
     setup() {
-        if (this.props.type === "column") {
-            this.isFirst = this.props.target.cellIndex === 0;
-            this.isLast = !this.props.target.nextElementSibling;
-        } else {
-            const tr = this.props.target.parentElement;
-            this.isFirst = !tr.previousElementSibling;
-            this.isLast = !tr.nextElementSibling;
-            this.isTableHeader = [...tr.children][0].nodeName === "TH";
-        }
-        this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
         this.menuRef = useRef("menuRef");
         const onPointerDown = (ev) => this.onPointerDown(ev);
         onMounted(() => {
             this.overlayEl = this.menuRef.el;
             this.overlayEl.addEventListener("pointerdown", onPointerDown);
-            this.updatePosition(this.props);
         });
         onWillUnmount(() => {
             this.menuRef?.el.removeEventListener("pointerdown", onPointerDown);
@@ -67,12 +56,25 @@ export class TableMenu extends Component {
             // Listen outside the iframe.
             useExternalListener(document, "pointerup", this.onPointerUp);
         }
-        onWillUpdateProps((newProps) => {
-            this.updatePosition(newProps);
-        });
+        useEffect(
+            () => {
+                if (this.props.type === "column") {
+                    this.isFirst = this.props.target.cellIndex === 0;
+                    this.isLast = !this.props.target.nextElementSibling;
+                } else {
+                    const tr = this.props.target.parentElement;
+                    this.isFirst = !tr.previousElementSibling;
+                    this.isLast = !tr.nextElementSibling;
+                    this.isTableHeader = [...tr.children][0].nodeName === "TH";
+                }
+                this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
+                this.updatePosition();
+            },
+            () => [this.props.target]
+        );
         if (this.props.document.defaultView.frameElement) {
             useExternalListener(this.props.document, "scroll", () => {
-                this.updatePosition(this.props);
+                this.updatePosition();
             });
         }
     }
@@ -100,7 +102,8 @@ export class TableMenu extends Component {
         );
     }
 
-    updatePosition({ target, type, direction }) {
+    updatePosition() {
+        const { target, type, direction } = this.props;
         if (!this.overlayEl || !target) {
             return;
         }
