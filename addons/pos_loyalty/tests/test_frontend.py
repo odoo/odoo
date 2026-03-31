@@ -2661,6 +2661,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
 
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.create_programs([('arbitrary_name', 'gift_card')])
+
+        self.env['res.partner'].create({'name': 'AAAAAAA'})
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        self.create_programs([('arbitrary_name', 'ewallet')])
+
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
