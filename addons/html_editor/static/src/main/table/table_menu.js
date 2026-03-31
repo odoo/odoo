@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUpdateProps, useExternalListener, useRef } from "@odoo/owl";
+import { Component, onMounted, useEffect, useExternalListener, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -25,25 +25,27 @@ export class TableMenu extends Component {
 
     setup() {
         this.dropdownRef = useRef("dropdown");
-        if (this.props.type === "column") {
-            this.isFirst = this.props.target.cellIndex === 0;
-            this.isLast = !this.props.target.nextElementSibling;
-        } else {
-            const tr = this.props.target.parentElement;
-            this.isFirst = !tr.previousElementSibling;
-            this.isLast = !tr.nextElementSibling;
-        }
-        this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
-        onWillUpdateProps((newProps) => {
-            this.updatePosition(newProps);
-        });
         onMounted(() => {
             this.overlayEl = this.dropdownRef.el;
-            this.updatePosition(this.props);
         });
+        useEffect(
+            () => {
+                if (this.props.type === "column") {
+                    this.isFirst = this.props.target.cellIndex === 0;
+                    this.isLast = !this.props.target.nextElementSibling;
+                } else {
+                    const tr = this.props.target.parentElement;
+                    this.isFirst = !tr.previousElementSibling;
+                    this.isLast = !tr.nextElementSibling;
+                }
+                this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
+                this.updatePosition();
+            },
+            () => [this.props.target]
+        );
         if (this.props.document.defaultView.frameElement) {
             useExternalListener(this.props.document, "scroll", () => {
-                this.updatePosition(this.props);
+                this.updatePosition();
             });
             useExternalListener(this.props.document, "pointerdown", (ev) => {
                 if (!this.overlayEl.contains(ev.target)) {
@@ -61,7 +63,8 @@ export class TableMenu extends Component {
         );
     }
 
-    updatePosition({ target, type, direction }) {
+    updatePosition() {
+        const { target, type, direction } = this.props;
         if (!this.overlayEl || !target) {
             return;
         }
