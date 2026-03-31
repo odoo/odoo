@@ -7,6 +7,7 @@ from markupsafe import Markup
 from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.misc import OrderedSet
+from odoo.tools import format_datetime
 from odoo.fields import Domain
 
 class ResPartner(models.Model):
@@ -91,8 +92,19 @@ class ResPartner(models.Model):
         if page_history:
             message_body = Markup("<ul>%s</ul>") % (
                 Markup("").join(
-                    Markup('<li><a href="%(page)s" target="_blank">%(page)s</a></li>')
-                    % {"page": page}
+                    Markup('<li><a href="%(url)s" target="_blank">%(title)s</a> %(visited_at)s</li>') % {
+                        "url": page["url"],
+                        "title": page["title"],
+                        "visited_at": Markup("<small class='text-muted ms-1'>%s</small>")
+                        % format_datetime(
+                            self.env,
+                            fields.Datetime.to_datetime(page["visited_at"]),
+                            # sudo: res.partner - reading member timezone is acceptable to format livechat history pages
+                            tz=self.sudo().tz,
+                        )
+                        if page["visited_at"]
+                        else Markup(""),
+                    }
                     for page in page_history
                 )
             )
