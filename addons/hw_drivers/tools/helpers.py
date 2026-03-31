@@ -232,7 +232,7 @@ def check_image():
         if line:
             value, name = line.split('  ')
             checkFile.update({value: name})
-            if name == 'iotbox-latest.zip':
+            if name == 'iotboxv24_11.zip':
                 valueLastest = value
             elif name == get_img_name():
                 valueActual = value
