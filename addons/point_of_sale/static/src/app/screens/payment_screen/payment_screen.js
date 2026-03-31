@@ -408,7 +408,7 @@ export class PaymentScreen extends Component {
         if (
             nextPage.page === "ReceiptScreen" &&
             this.currentOrder.nb_print === 0 &&
-            this.pos.config.iface_print_auto
+            this.autoPrint
         ) {
             const invoiced_finalized = this.currentOrder.isToInvoice()
                 ? this.currentOrder.finalized
@@ -431,6 +431,9 @@ export class PaymentScreen extends Component {
         if (switchScreen) {
             this.pos.navigate(nextPage.page, nextPage.params);
         }
+    }
+    get autoPrint() {
+        return this.pos.config.iface_print_auto;
     }
     selectNextOrder() {
         if (this.currentOrder.originalSplittedOrder) {
