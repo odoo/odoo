@@ -41,6 +41,18 @@ export class PaymentInterface {
     }
 
     /**
+     * This getter is used for cash machines to display the amount
+     * of money that has been inserted in real time. If a number is
+     * returned, it will be shown as a formatted currency in the
+     * payment line display.
+     *
+     * @returns {number | null}
+     */
+    get amountInserted() {
+        return null;
+    }
+
+    /**
      * Called when a user clicks the "Send" button in the
      * interface. This should initiate a payment request and return a
      * Promise that resolves when the final status of the payment line

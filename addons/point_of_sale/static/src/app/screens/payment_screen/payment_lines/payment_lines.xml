@@ -44,6 +44,11 @@
                                 <i t-att-class="state.icon" role="img" />
                             </t>
                         </div>
+                        <div t-if="state.id == 'waiting' and line.payment_method_id.payment_interface?.amountInserted != null"
+                            class="d-flex align-items-center justify-content-between pb-3 px-4 fs-4">
+                            <span>Cash inserted</span>
+                            <span t-out="this.env.utils.formatCurrency(line.payment_method_id.payment_interface.amountInserted)"/>
+                        </div>
                         <div class="paymentline_status_actions btn-group d-flex w-100" role="group">
                             <button t-foreach="state.actions" t-as="button" t-key="button.id"
                                     t-if="button.show === undefined || button.show"
