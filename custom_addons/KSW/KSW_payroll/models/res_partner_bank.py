@@ -16,4 +16,12 @@ class ResPartnerBank(models.Model):
         string='MOL ID',
         help='Ministry of Labor establishment ID for WPS.',
     )
-
+    x_file_type = fields.Selection(
+        [
+            ('wps', 'WPS (Bank Transfer)'),
+            ('kawthar', 'Kawthar (Itqan Payroll Card)'),
+        ],
+        string='Payroll File Type',
+        help='The bank file format used when exporting payroll for '
+             'employees assigned to this bank account.',
+    )

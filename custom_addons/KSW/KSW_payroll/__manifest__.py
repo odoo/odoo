@@ -38,7 +38,7 @@ Extends om_hr_payroll with:
         'data/salary_rule_deduction.xml',
 
         # Wizard
-        'wizard/wps_file_wizard_views.xml',
+        'wizard/bank_file_export_wizard_views.xml',
 
         # Views
         'views/hr_employee_view.xml',

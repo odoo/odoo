@@ -7,12 +7,15 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <group string="WPS Bank File Configuration">
-                    <group>
+                <group string="Payroll File Configuration">
+                    <group colspan="2">
+                        <field name="x_file_type"/>
+                    </group>
+                    <group invisible="x_file_type != 'wps'">
                         <field name="x_wps_cic_number"/>
                         <field name="x_wps_mol_id"/>
                     </group>
-                    <group>
+                    <group invisible="x_file_type != 'wps'">
                         <field name="x_wps_debit_account"/>
                     </group>
                 </group>

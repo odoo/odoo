@@ -4,10 +4,15 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='parent_id']"
-                   position="after">
+            <!-- Add our schedule fields after the Schedule separator -->
+            <xpath expr="//separator[@name='schedule']" position="after">
                 <field name="main_calendar_id"/>
                 <field name="temp_calendar_id"/>
+            </xpath>
+            <!-- Hide the standard Working Hours field in the Payroll page -->
+            <xpath expr="//group[@name='contract']/field[@name='resource_calendar_id']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>

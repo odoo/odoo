@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wizard form -->
+    <record id="view_bank_file_export_wizard_form" model="ir.ui.view">
+        <field name="name">ksw.bank.file.export.wizard.form</field>
+        <field name="model">ksw.bank.file.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Bank File">
+                <group>
+                    <field name="payslip_run_id"/>
+                    <field name="export_mode" widget="radio"/>
+                    <field name="company_partner_id" invisible="1"/>
+                    <field name="bank_account_id"
+                           invisible="export_mode not in ('specific_excel', 'specific_txt')"
+                           required="export_mode in ('specific_excel', 'specific_txt')"/>
+                    <field name="value_date"
+                           invisible="export_mode not in ('all_txt', 'specific_txt')"
+                           required="export_mode in ('all_txt', 'specific_txt')"/>
+                    <field name="operation_code"/>
+                </group>
+                <footer>
+                    <button string="Export" name="action_export"
+                            type="object" class="btn-primary"
+                            icon="fa-download"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window action -->
+    <record id="action_bank_file_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Bank File</field>
+        <field name="res_model">ksw.bank.file.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+

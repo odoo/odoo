@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -83,3 +83,20 @@ class HrEmployee(models.Model):
             current += timedelta(days=1)
 
         return {'days': total_days, 'hours': total_hours}
+
+    # ------------------------------------------------------------------
+    # Sync main_calendar_id → resource_calendar_id (Working Schedule)
+    # ------------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('main_calendar_id') and not vals.get('resource_calendar_id'):
+                vals['resource_calendar_id'] = vals['main_calendar_id']
+        employees = super().create(vals_list)
+        return employees
+
+    def write(self, vals):
+        if 'main_calendar_id' in vals and 'resource_calendar_id' not in vals:
+            vals['resource_calendar_id'] = vals['main_calendar_id']
+        return super().write(vals)

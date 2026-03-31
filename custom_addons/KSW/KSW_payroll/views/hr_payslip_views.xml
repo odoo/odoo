@@ -135,13 +135,9 @@
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='close_payslip_run']"
                    position="after">
-                <button name="action_export_bank_file" type="object"
+                <button name="action_open_export_wizard" type="object"
                         string="Export Bank File"
-                        icon="fa-file-excel-o"
-                        class="btn-secondary"/>
-                <button name="action_open_wps_wizard" type="object"
-                        string="Create WPS File"
-                        icon="fa-file-text-o"
+                        icon="fa-download"
                         class="btn-secondary"/>
             </xpath>
             <!-- Bank account selector for WPS export -->

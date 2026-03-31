@@ -1,6 +1,3 @@
-import io
-import base64
-
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 
@@ -41,13 +38,13 @@ class HrPayslipRun(models.Model):
     # Main action
     # ------------------------------------------------------------------
 
-    def action_open_wps_wizard(self):
-        """Open the WPS text-file generator wizard."""
+    def action_open_export_wizard(self):
+        """Open the unified bank file export wizard."""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Create WPS File'),
-            'res_model': 'ksw.wps.file.wizard',
+            'name': _('Export Bank File'),
+            'res_model': 'ksw.bank.file.export.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {
@@ -56,7 +53,7 @@ class HrPayslipRun(models.Model):
         }
 
     def _group_slips_by_bank_account(self):
-        """Group payslips by the paying bank account.
+        """Group payslips by the paying bank account
 
         Resolution order for each slip:
         1. Employee's ``x_salary_bank_account_id``
@@ -78,71 +75,13 @@ class HrPayslipRun(models.Model):
             groups[bank] |= slip
         return groups
 
-    def action_export_bank_file(self):
-        """Generate the WPS payroll Excel file from this batch."""
-        self.ensure_one()
-        if not openpyxl:
-            raise UserError(_('The openpyxl library is required.'))
-        if not self.slip_ids:
-            raise UserError(_('No payslips in this batch to export.'))
-
-        groups = self._group_slips_by_bank_account()
-
-        # Validate: every slip must resolve to a bank account
-        no_bank_slips = groups.pop(self.env['res.partner.bank'], None)
-        if no_bank_slips:
-            names = ', '.join(no_bank_slips.mapped('employee_id.name'))
-            raise UserError(_(
-                'The following employees have no Salary Paying Bank Account '
-                'set (and no fallback is configured on the batch):\n%s\n\n'
-                'Please set it on each employee or on the batch.', names,
-            ))
-
-        wb = openpyxl.Workbook()
-        self._fill_payroll_summary_sheet(wb)
-
-        # One WPS sheet per bank account
-        for bank_account, slips in groups.items():
-            suffix = ''
-            if len(groups) > 1:
-                suffix = ' - %s' % (
-                    bank_account.bank_id.name
-                    or bank_account.acc_number
-                    or str(bank_account.id)
-                )
-            self._fill_wps_sheet(wb, bank_account, slips, suffix)
-
-        # Remove default empty sheet created by openpyxl
-        if 'Sheet' in wb.sheetnames:
-            del wb['Sheet']
-
-        output = io.BytesIO()
-        wb.save(output)
-        file_data = base64.b64encode(output.getvalue())
-
-        filename = 'WPS_Payroll_%s.xlsx' % (
-            self.name.replace(' ', '_').replace('/', '-'),
-        )
-        attachment = self.env['ir.attachment'].create({
-            'name': filename,
-            'type': 'binary',
-            'datas': file_data,
-            'mimetype': 'application/vnd.openxmlformats-officedocument'
-                        '.spreadsheetml.sheet',
-            'res_model': self._name,
-            'res_id': self.id,
-        })
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/web/content/%s?download=true' % attachment.id,
-            'target': 'new',
-        }
-
     # ------------------------------------------------------------------
     # Sheet 1 — Internal payroll summary
     # ------------------------------------------------------------------
 
-    def _fill_payroll_summary_sheet(self, wb):
+    def _fill_payroll_summary_sheet(self, wb, slips=None):
+        if slips is None:
+            slips = self.slip_ids
         ws = wb.active
         ws.title = 'Payroll Summary'
 
@@ -170,7 +109,7 @@ class HrPayslipRun(models.Model):
             c.border = thin
 
         for ri, slip in enumerate(
-                self.slip_ids.sorted(lambda s: s.employee_id.name or ''), 2):
+                slips.sorted(lambda s: s.employee_id.name or ''), 2):
             emp = slip.employee_id
             bank = emp.sudo().primary_bank_account_id
             is_sheet = emp.sudo().x_is_attendance_sheet
@@ -372,10 +311,4 @@ class HrPayslipRun(models.Model):
                 for r in range(1, max(ws.max_row + 1, 2))
             )
             ws.column_dimensions[letter].width = min(mx + 3, 40)
-
-
-
-
-
-
 
