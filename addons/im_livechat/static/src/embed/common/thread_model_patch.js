@@ -23,7 +23,7 @@ patch(Thread.prototype, {
     async post(body, postData, extraData = {}) {
         if (
             this.channel?.chatbot &&
-            !this.channel.chatbot.forwarded &&
+            !this.channel.livechat_agent_history_ids.length &&
             this.channel.chatbot.currentStep?.step_type !== "free_input_multi"
         ) {
             this.channel.chatbot.isProcessingAnswer = true;
@@ -65,7 +65,7 @@ patch(Thread.prototype, {
         if (this.channel?.channel_type !== "livechat") {
             return super.computeComposerDisabled(...arguments);
         }
-        if (this.channel?.chatbot?.forwarded && !this.livechat_end_dt) {
+        if (this.channel?.livechat_agent_history_ids.length && !this.livechat_end_dt) {
             return false;
         }
         const step = this.channel?.chatbot?.currentStep;

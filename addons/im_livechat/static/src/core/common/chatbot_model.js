@@ -1,5 +1,5 @@
 import { AND, fields, Record } from "@mail/model/export";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
@@ -12,17 +12,10 @@ export class Chatbot extends Record {
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
 
-    forwarded;
     isTyping = false;
     isProcessingAnswer = false;
     script = fields.One("chatbot.script");
-    currentStep = fields.One("ChatbotStep", {
-        onUpdate() {
-            if (this.currentStep?.operatorFound) {
-                this.forwarded = true;
-            }
-        },
-    });
+    currentStep = fields.One("ChatbotStep");
     steps = fields.Many("ChatbotStep");
     channel_id = fields.One("discuss.channel", {
         inverse: "chatbot",
@@ -93,7 +86,7 @@ export class Chatbot extends Record {
      */
     async processAnswer(message) {
         if (
-            this.forwarded ||
+            this.channel_id.livechat_agent_history_ids.length ||
             this.channel_id.notEq(message.thread.channel) ||
             !this.currentStep?.expectAnswer
         ) {
@@ -134,7 +127,8 @@ export class Chatbot extends Record {
         return (
             this.currentStep?.isLast ||
             this.currentStep?.operatorFound ||
-            this.channel_id.livechat_end_dt
+            this.channel_id.livechat_end_dt ||
+            this.channel_id.livechat_agent_history_ids.length > 0
         );
     }
 
@@ -151,16 +145,31 @@ export class Chatbot extends Record {
         }
         if (this.steps.at(-1)?.eq(this.currentStep)) {
             const dataRequest = this.store.DataResponse.createRequest();
-            await rpc("/chatbot/step/trigger", {
-                channel_id: this.channel_id.id,
-                chatbot_script_id: this.script.id,
-                data_id: dataRequest.id,
-            });
-            await dataRequest._resultResolvers.promise;
-            if (this.currentStep.isLast) {
-                return;
+            try {
+                await rpc("/chatbot/step/trigger", {
+                    channel_id: this.channel_id.id,
+                    chatbot_script_id: this.script.id,
+                    data_id: dataRequest.id,
+                });
+                await dataRequest._resultResolvers.promise;
+                if (this.currentStep.isLast) {
+                    return;
+                }
+                this.steps.push(dataRequest.chatbot_step);
+            } catch (error) {
+                if (
+                    error instanceof ConnectionAbortedError ||
+                    error instanceof ConnectionLostError ||
+                    error instanceof RPCError
+                ) {
+                    if (!this.channel_id.chatbot_current_step_id) {
+                        return;
+                    }
+                    this.channel_id.chatbotTriggerFailedError = error;
+                } else {
+                    throw error;
+                }
             }
-            this.steps.push(dataRequest.chatbot_step);
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
@@ -177,7 +186,8 @@ export class Chatbot extends Record {
         if (
             !this.currentStep ||
             this.completed ||
-            (this.currentStep.expectAnswer && !this.currentStep.completed)
+            (this.currentStep.expectAnswer && !this.currentStep.completed) ||
+            this.channel_id.chatbotTriggerFailedError
         ) {
             return;
         }

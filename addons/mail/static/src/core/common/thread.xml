@@ -9,7 +9,7 @@
                 <t t-set="currentDay" t-value="0"/>
                 <t t-if="this.props.order === 'asc'">
                     <t t-if="this.showLoadOlder" t-call="mail.Thread.loadOlder"/>
-                    <t t-elif="this.props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                    <t t-elif="this.isInErrorState" t-call="mail.Thread.loadingError"/>
                     <t t-elif="this.showStartMessage" t-call="mail.Thread.startMessage"/>
                 </t>
                 <span t-else="" class="pt-1" t-custom-ref="load-newer"/>
@@ -43,7 +43,7 @@
                 <span t-if="this.props.order === 'asc'" class="pt-1" t-custom-ref="load-newer"/>
                 <t t-else="">
                     <t t-if="this.showLoadOlder" t-call="mail.Thread.loadOlder"/>
-                    <t t-if="this.props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                    <t t-if="this.props.thread.isInErrorState" t-call="mail.Thread.loadingError"/>
                 </t>
             </div>
         </t>
@@ -81,10 +81,10 @@
     <div class="d-flex flex-grow-1 align-items-center justify-content-center flex-column">
         <span class="fs-1">😔</span>
         <div class="o-mail-Thread-error">
-            An error occurred while loading messages.
+            <t t-out="this.errorStateText"/>
         </div>
         <span t-if="this.props.thread.hasLoadingFailedError" class="o-xsmaller text-muted" t-out="window.String(this.props.thread.hasLoadingFailedError)"/>
-        <button class="btn btn-link" t-on-click="this.onClickLoadOlder">
+        <button class="btn btn-link" t-on-click="this.onClickRetry">
             <i class="fa fa-refresh"/>
             Try again
         </button>

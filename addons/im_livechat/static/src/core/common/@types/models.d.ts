@@ -34,6 +34,7 @@ declare module "models" {
     export interface DiscussChannel {
         chatbot: Chatbot;
         chatbot_current_step_id: ChatbotScriptStep;
+        chatbotTriggerFailedError: import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined;
         country_id: Country;
         livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_bot_history_ids: LivechatChannelMemberHistory[];

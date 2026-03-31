@@ -7,6 +7,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
 from odoo.tools.mimetypes import get_extension
 from odoo.tools.sql import SQL
@@ -487,6 +488,7 @@ class DiscussChannel(models.Model):
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
+        res[None].one("chatbot_current_step_id", [], predicate=is_livechat_channel)
         res["internal_users"].attr("description", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_status", predicate=is_livechat_channel)
@@ -706,13 +708,14 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         parts = []
         previous_message_author = None
-        # sudo - mail.message: visitors can access messages on chats they have access to
-        messages = self.sudo().chatbot_message_ids.mail_message_id or self.message_ids
+        message_domain = Domain("message_type", "!=", "notification")
+        # sudo - chatbot.message: visitors can access messages on chats they have access to
+        if first_chatbot_message := self.sudo().chatbot_message_ids.sorted("id")[:1]:
+            message_domain &= Domain("id", ">=", first_chatbot_message.mail_message_id.id)
         # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
         filtered_messages = (
-            messages.sudo().filtered(lambda m: m.message_type != "notification")
-            - messages.sudo()._filter_empty()
-        )
+            self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
+        ).filtered_domain(message_domain)
         for message in filtered_messages.sorted("id"):
             # sudo - res.partner: accessing livechat username or name is allowed to visitor
             message_author = message.author_id.sudo() or message.author_guest_id
@@ -821,6 +824,32 @@ class DiscussChannel(models.Model):
 
     def _add_members(self, **kwargs):
         all_new_members = super()._add_members(**kwargs)
+        skip_chatbot_current_step_reset = kwargs.pop("skip_chatbot_current_step_reset", False)
+        if not skip_chatbot_current_step_reset and (
+            first_agents := all_new_members.filtered(
+                lambda m: m.livechat_member_type == "agent"
+                # sudo: discuss.channel - reading the current chatbot step
+                # when an agent joins is acceptable.
+                and m.channel_id.sudo().chatbot_current_step_id,
+            )
+
+        ):
+            store = Store.Stores()
+            for channel in first_agents.channel_id:
+                channel._notify_current_step_is_last(store[channel])
+            # Clearing the current step id to flag the end of the chatbot script
+            #
+            # In case of a concurrent step trigger of a chatbot and a new agent joining,
+            # - either the trigger is committed first, updating the current step id
+            #   the agent joining will fail to write the current step id,
+            #   and therefore fail to join, retry and be added to the channel.
+            #   any subsequent trigger will see the new agent and stop the script.
+            # - or the agent joining is committed first,
+            #   the trigger will fail, retry (with user action),
+            #   see the new agent and stop the script.
+            # sudo: discuss.channel - writing the current chatbot step
+            # when an agent joins is acceptable.
+            first_agents.channel_id.sudo().chatbot_current_step_id = False
         for channel in all_new_members.channel_id:
             # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
             if channel.sudo().livechat_status == "need_help":
@@ -1005,6 +1034,7 @@ class DiscussChannel(models.Model):
                 create_member_params=create_member_params,
                 inviting_partner=bot_partner_id,
                 users=human_operator,
+                skip_chatbot_current_step_reset=True,
             )
             channel_sudo._action_unfollow(partner=bot_partner_id, post_leave_message=False)
 
@@ -1074,3 +1104,20 @@ class DiscussChannel(models.Model):
 
     def _allow_invite_by_email(self):
         return self.channel_type == "livechat" or super()._allow_invite_by_email()
+
+    def _notify_current_step_is_last(self, store):
+        self.ensure_one()
+        step_message = next((
+            # sudo - chatbot.message.id: visitor can access chat bot messages.
+            m.mail_message_id for m in self.sudo().chatbot_message_ids.sorted("id")
+            if m.script_step_id == self.chatbot_current_step_id
+        ), self.env["mail.message"])
+        store.add_model_values(
+            "ChatbotStep",
+            {
+                "id": (self.chatbot_current_step_id.id, step_message.id),
+                "scriptStep": self.chatbot_current_step_id.id,
+                "message": step_message.id,
+                "isLast": True,
+            },
+        )

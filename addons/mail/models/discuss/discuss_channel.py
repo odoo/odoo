@@ -655,6 +655,7 @@ class DiscussChannel(models.Model):
         invite_to_rtc_call=False,
         post_joined_message=True,
         inviting_partner=None,
+        **kwargs,
     ):
         """Adds the given users, partners and guests as member of self channels.
         Prefer giving users rather than partners when possible."""
