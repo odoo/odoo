@@ -1,5 +1,6 @@
 import { useChildSubEnv, useState } from "@web/owl2/utils";
-import { Component, markRaw, onWillStart } from "@odoo/owl";
+import { Component, markRaw, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
@@ -17,6 +18,19 @@ spreadsheet.registries.topbarMenuRegistry.addChild("download_public_excel", ["fi
     isVisible: (env) => env.canDownloadExcel?.(),
     isEnabledOnLockedSheet: true,
 });
+
+function readSheetIdFromURL() {
+    const url = new URL(browser.location.href);
+    return url.searchParams.get("sheet_id");
+}
+
+function writeSheetIdToURL(sheetId) {
+    const url = new URL(browser.location.href);
+    if (url.searchParams.get("sheet_id") !== sheetId) {
+        url.searchParams.set("sheet_id", sheetId);
+        browser.history.replaceState(browser.history.state, null, url);
+    }
+}
 
 export class PublicReadonlySpreadsheet extends Component {
     static template = "spreadsheet.PublicReadonlySpreadsheet";
@@ -41,7 +55,16 @@ export class PublicReadonlySpreadsheet extends Component {
                 }),
             canDownloadExcel: () => Boolean(this.props.downloadExcelUrl),
         });
-        onWillStart(this.createModel.bind(this));
+        onWillStart(async () => {
+            await this.createModel();
+            this.syncSheetFromURL();
+        });
+        onMounted(() => {
+            this.model.on("command-dispatched", this, this.syncURLFromSheet);
+        });
+        onWillUnmount(() => {
+            this.model.off("command-dispatched", this);
+        });
     }
 
     get showFilterButton() {
@@ -76,6 +99,26 @@ export class PublicReadonlySpreadsheet extends Component {
             // eslint-disable-next-line no-import-assign
             spreadsheet.__DEBUG__ = spreadsheet.__DEBUG__ || {};
             spreadsheet.__DEBUG__.model = this.model;
+        }
+    }
+
+    syncSheetFromURL() {
+        const urlSheetId = readSheetIdFromURL();
+        const sheetIds = this.model.getters.getSheetIds();
+        const activeSheetId = this.model.getters.getActiveSheetId();
+        const targetSheetId = sheetIds.includes(urlSheetId) ? urlSheetId : sheetIds[0];
+        if (activeSheetId !== targetSheetId) {
+            this.model.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: activeSheetId,
+                sheetIdTo: targetSheetId,
+            });
+        }
+        writeSheetIdToURL(targetSheetId);
+    }
+
+    syncURLFromSheet(cmd) {
+        if (cmd.type === "ACTIVATE_SHEET" && readSheetIdFromURL() !== cmd.sheetIdTo) {
+            writeSheetIdToURL(cmd.sheetIdTo);
         }
     }
 

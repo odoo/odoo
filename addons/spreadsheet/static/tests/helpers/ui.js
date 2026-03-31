@@ -45,7 +45,7 @@ export async function mountSpreadsheet(model) {
 export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "") {
     const env = getMockEnv();
     env.isFrozenSpreadsheet = () => true;
-    mountWithCleanup(PublicReadonlySpreadsheet, {
+    const component = await mountWithCleanup(PublicReadonlySpreadsheet, {
         props: {
             dataUrl,
             downloadExcelUrl,
@@ -55,7 +55,10 @@ export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "
         env,
     });
     await animationFrame();
-    return getFixture();
+    return {
+        fixture: getFixture(),
+        model: component.model,
+    };
 }
 
 export async function doMenuAction(registry, path, env) {
