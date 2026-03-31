@@ -378,6 +378,20 @@ class TestDiscussTools(MailCase):
         data2 = store.get_result()
         self.assertEqual(data2["res.partner"][0]["im_status"], "online")
 
+    def test_391_add_no_loop_callable_identity_obj(self):
+        def _store_partner_test_fields(res):
+            res.attr("test", lambda p: p.id, predicate=lambda p: p.id)
+            res.one("main_user_id", _store_user_test_fields)
+
+        def _store_user_test_fields(res):
+            res.attr("test", lambda u: u.id, predicate=lambda u: u.id)
+            res.one("partner_id", _store_partner_test_fields)
+
+        user = new_test_user(self.env, "test_user_391@example.com")
+        data = Store().add(user, _store_user_test_fields).get_result()
+        self.assertEqual(data["res.partner"][0]["test"], user.partner_id.id)
+        self.assertEqual(data["res.users"][0]["test"], user.id)
+
     def test_393_delayed_add(self):
         """Test that delayed store.add() postpones reading fields until get_result()."""
         user_a = new_test_user(self.env, "test_user_390@example.com")

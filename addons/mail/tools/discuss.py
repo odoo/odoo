@@ -569,7 +569,7 @@ class Store:
             return tuple(Store._deep_freeze(i) for i in obj)
         if isinstance(obj, set):
             return frozenset(Store._deep_freeze(i) for i in obj)
-        return obj
+        return obj.__code__ if hasattr(obj, "__code__") else obj
 
     class Stores(dict[object | tuple, "Store"]):
         """Lazy mapping to manage a list of Store indexed by bus target.
