@@ -788,9 +788,6 @@ class configmanager:
             if not os.path.isdir(path):
                 cls._log(logging.WARNING, "option %s, no such directory %r, skipped", opt, path)
                 continue
-            if not cls._is_addons_path(path):
-                cls._log(logging.WARNING, "option %s, invalid addons directory %r, skipped", opt, path)
-                continue
             ad_paths.append(path)
 
         return ad_paths
