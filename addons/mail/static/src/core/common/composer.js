@@ -354,7 +354,9 @@ export class Composer extends Component {
             () => [
                 this.state.isFullComposerOpen,
                 this.props.composer.restoredFromFullComposer,
-                untrack(this.rootRef)?.querySelector("button[name='open-full-composer']"),
+                this.props.composer.message
+                    ? untrack(() => this.moreAction()?.actionRef())
+                    : untrack(this.rootRef)?.querySelector("button[name='open-full-composer']"),
             ]
         );
         onMounted(() => {
@@ -707,9 +709,13 @@ export class Composer extends Component {
     }
 
     async onClickFullComposerGetAction() {
+        const message = this.props.composer.message;
         this.props.composer.restoredFromFullComposer = false;
-        const allRecipients = [...this.thread.suggestedRecipients];
-        if (this.props.type !== "note") {
+        const isEditing = Boolean(message);
+        const allRecipients = isEditing
+            ? message.partner_ids
+            : [...this.thread.suggestedRecipients];
+        if (!isEditing && this.props.type !== "note") {
             allRecipients.push(...this.thread.additionalRecipients);
             // auto-create partners:
             const newPartners = allRecipients.filter((recipient) => !recipient.partner_id);
@@ -732,46 +738,62 @@ export class Composer extends Component {
                 }
             }
         }
-        const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
+        const attachmentIds = isEditing
+            ? message.attachment_ids.map((a) => a.id)
+            : this.props.composer.attachments.map((attachment) => attachment.id);
         let default_body = this.props.composer.composerHtml;
-        if (isHtmlEmpty(default_body)) {
-            // Reset signature when recovering an empty body.
-            this.props.composer.emailAddSignature = true;
+        if (!isEditing) {
+            if (isHtmlEmpty(default_body)) {
+                // Reset signature when recovering an empty body.
+                this.props.composer.emailAddSignature = true;
+            }
+            const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
+            default_body = this.formatDefaultBodyForFullComposer(
+                default_body,
+                this.props.composer.emailAddSignature ? signature : ""
+            );
         }
-        const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
-        default_body = this.formatDefaultBodyForFullComposer(
-            default_body,
-            this.props.composer.emailAddSignature ? signature : ""
-        );
         const context = {
             default_attachment_ids: attachmentIds,
             default_body,
             default_email_add_signature: false,
-            default_model: this.thread.model,
-            default_partner_ids:
-                this.props.type === "note"
-                    ? []
-                    : allRecipients
-                          .filter((r) => r.recipient_type !== "cc" && r.partner_id)
-                          .map((r) => r.partner_id),
-            default_partner_cc_ids:
-                this.props.type === "note"
-                    ? []
-                    : allRecipients
-                          .filter((r) => r.recipient_type === "cc" && r.partner_id)
-                          .map((r) => r.partner_id),
-            default_res_ids: [this.thread.id],
-            default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
-            clicked_on_full_composer: true,
+            default_model: isEditing ? message.thread.model : this.thread.model,
+            default_partner_ids: isEditing
+                ? message.partner_ids.map((p) => p.id)
+                : this.props.type === "note"
+                ? []
+                : allRecipients
+                      .filter((r) => r.recipient_type !== "cc" && r.partner_id)
+                      .map((r) => r.partner_id),
+            default_partner_cc_ids: isEditing
+                ? message.partner_cc_ids?.map((p) => p.id) || []
+                : this.props.type === "note"
+                ? []
+                : allRecipients
+                      .filter((r) => r.recipient_type === "cc" && r.partner_id)
+                      .map((r) => r.partner_id),
+            default_res_ids: isEditing ? [message.thread.id] : [this.thread.id],
+            default_subtype_xmlid:
+                this.props.type === "note" || (isEditing && message.isNote)
+                    ? "mail.mt_note"
+                    : "mail.mt_comment",
             body_contains_signature_only:
                 !this.props.composer.composerText ||
                 this.props.composer.composerText.trim().length === 0,
+            default_message_id: isEditing ? message.id : undefined,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
             sync_attachments_to_thread_composer: true,
+            is_full_composer: true,
             ...this.fullComposerAdditionalContext,
         };
         const action = {
-            name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),
+            name: isEditing
+                ? message.isNote
+                    ? _t("Editing note")
+                    : _t("Editing message")
+                : this.props.type === "note"
+                ? _t("Log note")
+                : _t("Compose Email"),
             type: "ir.actions.act_window",
             res_model: "mail.compose.message",
             view_mode: "form",
@@ -785,7 +807,7 @@ export class Composer extends Component {
                 // args === { special: true } : click on 'discard'
                 const accidentalDiscard = args?.dismiss;
                 const isDiscard = accidentalDiscard || args?.special;
-                if (accidentalDiscard) {
+                if (accidentalDiscard && !isEditing) {
                     this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
                         onAccidentalDiscard: async (isEmpty) => {
                             if (!isEmpty) {
@@ -798,6 +820,9 @@ export class Composer extends Component {
                     });
                 } else {
                     this.clear();
+                    if (isEditing) {
+                        message.exitEditMode();
+                    }
                 }
                 this.props.composer.replyToMessage = undefined;
                 this.onCloseFullComposerCallback(isDiscard);

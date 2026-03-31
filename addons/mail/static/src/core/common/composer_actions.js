@@ -115,7 +115,6 @@ registerComposerAction("upload-files", {
 });
 registerComposerAction("open-full-composer", {
     condition: ({ composer, owner }) =>
-        !composer.message &&
         owner.props.showFullComposer &&
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
@@ -126,7 +125,8 @@ registerComposerAction("open-full-composer", {
     icon: "expand_content",
     isActive: ({ composer, owner }) =>
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
-    name: _t("Open Full Composer"),
+    name: ({ composer }) =>
+        composer.message ? _t("Edit in Full Composer") : _t("Open Full Composer"),
     onSelected: ({ owner }) => owner.onClickFullComposer(),
     sequence: 30,
     tags: ({ composer, owner }) =>

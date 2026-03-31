@@ -112,6 +112,10 @@
 
 .o-mail-Composer-bg {
     background-color: var(--mail-Composer-bg, $o-view-background-color);
+
+    &:disabled {
+        background-color: var(--mail-Composer-bg, $o-view-background-color);
+    }
 }
 
 .o-mail-Composer-inputStyle, .o-mail-Composer-html {
