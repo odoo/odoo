@@ -39,6 +39,12 @@
         <field name="view_mode">list</field>
     </record>
 
+    <record id="spreadsheet_dashboard_share_action_configuration_share_links" model="ir.actions.act_window">
+        <field name="name">Share links</field>
+        <field name="res_model">spreadsheet.dashboard.share</field>
+        <field name="view_mode">list</field>
+    </record>
+
     <menuitem
         id="spreadsheet_dashboard_menu_configuration_dashboards"
         name="Dashboards"
@@ -52,5 +58,12 @@
         parent="spreadsheet_dashboard_menu_configuration"
         action="spreadsheet_dashboard_group_action_configuration_sections"
         sequence="20"/>
+
+    <menuitem
+        id="spreadsheet_dashboard_share_menu_configuration_share_links"
+        name="Share links"
+        parent="spreadsheet_dashboard_menu_configuration"
+        action="spreadsheet_dashboard_share_action_configuration_share_links"
+        sequence="30"/>
 
 </odoo>

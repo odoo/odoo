@@ -79,4 +79,38 @@
         </field>
     </record>
 
+    <record id="spreadsheet_dashboard_share_view_list" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.share.view.list</field>
+        <field name="model">spreadsheet.dashboard.share</field>
+        <field name="arch" type="xml">
+            <list create="false" editable="bottom">
+                <field name="name"/>
+                <field name="dashboard_id" readonly="1"/>
+                <field name="dashboard_group_id" options="{'no_open': True}"/>
+                <field name="create_uid"/>
+                <field name="create_date"/>
+                <field name="full_url" string="URL" widget="CopyClipboardURL"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="spreadsheet_dashboard_share_view_search" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.share.search</field>
+        <field name="model">spreadsheet.dashboard.share</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="dashboard_id"/>
+                <field name="create_uid"/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Dashboard" name="groupby_dashboard_id" context="{'group_by': 'dashboard_id'}"/>
+                    <filter string="Created by" name="groupby_create_uid" context="{'group_by': 'create_uid'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
 </odoo>

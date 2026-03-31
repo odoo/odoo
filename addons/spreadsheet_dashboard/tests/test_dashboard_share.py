@@ -2,6 +2,7 @@
 
 from .common import DashboardTestCommon
 from odoo.tests import tagged
+from odoo.tests.common import new_test_user
 
 from odoo.exceptions import AccessError
 
@@ -28,6 +29,7 @@ class DashboardSharing(DashboardTestCommon):
         )
         self.assertEqual(url, share.full_url)
         self.assertEqual(share.dashboard_id, dashboard)
+        self.assertEqual(share.name, "a dashboard - Share Link")
         self.assertTrue(share.excel_export)
 
     def test_can_create_own(self):
@@ -43,3 +45,15 @@ class DashboardSharing(DashboardTestCommon):
         share = self.share_dashboard(dashboard)
         with self.assertRaises(AccessError):
             share.with_user(self.user).access_token
+
+    def test_dashboard_manager_sees_all_shares(self):
+        second_user = new_test_user(self.env, login='Jeanne')
+        second_user.group_ids |= self.group
+        dashboard = self.create_dashboard()
+        with self.with_user(self.user.login):
+            user_share = self.share_dashboard(dashboard)
+        with self.with_user(second_user.login):
+            second_user_share = self.share_dashboard(dashboard)
+
+        shares = self.env['spreadsheet.dashboard.share'].with_user(self.dashboard_manager).search([])
+        self.assertEqual(shares, user_share | second_user_share)

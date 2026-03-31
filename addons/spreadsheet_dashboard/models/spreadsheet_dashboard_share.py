@@ -9,17 +9,26 @@ class SpreadsheetDashboardShare(models.Model):
     _name = 'spreadsheet.dashboard.share'
     _inherit = ['spreadsheet.mixin']
     _description = 'Copy of a shared dashboard'
+    _order = 'create_date desc'
 
     dashboard_id = fields.Many2one('spreadsheet.dashboard', required=True, ondelete='cascade')
+    dashboard_group_id = fields.Many2one(related='dashboard_id.dashboard_group_id')
     excel_export = fields.Binary()
+    active = fields.Boolean(default=True)
     access_token = fields.Char(required=True, default=lambda _x: str(uuid.uuid4()))
     full_url = fields.Char(string="URL", compute='_compute_full_url')
-    name = fields.Char(related='dashboard_id.name')
+    name = fields.Char(compute='_compute_name', readonly=False, store=True, required=True, precompute=True)
 
     @api.depends('access_token')
     def _compute_full_url(self):
         for share in self:
             share.full_url = "%s/dashboard/share/%s/%s" % (share.get_base_url(), share.id, share.access_token)
+
+    @api.depends('dashboard_id')
+    def _compute_name(self):
+        for share in self:
+            if not share.name and share.dashboard_id:
+                share.name = share.env._("%s - Share Link", share.dashboard_id.name)
 
     @api.model
     def action_get_share_url(self, vals):
