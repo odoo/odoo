@@ -2063,6 +2063,8 @@ class MailCommon(MailCase):
                 data.pop("original_id", None)
                 data.pop("public", None)
                 data.pop("res_id", None)
+            if "documents.document" not in self.env:
+                data.pop("linked_document_ids", None)
         return list(attachments_data)
 
     @classmethod

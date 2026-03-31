@@ -123,6 +123,7 @@ class TestMessageController(HttpCaseWithUserDemo, MailCommon):
                     "original_id": False,
                     "public": False,
                     "res_id": self.attachments[0].res_id,
+                    "linked_document_id": self.attachments[0].linked_document_id.id,
                 },
             ),
             "guest should be allowed to add attachment with token when posting message",
