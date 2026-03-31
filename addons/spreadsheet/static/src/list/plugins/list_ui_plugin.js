@@ -6,7 +6,6 @@ const { constants, helpers } = spreadsheet;
 const { PIVOT_STATIC_TABLE_CONFIG } = constants;
 
 const { UuidGenerator, sanitizeSheetName, getUniqueText } = helpers;
-const uuidGenerator = new UuidGenerator();
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
@@ -40,7 +39,7 @@ export class ListUIPlugin extends OdooUIPlugin {
                 );
                 if (cmd.insertInNewSheet) {
                     const sheetIdFrom = this.getters.getActiveSheetId();
-                    const sheetId = uuidGenerator.smallUuid();
+                    const sheetId = UuidGenerator.smallUuid();
 
                     this.dispatch("CREATE_SHEET", {
                         sheetId,
@@ -87,7 +86,7 @@ export class ListUIPlugin extends OdooUIPlugin {
                 );
 
                 const sheetIdFrom = this.getters.getActiveSheetId();
-                const sheetId = uuidGenerator.smallUuid();
+                const sheetId = UuidGenerator.smallUuid();
 
                 this.dispatch("CREATE_SHEET", {
                     sheetId,

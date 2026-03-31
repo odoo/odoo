@@ -29,7 +29,6 @@ import { getFilterCellValue, getFilterValueDomain } from "../helpers";
 const { DateTime } = luxon;
 
 const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
-const uuidGenerator = new UuidGenerator();
 
 export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     static getters = /** @type {const} */ ([
@@ -360,7 +359,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         }
         this.exportSheetWithActiveFilters(data);
         data.sheets[data.sheets.length - 1] = {
-            ...createEmptyExcelSheet(uuidGenerator.smallUuid(), _t("Active Filters")),
+            ...createEmptyExcelSheet(UuidGenerator.smallUuid(), _t("Active Filters")),
             ...data.sheets.at(-1),
         };
     }
@@ -400,7 +399,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const styleId = getItemId({ bold: true }, data.styles);
 
         const sheet = {
-            ...createEmptySheet(uuidGenerator.smallUuid(), _t("Active Filters")),
+            ...createEmptySheet(UuidGenerator.smallUuid(), _t("Active Filters")),
             cells,
             formats,
             styles: {
