@@ -129,8 +129,8 @@ class MrpWorkcenter(models.Model):
 
     def _get_workcenter_load_per_week(self, week_range, date_start, date_stop):
         load_data = {rec: {} for rec in self}
-        # demo data
-        if not self.order_ids:
+        has_workorders = bool(self.env['mrp.workorder'].search_count([('workcenter_id', 'in', self.ids)], limit=1))
+        if not has_workorders:  # demo data
             for wc in self:
                 load_limit = 40     # default max load per week is 40 hours on a new workcenter
                 load_data[wc] = {week_start: randint(0, int(load_limit * 2)) for week_start in week_range}
@@ -147,9 +147,13 @@ class MrpWorkcenter(models.Model):
 
     def _prepare_graph_data(self, load_data, week_range):
         graph_data = {wid: [] for wid in self._ids}
+        has_workorders = bool(self.env['mrp.workorder'].search_count([('workcenter_id', 'in', self.ids)], limit=1))
+        attendances_duration_hours_by_resource_calendar = defaultdict(int)
+        for resource_calendar in self.resource_calendar_id:
+            attendances_duration_hours_by_resource_calendar[resource_calendar.id] = sum(resource_calendar.attendance_ids.mapped('duration_hours'))
         for workcenter in self:
-            load_limit = sum(workcenter.resource_calendar_id.attendance_ids.mapped('duration_hours'))
-            wc_data = {'is_sample_data': not self.order_ids, 'labels': list(week_range.values())}
+            load_limit = attendances_duration_hours_by_resource_calendar[workcenter.resource_calendar_id.id]
+            wc_data = {'is_sample_data': not has_workorders, 'labels': list(week_range.values())}
             load_bar = []
             excess_bar = []
             for week_start in week_range:
