@@ -74,6 +74,10 @@ registerWebsitePreviewTour("website_auto_hide_menu", {}, () => [
         trigger: ".hb-row[data-label='Content Width'] .o-hb-btn[title='Small']",
         run: "click",
     },
+    {
+        content: "Wait for the operation to finish",
+        trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
+    },
     checkThatLayoutChanged,
     {
         content: "Make content width large",
@@ -95,6 +99,10 @@ registerWebsitePreviewTour("website_auto_hide_menu", {}, () => [
         content: "Set the page layout to 'boxed'",
         trigger: ".o-hb-select-dropdown-item[data-action-value='boxed']",
         run: "click",
+    },
+    {
+        content: "Wait for the operation to finish",
+        trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
     },
     checkThatLayoutChanged,
 ]);
