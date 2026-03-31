@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.MailingListPickerDialog">
+        <Dialog size="'lg'" title.translate="Create a Mailing List" bodyClass="'o_mm_mailing_list_picker_dialog p-0 h-100'">
+            <div class="d-sm-flex">
+                <div class="d-flex flex-column flex-grow-1 min-w-0">
+                    <MailingListTypePickerSheet
+                        listTypes="this.listTypes"
+                        onClick.bind="this.onChooseListType"
+                    />
+                    <MailingListTemplatePickerSheet 
+                        templates="this.templates"
+                        onClick.bind="this.onChooseListTemplate"
+                    />
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

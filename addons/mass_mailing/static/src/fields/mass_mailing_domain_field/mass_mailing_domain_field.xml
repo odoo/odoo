@@ -9,5 +9,12 @@
                 this.props.record.data.use_exclusion_list
             </attribute>
         </xpath>
+        <xpath expr="//div[hasclass('o_field_domain_panel')]//button[hasclass('o_domain_show_selection_button')]" position="after">
+            <t t-if="this.state.isValid and this.props.ableToSave and this.isDomainChanged">
+                <button class="btn btn-sm btn-secondary" type="button" t-on-click.stop="this.onSaveDynamicListButtonClick">
+                    Save as a Dynamic List
+                </button>
+            </t>
+        </xpath>
     </t>
 </templates>
