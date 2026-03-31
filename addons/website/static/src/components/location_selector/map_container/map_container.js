@@ -1,29 +1,28 @@
-import {
-    LocationSchedule
-} from '@website_sale_stock/js/location_selector/location_schedule/location_schedule';
-import { Map } from '@website_sale_stock/js/location_selector/map/map';
-import { Component, onWillStart, proxy, t, useProps } from '@odoo/owl';
-import { AssetsLoadingError, loadCSS, loadJS } from '@web/core/assets';
-import { _t } from '@web/core/l10n/translation';
+import { LocationSchedule } from "../location_schedule/location_schedule";
+import { Map } from "../map/map";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
+import { AssetsLoadingError, loadCSS, loadJS } from "@web/core/assets";
+import { _t } from "@web/core/l10n/translation";
 
 export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
-    static template = 'website_sale_stock.locationSelector.mapContainer';
     props = useProps({
-        locations: t.array(t.object({
-            id: t.or([t.string(), t.number()]),
-            name: t.string(),
-            opening_hours: t.record(t.array(t.string())),
-            street: t.string(),
-            city: t.string(),
-            zip_code: t.string(),
-            state: t.string().optional(),
-            country_code: t.string(),
-            additional_data: t.object().optional(),
-            distance: t.number().optional(),
-            latitude: t.or([t.string(), t.number()]),
-            longitude: t.or([t.string(), t.number()]),
-        })),
+        locations: t.array(
+            t.object({
+                id: t.or([t.string(), t.number()]),
+                name: t.string(),
+                opening_hours: t.record(t.array(t.string())),
+                street: t.string(),
+                city: t.string(),
+                zip_code: t.string(),
+                state: t.string().optional(),
+                country_code: t.string(),
+                additional_data: t.object().optional(),
+                distance: t.number().optional(),
+                latitude: t.or([t.string(), t.number()]),
+                longitude: t.or([t.string(), t.number()]),
+            })
+        ),
         selectedLocationId: t.or([t.string(), t.literal(false)]),
         setSelectedLocation: t.function(),
         validateSelection: t.function(),
@@ -43,9 +42,9 @@ export class MapContainer extends Component {
              */
             try {
                 await Promise.all([
-                    loadJS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'),
-                    loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
-                ])
+                    loadJS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"),
+                    loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"),
+                ]);
                 this.state.shouldLoadMap = true;
             } catch (error) {
                 if (!(error instanceof AssetsLoadingError)) {
@@ -72,7 +71,7 @@ export class MapContainer extends Component {
      * @return {Object} The selected location.
      */
     get selectedLocation() {
-        return this.props.locations.find(l => String(l.id) === this.props.selectedLocationId);
+        return this.props.locations.find((l) => String(l.id) === this.props.selectedLocationId);
     }
 
     get errorMessage() {
