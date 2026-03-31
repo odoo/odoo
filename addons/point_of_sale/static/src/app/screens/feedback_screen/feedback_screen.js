@@ -76,9 +76,7 @@ export class FeedbackScreen extends Component {
     }
 
     get isAutoSkip() {
-        return (
-            this.pos.config.iface_print_auto && this.currentOrder.payment_ids[0]?.payment_method_id
-        );
+        return this.pos.config.autoPrint && this.currentOrder.payment_ids[0]?.payment_method_id;
     }
 
     get currentOrder() {
