@@ -99,24 +99,12 @@
                         </h1>
                     </div>
                     <group>
-                        <div>
-                            <div class="o_input_box">
-                                <i class="o_input_box_overlay_start fa fa-user" title="Customer" name="partner_id"/>
-                                <field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
-                            </div>
-                            <div class="o_input_box" invisible="not partner_phone">
-                                <i class="o_input_box_overlay_start fa fa-phone" title="Phone"/>
-                                <field name="partner_phone" nolabel="1" widget="phone"/>
-                            </div>
-                            <div class="o_input_box" invisible="not partner_email">
-                                <i class="o_input_box_overlay_start fa fa-envelope" title="Email"/>
-                                <field name="partner_email" nolabel="1" widget="email"/>
-                            </div>
-                            <div class="o_input_box">
-                                <i class="o_input_box_overlay_start fa fa-tag" title="Tags"/>
-                                <field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                            </div>
-                        </div>
+                        <group>
+                            <field name="partner_id" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
+                            <field name="partner_phone" widget="phone" invisible="not partner_phone"/>
+                            <field name="partner_email" widget="email" invisible="not partner_email"/>
+                            <field name="tag_ids" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                        </group>
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]"/>
