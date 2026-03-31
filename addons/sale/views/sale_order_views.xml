@@ -418,7 +418,7 @@
                                                 invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                             />
                                             <field name="product_id"
-                                                domain="[('sale_ok', '=', True)]"
+                                                domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"
                                                 context="{
                                                     'partner_id': parent.partner_id,
                                                     'quantity': product_uom_qty,
