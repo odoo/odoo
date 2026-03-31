@@ -62,6 +62,7 @@ class GattSylvacBtDriver(Device):
         if total > 256 ** 4 / 2:
             total = total - 256 ** 4
         self.btdriver.data['value'] = total / 1000000.0
+        self.btdriver.data['status'] = 'success'
         event_manager.device_changed(self.btdriver)
 
     def characteristic_enable_notification_succeeded(self):
