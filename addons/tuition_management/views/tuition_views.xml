@@ -234,7 +234,7 @@
 <record id="action_tuition_time_slots" model="ir.actions.act_window">
 <field name="name">Time Slots</field>
 <field name="res_model">tuition.time.slot</field>
-<field name="view_mode">tree,form</field>
+<field name="view_mode">list,form</field>
 </record>
 
 <!-- Course Master Views -->
@@ -609,28 +609,30 @@
 <field name="view_mode">list,form</field>
 </record>
 
-<!-- Demo Sessions Menu -->
-<menuitem id="menu_tuition_demo_sessions" name="Demo Sessions" parent="menu_tuition_root" action="action_demo_sessions"/>
-
 <!-- Top Level Admin Menus -->
 <menuitem id="menu_tuition_root" name="Tuition" sequence="50"/>
-<menuitem id="menu_tuition_time_slots" name="Time Slots" parent="menu_tuition_root" action="action_tuition_time_slots"/>
-<menuitem id="menu_tuition_courses" name="Courses" parent="menu_tuition_root" action="action_course_masters"/>
-<menuitem id="menu_tuition_enrollments" name="Enrollments" parent="menu_tuition_root" action="action_course_enrollments"/>
-<menuitem id="menu_tuition_class_schedules" name="Class Schedules" parent="menu_tuition_root" action="action_class_schedules"/>
-<menuitem id="menu_tuition_attendance" name="Attendance" parent="menu_tuition_root" action="action_attendance_records"/>
-<menuitem id="menu_tuition_enquiries" name="Enquiries" parent="menu_tuition_root" action="action_enquiry"/>
 
-<!-- Settings Menu -->
-<menuitem id="menu_tuition_settings" name="Settings" parent="menu_tuition_root" sequence="100"/>
-<menuitem id="menu_tuition_subjects" name="Subjects" parent="menu_tuition_settings" action="action_subject_masters"/>
-<menuitem id="menu_tuition_subject_categories" name="Subject Categories" parent="menu_tuition_settings" action="action_subject_categories"/>
-<menuitem id="menu_tuition_grades" name="Grades" parent="menu_tuition_settings" action="action_grade_masters"/>
+<!-- Scheduling Menu -->
+<menuitem id="menu_tuition_scheduling" name="Scheduling" parent="menu_tuition_root" sequence="10"/>
+<menuitem id="menu_tuition_courses" name="Courses" parent="menu_tuition_scheduling" action="action_course_masters"/>
+<menuitem id="menu_tuition_enrollments" name="Enrollments" parent="menu_tuition_scheduling" action="action_course_enrollments"/>
+<menuitem id="menu_tuition_class_schedules" name="Class Schedules" parent="menu_tuition_scheduling" action="action_class_schedules"/>
+<menuitem id="menu_tuition_demo_sessions" name="Demo Sessions" parent="menu_tuition_scheduling" action="action_demo_sessions"/>
+<menuitem id="menu_tuition_attendance" name="Attendance" parent="menu_tuition_scheduling" action="action_attendance_records"/>
+<menuitem id="menu_tuition_tutor_availability" name="Tutor Availability" parent="menu_tuition_scheduling" action="action_tutor_availability"/>
+
+<!-- Enquiries Menu -->
+<menuitem id="menu_tuition_enquiries" name="Enquiries" parent="menu_tuition_root" sequence="20" action="action_enquiry"/>
 
 <!-- User Management Menu -->
-<menuitem id="menu_tuition_users" name="Users" parent="menu_tuition_root" sequence="110"/>
+<menuitem id="menu_tuition_users" name="Users" parent="menu_tuition_root" sequence="30"/>
 <menuitem id="menu_tuition_students" name="Students" parent="menu_tuition_users" action="action_student_profiles"/>
 <menuitem id="menu_tuition_tutors" name="Tutors" parent="menu_tuition_users" action="action_tutor_profiles"/>
 <menuitem id="menu_tuition_parents" name="Parents" parent="menu_tuition_users" action="action_parent_profiles"/>
-<menuitem id="menu_tuition_tutor_availability" name="Tutor Availability" parent="menu_tuition_users" action="action_tutor_availability"/>
+
+<!-- Settings Menu -->
+<menuitem id="menu_tuition_settings" name="Settings" parent="menu_tuition_root" sequence="40"/>
+<menuitem id="menu_tuition_subjects" name="Subjects" parent="menu_tuition_settings" action="action_subject_masters"/>
+<menuitem id="menu_tuition_subject_categories" name="Subject Categories" parent="menu_tuition_settings" action="action_subject_categories"/>
+<menuitem id="menu_tuition_grades" name="Grades" parent="menu_tuition_settings" action="action_grade_masters"/>
 </odoo>
