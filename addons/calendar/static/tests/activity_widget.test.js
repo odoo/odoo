@@ -41,14 +41,13 @@ test("list activity widget: reschedule button in dropdown", async () => {
         calendar_event_id: meetingId,
         summary: "OXP",
     });
-    pyEnv["res.partner"].write([serverState.partnerId], {
+    pyEnv["res.partner"].write(serverState.partnerId, {
         activity_ids: [activityId_1],
-        activity_state: "today",
     });
-
     // FIXME: Manually trigger recomputation of related fields
-    pyEnv["res.users"]._applyComputesAndValidate();
-    pyEnv["res.users"][0].activity_ids = [activityId_1];
+    pyEnv["res.users"].write(serverState.userId, {
+        activity_ids: [activityId_1],
+    });
 
     await start();
     await openListView("res.users", {

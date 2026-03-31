@@ -1062,7 +1062,7 @@ export class MockServer {
             for (const record of model) {
                 model._applyDefaults(record);
             }
-            model._applyComputesAndValidate();
+            model._applyComputesAndValidate({}, { force: true });
         }
 
         // creation of the ir.model.fields records, required for tracked fields

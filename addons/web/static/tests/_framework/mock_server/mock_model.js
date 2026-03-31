@@ -77,6 +77,8 @@ const {
  * @typedef {ViewType | `${ViewType},${number}`} ViewKey
  *
  * @typedef {import("@web/views/view").ViewType} ViewType
+ *
+ * @typedef {{ force?: boolean }} WriteOptions
  */
 
 /**
@@ -566,6 +568,13 @@ function getViewKey(viewType, viewId) {
 function isDateField(field) {
     const fieldType = typeof field === "string" ? field : field.type;
     return fieldType === "date" || fieldType === "datetime";
+}
+
+/**
+ * @param {FieldDefinition} field
+ */
+function isFieldWritable(field) {
+    return field.store || !isComputed(field);
 }
 
 /**
@@ -1207,8 +1216,9 @@ function traverseElement(node, callback) {
  * @param {Model} model
  * @param {ModelRecord} record record that have been created/updated.
  * @param {ModelRecord} [originalRecord] record before update.
+ * @param {WriteOptions} [writeOptions]
  */
-function updateComodelRelationalFields(model, record, originalRecord) {
+function updateComodelRelationalFields(model, record, originalRecord, writeOptions) {
     for (const fname in record) {
         const field = model._fields[fname];
         const coModel = getRelation(field, record);
@@ -1241,13 +1251,13 @@ function updateComodelRelationalFields(model, record, originalRecord) {
                 if (comodelInverseField.type === "many2one_reference") {
                     data[comodelInverseField.model_name_ref_fname] = model._name;
                 }
-                coModel._write(data, relatedRecordId);
+                coModel._write(data, relatedRecordId, writeOptions);
             }
         } else if (field.type === "many2one_reference") {
             // we need to clean the many2one_field as well.
             const model_many2one_field =
                 comodelInverseField.inverse_fname_by_model_name[model._name];
-            model._write({ [model_many2one_field]: false }, record.id);
+            model._write({ [model_many2one_field]: false }, record.id, writeOptions);
         }
         // it's an update, get the records that were originally referenced but are not
         // anymore and update their relational fields.
@@ -1264,17 +1274,17 @@ function updateComodelRelationalFields(model, record, originalRecord) {
                 }
                 let inverseFieldNewValue = false;
                 if (Array.isArray(removedRecord[inverseFieldName])) {
-                    inverseFieldNewValue = removedRecord[inverseFieldName].filter(
+                    const filtered = removedRecord[inverseFieldName].filter(
                         (id) => id !== record.id
                     );
+                    if (filtered.length) {
+                        inverseFieldNewValue = filtered;
+                    }
                 }
                 coModel._write(
-                    {
-                        [inverseFieldName]: inverseFieldNewValue.length
-                            ? inverseFieldNewValue
-                            : false,
-                    },
-                    removedRecordId
+                    { [inverseFieldName]: inverseFieldNewValue },
+                    removedRecordId,
+                    writeOptions
                 );
             }
         }
@@ -1644,6 +1654,7 @@ export class Model extends Array {
      */
     browse(idOrIds) {
         const ids = ensureArray(idOrIds);
+        /** @type {typeof this} */
         const records = new this.constructor();
         if (ids.length > 1) {
             const recordSet = new Map();
@@ -1676,17 +1687,28 @@ export class Model extends Array {
     copy(idOrIds, defaultValues) {
         ({ ids: idOrIds, default: defaultValues } = getKwArgs(arguments, "ids", "default"));
 
-        return ensureArray(idOrIds).map((id) => {
-            const copyId = this._getNextId();
-            const originalRecord = this.find((record) => record.id === id);
-            this.push({
+        for (const fieldName in defaultValues) {
+            if (!(fieldName in this._fields)) {
+                delete defaultValues[fieldName];
+            }
+        }
+        const recName = this._rec_name;
+        /** @type {number[]} */
+        const copyIds = [];
+        for (const originalRecord of this.browse(idOrIds)) {
+            const recordCopy = {
                 ...originalRecord,
                 ...defaultValues,
-                id: copyId,
-                display_name: `${originalRecord.display_name} (copy)`,
-            });
-            return copyId;
-        });
+                id: this._getNextId(),
+            };
+            if (recName) {
+                recordCopy[recName] = `${originalRecord[recName]} (copy)`;
+            }
+            copyIds.push(recordCopy.id);
+            this.push(recordCopy);
+        }
+        this.browse(copyIds)._applyComputesAndValidate({}, { force: true });
+        return copyIds;
     }
 
     /**
@@ -1700,17 +1722,18 @@ export class Model extends Array {
         const allValues = shouldReturnList ? valuesList : [valuesList];
         /** @type {number[]} */
         const ids = [];
+        const writeOptions = { force: true };
         for (const values of allValues) {
             if ("id" in values) {
                 throw new MockServerError(`Cannot create a record with a given ID value`);
             }
-            const record = { id: this._getNextId() };
-            ids.push(record.id);
-            this.push(record);
+            const createdRecord = { id: this._getNextId() };
+            ids.push(createdRecord.id);
+            this.push(createdRecord);
             this._applyDefaults(values, kwargs.context);
-            this._write(values, record.id);
+            this._write(values, createdRecord.id, writeOptions);
         }
-        this.browse(ids)._applyComputesAndValidate();
+        this.browse(ids)._applyComputesAndValidate({}, writeOptions);
         return shouldReturnList ? ids : ids[0];
     }
 
@@ -1819,11 +1842,13 @@ export class Model extends Array {
      * @param {string} name
      */
     name_create(name) {
+        if (!this._rec_name) {
+            return false;
+        }
         const kwargs = getKwArgs(arguments, "name");
         ({ name } = kwargs);
 
-        const values = { [this._rec_name]: name, display_name: name };
-        const [id] = this.create([values], kwargs);
+        const id = this.create({ [this._rec_name]: name }, kwargs);
         return [id, kwargs.name];
     }
 
@@ -2738,13 +2763,13 @@ export class Model extends Array {
         const kwargs = getKwArgs(arguments, "ids", "vals");
         ({ ids: idOrIds, vals: values } = kwargs);
 
-        const ids = ensureArray(idOrIds);
         const originalRecords = {};
-        for (const id of ids) {
-            originalRecords[id] = { ...this.browse(id)[0] };
-            this._write(values, id);
+        const records = this.browse(idOrIds);
+        for (const record of records) {
+            originalRecords[record.id] = { ...record };
+            this._write(values, record.id);
         }
-        this.browse(ids)._applyComputesAndValidate(originalRecords);
+        records._applyComputesAndValidate(originalRecords);
         return true;
     }
 
@@ -2754,9 +2779,10 @@ export class Model extends Array {
 
     /**
      * @private
-     * @param {Record<string, ModelRecord>} [originalRecords={}]
+     * @param {Record<string, ModelRecord>} originalRecords
+     * @param {WriteOptions} [writeOptions]
      */
-    _applyComputesAndValidate(originalRecords = {}) {
+    _applyComputesAndValidate(originalRecords, writeOptions) {
         // Compute related fields
         for (const fieldName of this._related) {
             this._compute_related_field(fieldName);
@@ -2769,7 +2795,7 @@ export class Model extends Array {
 
         // Validate record values
         for (const record of this) {
-            for (const fieldName of Object.keys(record)) {
+            for (const fieldName in record) {
                 const fieldDef = this._fields[fieldName];
                 if (!isValidFieldValue(record, fieldDef)) {
                     throw new MockServerError(
@@ -2782,7 +2808,7 @@ export class Model extends Array {
                 }
             }
 
-            updateComodelRelationalFields(this, record, originalRecords[record.id]);
+            updateComodelRelationalFields(this, record, originalRecords[record.id], writeOptions);
         }
     }
 
@@ -2817,7 +2843,7 @@ export class Model extends Array {
                     typeof fieldDef.default === "function"
                         ? fieldDef.default.call(this, record)
                         : fieldDef.default;
-            } else if (fieldDef.type in DEFAULT_FIELD_VALUES) {
+            } else if (fieldDef.type in DEFAULT_FIELD_VALUES && isFieldWritable(fieldDef)) {
                 record[fieldName] = DEFAULT_FIELD_VALUES[fieldDef.type]();
             }
         }
@@ -3241,8 +3267,9 @@ export class Model extends Array {
      * @private
      * @param {ModelRecord} values
      * @param {number} id
+     * @param {WriteOptions} [options]
      */
-    _write(values, id) {
+    _write(values, id, options) {
         const record = this.find((r) => r.id === id);
         const todoValsMap = new Map(Object.entries(values));
         const MAX_ITER = todoValsMap.size;
@@ -3257,6 +3284,14 @@ export class Model extends Array {
                     fieldName,
                     `could not write on ${getRecordQualifier(record)}`
                 );
+            }
+            if (field.related) {
+                const fieldNames = safeSplit(field.related, ".");
+                const [value, fieldType] = this._followRelation(record, fieldNames);
+                if (fieldType) {
+                    record[fieldName] = value;
+                }
+                continue;
             }
             if (isX2MField(field)) {
                 let ids = record[fieldName] ? record[fieldName].slice() : [];
@@ -3377,8 +3412,11 @@ export class Model extends Array {
                         record[fieldName][property.name] = value;
                     }
                 }
-            } else if (!isComputed(field)) {
+            } else if (options?.force || isFieldWritable(field)) {
                 record[fieldName] = value;
+            } else {
+                // FIXME: should also take 'readonly' into account
+                console.warn(`could not write on ${field.name} field as it cannot be stored`);
             }
             i++;
         }
