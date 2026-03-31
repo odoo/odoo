@@ -17,15 +17,16 @@ export const tourState = {
         browser.localStorage.setItem(CURRENT_TOUR_LOCAL_STORAGE, tourName);
     },
     getCurrentIndex() {
-        const index = browser.localStorage.getItem(CURRENT_TOUR_INDEX_LOCAL_STORAGE, "0");
-        return parseInt(index, 10);
+        const index = browser.localStorage.getItem(CURRENT_TOUR_INDEX_LOCAL_STORAGE);
+        const parsed = parseInt(index, 10);
+        return isNaN(parsed) ? 0 : parsed;
     },
     setCurrentIndex(index) {
         browser.localStorage.setItem(CURRENT_TOUR_INDEX_LOCAL_STORAGE, index.toString());
     },
     getCurrentConfig() {
-        const config = browser.localStorage.getItem(CURRENT_TOUR_CONFIG_LOCAL_STORAGE, "{}");
-        return JSON.parse(config);
+        const config = browser.localStorage.getItem(CURRENT_TOUR_CONFIG_LOCAL_STORAGE);
+        return config ? JSON.parse(config) : {};
     },
     setCurrentConfig(config) {
         config = JSON.stringify(config);

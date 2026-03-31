@@ -259,7 +259,9 @@ export class TourService {
                 browser.console.log("tour succeeded");
                 let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
                 if (message) {
-                    message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);
+                    if (window.DOMPurify) {
+                        message = window.DOMPurify.sanitize(message);
+                    }
                     this.effect.add({
                         type: "rainbow_man",
                         message: markup(message),

@@ -84,13 +84,13 @@ export class TourInteractive {
 
     play() {
         this.removeListeners();
-        if (this.currentActionIndex === this.actions.length) {
+        this.currentAction = this.actions.at(this.currentActionIndex);
+
+        if (!this.currentAction) {
             TourInteractive.observer.disconnect();
             this.onTourEnd();
             return;
         }
-
-        this.currentAction = this.actions.at(this.currentActionIndex);
 
         if (!this.currentAction.step.active || this.currentAction.event === "warn") {
             if (this.currentAction.event === "warn") {
