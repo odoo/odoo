@@ -276,7 +276,7 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <xpath expr="//h1" position="attributes">
-                <attribute name="class" add="d-flex align-items-center" separator=" "/>
+                <attribute name="class" add="d-flex align-items-center gap-2" separator=" "/>
             </xpath>
             <xpath expr="//field[@name='name']" position="before">
                 <field name="is_favorite" widget="boolean_favorite" class="hr_recruitment_is_favorite_job" nolabel="1"/>

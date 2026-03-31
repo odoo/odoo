@@ -93,8 +93,8 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <widget name="web_ribbon" title="Template" bg_color="text-bg-info" invisible="not (is_template and active)"/>
                     <div class="oe_title">
-                        <h1 class="o_input_box">
-                            <field name="is_favorite" nolabel="1" widget="project_is_favorite" class="o_input_box_overlay_start" options="{'autosave': False}"/>
+                        <h1 class="d-flex align-items-center gap-2">
+                            <field name="is_favorite" nolabel="1" widget="project_is_favorite" options="{'autosave': False}"/>
                             <field name="name" options="{'line_breaks': False}" widget="text" class="o_text_overflow" placeholder="e.g. Office Party"/>
                         </h1>
                     </div>
