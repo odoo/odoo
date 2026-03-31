@@ -19,7 +19,7 @@
                                 </t>
                             </t>
                         </header>
-                        <main class="modal-body" t-attf-class="{{ this.props.bodyClass }}">
+                        <main class="modal-body" t-attf-class="{{ this.props.bodyClass }}" t-att-tabindex="this.bodyTabIndex">
                             <t t-slot="default" close="() => this.data.close()" />
                         </main>
                         <footer t-if="this.props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-2 w-100">
