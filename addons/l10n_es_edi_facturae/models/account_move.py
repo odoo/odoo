@@ -468,6 +468,8 @@ class AccountMove(models.Model):
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_base_line_tax)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         for grouping_key, values in values_per_grouping_key.items():
+            if not grouping_key:
+                continue
             tax_record = values['base_line_x_taxes_data'][0][1][0]['tax']
             if not tax_record:
                 continue
