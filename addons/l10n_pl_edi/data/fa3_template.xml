@@ -184,10 +184,10 @@
           <!-- P_13_11: Total value of sales under the margin scheme referred to in Article 119 and Article 120 TO-CHECK -->
 
           <!-- P_15: Total gross amount of the invoice (including all taxes). -->
-        <P_15 t-out="float_repr(invoice.amount_total_signed, 2)"/>
+        <P_15 t-out="float_repr(invoice.amount_total_in_currency_signed, 2)"/>
 
           <!-- KursWalutyZ: Exchange rate of the currency to PLN on the invoice date. TO-CHECK -->
-          <KursWalutyZ t-out="invoice.invoice_currency_rate"/>
+          <KursWalutyZ t-out="float_repr(1 / (invoice.invoice_currency_rate or 1), 5)"/>
         <!--
           ======================================================================
           Adnotacje (Annotations)
