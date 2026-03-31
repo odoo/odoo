@@ -125,7 +125,7 @@ class TestSafeEval(BaseCase):
            ast.literal_eval('{"a": True.__class__}')
 
     @mute_logger('odoo.tools.safe_eval')
-    def test_05_safe_eval_forbiddon(self):
+    def test_05_safe_eval_forbidden(self):
         """ Try forbidden expressions in safe_eval to verify they are not allowed"""
         # no forbidden builtin expression
         with self.assertRaises(ValueError):
@@ -134,6 +134,10 @@ class TestSafeEval(BaseCase):
         # no forbidden opcodes
         with self.assertRaises(ValueError):
             safe_eval("import odoo", mode="exec")
+
+        # Error message shows the function's name
+        with self.assertRaisesRegex(ValueError, r"forbidden opcode\(s\) in 'foo':"):
+            safe_eval("def foo(x): x.bar = 2", mode="exec")
 
         # no dunder
         with self.assertRaises(NameError):

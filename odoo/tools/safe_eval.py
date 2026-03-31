@@ -293,7 +293,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     :type allowed_codes: set(int)
     :param code_obj: code object to name-validate
     :type code_obj: CodeType
-    :param str expr: expression corresponding to the code object, for debugging
+    :param str expr: expression or name of to the code object, for debugging
                      purposes
     :raises ValueError: in case of forbidden bytecode in ``code_obj``
     :raises NameError: in case a forbidden name (containing two underscores)
@@ -309,7 +309,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
 
     for const in code_obj.co_consts:
         if isinstance(const, CodeType):
-            assert_valid_codeobj(allowed_codes, const, 'lambda')
+            assert_valid_codeobj(allowed_codes, const, const.co_name)
 
 
 def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Literal['eval', 'exec'] = 'eval'):
