@@ -362,11 +362,7 @@ export class PaymentScreen extends Component {
         let nextScreen = this.nextScreen;
         let switchScreen = true;
 
-        if (
-            nextScreen === "ReceiptScreen" &&
-            this.currentOrder.nb_print === 0 &&
-            this.pos.config.iface_print_auto
-        ) {
+        if (nextScreen === "ReceiptScreen" && this.currentOrder.nb_print === 0 && this.autoPrint) {
             const invoiced_finalized = this.currentOrder.is_to_invoice()
                 ? this.currentOrder.finalized
                 : true;
@@ -392,6 +388,9 @@ export class PaymentScreen extends Component {
         if (!this.pos.config.module_pos_restaurant) {
             this.pos.checkPreparationStateAndSentOrderInPreparation(this.currentOrder);
         }
+    }
+    get autoPrint() {
+        return this.pos.config.iface_print_auto;
     }
     selectNextOrder() {
         if (this.currentOrder.originalSplittedOrder) {
