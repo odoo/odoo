@@ -203,11 +203,11 @@ function getWatchedEventTargets(view) {
         // Other event targets
         EventBus.prototype,
         MockEventTarget.prototype,
+        view.BaseAudioContext.prototype,
         view.MediaDevices.prototype,
         view.MediaStreamTrack.prototype,
-        view.RTCPeerConnection.prototype,
         view.RTCDataChannel.prototype,
-        view.BaseAudioContext.prototype,
+        view.RTCPeerConnection.prototype,
     ];
 }
 
@@ -722,7 +722,9 @@ export function watchAddedNodes(view = getWindow()) {
  * @param {typeof globalThis} [view=getWindow()]
  */
 export function watchListeners(view = getWindow()) {
-    const targets = getWatchedEventTargets(view);
+    const targets = getRunner().headless
+        ? [view.EventTarget.prototype]
+        : getWatchedEventTargets(view);
     for (const target of targets) {
         target.addEventListener = mockedAddEventListener;
         target.removeEventListener = mockedRemoveEventListener;
