@@ -114,6 +114,10 @@
 <field name="grade_id"/>
 <field name="subjects_ids" widget="many2many_tags"/>
 </group>
+<group string="Parent">
+<field name="parent_id"/>
+<button name="action_view_parent" type="object" string="View Parent" class="btn-link" icon="fa-external-link" invisible="not parent_id"/>
+</group>
 <group string="Address">
 <field name="address_line_1" placeholder="Address Line 1"/>
 <field name="address_line_2" placeholder="Address Line 2"/>
@@ -493,8 +497,6 @@
 <field name="arch" type="xml">
 <form string="Enquiry">
 <header>
-<button name="action_convert_to_student" type="object" string="Convert to Student" class="btn-secondary"/>
-<button name="action_convert_to_parent" type="object" string="Convert to Parent" class="btn-secondary"/>
 <button name="action_enroll_to_course" type="object" string="Enroll to Course" class="btn-primary"/>
 </header>
 <div class="alert alert-info" role="status">
