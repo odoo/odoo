@@ -38,6 +38,7 @@ Then it can be made specific at the product level.
             "website_sale_stock/static/src/xml/**/*",
             "website_sale_stock/static/src/scss/**/*",
             "website_sale_stock/static/src/js/location_selector/**/*",
+            "website/static/src/components/location_selector/**/*",
         ],
         "web.assets_backend": [
             "website_sale_stock/static/src/js/location_selector/**/*",
