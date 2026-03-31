@@ -4449,11 +4449,11 @@
             if (ast.context) {
                 const dynCtxVar = generateId("ctx");
                 this.addLine(`const ${dynCtxVar} = ${compileExpr(ast.context)};`);
-                if (attrs.length) {
-                    ctxExpr = `Object.assign({this: ${dynCtxVar}}, ${ctxString})`;
-                }
-                else {
-                    ctxExpr = `{this: ${dynCtxVar}}`;
+                if (ast.attrs) {
+                    ctxExpr = `Object.assign({}, ${dynCtxVar}${attrs.length ? ", " + ctxString : ""})`;
+                } else {
+                    const thisCtx = `{this: ${dynCtxVar}, __owl__: this.__owl__}`;
+                    ctxExpr = `Object.assign({}, ${dynCtxVar}, ${thisCtx}${attrs.length ? ", " + ctxString : ""})`;
                 }
             }
             else {
