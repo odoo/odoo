@@ -31,7 +31,7 @@ if typing.TYPE_CHECKING:
 
 class BaseString(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
-    translate: bool | Callable[[Callable[[str], str], str], str] = False  # whether the field is translated
+    translate: bool | Callable[[Callable[[str], str | None], str], str] = False  # whether the field is translated
     size = None                         # maximum size of values (deprecated)
     is_text = True
     falsy_value = ''
@@ -113,14 +113,16 @@ class BaseString(Field[str | typing.Literal[False]]):
             lang = record.env.lang or 'en_US'
             value = value.get(lang, value.get('en_US', next(iter(value.values()))))
 
-        if isinstance(value, bytes):
-            s = value.decode()
-        else:
-            s = str(value)
-        value = s[:self.size]
-        if validate and callable(self.translate):
-            # pylint: disable=not-callable
-            value = self.translate(lambda t: None, value)
+        value = value.decode() if isinstance(value, bytes) else str(value)
+        value = value[:self.size]
+        if validate:
+            return self._validated_cache_value(value, record)
+        return value
+
+    def _validated_cache_value(self, value: str, record) -> str:
+        if callable(self.translate):
+            # auto fix broken value
+            value = self.translate(lambda t: None, value)  # pylint: disable=not-callable
         return value
 
     def convert_to_record(self, value, record):
@@ -637,21 +639,8 @@ class Html(BaseString):
     _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
 
-    def convert_to_column(self, value, record, values=None, validate=True):
-        value = self._convert(value, record, validate=validate)
-        return super().convert_to_column(value, record, values, validate=False)
-
-    def convert_to_cache(self, value, record, validate=True):
-        if self.translate and isinstance(value, dict):
-            lang = record.env.lang or 'en_US'
-            value = value.get(lang, value.get('en_US', next(iter(value.values()))))
-        return self._convert(value, record, validate)
-
-    def _convert(self, value, record, validate):
-        if value is None or value is False:
-            return None
-
-        if not validate or not self.sanitize:
+    def _validated_cache_value(self, value: str, record) -> str:
+        if not self.sanitize:
             return value
 
         sanitize_vals = {
@@ -711,16 +700,8 @@ class Html(BaseString):
         return html_sanitize(value, **sanitize_vals)
 
     def convert_to_record(self, value, record):
-        r = super().convert_to_record(value, record)
-        if isinstance(r, bytes):
-            r = r.decode()
-        return r and Markup(r)
-
-    def convert_to_read(self, value, record, use_display_name=True):
-        r = super().convert_to_read(value, record, use_display_name)
-        if isinstance(r, bytes):
-            r = r.decode()
-        return r and Markup(r)
+        value = super().convert_to_record(value, record)
+        return False if value is False else Markup(value)
 
     def get_trans_terms(self, value):
         # ensure the translation terms are stringified, otherwise we can break the PO file
