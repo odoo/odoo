@@ -1,5 +1,5 @@
-import { reactive, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, status, useEffect, xml } from "@odoo/owl";
+import { onRendered, reactive, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, status, untrack, useEffect, xml } from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 import { useDropdownNesting } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
@@ -170,7 +170,9 @@ export class Dropdown extends Component {
 
         // As the popover is in another context we need to force
         // its re-rendering when the dropdown re-renders
-        // onRendered(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null));
+        onRendered(() =>
+            untrack(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null))
+        );
 
         // onMounted(() => this.onStateChanged(this.state));
         useEffect(() => {

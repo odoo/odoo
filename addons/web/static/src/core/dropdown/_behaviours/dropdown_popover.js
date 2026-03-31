@@ -35,7 +35,7 @@ export class DropdownPopover extends Component {
             // component must also re-render itself.
             // This is why we subscribe to this reactive, which is changed when
             // the Dropdown component is re-rendered.
-            // this.props.refresher.token;
+            this.props.refresher.token;
         });
 
         onWillStart(async () => {
