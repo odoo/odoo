@@ -307,6 +307,11 @@ class Product(models.Model):
                 location_ids = set(Warehouse.search(
                     [('company_id', 'in', self.env.companies.ids)]
                 ).mapped('view_location_id').ids)
+        if self.env.context.get('transit_loc'):
+            location_ids.update(self.env['stock.location'].search([
+                ('usage', '=', 'transit'),
+                ('company_id', 'in', self.env.companies.ids),
+            ]).ids)
 
         return self._get_domain_locations_new(location_ids)
 
