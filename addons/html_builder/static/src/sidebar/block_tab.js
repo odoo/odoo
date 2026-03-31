@@ -66,76 +66,8 @@ export class BlockTab extends Component {
      * @param {Object} snippet the clicked snippet group
      */
     onSnippetGroupClick(snippet) {
-        this.shared.operation.next(
-            async () => {
-                this.cancelDragAndDrop = this.shared.history.makeSavePoint();
-                this.dragState = {};
-                let snippetEl;
-                this.state.ongoingInsertion = true;
-                await new Promise((resolve) => {
-                    this.snippetModel.openSnippetDialog(
-                        snippet,
-                        {
-                            onSelect: (snippet) => {
-                                snippetEl = snippet.content.cloneNode(true);
-
-                                // Add the dropzones corresponding to the snippet
-                                // and make them invisible.
-                                const selectors = this.shared.dropzone.getSelectors(snippetEl);
-                                let dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
-                                dropzoneEls = dropzoneEls.filter(
-                                    (dropzoneEl) =>
-                                        !dropzoneEl.closest("[data-snippet]:not(:has(> .modal))")
-                                );
-
-                                this.editable
-                                    .querySelectorAll(".oe_drop_zone")
-                                    .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
-
-                                // Find the dropzone closest to the center of the
-                                // viewport and not located in the top quarter of
-                                // the viewport.
-                                const iframeWindow = this.document.defaultView;
-                                const viewPortCenterPoint = {
-                                    x: iframeWindow.innerWidth / 2,
-                                    y: iframeWindow.innerHeight / 2,
-                                };
-                                const validDropzoneEls = dropzoneEls.filter(
-                                    (el) =>
-                                        el.getBoundingClientRect().top >= viewPortCenterPoint.y / 2
-                                );
-                                const closestDropzoneEl =
-                                    closest(validDropzoneEls, viewPortCenterPoint) ||
-                                    dropzoneEls.at(-1);
-
-                                // Insert the selected snippet.
-                                closestDropzoneEl.after(snippetEl);
-                                this.shared.dropzone.removeDropzones();
-                                return snippetEl;
-                            },
-                            onClose: () => {
-                                resolve();
-                            },
-                        },
-                        this.env.editor
-                    );
-                });
-
-                if (snippetEl) {
-                    await this.scrollToDroppedSnippet(snippetEl);
-                    await this.processDroppedSnippet(snippetEl);
-                }
-                this.state.ongoingInsertion = false;
-                delete this.cancelDragAndDrop;
-            },
-            {
-                withLoadingEffect: false,
-                shouldInterceptClick: true,
-                canTimeout: false,
-            }
-        );
-        //this.state.cancelDragAndDrop = this.cancelDragAndDrop;
-        //this.shared.blockTab.onSnippetGroupClick(snippet, this.state);
+        this.state.cancelDragAndDrop = this.cancelDragAndDrop;
+        this.shared.blockTab.onSnippetGroupClick(snippet, this.state);
     }
 
     /**

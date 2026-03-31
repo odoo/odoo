@@ -13,13 +13,19 @@ class BlockTabPlugin extends Plugin {
         "processDroppedSnippet",
     ];
 
+    /**
+     * Opens and manages the snippet dialog after clicking on a snippet group,
+     * and inserts the selected snippet in the page.
+     *
+     * @param {Object} snippet the clicked snippet group
+     * @param {Object} state   the state of the working blockTab
+     */
     onSnippetGroupClick(snippet, state) {
         this.dependencies.operation.next(
             async () => {
                 state.cancelDragAndDrop = this.dependencies.history.makeSavePoint();
                 this.dragState = {};
                 let snippetEl;
-                const baseSectionEl = snippet.content.cloneNode(true);
                 state.ongoingInsertion = true;
                 await new Promise((resolve) => {
                     this.config.snippetModel.openSnippetDialog(
@@ -31,9 +37,13 @@ class BlockTabPlugin extends Plugin {
                                 // Add the dropzones corresponding to a section and
                                 // make them invisible.
                                 const selectors =
-                                    this.dependencies.dropzone.getSelectors(baseSectionEl);
-                                const dropzoneEls =
+                                    this.dependencies.dropzone.getSelectors(snippetEl);
+                                let dropzoneEls =
                                     this.dependencies.dropzone.activateDropzones(selectors);
+                                dropzoneEls = dropzoneEls.filter(
+                                    (dropzoneEl) =>
+                                        !dropzoneEl.closest("[data-snippet]:not(:has(> .modal))")
+                                );
                                 this.editable
                                     .querySelectorAll(".oe_drop_zone")
                                     .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
