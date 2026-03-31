@@ -452,7 +452,7 @@ class StockMove(models.Model):
             if not production:
                 continue
             cancelled_dests = move.move_dest_ids.filtered(lambda m: m.id in cancelled_ids)
-            if not cancelled_dests:
+            if not cancelled_dests.picking_id:
                 continue
             documents[move.production_id, move.production_id.user_id or self.env.user] = cancelled_dests
         return self.env['stock.picking']._log_activity(_render_note_exception_cancel_dest, documents)
