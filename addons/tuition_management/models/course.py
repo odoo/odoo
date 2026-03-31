@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+import pytz
 
 COUNTRY_CODES = [
     ('+1', '+1 (USA/Canada)'),
@@ -50,6 +52,19 @@ COUNTRY_CODES = [
     ('+385', '+385 (Croatia)'),
     ('+389', '+389 (Macedonia)'),
 ]
+
+
+# Helper function to get all timezones
+def _get_timezone_selection():
+    """Return a list of tuples of all available timezones."""
+    return [(tz, tz) for tz in sorted(pytz.all_timezones)]
+
+
+class GradeMaster(models.Model):
+    _name = 'grade.master'
+    _description = 'Grade Master'
+
+    name = fields.Char(string='Grade Name', required=True)
 
 
 class TuitionTimeSlot(models.Model):
@@ -176,16 +191,10 @@ class Enquiry(models.Model):
     enquiry_name = fields.Char(string='Enquiry Name', required=True, help='e.g., SAT Enquiry for Tom Thomas', tracking=True)
     
     # Personal Information
-    name = fields.Char(string='Contact Name', compute='_compute_contact_name', store=True)
-    first_name = fields.Char(string='First Name', required=True, tracking=True)
-    middle_name = fields.Char(string='Middle Name')
-    last_name = fields.Char(string='Last Name', required=True, tracking=True)
+    name = fields.Char(string='Parent Name', required=True, tracking=True)
     
     # Student Information
-    student_first_name = fields.Char(string='First Name', required=True, tracking=True)
-    student_middle_name = fields.Char(string='Middle Name')
-    student_last_name = fields.Char(string='Last Name', required=True, tracking=True)
-    student_name = fields.Char(string='Student Name', compute='_compute_student_name', store=True)
+    student_name = fields.Char(string='Student Name', required=True, tracking=True)
     
     partner_id = fields.Many2one('res.partner', string='Contact', required=True, ondelete='cascade')
     email = fields.Char()
@@ -203,26 +212,6 @@ class Enquiry(models.Model):
     ], default='new', tracking=True)
     notes = fields.Text()
     demo_session_ids = fields.One2many('demo.session', 'enquiry_id', string='Demo Sessions')
-
-    @api.depends('first_name', 'middle_name', 'last_name')
-    def _compute_contact_name(self):
-        """Compute contact name from first_name, middle_name, and last_name"""
-        for rec in self:
-            name_parts = [rec.first_name or '']
-            if rec.middle_name:
-                name_parts.append(rec.middle_name)
-            name_parts.append(rec.last_name or '')
-            rec.name = ' '.join(filter(None, name_parts))
-
-    @api.depends('student_first_name', 'student_middle_name', 'student_last_name')
-    def _compute_student_name(self):
-        """Compute student name from student first_name, middle_name, and last_name"""
-        for rec in self:
-            name_parts = [rec.student_first_name or '']
-            if rec.student_middle_name:
-                name_parts.append(rec.student_middle_name)
-            name_parts.append(rec.student_last_name or '')
-            rec.student_name = ' '.join(filter(None, name_parts))
 
     def action_schedule_demo(self):
         """Schedule a demo session for this enquiry."""
@@ -277,21 +266,18 @@ class Enquiry(models.Model):
                 'target': 'current',
             }
         else:
-            raise models.UserError('No active course found matching the subject and grade.')
+            raise UserError('No active course found matching the subject and grade.')
 
     def action_convert_to_parent(self):
         """Convert enquiry to parent profile."""
         self.ensure_one()
-        # Create or get parent profile
-        parent_profile = self.env['parent.profile'].search([('first_name', '=', self.first_name), ('last_name', '=', self.last_name)])
+        parent_profile = self.env['parent.profile'].search([('name', '=', self.name)], limit=1)
         if not parent_profile:
             parent_profile = self.env['parent.profile'].create({
-                'first_name': self.first_name,
-                'middle_name': self.middle_name or '',
-                'last_name': self.last_name,
+                'name': self.name,
                 'email': self.email or '',
                 'phone': self.phone or '',
-                'country_code': '+1',
+                'country_code': self.country_code or '+1',
             })
         
         self.status = 'enrolled'
@@ -318,29 +304,80 @@ class Enquiry(models.Model):
         self.ensure_one()
         self.write({'status': 'enrolled'})
 
+    def action_enroll_to_course(self):
+        """Convert enrolled enquiry to a course enrollment."""
+        self.ensure_one()
+        if self.status != 'enrolled':
+            raise UserError('Enquiry must be in "Enrolled" status to enroll in a course.')
+        
+        # Create or get student profile if not already created
+        student_profile = self.env['student.profile'].search([
+            ('email', '=', self.email)
+        ], limit=1)
+        
+        if not student_profile:
+            student_profile = self.env['student.profile'].create({
+                'name': self.student_name,
+                'email': self.email or '',
+                'phone': self.phone or '',
+                'country_code': self.country_code,
+                'grade_id': self.grade_id.id if self.grade_id else None,
+                'subjects_ids': [(6, 0, [self.subject_id.id])] if self.subject_id else [],
+            })
+        
+        # Find active course matching subject and grade
+        course = self.env['course.master'].search([
+            ('subject_id', '=', self.subject_id.id),
+            ('grade_id', '=', self.grade_id.id),
+            ('status', '=', 'active')
+        ], limit=1)
+        
+        if not course:
+            raise UserError('No active course found matching the subject and grade. Please create a course first.')
+        
+        # Create enrollment
+        enrollment = self.env['course.enrollment'].create({
+            'name': f"{student_profile.name} - {course.name}",
+            'course_id': course.id,
+            'student_id': student_profile.id,
+            'status': 'enrolled',
+        })
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'course.enrollment',
+            'res_id': enrollment.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
 
 class DemoSession(models.Model):
     _name = 'demo.session'
     _description = 'Demo Session'
 
-    enquiry_id = fields.Many2one('enquiry', string='Enquiry', ondelete='cascade')
-    subject_id = fields.Many2one('subject.master', string='Subject', required=True)
-    tutor_id = fields.Many2one('tutor.profile', string='Tutor')
-    scheduled_date = fields.Date(required=True)
-    completed_date = fields.Date(string='Completed Date')
+    enquiry_id = fields.Many2one('enquiry', string='Enquiry', required=True, ondelete='cascade')
+    subject_id = fields.Many2one('subject.master', string='Subject', required=True, ondelete='restrict')
+    tutor_id = fields.Many2one('tutor.profile', string='Tutor', required=True, ondelete='restrict')
+    scheduled_datetime = fields.Datetime(string='Scheduled Date & Time', required=True)
+    timezone = fields.Selection(lambda self: self._get_timezone_selection(), string='Timezone', default='UTC', required=True)
+    duration_minutes = fields.Integer(string='Duration (Minutes)', default=30, required=True)
     status = fields.Selection([
-        ('scheduled', 'Scheduled'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled')
-    ], default='scheduled', tracking=True)
+        ('pending', 'Pending'),
+        ('completed', 'Completed')
+    ], string='Status', default='pending', required=True)
+    rating = fields.Integer(string='Rating', default=0, help='Rate from 0 to 5')
     feedback = fields.Text(string='Feedback')
-    rating = fields.Integer(string='Rating (1-5)', default=5)
+
+    @staticmethod
+    def _get_timezone_selection():
+        """Return a list of tuples of all available timezones."""
+        return [(tz, tz) for tz in sorted(pytz.all_timezones)]
 
     def action_mark_completed(self):
         """Mark demo session as completed."""
         self.ensure_one()
         self.write({
-            'completed_date': fields.Date.context_today(self),
             'status': 'completed'
         })
         if self.enquiry_id:
@@ -361,10 +398,6 @@ class AttendanceRecord(models.Model):
         ('excused', 'Excused')
     ], default='absent', tracking=True)
     remarks = fields.Text(string='Remarks')
-
-    _sql_constraints = [
-        ('unique_attendance', 'UNIQUE(class_schedule_id, student_id, attendance_date)', 'Attendance record already exists for this student on this date.')
-    ]
 
     def action_mark_present(self):
         """Mark attendance as present."""
@@ -485,17 +518,18 @@ class ClassSchedule(models.Model):
             day_of_week = current_date.weekday() # 0=Monday, 6=Sunday
             
             if day_of_week in days_to_schedule:
-                # Create start and end datetime
-                event_start = tz.localize(datetime.combine(current_date, __import__('datetime').time(hours, minutes)))
-                event_end = event_start + timedelta(minutes=self.schedule_duration)
+                # Create start and end datetime in local tz, then convert to naive UTC
+                local_start = tz.localize(datetime.combine(current_date, __import__('datetime').time(hours, minutes)))
+                utc_start = local_start.astimezone(pytz.utc).replace(tzinfo=None)
+                utc_end = utc_start + timedelta(minutes=self.schedule_duration)
                 
                 events_to_create.append({
                     'name': f"{self.name} - {current_date.strftime('%A, %b %d, %Y')}",
-                    'start': event_start,
-                    'stop': event_end,
+                    'start': utc_start,
+                    'stop': utc_end,
                     'location': '',
-                    'description': f"Course: {self.course_id.name}\nTutor: {self.tutor_id.first_name + ' ' + self.tutor_id.last_name if self.tutor_id else 'N/A'}",
-                    'user_id': self.tutor_id.partner_id.user_ids[0].id if self.tutor_id and self.tutor_id.partner_id.user_ids else self.env.user.id,
+                    'description': f"Course: {self.course_id.name}\nTutor: {self.tutor_id.name if self.tutor_id else 'N/A'}",
+                    'user_id': self.env.user.id,
                 })
             
             current_date += timedelta(days=1)
@@ -536,9 +570,7 @@ class TutorProfile(models.Model):
     _name = 'tutor.profile'
     _description = 'Tutor Profile'
 
-    first_name = fields.Char(string='First Name', required=True)
-    middle_name = fields.Char(string='Middle Name')
-    last_name = fields.Char(string='Last Name', required=True)
+    name = fields.Char(string='Full Name', required=True)
     email = fields.Char(string='Email')
     country_code = fields.Selection(COUNTRY_CODES, string='Country Code', default='+1')
     phone = fields.Char(string='Phone')
@@ -554,29 +586,21 @@ class TutorProfile(models.Model):
     availability_ids = fields.One2many('tutor.availability', 'tutor_id', string='Availability')
     student_ids = fields.One2many('student.profile', 'tutor_id', string='Students')
 
-    # Add display_name field
-    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
-
-    @api.depends('first_name', 'last_name')
-    def _compute_display_name(self):
-        """Compute display name from first and last name."""
-        for record in self:
-            record.display_name = f"{record.first_name} {record.last_name}".strip()
-
 
 class TutorAvailability(models.Model):
     _name = 'tutor.availability'
     _description = 'Tutor Availability'
 
+    name = fields.Char(string='Name')
     tutor_id = fields.Many2one('tutor.profile', string='Tutor', required=True, ondelete='cascade')
     day_of_week = fields.Selection([
-        (0, 'Monday'),
-        (1, 'Tuesday'),
-        (2, 'Wednesday'),
-        (3, 'Thursday'),
-        (4, 'Friday'),
-        (5, 'Saturday'),
-        (6, 'Sunday')
+        ('0', 'Monday'),
+        ('1', 'Tuesday'),
+        ('2', 'Wednesday'),
+        ('3', 'Thursday'),
+        ('4', 'Friday'),
+        ('5', 'Saturday'),
+        ('6', 'Sunday')
     ], string='Day of Week', required=True)
     start_time = fields.Float(string='Start Time', required=True)
     end_time = fields.Float(string='End Time', required=True)
@@ -588,19 +612,19 @@ class TutorAvailability(models.Model):
             if record.end_time <= record.start_time:
                 raise models.ValidationError("End time must be after start time.")
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Override create to set default name"""
-        record = super().create(vals)
-        record.name = f"{record.tutor_id.display_name} - {record.get_day_name(record.day_of_week)}: {record.start_time} - {record.end_time}"
-        return record
+        records = super().create(vals_list)
+        for record in records:
+            record.name = f"{record.tutor_id.name} - {record.get_day_name(record.day_of_week)}: {record.start_time} - {record.end_time}"
+        return records
 
-    @api.model
     def write(self, vals):
         """Override write to update name field"""
         result = super().write(vals)
         for record in self:
-            record.name = f"{record.tutor_id.display_name} - {record.get_day_name(record.day_of_week)}: {record.start_time} - {record.end_time}"
+            record.name = f"{record.tutor_id.name} - {record.get_day_name(record.day_of_week)}: {record.start_time} - {record.end_time}"
         return result
 
     def get_day_name(self, day_number):
@@ -612,9 +636,7 @@ class StudentProfile(models.Model):
     _name = 'student.profile'
     _description = 'Student Profile'
 
-    first_name = fields.Char(string='First Name', required=True)
-    middle_name = fields.Char(string='Middle Name')
-    last_name = fields.Char(string='Last Name', required=True)
+    name = fields.Char(string='Full Name', required=True)
     email = fields.Char(string='Email')
     country_code = fields.Selection(COUNTRY_CODES, string='Country Code', default='+1')
     phone = fields.Char(string='Phone')
@@ -625,26 +647,41 @@ class StudentProfile(models.Model):
     address_line_3 = fields.Char(string='Address Line 3')
     address_line_4 = fields.Char(string='Address Line 4')
     zip_code = fields.Char(string='Zip Code')
-    parent_id = fields.Many2one('parent.profile', string='Parent')
-    tutor_id = fields.Many2one('tutor.profile', string='Tutor')
+    parent_id = fields.Many2one('parent.profile', string='Parent', ondelete='set null')
+    tutor_id = fields.Many2one('tutor.profile', string='Tutor', ondelete='set null')
 
-    # Add display_name field
-    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
+    def action_link_parent(self):
+        """Open parent selection dialog to link parent to student."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'parent.profile',
+            'view_mode': 'tree,form',
+            'target': 'current',
+            'context': {
+                'default_student_ids': [(4, self.id)],
+            }
+        }
 
-    @api.depends('first_name', 'last_name')
-    def _compute_display_name(self):
-        """Compute display name from first and last name."""
-        for record in self:
-            record.display_name = f"{record.first_name} {record.last_name}".strip()
+    def action_view_parent(self):
+        """Navigate to the parent form from student."""
+        self.ensure_one()
+        if not self.parent_id:
+            return
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'parent.profile',
+            'res_id': self.parent_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
 
 class ParentProfile(models.Model):
     _name = 'parent.profile'
     _description = 'Parent Profile'
 
-    first_name = fields.Char(string='First Name', required=True)
-    middle_name = fields.Char(string='Middle Name')
-    last_name = fields.Char(string='Last Name', required=True)
+    name = fields.Char(string='Full Name', required=True)
     email = fields.Char(string='Email')
     country_code = fields.Selection(COUNTRY_CODES, string='Country Code', default='+1')
     phone = fields.Char(string='Phone')
@@ -654,12 +691,3 @@ class ParentProfile(models.Model):
     address_line_4 = fields.Char(string='Address Line 4')
     zip_code = fields.Char(string='Zip Code')
     student_ids = fields.One2many('student.profile', 'parent_id', string='Students')
-
-    # Add display_name field
-    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
-
-    @api.depends('first_name', 'last_name')
-    def _compute_display_name(self):
-        """Compute display name from first and last name."""
-        for record in self:
-            record.display_name = f"{record.first_name} {record.last_name}".strip()

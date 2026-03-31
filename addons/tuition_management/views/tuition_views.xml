@@ -87,8 +87,7 @@
 <field name="model">student.profile</field>
 <field name="arch" type="xml">
 <list>
-<field name="first_name"/>
-<field name="last_name"/>
+<field name="name" string="Full Name"/>
 <field name="email"/>
 <field name="phone"/>
 <field name="grade_id"/>
@@ -103,66 +102,16 @@
 <form>
 <sheet>
 <group string="Personal Information">
-<field name="first_name"/>
-<field name="middle_name"/>
-<field name="last_name"/>
+<field name="name" string="Full Name"/>
 <field name="email"/>
 <label for="phone" string="Phone Number"/>
 <div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
-<field name="country_code"/>
-<field name="phone" class="o_field_char"/>
+<field name="country_code" placeholder="Country Code"/>
+<field name="phone" class="o_field_char" placeholder="Phone Number"/>
 </div>
 </group>
 <group string="Academic Information">
 <field name="grade_id"/>
-<field name="subjects_ids" widget="many2many_tags"/>
-</group>
-<group string="Address">
-<field name="address_line_1" placeholder="Address Line 1"/>
-<field name="address_line_2" placeholder="Address Line 2"/>
-<field name="address_line_3" placeholder="Address Line 3"/>
-<field name="address_line_4" placeholder="Address Line 4"/>
-<field name="zip_code"/>
-</group>
-</sheet>
-</form>
-</field>
-</record>
-
-<!-- Tutor Profile Views -->
-<record id="view_tutor_profile_list" model="ir.ui.view">
-<field name="name">tutor.profile.list</field>
-<field name="model">tutor.profile</field>
-<field name="arch" type="xml">
-<list>
-<field name="first_name"/>
-<field name="last_name"/>
-<field name="email"/>
-<field name="country_code"/>
-<field name="phone"/>
-<field name="subjects_ids"/>
-</list>
-</field>
-</record>
-
-<record id="view_tutor_profile_form" model="ir.ui.view">
-<field name="name">tutor.profile.form</field>
-<field name="model">tutor.profile</field>
-<field name="arch" type="xml">
-<form>
-<sheet>
-<group string="Personal Information">
-<field name="first_name"/>
-<field name="middle_name"/>
-<field name="last_name"/>
-<field name="email"/>
-<label for="phone" string="Phone Number"/>
-<div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
-<field name="country_code"/>
-<field name="phone" class="o_field_char"/>
-</div>
-</group>
-<group string="Professional Information">
 <field name="subjects_ids" widget="many2many_tags"/>
 </group>
 <group string="Address">
@@ -184,11 +133,9 @@
 <field name="arch" type="xml">
 <list string="Tutor Availability">
 <field name="tutor_id"/>
-<field name="availability_type"/>
-<field name="start_time_display"/>
-<field name="end_time_display"/>
-<field name="timezone"/>
-<field name="active"/>
+<field name="day_of_week"/>
+<field name="start_time"/>
+<field name="end_time"/>
 </list>
 </field>
 </record>
@@ -201,40 +148,9 @@
 <sheet>
 <group>
 <field name="tutor_id"/>
-<field name="availability_type"/>
-<field name="timezone"/>
-<field name="active"/>
-</group>
-
-<group string="Time Slot">
-<group>
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-<span style="font-weight: bold; min-width: 80px;">Start Time</span>
-<field name="start_hour" nolabel="1" style="width: 50px;"/>
-<span>:</span>
-<field name="start_minute" nolabel="1" style="width: 50px;"/>
-</div>
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-<span style="font-weight: bold; min-width: 80px;">End Time</span>
-<field name="end_hour" nolabel="1" style="width: 50px;"/>
-<span>:</span>
-<field name="end_minute" nolabel="1" style="width: 50px;"/>
-</div>
-</group>
-</group>
-
-<group string="Days of Availability">
-<field name="monday"/>
-<field name="tuesday"/>
-<field name="wednesday"/>
-<field name="thursday"/>
-<field name="friday"/>
-<field name="saturday"/>
-<field name="sunday"/>
-</group>
-
-<group string="Notes">
-<field name="notes" nolabel="1"/>
+<field name="day_of_week"/>
+<field name="start_time"/>
+<field name="end_time"/>
 </group>
 </sheet>
 </form>
@@ -247,8 +163,7 @@
 <field name="model">parent.profile</field>
 <field name="arch" type="xml">
 <list>
-<field name="first_name"/>
-<field name="last_name"/>
+<field name="name" string="Full Name"/>
 <field name="email"/>
 <field name="phone"/>
 </list>
@@ -262,14 +177,12 @@
 <form>
 <sheet>
 <group string="Personal Information">
-<field name="first_name"/>
-<field name="middle_name"/>
-<field name="last_name"/>
+<field name="name" string="Full Name"/>
 <field name="email"/>
 <label for="phone" string="Phone Number"/>
 <div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
-<field name="country_code"/>
-<field name="phone" class="o_field_char"/>
+<field name="country_code" placeholder="Country Code"/>
+<field name="phone" class="o_field_char" placeholder="Phone Number"/>
 </div>
 </group>
 <group string="Address">
@@ -387,7 +300,7 @@
 <group>
 <field name="name"/>
 <field name="course_id"/>
-<field name="student_id"/>
+<field name="student_id" string="Student Name"/>
 </group>
 <group>
 <field name="fee"/>
@@ -413,7 +326,7 @@
 <list string="Enrollments">
 <field name="name"/>
 <field name="course_id"/>
-<field name="student_id"/>
+<field name="student_id" string="Student Name"/>
 <field name="fee"/>
 <field name="status"/>
 </list>
@@ -582,6 +495,7 @@
 <header>
 <button name="action_convert_to_student" type="object" string="Convert to Student" class="btn-secondary"/>
 <button name="action_convert_to_parent" type="object" string="Convert to Parent" class="btn-secondary"/>
+<button name="action_enroll_to_course" type="object" string="Enroll to Course" class="btn-primary" invisible="status != 'enrolled'"/>
 </header>
 <div class="alert alert-info" role="status">
 <field name="status" nolabel="1" widget="statusbar" options="{'clickable': True}"/>
@@ -592,21 +506,17 @@
 <field name="enquiry_date"/>
 </group>
 <group string="Parent Information">
-<field name="first_name"/>
-<field name="middle_name"/>
-<field name="last_name"/>
+<field name="name" string="Parent Name"/>
 <field name="email"/>
 <field name="partner_id"/>
 <label for="phone" string="Phone Number"/>
 <div style="display: grid; grid-template-columns: 25% 75%; gap: 8px;">
-<field name="country_code"/>
-<field name="phone" class="o_field_char"/>
+<field name="country_code" placeholder="Country Code"/>
+<field name="phone" class="o_field_char" placeholder="Phone Number"/>
 </div>
 </group>
 <group string="Student Information">
-<field name="student_first_name"/>
-<field name="student_middle_name"/>
-<field name="student_last_name"/>
+<field name="student_name"/>
 </group>
 <group string="Academic Information">
 <field name="subject_id"/>
@@ -630,8 +540,8 @@
 <field name="arch" type="xml">
 <list string="Enquiries">
 <field name="enquiry_name"/>
-<field name="first_name"/>
-<field name="last_name"/>
+<field name="name" string="Parent Name"/>
+<field name="student_name"/>
 <field name="email"/>
 <field name="phone"/>
 <field name="subject_id"/>
@@ -650,8 +560,8 @@
 <field name="enquiry_id"/>
 <field name="subject_id"/>
 <field name="tutor_id"/>
-<field name="scheduled_date"/>
-<field name="completed_date"/>
+<field name="scheduled_datetime"/>
+<field name="duration_minutes"/>
 <field name="status"/>
 <field name="rating"/>
 </list>
@@ -668,15 +578,18 @@
 <field name="enquiry_id"/>
 <field name="subject_id"/>
 <field name="tutor_id"/>
-<field name="scheduled_date"/>
-<field name="completed_date"/>
+</group>
+<group>
+<field name="scheduled_datetime"/>
+<field name="timezone"/>
+<field name="duration_minutes" string="Duration (Minutes)"/>
 </group>
 <group>
 <field name="status"/>
 <field name="rating"/>
 </group>
 <group string="Feedback">
-<field name="feedback" nolabel="1"/>
+<field name="feedback" nolabel="1" widget="text" colspan="2" style="width: 100%; min-height: 200px;"/>
 </group>
 </sheet>
 </form>
