@@ -55,3 +55,23 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
         # The description should not contain the partner_phone since it was not provided
         self.assertEqual(str(task.description), ('<p>Fix this</p><h4>Other Information</h4>Email : jean@michel.com<br>\n'
             'partner_name : Not Jean Michel<br>\npartner_company_name : foo'))
+
+    def test_portal_task_submission_without_existing_partner_email(self):
+        """
+        Test the creation of a project task via the website form when the
+        provided email does not match any existing partner.
+        """
+        ticket_data = {
+            'name': 'FIX',
+            'partner_name': 'Test demo',
+            'email_from': 'test@demo.com',
+            'description': 'Fix this',
+            'project_id': self.project_portal.id,
+        }
+        response = self.url_open('/website/form/project.task', data=ticket_data)
+        self.assertEqual(response.status_code, 200)
+
+        task = self.env['project.task'].browse(response.json().get('id'))
+        self.assertTrue(task.exists())
+        self.assertEqual(task.name, ticket_data['name'])
+        self.assertEqual(task.email_from, ticket_data['email_from'])
