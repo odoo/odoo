@@ -56,7 +56,7 @@ class ScaleDriver(SerialDriver):
         """Asks for a new weight from the scale, checks if it is valid
         and, if it is, makes it the current value."""
         self._connection.write(self._protocol.measureCommand + self._protocol.commandTerminator)
-        answer = self._get_raw_response()
+        answer = self._get_raw_response(self._connection)
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
             return float(match.group(1))
