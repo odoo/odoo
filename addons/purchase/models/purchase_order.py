@@ -736,7 +736,13 @@ class PurchaseOrder(models.Model):
                 if line.selected_seller_id:
                     supplierinfo['product_name'] = line.selected_seller_id.product_name
                     supplierinfo['product_code'] = line.selected_seller_id.product_code
+<<<<<<< 8dfa54ac14d413e3e449786212e4c9bc09144b02
                     supplierinfo['uom_id'] = line.uom_id.id
+||||||| eee8e9dea57940a9c4de70cbabb32a4f81d5b8f4
+                    supplierinfo['product_uom_id'] = line.product_uom.id
+=======
+                    supplierinfo['product_uom_id'] = line.product_uom_id.id
+>>>>>>> b3168931410b8f750d6e4b02b9b71525e0bdd4f4
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
