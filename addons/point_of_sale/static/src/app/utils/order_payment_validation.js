@@ -38,7 +38,7 @@ export default class OrderPaymentValidation {
     }
 
     get nextPage() {
-        if (this.pos.config.iface_print_auto && this.pos.config.iface_print_skip_screen) {
+        if (this.pos.config.autoPrint && this.pos.config.iface_print_skip_screen) {
             return {
                 page: "FeedbackScreen",
                 params: {
@@ -211,7 +211,7 @@ export default class OrderPaymentValidation {
     get canPrintReceipt() {
         return (
             this.order.nb_print === 0 &&
-            this.pos.config.iface_print_auto &&
+            this.pos.config.autoPrint &&
             (this.order.isToInvoice() ? this.order.finalized : true)
         );
     }
