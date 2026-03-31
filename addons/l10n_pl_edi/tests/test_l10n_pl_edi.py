@@ -389,6 +389,25 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         )
 
     @freeze_time('2026-01-23')
+    def test_invoice_in_foreign_currency(self):
+        self.env.ref('base.EUR').active = True
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.env.ref('base.EUR').id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 10.0,
+            })],
+            'invoice_currency_rate': '2',
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'fa3_invoice_foreign_currency.xml')
+
+    @freeze_time('2026-01-23')
     def test_scenario_correction_values_are_negative(self):
         """
         Verification of Negative Values for Corrections (Difference Method).
