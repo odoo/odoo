@@ -2,25 +2,27 @@
 
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
-import { renderToString } from '@web/core/utils/render';
+import { renderToString } from "@web/core/utils/render";
 
 export class Map extends Component {
-    static template = 'website_sale_stock.locationSelector.map';
+    static template = "website.locationSelector.map";
     props = useProps({
-        locations: t.array(t.object({
-            id: t.or([t.string(), t.number()]),
-            name: t.string(),
-            opening_hours: t.record(t.array(t.string())),
-            street: t.string(),
-            city: t.string(),
-            zip_code: t.string(),
-            state: t.string().optional(),
-            country_code: t.string(),
-            additional_data: t.object().optional(),
-            distance: t.number().optional(),
-            latitude: t.or([t.string(), t.number()]),
-            longitude: t.or([t.string(), t.number()]),
-        })),
+        locations: t.array(
+            t.object({
+                id: t.or([t.string(), t.number()]),
+                name: t.string(),
+                opening_hours: t.record(t.array(t.string())),
+                street: t.string(),
+                city: t.string(),
+                zip_code: t.string(),
+                state: t.string().optional(),
+                country_code: t.string(),
+                additional_data: t.object().optional(),
+                distance: t.number().optional(),
+                latitude: t.or([t.string(), t.number()]),
+                longitude: t.or([t.string(), t.number()]),
+            })
+        ),
         selectedLocationId: t.or([t.string(), t.literal(false)]),
         setSelectedLocation: t.function(),
     });
@@ -39,9 +41,10 @@ export class Map extends Component {
             this.leafletMap.attributionControl.setPrefix(
                 '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
             );
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 maxZoom: 19,
-                attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+                attribution:
+                    "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
             }).addTo(this.leafletMap);
         });
         onWillUnmount(() => {
@@ -60,15 +63,12 @@ export class Map extends Component {
         useLayoutEffect(
             (locations, selectedLocationId) => {
                 this.addMarkers(locations);
-                const selectedLocation = locations.find(
-                    l => String(l.id) === selectedLocationId
-                );
+                const selectedLocation = locations.find((l) => String(l.id) === selectedLocationId);
                 if (selectedLocation) {
                     // Center the Map.
-                    this.leafletMap.panTo(
-                        [selectedLocation.latitude, selectedLocation.longitude],
-                        { animate: true }
-                    );
+                    this.leafletMap.panTo([selectedLocation.latitude, selectedLocation.longitude], {
+                        animate: true,
+                    });
                 }
                 return () => {
                     this.removeMarkers();
@@ -87,33 +87,32 @@ export class Map extends Component {
      */
     addMarkers(locations) {
         for (const loc of locations) {
-            const isSelected = String(loc.id) === this.props.selectedLocationId
+            const isSelected = String(loc.id) === this.props.selectedLocationId;
             // Icon creation
             const iconInfo = {
-                className: isSelected ? 'o_location_selector_marker_icon_selected'
-                    : 'o_location_selector_marker_icon',
-                html: renderToString(
-                    'website_sale_stock.locationSelector.map.marker',
-                    { number: locations.indexOf(loc) + 1 },
-                ),
+                className: isSelected
+                    ? "o_location_selector_marker_icon_selected"
+                    : "o_location_selector_marker_icon",
+                html: renderToString("website.locationSelector.map.marker", {
+                    number: locations.indexOf(loc) + 1,
+                }),
                 iconSize: [30, 40],
                 iconAnchor: [15, 40],
             };
 
-            const marker = L.marker(
-                [loc.latitude, loc.longitude],
-                {
-                    icon: L.divIcon(iconInfo),
-                    title: locations.indexOf(loc) + 1,
-                },
-            );
+            const marker = L.marker([loc.latitude, loc.longitude], {
+                icon: L.divIcon(iconInfo),
+                title: locations.indexOf(loc) + 1,
+            });
 
             // By default, the marker's zIndex is based on its latitude. This ensures the selected
             // marker is always displayed on top of all others.
-            if (isSelected) marker.setZIndexOffset(100);
+            if (isSelected) {
+                marker.setZIndexOffset(100);
+            }
 
             marker.addTo(this.leafletMap);
-            marker.addEventListener('click', () => {
+            marker.addEventListener("click", () => {
                 this.props.setSelectedLocation(loc.id);
             });
 
@@ -140,6 +139,6 @@ export class Map extends Component {
      * @return {Object} The selected location.
      */
     get selectedLocation() {
-        return this.props.locations.find(l => String(l.id) === this.props.selectedLocationId)
+        return this.props.locations.find((l) => String(l.id) === this.props.selectedLocationId);
     }
 }
