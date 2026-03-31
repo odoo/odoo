@@ -1,6 +1,6 @@
 /** @odoo-module ignore **/
 
-odoo.define("kodoo_studio.forge_api", function () {
+odoo.define("kodoo_studio.forge_api", [], function () {
     "use strict";
 
     const namespace = window.kodooStudio = window.kodooStudio || {};

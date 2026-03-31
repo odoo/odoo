@@ -1,6 +1,6 @@
 /** @odoo-module ignore **/
 
-odoo.define("kodoo_studio.StudioTerminal", function (require) {
+odoo.define("kodoo_studio.StudioTerminal", ["kodoo_studio.forge_api"], function (require) {
     "use strict";
 
     const { Component, onMounted, onWillUnmount, onWillUpdateProps, useRef, useState } = owl;

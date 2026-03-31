@@ -1,6 +1,6 @@
 /** @odoo-module ignore **/
 
-odoo.define("kodoo_studio.PipelinePanel", function (require) {
+odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (require) {
     "use strict";
 
     const { Component, onMounted, onWillUpdateProps, useState } = owl;

@@ -1,6 +1,15 @@
 /** @odoo-module ignore **/
 
-odoo.define("kodoo_studio", function (require) {
+odoo.define(
+    "kodoo_studio",
+    [
+        "@web/core/registry",
+        "kodoo_studio.AppManager",
+        "kodoo_studio.ModuleForm",
+        "kodoo_studio.PipelinePanel",
+        "kodoo_studio.StudioTerminal",
+    ],
+    function (require) {
     "use strict";
 
     const { Component, useState } = owl;
@@ -112,4 +121,5 @@ odoo.define("kodoo_studio", function (require) {
     owl.registry.add("KodooStudio", KodooStudio);
     registry.category("actions").add("kodoo_studio", KodooStudio, { force: true });
     return KodooStudio;
-});
+    }
+);
