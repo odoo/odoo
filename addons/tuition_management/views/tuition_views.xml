@@ -495,10 +495,10 @@
 <header>
 <button name="action_convert_to_student" type="object" string="Convert to Student" class="btn-secondary"/>
 <button name="action_convert_to_parent" type="object" string="Convert to Parent" class="btn-secondary"/>
-<button name="action_enroll_to_course" type="object" string="Enroll to Course" class="btn-primary" invisible="status != 'enrolled'"/>
+<button name="action_enroll_to_course" type="object" string="Enroll to Course" class="btn-primary"/>
 </header>
 <div class="alert alert-info" role="status">
-<field name="status" nolabel="1" widget="statusbar" options="{'clickable': True}"/>
+<field name="stage_id" nolabel="1" widget="statusbar" options="{'clickable': True}"/>
 </div>
 <sheet>
 <group string="Enquiry Information">
@@ -546,7 +546,7 @@
 <field name="phone"/>
 <field name="subject_id"/>
 <field name="grade_id"/>
-<field name="status"/>
+<field name="stage_id"/>
 </list>
 </field>
 </record>
@@ -602,11 +602,88 @@
 <field name="view_mode">list,form</field>
 </record>
 
+<!-- Enquiry Kanban View -->
+<record id="view_enquiry_kanban" model="ir.ui.view">
+<field name="name">enquiry.kanban</field>
+<field name="model">enquiry</field>
+<field name="arch" type="xml">
+<kanban default_group_by="stage_id" class="o_kanban_small_column" on_create="quick_create" quick_create_view="tuition_management.view_enquiry_form_quick_create">
+<field name="enquiry_name"/>
+<field name="name"/>
+<field name="student_name"/>
+<field name="email"/>
+<field name="phone"/>
+<field name="subject_id"/>
+<field name="grade_id"/>
+<field name="stage_id"/>
+<field name="enquiry_date"/>
+<templates>
+<t t-name="card">
+<div class="oe_kanban_content">
+<div class="o_kanban_record_top mb-0">
+<div class="o_kanban_record_headings">
+<strong class="o_kanban_record_title">
+<field name="enquiry_name"/>
+</strong>
+</div>
+</div>
+<div class="o_kanban_record_body">
+<div class="mb-1">
+<strong>Parent:</strong> <field name="name"/>
+</div>
+<div class="mb-1">
+<strong>Student:</strong> <field name="student_name"/>
+</div>
+<div class="mb-1" t-if="record.subject_id.value">
+<strong>Subject:</strong> <field name="subject_id"/>
+</div>
+<div class="mb-1" t-if="record.grade_id.value">
+<strong>Grade:</strong> <field name="grade_id"/>
+</div>
+<div class="text-muted" t-if="record.email.value">
+<i class="fa fa-envelope me-1"/><field name="email"/>
+</div>
+<div class="text-muted" t-if="record.phone.value">
+<i class="fa fa-phone me-1"/><field name="phone"/>
+</div>
+</div>
+<div class="o_kanban_record_bottom">
+<div class="oe_kanban_bottom_left">
+<field name="enquiry_date" widget="date"/>
+</div>
+</div>
+</div>
+</t>
+</templates>
+</kanban>
+</field>
+</record>
+
+<!-- Enquiry Quick Create Form -->
+<record id="view_enquiry_form_quick_create" model="ir.ui.view">
+<field name="name">enquiry.form.quick_create</field>
+<field name="model">enquiry</field>
+<field name="arch" type="xml">
+<form>
+<group>
+<field name="enquiry_name" placeholder="e.g., SAT Enquiry for John"/>
+<field name="name" string="Parent Name" placeholder="Parent Full Name"/>
+<field name="student_name" placeholder="Student Full Name"/>
+<field name="partner_id"/>
+<field name="email" placeholder="Email"/>
+<field name="phone" placeholder="Phone"/>
+<field name="subject_id"/>
+<field name="grade_id"/>
+</group>
+</form>
+</field>
+</record>
+
 <!-- Enquiry Action -->
 <record id="action_enquiry" model="ir.actions.act_window">
 <field name="name">Enquiries</field>
 <field name="res_model">enquiry</field>
-<field name="view_mode">list,form</field>
+<field name="view_mode">kanban,list,form</field>
 </record>
 
 <!-- Top Level Admin Menus -->

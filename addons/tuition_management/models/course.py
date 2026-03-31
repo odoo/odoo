@@ -182,6 +182,16 @@ class CourseEnrollment(models.Model):
             rec.net_fee = rec.fee - rec.discount_amount if rec.fee else 0.0
 
 
+class EnquiryStage(models.Model):
+    _name = 'enquiry.stage'
+    _description = 'Enquiry Stage'
+    _order = 'sequence, id'
+
+    name = fields.Char(string='Stage Name', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
+    fold = fields.Boolean(string='Folded in Kanban', default=False)
+
+
 class Enquiry(models.Model):
     _name = 'enquiry'
     _description = 'Student Enquiry'
@@ -203,15 +213,16 @@ class Enquiry(models.Model):
     subject_id = fields.Many2one('subject.master', string='Interested Subject', required=True)
     grade_id = fields.Many2one('grade.master', string='Target Grade', required=True)
     enquiry_date = fields.Date(default=fields.Date.context_today, tracking=True)
-    status = fields.Selection([
-        ('new', 'New'),
-        ('demo_scheduled', 'Demo Scheduled'),
-        ('completed', 'Completed'),
-        ('lost', 'Lost'),
-        ('enrolled', 'Enrolled')
-    ], default='new', tracking=True)
+    stage_id = fields.Many2one('enquiry.stage', string='Stage', tracking=True, 
+                                default=lambda self: self.env['enquiry.stage'].search([], limit=1, order='sequence'),
+                                group_expand='_read_group_stage_ids')
     notes = fields.Text()
     demo_session_ids = fields.One2many('demo.session', 'enquiry_id', string='Demo Sessions')
+
+    @api.model
+    def _read_group_stage_ids(self, stages, domain):
+        """Always display all stages in kanban, even if empty."""
+        return self.env['enquiry.stage'].search([], order='sequence')
 
     def action_schedule_demo(self):
         """Schedule a demo session for this enquiry."""
@@ -222,7 +233,10 @@ class Enquiry(models.Model):
             'scheduled_date': fields.Date.context_today(self),
         }
         demo = self.env['demo.session'].create(demo_vals)
-        self.status = 'demo_scheduled'
+        # Move to "Demo Scheduled" stage if it exists
+        demo_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Demo')], limit=1)
+        if demo_stage:
+            self.stage_id = demo_stage
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'demo.session',
@@ -257,7 +271,9 @@ class Enquiry(models.Model):
                 'student_id': student_profile.id,
                 'status': 'enrolled',
             })
-            self.status = 'enrolled'
+            enrolled_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Enrolled')], limit=1)
+            if enrolled_stage:
+                self.stage_id = enrolled_stage
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'course.enrollment',
@@ -280,7 +296,9 @@ class Enquiry(models.Model):
                 'country_code': self.country_code or '+1',
             })
         
-        self.status = 'enrolled'
+        enrolled_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Enrolled')], limit=1)
+        if enrolled_stage:
+            self.stage_id = enrolled_stage
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'parent.profile',
@@ -292,23 +310,30 @@ class Enquiry(models.Model):
     def action_mark_completed(self):
         """Mark enquiry as completed."""
         self.ensure_one()
-        self.write({'status': 'completed'})
+        completed_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Completed')], limit=1)
+        if completed_stage:
+            self.stage_id = completed_stage
 
     def action_mark_lost(self):
         """Mark enquiry as lost."""
         self.ensure_one()
-        self.write({'status': 'lost'})
+        lost_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Lost')], limit=1)
+        if lost_stage:
+            self.stage_id = lost_stage
 
     def action_enroll_student(self):
         """Mark enquiry as enrolled (alternative to converting to student/parent)."""
         self.ensure_one()
-        self.write({'status': 'enrolled'})
+        enrolled_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Enrolled')], limit=1)
+        if enrolled_stage:
+            self.stage_id = enrolled_stage
 
     def action_enroll_to_course(self):
         """Convert enrolled enquiry to a course enrollment."""
         self.ensure_one()
-        if self.status != 'enrolled':
-            raise UserError('Enquiry must be in "Enrolled" status to enroll in a course.')
+        enrolled_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Enrolled')], limit=1)
+        if enrolled_stage and self.stage_id != enrolled_stage:
+            raise UserError('Enquiry must be in "Enrolled" stage to enroll in a course.')
         
         # Create or get student profile if not already created
         student_profile = self.env['student.profile'].search([
@@ -381,7 +406,9 @@ class DemoSession(models.Model):
             'status': 'completed'
         })
         if self.enquiry_id:
-            self.enquiry_id.write({'status': 'completed'})
+            completed_stage = self.env['enquiry.stage'].search([('name', 'ilike', 'Completed')], limit=1)
+            if completed_stage:
+                self.enquiry_id.stage_id = completed_stage
 
 
 class AttendanceRecord(models.Model):
