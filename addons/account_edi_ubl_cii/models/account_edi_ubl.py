@@ -1241,7 +1241,7 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_get_payment_means_payee_financial_account_node_from_partner_bank(self, vals, partner_bank):
         return {
-            'cbc:ID': {'_text': sanitize_account_number(partner_bank.account_number)},
+            'cbc:ID': {'_text': partner_bank.account_number},
             'cac:FinancialInstitutionBranch': self._ubl_get_payment_means_payee_financial_account_institution_branch_node_from_partner_bank(vals, partner_bank),
         }
 

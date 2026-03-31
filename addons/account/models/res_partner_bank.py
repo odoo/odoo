@@ -112,7 +112,7 @@ class ResPartnerBank(models.Model):
             },
         }
         code_to_country_id = dict(self.env['res.country']._read_group(
-            domain=[('code', 'in', iban_accounts.mapped(lambda account: account.account_number[:2]))],
+            domain=[('code', 'in', iban_accounts.mapped(lambda account: (account.account_number or '')[:2]))],
             groupby=['code'],
             aggregates=['id:recordset'],
         )) if (iban_accounts := self.filtered(lambda account: account.account_type == 'iban')) else {}

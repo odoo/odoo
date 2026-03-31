@@ -344,7 +344,7 @@ class TestUblBis3Common(TestUblCiiCommon):
 
     def _create_sdd_mandate(self, partner, account_number, start_date=None, end_date=None):
         partner_bank = self.env['res.partner.bank'].create({
-            'account_number': account_number,
+            'formatted_account_number': account_number,
             'partner_id': partner.id,
             'company_id': self.env.company.id,
         })
