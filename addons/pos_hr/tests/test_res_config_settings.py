@@ -4,6 +4,7 @@ import odoo
 
 from odoo.addons.pos_hr.tests.test_frontend import TestPosHrHttpCommon
 from odoo.addons.point_of_sale.tests.test_res_config_settings import TestConfigureShops
+from odoo.tests import Form
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -42,3 +43,14 @@ class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
         self.assertEqual(len(self.main_pos_config.advanced_employee_ids), 1)
         self.assertEqual(self.main_pos_config.advanced_employee_ids.company_id, self.main_pos_config.company_id)
         self.assertEqual(self.main_pos_config.advanced_employee_ids, advanced_employee)
+
+    def test_write_pos_config_without_employee_id(self):
+        """
+        Checks that when we write on a config with a user that has a corresponding employee in employee_ids but no
+        corresponding employee in employee_id, we don't try to create an employee. If we do, a psycopg2 error
+        is raised as we try to create an employee that already exists.
+        """
+        self.manager_user.write({'group_ids': False })
+        self.pos_admin.write({'group_ids': False })
+        self.user.employee_id = False
+        self.main_pos_config.write({'status': 'active'})
