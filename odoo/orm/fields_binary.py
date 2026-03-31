@@ -53,7 +53,7 @@ class Binary(Field[BinaryValue]):
         return False
 
     def update_db(self, model, columns):
-        if self.column_type is None and self.default and model._table_has_rows():
+        if self.column_type is None and self.default and model.env.execute_query(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table))):
             model.pool.post_init(self.update_db_binary_attachment, model)
             return False
         return super().update_db(model, columns)

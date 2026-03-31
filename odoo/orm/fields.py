@@ -119,6 +119,13 @@ class Field[T]:
         ``default=None`` to discard default values for the field
     :type default: value or callable
 
+    :param str init_column: the function that initializes null values in the column in the database;
+
+        The function can initialize the column in the database. It may call in
+        `model.pool.post_init` to delay the initialization after other columns.
+        The function returns a list of ids to recompute (can be nothing).
+        The ORM cannot be used in this function!
+
     :param str groups: comma-separated list of group xml ids (string); this
         restricts the field access to the users of the given groups only
 
@@ -293,6 +300,7 @@ class Field[T]:
     related: str | None = None          # sequence of field names, for related fields
     company_dependent: bool = False     # whether ``self`` is company-dependent (property field)
     default: Callable[[BaseModel], T] | T | None = None  # default(recs) returns the default value
+    init_column: str | Callable[[BaseModel], list[IdType] | bool | None] | None = None  # initialize null values in the column
 
     string: str | None = None           # field label
     export_string_translation: bool = True  # whether the field label translations are exported
@@ -690,6 +698,16 @@ class Field[T]:
             delegate_field = model._fields[self.related.split('.')[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
+        if (
+            self.related.count('.') == 1
+            and self.related_field.store
+            and not self.related_field.compute
+            and self.related_field.column_type
+            and not self.init_column
+        ):
+            # optimization for computing simple related fields like 'foo_id.bar'
+            self.init_column = self._init_column_related
+
     def _compute_related(self, records: BaseModel) -> None:
         """ Compute the related field ``self`` on ``records``. """
         #
@@ -811,6 +829,35 @@ class Field[T]:
             if can_be_null and field.type == 'many2one' and not field.required:
                 domain |= Domain(field.name, '=', False)
         return domain
+
+    def _init_column_related(self, model: BaseModel) -> bool:
+        join_field = model._fields[self.related.split('.')[0]]
+        if (
+            join_field.type == 'many2one'
+            and join_field.store and not join_field.compute
+        ):
+            model.pool.post_init(self._init_column_related_update, model)
+            # discard the "classical" computation
+            return False
+        return True
+
+    def _init_column_related_update(self, model: BaseModel) -> None:
+        """ Compute a stored related field directly in SQL. """
+        comodel = model.env[self.related_field.model_name]
+        join_field, comodel_field = self.related.split('.')
+        model.env.cr.execute(SQL(
+            """ UPDATE %(model_table)s AS x
+                SET %(model_field)s = y.%(comodel_field)s
+                FROM %(comodel_table)s AS y
+                WHERE x.%(join_field)s = y.id
+                AND x.%(model_field)s IS NULL
+            """,
+            model_table=SQL.identifier(model._table),
+            model_field=SQL.identifier(self.name),
+            comodel_table=SQL.identifier(comodel._table),
+            comodel_field=SQL.identifier(comodel_field),
+            join_field=SQL.identifier(join_field),
+        ))
 
     # properties used by setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
@@ -1145,75 +1192,32 @@ class Field[T]:
         """ Prescribed column order in table. """
         return 0 if self.column_type is None else sql.SQL_ORDER_BY_TYPE[self.column_type[0]]
 
-    def update_db(self, model: BaseModel, columns: dict[str, dict[str, typing.Any]]) -> bool:
+    def update_db(self, model: BaseModel, columns: dict[str, dict[str, typing.Any]]) -> None:
         """ Update the database schema to implement this field.
 
             :param model: an instance of the field's model
             :param columns: a dict mapping column names to their configuration in database
-            :return: ``True`` if the field must be recomputed on existing rows
         """
         if not self.column_type:
-            return False
+            return
 
         column = columns.get(self.name)
 
-        # create/update the column, not null constraint; the index will be
-        # managed by registry.check_indexes()
+        # create/update the column, initialize it and not null constraint.
+        # The index will be managed by registry.check_indexes().
         self.update_db_column(model, column)
-        self.update_db_notnull(model, column)
 
-        # optimization for computing simple related fields like 'foo_id.bar'
-        if (
-            not column
-            and self.related and self.related.count('.') == 1
-            and self.related_field.store and not self.related_field.compute
-            and not (self.related_field.type == 'binary' and self.related_field.attachment)
-            and self.related_field.type not in ('one2many', 'many2many')
-        ):
-            join_field = model._fields[self.related.split('.')[0]]
-            if (
-                join_field.type == 'many2one'
-                and join_field.store and not join_field.compute
-            ):
-                model.pool.post_init(self.update_db_related, model)
-                # discard the "classical" computation
-                return False
-
-        return not column
-
-    def update_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
-        """ Create/update the column corresponding to ``self``.
-
-            :param model: an instance of the field's model
-            :param column: the column's configuration (dict) if it exists, or ``None``
-        """
-        if not column:
-            # the column does not exist, create it
-            sql.create_column(model.env.cr, model._table, self.name, self.column_type[1], self.string)
-            return
-        if column['udt_name'] == self.column_type[0]:
-            return
-        self._convert_db_column(model, column)
-
-    def _convert_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
-        """ Convert the given database column to the type of the field. """
-        sql.convert_column(model.env.cr, model._table, self.name, self.column_type[1])
-
-    def update_db_notnull(self, model: BaseModel, column: dict[str, typing.Any]):
-        """ Add or remove the NOT NULL constraint on ``self``.
-
-            :param model: an instance of the field's model
-            :param column: the column's configuration (dict) if it exists, or ``None``
-        """
+        # initialization of values and null handling
         has_notnull = column and column['is_nullable'] == 'NO'
 
         if not column or (self.required and not has_notnull):
-            # the column is new or it becomes required; initialize its values
-            if model._table_has_rows():
-                model._init_column(self.name)
+            # either we have a new column or it becomes required
+            model.env.cr.execute(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table)))
+            if bool(model.env.cr.rowcount):
+                self._init_column_data(model)
 
         if self.required and not has_notnull:
-            # _init_column may delay computations in post-init phase
+            # _init_column_data may delay computations in post-init phase
             @model.pool.post_init
             def add_not_null():
                 # At the time this function is called, the model's _fields may have been reset, although
@@ -1238,21 +1242,67 @@ class Field[T]:
         elif not self.required and has_notnull:
             sql.drop_not_null(model.env.cr, model._table, self.name)
 
-    def update_db_related(self, model: BaseModel) -> None:
-        """ Compute a stored related field directly in SQL. """
-        comodel = model.env[self.related_field.model_name]
-        join_field, comodel_field = self.related.split('.')
-        model.env.cr.execute(SQL(
-            """ UPDATE %(model_table)s AS x
-                SET %(model_field)s = y.%(comodel_field)s
-                FROM %(comodel_table)s AS y
-                WHERE x.%(join_field)s = y.id """,
-            model_table=SQL.identifier(model._table),
-            model_field=SQL.identifier(self.name),
-            comodel_table=SQL.identifier(comodel._table),
-            comodel_field=SQL.identifier(comodel_field),
-            join_field=SQL.identifier(join_field),
-        ))
+    def update_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
+        """ Create/update the column corresponding to ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        if not column:
+            # the column does not exist, create it
+            sql.create_column(model.env.cr, model._table, self.name, self.column_type[1], self.string)
+            return
+        if column['udt_name'] == self.column_type[0]:
+            return
+        self._convert_db_column(model, column)
+
+    def _convert_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
+        """ Convert the given database column to the type of the field. """
+        sql.convert_column(model.env.cr, model._table, self.name, self.column_type[1])
+
+    def _init_column_data(self, model: BaseModel) -> None:
+        """ Initialize null values in the column. """
+        assert self.column_type and model._name == self.model_name
+        # Check if we have a custom init function
+        if self.init_column:
+            _logger.debug("Table '%s': call %s for column %s", model._table, self.init_column, self.name)
+            to_compute = determine(self.init_column, model)
+        else:
+            to_compute = True
+        # Get the default value; ideally, we should use default_get(), but it
+        # fails due to ir.default not being ready
+        if self.default:
+            value = self.default(model)
+            if value is not None and to_compute is True:  # we have a default, do not recompute fields
+                to_compute = False
+            value = self.convert_to_write(value, model)
+            value = self.convert_to_column_insert(value, model)
+        else:
+            value = None
+        # Write value if non-NULL, except for booleans for which False means
+        # the same as NULL - this saves us an expensive query on large tables,
+        # if the boolean is required we still write False to allow NOT NULL constraints.
+        cr = model.env.cr
+        if value is False and self.type == 'boolean' and not self.required:
+            value = None
+        if value is not None:
+            _logger.debug("Table '%s': setting default value of new column %s to %r",
+                          model._table, self.name, value)
+            cr.execute(SQL(
+                "UPDATE %(table)s SET %(field)s = %(value)s WHERE %(field)s IS NULL",
+                table=SQL.identifier(model._table),
+                field=SQL.identifier(self.name),
+                value=value,
+            ))
+        # Mark computed fields to recompute
+        if to_compute and self.compute:
+            _logger.info("Prepare computation of %s", self)
+            if isinstance(to_compute, list):
+                records = model.browse(to_compute)
+            else:
+                cr.execute(SQL('SELECT id FROM %s WHERE %s IS NULL', SQL.identifier(model._table), SQL.identifier(self.name)))
+                records = model.browse(row[0] for row in cr.fetchall())
+            model.env.add_to_compute(self, records)
 
     ############################################################################
     #
