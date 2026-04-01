@@ -66,7 +66,7 @@
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
             <header
-                class="o_search_panel_section_header ps-2 pb-2 text-uppercase cursor-default"
+                class="o_search_panel_section_header ps-1 pb-2 text-uppercase cursor-default"
                 t-attf-class="{{section_first ? 'pt-2' : 'pt-3'}}">
                 <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                     t-att-style="section.color and ('color: ' + section.color)"
@@ -85,7 +85,7 @@
     <div t-if="section.errorMsg" class="alert alert-warning">
         <span><t t-out="section.errorMsg"/></span>
     </div>
-    <ul t-else="" class="list-group d-block o_search_panel_field px-2 px-md-0">
+    <ul t-else="" class="list-group d-block o_search_panel_field">
         <t t-if="section.type === 'category'" t-call="{{ this.constructor.subTemplates.category }}">
             <t t-set="values" t-value="section.rootIds"/>
         </t>
@@ -187,19 +187,19 @@
             t-att-class="isChildList ? this.env.isSmall ? '' : 'o_treeEntry' : 'ps-0'"
             >
             <header
-                class="list-group-item list-group-item-action d-flex align-items-center border-0"
+                class="o_search_panel_category_value_header list-group-item list-group-item-action d-flex align-items-center border-0"
                 t-att-class="{'active text-black fw-bold': this.state.active[section.id] === valueId}"
                 t-on-click="() => this.toggleCategory(section, value)"
                 >
                 <div
-                    class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0 gap-1"
+                    class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0"
                     t-att-class="{
                         'o_with_counters': section.enableCounters,
                         'o_search_panel_label_expanded':  this.state.expanded[section.id][valueId]
                         }"
                     t-att-data-tooltip="value.display_name"
                     >
-                    <button class="o_toggle_fold btn border-0 p-0 px-1 flex-shrink-0 lh-sm text-center">
+                    <button class="o_toggle_fold btn border-0 py-0 px-1 flex-shrink-0 text-center" t-att-class="{'o_toggle_fold_with_children' : value.childrenIds.length}">
                         <i
                             t-if="value.childrenIds.length"
                             class="fa"
@@ -210,13 +210,13 @@
                             />
                     </button>
                     <span
-                        class="o_search_panel_label_title text-truncate lh-sm"
+                        class="o_search_panel_label_title text-truncate"
                         t-att-class="{'fw-bold' : value.bold}"
                         t-out="value.display_name"
                         />
                 </div>
                 <small t-if="section.enableCounters and value.__count gt 0"
-                    class="o_search_panel_counter mx-2 fw-bold lh-sm"
+                    class="o_search_panel_counter mx-2 fw-bold"
                     t-att-class="{'text-muted': this.state.active[section.id] !== valueId}"
                     t-out="value.__count"
                 />
@@ -235,20 +235,22 @@
 
 <t t-name="web.SearchPanel.FiltersGroup">
     <li t-foreach="[...values.keys()]" t-as="valueId" t-key="valueId"
-        class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 cursor-pointer ps-2"
+        class="o_search_panel_filter_value list-group-item border-0 mt-0 ps-1 cursor-pointer"
+        t-att-class="{'text-black active': this.state.active[section.id][valueId] }"
     >
         <t t-set="value" t-value="values.get(valueId)"/>
         <div class="form-check w-100">
             <input type="checkbox"
                 t-attf-id="{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="this.state.active[section.id][valueId]"
-                class="form-check-input"
+                class="o_search_panel_filter_value_checkbox form-check-input"
+                t-att-class="{'border-transparent bg-transparent shadow-none': this.state.active[section.id][valueId]}"
                 t-on-click="ev => this.toggleFilterValue(section.id, valueId, ev)"
             />
             <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
                 t-attf-for="{{ section.id }}_input_{{ valueId }}"
                 t-att-title="(group and group.tooltip) or false">
-                <span class="o_search_panel_label_title text-truncate" t-out="value.display_name"/>
+                <span class="o_search_panel_label_title lh-base text-truncate" t-out="value.display_name"/>
                 <span t-if="section.enableCounters and value.__count gt 0"
                     class="o_search_panel_counter text-muted mx-2 small"
                     t-out="value.__count"

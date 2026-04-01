@@ -12,11 +12,44 @@
 }
 
 // ------- SearchPanel -------
+// SearchPanel + SearchPanel in bottomsheet
+.o_search_panel_section {
+    .o_search_panel_filter_value_checkbox:checked {
+        background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$black}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"));
+    }
 
+    .list-group-item {
+        border-radius: var(--SearchPanelHeader-border-radius, var(--#{$prefix}border-radius));
+    }
+
+    .o_search_panel_counter {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .o_bottom_sheet & {
+        .list-group {
+            --#{$prefix}list-group-bg: transparent;
+        }
+
+        .o_search_panel_category_value, .o_search_panel_filter_value {
+            margin-bottom: map-get($spacers, 1);
+        }
+
+        .o_search_panel_category_value {
+            padding-block: 0;
+        }
+    }
+}
+
+// The following styling is not applied inside the bottom sheet
 .o_search_panel {
     --treeEntry-padding-h: #{map-get($spacers, 3)};
     --treeEntry-padding-v: #{map-get($spacers, 2)};
-    --searchPanelHeader-margin-y: #{map-get($spacers, 1) * .5};
+    --SearchPanelHeader-margin-y: #{map-get($spacers, 1) * .5};
+
+    &:not(:has(.o_toggle_fold_with_children)) {
+        --SearchPanelHeader-toggle-fold-width: 0;
+    }
 
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
@@ -25,34 +58,36 @@
         border-right: $border-width solid $border-color;
     }
 
-    .o_toggle_fold {
-        width: var(--searchPanelHeader-toggle-fold-width, map-get($spacers, 3));
-
-        &:focus-visible {
-            box-shadow: inset 0 0 0 $focus-ring-width $focus-ring-color;
-        }
-    }
-
-    .o_search_panel_counter {
-        font-variant-numeric: tabular-nums;
-    }
-
     .list-group-item {
         --list-group-color: #{$gray-800};
-        --list-group-item-padding-y: var(--searchPanelHeader-padding-y, calc(#{map-get($spacers, 2)} - var(--searchPanelHeader-margin-y)));
+        --list-group-item-padding-y: var(--SearchPanelHeader-padding-y, calc(#{map-get($spacers, 2)} - var(--SearchPanelHeader-margin-y)));
         --list-group-item-padding-x: 0;
 
-        &:where(:not(.list-group-item-action)) {
+        &:where(:not(.list-group-item-action, .o_search_panel_filter_value)) {
             // This acts as a margin, we use padding to avoid space between
             // pseudo elements used to display the tree.
-            --list-group-item-padding-y: var(--searchPanelHeader-margin-y);
+            --list-group-item-padding-y: var(--SearchPanelHeader-margin-y);
 
             + .list-group-item {
                 padding-top: 0;
             }
         }
+    }
 
-        border-radius: var(--searchPanelHeader-border-radius, var(--border-radius));
+    .o_search_panel_filter_value {
+        --list-group-item-padding-y: calc(var(--SearchPanelHeader-margin-y) + #{$border-width});
+
+        margin-bottom: var(--SearchPanelHeader-margin-y);
+    }
+
+    .o_search_panel_label_title,
+    .o_search_panel_counter,
+    .o_toggle_fold {
+        line-height: normal;
+    }
+
+    .o_toggle_fold {
+        width: var(--SearchPanelHeader-toggle-fold-width, #{map-get($spacers, 3)});
     }
 }
 
@@ -93,12 +128,6 @@
     }
 }
 
-.o_search_panel_section {
-    .o_bottom_sheet & .list-group {
-        --#{$prefix}list-group-bg: transparent;
-    }
-}
-
 .o_search_panel:has(.o_treeEntry:hover) {
     .o_treeEntry::before,
     .o_treeEntry::after {
@@ -109,7 +138,7 @@
         background-color: $body-color;
     }
 
-    .o_search_panel_category_value:hover > header {
+    .o_search_panel_category_value:hover > .o_search_panel_category_value_header {
         --list-group-color: #{$black};
     }
 
@@ -135,9 +164,9 @@
         color: $text-muted;
     }
 
-    header.active:hover {
+    .o_search_panel_category_value_header.active:hover {
         .o_toggle_fold {
-            color: var(--searchPanelHeader-hover-fold-color, #{$black});
+            color: var(--SearchPanelHeader-hover-fold-color, #{$black});
         }
     }
 }
