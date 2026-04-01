@@ -17,7 +17,13 @@ import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
-import { insertLineBreak, insertText, splitBlock, undo } from "../_helpers/user_actions";
+import {
+    insertLineBreak,
+    insertSpace,
+    insertText,
+    splitBlock,
+    undo,
+} from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 
 const base64Img =
@@ -440,7 +446,7 @@ describe("Link creation", () => {
         test("typing valid URL + space should convert to link", async () => {
             const { editor, el } = await setupEditor("<p>[]</p>");
             await insertText(editor, "http://google.co.in");
-            await insertText(editor, " ");
+            await insertSpace(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p><a href="http://google.co.in">http://google.co.in</a>&nbsp;[]</p>'
             );
@@ -448,7 +454,7 @@ describe("Link creation", () => {
         test("typing valid URL without protocol + space should convert to https link", async () => {
             const { editor, el } = await setupEditor("<p>[]</p>");
             await insertText(editor, "google.com");
-            await insertText(editor, " ");
+            await insertSpace(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p><a href="https://google.com">google.com</a>&nbsp;[]</p>'
             );
@@ -456,7 +462,7 @@ describe("Link creation", () => {
         test("typing valid http URL + space should convert to http link", async () => {
             const { editor, el } = await setupEditor("<p>[]</p>");
             await insertText(editor, "http://google.com");
-            await insertText(editor, " ");
+            await insertSpace(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p><a href="http://google.com">http://google.com</a>&nbsp;[]</p>'
             );
