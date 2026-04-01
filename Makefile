@@ -81,6 +81,24 @@ DEV_PROJECT_HTTP_PORT ?= 8071
 DEV_PROJECT_LOG_PATH ?= logs/odoo-dev-project.log
 DEV_PROJECT_PID_FILE ?= logs/odoo-dev-project.pid
 DEV_PROJECT_ADMIN_PASSWORD ?=
+STUDIO_RUNTIME_CONFIG ?= deploy/odoo/kodoo.runtime-studio.local.conf
+STUDIO_RUNTIME_DB ?= kodoo_studio
+STUDIO_RUNTIME_HTTP_PORT ?= 8073
+STUDIO_RUNTIME_LOG_PATH ?= logs/odoo-runtime-studio.log
+STUDIO_RUNTIME_PID_FILE ?= logs/odoo-runtime-studio.pid
+STUDIO_RUNTIME_MODULES ?= kodoo_forge,kodoo_studio,kodoo_studio_integration
+STUDIO_RUNTIME_ENGINE_PORT ?= 8765
+STUDIO_RUNTIME_ENGINE_PID_FILE ?= logs/forge-engine-studio.pid
+STUDIO_RUNTIME_ENGINE_LOG_PATH ?= logs/forge-engine-studio.log
+STUDIO_RUNTIME_OUTPUT_PATH ?= /tmp/forge_output
+STUDIO_RUNTIME_TERMINAL_SECRET ?= $(if $(strip $(TERMINAL_SECRET)),$(TERMINAL_SECRET),kodoo-studio-local-dev-secret)
+GOV_RUNTIME_CONFIG ?= deploy/odoo/kodoo.runtime-gov.local.conf
+GOV_RUNTIME_DB ?= gov_suite
+GOV_RUNTIME_HTTP_PORT ?= 8074
+GOV_RUNTIME_LOG_PATH ?= logs/odoo-runtime-gov.log
+GOV_RUNTIME_PID_FILE ?= logs/odoo-runtime-gov.pid
+GOV_RUNTIME_MODULES ?= gov_suite
+FORGE_ENGINE_PYTHON_BIN ?= $(if $(wildcard services/forge_engine/.venv/bin/python),services/forge_engine/.venv/bin/python,$(PYTHON))
 DEV_UPGRADE_DB ?= $(DEV_HOST_TEST_DB)
 DEV_MODULES ?= gov_compras
 DOCKER_DB_BIND_HOST ?= 127.0.0.1
@@ -142,6 +160,8 @@ CONFIG_FIND_CMD = find . \
 	dev-host-up dev-host-stop dev-host-logs dev-host-status dev-host-upgrade \
 	dev-project dev-project-config dev-project-db-setup dev-project-db-init \
 	dev-project-up dev-project-stop dev-project-logs dev-project-status \
+	studio-runtime-config studio-runtime-bootstrap studio-runtime-up studio-runtime-stop studio-runtime-logs studio-runtime-status studio-runtime-shell studio-runtime-sync-engine-url \
+	gov-runtime-config gov-runtime-bootstrap gov-runtime-up gov-runtime-stop gov-runtime-logs gov-runtime-status gov-runtime-shell \
 	dev-host-backup dev-host-restore-ktest \
 	assets-rebuild \
 	smoke troubleshoot up-smoke \
@@ -169,6 +189,8 @@ help:
 	@echo "Modes:"
 	@echo "  make dev            # Run Odoo natively on host over Docker PostgreSQL (DB=<client> pins one DB; empty keeps manager)"
 	@echo "  make dev-safe       # Run Odoo natively on host over local PostgreSQL (DB=<client> pins one DB; empty keeps manager)"
+	@echo "  make studio-runtime-up # Run the dedicated Kodoo Studio local runtime (Odoo + forge_engine)"
+	@echo "  make gov-runtime-up # Run the dedicated AGI Gov local runtime"
 	@echo "  make up-home        # Switch to the normal home stack (same as up, after down-tunnel)"
 	@echo "  make up-cowork      # Switch to cowork stack (tunnel + local URL)"
 	@echo "  make up-dev         # Switch to localhost-only dev stack"
@@ -231,6 +253,8 @@ help:
 
 	@echo "  make dev-host-config # Generate $(DEV_HOST_CONFIG) from local secrets"
 	@echo "  make dev-project-config # Generate $(DEV_PROJECT_CONFIG) from local secrets"
+	@echo "  make studio-runtime-config # Generate $(STUDIO_RUNTIME_CONFIG) for the dedicated Studio runtime"
+	@echo "  make gov-runtime-config # Generate $(GOV_RUNTIME_CONFIG) for the dedicated Gov runtime"
 	@echo "  make odoo-fix-url   # Force Odoo base URL for DB=$(DB) (or BASE_URL=https://...)"
 	@echo ""
 	@echo "Database:"
@@ -296,6 +320,16 @@ help:
 	@echo "  make dev-project-stop # Stop host-run Odoo and Docker PostgreSQL"
 	@echo "  make dev-project-logs # Tail host-run Odoo log for project mode"
 	@echo "  make dev-project-status # Check host-run Odoo and Docker PostgreSQL status"
+	@echo "  make studio-runtime-bootstrap # Prepare/update DB $(STUDIO_RUNTIME_DB) and install $(STUDIO_RUNTIME_MODULES)"
+	@echo "  make studio-runtime-up # Start dedicated Studio Odoo on $(LOCAL_BIND_HOST):$(STUDIO_RUNTIME_HTTP_PORT) and forge_engine on 127.0.0.1:$(STUDIO_RUNTIME_ENGINE_PORT)"
+	@echo "  make studio-runtime-stop # Stop dedicated Studio Odoo and forge_engine"
+	@echo "  make studio-runtime-logs # Tail both Studio runtime logs"
+	@echo "  make studio-runtime-status # Check dedicated Studio runtime and engine health"
+	@echo "  make gov-runtime-bootstrap # Prepare/update DB $(GOV_RUNTIME_DB) and install $(GOV_RUNTIME_MODULES)"
+	@echo "  make gov-runtime-up # Start dedicated Gov Odoo on $(LOCAL_BIND_HOST):$(GOV_RUNTIME_HTTP_PORT)"
+	@echo "  make gov-runtime-stop # Stop dedicated Gov runtime"
+	@echo "  make gov-runtime-logs # Tail dedicated Gov runtime log"
+	@echo "  make gov-runtime-status # Check dedicated Gov runtime health"
 	@echo "  make dev-host-backup # Dump $(DEV_HOST_DB) to $(BACKUP_DIR)"
 	@echo "  make dev-host-restore-ktest # Restore latest backup into $(DEV_HOST_TEST_DB)"
 	@echo ""
@@ -685,6 +719,30 @@ dev-project-config:
 	./scripts/render-dev-host-config.sh
 	@chmod 644 "$(DEV_PROJECT_CONFIG)"
 	@echo "Generated $(DEV_PROJECT_CONFIG) from $(ENV_FILE) (chmod 644)."
+
+studio-runtime-config:
+	@CONFIG_OUTPUT="$(STUDIO_RUNTIME_CONFIG)" \
+	DEV_HOST_ADMIN_PASSWORD="$(if $(DEV_HOST_ADMIN_PASSWORD),$(DEV_HOST_ADMIN_PASSWORD),$(PROD_ADMIN_PASSWORD))" \
+	APP_DB_HOST="$(PG_LOCAL_HOST)" \
+	APP_DB_PORT="$(PG_LOCAL_PORT)" \
+	APP_DB_USER="$(PG_LOCAL_USER)" \
+	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	APP_HTTP_PORT="$(STUDIO_RUNTIME_HTTP_PORT)" \
+	./scripts/render-dev-host-config.sh
+	@chmod 644 "$(STUDIO_RUNTIME_CONFIG)"
+	@echo "Generated $(STUDIO_RUNTIME_CONFIG) from $(ENV_FILE) (chmod 644)."
+
+gov-runtime-config:
+	@CONFIG_OUTPUT="$(GOV_RUNTIME_CONFIG)" \
+	DEV_HOST_ADMIN_PASSWORD="$(if $(DEV_HOST_ADMIN_PASSWORD),$(DEV_HOST_ADMIN_PASSWORD),$(PROD_ADMIN_PASSWORD))" \
+	APP_DB_HOST="$(PG_LOCAL_HOST)" \
+	APP_DB_PORT="$(PG_LOCAL_PORT)" \
+	APP_DB_USER="$(PG_LOCAL_USER)" \
+	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	APP_HTTP_PORT="$(GOV_RUNTIME_HTTP_PORT)" \
+	./scripts/render-dev-host-config.sh
+	@chmod 644 "$(GOV_RUNTIME_CONFIG)"
+	@echo "Generated $(GOV_RUNTIME_CONFIG) from $(ENV_FILE) (chmod 644)."
 # Equivalent to scripts/start-with-lnav.ps1 for Linux/WSL environments.
 odoo-lnav:
 	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
@@ -1355,6 +1413,16 @@ dev-project-shell:
 	$(MAKE) dev-project-config >/dev/null; \
 	"$(PYTHON)" "$(ODOO_BIN)" shell -c "$(DEV_PROJECT_CONFIG)" -d "$$db_name"
 
+studio-runtime-shell:
+	@$(MAKE) guard-dev-host
+	@$(MAKE) studio-runtime-config >/dev/null
+	@"$(PYTHON)" "$(ODOO_BIN)" shell -c "$(STUDIO_RUNTIME_CONFIG)" -d "$(STUDIO_RUNTIME_DB)"
+
+gov-runtime-shell:
+	@$(MAKE) guard-dev-host
+	@$(MAKE) gov-runtime-config >/dev/null
+	@"$(PYTHON)" "$(ODOO_BIN)" shell -c "$(GOV_RUNTIME_CONFIG)" -d "$(GOV_RUNTIME_DB)"
+
 odoo-fix-url:
 	@$(MAKE) guard-prod-host
 	@set -e; \
@@ -1478,6 +1546,126 @@ dev-project-status:
 	fi; \
 	docker inspect -f '{{.State.Status}}' kodoo-db 2>/dev/null | sed 's/^/Docker PostgreSQL: /' || echo "Docker PostgreSQL: not running"; \
 	echo "Database: $(DEV_PROJECT_DB) via $(DOCKER_DB_BIND_HOST):$(DOCKER_DB_HOST_PORT)"
+
+studio-runtime-sync-engine-url:
+	@PGPASSWORD="$(PG_LOCAL_PASSWORD)" psql -h "$(PG_LOCAL_HOST)" -p "$(PG_LOCAL_PORT)" -U "$(PG_LOCAL_USER)" -d "$(STUDIO_RUNTIME_DB)" -v ON_ERROR_STOP=1 -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('kodoo.forge.engine_url','http://127.0.0.1:$(STUDIO_RUNTIME_ENGINE_PORT)',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();" >/dev/null
+	@echo "Studio runtime engine URL synced to http://127.0.0.1:$(STUDIO_RUNTIME_ENGINE_PORT)"
+
+studio-runtime-bootstrap:
+	@$(MAKE) guard-dev-host
+	@$(MAKE) studio-runtime-stop >/dev/null 2>&1 || true
+	@$(MAKE) dev-host-db-setup DEV_HOST_DB="$(STUDIO_RUNTIME_DB)" DEV_HOST_TEST_DB="$(STUDIO_RUNTIME_DB)_test"
+	@$(MAKE) studio-runtime-config
+	@TERMINAL_SECRET="$(STUDIO_RUNTIME_TERMINAL_SECRET)" "$(PYTHON)" "$(ODOO_BIN)" -c "$(STUDIO_RUNTIME_CONFIG)" -d "$(STUDIO_RUNTIME_DB)" -i "$(STUDIO_RUNTIME_MODULES)" --stop-after-init
+	@$(MAKE) studio-runtime-sync-engine-url
+
+studio-runtime-up:
+	@$(MAKE) guard-dev-host
+	@has_schema="$$(PGPASSWORD="$(PG_LOCAL_PASSWORD)" psql -h "$(PG_LOCAL_HOST)" -p "$(PG_LOCAL_PORT)" -U "$(PG_LOCAL_USER)" -d "$(STUDIO_RUNTIME_DB)" -tAc "SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_module_module'" 2>/dev/null | tr -d '[:space:]' || true)"; \
+	if [ "$$has_schema" != "1" ]; then \
+	  echo "Studio runtime database '$(STUDIO_RUNTIME_DB)' is fresh. Bootstrapping modules first..."; \
+	  $(MAKE) studio-runtime-bootstrap; \
+	fi
+	@$(MAKE) ports-clean PORTS="$(STUDIO_RUNTIME_HTTP_PORT) $(STUDIO_RUNTIME_ENGINE_PORT)"
+	@$(MAKE) studio-runtime-config
+	@$(MAKE) studio-runtime-sync-engine-url >/dev/null 2>&1 || true
+	@TERMINAL_SECRET="$(STUDIO_RUNTIME_TERMINAL_SECRET)" \
+	PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(STUDIO_RUNTIME_CONFIG)" \
+	ODOO_DEV_DB="$(STUDIO_RUNTIME_DB)" \
+	ODOO_DEV_LOG_PATH="$(STUDIO_RUNTIME_LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(STUDIO_RUNTIME_PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(STUDIO_RUNTIME_HTTP_PORT)" \
+	./scripts/dev-host-start.sh
+	@FORGE_ENGINE_PYTHON_BIN="$(FORGE_ENGINE_PYTHON_BIN)" \
+	FORGE_ENGINE_PORT="$(STUDIO_RUNTIME_ENGINE_PORT)" \
+	FORGE_ENGINE_LOG_PATH="$(STUDIO_RUNTIME_ENGINE_LOG_PATH)" \
+	FORGE_ENGINE_PID_FILE="$(STUDIO_RUNTIME_ENGINE_PID_FILE)" \
+	FORGE_DB_HOST="$(PG_LOCAL_HOST)" \
+	FORGE_DB_PORT="$(PG_LOCAL_PORT)" \
+	FORGE_DB_USER="$(PG_LOCAL_USER)" \
+	FORGE_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	FORGE_DB_NAME="$(STUDIO_RUNTIME_DB)" \
+	ADDONS_PATH="$(CURDIR)/addons" \
+	OUTPUT_PATH="$(STUDIO_RUNTIME_OUTPUT_PATH)" \
+	TERMINAL_SECRET="$(STUDIO_RUNTIME_TERMINAL_SECRET)" \
+	ODOO_RUNTIME_MODE="direct" \
+	ODOO_URL="http://127.0.0.1:$(STUDIO_RUNTIME_HTTP_PORT)" \
+	ODOO_DB="$(STUDIO_RUNTIME_DB)" \
+	ODOO_USER="$(PG_LOCAL_USER)" \
+	ODOO_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	./scripts/forge-engine-start.sh
+
+studio-runtime-stop:
+	@FORGE_ENGINE_PID_FILE="$(STUDIO_RUNTIME_ENGINE_PID_FILE)" ./scripts/forge-engine-stop.sh >/dev/null 2>&1 || true
+	@ODOO_DEV_PID_FILE="$(STUDIO_RUNTIME_PID_FILE)" ./scripts/dev-host-stop.sh >/dev/null 2>&1 || true
+
+studio-runtime-logs:
+	@mkdir -p "$$(dirname "$(STUDIO_RUNTIME_LOG_PATH)")"
+	@touch "$(STUDIO_RUNTIME_LOG_PATH)" "$(STUDIO_RUNTIME_ENGINE_LOG_PATH)"
+	@tail -f "$(STUDIO_RUNTIME_LOG_PATH)" "$(STUDIO_RUNTIME_ENGINE_LOG_PATH)"
+
+studio-runtime-status:
+	@set -e; \
+	if [ -f "$(STUDIO_RUNTIME_PID_FILE)" ] && kill -0 "$$(cat "$(STUDIO_RUNTIME_PID_FILE)")" 2>/dev/null; then \
+	  echo "Studio Odoo runtime: running (PID $$(cat "$(STUDIO_RUNTIME_PID_FILE)"))"; \
+	else \
+	  echo "Studio Odoo runtime: stopped"; \
+	fi; \
+	if [ -f "$(STUDIO_RUNTIME_ENGINE_PID_FILE)" ] && kill -0 "$$(cat "$(STUDIO_RUNTIME_ENGINE_PID_FILE)")" 2>/dev/null; then \
+	  echo "forge_engine: running (PID $$(cat "$(STUDIO_RUNTIME_ENGINE_PID_FILE)"))"; \
+	else \
+	  echo "forge_engine: stopped"; \
+	fi; \
+	echo "Odoo URL: http://$(LOCAL_BIND_HOST):$(STUDIO_RUNTIME_HTTP_PORT)"; \
+	echo "Engine URL: http://127.0.0.1:$(STUDIO_RUNTIME_ENGINE_PORT)/health"; \
+	echo "Database: $(STUDIO_RUNTIME_DB) via $(PG_LOCAL_HOST):$(PG_LOCAL_PORT)"; \
+	echo "Config: $(STUDIO_RUNTIME_CONFIG)"; \
+	echo "Output: $(STUDIO_RUNTIME_OUTPUT_PATH)"; \
+	curl -fsS "http://127.0.0.1:$(STUDIO_RUNTIME_ENGINE_PORT)/health" >/dev/null 2>&1 && echo "Engine health: ok" || echo "Engine health: unavailable"
+
+gov-runtime-bootstrap:
+	@$(MAKE) guard-dev-host
+	@$(MAKE) gov-runtime-stop >/dev/null 2>&1 || true
+	@$(MAKE) dev-host-db-setup DEV_HOST_DB="$(GOV_RUNTIME_DB)" DEV_HOST_TEST_DB="$(GOV_RUNTIME_DB)_test"
+	@$(MAKE) gov-runtime-config
+	@"$(PYTHON)" "$(ODOO_BIN)" -c "$(GOV_RUNTIME_CONFIG)" -d "$(GOV_RUNTIME_DB)" -i "$(GOV_RUNTIME_MODULES)" --stop-after-init
+
+gov-runtime-up:
+	@$(MAKE) guard-dev-host
+	@has_schema="$$(PGPASSWORD="$(PG_LOCAL_PASSWORD)" psql -h "$(PG_LOCAL_HOST)" -p "$(PG_LOCAL_PORT)" -U "$(PG_LOCAL_USER)" -d "$(GOV_RUNTIME_DB)" -tAc "SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_module_module'" 2>/dev/null | tr -d '[:space:]' || true)"; \
+	if [ "$$has_schema" != "1" ]; then \
+	  echo "Gov runtime database '$(GOV_RUNTIME_DB)' is fresh. Bootstrapping modules first..."; \
+	  $(MAKE) gov-runtime-bootstrap; \
+	fi
+	@$(MAKE) ports-clean PORTS="$(GOV_RUNTIME_HTTP_PORT)"
+	@$(MAKE) gov-runtime-config
+	@PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(GOV_RUNTIME_CONFIG)" \
+	ODOO_DEV_DB="$(GOV_RUNTIME_DB)" \
+	ODOO_DEV_LOG_PATH="$(GOV_RUNTIME_LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(GOV_RUNTIME_PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(GOV_RUNTIME_HTTP_PORT)" \
+	./scripts/dev-host-start.sh
+
+gov-runtime-stop:
+	@ODOO_DEV_PID_FILE="$(GOV_RUNTIME_PID_FILE)" ./scripts/dev-host-stop.sh >/dev/null 2>&1 || true
+
+gov-runtime-logs:
+	@mkdir -p "$$(dirname "$(GOV_RUNTIME_LOG_PATH)")"
+	@touch "$(GOV_RUNTIME_LOG_PATH)"
+	@tail -f "$(GOV_RUNTIME_LOG_PATH)"
+
+gov-runtime-status:
+	@set -e; \
+	if [ -f "$(GOV_RUNTIME_PID_FILE)" ] && kill -0 "$$(cat "$(GOV_RUNTIME_PID_FILE)")" 2>/dev/null; then \
+	  echo "Gov runtime: running (PID $$(cat "$(GOV_RUNTIME_PID_FILE)"))"; \
+	  echo "URL: http://$(LOCAL_BIND_HOST):$(GOV_RUNTIME_HTTP_PORT)"; \
+	else \
+	  echo "Gov runtime: stopped"; \
+	fi; \
+	echo "Database: $(GOV_RUNTIME_DB) via $(PG_LOCAL_HOST):$(PG_LOCAL_PORT)"; \
+	echo "Config: $(GOV_RUNTIME_CONFIG)"
 
 dev-host-backup:
 	@BACKUP_DIR="$(BACKUP_DIR)" \

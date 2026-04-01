@@ -7,9 +7,9 @@ from .builder import (
     get_last_successful_artifacts,
     list_snapshots,
     load_module_graph,
-    restore_snapshot,
     snapshot_payload_from_graph,
 )
 from .diff import diff_module
 from .publisher import publish_module
+from .rollback import rollback_module
 from .validator import ValidationIssue, validate_module_graph

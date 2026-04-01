@@ -79,17 +79,35 @@ type RuntimeState struct {
 	SuggestedNextStep string
 }
 
+type DedicatedRuntimeState struct {
+	Key             string
+	Label           string
+	Description     string
+	Status          string
+	Detail          string
+	LocalURL        string
+	EngineURL       string
+	DBName          string
+	ConfigPath      string
+	OutputPath      string
+	Modules         string
+	OdooPIDStatus   string
+	EnginePIDStatus string
+	Warnings        []string
+}
+
 type Snapshot struct {
-	Runtime      RuntimeState
-	Services     []ServiceHealth
-	Databases    []DatabaseInfo
-	Incidents    []Incident
-	Smoke        []health.CheckResult
-	Containers   []docker.Container
-	Stats        []docker.Stat
-	Logs         []string
-	ServiceNames []string
-	Config       ConfigState
+	Runtime           RuntimeState
+	DedicatedRuntimes []DedicatedRuntimeState
+	Services          []ServiceHealth
+	Databases         []DatabaseInfo
+	Incidents         []Incident
+	Smoke             []health.CheckResult
+	Containers        []docker.Container
+	Stats             []docker.Stat
+	Logs              []string
+	ServiceNames      []string
+	Config            ConfigState
 }
 
 type MsgSnapshotLoaded struct {
@@ -134,6 +152,9 @@ func Load(ctx context.Context, cfg *envconfig.Config, repoDir, activeDB string) 
 	dockerDBHostPortOK := portReachable(cfg.DockerDBBindHost, cfg.DockerDBHostPort)
 	devHostPID := readPIDStatus(filepath.Join(repoDir, "logs", "odoo-dev-host.pid"))
 	devProjectPID := readPIDStatus(filepath.Join(repoDir, "logs", "odoo-dev-project.pid"))
+	studioRuntimePID := readPIDStatus(filepath.Join(repoDir, "logs", "odoo-runtime-studio.pid"))
+	studioEnginePID := readPIDStatus(filepath.Join(repoDir, "logs", "forge-engine-studio.pid"))
+	govRuntimePID := readPIDStatus(filepath.Join(repoDir, "logs", "odoo-runtime-gov.pid"))
 	dockerDBRunning := containerRunning(containers, "kodoo-db")
 
 	snapshot.Containers = containers
@@ -141,10 +162,11 @@ func Load(ctx context.Context, cfg *envconfig.Config, repoDir, activeDB string) 
 	snapshot.Logs = logLines
 	snapshot.ServiceNames = services
 	snapshot.Smoke = smoke
-	snapshot.Runtime = buildRuntimeState(cfg, containers, smoke, snapshot.Config, devHostPID, devProjectPID, activeDB)
+	snapshot.Runtime = buildRuntimeState(cfg, containers, smoke, snapshot.Config, devHostPID, devProjectPID, studioRuntimePID, govRuntimePID, activeDB)
+	snapshot.DedicatedRuntimes = buildDedicatedRuntimes(cfg, repoDir, studioRuntimePID, studioEnginePID, govRuntimePID)
 	snapshot.Databases = loadDatabases(ctx, repoDir, snapshot.Runtime.Mode, localDBOK, dockerDBHostPortOK, dockerDBRunning)
-	snapshot.Services = buildServices(containers, snapshot.Runtime.Mode, localDBOK, dockerDBHostPortOK, dockerDBRunning, cfg, devHostPID, devProjectPID)
-	snapshot.Incidents = detectIncidents(cfg, snapshot, localDBOK, dockerDBHostPortOK, dockerDBRunning, devHostPID, devProjectPID)
+	snapshot.Services = buildServices(containers, snapshot.Runtime.Mode, localDBOK, dockerDBHostPortOK, dockerDBRunning, cfg, devHostPID, devProjectPID, studioRuntimePID, studioEnginePID, govRuntimePID)
+	snapshot.Incidents = detectIncidents(cfg, snapshot, localDBOK, dockerDBHostPortOK, dockerDBRunning, devHostPID, devProjectPID, studioRuntimePID, studioEnginePID, govRuntimePID)
 
 	if len(snapshot.Incidents) > 0 {
 		snapshot.Runtime.LastIncident = snapshot.Incidents[0].Summary
@@ -163,8 +185,8 @@ func Load(ctx context.Context, cfg *envconfig.Config, repoDir, activeDB string) 
 	return snapshot, nil
 }
 
-func buildRuntimeState(cfg *envconfig.Config, containers []docker.Container, smoke []health.CheckResult, config ConfigState, devHostPID, devProjectPID pidStatus, activeDB string) RuntimeState {
-	mode, backend, dbBackend := detectMode(containers, devHostPID, devProjectPID)
+func buildRuntimeState(cfg *envconfig.Config, containers []docker.Container, smoke []health.CheckResult, config ConfigState, devHostPID, devProjectPID, studioRuntimePID, govRuntimePID pidStatus, activeDB string) RuntimeState {
+	mode, backend, dbBackend := detectMode(containers, devHostPID, devProjectPID, studioRuntimePID, govRuntimePID)
 	warnings := make([]string, 0, 4)
 	for _, result := range smoke {
 		if !result.OK {
@@ -174,13 +196,36 @@ func buildRuntimeState(cfg *envconfig.Config, containers []docker.Container, smo
 	if len(config.MissingKeys) > 0 {
 		warnings = append(warnings, fmt.Sprintf("%d required config values missing", len(config.MissingKeys)))
 	}
+	if activeDB == "" {
+		switch mode {
+		case "Studio Runtime":
+			activeDB = cfg.StudioRuntimeDB
+		case "Gov Suite Runtime":
+			activeDB = cfg.GovRuntimeDB
+		case "Multi-runtime":
+			activeDB = "multiple runtimes"
+		}
+	}
+	profile := runtimeProfile(containers)
+	localURL := cfg.LocalHTTPURL()
+	switch mode {
+	case "Studio Runtime":
+		profile = "kodoo studio local runtime"
+		localURL = fmt.Sprintf("http://%s:%d", cfg.LocalBindHost, cfg.StudioRuntimeHTTPPort)
+	case "Gov Suite Runtime":
+		profile = "gov suite local runtime"
+		localURL = fmt.Sprintf("http://%s:%d", cfg.LocalBindHost, cfg.GovRuntimeHTTPPort)
+	case "Multi-runtime":
+		profile = "multiple local runtimes"
+		localURL = "multiple local runtime ports"
+	}
 	return RuntimeState{
 		Mode:           mode,
-		RuntimeProfile: runtimeProfile(containers),
+		RuntimeProfile: profile,
 		Backend:        backend,
 		DBBackend:      dbBackend,
-		LocalPIDStatus: localPIDSummary(devHostPID, devProjectPID),
-		LocalURL:       cfg.LocalHTTPURL(),
+		LocalPIDStatus: localPIDSummary(devHostPID, devProjectPID, studioRuntimePID, govRuntimePID),
+		LocalURL:       localURL,
 		PublicURL:      cfg.PublicHTTPURL(),
 		Warnings:       warnings,
 		PortSummary:    portSummary(containers),
@@ -189,7 +234,7 @@ func buildRuntimeState(cfg *envconfig.Config, containers []docker.Container, smo
 	}
 }
 
-func buildServices(containers []docker.Container, mode string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, cfg *envconfig.Config, devHostPID, devProjectPID pidStatus) []ServiceHealth {
+func buildServices(containers []docker.Container, mode string, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, cfg *envconfig.Config, devHostPID, devProjectPID, studioRuntimePID, studioEnginePID, govRuntimePID pidStatus) []ServiceHealth {
 	services := []ServiceHealth{
 		serviceFromPort("db-local", localDBOK, "postgres local", "127.0.0.1 reachability"),
 		serviceFromDockerDB(mode, dockerDBRunning, dockerDBHostPortOK, cfg.DockerDBBindHost, cfg.DockerDBHostPort),
@@ -200,6 +245,9 @@ func buildServices(containers []docker.Container, mode string, localDBOK, docker
 	}
 	services = append(services, serviceFromPID("odoo-dev-host", devHostPID))
 	services = append(services, serviceFromPID("odoo-dev-project", devProjectPID))
+	services = append(services, serviceFromPID("odoo-runtime-studio", studioRuntimePID))
+	services = append(services, serviceFromPID("forge-engine-studio", studioEnginePID))
+	services = append(services, serviceFromPID("odoo-runtime-gov", govRuntimePID))
 	return services
 }
 
@@ -244,7 +292,7 @@ func loadDatabases(ctx context.Context, repoDir, mode string, localDBOK, dockerD
 	return rows
 }
 
-func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, devHostPID, devProjectPID pidStatus) []Incident {
+func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, dockerDBHostPortOK, dockerDBRunning bool, devHostPID, devProjectPID, studioRuntimePID, studioEnginePID, govRuntimePID pidStatus) []Incident {
 	var incidents []Incident
 	if !cfg.Exists {
 		incidents = append(incidents, Incident{
@@ -315,6 +363,30 @@ func detectIncidents(cfg *envconfig.Config, snapshot Snapshot, localDBOK, docker
 			Summary:    "PID stale em dev-project",
 			Cause:      "Existe arquivo de PID do Odoo dev-project, mas o processo não está vivo.",
 			Suggestion: "Pare o modo local e suba novamente via Runtime.",
+		})
+	}
+	if studioRuntimePID.Exists && !studioRuntimePID.Running {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityWarning,
+			Summary:    "PID stale em studio-runtime",
+			Cause:      "Existe arquivo de PID do Odoo Studio runtime, mas o processo não está vivo.",
+			Suggestion: "Abra Cockpit e reinicie o runtime do Kodoo Studio.",
+		})
+	}
+	if studioEnginePID.Exists && !studioEnginePID.Running {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityWarning,
+			Summary:    "PID stale no forge-engine",
+			Cause:      "Existe arquivo de PID do forge_engine do Studio, mas o processo não está vivo.",
+			Suggestion: "Abra Cockpit e reinicie o Kodoo Studio runtime para religar o engine.",
+		})
+	}
+	if govRuntimePID.Exists && !govRuntimePID.Running {
+		incidents = append(incidents, Incident{
+			Severity:   SeverityWarning,
+			Summary:    "PID stale em gov-runtime",
+			Cause:      "Existe arquivo de PID do runtime dedicado da suíte gov, mas o processo não está vivo.",
+			Suggestion: "Abra Cockpit e reinicie o runtime da suíte gov.",
 		})
 	}
 	if strings.TrimSpace(cfg.CloudflaredToken) == "" {
@@ -408,7 +480,29 @@ func readPIDStatus(path string) pidStatus {
 	return pidStatus{Exists: true, Running: err == nil, PID: pid}
 }
 
-func detectMode(containers []docker.Container, devHostPID, devProjectPID pidStatus) (string, string, string) {
+func detectMode(containers []docker.Container, devHostPID, devProjectPID, studioRuntimePID, govRuntimePID pidStatus) (string, string, string) {
+	localRuntimes := 0
+	if studioRuntimePID.Running {
+		localRuntimes++
+	}
+	if govRuntimePID.Running {
+		localRuntimes++
+	}
+	if devProjectPID.Running {
+		localRuntimes++
+	}
+	if devHostPID.Running {
+		localRuntimes++
+	}
+	if localRuntimes > 1 {
+		return "Multi-runtime", "local processes", "mixed"
+	}
+	if studioRuntimePID.Running {
+		return "Studio Runtime", "local process", "local"
+	}
+	if govRuntimePID.Running {
+		return "Gov Suite Runtime", "local process", "local"
+	}
 	if devProjectPID.Running {
 		return "Dev Project", "local process", "docker"
 	}
@@ -516,13 +610,158 @@ func serviceFromPID(name string, pid pidStatus) ServiceHealth {
 	}
 }
 
-func localPIDSummary(devHostPID, devProjectPID pidStatus) string {
+func buildDedicatedRuntimes(cfg *envconfig.Config, repoDir string, studioRuntimePID, studioEnginePID, govRuntimePID pidStatus) []DedicatedRuntimeState {
+	studioConfig := filepath.Join(repoDir, "deploy", "odoo", "kodoo.runtime-studio.local.conf")
+	govConfig := filepath.Join(repoDir, "deploy", "odoo", "kodoo.runtime-gov.local.conf")
+	studioURL := fmt.Sprintf("http://%s:%d", cfg.LocalBindHost, cfg.StudioRuntimeHTTPPort)
+	studioEngineURL := fmt.Sprintf("http://127.0.0.1:%d", cfg.StudioRuntimeEnginePort)
+	govURL := fmt.Sprintf("http://%s:%d", cfg.LocalBindHost, cfg.GovRuntimeHTTPPort)
+
+	studioWarnings := collectRuntimeWarnings(
+		fileExists(studioConfig),
+		"config ausente: "+studioConfig,
+		studioRuntimePID,
+		"stale pid do Odoo Studio",
+		portReachable(cfg.LocalBindHost, cfg.StudioRuntimeHTTPPort),
+		"porta HTTP do Studio sem resposta",
+	)
+	if studioEnginePID.Exists && !studioEnginePID.Running {
+		studioWarnings = append(studioWarnings, "stale pid do forge_engine")
+	}
+	if studioEnginePID.Running && !portReachable("127.0.0.1", cfg.StudioRuntimeEnginePort) {
+		studioWarnings = append(studioWarnings, "health port do forge_engine sem resposta")
+	}
+
+	govWarnings := collectRuntimeWarnings(
+		fileExists(govConfig),
+		"config ausente: "+govConfig,
+		govRuntimePID,
+		"stale pid do Gov runtime",
+		portReachable(cfg.LocalBindHost, cfg.GovRuntimeHTTPPort),
+		"porta HTTP do Gov runtime sem resposta",
+	)
+
+	return []DedicatedRuntimeState{
+		{
+			Key:             "studio",
+			Label:           "Kodoo Studio Runtime",
+			Description:     "Odoo local dedicado ao Kodoo Studio com forge_engine acoplado.",
+			Status:          combinedRuntimeStatus(studioRuntimePID.Running, portReachable(cfg.LocalBindHost, cfg.StudioRuntimeHTTPPort), studioEnginePID.Running, portReachable("127.0.0.1", cfg.StudioRuntimeEnginePort), studioWarnings),
+			Detail:          combinedRuntimeDetail(studioRuntimePID, studioEnginePID),
+			LocalURL:        studioURL,
+			EngineURL:       studioEngineURL,
+			DBName:          cfg.StudioRuntimeDB,
+			ConfigPath:      studioConfig,
+			OutputPath:      cfg.StudioRuntimeOutputPath,
+			Modules:         "kodoo_forge, kodoo_studio, kodoo_studio_integration",
+			OdooPIDStatus:   pidLabel(studioRuntimePID),
+			EnginePIDStatus: pidLabel(studioEnginePID),
+			Warnings:        studioWarnings,
+		},
+		{
+			Key:             "gov",
+			Label:           "Gov Suite Runtime",
+			Description:     "Odoo local dedicado para validação e operação da suíte gov.",
+			Status:          singleRuntimeStatus(govRuntimePID.Running, portReachable(cfg.LocalBindHost, cfg.GovRuntimeHTTPPort), govWarnings),
+			Detail:          singleRuntimeDetail(govRuntimePID),
+			LocalURL:        govURL,
+			DBName:          cfg.GovRuntimeDB,
+			ConfigPath:      govConfig,
+			Modules:         "gov_suite",
+			OdooPIDStatus:   pidLabel(govRuntimePID),
+			EnginePIDStatus: "n/a",
+			Warnings:        govWarnings,
+		},
+	}
+}
+
+func collectRuntimeWarnings(configReady bool, configWarning string, runtimePID pidStatus, staleWarning string, httpReady bool, httpWarning string) []string {
+	warnings := make([]string, 0, 3)
+	if !configReady {
+		warnings = append(warnings, configWarning)
+	}
+	if runtimePID.Exists && !runtimePID.Running {
+		warnings = append(warnings, staleWarning)
+	}
+	if runtimePID.Running && !httpReady {
+		warnings = append(warnings, httpWarning)
+	}
+	return warnings
+}
+
+func combinedRuntimeStatus(odooRunning, odooHTTPReady, engineRunning, engineHTTPReady bool, warnings []string) string {
 	switch {
+	case odooRunning && odooHTTPReady && engineRunning && engineHTTPReady && len(warnings) == 0:
+		return "running"
+	case odooRunning || engineRunning || len(warnings) > 0:
+		return "degraded"
+	default:
+		return "stopped"
+	}
+}
+
+func combinedRuntimeDetail(odooPID, enginePID pidStatus) string {
+	switch {
+	case odooPID.Running && enginePID.Running:
+		return "odoo + forge_engine ativos"
+	case odooPID.Running:
+		return "odoo ativo, forge_engine indisponível"
+	case enginePID.Running:
+		return "forge_engine ativo, Odoo indisponível"
+	case odooPID.Exists || enginePID.Exists:
+		return "pids existentes, mas processo não está vivo"
+	default:
+		return "nenhum processo dedicado ativo"
+	}
+}
+
+func singleRuntimeStatus(running, httpReady bool, warnings []string) string {
+	switch {
+	case running && httpReady && len(warnings) == 0:
+		return "running"
+	case running || len(warnings) > 0:
+		return "degraded"
+	default:
+		return "stopped"
+	}
+}
+
+func singleRuntimeDetail(pid pidStatus) string {
+	switch {
+	case pid.Running:
+		return "odoo dedicado ativo"
+	case pid.Exists:
+		return "pid existente, mas processo não está vivo"
+	default:
+		return "nenhum processo dedicado ativo"
+	}
+}
+
+func pidLabel(pid pidStatus) string {
+	switch {
+	case pid.Running:
+		return "running (pid " + pid.PID + ")"
+	case pid.Exists:
+		if pid.PID != "" {
+			return "stale pid " + pid.PID
+		}
+		return "stale pid"
+	default:
+		return "stopped"
+	}
+}
+
+func localPIDSummary(devHostPID, devProjectPID, studioRuntimePID, govRuntimePID pidStatus) string {
+	switch {
+	case studioRuntimePID.Running:
+		return "studio-runtime pid " + studioRuntimePID.PID
+	case govRuntimePID.Running:
+		return "gov-runtime pid " + govRuntimePID.PID
 	case devProjectPID.Running:
 		return "dev-project pid " + devProjectPID.PID
 	case devHostPID.Running:
 		return "dev-host pid " + devHostPID.PID
-	case devProjectPID.Exists || devHostPID.Exists:
+	case studioRuntimePID.Exists || govRuntimePID.Exists || devProjectPID.Exists || devHostPID.Exists:
 		return "stale pid detected"
 	default:
 		return "no local pid"
@@ -545,7 +784,7 @@ func compatibleModes(backend string) []string {
 	case "docker":
 		return []string{"Dev Project", "Stable Docker", "Stable Tunnel"}
 	case "local":
-		return []string{"Dev Host", "Local Diagnostic / Manager"}
+		return []string{"Dev Host", "Studio Runtime", "Gov Suite Runtime", "Local Diagnostic / Manager"}
 	default:
 		return []string{"unknown"}
 	}
@@ -582,6 +821,10 @@ func defaultNextStep(mode string) string {
 	switch mode {
 	case "Stopped":
 		return "Abra Runtime e suba o modo que você quer operar agora."
+	case "Studio Runtime", "Gov Suite Runtime":
+		return "Abra Cockpit para logs, bootstrap e controle do runtime dedicado."
+	case "Multi-runtime":
+		return "Abra Cockpit para comparar os runtimes dedicados ativos e administrar cada um separadamente."
 	case "Stable Docker", "Stable Tunnel":
 		return "Abra Logs se houver falha ou Databases para preparar um modo de desenvolvimento."
 	case "Dev Host", "Dev Project":

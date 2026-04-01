@@ -36,4 +36,9 @@ app.include_router(terminal_router, tags=["terminal"])
 
 @app.get("/health")
 async def healthcheck() -> dict[str, str]:
-    return {"status": "ok"}
+    return {"status": "ok", "version": app.version}
+
+
+@app.head("/health")
+async def healthcheck_head() -> None:
+    return None

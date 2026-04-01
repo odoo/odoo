@@ -43,6 +43,7 @@ func (m Model) HelpLines() []string {
 	return []string{
 		"s start/stop contextual",
 		"w open Runtime",
+		"k open Cockpit",
 		"d open Databases",
 		"l open Logs",
 		"t run troubleshoot",

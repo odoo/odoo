@@ -51,6 +51,12 @@ type Config struct {
 	DevProjectHTTPPort      int
 	DevProjectDB            string
 	DevProjectAdminPassword string
+	StudioRuntimeHTTPPort   int
+	StudioRuntimeDB         string
+	StudioRuntimeEnginePort int
+	StudioRuntimeOutputPath string
+	GovRuntimeHTTPPort      int
+	GovRuntimeDB            string
 	PGLocalHost             string
 	PGLocalPort             int
 	PGLocalUser             string
@@ -84,6 +90,12 @@ var defaultValues = map[string]string{
 	"DEV_PROJECT_DB":             "ktest",
 	"DEV_HOST_ADMIN_PASSWORD":    "",
 	"DEV_PROJECT_ADMIN_PASSWORD": "",
+	"STUDIO_RUNTIME_HTTP_PORT":   "8073",
+	"STUDIO_RUNTIME_DB":          "kodoo_studio",
+	"STUDIO_RUNTIME_ENGINE_PORT": "8765",
+	"STUDIO_RUNTIME_OUTPUT_PATH": "/tmp/forge_output",
+	"GOV_RUNTIME_HTTP_PORT":      "8074",
+	"GOV_RUNTIME_DB":             "gov_suite",
 	"PG_LOCAL_HOST":              "127.0.0.1",
 	"PG_LOCAL_PORT":              "5432",
 	"PG_LOCAL_USER":              "kodoo",
@@ -364,6 +376,12 @@ func (c *Config) applyTypedValues() {
 	c.DevProjectHTTPPort = atoi(c.Value("DEV_PROJECT_HTTP_PORT"), 8071)
 	c.DevProjectDB = c.Value("DEV_PROJECT_DB")
 	c.DevProjectAdminPassword = c.Value("DEV_PROJECT_ADMIN_PASSWORD")
+	c.StudioRuntimeHTTPPort = atoi(c.Value("STUDIO_RUNTIME_HTTP_PORT"), 8073)
+	c.StudioRuntimeDB = c.Value("STUDIO_RUNTIME_DB")
+	c.StudioRuntimeEnginePort = atoi(c.Value("STUDIO_RUNTIME_ENGINE_PORT"), 8765)
+	c.StudioRuntimeOutputPath = c.Value("STUDIO_RUNTIME_OUTPUT_PATH")
+	c.GovRuntimeHTTPPort = atoi(c.Value("GOV_RUNTIME_HTTP_PORT"), 8074)
+	c.GovRuntimeDB = c.Value("GOV_RUNTIME_DB")
 	c.PGLocalHost = c.Value("PG_LOCAL_HOST")
 	c.PGLocalPort = atoi(c.Value("PG_LOCAL_PORT"), 5432)
 	c.PGLocalUser = c.Value("PG_LOCAL_USER")

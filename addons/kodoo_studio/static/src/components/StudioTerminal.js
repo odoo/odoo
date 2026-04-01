@@ -36,6 +36,10 @@ odoo.define("kodoo_studio.StudioTerminal", ["kodoo_studio.forge_api"], function 
             this.term = null;
             this.fitAddon = null;
             this.resizeObserver = null;
+            this.reconnectTimer = null;
+            this.reconnectAttempts = 0;
+            this.tokenRetryUsed = false;
+            this.manualClose = false;
 
             onMounted(() => this.mountTerminal());
             onWillUnmount(() => this.destroyTerminal());
@@ -74,7 +78,6 @@ odoo.define("kodoo_studio.StudioTerminal", ["kodoo_studio.forge_api"], function 
 
             this.term.open(this.terminalRef.el);
             this.fitSoon();
-
             this.term.onData((data) => this.handleInput(data));
 
             this.resizeObserver = new ResizeObserver(() => {
@@ -89,29 +92,40 @@ odoo.define("kodoo_studio.StudioTerminal", ["kodoo_studio.forge_api"], function 
             await this.connectSocket();
         }
 
-        async connectSocket() {
+        async connectSocket(isReconnect) {
+            if (this.manualClose) {
+                return;
+            }
             this.state.status = "connecting";
-            this.state.message = "Requesting terminal token...";
+            this.state.message = isReconnect ? "Reconnecting..." : "Requesting terminal token...";
+
+            let token;
             try {
                 const tokenResult = await forgeApi.getTerminalToken();
-                const token = tokenResult && tokenResult.token ? tokenResult.token : null;
+                token = tokenResult && tokenResult.token ? tokenResult.token : null;
                 if (!token) {
                     throw new Error("Missing terminal token.");
                 }
-                const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-                this.socket = new window.WebSocket(
-                    `${protocol}//${window.location.host}/kodoo/studio/ws/terminal?token=${encodeURIComponent(token)}`
-                );
             } catch (error) {
                 this.state.status = "error";
                 this.state.message = error.message || "Could not open terminal.";
-                this.writeSystem(`[error] ${this.state.message}`);
+                this.writeNotice("[Falha ao obter token do terminal.]");
+                if (isReconnect) {
+                    this.scheduleReconnect();
+                }
                 return;
             }
+
+            const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+            this.socket = new window.WebSocket(
+                `${protocol}//${window.location.host}/kodoo/studio/ws/terminal?token=${encodeURIComponent(token)}`
+            );
 
             this.socket.onopen = () => {
                 this.state.status = "connected";
                 this.state.message = "Connected";
+                this.reconnectAttempts = 0;
+                this.tokenRetryUsed = false;
                 this.sendResize();
             };
 
@@ -120,17 +134,58 @@ odoo.define("kodoo_studio.StudioTerminal", ["kodoo_studio.forge_api"], function 
             };
 
             this.socket.onerror = () => {
-                this.state.status = "error";
                 this.state.message = "Terminal bridge error.";
             };
 
-            this.socket.onclose = () => {
-                if (this.state.status !== "error") {
-                    this.state.status = "closed";
-                    this.state.message = "Disconnected";
-                }
-                this.writeSystem("[terminal] connection closed");
+            this.socket.onclose = (event) => {
+                this.handleSocketClose(event);
             };
+        }
+
+        handleSocketClose(event) {
+            this.socket = null;
+            this.processRunning = false;
+            if (this.manualClose) {
+                return;
+            }
+            if (event.code === 1000) {
+                this.state.status = "closed";
+                this.state.message = "Disconnected";
+                this.writeNotice("[terminal] connection closed");
+                return;
+            }
+            if (event.code === 4001 && !this.tokenRetryUsed) {
+                this.tokenRetryUsed = true;
+                this.state.status = "connecting";
+                this.state.message = "Refreshing terminal token...";
+                this.writeNotice("[Token expirado. Reconectando...]");
+                this.connectSocket(true);
+                return;
+            }
+            this.scheduleReconnect();
+        }
+
+        scheduleReconnect() {
+            if (this.manualClose) {
+                return;
+            }
+            if (this.reconnectAttempts >= 3) {
+                this.state.status = "error";
+                this.state.message = "Reconnect failed";
+                this.writeNotice("[Falha ao reconectar. Abra e feche o terminal.]");
+                return;
+            }
+            this.reconnectAttempts += 1;
+            this.state.status = "connecting";
+            this.state.message = `Reconnect attempt ${this.reconnectAttempts}/3`;
+            this.writeNotice("[Conex\u00e3o perdida. Reconectando em 3s...]");
+            if (this.reconnectTimer) {
+                window.clearTimeout(this.reconnectTimer);
+            }
+            this.reconnectTimer = window.setTimeout(() => {
+                this.reconnectTimer = null;
+                this.connectSocket(true);
+            }, 3000);
         }
 
         handleMessage(rawMessage) {
@@ -234,6 +289,9 @@ odoo.define("kodoo_studio.StudioTerminal", ["kodoo_studio.forge_api"], function 
         }
 
         writePrompt() {
+            if (!this.term) {
+                return;
+            }
             this.term.write(`${this.cwd || "."}$ `);
         }
 
@@ -244,13 +302,25 @@ odoo.define("kodoo_studio.StudioTerminal", ["kodoo_studio.forge_api"], function 
             this.term.write(`${message}\r\n`);
         }
 
+        writeNotice(message) {
+            if (!this.term) {
+                return;
+            }
+            this.term.write(`\r\n${message}\r\n`);
+        }
+
         destroyTerminal() {
+            this.manualClose = true;
+            if (this.reconnectTimer) {
+                window.clearTimeout(this.reconnectTimer);
+                this.reconnectTimer = null;
+            }
             if (this.resizeObserver) {
                 this.resizeObserver.disconnect();
                 this.resizeObserver = null;
             }
             if (this.socket) {
-                this.socket.close();
+                this.socket.close(1000, "CLIENT_CLOSED");
                 this.socket = null;
             }
             if (this.term) {

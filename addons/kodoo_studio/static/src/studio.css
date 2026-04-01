@@ -61,6 +61,44 @@
     gap: 18px;
 }
 
+.o_kodoo_studio__engine_banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    border: 1px solid var(--kodoo-studio-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.o_kodoo_studio__engine_banner--offline {
+    background: var(--kodoo-studio-amber-bg);
+    border-color: #f5c76a;
+    color: var(--kodoo-studio-amber-text);
+}
+
+.o_kodoo_studio__engine_banner--online {
+    background: var(--kodoo-studio-green-bg);
+    border-color: #9fe3ad;
+    color: var(--kodoo-studio-green-text);
+}
+
+.o_kodoo_studio__engine_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.o_kodoo_studio__engine_text {
+    flex: 1 1 auto;
+}
+
 .o_kodoo_studio__welcome {
     display: flex;
     flex-direction: column;
@@ -144,6 +182,16 @@
     color: var(--kodoo-studio-green-text);
     background: #ecfdf3;
     border-color: #abefc6;
+}
+
+.o_kodoo_studio__notice--compact {
+    margin-top: 0;
+}
+
+.o_kodoo_studio__notice_stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .o_kodoo_studio__empty--compact {
@@ -343,6 +391,19 @@
     margin-top: 16px;
 }
 
+.o_kodoo_studio__action_blocks {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.o_kodoo_studio__action_block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
 .o_kodoo_studio__pipeline_column {
     min-width: 0;
 }
@@ -360,6 +421,11 @@
 
 .o_kodoo_studio__dialog_text {
     margin: 0 0 10px;
+}
+
+.o_kodoo_studio__waiting_hint {
+    color: var(--kodoo-studio-muted);
+    font-size: 0.85rem;
 }
 
 .o_kodoo_studio__issue_list,
@@ -439,6 +505,53 @@
     word-break: break-word;
     font-family: "IBM Plex Mono", Consolas, monospace;
     font-size: 0.82rem;
+}
+
+.o_kodoo_studio__inline_feedback {
+    border: 1px solid var(--kodoo-studio-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.o_kodoo_studio__inline_feedback--error {
+    background: #fef3f2;
+    border-color: #fecdca;
+    color: #b42318;
+}
+
+.o_kodoo_studio__inline_feedback--warning {
+    background: #fff7e6;
+    border-color: #f5c76a;
+    color: var(--kodoo-studio-amber-text);
+}
+
+.o_kodoo_studio__inline_feedback_head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.o_kodoo_studio__inline_feedback_icon {
+    font-weight: 700;
+}
+
+.o_kodoo_studio__feedback_link {
+    padding: 0;
+    min-height: auto;
+    line-height: 1.2;
+}
+
+.o_kodoo_studio__inline_feedback_detail {
+    margin: 10px 0 0;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(16, 20, 24, 0.06);
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: 0.8rem;
 }
 
 .o_kodoo_studio__drawer {
@@ -551,6 +664,7 @@
 }
 
 @media (max-width: 1100px) {
+    .o_kodoo_studio__action_blocks,
     .o_kodoo_studio__pipeline_grid,
     .o_kodoo_studio__form_grid {
         grid-template-columns: 1fr;

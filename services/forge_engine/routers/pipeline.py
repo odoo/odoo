@@ -15,7 +15,7 @@ from ..pipeline import (
     list_snapshots,
     load_module_graph,
     publish_module,
-    restore_snapshot,
+    rollback_module,
     validate_module_graph,
 )
 from ..pipeline.codegen import collect_block_conflicts
@@ -26,6 +26,7 @@ router = APIRouter()
 
 class PublishRequest(BaseModel):
     mode: Literal["runtime", "export", "both"]
+    target_url: str | None = None
 
 
 class SnapshotRequest(BaseModel):
@@ -104,7 +105,12 @@ async def publish_pipeline(
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, object]:
     try:
-        return await publish_module(session, module_id, payload.mode)
+        return await publish_module(
+            session,
+            module_id,
+            payload.mode,
+            target_url=payload.target_url,
+        )
     except LookupError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
 
@@ -184,8 +190,4 @@ async def rollback_pipeline(
     snapshot_id: int,
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, object]:
-    try:
-        result = await restore_snapshot(session, module_id, snapshot_id, created_by="api")
-    except LookupError as exc:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
-    return result
+    return await rollback_module(module_id, snapshot_id, session)

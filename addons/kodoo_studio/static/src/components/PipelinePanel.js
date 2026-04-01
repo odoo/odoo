@@ -3,7 +3,7 @@
 odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (require) {
     "use strict";
 
-    const { Component, onMounted, onWillUpdateProps, useState } = owl;
+    const { Component, onMounted, onWillUnmount, onWillUpdateProps, useState } = owl;
     const forgeApi = require("kodoo_studio.forge_api");
 
     const namespace = window.kodooStudio = window.kodooStudio || {};
@@ -22,6 +22,26 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
     }
 
     function emptyLoading() {
+        return {
+            validate: false,
+            build: false,
+            diff: false,
+            publish: false,
+            snapshot: false,
+        };
+    }
+
+    function emptyErrors() {
+        return {
+            validate: null,
+            build: null,
+            diff: null,
+            publish: null,
+            snapshot: null,
+        };
+    }
+
+    function emptyFlags() {
         return {
             validate: false,
             build: false,
@@ -86,6 +106,9 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
             this.state = useState({
                 module: null,
                 loading: emptyLoading(),
+                slow: emptyFlags(),
+                errors: emptyErrors(),
+                errorExpanded: emptyFlags(),
                 results: defaultResults(),
                 diffResult: null,
                 snapshots: [],
@@ -100,18 +123,33 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
                 error: null,
             });
 
+            this.loadingTimers = {};
+
             onMounted(() => this.loadPanel(this.props.moduleId, { resetResults: true }));
+            onWillUnmount(() => this.clearLoadingTimers());
             onWillUpdateProps((nextProps) => {
-                if (nextProps.moduleId !== this.props.moduleId) {
-                    return this.loadPanel(nextProps.moduleId, { resetResults: true });
+                if (
+                    nextProps.moduleId !== this.props.moduleId ||
+                    (this.props.engineOnline === false && nextProps.engineOnline === true)
+                ) {
+                    return this.loadPanel(nextProps.moduleId, { resetResults: nextProps.moduleId !== this.props.moduleId });
                 }
             });
+        }
+
+        clearLoadingTimers() {
+            for (const timerId of Object.values(this.loadingTimers)) {
+                window.clearTimeout(timerId);
+            }
+            this.loadingTimers = {};
         }
 
         async loadPanel(moduleId, options) {
             this.state.error = null;
             if (options && options.resetResults) {
                 this.state.results = defaultResults();
+                this.state.errors = emptyErrors();
+                this.state.errorExpanded = emptyFlags();
                 this.state.publishConfirm = false;
                 this.state.showConflicts = false;
                 this.state.expandedConflictKeys = {};
@@ -158,47 +196,124 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
 
         startLoading(name) {
             this.state.loading[name] = true;
+            this.state.slow[name] = false;
+            if (this.loadingTimers[name]) {
+                window.clearTimeout(this.loadingTimers[name]);
+            }
+            this.loadingTimers[name] = window.setTimeout(() => {
+                if (this.state.loading[name]) {
+                    this.state.slow[name] = true;
+                }
+            }, 10000);
         }
 
         stopLoading(name) {
             this.state.loading[name] = false;
+            this.state.slow[name] = false;
+            if (this.loadingTimers[name]) {
+                window.clearTimeout(this.loadingTimers[name]);
+                delete this.loadingTimers[name];
+            }
+        }
+
+        clearActionError(name) {
+            this.state.errors[name] = null;
+            this.state.errorExpanded[name] = false;
+        }
+
+        setActionError(name, error, options) {
+            const detail = options && "detail" in options ? options.detail : error.detail;
+            this.state.errors[name] = {
+                level: (options && options.level) || "error",
+                message: (options && options.message) || error.message || "Request failed.",
+                detail: detail || null,
+                status: error.status || 500,
+                conflicts: (options && options.conflicts) || null,
+            };
+            this.state.errorExpanded[name] = false;
+        }
+
+        toggleActionError(name) {
+            this.state.errorExpanded[name] = !this.state.errorExpanded[name];
+        }
+
+        actionDetail(name) {
+            const error = this.state.errors[name];
+            if (!error || !error.detail) {
+                return "";
+            }
+            return forgeApi.stringifyDetail(error.detail);
+        }
+
+        actionErrorClass(name) {
+            const error = this.state.errors[name];
+            if (!error) {
+                return "";
+            }
+            if (error.level === "warning") {
+                return "o_kodoo_studio__inline_feedback o_kodoo_studio__inline_feedback--warning";
+            }
+            return "o_kodoo_studio__inline_feedback o_kodoo_studio__inline_feedback--error";
+        }
+
+        isActionDisabled(name) {
+            return !this.props.moduleId || this.state.loading[name] || this.props.engineOnline === false;
+        }
+
+        actionTitle() {
+            if (this.props.engineOnline === false) {
+                return "Engine offline";
+            }
+            return null;
+        }
+
+        openConflictsFromError() {
+            this.state.showConflicts = true;
         }
 
         async runValidate() {
-            if (!this.props.moduleId) {
+            if (!this.props.moduleId || this.props.engineOnline === false) {
                 return;
             }
             this.startLoading("validate");
             this.state.error = null;
             try {
                 this.state.results.validate = await forgeApi.validate(this.props.moduleId);
+                this.clearActionError("validate");
                 this.state.module = await forgeApi.getModule(this.props.moduleId);
             } catch (error) {
-                this.state.error = error.message || "Validation failed.";
+                this.setActionError("validate", error);
             } finally {
                 this.stopLoading("validate");
             }
         }
 
         async runBuild() {
-            if (!this.props.moduleId) {
+            if (!this.props.moduleId || this.props.engineOnline === false) {
                 return;
             }
             this.startLoading("build");
             this.state.error = null;
             try {
                 this.state.results.build = await forgeApi.build(this.props.moduleId);
+                this.clearActionError("build");
             } catch (error) {
-                if (error.payload && error.payload.detail) {
-                    this.state.results.build = error.payload.detail;
-                    if (error.payload.detail.errors) {
+                if (error.status === 409 && error.detail && error.detail.conflicts) {
+                    this.state.results.build = error.detail;
+                    this.setActionError("build", error, {
+                        level: "warning",
+                        message: "Build com conflitos detectados.",
+                        detail: error.detail,
+                        conflicts: error.detail.conflicts,
+                    });
+                } else {
+                    if (error.detail && error.detail.errors) {
                         this.state.results.validate = {
                             valid: false,
-                            errors: error.payload.detail.errors,
+                            errors: error.detail.errors,
                         };
                     }
-                } else {
-                    this.state.error = error.message || "Build failed.";
+                    this.setActionError("build", error);
                 }
             } finally {
                 this.stopLoading("build");
@@ -210,21 +325,25 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
         }
 
         async runDiff() {
-            if (!this.props.moduleId) {
+            if (!this.props.moduleId || this.props.engineOnline === false) {
                 return;
             }
             this.startLoading("diff");
             this.state.error = null;
             try {
                 this.state.diffResult = await forgeApi.diff(this.props.moduleId);
+                this.clearActionError("diff");
             } catch (error) {
-                this.state.error = error.message || "Diff failed.";
+                this.setActionError("diff", error);
             } finally {
                 this.stopLoading("diff");
             }
         }
 
         askPublish() {
+            if (this.props.engineOnline === false) {
+                return;
+            }
             this.state.publishConfirm = true;
         }
 
@@ -233,7 +352,7 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
         }
 
         async confirmPublish() {
-            if (!this.props.moduleId) {
+            if (!this.props.moduleId || this.props.engineOnline === false) {
                 return;
             }
             this.startLoading("publish");
@@ -244,8 +363,17 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
                     this.props.moduleId,
                     this.state.publishMode
                 );
+                if (this.state.results.publish && this.state.results.publish.errors && this.state.results.publish.errors.length) {
+                    this.setActionError("publish", {
+                        message: "Publicação retornou erros.",
+                        status: 500,
+                        detail: this.state.results.publish.errors,
+                    });
+                } else {
+                    this.clearActionError("publish");
+                }
             } catch (error) {
-                this.state.error = error.message || "Publish failed.";
+                this.setActionError("publish", error);
             } finally {
                 this.stopLoading("publish");
                 await this.refreshState();
@@ -256,7 +384,7 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
         }
 
         async runSnapshot() {
-            if (!this.props.moduleId) {
+            if (!this.props.moduleId || this.props.engineOnline === false) {
                 return;
             }
             this.startLoading("snapshot");
@@ -267,8 +395,9 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
                     this.state.snapshotName || this.defaultSnapshotName()
                 );
                 this.state.snapshotName = this.defaultSnapshotName();
+                this.clearActionError("snapshot");
             } catch (error) {
-                this.state.error = error.message || "Snapshot failed.";
+                this.setActionError("snapshot", error);
             } finally {
                 this.stopLoading("snapshot");
                 await this.refreshState();
@@ -276,7 +405,7 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
         }
 
         async rollback(snapshotId) {
-            if (!this.props.moduleId) {
+            if (!this.props.moduleId || this.props.engineOnline === false) {
                 return;
             }
             this.state.error = null;
@@ -344,10 +473,6 @@ odoo.define("kodoo_studio.PipelinePanel", ["kodoo_studio.forge_api"], function (
         moduleStateClass() {
             const state = this.state.module && this.state.module.state ? this.state.module.state : "draft";
             return `o_kodoo_studio__state o_kodoo_studio__state--${state}`;
-        }
-
-        loadingClass(name) {
-            return this.state.loading[name] ? "disabled" : "";
         }
 
         formatDate(value) {

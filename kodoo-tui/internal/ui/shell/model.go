@@ -124,6 +124,14 @@ func BuildContextualShellRequest(snapshot state.Snapshot, forceSelect bool) even
 	}
 
 	switch mode {
+	case "Studio Runtime":
+		request.Target = "studio-runtime-shell"
+		request.Description = "Open the native Odoo shell against the dedicated Kodoo Studio database."
+		request.DatabaseBackend = "local"
+	case "Gov Suite Runtime":
+		request.Target = "gov-runtime-shell"
+		request.Description = "Open the native Odoo shell against the dedicated Gov suite database."
+		request.DatabaseBackend = "local"
 	case "Dev Host":
 		request.Target = "dev-host-shell"
 		request.Description = "Open the native Odoo shell against the local PostgreSQL database."
@@ -186,6 +194,12 @@ func fallbackDB(snapshot state.Snapshot) string {
 
 func noteForMode(mode string) string {
 	switch mode {
+	case "Studio Runtime":
+		return "Uses the dedicated Kodoo Studio Odoo process and its local PostgreSQL database."
+	case "Gov Suite Runtime":
+		return "Uses the dedicated Gov suite Odoo process and its local PostgreSQL database."
+	case "Multi-runtime":
+		return "More than one local runtime is active. Open the dedicated cockpit to choose the right target explicitly."
 	case "Dev Host":
 		return "Uses the host Python runtime and the local PostgreSQL service."
 	case "Dev Project":

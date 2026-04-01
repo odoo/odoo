@@ -11,6 +11,18 @@
                     />
                 </aside>
                 <main class="o_kodoo_studio__main">
+                    <div t-if="this.showOfflineBanner()" class="o_kodoo_studio__engine_banner o_kodoo_studio__engine_banner--offline">
+                        <span class="o_kodoo_studio__engine_icon">!</span>
+                        <span class="o_kodoo_studio__engine_text" t-esc="state.engineError"/>
+                        <button class="btn btn-secondary btn-sm" type="button" t-att-disabled="state.checkingEngine ? true : undefined" t-on-click="retryEngineCheck">
+                            <t t-esc="state.checkingEngine ? 'Tentando...' : 'Tentar novamente'"/>
+                        </button>
+                    </div>
+                    <div t-if="this.showRecoveredBannerState()" class="o_kodoo_studio__engine_banner o_kodoo_studio__engine_banner--online">
+                        <span class="o_kodoo_studio__engine_icon">OK</span>
+                        <span class="o_kodoo_studio__engine_text">Forge Engine conectado novamente.</span>
+                    </div>
+
                     <div t-if="state.selectedModuleId" class="o_kodoo_studio__main_stack">
                         <ModuleForm
                             moduleId="state.selectedModuleId"
@@ -19,6 +31,7 @@
                         />
                         <PipelinePanel
                             moduleId="state.selectedModuleId"
+                            engineOnline="state.engineOnline"
                             onModuleChanged.bind="onModuleChanged"
                             onOpenTerminal.bind="openTerminal"
                         />
@@ -72,7 +85,11 @@
                 Carregando apps...
             </div>
             <div t-elif="state.error" class="o_kodoo_studio__notice o_kodoo_studio__notice--error">
-                <span t-esc="state.error"/>
+                <div class="o_kodoo_studio__notice_stack">
+                    <span t-esc="state.error"/>
+                    <small t-if="state.errorDetail" t-esc="state.errorDetail"/>
+                    <button class="btn btn-secondary btn-sm" type="button" t-on-click="loadApps">Recarregar</button>
+                </div>
             </div>
             <div t-elif="!state.apps.length" class="o_kodoo_studio__empty">
                 Nenhum app criado ainda.
@@ -124,6 +141,9 @@
                     </div>
 
                     <div t-if="state.dialog === 'app'" class="o_kodoo_studio__form_stack">
+                        <div t-if="state.dialogError" class="o_kodoo_studio__notice o_kodoo_studio__notice--error o_kodoo_studio__notice--compact">
+                            <span t-esc="state.dialogError"/>
+                        </div>
                         <label class="o_kodoo_studio__field">
                             <span>Name</span>
                             <input class="form-control" type="text" t-model="state.appForm.name"/>
@@ -132,12 +152,15 @@
                             <span>Technical Name</span>
                             <input class="form-control" type="text" t-model="state.appForm.technical_name"/>
                         </label>
-                        <button class="btn btn-primary" type="button" t-on-click="createApp">
-                            Criar App
+                        <button class="btn btn-primary" type="button" t-att-disabled="state.dialogSubmitting ? true : undefined" t-on-click="createApp">
+                            <t t-esc="state.dialogSubmitting ? 'Criando...' : 'Criar App'"/>
                         </button>
                     </div>
 
                     <div t-if="state.dialog === 'module'" class="o_kodoo_studio__form_stack">
+                        <div t-if="state.dialogError" class="o_kodoo_studio__notice o_kodoo_studio__notice--error o_kodoo_studio__notice--compact">
+                            <span t-esc="state.dialogError"/>
+                        </div>
                         <label class="o_kodoo_studio__field">
                             <span>Name</span>
                             <input class="form-control" type="text" t-model="state.moduleForm.name"/>
@@ -150,8 +173,8 @@
                             <span>Depends</span>
                             <input class="form-control" type="text" t-model="state.moduleForm.depends"/>
                         </label>
-                        <button class="btn btn-primary" type="button" t-on-click="createModule">
-                            Criar M&#243;dulo
+                        <button class="btn btn-primary" type="button" t-att-disabled="state.dialogSubmitting ? true : undefined" t-on-click="createModule">
+                            <t t-esc="state.dialogSubmitting ? 'Criando...' : 'Criar M&#243;dulo'"/>
                         </button>
                     </div>
                 </div>
@@ -173,7 +196,13 @@
                 Carregando m&#243;dulo...
             </div>
             <div t-elif="state.error" class="o_kodoo_studio__notice o_kodoo_studio__notice--error">
-                <span t-esc="state.error"/>
+                <div class="o_kodoo_studio__notice_stack">
+                    <span t-esc="state.error"/>
+                    <small t-if="state.errorDetail" t-esc="state.errorDetail"/>
+                    <button t-if="state.conflictSave" class="btn btn-secondary btn-sm" type="button" t-on-click="reloadCurrentModule">
+                        Recarregar
+                    </button>
+                </div>
             </div>
             <div t-elif="!state.module" class="o_kodoo_studio__empty">
                 Sem m&#243;dulo selecionado.
@@ -233,7 +262,7 @@
                 <span t-if="state.module" t-att-class="this.moduleStateClass()" t-esc="state.module.state || 'draft'"/>
             </div>
 
-            <div t-if="state.error" class="o_kodoo_studio__notice o_kodoo_studio__notice--error">
+            <div t-if="state.error &amp;&amp; props.engineOnline !== false" class="o_kodoo_studio__notice o_kodoo_studio__notice--error">
                 <span t-esc="state.error"/>
             </div>
 
@@ -243,50 +272,116 @@
 
             <div t-else="" class="o_kodoo_studio__pipeline_grid">
                 <section class="o_kodoo_studio__pipeline_column">
-                    <div class="o_kodoo_studio__action_row">
-                        <button
-                            class="btn btn-primary"
-                            type="button"
-                            t-att-disabled="state.loading.validate ? true : undefined"
-                            t-on-click="runValidate"
-                        >
-                            <t t-esc="state.loading.validate ? 'Validando...' : 'Validar'"/>
-                        </button>
-                        <button
-                            class="btn btn-primary"
-                            type="button"
-                            t-att-disabled="state.loading.build ? true : undefined"
-                            t-on-click="runBuild"
-                        >
-                            <t t-esc="state.loading.build ? 'Buildando...' : 'Build'"/>
-                        </button>
-                        <button
-                            class="btn btn-secondary"
-                            type="button"
-                            t-att-disabled="state.loading.diff ? true : undefined"
-                            t-on-click="runDiff"
-                        >
-                            <t t-esc="state.loading.diff ? 'Comparando...' : 'Diff'"/>
-                        </button>
+                    <div class="o_kodoo_studio__action_blocks">
+                        <div class="o_kodoo_studio__action_block">
+                            <button
+                                class="btn btn-primary"
+                                type="button"
+                                t-att-disabled="this.isActionDisabled('validate') ? true : undefined"
+                                t-att-title="this.actionTitle()"
+                                t-on-click="runValidate"
+                            >
+                                <t t-esc="state.loading.validate ? 'Validando...' : 'Validar'"/>
+                            </button>
+                            <div t-if="state.slow.validate" class="o_kodoo_studio__waiting_hint">Aguardando engine...</div>
+                            <div t-if="state.errors.validate" t-att-class="this.actionErrorClass('validate')">
+                                <div class="o_kodoo_studio__inline_feedback_head">
+                                    <span class="o_kodoo_studio__inline_feedback_icon">!</span>
+                                    <span t-esc="state.errors.validate.message"/>
+                                    <button t-if="this.actionDetail('validate')" class="btn btn-link btn-sm o_kodoo_studio__feedback_link" type="button" t-on-click="() => this.toggleActionError('validate')">
+                                        <t t-esc="state.errorExpanded.validate ? 'Ocultar detalhe' : 'Ver detalhe'"/>
+                                    </button>
+                                </div>
+                                <pre t-if="state.errorExpanded.validate" class="o_kodoo_studio__inline_feedback_detail" t-esc="this.actionDetail('validate')"/>
+                            </div>
+                        </div>
+
+                        <div class="o_kodoo_studio__action_block">
+                            <button
+                                class="btn btn-primary"
+                                type="button"
+                                t-att-disabled="this.isActionDisabled('build') ? true : undefined"
+                                t-att-title="this.actionTitle()"
+                                t-on-click="runBuild"
+                            >
+                                <t t-esc="state.loading.build ? 'Buildando...' : 'Build'"/>
+                            </button>
+                            <div t-if="state.slow.build" class="o_kodoo_studio__waiting_hint">Aguardando engine...</div>
+                            <div t-if="state.errors.build" t-att-class="this.actionErrorClass('build')">
+                                <div class="o_kodoo_studio__inline_feedback_head">
+                                    <span class="o_kodoo_studio__inline_feedback_icon">!</span>
+                                    <span t-esc="state.errors.build.message"/>
+                                    <button
+                                        t-if="state.errors.build.level === 'warning' &amp;&amp; state.errors.build.conflicts"
+                                        class="btn btn-link btn-sm o_kodoo_studio__feedback_link"
+                                        type="button"
+                                        t-on-click="openConflictsFromError"
+                                    >
+                                        Abrir conflitos
+                                    </button>
+                                    <button t-if="this.actionDetail('build')" class="btn btn-link btn-sm o_kodoo_studio__feedback_link" type="button" t-on-click="() => this.toggleActionError('build')">
+                                        <t t-esc="state.errorExpanded.build ? 'Ocultar detalhe' : 'Ver detalhe'"/>
+                                    </button>
+                                </div>
+                                <pre t-if="state.errorExpanded.build" class="o_kodoo_studio__inline_feedback_detail" t-esc="this.actionDetail('build')"/>
+                            </div>
+                        </div>
+
+                        <div class="o_kodoo_studio__action_block">
+                            <button
+                                class="btn btn-secondary"
+                                type="button"
+                                t-att-disabled="this.isActionDisabled('diff') ? true : undefined"
+                                t-att-title="this.actionTitle()"
+                                t-on-click="runDiff"
+                            >
+                                <t t-esc="state.loading.diff ? 'Comparando...' : 'Diff'"/>
+                            </button>
+                            <div t-if="state.slow.diff" class="o_kodoo_studio__waiting_hint">Aguardando engine...</div>
+                            <div t-if="state.errors.diff" t-att-class="this.actionErrorClass('diff')">
+                                <div class="o_kodoo_studio__inline_feedback_head">
+                                    <span class="o_kodoo_studio__inline_feedback_icon">!</span>
+                                    <span t-esc="state.errors.diff.message"/>
+                                    <button t-if="this.actionDetail('diff')" class="btn btn-link btn-sm o_kodoo_studio__feedback_link" type="button" t-on-click="() => this.toggleActionError('diff')">
+                                        <t t-esc="state.errorExpanded.diff ? 'Ocultar detalhe' : 'Ver detalhe'"/>
+                                    </button>
+                                </div>
+                                <pre t-if="state.errorExpanded.diff" class="o_kodoo_studio__inline_feedback_detail" t-esc="this.actionDetail('diff')"/>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="o_kodoo_studio__inline_action">
-                        <label class="o_kodoo_studio__field o_kodoo_studio__field--compact">
-                            <span>Publish</span>
-                            <select class="form-select" t-model="state.publishMode">
-                                <option value="export">Export</option>
-                                <option value="runtime">Runtime</option>
-                                <option value="both">Both</option>
-                            </select>
-                        </label>
-                        <button
-                            class="btn btn-secondary"
-                            type="button"
-                            t-att-disabled="state.loading.publish ? true : undefined"
-                            t-on-click="askPublish"
-                        >
-                            <t t-esc="state.loading.publish ? 'Publicando...' : 'Publicar'"/>
-                        </button>
+                    <div class="o_kodoo_studio__action_block">
+                        <div class="o_kodoo_studio__inline_action">
+                            <label class="o_kodoo_studio__field o_kodoo_studio__field--compact">
+                                <span>Publish</span>
+                                <select class="form-select" t-model="state.publishMode" t-att-disabled="props.engineOnline === false ? true : undefined">
+                                    <option value="export">Export</option>
+                                    <option value="runtime">Runtime</option>
+                                    <option value="both">Both</option>
+                                </select>
+                            </label>
+                            <button
+                                class="btn btn-secondary"
+                                type="button"
+                                t-att-disabled="this.isActionDisabled('publish') ? true : undefined"
+                                t-att-title="this.actionTitle()"
+                                t-on-click="askPublish"
+                            >
+                                <t t-esc="state.loading.publish ? 'Publicando...' : 'Publicar'"/>
+                            </button>
+                        </div>
+                        <div t-if="state.slow.publish" class="o_kodoo_studio__waiting_hint">Aguardando engine...</div>
+                        <div t-if="state.errors.publish" t-att-class="this.actionErrorClass('publish')">
+                            <div class="o_kodoo_studio__inline_feedback_head">
+                                <span class="o_kodoo_studio__inline_feedback_icon">!</span>
+                                <span t-esc="state.errors.publish.message"/>
+                                <button t-if="this.actionDetail('publish')" class="btn btn-link btn-sm o_kodoo_studio__feedback_link" type="button" t-on-click="() => this.toggleActionError('publish')">
+                                    <t t-esc="state.errorExpanded.publish ? 'Ocultar detalhe' : 'Ver detalhe'"/>
+                                </button>
+                            </div>
+                            <pre t-if="state.errorExpanded.publish" class="o_kodoo_studio__inline_feedback_detail" t-esc="this.actionDetail('publish')"/>
+                        </div>
                     </div>
 
                     <div t-if="state.publishConfirm" class="o_kodoo_studio__inline_dialog o_kodoo_studio__inline_dialog--embedded">
@@ -304,19 +399,33 @@
                         </div>
                     </div>
 
-                    <div class="o_kodoo_studio__inline_action">
-                        <label class="o_kodoo_studio__field o_kodoo_studio__field--grow">
-                            <span>Snapshot</span>
-                            <input class="form-control" type="text" t-model="state.snapshotName"/>
-                        </label>
-                        <button
-                            class="btn btn-secondary"
-                            type="button"
-                            t-att-disabled="state.loading.snapshot ? true : undefined"
-                            t-on-click="runSnapshot"
-                        >
-                            <t t-esc="state.loading.snapshot ? 'Salvando...' : 'Snapshot'"/>
-                        </button>
+                    <div class="o_kodoo_studio__action_block">
+                        <div class="o_kodoo_studio__inline_action">
+                            <label class="o_kodoo_studio__field o_kodoo_studio__field--grow">
+                                <span>Snapshot</span>
+                                <input class="form-control" type="text" t-model="state.snapshotName" t-att-disabled="props.engineOnline === false ? true : undefined"/>
+                            </label>
+                            <button
+                                class="btn btn-secondary"
+                                type="button"
+                                t-att-disabled="this.isActionDisabled('snapshot') ? true : undefined"
+                                t-att-title="this.actionTitle()"
+                                t-on-click="runSnapshot"
+                            >
+                                <t t-esc="state.loading.snapshot ? 'Salvando...' : 'Snapshot'"/>
+                            </button>
+                        </div>
+                        <div t-if="state.slow.snapshot" class="o_kodoo_studio__waiting_hint">Aguardando engine...</div>
+                        <div t-if="state.errors.snapshot" t-att-class="this.actionErrorClass('snapshot')">
+                            <div class="o_kodoo_studio__inline_feedback_head">
+                                <span class="o_kodoo_studio__inline_feedback_icon">!</span>
+                                <span t-esc="state.errors.snapshot.message"/>
+                                <button t-if="this.actionDetail('snapshot')" class="btn btn-link btn-sm o_kodoo_studio__feedback_link" type="button" t-on-click="() => this.toggleActionError('snapshot')">
+                                    <t t-esc="state.errorExpanded.snapshot ? 'Ocultar detalhe' : 'Ver detalhe'"/>
+                                </button>
+                            </div>
+                            <pre t-if="state.errorExpanded.snapshot" class="o_kodoo_studio__inline_feedback_detail" t-esc="this.actionDetail('snapshot')"/>
+                        </div>
                     </div>
 
                     <div t-if="state.results.validate" class="o_kodoo_studio__section">

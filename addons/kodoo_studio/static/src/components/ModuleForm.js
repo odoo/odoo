@@ -35,6 +35,8 @@ odoo.define("kodoo_studio.ModuleForm", ["kodoo_studio.forge_api"], function (req
                 saving: false,
                 loading: false,
                 error: null,
+                errorDetail: null,
+                conflictSave: false,
             });
 
             onMounted(() => this.loadModule(this.props.moduleId));
@@ -51,6 +53,8 @@ odoo.define("kodoo_studio.ModuleForm", ["kodoo_studio.forge_api"], function (req
         async loadModule(moduleId) {
             this.state.loading = true;
             this.state.error = null;
+            this.state.errorDetail = null;
+            this.state.conflictSave = false;
             this.state.dirty = false;
             if (!moduleId) {
                 this.state.module = null;
@@ -66,6 +70,7 @@ odoo.define("kodoo_studio.ModuleForm", ["kodoo_studio.forge_api"], function (req
                 this.state.form.depends = moduleRecord ? moduleRecord.depends || "" : "";
             } catch (error) {
                 this.state.error = error.message || "Could not load module.";
+                this.state.errorDetail = forgeApi.stringifyDetail(error.detail);
                 this.state.module = null;
             } finally {
                 this.state.loading = false;
@@ -82,6 +87,8 @@ odoo.define("kodoo_studio.ModuleForm", ["kodoo_studio.forge_api"], function (req
             }
             this.state.saving = true;
             this.state.error = null;
+            this.state.errorDetail = null;
+            this.state.conflictSave = false;
             try {
                 const updated = await forgeApi.saveModule(this.state.module.id, {
                     name: this.state.form.name,
@@ -95,10 +102,20 @@ odoo.define("kodoo_studio.ModuleForm", ["kodoo_studio.forge_api"], function (req
                     this.props.onModuleUpdated(updated);
                 }
             } catch (error) {
-                this.state.error = error.message || "Could not save module.";
+                if (error.status === 409) {
+                    this.state.conflictSave = true;
+                    this.state.error = "Modificado em outro lugar - recarregar?";
+                } else {
+                    this.state.error = error.message || "Could not save module.";
+                }
+                this.state.errorDetail = forgeApi.stringifyDetail(error.detail);
             } finally {
                 this.state.saving = false;
             }
+        }
+
+        reloadCurrentModule() {
+            return this.loadModule(this.props.moduleId);
         }
 
         stateClass() {

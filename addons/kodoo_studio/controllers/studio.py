@@ -27,6 +27,8 @@ class ReverseWebsocketClient:
         self._buffer = bytearray()
         self._closed = False
         self._close_sent = False
+        self.last_close_code = None
+        self.last_close_reason = None
 
     def connect(self):
         if self._parsed.scheme not in {"ws", "wss"}:
@@ -90,6 +92,9 @@ class ReverseWebsocketClient:
         while not self._closed:
             opcode, payload, fin = self._recv_frame()
             if opcode == 0x8:
+                if len(payload) >= 2:
+                    self.last_close_code = struct.unpack("!H", payload[:2])[0]
+                    self.last_close_reason = payload[2:].decode("utf-8", errors="replace")
                 self.close()
                 return None
             if opcode == 0x9:
@@ -246,7 +251,7 @@ class StudioController(http.Controller):
         ["/kodoo/studio/api", "/kodoo/studio/api/", "/kodoo/studio/api/<path:path>"],
         type="http",
         auth="public",
-        methods=["GET", "POST"],
+        methods=["GET", "POST", "HEAD"],
         csrf=False,
     )
     def studio_api(self, path="", **_kwargs):
@@ -283,12 +288,12 @@ class StudioController(http.Controller):
                 url=target_url,
                 data=body or None,
                 headers=headers,
-                timeout=120,
+                timeout=5 if path.strip("/") == "health" else 120,
             )
-        except requests.RequestException as exc:
+        except requests.RequestException:
             return request.make_json_response(
-                {"error": f"Could not reach forge engine: {exc}"},
-                status=502,
+                {"error": "Engine offline", "status": 503},
+                status=503,
             )
 
         response_headers = []
@@ -379,7 +384,10 @@ class StudioController(http.Controller):
             finally:
                 stop_event.set()
                 with suppress(Exception):
-                    browser_ws.close(CloseCode.GOING_AWAY, "TERMINAL_BRIDGE_CLOSED")
+                    browser_ws.close(
+                        upstream_ws.last_close_code or CloseCode.GOING_AWAY,
+                        upstream_ws.last_close_reason or "TERMINAL_BRIDGE_CLOSED",
+                    )
 
         greenlets = [
             gevent.spawn(browser_to_upstream),

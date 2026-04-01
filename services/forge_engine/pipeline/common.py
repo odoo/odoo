@@ -55,3 +55,15 @@ def runtime_relation_model_name(relation_model: str) -> str:
     if "." in relation_model and relation_model.replace(".", "_").replace("_", "").isalnum():
         return runtime_model_name(relation_model)
     return relation_model
+
+
+def canonical_to_runtime_model(technical_name: str) -> str:
+    return runtime_model_name(technical_name)
+
+
+def canonical_to_runtime_field(field_name: str) -> str:
+    return runtime_field_name(field_name)
+
+
+def compose_xml_id(module_name: str, local_name: str) -> str:
+    return f"{module_name}.{local_name}"

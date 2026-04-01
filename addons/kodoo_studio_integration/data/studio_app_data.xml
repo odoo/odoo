@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_kodoo_studio_app" model="ir.actions.client">
+        <field name="name">Studio</field>
+        <field name="tag">kodoo_studio</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem
+        id="menu_kodoo_studio_app"
+        name="Studio"
+        action="action_kodoo_studio_app"
+        sequence="5"
+        web_icon="kodoo_studio_integration,static/description/icon.png"
+        groups="base.group_system"
+    />
+
+    <record id="kodoo_studio.action_kodoo_studio" model="ir.actions.client">
+        <field name="name">Studio</field>
+        <field name="tag">kodoo_studio</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem
+        id="kodoo_studio.menu_kodoo_studio"
+        name="Studio"
+        parent="kodoo_studio.menu_kodoo_root"
+        action="kodoo_studio.action_kodoo_studio"
+        groups="base.group_system"
+    />
+</odoo>

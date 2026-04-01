@@ -21,6 +21,7 @@ import (
 	"github.com/kodoo/kodoo-tui/internal/event"
 	"github.com/kodoo/kodoo-tui/internal/runner"
 	"github.com/kodoo/kodoo-tui/internal/state"
+	"github.com/kodoo/kodoo-tui/internal/ui/cockpit"
 	"github.com/kodoo/kodoo-tui/internal/ui/config"
 	"github.com/kodoo/kodoo-tui/internal/ui/dashboard"
 	"github.com/kodoo/kodoo-tui/internal/ui/databases"
@@ -112,6 +113,7 @@ type Model struct {
 	snapshot       state.Snapshot
 	dashboard      dashboard.Model
 	runtime        runtime.Model
+	cockpit        cockpit.Model
 	databases      databases.Model
 	doctor         doctor.Model
 	logs           logs.Model
@@ -138,6 +140,7 @@ func New(cfg *envconfig.Config, repoDir string) Model {
 		cfg:       cfg,
 		dashboard: dashboard.New(cfg),
 		runtime:   runtime.New(),
+		cockpit:   cockpit.New(),
 		databases: databases.New(cfg),
 		doctor:    doctor.New(),
 		logs:      logs.New().SetTailLines(cfg.TUILogLines),
@@ -178,6 +181,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.snapshot = msg.Snapshot
 		m.dashboard = m.dashboard.SetSnapshot(msg.Snapshot)
 		m.runtime = m.runtime.SetSnapshot(msg.Snapshot)
+		m.cockpit = m.cockpit.SetSnapshot(msg.Snapshot)
 		m.databases = m.databases.SetSnapshot(msg.Snapshot)
 		m.doctor = m.doctor.SetSnapshot(msg.Snapshot)
 		m.logs = m.logs.SetSnapshot(msg.Snapshot)
@@ -409,11 +413,14 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 	case "7":
 		m.activeTab = 6
 		return true, m, nil
+	case "8":
+		m.activeTab = 7
+		return true, m, nil
 	case "tab":
-		m.activeTab = (m.activeTab + 1) % 7
+		m.activeTab = (m.activeTab + 1) % 8
 		return true, m, nil
 	case "shift+tab":
-		m.activeTab = (m.activeTab + 6) % 7
+		m.activeTab = (m.activeTab + 7) % 8
 		return true, m, nil
 	case "?":
 		m.helpVisible = true
@@ -441,16 +448,19 @@ func (m Model) handleGlobalKey(msg tea.KeyMsg) (bool, Model, tea.Cmd) {
 			m.activeTab = 1
 			return true, m, nil
 		case "d":
-			m.activeTab = 2
+			m.activeTab = 3
 			return true, m, nil
 		case "l":
-			m.activeTab = 4
-			return true, m, nil
-		case "o":
 			m.activeTab = 5
 			return true, m, nil
-		case "c":
+		case "o":
 			m.activeTab = 6
+			return true, m, nil
+		case "c":
+			m.activeTab = 7
+			return true, m, nil
+		case "k":
+			m.activeTab = 2
 			return true, m, nil
 		case "t":
 			next, cmd := m.prepareActionRequest(event.RequestMakeTargetMsg{
@@ -692,6 +702,10 @@ func (m Model) updateAll(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if cmd != nil {
 		cmds = append(cmds, cmd)
 	}
+	m.cockpit, cmd = m.cockpit.Update(msg)
+	if cmd != nil {
+		cmds = append(cmds, cmd)
+	}
 	m.databases, cmd = m.databases.Update(msg)
 	if cmd != nil {
 		cmds = append(cmds, cmd)
@@ -726,18 +740,22 @@ func (m Model) updateActive(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.runtime = next
 		return m, cmd
 	case 2:
+		next, cmd := m.cockpit.Update(msg)
+		m.cockpit = next
+		return m, cmd
+	case 3:
 		next, cmd := m.databases.Update(msg)
 		m.databases = next
 		return m, cmd
-	case 3:
+	case 4:
 		next, cmd := m.doctor.Update(msg)
 		m.doctor = next
 		return m, cmd
-	case 4:
+	case 5:
 		next, cmd := m.logs.Update(msg)
 		m.logs = next
 		return m, cmd
-	case 5:
+	case 6:
 		next, cmd := m.shell.Update(msg)
 		m.shell = next
 		return m, cmd
@@ -752,11 +770,12 @@ func (m Model) tabsView() string {
 	tabs := []string{
 		m.renderTab(0, "1 Dashboard"),
 		m.renderTab(1, "2 Runtime"),
-		m.renderTab(2, "3 Databases"),
-		m.renderTab(3, "4 Doctor"),
-		m.renderTab(4, "5 Logs"),
-		m.renderTab(5, "6 Shell"),
-		m.renderTab(6, "7 Config"),
+		m.renderTab(2, "3 Cockpit"),
+		m.renderTab(3, "4 Databases"),
+		m.renderTab(4, "5 Doctor"),
+		m.renderTab(5, "6 Logs"),
+		m.renderTab(6, "7 Shell"),
+		m.renderTab(7, "8 Config"),
 	}
 	return lipgloss.JoinHorizontal(lipgloss.Top, tabs...)
 }
@@ -775,12 +794,14 @@ func (m Model) activeTabView(width, height int) string {
 	case 1:
 		return m.runtime.View(width, height)
 	case 2:
-		return m.databases.View(width, height)
+		return m.cockpit.View(width, height)
 	case 3:
-		return m.doctor.View(width, height)
+		return m.databases.View(width, height)
 	case 4:
-		return m.logs.View(width, height)
+		return m.doctor.View(width, height)
 	case 5:
+		return m.logs.View(width, height)
+	case 6:
 		return m.shell.View(width, height)
 	default:
 		return m.config.View(width, height)
@@ -790,7 +811,7 @@ func (m Model) activeTabView(width, height int) string {
 func (m Model) helpView(width, height int) string {
 	lines := []string{titleStyle.Render("Help")}
 	lines = append(lines, m.currentHelpLines()...)
-	lines = append(lines, "", "Global keys: 1-7 tabs · tab/shift+tab cycle · O shell · ctrl+p palette · ctrl+r refresh · ctrl+y last run · q quit · esc close overlay")
+	lines = append(lines, "", "Global keys: 1-8 tabs · tab/shift+tab cycle · O shell · ctrl+p palette · ctrl+r refresh · ctrl+y last run · q quit · esc close overlay")
 	return overlayStyle.Width(width - 2).Height(height - 1).Render(strings.Join(lines, "\n"))
 }
 
@@ -916,12 +937,14 @@ func (m Model) currentHelpLines() []string {
 	case 1:
 		return m.runtime.HelpLines()
 	case 2:
-		return m.databases.HelpLines()
+		return m.cockpit.HelpLines()
 	case 3:
-		return m.doctor.HelpLines()
+		return m.databases.HelpLines()
 	case 4:
-		return m.logs.HelpLines()
+		return m.doctor.HelpLines()
 	case 5:
+		return m.logs.HelpLines()
+	case 6:
 		return m.shell.HelpLines()
 	default:
 		return m.config.HelpLines()
@@ -1194,11 +1217,12 @@ func (m Model) buildPalette() []paletteOption {
 	return []paletteOption{
 		{Title: "Dashboard", Description: "Operational health, tenant routing, security and resource summary.", Mode: paletteSwitch, Tab: 0},
 		{Title: "Runtime", Description: "Quick switch to runtime mode control.", Mode: paletteSwitch, Tab: 1},
-		{Title: "Databases", Description: "Quick switch to database operations.", Mode: paletteSwitch, Tab: 2},
-		{Title: "Doctor", Description: "Quick switch to mode-specific diagnostics.", Mode: paletteSwitch, Tab: 3},
-		{Title: "Logs", Description: "Quick switch to incidents and raw logs.", Mode: paletteSwitch, Tab: 4},
-		{Title: "Shell", Description: "Quick switch to the contextual Odoo shell launcher.", Mode: paletteSwitch, Tab: 5},
-		{Title: "Config", Description: "Quick switch to setup, values and generate/validate.", Mode: paletteSwitch, Tab: 6},
+		{Title: "Cockpit", Description: "Quick switch to dedicated runtime control for Studio and Gov.", Mode: paletteSwitch, Tab: 2},
+		{Title: "Databases", Description: "Quick switch to database operations.", Mode: paletteSwitch, Tab: 3},
+		{Title: "Doctor", Description: "Quick switch to mode-specific diagnostics.", Mode: paletteSwitch, Tab: 4},
+		{Title: "Logs", Description: "Quick switch to incidents and raw logs.", Mode: paletteSwitch, Tab: 5},
+		{Title: "Shell", Description: "Quick switch to the contextual Odoo shell launcher.", Mode: paletteSwitch, Tab: 6},
+		{Title: "Config", Description: "Quick switch to setup, values and generate/validate.", Mode: paletteSwitch, Tab: 7},
 		{
 			Title:       "Open Contextual Odoo Shell",
 			Description: "Open the interactive Odoo shell for the active runtime and selected database.",
@@ -1251,6 +1275,54 @@ func (m Model) buildPalette() []paletteOption {
 				RelevantKeys:    []string{"DEV_PROJECT_HTTP_PORT", "DOCKER_DB_HOST_PORT"},
 				SelectDatabase:  true,
 				DatabaseBackend: "docker",
+			},
+		},
+		{
+			Title:       "Start Studio Runtime",
+			Description: "Boot the dedicated Kodoo Studio Odoo runtime and forge_engine.",
+			Mode:        paletteAction,
+			Request: event.RequestMakeTargetMsg{
+				Target:      "studio-runtime-up",
+				Description: "Start the dedicated Kodoo Studio runtime and forge_engine.",
+				RelevantKeys: []string{
+					"STUDIO_RUNTIME_DB", "STUDIO_RUNTIME_HTTP_PORT", "STUDIO_RUNTIME_ENGINE_PORT",
+				},
+			},
+		},
+		{
+			Title:       "Bootstrap Studio Runtime",
+			Description: "Prepare the dedicated Studio DB and install Studio modules.",
+			Mode:        paletteAction,
+			Request: event.RequestMakeTargetMsg{
+				Target:      "studio-runtime-bootstrap",
+				Description: "Prepare the dedicated Studio database and install the Studio modules.",
+				RelevantKeys: []string{
+					"STUDIO_RUNTIME_DB", "STUDIO_RUNTIME_HTTP_PORT", "STUDIO_RUNTIME_ENGINE_PORT",
+				},
+			},
+		},
+		{
+			Title:       "Start Gov Runtime",
+			Description: "Boot the dedicated AGI Gov runtime.",
+			Mode:        paletteAction,
+			Request: event.RequestMakeTargetMsg{
+				Target:      "gov-runtime-up",
+				Description: "Start the dedicated Gov suite runtime.",
+				RelevantKeys: []string{
+					"GOV_RUNTIME_DB", "GOV_RUNTIME_HTTP_PORT",
+				},
+			},
+		},
+		{
+			Title:       "Bootstrap Gov Runtime",
+			Description: "Prepare the dedicated Gov DB and install gov_suite.",
+			Mode:        paletteAction,
+			Request: event.RequestMakeTargetMsg{
+				Target:      "gov-runtime-bootstrap",
+				Description: "Prepare the dedicated Gov suite database and install gov_suite.",
+				RelevantKeys: []string{
+					"GOV_RUNTIME_DB", "GOV_RUNTIME_HTTP_PORT",
+				},
 			},
 		},
 		{

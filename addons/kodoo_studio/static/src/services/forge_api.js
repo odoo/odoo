@@ -4,6 +4,7 @@ odoo.define("kodoo_studio.forge_api", [], function () {
     "use strict";
 
     const namespace = window.kodooStudio = window.kodooStudio || {};
+    const ENGINE_OFFLINE_MESSAGE = "Engine offline";
 
     function normalizeModuleRecord(record) {
         if (!record) {
@@ -44,67 +45,127 @@ odoo.define("kodoo_studio.forge_api", [], function () {
         }
     }
 
-    function extractError(payload, fallbackMessage) {
+    function stringifyDetail(detail) {
+        if (detail == null) {
+            return "";
+        }
+        if (typeof detail === "string") {
+            return detail;
+        }
+        try {
+            return JSON.stringify(detail, null, 2);
+        } catch {
+            return String(detail);
+        }
+    }
+
+    function extractErrorParts(payload, fallbackMessage) {
         if (!payload) {
-            return fallbackMessage;
+            return { message: fallbackMessage, detail: null };
         }
         if (typeof payload === "string") {
-            return payload;
+            return { message: payload, detail: payload };
+        }
+        if (payload.error && typeof payload.error === "string") {
+            return { message: payload.error, detail: payload };
         }
         if (payload.error && payload.error.data && payload.error.data.message) {
-            return payload.error.data.message;
+            return { message: payload.error.data.message, detail: payload.error.data };
         }
         if (payload.error && payload.error.message) {
-            return payload.error.message;
+            return { message: payload.error.message, detail: payload.error };
         }
         if (payload.detail && typeof payload.detail === "string") {
-            return payload.detail;
+            return { message: payload.detail, detail: payload.detail };
+        }
+        if (payload.detail && payload.detail.message) {
+            return { message: payload.detail.message, detail: payload.detail };
         }
         if (payload.message && typeof payload.message === "string") {
-            return payload.message;
+            return { message: payload.message, detail: payload };
         }
-        return fallbackMessage;
+        return {
+            message: fallbackMessage,
+            detail: payload,
+        };
     }
 
     class ForgeApiError extends Error {
-        constructor(message, payload, status) {
+        constructor(message, status, detail, endpoint) {
             super(message);
             this.name = "ForgeApiError";
-            this.payload = payload || null;
-            this.status = status || 500;
+            this.status = status;
+            this.detail = detail || null;
+            this.endpoint = endpoint;
+            this.payload = detail || null;
         }
     }
 
-    async function jsonRpc(url, params) {
-        const response = await window.fetch(url, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(makeJsonRpcBody(params)),
-        });
+    function toForgeApiError(error, endpoint, fallbackMessage) {
+        if (error instanceof ForgeApiError) {
+            if (!error.endpoint) {
+                error.endpoint = endpoint;
+            }
+            return error;
+        }
+        if (error instanceof TypeError) {
+            return new ForgeApiError(ENGINE_OFFLINE_MESSAGE, 0, null, endpoint);
+        }
+        return new ForgeApiError(
+            (error && error.message) || fallbackMessage,
+            (error && error.status) || 500,
+            (error && (error.detail || error.payload)) || null,
+            endpoint
+        );
+    }
+
+    async function fetchJson(endpoint, options, fallbackMessage) {
+        let response;
+        try {
+            response = await window.fetch(endpoint, options);
+        } catch (_error) {
+            throw new ForgeApiError(ENGINE_OFFLINE_MESSAGE, 0, null, endpoint);
+        }
+
         const payload = await parseJsonResponse(response);
         if (!response.ok) {
-            throw new ForgeApiError(
-                extractError(payload, "Odoo RPC request failed"),
+            const extracted = extractErrorParts(
                 payload,
-                response.status
+                response.status === 503 ? ENGINE_OFFLINE_MESSAGE : fallbackMessage
+            );
+            throw new ForgeApiError(
+                extracted.message,
+                response.status,
+                extracted.detail,
+                endpoint
             );
         }
+        return payload;
+    }
+
+    async function jsonRpc(url, params) {
+        const payload = await fetchJson(
+            url,
+            {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(makeJsonRpcBody(params)),
+            },
+            "Odoo RPC request failed"
+        );
         if (payload && payload.error) {
-            throw new ForgeApiError(
-                extractError(payload, "Odoo RPC request failed"),
-                payload,
-                response.status
-            );
+            const extracted = extractErrorParts(payload, "Odoo RPC request failed");
+            throw new ForgeApiError(extracted.message, 500, extracted.detail, url);
         }
         return payload ? payload.result : null;
     }
 
-    async function controllerRequest(path, options) {
+    async function controllerRequest(path, options, fallbackMessage) {
         const normalized = normalizePath(path);
-        const url = normalized
+        const endpoint = normalized
             ? `/kodoo/studio/api/${normalized}`
             : "/kodoo/studio/api";
         const requestOptions = Object.assign(
@@ -117,21 +178,12 @@ odoo.define("kodoo_studio.forge_api", [], function () {
             },
             options || {}
         );
-        const response = await window.fetch(url, requestOptions);
-        const payload = await parseJsonResponse(response);
-        if (!response.ok) {
-            throw new ForgeApiError(
-                extractError(payload, "Forge engine request failed"),
-                payload,
-                response.status
-            );
-        }
-        return payload;
+        return fetchJson(endpoint, requestOptions, fallbackMessage || "Forge engine request failed");
     }
 
     function callKw(model, method, args, kwargs) {
-        const url = `/web/dataset/call_kw/${model}/${method}`;
-        return jsonRpc(url, {
+        const endpoint = `/web/dataset/call_kw/${model}/${method}`;
+        return jsonRpc(endpoint, {
             model: model,
             method: method,
             args: args || [],
@@ -139,112 +191,199 @@ odoo.define("kodoo_studio.forge_api", [], function () {
         });
     }
 
+    async function wrapCall(endpoint, fallbackMessage, callback) {
+        try {
+            return await callback();
+        } catch (error) {
+            throw toForgeApiError(error, endpoint, fallbackMessage);
+        }
+    }
+
     const forgeApi = {
+        ForgeApiError: ForgeApiError,
+        stringifyDetail: stringifyDetail,
+
         async listApps() {
-            return callKw("forge.app", "search_read", [[["id", "!=", 0]]], {
-                fields: ["id", "name", "technical_name"],
-                order: "name asc, id asc",
-            });
+            return wrapCall(
+                "/web/dataset/call_kw/forge.app/search_read",
+                "Could not load apps.",
+                async () => {
+                    return callKw("forge.app", "search_read", [[["id", "!=", 0]]], {
+                        fields: ["id", "name", "technical_name"],
+                        order: "name asc, id asc",
+                    });
+                }
+            );
         },
 
         async listModules(appId) {
-            const records = await callKw("forge.module", "search_read", [[["app_id", "=", appId]]], {
-                fields: ["id", "name", "technical_name", "state", "app_id", "version", "depends"],
-                order: "name asc, id asc",
-            });
-            return (records || []).map(normalizeModuleRecord);
+            return wrapCall(
+                "/web/dataset/call_kw/forge.module/search_read",
+                "Could not load modules.",
+                async () => {
+                    const records = await callKw("forge.module", "search_read", [[["app_id", "=", appId]]], {
+                        fields: ["id", "name", "technical_name", "state", "app_id", "version", "depends"],
+                        order: "name asc, id asc",
+                    });
+                    return (records || []).map(normalizeModuleRecord);
+                }
+            );
         },
 
         async getModule(id) {
-            const records = await callKw("forge.module", "read", [[id]], {
-                fields: ["id", "name", "technical_name", "app_id", "version", "depends", "state"],
-            });
-            return records && records.length ? normalizeModuleRecord(records[0]) : null;
+            return wrapCall(
+                "/web/dataset/call_kw/forge.module/read",
+                "Could not load module.",
+                async () => {
+                    const records = await callKw("forge.module", "read", [[id]], {
+                        fields: ["id", "name", "technical_name", "app_id", "version", "depends", "state"],
+                    });
+                    return records && records.length ? normalizeModuleRecord(records[0]) : null;
+                }
+            );
         },
 
         async saveModule(id, vals) {
-            await callKw("forge.module", "write", [[id], vals || {}], {});
-            return this.getModule(id);
+            return wrapCall(
+                "/web/dataset/call_kw/forge.module/write",
+                "Could not save module.",
+                async () => {
+                    await callKw("forge.module", "write", [[id], vals || {}], {});
+                    return this.getModule(id);
+                }
+            );
         },
 
         async createApp(vals) {
-            const id = await callKw("forge.app", "create", [vals || {}], {});
-            return id;
+            return wrapCall(
+                "/web/dataset/call_kw/forge.app/create",
+                "Could not create app.",
+                async () => {
+                    return callKw("forge.app", "create", [vals || {}], {});
+                }
+            );
         },
 
         async createModule(vals) {
-            const id = await callKw("forge.module", "create", [vals || {}], {});
-            return id;
+            return wrapCall(
+                "/web/dataset/call_kw/forge.module/create",
+                "Could not create module.",
+                async () => {
+                    return callKw("forge.module", "create", [vals || {}], {});
+                }
+            );
         },
 
         async listBuilds(moduleId) {
-            return callKw("forge.build", "search_read", [[["module_id", "=", moduleId]]], {
-                fields: ["id", "build_date", "state", "triggered_by", "log"],
-                order: "build_date desc, id desc",
-                limit: 1,
-            });
+            return wrapCall(
+                "/web/dataset/call_kw/forge.build/search_read",
+                "Could not load builds.",
+                async () => {
+                    return callKw("forge.build", "search_read", [[["module_id", "=", moduleId]]], {
+                        fields: ["id", "build_date", "state", "triggered_by", "log"],
+                        order: "build_date desc, id desc",
+                        limit: 1,
+                    });
+                }
+            );
         },
 
         async validate(moduleId) {
-            return controllerRequest(`pipeline/${moduleId}/validate`, {
-                method: "POST",
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/validate`, "Validation failed.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/validate`, {
+                    method: "POST",
+                }, "Validation failed.");
             });
         },
 
         async build(moduleId) {
-            return controllerRequest(`pipeline/${moduleId}/build`, {
-                method: "POST",
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/build`, "Build failed.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/build`, {
+                    method: "POST",
+                }, "Build failed.");
             });
         },
 
         async diff(moduleId) {
-            return controllerRequest(`pipeline/${moduleId}/diff`);
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/diff`, "Diff failed.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/diff`, {
+                    method: "GET",
+                }, "Diff failed.");
+            });
         },
 
         async publish(moduleId, mode) {
-            return controllerRequest(`pipeline/${moduleId}/publish`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ mode: mode }),
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/publish`, "Publish failed.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/publish`, {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ mode: mode }),
+                }, "Publish failed.");
             });
         },
 
         async snapshot(moduleId, name) {
-            return controllerRequest(`pipeline/${moduleId}/snapshot`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ name: name }),
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/snapshot`, "Snapshot failed.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/snapshot`, {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ name: name }),
+                }, "Snapshot failed.");
             });
         },
 
         async listSnapshots(moduleId) {
-            return controllerRequest(`pipeline/${moduleId}/snapshots`);
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/snapshots`, "Could not load snapshots.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/snapshots`, {
+                    method: "GET",
+                }, "Could not load snapshots.");
+            });
         },
 
         async rollback(moduleId, snapshotId) {
-            return controllerRequest(`pipeline/${moduleId}/rollback/${snapshotId}`, {
-                method: "POST",
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/rollback/${snapshotId}`, "Rollback failed.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/rollback/${snapshotId}`, {
+                    method: "POST",
+                }, "Rollback failed.");
             });
         },
 
         async conflicts(moduleId) {
-            return controllerRequest(`pipeline/${moduleId}/conflicts`);
+            return wrapCall(`/kodoo/studio/api/pipeline/${moduleId}/conflicts`, "Could not load conflicts.", async () => {
+                return controllerRequest(`pipeline/${moduleId}/conflicts`, {
+                    method: "GET",
+                }, "Could not load conflicts.");
+            });
         },
 
         async getTerminalToken() {
-            return controllerRequest("terminal/token", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({}),
+            return wrapCall("/kodoo/studio/api/terminal/token", "Could not request terminal token.", async () => {
+                return controllerRequest("terminal/token", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({}),
+                }, "Could not request terminal token.");
+            });
+        },
+
+        async isOnline() {
+            return wrapCall("/kodoo/studio/api/health", ENGINE_OFFLINE_MESSAGE, async () => {
+                await controllerRequest("health", {
+                    method: "HEAD",
+                    headers: {
+                        Accept: "application/json",
+                    },
+                }, ENGINE_OFFLINE_MESSAGE);
+                return true;
             });
         },
     };

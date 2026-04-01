@@ -29,6 +29,9 @@ odoo.define("kodoo_studio.AppManager", ["kodoo_studio.forge_api"], function (req
                 loading: false,
                 dialog: null,
                 error: null,
+                errorDetail: null,
+                dialogError: null,
+                dialogSubmitting: false,
                 appForm: {
                     name: "",
                     technical_name: "",
@@ -56,6 +59,7 @@ odoo.define("kodoo_studio.AppManager", ["kodoo_studio.forge_api"], function (req
         async loadApps(options) {
             this.state.loading = true;
             this.state.error = null;
+            this.state.errorDetail = null;
             const previousExpanded = Object.assign({}, this.state.expanded);
             try {
                 const apps = await forgeApi.listApps();
@@ -77,7 +81,8 @@ odoo.define("kodoo_studio.AppManager", ["kodoo_studio.forge_api"], function (req
                 }
                 this.state.expanded = nextExpanded;
             } catch (error) {
-                this.state.error = error.message || "Could not load apps.";
+                this.state.error = "N\u00e3o foi poss\u00edvel carregar apps";
+                this.state.errorDetail = error.message || "Could not load apps.";
             } finally {
                 this.state.loading = false;
             }
@@ -89,12 +94,14 @@ odoo.define("kodoo_studio.AppManager", ["kodoo_studio.forge_api"], function (req
 
         openAppDialog() {
             this.state.dialog = "app";
+            this.state.dialogError = null;
             this.state.appForm.name = "";
             this.state.appForm.technical_name = "";
         }
 
         openModuleDialog(appId) {
             this.state.dialog = "module";
+            this.state.dialogError = null;
             this.state.moduleForm.app_id = appId;
             this.state.moduleForm.name = "";
             this.state.moduleForm.technical_name = "";
@@ -103,9 +110,13 @@ odoo.define("kodoo_studio.AppManager", ["kodoo_studio.forge_api"], function (req
 
         closeDialog() {
             this.state.dialog = null;
+            this.state.dialogError = null;
+            this.state.dialogSubmitting = false;
         }
 
         async createApp() {
+            this.state.dialogSubmitting = true;
+            this.state.dialogError = null;
             try {
                 const newAppId = await forgeApi.createApp({
                     name: this.state.appForm.name,
@@ -114,11 +125,15 @@ odoo.define("kodoo_studio.AppManager", ["kodoo_studio.forge_api"], function (req
                 this.state.dialog = null;
                 await this.loadApps({ expandAppId: newAppId });
             } catch (error) {
-                this.state.error = error.message || "Could not create app.";
+                this.state.dialogError = error.message || "Could not create app.";
+            } finally {
+                this.state.dialogSubmitting = false;
             }
         }
 
         async createModule() {
+            this.state.dialogSubmitting = true;
+            this.state.dialogError = null;
             try {
                 const newModuleId = await forgeApi.createModule({
                     app_id: this.state.moduleForm.app_id,
@@ -132,7 +147,9 @@ odoo.define("kodoo_studio.AppManager", ["kodoo_studio.forge_api"], function (req
                     this.props.onSelectModule(newModuleId, this.state.moduleForm.app_id);
                 }
             } catch (error) {
-                this.state.error = error.message || "Could not create module.";
+                this.state.dialogError = error.message || "Could not create module.";
+            } finally {
+                this.state.dialogSubmitting = false;
             }
         }
 
