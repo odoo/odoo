@@ -383,6 +383,10 @@ class ResConfigTest(models.Model):
         'res.config',
         config_parameter="resConfigTest.parameter2")
 
+    param_bool = fields.Boolean(
+        string='Test boolean parameter',
+        config_parameter='resConfigTest.parameterBool')
+
 
 class Test_Testing_UtilitiesWide(models.Model):
     _name = 'test_testing_utilities.wide'
