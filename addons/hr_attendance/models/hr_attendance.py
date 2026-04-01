@@ -697,8 +697,12 @@ class HrAttendance(models.Model):
                 week_interval = Intervals([(start_datetime, stop_datetime_for_week, self.env['resource.calendar'])])
 
                 attendance_interval = Intervals([(check_in, check_out, attendance)])
-                attendance_by_employee_by_day[employee][day] |= attendance_interval & day_interval
-                attendance_by_employee_by_week[employee][week_date] |= attendance_interval & week_interval
+                intersected_day_interval = attendance_interval & day_interval
+                intersected_week_interval = attendance_interval & week_interval
+                if intersected_day_interval:
+                    attendance_by_employee_by_day[employee][day] |= intersected_day_interval
+                if intersected_week_interval:
+                    attendance_by_employee_by_week[employee][week_date] |= intersected_week_interval
 
         return {
             'day': attendance_by_employee_by_day,
