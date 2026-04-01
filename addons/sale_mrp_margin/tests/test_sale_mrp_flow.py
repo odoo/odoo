@@ -135,3 +135,52 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
             {'debit': 0.0, 'credit': 1800},
             {'debit': 1800, 'credit': 0.0},
         ])
+
+    def test_kit_cost_calculation_3(self):
+        """ Check that the average cost price is correct with different UoM in BoM:
+            Product A UoM is pack of ten
+            Lovely KIT BOM for 1:
+                - 1 unit of Product A
+        """
+        kit = self._cls_create_product('Lovely Kit', self.uom_unit)
+        self.product_category.property_cost_method = 'average'
+        self.product_category.property_valuation = 'real_time'
+        self.component_a.uom_id = self.uom_ten
+        (kit + self.component_a).categ_id = self.product_category
+        self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': kit.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({
+                        'product_id': self.component_a.id,
+                        'product_qty': 1.0,
+                        'uom_id': self.uom_unit.id,
+                    }),
+                ],
+            }
+        ])
+        self.component_a.standard_price = 10
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': kit.id,
+                'product_uom_qty': 1,
+            })]
+        })
+        so.action_confirm()
+        for move in so.picking_ids.move_ids:
+            move.quantity = move.product_uom_qty
+        so.picking_ids.button_validate()
+        # create an invoice to check that the cost price on the invoice line is correct
+        inv_1 = so._create_invoices()
+        inv_1.action_post()
+        self.assertEqual(inv_1.state, 'posted', 'invoice should be in posted state')
+        self.assertRecordValues(inv_1.line_ids, [
+            {'debit': 0.0, 'credit': 1.0},
+            {'debit': 0.0, 'credit': 0.15},
+            {'debit': 1.15, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 1.0},
+            {'debit': 1.0, 'credit': 0.0}
+        ])

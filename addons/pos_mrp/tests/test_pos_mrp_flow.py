@@ -370,9 +370,36 @@ class TestPosMrp(CommonPosMrpTest):
         self.env['pos.order'].sync_from_ui([pos_order_data])['pos.order'][0]['id']
         self.assertEqual(len(current_session.picking_ids.move_line_ids), 4)
 
+    def test_bom_kit_different_uom_invoice_valuation_2(self):
+        """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
+           the price unit is correctly computed on the invoice lines.
+        """
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestPosMrpTemp(CommonPosMrpTest):
+        # Edit kit product and component product
+        self.product_product_kit_one.categ_id = self.category_fifo_realtime
+        self.product_product_comp_one.standard_price = 12000
+        self.product_product_comp_one.uom_id = self.env.ref('uom.product_uom_dozen').id
+
+        # Edit kit product quantity
+        self.bom_one_line.bom_line_ids[0].product_qty = 1
+        self.bom_one_line.bom_line_ids[0].uom_id = self.env.ref('uom.product_uom_unit').id
+        self.bom_one_line.product_qty = 1
+
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'to_invoice': True,
+                'partner_id': self.partner_moda.id,
+            },
+            'line_data': [
+                {'product_id': self.product_product_kit_one.id, 'qty': 1},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id}
+            ]
+        })
+        self.assertEqual(order.lines[0].total_cost, 1000.0)
+
     def test_bom_kit_different_uom_invoice_valuation_no_invoice(self):
         """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
            the price unit is correctly computed on the invoice lines.
