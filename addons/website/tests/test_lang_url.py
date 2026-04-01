@@ -267,6 +267,11 @@ class TestTranslateUrl(TestLangUrl):
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'set_homepage_property_of_a_page', login='admin')
         self.assertEqual(self.website.homepage_url, False)
 
+    def test_translate_url_in_website_default_lang_and_redirect(self):
+        self.website.default_lang_id = self.lang_fr
+        self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'translate_url_and_redirect', login='admin')
+        self.assertTrue(self.env['website.rewrite'].search([('url_from', '=', '/contactus'), ('url_to', '=', '/contactus-fr')]))
+
 
 @tagged('-at_install', 'post_install')
 class TestAddLanguageAndTranslateUrl(HttpCase):
