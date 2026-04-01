@@ -1,4 +1,5 @@
 import { onWillRender, useEnv, useState, useSubEnv } from "@web/owl2/utils";
+import { untrack } from "@odoo/owl";
 
 /**
  * @typedef PagerUpdateParams
@@ -30,6 +31,8 @@ export function usePager(getProps) {
         },
     });
     onWillRender(() => {
-        Object.assign(pagerState, getProps() || { total: 0 });
+        untrack(() => {
+            Object.assign(pagerState, getProps() || { total: 0 });
+        });
     });
 }
