@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="address_street_extended_city_form" model="ir.ui.view">
+        <field name="name">partner.form.address.extended.city_id</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="city" position="attributes">
+                <attribute name="invisible">
+                    country_enforce_cities and (city_id or city in ('', False))
+                </attribute>
+            </field>
+            <field name="city" position="before">
+                <field name="country_enforce_cities" invisible="1"/>
+                <!-- TDE FIXME: check it is correctly sync -->
+                <field
+                    name="city_id"
+                    placeholder="City"
+                    class="o_address_city"
+                    domain="[('country_id', '=', country_id)]"
+                    invisible="not country_enforce_cities"
+                    context="{
+                        'default_country_id': country_id,
+                        'default_state_id': state_id,
+                        'default_zipcode': zip,
+                    }"
+                />
+            </field>
+
+            <field name="city" position="attributes">
+                <attribute name="invisible">
+                    country_enforce_cities and (city_id or city in ('', False))
+                </attribute>
+            </field>
+            <field name="city" position="before">
+                <field name="country_enforce_cities" invisible="1"/>
+                <field
+                    name="city_id"
+                    placeholder="City"
+                    class="o_address_city"
+                    domain="[('country_id', '=', country_id)]"
+                    invisible="not country_enforce_cities"
+                    context="{
+                        'default_country_id': country_id,
+                        'default_state_id': state_id,
+                        'default_zipcode': zip
+                    }"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>
