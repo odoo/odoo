@@ -854,11 +854,33 @@ class Website(models.CachedModel):
                     ('s_banner_connected_default_image', 's_cover_default_image'),
                 ]
             }
+
+            def get_mapped_image_url(image_name):
+                if image_name not in images_map:
+                    image_name = fallback_images_map.get(image_name)
+                image_url = images_map.get(image_name)
+                return image_url.replace('/small/', '/') if image_url else image_url
+
             for image_url in set(re.findall(r'(?<=["\'])\/web\/image\/[^"\']+(?=["\'])', final_html)):
                 image_name = image_url.replace('/web/image/', '', 1)
-                image_name = image_name if image_name in images_map else fallback_images_map.get(image_name)
-                if image_name in images_map:
-                    final_html = final_html.replace(image_url, images_map[image_name])
+                mapped_image_url = get_mapped_image_url(image_name)
+                if mapped_image_url:
+                    final_html = final_html.replace(image_url, mapped_image_url)
+
+            shape_urls = set(re.findall(r'(?<=["\'])/(html_editor|web_editor)/image_shape/([^/"\']+)/([^"\']+)(?=["\'])', final_html))
+            for editor, image_name, shape_path in shape_urls:
+                mapped_image_url = get_mapped_image_url(image_name)
+                if not mapped_image_url:
+                    continue
+                shape_src = f'/{editor}/image_shape/{image_name}/{shape_path}'
+                shape_file_path, _, shape_query = shape_path.partition('?')
+                module, _, shape_filename = shape_file_path.partition('/')
+                if not shape_filename:
+                    continue
+                shaped_url = f'/{editor}/image_shape_url/{module}/{shape_filename}'
+                image_query = urls.url_encode({'image_url': mapped_image_url})
+                shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
+                final_html = final_html.replace(shape_src, shaped_url)
 
         return final_html
 
@@ -1201,6 +1223,7 @@ class Website(models.CachedModel):
             ('model', '=', 'ir.attachment')
         ]).mapped('name')
         for name, image_src in images.items():
+            image_src = image_src.replace('/small/', '/')
             extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
             if extn_identifier in names:
                 continue

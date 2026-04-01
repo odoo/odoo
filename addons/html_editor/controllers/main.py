@@ -745,6 +745,63 @@ class HTML_Editor(Controller):
             ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
 
+    @route(['/web_editor/image_shape_url/<module>/<path:filename>', '/html_editor/image_shape_url/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def image_shape_url(self, module, filename, image_url=None, **kwargs):
+        # Used for compatibility
+        if module == 'web_editor':
+            module = 'html_builder'
+        if not image_url:
+            raise werkzeug.exceptions.BadRequest()
+        svg = self._get_shape_svg(module, 'image_shapes', filename)
+
+        try:
+            response = requests.get(image_url, timeout=10)
+            response.raise_for_status()
+        except requests.RequestException as exc:
+            raise werkzeug.exceptions.NotFound() from exc
+        image = response.content
+        mimetype = response.headers.get('Content-Type', '')
+        if mimetype.startswith("image/webp"):
+            width, height = (str(size) for size in get_webp_size(image))
+        else:
+            img = binary_to_image(image)
+            width, height = (str(size) for size in img.size)
+        root = etree.fromstring(svg)
+
+        # When data-aspect-ratio-crop is set in the shape SVG, it means that we
+        # want to crop the image to fit the shape aspect ratio and fill the
+        # entire shape.
+        if root.attrib.get("data-aspect-ratio-crop") and \
+                (image_elem := root.find('.//svg:image', {'svg': 'http://www.w3.org/2000/svg'})) is not None:
+            # We set the image width and height to 100% to make it fill the
+            # entire shape, and use preserveAspectRatio to crop it if needed.
+            image_elem.attrib.update({
+                'width': '100%',
+                'height': '100%',
+                'preserveAspectRatio': 'xMidYMid slice',
+            })
+
+        if root.attrib.get("data-forced-size") or root.attrib.get("data-aspect-ratio-crop"):
+            # Adjusts the SVG height to ensure the image fits properly within
+            # the SVG (e.g. for "devices" shapes and shapes that need to keep
+            # their aspect ratio).
+            svgHeight = float(root.attrib.get("height"))
+            svgWidth = float(root.attrib.get("width"))
+            svgAspectRatio = svgWidth / svgHeight
+            height = str(float(width) / svgAspectRatio)
+
+        root.attrib.update({'width': width, 'height': height})
+        # Update default color palette on shape SVG.
+        svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
+        # Add image in base64 inside the shape.
+        uri = image_data_uri(image)
+        svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
+
+        return request.make_response(svg, [
+            ('Content-type', 'image/svg+xml'),
+            ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
+        ])
+
     @route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")
     def generate_text(self, prompt, conversation_history):
         try:
