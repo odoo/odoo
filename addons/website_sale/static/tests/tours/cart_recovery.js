@@ -39,23 +39,32 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
             run: "edit admin",
         },
         {
-            content: "edit hidden redirect input",
+            content: "edit hidden redirect input to go to sales orders list",
             trigger: '.oe_login_form input[name="redirect"]:hidden',
             run() {
-                const orderId = browser.localStorage.getItem(orderIdKey);
-                const url = "/odoo/action-sale.action_orders/" + orderId;
+                const url = "/web#action=sale.action_orders&view_type=list";
                 this.anchor.value = url;
             },
         },
         {
-            content: "login as admin and go to the SO (backend)",
+            content: "login as admin and go to sales orders list",
             trigger: ".oe_login_form .oe_login_buttons button:contains(log in)",
             run: "click",
             expectUnloadPage: true,
         },
         {
-            content: "click action",
-            trigger: ".o_cp_action_menus .dropdown-toggle",
+            content: "remove default Sales Orders filter",
+            trigger: 'button.o_facet_remove',
+            run: "click",
+        },
+        {
+            content: "check the sales order checkbox",
+            trigger: 'td.o_list_record_selector input.form-check-input',
+            run: "click",
+        },
+        {
+            content: "click the actions button",
+            trigger: 'button.o-dropdown:contains("Actions")',
             run: "click",
         },
         {
@@ -64,8 +73,8 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
             run: "click",
         },
         {
-            content: "Wait the modal is opened and form is fullfilled",
-            trigger: ".modal main .o_form_view_container [name=subject] input:value(/^S0/)",
+            content: "Wait for mail composer to appear",
+            trigger: ".o_mail_composer_form",
         },
         {
             content: "select template",
@@ -80,7 +89,12 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
         },
         {
             content: "click Send email",
-            trigger: ".btn.o_mail_send",
+            trigger: "button.o_mail_send",
+            run: "click",
+        },
+        {
+            content: "click on the record to open form view",
+            trigger: "tr.o_data_row td[name='name']",
             run: "click",
         },
         {

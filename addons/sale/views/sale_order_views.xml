@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Kept first because this server action is referenced by the SO list header button -->
-    <record id="model_sale_order_action_quotation_confirm" model="ir.actions.server">
-        <field name="name">Confirm Orders</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list</field>
-        <field name="state">code</field>
-        <field name="code">records.action_confirm()</field>
-    </record>
-
     <!-- VIEWS -->
 
     <record id="sale_order_view_activity" model="ir.ui.view">
@@ -133,12 +123,6 @@
                         name="%(sale.action_view_sale_advance_payment_inv)d"
                         type="action"
                         class="btn-secondary"/>
-                    <button
-                        string="Confirm Orders"
-                        name="%(sale.model_sale_order_action_quotation_confirm)d"
-                        type="action"
-                        class="btn-secondary"
-                    />
                 </header>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="currency_id" column_invisible="True"/>
@@ -354,7 +338,7 @@
                     data-hotkey="q"
                     invisible="state != 'sent'"/>
                 <button
-                    string="Print"
+                    string="Download"
                     name="sale.action_report_saleorder"
                     type="action"
                     data-hotkey="i"
@@ -1270,7 +1254,7 @@
     <!-- ACTIONS (SERVER) -->
 
     <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
-        <field name="name">Mark Quotation as Sent</field>
+        <field name="name">Mark as Sent</field>
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_view_types">form,list,kanban</field>
@@ -1278,6 +1262,15 @@
         <field name="code">action = records.action_quotation_sent()</field>
     </record>
 
+    <record id="model_sale_order_action_quotation_confirm" model="ir.actions.server">
+        <field name="name">Confirm Orders</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_confirm()</field>
+    </record>
+    
     <record id="model_sale_order_action_share" model="ir.actions.server">
         <field name="name">Share</field>
         <field name="model_id" ref="sale.model_sale_order"/>
@@ -1292,7 +1285,7 @@
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="sequence">1</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">
             if records:
