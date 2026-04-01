@@ -11,8 +11,12 @@ export class LocationSchedule extends Component {
                 element: String,
                 optional: true,
             },
+            optional: true,
         },
         wrapClass: { type: String, optional: true },
+    };
+    static defaultProps = {
+        openingHours: {},
     };
 
     /**
