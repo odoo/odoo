@@ -1,12 +1,13 @@
 import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { advanceTime, describe, test } from "@odoo/hoot";
+import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { url } from "@web/core/utils/urls";
+import { Deferred } from "@web/core/utils/concurrency";
 import { defineLivechatModels } from "./livechat_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
@@ -483,6 +484,15 @@ test("show looking for help duration in the sidebar", async () => {
     pyEnv["discuss.channel.member"].create([
         { guest_id: guestId, channel_id: channelId, livechat_member_type: "visitor" },
     ]);
+    const joinDef = new Deferred();
+    let isJoining = false;
+    onRpc("/mail/data", async (req) => {
+        const { params } = await req.json();
+        if (isJoining && params.fetch_params?.some((p) => p[0] === "discuss.channel")) {
+            expect.step("fetch discuss.channel");
+            await joinDef;
+        }
+    });
     await start();
     await openDiscuss(channelId);
     await waitFor(
@@ -508,11 +518,16 @@ test("show looking for help duration in the sidebar", async () => {
     await waitFor(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(2d)"
     );
+    isJoining = true;
     await click("button[name='join-channel']");
+    await expect.waitForSteps(["fetch discuss.channel"]);
     await contains(".o-livechat-LivechatStatusSelection .active:text('In Progress')");
     await waitForNone(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer"
     );
+    joinDef.resolve();
+    await tick();
+    await expect.waitForSteps([]);
     await click(".o-livechat-LivechatStatusSelection button:text('Looking for help')");
     await waitFor(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
