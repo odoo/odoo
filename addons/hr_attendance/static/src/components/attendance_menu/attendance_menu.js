@@ -35,6 +35,7 @@ export class ActivityMenu extends Component {
             this.lazySession.getValue("attendance_user_data", (employee) => {
                 if (employee) {
                     this.employee = employee;
+                    this.attendanceCheckInPermission = employee.has_attendance_check_in_ability;
                     this._searchReadEmployeeFill();
                 }
             });
@@ -53,7 +54,7 @@ export class ActivityMenu extends Component {
         }
 
         this.employeeName = this.employee.name;
-        this.state.isDisplayed = this.employee.display_systray;
+        this.state.isDisplayed = this.attendanceCheckInPermission;
         this.state.checkedIn = this.employee.attendance_state === "checked_in";
         this.state.captureCheckInImage =
             this.employee.capture_check_in_image && !this.state.checkedIn;
