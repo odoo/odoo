@@ -3,28 +3,28 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 import { renderToString } from "@web/core/utils/render";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { _t } from "@web/core/l10n/translation";
+import { LOCATION_LIST } from "../utils";
+
+const OSM_MAX_ZOOM = 19;
 
 export class Map extends Component {
     static template = "website.locationSelector.map";
     props = useProps({
-        locations: t.array(
-            t.object({
-                id: t.or([t.string(), t.number()]),
-                name: t.string(),
-                opening_hours: t.record(t.array(t.string())),
-                street: t.string(),
-                city: t.string(),
-                zip_code: t.string(),
-                state: t.string().optional(),
-                country_code: t.string(),
-                additional_data: t.object().optional(),
-                distance: t.number().optional(),
-                latitude: t.or([t.string(), t.number()]),
-                longitude: t.or([t.string(), t.number()]),
-            })
-        ),
+        locations: LOCATION_LIST,
         selectedLocationId: t.or([t.string(), t.literal(false)]),
         setSelectedLocation: t.function(),
+        pressControlToZoom: { type: Boolean, optional: true },
+        setVisibleLocations: { type: Function, optional: true },
+        showDetailsTooltip: Boolean,
+        showIndexes: Boolean,
+        showEmail: { type: Boolean, optional: true },
+        showImage: { type: Boolean, optional: true },
+        showPhone: { type: Boolean, optional: true },
+        showWebsite: { type: Boolean, optional: true },
+        showLocationNameOnMarkerHover: { type: Boolean, optional: true },
+        mapZoom: String,
     });
 
     mapRef = signal.ref();
@@ -33,21 +33,47 @@ export class Map extends Component {
         this.leafletMap = null;
         this.markers = [];
 
+        const boundWheelHandler = useThrottleForAnimation(this.wheelEventHandler.bind(this));
+
         // Create the map.
         onMounted(() => {
             this.leafletMap = L.map(this.mapRef(), {
-                zoom: 13,
+                zoom: parseInt(this.props.mapZoom),
             });
+
+            this.leafletMapContainer = this.leafletMap.getContainer();
+
             this.leafletMap.attributionControl.setPrefix(
                 '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
             );
+
             L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                maxZoom: 19,
+                maxZoom: OSM_MAX_ZOOM,
                 attribution:
                     "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
             }).addTo(this.leafletMap);
+
+            this.leafletMap.addEventListener("moveend", () => {
+                this.props.setVisibleLocations?.(this.getVisibleMarks(this.leafletMap));
+            });
+
+            if (this.props.pressControlToZoom) {
+                this.mapRef().dataset.zoomDisabledText = _t("Hold Ctrl and scroll to zoom");
+                this.leafletMap.scrollWheelZoom.disable();
+                this.leafletMapContainer.addEventListener("wheel", boundWheelHandler);
+            }
+
+            this.resizeObserver = new ResizeObserver(() => {
+                this.leafletMap.invalidateSize();
+            });
+            this.resizeObserver.observe(this.leafletMapContainer);
         });
+
         onWillUnmount(() => {
+            this.resizeObserver.disconnect();
+            this.leafletMapContainer.removeEventListener("wheel", boundWheelHandler);
+            clearTimeout(this.zoomDisabledWarning);
+            // `remove` destroys the map and clears all related event listeners
             this.leafletMap.remove();
         });
 
@@ -78,6 +104,24 @@ export class Map extends Component {
         );
     }
 
+    wheelEventHandler(e) {
+        if (e.metaKey || e.ctrlKey) {
+            e.preventDefault();
+            this.mapRef().classList.remove("map_zoom_disabled");
+            this.leafletMap.scrollWheelZoom.enable();
+            clearTimeout(this.zoomDisabledWarning);
+        } else {
+            this.leafletMap.scrollWheelZoom.disable();
+            this.mapRef().classList.add("map_zoom_disabled");
+            if (!this.zoomDisabledWarning) {
+                this.zoomDisabledWarning = setTimeout(() => {
+                    this.mapRef().classList.remove("map_zoom_disabled");
+                    this.zoomDisabledWarning = null;
+                }, 3000);
+            }
+        }
+    }
+
     /**
      * Add the markers of the closest locations on the map.
      * Binds events to the created markers.
@@ -94,7 +138,7 @@ export class Map extends Component {
                     ? "o_location_selector_marker_icon_selected"
                     : "o_location_selector_marker_icon",
                 html: renderToString("website.locationSelector.map.marker", {
-                    number: locations.indexOf(loc) + 1,
+                    number: this.props.showIndexes && locations.indexOf(loc) + 1,
                 }),
                 iconSize: [30, 40],
                 iconAnchor: [15, 40],
@@ -102,13 +146,31 @@ export class Map extends Component {
 
             const marker = L.marker([loc.latitude, loc.longitude], {
                 icon: L.divIcon(iconInfo),
-                title: locations.indexOf(loc) + 1,
+                title: this.props.showLocationNameOnMarkerHover
+                    ? loc.name
+                    : locations.indexOf(loc) + 1,
             });
+            marker.id = locations.indexOf(loc) + 1;
 
             // By default, the marker's zIndex is based on its latitude. This ensures the selected
             // marker is always displayed on top of all others.
             if (isSelected) {
                 marker.setZIndexOffset(100);
+                if (this.props.showDetailsTooltip) {
+                    marker.bindTooltip(
+                        renderToString("website.locationSelector.map.tooltip", {
+                            location: loc,
+                            showEmail: this.props.showEmail,
+                            showPhone: this.props.showPhone,
+                            showWebsite: this.props.showWebsite,
+                        }),
+                        {
+                            direction: "bottom",
+                            interactive: "true",
+                            permanent: "true",
+                        }
+                    );
+                }
             }
 
             marker.addTo(this.leafletMap);
@@ -128,6 +190,7 @@ export class Map extends Component {
     removeMarkers() {
         for (const marker of this.markers) {
             marker.removeEventListener();
+            marker.unbindTooltip();
             this.leafletMap.removeLayer(marker);
         }
         this.markers = [];
@@ -140,5 +203,23 @@ export class Map extends Component {
      */
     get selectedLocation() {
         return this.props.locations.find((l) => String(l.id) === this.props.selectedLocationId);
+    }
+
+    /**
+     * Find the locations placed outside the portion of the map currently in view.
+     *
+     * @return {Array} The list of hidden markers
+     */
+    getVisibleMarks() {
+        const map = this.leafletMap;
+        const visibleMarks = [];
+        map.eachLayer(function (layer) {
+            if (layer instanceof L.Marker) {
+                if (map.getBounds().contains(layer.getLatLng())) {
+                    visibleMarks.push(String(layer.id));
+                }
+            }
+        });
+        return visibleMarks;
     }
 }
