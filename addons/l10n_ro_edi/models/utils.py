@@ -279,8 +279,8 @@ def _request_ciusro_synchronize_invoices_pagination(company, session, nb_days=1)
         try:
             msg_content = json.loads(result['content'])
             messages += msg_content.get('mesaje', [])
-        except ValueError:
-            return {'error': company.env._("The SPV data could not be parsed.")}
+        except ValueError as e:
+            errors.append(company.env._("The SPV data could not be parsed. %s") % e)
 
         page_number += 1
 
