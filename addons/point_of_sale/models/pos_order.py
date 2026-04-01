@@ -653,15 +653,20 @@ class PosOrder(models.Model):
         body += Markup("</ul>")
         return body
 
+    def _get_order_name_from_pos_reference(self, session=None):
+        """Return the order name from the sequence prefix and the receipt reference (``pos_reference``)."""
+        self.ensure_one()
+        session = session or self.session_id
+        last_reference_part = self.get_reference_last_part()
+        prefix = session.config_id.order_seq_id.prefix or session.config_id.name
+        suffix = f" - {session.config_id.order_seq_id.suffix}" if session.config_id.order_seq_id.suffix else ''
+        return f"{prefix} - {last_reference_part}{suffix}"
+
     def _compute_order_name(self, session=None):
         session = session or self.session_id
         if self.refunded_order_id.exists():
             return _('%(refunded_order)s REFUND', refunded_order=self.refunded_order_id.name)
-        else:
-            last_reference_part = self.get_reference_last_part()
-            prefix = session.config_id.order_seq_id.prefix or session.config_id.name
-            suffix = f" - {session.config_id.order_seq_id.suffix}" if session.config_id.order_seq_id.suffix else ''
-            return f"{prefix} - {last_reference_part}{suffix}"
+        return self._get_order_name_from_pos_reference(session)
 
     def get_reference_last_part(self):
         return self.pos_reference.split('-')[-1]
