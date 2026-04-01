@@ -98,7 +98,7 @@ class Properties(Field):
             assert self.definition.count(".") == 1
             self.definition_record, self.definition_record_field = self.definition.rsplit('.', 1)
 
-            if not self.inherited_field:
+            if not self.related:
                 # make the field computed, and set its dependencies
                 self._depends = (self.definition_record, )
                 self.compute = self._compute
