@@ -447,11 +447,17 @@ class DiscussChannelMember(models.Model):
             session_domain = [("partner_id", "=", self.partner_id.id)]
         elif self.guest_id:
             session_domain = [("guest_id", "=", self.guest_id.id)]
-        user_sessions = self.search(session_domain).rtc_session_ids
+        # sudo: discuss.channel.member - can find existing session of member when joining a call
+        user_sessions = self.search(session_domain).sudo().rtc_session_ids
         check_rtc_session_ids = (check_rtc_session_ids or []) + user_sessions.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
         user_sessions.unlink()
-        rtc_session = self.env['discuss.channel.rtc.session'].create({'channel_member_id': self.id, 'is_camera_on': camera})
+        # sudo: discuss.channel.rtc.session - can create session when joining a call
+        rtc_session = (
+            self.env["discuss.channel.rtc.session"]
+            .sudo()
+            .create({"channel_member_id": self.id, "is_camera_on": camera})
+        )
         rtc_updates = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
         self._join_sfu(ice_servers)
@@ -473,8 +479,10 @@ class DiscussChannelMember(models.Model):
             self._rtc_invite_members()
 
     def _join_sfu(self, ice_servers=None, force=False):
-        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
-            if self.channel_id.sfu_channel_uuid:
+        # sudo: discuss.channel - can count sessions when attempting to join SFU
+        if len(self.channel_id.sudo().rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
+            # sudo: discuss.channel - can read SFU fields when attempting to join SFU
+            if self.channel_id.sudo().sfu_channel_uuid:
                 self.channel_id.sfu_channel_uuid = None
                 self.channel_id.sfu_server_url = None
             return
@@ -513,8 +521,9 @@ class DiscussChannelMember(models.Model):
             )
 
     def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):
-        sfu_channel_uuid = self.channel_id.sfu_channel_uuid
-        sfu_server_url = self.channel_id.sfu_server_url
+        # sudo: discuss.channel - can read SFU fields when attempting to get server info
+        sfu_channel_uuid = self.channel_id.sudo().sfu_channel_uuid
+        sfu_server_url = self.channel_id.sudo().sfu_server_url
         if not sfu_channel_uuid or not sfu_server_url:
             return None
         if not key:
@@ -528,11 +537,12 @@ class DiscussChannelMember(models.Model):
 
     def _rtc_leave_call(self, session_id=None):
         self.ensure_one()
-        if self.rtc_session_ids:
+        # sudo: discuss.channel.member - can find and delete rtc.session of member when leaving call
+        if sessions := self.sudo().rtc_session_ids:
             if session_id:
-                self.rtc_session_ids.filtered(lambda rec: rec.id == session_id).unlink()
+                sessions.filtered(lambda rec: rec.id == session_id).unlink()
                 return
-            self.rtc_session_ids.unlink()
+            sessions.unlink()
         else:
             self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
 
@@ -548,9 +558,13 @@ class DiscussChannelMember(models.Model):
             :rtype: tuple
         """
         self.ensure_one()
-        self.channel_id.rtc_session_ids._delete_inactive_rtc_sessions()
+        # sudo: discuss.channel - can access sessions of the channel to sync them
+        self.channel_id.sudo().rtc_session_ids._delete_inactive_rtc_sessions()
         check_rtc_sessions = self.env['discuss.channel.rtc.session'].browse([int(check_rtc_session_id) for check_rtc_session_id in (check_rtc_session_ids or [])])
-        return self.channel_id.rtc_session_ids, check_rtc_sessions - self.channel_id.rtc_session_ids
+        return (
+            self.channel_id.sudo().rtc_session_ids,
+            check_rtc_sessions - self.channel_id.sudo().rtc_session_ids,
+        )
 
     def _get_rtc_invite_members_domain(self, member_ids=None):
         """ Get the domain used to get the members to invite to and RTC call on
@@ -580,8 +594,12 @@ class DiscussChannelMember(models.Model):
             :param list member_ids: list of the partner ids to invite
         """
         self.ensure_one()
-        members = self.env["discuss.channel.member"].search(
-            self._get_rtc_invite_members_domain(member_ids)
+        # sudo: discuss.channel.member - can search for members to invite to the call,
+        # necessary because rtc.session are present in the domain
+        members = (
+            self.env["discuss.channel.member"]
+            .sudo()
+            .search(self._get_rtc_invite_members_domain(member_ids))
         )
         if members:
             members.rtc_inviting_session_id = self.rtc_session_ids.id

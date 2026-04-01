@@ -9,6 +9,10 @@ const resUsersPatch = {
         super.setup(...arguments);
         this.is_livechat_manager = false;
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
+        /** @type {String[]} */
+        this.livechat_languages = [];
+        /** @type {String} */
+        this.livechat_username;
     },
 };
 patch(ResUsers.prototype, resUsersPatch);

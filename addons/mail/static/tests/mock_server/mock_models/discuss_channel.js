@@ -118,13 +118,15 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} ids
+     * @param {number[]} user_ids
      * @param {number[]} partner_ids
      * @param {boolean} [invite_to_rtc_call=undefined]
      */
-    add_members(ids, partner_ids, invite_to_rtc_call) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "invite_to_rtc_call");
+    add_members(ids, user_ids, partner_ids, invite_to_rtc_call) {
+        const kwargs = getKwArgs(arguments, "ids", "user_ids", "partner_ids", "invite_to_rtc_call");
         ids = kwargs.ids;
         delete kwargs.ids;
+        user_ids = kwargs.user_ids || [];
         partner_ids = kwargs.partner_ids || [];
 
         /** @type {import("mock_models").BusBus} */
@@ -135,9 +137,14 @@ export class DiscussChannel extends models.ServerModel {
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
 
         const [channel] = this.browse(ids);
-        const partners = ResPartner.browse(partner_ids);
+        const users = ResUsers.browse(user_ids);
+        const partners = ResPartner.browse(
+            partner_ids.concat(users.map((user) => user.partner_id))
+        );
         for (const partner of partners) {
             if (partner.id === this.env.user.partner_id) {
                 continue; // adding 'yourself' to the conversation is handled below
@@ -310,50 +317,43 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
-     * @param {number[]} partners_to
+     * @param {Object[]} users
      */
-    _get_or_create_chat(partners_to) {
-        const kwargs = getKwArgs(arguments, "partners_to");
-        partners_to = kwargs.partners_to || [];
+    _get_or_create_chat(users) {
+        const kwargs = getKwArgs(arguments, "users");
+        users = kwargs.users;
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
-        if (!partners_to.includes(this.env.user.partner_id)) {
-            partners_to.push(this.env.user.partner_id);
-        }
-        const partners = ResPartner.browse(partners_to);
         const channels = this.search_read([["channel_type", "=", "chat"]]);
         for (const channel of channels) {
             const channelMemberIds = DiscussChannelMember.search([
                 ["channel_id", "=", channel.id],
-                ["partner_id", "in", partners_to],
+                ["partner_id", "in", users.map((user) => user.partner_id)],
             ]);
             if (
-                channelMemberIds.length === partners.length &&
-                channel.channel_member_ids.length === partners.length
+                channelMemberIds.length === users.length &&
+                channel.channel_member_ids.length === users.length
             ) {
                 return DiscussChannel.browse(channel.id);
             }
         }
         const id = this.create({
-            channel_member_ids: partners.map((partner) =>
+            channel_member_ids: users.map((user) =>
                 Command.create({
-                    partner_id: partner.id,
-                    unpin_dt:
-                        partner.id == serverState.partnerId ? false : serializeDateTime(today()),
+                    partner_id: user.partner_id,
+                    unpin_dt: user.id == this.env.user.id ? false : serializeDateTime(today()),
                 })
             ),
             channel_type: "chat",
-            name: partners.map((partner) => partner.name).join(", "),
+            name: users.map((user) => user.name).join(", "),
         });
         this._broadcast(
             [id],
-            partners.flatMap((partner) => partner.user_ids)
+            users.map(({ id }) => id)
         );
         return DiscussChannel.browse(id);
     }
@@ -485,33 +485,30 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      */
     /**
-     * @param {number[]} partners_to
+     * @param {Object[]} users
      * @param {string} [default_display_mode=undefined]
      * @param {string} name
      * */
-    _create_group(partners_to, default_display_mode, name) {
-        const kwargs = getKwArgs(arguments, "partners_to", "default_display_mode", "name");
-        partners_to = kwargs.partners_to || [];
+    _create_group(users, default_display_mode, name) {
+        const kwargs = getKwArgs(arguments, "users", "default_display_mode", "name");
+        users = kwargs.users || [];
         default_display_mode = kwargs.default_display_mode;
         name = kwargs.name || "";
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
-        const partners = ResPartner.browse(partners_to);
         const id = this.create({
             channel_type: "group",
-            channel_member_ids: partners.map((partner) =>
-                Command.create({ partner_id: partner.id })
+            channel_member_ids: users.map((user) =>
+                Command.create({ partner_id: user.partner_id })
             ),
             default_display_mode,
             name,
         });
         this._broadcast(
             [id],
-            partners.flatMap((partner) => partner.user_ids)
+            users.map((user) => user.id)
         );
         return DiscussChannel.browse(id);
     }
@@ -869,7 +866,7 @@ export class DiscussChannel extends models.ServerModel {
 
         const notifications = [];
         for (const user_id of user_ids) {
-            const user = ResUsers.browse(user_id)[0];
+            const user = ResUsers.browse(user_id);
             if (!user) {
                 continue;
             }

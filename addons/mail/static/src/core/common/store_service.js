@@ -273,7 +273,7 @@ export class Store extends BaseStore {
         /** @type {import("models").DiscussChannel} */
         const channel = await this.createGroupChat({
             default_display_mode: "video_full_screen",
-            partners_to: [this.self.id],
+            user_ids: [this.self_user.id],
         });
         await this.chatHub.initPromise;
         channel.chatWindow?.update({ autofocus: 0 });
@@ -447,9 +447,9 @@ export class Store extends BaseStore {
         if (!partner) {
             return;
         }
-        let chat = partner.searchChat();
+        let chat = user.searchChat();
         if (!chat?.self_member_id?.is_pinned) {
-            chat = await this.joinChat(partner.id);
+            chat = await this.joinChat(user.id);
         }
         if (!chat) {
             this.env.services.notification.add(
@@ -609,10 +609,10 @@ export class Store extends BaseStore {
         return lastMessageId + temporaryIdOffset;
     }
 
-    async joinChat(id, forceOpen = false) {
+    async joinChat(user_id, forceOpen = false) {
         const { channel } = await this.fetchStoreData(
             "/discuss/get_or_create_chat",
-            { partners_to: [id] },
+            { user_id },
             { readonly: false, requestData: true }
         );
         if (forceOpen) {

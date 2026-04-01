@@ -246,12 +246,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         )
         self.channel_channel_group_4._add_members(users=self.users[0] | self.users[2])
         # create chats
-        self.channel_chat_1 = Channel._get_or_create_chat((self.users[0] + self.users[14]).partner_id.ids)
-        self.channel_chat_2 = Channel._get_or_create_chat((self.users[0] + self.users[15]).partner_id.ids)
-        self.channel_chat_3 = Channel._get_or_create_chat((self.users[0] + self.users[2]).partner_id.ids)
-        self.channel_chat_4 = Channel._get_or_create_chat((self.users[0] + self.users[3]).partner_id.ids)
+        self.channel_chat_1 = Channel._get_or_create_chat(self.users[0] + self.users[14])
+        self.channel_chat_2 = Channel._get_or_create_chat(self.users[0] + self.users[15])
+        self.channel_chat_3 = Channel._get_or_create_chat(self.users[0] + self.users[2])
+        self.channel_chat_4 = Channel._get_or_create_chat(self.users[0] + self.users[3])
         # create groups
-        self.channel_group_1 = Channel._create_group((self.users[0] + self.users[12]).partner_id.ids)
+        self.channel_group_1 = Channel._create_group(self.users[0] + self.users[12])
         # create livechats
         self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.env['mail.presence']._update_presence(self.users[0])

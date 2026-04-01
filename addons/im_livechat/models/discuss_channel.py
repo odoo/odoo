@@ -801,26 +801,8 @@ class DiscussChannel(models.Model):
             subtype_xmlid='mail.mt_comment',
         )
 
-    def _add_members(
-        self,
-        *,
-        guests=None,
-        partners=None,
-        users=None,
-        create_member_params=None,
-        invite_to_rtc_call=False,
-        post_joined_message=True,
-        inviting_partner=None,
-    ):
-        all_new_members = super()._add_members(
-            guests=guests,
-            partners=partners,
-            users=users,
-            create_member_params=create_member_params,
-            invite_to_rtc_call=invite_to_rtc_call,
-            post_joined_message=post_joined_message,
-            inviting_partner=inviting_partner,
-        )
+    def _add_members(self, **kwargs):
+        all_new_members = super()._add_members(**kwargs)
         for channel in all_new_members.channel_id:
             # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
             if channel.sudo().livechat_status == "need_help":

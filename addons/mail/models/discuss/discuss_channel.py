@@ -633,14 +633,17 @@ class DiscussChannel(models.Model):
 
     def add_members(
         self,
-        partner_ids=None,
+        *,
+        user_ids=None,
+        partner_ids=None,  # deprecated, use user_ids instead
         guest_ids=None,
         invite_to_rtc_call=False,
         post_joined_message=True,
     ):
-        """Adds the given partner_ids and guest_ids as member of self channels.
+        """Adds the given user_ids and guest_ids as member of self channels.
         Prefer calling _add_members with recordsets directly when possible."""
         return self._add_members(
+            users=self.env["res.users"].browse(user_ids or []).exists(),
             partners=self.env["res.partner"].browse(partner_ids or []).exists(),
             guests=self.env["mail.guest"].browse(guest_ids or []).exists(),
             invite_to_rtc_call=invite_to_rtc_call,
@@ -651,7 +654,7 @@ class DiscussChannel(models.Model):
         self,
         *,
         guests=None,
-        partners=None,
+        partners=None,  # deprecated, use users instead
         users=None,
         create_member_params=None,
         invite_to_rtc_call=False,
@@ -836,7 +839,9 @@ class DiscussChannel(models.Model):
         if member_ids:
             channel_member_domain &= Domain('id', 'in', member_ids)
         members = self.env['discuss.channel.member'].search(channel_member_domain)
-        members.rtc_inviting_session_id = False
+        # sudo: discuss.channel.member - can write rtc_inviting_session_id when
+        # canceling invitations
+        members.sudo().rtc_inviting_session_id = False
         if members:
             Store(bus_channel=self).add(
                 self,
@@ -1140,7 +1145,8 @@ class DiscussChannel(models.Model):
 
     def _should_invite_members_to_join_call(self):
         self.ensure_one()
-        return len(self.rtc_session_ids) == 1 and self.channel_type != "channel"
+        # sudo: discuss.channel: allowed to count sessions when checking whether to invite members
+        return len(self.sudo().rtc_session_ids) == 1 and self.channel_type != "channel"
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Redirect to Discuss instead of form view. """
@@ -1355,21 +1361,15 @@ class DiscussChannel(models.Model):
     # User methods
 
     @api.model
-    def _get_or_create_chat(self, partners_to):
-        """ Get the canonical private channel between some partners, create it if needed.
+    def _get_or_create_chat(self, users):
+        """ Get the canonical private channel between some users, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
-            only the given partners.
-            :param partners_to : list of res.partner ids to add to the conversation
-            :param pin : True if getting the channel should pin it for the current user
+            only the given users.
+            :param users: list of res.users to add to the conversation
             :returns: channel_info of the created or existing channel
             :rtype: dict
         """
-        partners = (
-            self.env["res.partner"]
-            .with_context(active_test=False)
-            .search([("id", "in", partners_to)])
-        ) | self.env.user.partner_id
-        if len(partners) > 2:
+        if len(users) > 2:
             raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
         # determine type according to the number of partner in the channel
         self.flush_model()
@@ -1392,8 +1392,8 @@ class DiscussChannel(models.Model):
             HAVING ARRAY_AGG(DISTINCT M.partner_id ORDER BY M.partner_id) = %(sorted_partner_ids)s
             LIMIT 1
                 """,
-                partner_ids=tuple(partners.ids),
-                sorted_partner_ids=sorted(partners.ids),
+                partner_ids=tuple(users.partner_id.ids),
+                sorted_partner_ids=sorted(users.partner_id.ids),
             )
         )
         result = self.env.cr.dictfetchall()
@@ -1414,19 +1414,19 @@ class DiscussChannel(models.Model):
                         Command.create(
                             {
                                 "last_interest_dt": last_interest_dt,
-                                "partner_id": partner.id,
+                                "partner_id": user.partner_id.id,
                                 # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                                "unpin_dt": False if partner == self.env.user.partner_id else now,
+                                "unpin_dt": False if user == self.env.user else now,
                             }
                         )
-                        for partner in partners
+                        for user in users
                     ],
                     "channel_type": "chat",
                     "last_interest_dt": last_interest_dt,
-                    "name": ", ".join(partners.mapped("name")),
+                    "name": ", ".join(users.mapped("name")),
                 }
             )
-            channel._broadcast(partners.user_ids)
+            channel._broadcast(users)
         return channel
 
     def _allow_invite_by_email(self):
@@ -1496,35 +1496,34 @@ class DiscussChannel(models.Model):
         return new_channel
 
     @api.model
-    def _create_group(self, partners_to, default_display_mode=False, name=''):
+    def _create_group(self, users, *, default_display_mode=False, name=''):
         """ Creates a group channel.
 
-            :param partners_to : list of res.partner ids to add to the conversation
+            :param users: list of res.users to add to the conversation
             :param str default_display_mode: how the channel will be displayed by default
             :param str name: group name. default name is computed client side from the list of members if no name is set
             :returns: channel_info of the created channel
             :rtype: dict
         """
-        partners_to = OrderedSet(partners_to)
         channel = self.create(
             {
                 "channel_member_ids": [
                     Command.create(
                         {
-                            "partner_id": partner_id,
+                            "partner_id": user.partner_id.id,
                             "channel_role": "owner"
-                            if partner_id == self.env.user.partner_id.id and not self.env.user._is_public()
+                            if user == self.env.user and not self.env.user._is_public()
                             else None,
-                        }
+                        },
                     )
-                    for partner_id in partners_to
+                    for user in users
                 ],
                 "channel_type": "group",
                 "default_display_mode": default_display_mode,
                 "name": name,
-            }
+            },
         )
-        channel._broadcast(channel.channel_member_ids.partner_id.user_ids)
+        channel._broadcast(users)
         return channel
 
     def _create_sub_channel(self, from_message_id=None, name=None):

@@ -28,15 +28,15 @@ class ResUsers(models.Model):
 
     def _init_odoobot(self):
         self.ensure_one()
-        odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
-        channel = self.env['discuss.channel']._get_or_create_chat([odoobot_id, self.partner_id.id])
+        odoobot = self.env.ref("base.user_root")
+        channel = self.env["discuss.channel"]._get_or_create_chat(self | odoobot)
         message = Markup("%s<br/>%s<br/><b>%s</b> <span class=\"o_odoobot_command\">:)</span>") % (
             _("Hello,"),
             _("Odoo's chat helps employees collaborate efficiently. I'm here to help you discover its features."),
             _("Try to send me an emoji")
         )
         channel.sudo().message_post(
-            author_id=odoobot_id,
+            author_id=odoobot.partner_id.id,
             body=message,
             message_type="comment",
             silent=True,

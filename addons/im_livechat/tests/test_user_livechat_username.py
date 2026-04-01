@@ -77,8 +77,5 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
             .search_for_channel_invite("fr_FR", channel.id)["store_data"]
             ._build_result()
         )
-        john_data = next(filter(lambda partner: partner["id"] == john.partner_id.id, data["res.partner"]))
-        self.assertEqual(
-            john_data["user_livechat_username"],
-            "ELOPERADOR",
-        )
+        john_data = next(filter(lambda user: user["id"] == john.id, data["res.users"]))
+        self.assertEqual(john_data["livechat_username"], "ELOPERADOR")

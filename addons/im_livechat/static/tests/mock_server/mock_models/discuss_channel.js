@@ -41,25 +41,16 @@ export class DiscussChannel extends mailModels.DiscussChannel {
 
     /**
      * @override
-     * @param {number[]} ids
-     * @param {number[]} partner_ids
-     * @param {boolean} [invite_to_rtc_call=undefined]
      */
-    add_members(ids, partner_ids, invite_to_rtc_call) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "invite_to_rtc_call");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-        partner_ids = kwargs.partner_ids || [];
-        const channels = this.browse(
-            Array.from(super.add_members(ids, partner_ids, invite_to_rtc_call)).map(
-                ({ channel_id }) => channel_id
-            )
-        );
+    add_members() {
+        const res = super.add_members(...arguments);
+        const channels = this.browse(Array.from(res.map((member) => member.channel_id)));
         for (const channel of channels) {
             if (channel.livechat_status == "need_help") {
                 this.write([channel.id], { livechat_status: "in_progress" });
             }
         }
+        return res;
     }
 
     _channel_basic_info_fields() {
@@ -183,7 +174,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         if (channel.livechat_status !== "need_help") {
             return false;
         }
-        this.add_members([channel.id], [this.env.user.partner_id]);
+        this.add_members([channel.id], makeKwArgs({ user_ids: [this.env.user.id] }));
         return true;
     }
 

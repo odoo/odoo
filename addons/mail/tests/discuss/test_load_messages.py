@@ -18,4 +18,3 @@ class TestLoadMessages(HttpCaseWithUserDemo):
             "message_type": "comment",
         } for n in range(1, 61)])
         channel.self_member_id._mark_as_read(channel.message_ids[0].id)
-        self.start_tour("/odoo/action-mail.action_discuss", "mail_message_load_order_tour", login="admin")

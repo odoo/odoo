@@ -62,7 +62,7 @@ export class DiscussCommand extends Component {
         executeCommand: Function,
         imgUrl: { type: String, optional: true },
         name: String,
-        persona: { type: Object, optional: true },
+        user: { type: Object, optional: true },
         channel: { type: Object, optional: true },
         action: { type: Object, optional: true },
         searchValue: String,
@@ -131,11 +131,11 @@ export class DiscussCommandPalette {
         await this.store.searchConversations(this.cleanedTerm);
     }
 
-    /** @param {Record[]} [filtered] persona or thread to filters, e.g. being build already in a category in a patch such as MENTIONS or RECENT */
+    /** @param {Record[]} [filtered] users or threads to filter, e.g. being built already in a category in a patch such as MENTIONS or RECENT */
     buildResults(filtered) {
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 10;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
-        let partners = [];
+        let users = [];
         if (this.store.self_user?.share === false) {
             partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
@@ -144,16 +144,14 @@ export class DiscussCommandPalette {
                         cleanTerm(partner.email).includes(this.cleanedTerm)) &&
                     (!filtered || !filtered.has(partner))
             );
-            partners = this.suggestion
-                .sortPartnerSuggestions(partners, this.cleanedTerm)
+            users = this.suggestion
+                .sortUserSuggestions(users, this.cleanedTerm)
                 .slice(0, TOTAL_LIMIT);
         }
-        const selfPartner = this.store.self_user?.partner_id?.in(partners)
-            ? this.store.self_user.partner_id
-            : undefined;
-        if (selfPartner) {
-            // selfPersona filtered here to put at the bottom as lowest priority
-            partners = partners.filter((p) => p.notEq(selfPartner));
+        const selfUser = this.store.self_user?.in(users) ? this.store.self_user : undefined;
+        if (selfUser) {
+            // selfUser filtered here to put at the bottom as lowest priority
+            users = users.filter((u) => u.notEq(selfUser));
         }
         const channels = Object.values(this.store["discuss.channel"].records)
             .filter(
@@ -172,15 +170,15 @@ export class DiscussCommandPalette {
                 return c1.id - c2.id;
             })
             .slice(0, TOTAL_LIMIT);
-        // balance remaining: half personas, half channels
-        const elligiblePersonas = [];
+        // balance remaining: half users, half channels
+        const elligibleUsers = [];
         const elligibleChannels = [];
         let i = 0;
-        while ((channels.length || partners.length) && i < remaining) {
-            const p = partners.shift();
+        while ((channels.length || users.length) && i < remaining) {
+            const p = users.shift();
             const c = channels.shift();
             if (p) {
-                elligiblePersonas.push(p);
+                elligibleUsers.push(p);
                 i++;
             }
             if (i >= remaining) {
@@ -191,22 +189,22 @@ export class DiscussCommandPalette {
                 i++;
             }
         }
-        for (const persona of elligiblePersonas) {
-            this.commands.push(this.makeDiscussCommand(persona));
+        for (const user of elligibleUsers) {
+            this.commands.push(this.makeDiscussCommand(user));
         }
         for (const channel of elligibleChannels) {
             this.commands.push(this.makeDiscussCommand(channel));
         }
-        if (selfPartner && i < remaining) {
-            // put self persona as lowest priority item
-            this.commands.push(this.makeDiscussCommand(selfPartner));
+        if (selfUser && i < remaining) {
+            // put self user as lowest priority item
+            this.commands.push(this.makeDiscussCommand(selfUser));
         }
     }
 
-    makeDiscussCommand(channelOrPersona, category) {
-        if (channelOrPersona?.Model?.getName() === "discuss.channel") {
+    makeDiscussCommand(channelOrUser, category) {
+        if (channelOrUser?.Model?.getName() === "discuss.channel") {
             /** @type {import("models").DiscussChannel} */
-            const channel = channelOrPersona;
+            const channel = channelOrUser;
             return {
                 Component: DiscussCommand,
                 action: async () => {
@@ -220,31 +218,33 @@ export class DiscussCommandPalette {
                 props: {
                     imgUrl: channel.parent_channel_id?.avatarUrl ?? channel.avatarUrl,
                     channel: channel.channel_type !== "chat" ? channel : undefined,
-                    persona:
-                        channel.channel_type === "chat" ? channel.correspondent.persona : undefined,
+                    user:
+                        channel.channel_type === "chat"
+                            ? channel.correspondent.persona.main_user_id
+                            : undefined,
                     counter: channel.importantCounter,
                 },
             };
         }
-        if (channelOrPersona?.Model?.getName() === "res.partner") {
-            /** @type {import("models").Persona} */
-            const persona = channelOrPersona;
-            const chat = persona.searchChat();
+        if (channelOrUser?.Model?.getName() === "res.users") {
+            /** @type {import("models").ResUsers} */
+            const user = channelOrUser;
+            const chat = user.searchChat();
             return {
                 Component: DiscussCommand,
                 action: () => {
-                    this.store.openChat({ partnerId: persona.id });
+                    this.store.openChat({ userId: user.id });
                 },
-                name: persona.displayName,
+                name: user.displayName,
                 category,
                 props: {
-                    imgUrl: persona.avatarUrl,
-                    persona,
+                    imgUrl: user.avatarUrl,
+                    user,
                     counter: chat ? chat.importantCounter : undefined,
                 },
             };
         }
-        if (channelOrPersona === NEW_CHANNEL) {
+        if (channelOrUser === NEW_CHANNEL) {
             return {
                 Component: DiscussCommand,
                 action: () => {
@@ -267,7 +267,7 @@ export class DiscussCommandPalette {
                 },
             };
         }
-        throw new Error(`Unsupported use of makeDiscussCommand("${channelOrPersona}")`);
+        throw new Error(`Unsupported use of makeDiscussCommand("${channelOrUser}")`);
     }
 }
 

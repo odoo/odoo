@@ -64,7 +64,11 @@ class DiscussChannelRtcSession(models.Model):
 
     def unlink(self):
         stores = Store.Stores()
-        call_ended_channels = self.channel_id.filtered(lambda c: not (c.rtc_session_ids - self))
+        # sudo: discuss.channel: allowed to read sessions of the channel to
+        # determine which calls are ended
+        call_ended_channels = self.channel_id.filtered(
+            lambda c: not (c.sudo().rtc_session_ids - self),
+        )
         for channel in call_ended_channels:
             # If there is no member left in the RTC call, all invitations are cancelled.
             # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
@@ -73,8 +77,9 @@ class DiscussChannelRtcSession(models.Model):
             # If there is no member left in the RTC call, we remove the SFU channel uuid as the SFU
             # server will timeout the channel. It is better to obtain a new channel from the SFU server
             # than to attempt recycling a possibly stale channel uuid.
-            channel.sfu_channel_uuid = False
-            channel.sfu_server_url = False
+            # sudo: discuss.channel: can write SFU fields when ending call
+            channel.sudo().sfu_channel_uuid = False
+            channel.sudo().sfu_server_url = False
         for rtc_session in self:
             stores[rtc_session.channel_id].add(
                 rtc_session.channel_id,

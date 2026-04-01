@@ -11,7 +11,7 @@ export const joinChannelAction = {
         channel && !channel.self_member_id && !["chat", "group"].includes(channel.channel_type),
     onSelected: ({ channel, store }) =>
         store.env.services.orm.call("discuss.channel", "add_members", [[channel.id]], {
-            partner_ids: [store.self_user?.partner_id?.id],
+            user_ids: [store.self_user.id],
         }),
     icon: "fa fa-fw fa-sign-in",
     name: _t("Join Channel"),

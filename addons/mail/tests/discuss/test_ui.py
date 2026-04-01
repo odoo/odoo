@@ -32,9 +32,7 @@ class TestUi(HttpCaseWithUserDemo):
             group_chat = (
                 self.env["discuss.channel"]
                 .with_user(bob)
-                ._create_group(
-                    partners_to=john.partner_id.ids, default_display_mode="video_full_screen"
-                )
+                ._create_group(john, default_display_mode="video_full_screen")
             )
         group_chat._add_members(guests=guest)
         self.authenticate("bob", "bob")
