@@ -11,7 +11,7 @@
                         <span t-else="">Group</span>
                     </td>
                     <td>
-                        <a class="fw-bold" href="#" t-on-click="() => this.onGroupClicked(group)" t-out="group.name"/>
+                        <a class="fw-bold" href="#" t-on-click="() => this.onGroupClicked(this.group)" t-out="this.group.name"/>
                     </td>
                 </tr>
                 <tr t-if="this.impliedGroups.length">
@@ -48,10 +48,10 @@
                         </t>
                     </td>
                 </tr>
-                <tr t-if="group.disjointIds.length">
+                <tr t-if="this.group.disjointIds.length">
                     <td class="align-top text-danger">Incompatibility</td>
                     <td>
-                        <div t-foreach="group.disjointIds" t-as="groupId" t-key="groupId">
+                        <div t-foreach="this.group.disjointIds" t-as="groupId" t-key="groupId">
                             - <t t-out="this.getGroupDisplayName(this.groups[groupId])"/>
                         </div>
                     </td>
