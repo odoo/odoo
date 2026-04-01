@@ -1,5 +1,6 @@
 import copy
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import common, tagged, Form
 
@@ -487,4 +488,29 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 0.0, 'picked': False},
             {'quantity': 0.0, 'picked': False},
             {'quantity': 0.0, 'picked': False},
+        ])
+
+    def test_consumed_lots_after_production(self):
+        """
+        Test that manually added move lines with selected lots are preserved after
+        producing the product from a Manufacturing Order.
+        """
+        quant = self.create_quant(self.raw_lot, 10)
+        quant |= self.create_quant(self.raw_lot, 10, offset=1)
+        quant |= self.create_quant(self.raw_serial, 1)
+        quant.action_apply_inventory()
+        mo = self.create_mo(self.mo_lot_tmpl, self.DEFAULT_TRIGGERS_COUNT)
+        mo.action_confirm()
+        mo.action_generate_serial()
+        lot_move = mo.move_raw_ids[1]
+        lot_move.move_line_ids.quantity = 1
+        lot_move.move_line_ids = [Command.create({
+            'product_id': self.raw_lot.id,
+            'quantity': 1,
+            'lot_id': quant[1].lot_id.id
+        })]
+        mo.button_mark_done()
+        self.assertRecordValues(lot_move.move_line_ids, [
+            {'quantity': 1, 'picked': True, 'lot_id': quant[0].lot_id.id},
+            {'quantity': 1, 'picked': True, 'lot_id': quant[1].lot_id.id},
         ])

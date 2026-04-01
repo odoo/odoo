@@ -2312,9 +2312,17 @@ Please change the quantity done or the rounding precision of your unit of measur
                                                                       owner_id=ml.owner_id,
                                                                       strict=True)
             avail_qty = sum(q[1] for q in ml_quants)
+            total_quants = self.env['stock.quant']._get_available_quantity(self.product_id,
+                                                                      ml.location_id,
+                                                                      lot_id=ml.lot_id,
+                                                                      package_id=ml.package_id,
+                                                                      owner_id=ml.owner_id,
+                                                                      strict=True)
             # the quant did not add the quantity reserved on this specific move line
             consumed_quant |= {q[0].id for q in ml_quants}
-            if float_compare(avail_qty, qty, precision_rounding=self.product_uom.rounding) <= 0:
+            if float_compare(
+                avail_qty, qty, precision_rounding=self.product_uom.rounding
+            ) <= 0 and not (ml.lot_id and float_compare(total_quants, avail_qty, precision_rounding=self.product_uom.rounding) > 0):
                 qty -= avail_qty  # decrease the target quantity for the next move lines
                 avail_qty += ml_qty  # add the actual move line quantity as we will update it and not `+=` it
                 if ml.product_uom_id != self.product_id.uom_id:
