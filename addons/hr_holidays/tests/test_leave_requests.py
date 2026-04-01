@@ -1698,3 +1698,74 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
 
         self.assertEqual(leave.number_of_hours, 13.0)
+
+    def test_hourly_multi_employee_wizard(self):
+        """ Test hourly batch generation for multiple employees via wizard """
+
+        hourly_leave_type = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).create({
+            'name': 'Hourly Leave Type',
+            'request_unit': 'hour',
+            'leave_validation_type': 'no_validation',
+            'requires_allocation': 'no',
+        })
+
+        employees = self.employee_emp | self.employee_hruser
+
+        # Requesting 3 hours: 14:00 to 17:00
+        wizard = self.env['hr.leave.generate.multi.wizard'].with_user(self.user_hrmanager_id).create({
+            'allocation_mode': 'employee',
+            'employee_ids': [Command.set(employees.ids)],
+            'holiday_status_id': hourly_leave_type.id,
+            'date_from': date(2026, 4, 1),
+            'date_to': date(2026, 4, 1),
+            'hour_from': 14.0,
+            'hour_to': 17.0,
+        })
+
+        wizard.action_generate_time_off()
+
+        generated_leaves = self.env['hr.leave'].search([
+            ('holiday_status_id', '=', hourly_leave_type.id),
+            ('employee_id', 'in', employees.ids)
+        ])
+
+        self.assertEqual(len(generated_leaves), 2, "Should have created 2 hourly leaves")
+        for leave in generated_leaves:
+            self.assertTrue(leave.request_unit_hours)
+            self.assertEqual(leave.request_hour_from, 14)
+            self.assertEqual(leave.request_hour_to, 17)
+            self.assertEqual(leave.state, 'validate')
+
+    def test_halfday_multi_employee_wizard(self):
+        """ Test half-day batch generation for multiple employees via wizard """
+
+        half_day_type = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).create({
+            'name': 'Half Day Type',
+            'request_unit': 'half_day',
+            'leave_validation_type': 'no_validation',
+            'requires_allocation': 'no',
+        })
+
+        employees = self.employee_emp | self.employee_hruser
+
+        wizard = self.env['hr.leave.generate.multi.wizard'].with_user(self.user_hrmanager_id).create({
+            'allocation_mode': 'employee',
+            'employee_ids': [Command.set(employees.ids)],
+            'holiday_status_id': half_day_type.id,
+            'date_from': date(2026, 4, 2),
+            'date_to': date(2026, 4, 2),
+            'date_from_period': 'am',
+        })
+
+        wizard.action_generate_time_off()
+
+        generated_leaves = self.env['hr.leave'].search([
+            ('holiday_status_id', '=', half_day_type.id),
+            ('employee_id', 'in', employees.ids)
+        ])
+
+        self.assertEqual(len(generated_leaves), 2, "Should have created 2 half-day leaves")
+        for leave in generated_leaves:
+            self.assertTrue(leave.request_unit_half)
+            self.assertEqual(leave.request_date_from_period, 'am')
+            self.assertEqual(leave.number_of_days, 0.5)

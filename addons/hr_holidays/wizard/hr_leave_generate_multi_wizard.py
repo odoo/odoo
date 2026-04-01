@@ -31,6 +31,12 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag')
     date_from = fields.Date('Start Date', required=True)
     date_to = fields.Date('End Date', required=True)
+    hour_from = fields.Float(string='Hour from')
+    hour_to = fields.Float(string='Hour to')
+    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit')
+    date_from_period = fields.Selection([
+        ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period Start", default='am')
 
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
@@ -47,25 +53,42 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
         work_days_data = employees._get_work_days_data_batch(date_from_tz, date_to_tz)
-        return [{
-            'name': self.name,
-            'holiday_status_id': self.holiday_status_id.id,
-            'date_from': date_from_tz,
-            'date_to': date_to_tz,
-            'request_date_from': self.date_from,
-            'request_date_to': self.date_to,
-            'number_of_days': work_days_data[employee.id]['days'],
-            'employee_id': employee.id,
-            'state': 'validate',
-        } for employee in employees if work_days_data[employee.id]['days']]
+        values = []
+        for employee in employees:
+            if work_days_data[employee.id]['days'] > 0:
+                employee_values = {
+                    'name': self.name,
+                    'holiday_status_id': self.holiday_status_id.id,
+                    'request_date_from': self.date_from,
+                    'request_date_to': self.date_to,
+                    'employee_id': employee.id,
+                    'state': 'validate',
+                }
+                if self.leave_type_request_unit == 'hour':
+                    employee_values.update({
+                        'request_hour_from': self.hour_from,
+                        'request_hour_to': self.hour_to,
+                        'request_unit_hours': True,
+                    })
+                if self.leave_type_request_unit == 'half_day':
+                    employee_values.update({
+                        'request_unit_half': True,
+                        'request_date_from_period': self.date_from_period,
+                    })
+                values.append(employee_values)
+        return values
 
     def action_generate_time_off(self):
         self.ensure_one()
         employees = self._get_employees_from_allocation_mode()
 
         tz = timezone(self.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC')
-        date_from_tz = tz.localize(datetime.combine(self.date_from, datetime.min.time())).astimezone(UTC).replace(tzinfo=None)
-        date_to_tz = tz.localize(datetime.combine(self.date_to, datetime.max.time())).astimezone(UTC).replace(tzinfo=None)
+        if self.leave_type_request_unit == 'hour':
+            date_from_tz = (datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_from)).astimezone(UTC).replace(tzinfo=None)
+            date_to_tz = (datetime.combine(self.date_to, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_to)).astimezone(UTC).replace(tzinfo=None)
+        else:
+            date_from_tz = datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+            date_to_tz = datetime.combine(self.date_to, datetime.max.time(), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
 
         conflicting_leaves = self.env['hr.leave'].with_context(
             tracking_disable=True,
