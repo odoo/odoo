@@ -17,6 +17,7 @@ export class Location extends Component {
         additionalData: t.object().optional(),
         isSelected: t.boolean(),
         setSelectedLocation: t.function(),
+        showPinIndicator: t.boolean().optional(true),
     });
 
     /**
