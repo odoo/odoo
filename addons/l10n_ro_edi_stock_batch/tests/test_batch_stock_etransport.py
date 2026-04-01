@@ -59,9 +59,19 @@ class TestBatchStockETransport(TestETransportFlows):
         })
         batch.action_confirm()
 
+<<<<<<< 68a8f6522d9e90214551a0ff655360b2d1ecb537
         self.assertRecordValues(pickings.sorted('sale_id.id'), [
             {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
             {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+||||||| c11ca6d10cac99b367078823dafef46808346267
+        self.assertRecordValues(pickings.sorted('sale_id'), [
+            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+=======
+        self.assertRecordValues(pickings.sorted('sale_id'), [
+            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+>>>>>>> cd643584c6a2f4d5aa325081d125fc9a4d153dc9
         ])
         self.assertRecordValues(batch, [
             {'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_ids': pickings.ids},
@@ -93,9 +103,19 @@ class TestBatchStockETransport(TestETransportFlows):
         batch.action_confirm()
 
         # Can send the batch but not the individual pickings
+<<<<<<< 68a8f6522d9e90214551a0ff655360b2d1ecb537
         self.assertRecordValues(pickings.sorted('sale_id.id'), [
             {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
             {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+||||||| c11ca6d10cac99b367078823dafef46808346267
+        self.assertRecordValues(pickings.sorted('sale_id'), [
+            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+=======
+        self.assertRecordValues(pickings.sorted('sale_id'), [
+            {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+>>>>>>> cd643584c6a2f4d5aa325081d125fc9a4d153dc9
         ])
         self.assertRecordValues(batch, [
             {'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_ids': pickings.ids},
@@ -107,7 +127,7 @@ class TestBatchStockETransport(TestETransportFlows):
             # Can send as Done and not in the batch anymore
             {'sale_id': self.sale_orders[0].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_type_code': 'outgoing'},
             # In the batch so should be sent in the batch
-            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
+            {'sale_id': self.sale_orders[1].id, 'l10n_ro_edi_stock_enable': False, 'l10n_ro_edi_stock_enable_send': False, 'picking_type_code': 'outgoing'},
         ])
         self.assertRecordValues(batch, [
             {'l10n_ro_edi_stock_enable': True, 'l10n_ro_edi_stock_enable_send': True, 'picking_ids': pickings[1].ids},
