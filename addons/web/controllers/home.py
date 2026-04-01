@@ -10,7 +10,6 @@ from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
 from odoo.http.router import db_list
 from odoo.http.session import authenticate, check, touch, update_session_token
-from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import LazyTranslate, _, config, hmac
 from odoo.tools.cloc import Cloc
 
@@ -98,12 +97,8 @@ class Home(Controller):
             request.update_context(lang=lang)
 
         menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
-        body = json.dumps(menus)
-        return request.make_response(body, [
-            # this method must specify a content-type application/json instead of using the default text/html set because
-            # the type of the route is set to HTTP, but the rpc is made with a get and expects JSON
-            ('Content-Type', 'application/json'),
-            ('Cache-Control', f'public, max-age={STATIC_CACHE_LONG}'),
+        return request.make_json_response(menus, [
+            ('Cache-Control', 'no-store'),
         ])
 
     def _login_redirect(self, uid, redirect=None):
