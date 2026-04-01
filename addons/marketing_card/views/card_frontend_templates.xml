@@ -25,7 +25,7 @@
                         <div id="url-div">
                             <a class="fa fa-facebook rounded" t-attf-href="https://www.facebook.com/sharer/sharer.php?u={{share_url_quoted}}" target="_blank"/>
                             <a class="fa fa-twitter rounded" t-attf-href="https://twitter.com/intent/tweet?url={{share_url_quoted}}{{'&amp;text=%s' % quote(campaign.post_suggestion) if campaign.post_suggestion else ''}}" target="_blank"/>
-                            <a class="fa fa-linkedin rounded" t-attf-href="https://www.linkedin.com/sharing/share-offsite/?url={{share_url_quoted}}" target="_blank"/>
+                            <a class="fa fa-linkedin rounded" t-attf-href="/cards/{{card_slug if card_slug else card.id}}/share/linkedin" target="_blank"/>
                             <a class="fa fa-whatsapp rounded" t-attf-href="https://wa.me/?text={{share_url_quoted}}" target="_blank"/>
                             <a class="fa fa-pinterest rounded" t-attf-href="https://pinterest.com/pin/create/button/?url={{share_url_quoted}}" target="_blank"/>
                         </div>
@@ -75,5 +75,51 @@
             title="target_name"
             no_header="1"
             no_footer="1"/>
+    </template>
+
+    <template id="card_campaign_linkedin_share_composer">
+        <t t-call="web.frontend_layout"
+            title="card.display_name"
+            no_header="1"
+            no_footer="1"
+            no_livechat="1">
+            <div class="p-2">
+                <form t-if="linkedin_auth_state == 'success'" method="POST" t-attf-action="/cards/{{card.id}}/share/linkedin/post"
+                    class="container o_card_campaign_linkedin_share_composer_form"
+                >
+                    <div class="row justify-content-center my-1">
+                        <div class="col-12">
+                            <div class="row justify-content-start">
+                                <div class="col-auto p-0">
+                                    <img t-att-src="linkedin_user_picture_url or '/base/static/img/avatar_grey.png'" height="50" class="rounded-circle border"/>
+                                </div>
+                                <div t-if="linkedin_user_fullname" class="col-auto align-self-center">
+                                    <span t-out="linkedin_user_fullname"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="linkedin_access_token" t-att-value="linkedin_access_token"/>
+                    <div class="row justify-content-center my-2">
+                        <!--length is limited to 3000 characters by the API-->
+                        <textarea name="text" autofocus="1" maxlength="3000"
+                            placeholder="Post Text" t-out="(campaign_sudo.post_suggestion + '\n' if campaign_sudo.post_suggestion else  '') + card._get_redirect_url()"
+                            class="col-12 border-0 m-1 p-1"
+                        />
+                    </div>
+                    <div class="row justify-content-center my-2">
+                        <img t-att-src="card._get_card_url()" class="col-12 border px-0" height="auto"/>
+                    </div>
+                    <div class="row justify-content-center my-1">
+                        <button class="btn btn-primary col-7" type="submit">Post on LinkedIn</button>
+                    </div>
+                </form>
+                <div t-else="" class="alert alert-warning">
+                    <i class="fa fa-exclamation-triangle"/>
+                    <span>We were not able to get an authorization to post in your stead.</span>
+                </div>
+            </div>
+        </t>
     </template>
 </odoo>

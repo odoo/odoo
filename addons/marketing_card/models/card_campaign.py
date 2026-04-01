@@ -46,7 +46,7 @@ class CardCampaign(models.Model):
         precompute=True, readonly=True, required=True, store=True,
     )
 
-    post_suggestion = fields.Text(help="Description below the card and default text when sharing on X")
+    post_suggestion = fields.Text(help="Description below the card and default text when sharing on X and LinkedIn")
     preview_record_ref = fields.Reference(string="Preview On", selection="_get_model_selection", required=True)
     tag_ids = fields.Many2many('card.campaign.tag', string='Tags')
     target_url = fields.Char(
@@ -364,10 +364,10 @@ class CardCampaign(models.Model):
 
 <div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
     <div class="container s_allow_columns">
-        <p>{_("Hello everyone")}</p>
-        <p>{_("Here's the link to advertise your participation.")}
-        <br>{_("Your help with this promotion would be greatly appreciated!")}</p>
-        <p>{_("Many thanks")}</p>
+        <p>{_("Hi everyone!")}</p>
+        <p>{_("We've created these personalized cards to make it easy for you to share your involvement with your network.")}
+        <br>{_("We'd love your help in getting the word out. Feel free to post these on your social channels!")}</p>
+        <p>{_("Thanks for your support.")}</p>
     </div>
 </div>
 
